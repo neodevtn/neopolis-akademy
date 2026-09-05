@@ -3,6 +3,7 @@ import { BookOpen, CheckCircle2, Gift, GraduationCap, ShieldCheck, Users } from 
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { PublicSiteFooter, PublicSiteHeader } from "@/components/PublicSiteChrome";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function readableIdentifier(value?: string | null) {
   if (!value) return "un parcours Neopolis Akademy";
@@ -15,6 +16,7 @@ function readableIdentifier(value?: string | null) {
 }
 
 export default function ReferralLanding() {
+  const { t } = useLanguage();
   const [, navigate] = useLocation();
   const search = typeof window === "undefined" ? "" : window.location.search;
   const params = new URLSearchParams(search);
@@ -50,6 +52,7 @@ export default function ReferralLanding() {
           <h1 className="mt-5 max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
             {isAchievement ? "Une réussite vous est partagée." : isCourse ? "Une formation vous est recommandée." : "Vous êtes invité à découvrir Neopolis Akademy."}
           </h1>
+          <h2 className="mt-5 text-lg font-semibold text-slate-900 sm:text-xl">{t({ fr: "Des formations IA gratuites par métier, recommandées par votre réseau.", en: "Free AI training by profession, recommended by your network.", ar: "تدريبات مجانية في الذكاء الاصطناعي حسب المهنة، يوصي بها أفراد شبكتك." })}</h2>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
             {isCourse ? <>Découvrez <strong className="text-slate-900">{trainingTitle}</strong>, un parcours pratique pour développer des compétences mobilisables dans votre métier.</> : <>Un membre de votre réseau vous invite à découvrir des formations pratiques en intelligence artificielle et en transformation numérique.</>}
           </p>

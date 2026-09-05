@@ -485,7 +485,7 @@ export default function Apply() {
           <h1 className="wise-display-md mb-4">{t({fr: "Candidature soumise !", en: "Application Submitted!", ar: "تم تقديم الطلب!"})}</h1>
           <p className="wise-body-md mb-8">{result.message}</p>
           <div className="wise-card-green p-8 mb-8">
-            <div className="text-3xl font-black mb-2" style={{ color: "var(--wise-positive-deep)" }}>{t({fr: "Merci !", en: "Thank you!", ar: "شكراً!"})}</div>
+            <h2 className="text-3xl font-black mb-2" style={{ color: "var(--wise-positive-deep)" }}>{t({fr: "Merci !", en: "Thank you!", ar: "شكراً!"})}</h2>
             <p className="text-sm mb-4" style={{ color: "var(--wise-mute)" }}>{t({fr: "Votre candidature a bien été enregistrée", en: "Your application has been successfully registered", ar: "تم تسجيل طلبك بنجاح"})}</p>
             <p className="text-base" style={{ color: "var(--wise-body)" }}>{t({fr: "Notre équipe analysera votre profil et vous recevrez un email de confirmation avec les prochaines étapes.", en: "Our team will analyze your profile and you will receive a confirmation email with next steps.", ar: "سيقوم فريقنا بتحليل ملفك الشخصي وستتلقى بريداً إلكترونياً للتأكيد مع الخطوات التالية."})}</p>
           </div>
@@ -508,9 +508,10 @@ export default function Apply() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
         >
+          <h1 className="wise-display-md mb-4">{t({fr: "Candidature à Neopolis Akademy", en: "Apply to Neopolis Akademy", ar: "التقديم إلى نيوبوليس أكاديمي"})}</h1>
           <div className="flex items-center gap-2 md:gap-3 mb-2">
             {stepTitles[step - 1] && (() => { const Icon = stepTitles[step - 1].icon; return <Icon className="w-4 h-4 md:w-5 md:h-5" style={{ color: "var(--wise-positive)" }} />; })()}
-            <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{stepTitles[step - 1]?.title}</h1>
+            <h2 className="text-xl md:text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{stepTitles[step - 1]?.title}</h2>
           </div>
           <p className="wise-body-sm">{t({fr: `Étape ${step} sur ${totalSteps}`, en: `Step ${step} of ${totalSteps}`, ar: `الخطوة ${step} من ${totalSteps}`})}</p>
           <div className="mt-4 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>

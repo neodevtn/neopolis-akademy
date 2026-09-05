@@ -39,7 +39,7 @@ describe("server-rendered sharing metadata", () => {
   it("builds canonical social metadata without query parameters", () => {
     const metadata = renderSeoHead("/apply?utm_source=whatsapp");
 
-    expect(metadata).toContain("<title>Candidature | Neopolis Akademy</title>");
+    expect(metadata).toContain("<title>Candidature formations IA gratuites | Neopolis Akademy</title>");
     expect(metadata).toContain(`<link rel="canonical" href="${CANONICAL_ORIGIN}/apply" />`);
     expect(metadata).toContain(`<meta property="og:image" content="${SHARE_IMAGE_URL}" />`);
     expect(metadata).toContain(`<meta property="og:image:secure_url" content="${SHARE_IMAGE_URL}" />`);
@@ -63,18 +63,40 @@ describe("server-rendered sharing metadata", () => {
   it("publie des métadonnées publiques dédiées à la rubrique AI News", () => {
     const metadata = renderSeoHead("/ai-news");
 
-    expect(metadata).toContain("<title>AI News | Veille intelligence artificielle | Neopolis Akademy</title>");
+    expect(metadata).toContain("<title>AI News : actualités et veille IA | Neopolis Akademy</title>");
     expect(metadata).toContain(`<link rel="canonical" href="${CANONICAL_ORIGIN}/ai-news" />`);
     expect(metadata).toContain('name="keywords" content="actualités intelligence artificielle, veille IA, outils IA, analyses IA, Neopolis Akademy"');
   });
 
   it("utilise entre trois et huit mots-clés ciblés sur chaque page publique non thématique", () => {
-    ["/", "/apply", "/ai-news", "/refer", "/mentions-legales", "/refer?ref=NEO-AB12CD34&utm_content=course&course=ai_for_finance__01"].forEach((route) => {
-      const keywords = getSeoPage(route).keywords?.split(",").map((keyword) => keyword.trim()).filter(Boolean) || [];
+    ["/", "/en", "/ar", "/apply", "/ai-news", "/refer", "/mentions-legales", "/refer?ref=NEO-AB12CD34&utm_content=course&course=ai_for_finance__01"].forEach((route) => {
+      const page = getSeoPage(route);
+      const keywords = page.keywords?.split(",").map((keyword) => keyword.trim()).filter(Boolean) || [];
 
+      expect(page.title.trim()).not.toBe("");
+      expect(page.description.trim()).not.toBe("");
       expect(keywords.length).toBeGreaterThanOrEqual(3);
       expect(keywords.length).toBeLessThanOrEqual(8);
     });
+  });
+
+  it("respecte les plages de titre et de description recommandées sur les pages publiques statiques", () => {
+    ["/", "/en", "/ar", "/apply", "/ai-news", "/refer", "/mentions-legales"].forEach((route) => {
+      const page = getSeoPage(route);
+
+      expect([...page.title].length).toBeGreaterThanOrEqual(50);
+      expect([...page.title].length).toBeLessThanOrEqual(60);
+      expect([...page.description].length).toBeGreaterThanOrEqual(120);
+      expect([...page.description].length).toBeLessThanOrEqual(160);
+    });
+  });
+
+  it("exclut les routes inconnues de l’indexation plutôt que de leur attribuer les métadonnées de l’accueil", () => {
+    const page = getSeoPage("/ressource-inconnue");
+
+    expect(page.noindex).toBe(true);
+    expect(page.title).toBe("Page introuvable | Neopolis Akademy");
+    expect(page.description).toContain("introuvable");
   });
 
   it("contextualise l’aperçu social d’un lien de recommandation de cours", () => {
@@ -150,6 +172,20 @@ describe("server-rendered sharing metadata", () => {
     expect(headings).toHaveLength(1);
     expect(home).toContain('fr: "Formations IA gratuites"');
     expect(home).toContain('fr: "par métier"');
+  });
+
+  it("conserve une hiérarchie H1/H2 sur chaque page React publique indexable", () => {
+    const publicPages = ["Home", "AiNews", "Apply", "ReferralLanding", "MentionsLegales"];
+
+    publicPages.forEach((pageName) => {
+      const source = readFileSync(resolve(process.cwd(), `client/src/pages/${pageName}.tsx`), "utf8");
+      const h1Count = source.match(/<(?:motion\.)?h1\b/g)?.length || 0;
+
+      // La candidature rend l’un de ses deux états mutuellement exclusifs : formulaire ou confirmation.
+      if (pageName === "Apply") expect(h1Count).toBeGreaterThanOrEqual(1);
+      else expect(h1Count).toBe(1);
+      expect(source.match(/<(?:motion\.)?h2\b/g)?.length || 0).toBeGreaterThan(0);
+    });
   });
 
   it("publishes an agent-readable llms.txt with a Markdown H1 and canonical links", () => {

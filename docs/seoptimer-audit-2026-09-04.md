@@ -100,6 +100,12 @@ Les trois variantes d’accueil disposent d’URL propres : `/` pour le françai
 
 Le typage TypeScript, les 17 contrats SEO ciblés, la suite complète (556 tests réussis, 2 ignorés) et la matrice de publication sont passés localement. La confirmation des réponses du domaine public reste à effectuer après checkpoint. Le rapport SEOptimer lui-même doit être relancé lorsqu’une exécution gratuite sera disponible : son score et son nombre de recommandations varient entre deux générations, et son cache ne peut pas être forcé depuis l’application.
 
+## Couverture généralisée des titres et en-têtes publics
+
+Toutes les routes publiques indexables sont couvertes par des métadonnées spécifiques : accueil français, anglais et arabe ; AI News ; candidature ; parrainage ; mentions légales ; index et détails de formations par domaine. Elles disposent d’un `title`, d’une meta-description, de trois à huit mots-clés adaptés et d’un canonical. Les titres et descriptions des sept pages publiques statiques mesurent respectivement entre 52 et 57 caractères et entre 123 et 153 caractères ; leurs cinq ou six mots-clés sont tous dans la plage fixée.
+
+La hiérarchie de contenu est également explicite : les pages d’accueil, AI News, candidature, parrainage et mentions légales utilisent au moins un H1 et un H2 ; les pages Formation rendues côté serveur utilisent déjà un H1 de page suivi de H2 de section. La candidature ne rend qu’un H1 par état visible — formulaire ou confirmation — et utilise désormais les H2 pour l’étape et le message de suivi. Les routes de connexion, de récupération, d’invitation, de diagnostic, d’administration, d’apprentissage et d’examen sont volontairement exclues de l’indexation, car elles sont transactionnelles ou protégées.
+
 ## Références
 
 [1] [Chrome for Developers — *Reduce unused JavaScript*](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript)

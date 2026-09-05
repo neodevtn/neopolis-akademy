@@ -34,7 +34,7 @@ const DEFAULT_PAGE: SeoPage = {
 const LOCALIZED_HOME_PAGES: Record<"fr" | "en" | "ar", SeoPage> = {
   fr: DEFAULT_PAGE,
   en: {
-    title: "Free AI training by profession | Neopolis Akademy",
+    title: "Free AI training by profession online | Neopolis Akademy",
     description:
       "Explore free AI training by profession, practical learning paths and certifications to build job-ready skills with Neopolis Akademy.",
     keywords: "free AI training by profession, free AI courses, artificial intelligence training, AI skills, AI certification, professional training",
@@ -42,7 +42,7 @@ const LOCALIZED_HOME_PAGES: Record<"fr" | "en" | "ar", SeoPage> = {
     locale: "en",
   },
   ar: {
-    title: "تدريب مجاني في الذكاء الاصطناعي حسب المهنة | نيوبوليس أكاديمي",
+    title: "دورات ذكاء اصطناعي مجانية حسب المهنة | نيوبوليس أكاديمي",
     description:
       "اكتشف تدريبات مجانية في الذكاء الاصطناعي حسب المهنة، ومسارات عملية وشهادات لتطوير مهاراتك المهنية مع نيوبوليس أكاديمي الآن.",
     keywords: "تدريب مجاني ذكاء اصطناعي, دورات ذكاء اصطناعي للمهن, مهارات الذكاء الاصطناعي, شهادات ذكاء اصطناعي, تدريب مهني, نيوبوليس أكاديمي",
@@ -59,26 +59,26 @@ const LOCALE_METADATA = {
 
 const ROUTE_PAGES: Record<string, Omit<SeoPage, "path">> = {
   "/apply": {
-    title: "Candidature | Neopolis Akademy",
+    title: "Candidature formations IA gratuites | Neopolis Akademy",
     description:
-      "Candidatez au programme Neopolis Akademy et développez vos compétences en intelligence artificielle.",
-    keywords: "candidature formation IA, programme IA, compétences IA, formation professionnelle, Neopolis Akademy",
+      "Candidatez pour accéder aux formations IA gratuites par métier de Neopolis Akademy et développer des compétences adaptées à votre parcours professionnel.",
+    keywords: "candidature formation IA, formations IA gratuites, parcours IA par métier, compétences IA, formation professionnelle, Neopolis Akademy",
   },
   "/ai-news": {
-    title: "AI News | Veille intelligence artificielle | Neopolis Akademy",
+    title: "AI News : actualités et veille IA | Neopolis Akademy",
     description:
-      "Suivez les annonces, outils, analyses et prépublications qui comptent dans l’intelligence artificielle.",
+      "Suivez les annonces, outils, analyses et prépublications en intelligence artificielle, avec des repères utiles pour les métiers et la formation.",
     keywords: "actualités intelligence artificielle, veille IA, outils IA, analyses IA, Neopolis Akademy",
   },
   "/mentions-legales": {
-    title: "Mentions légales | Neopolis Akademy",
-    description: "Consultez les mentions légales de la plateforme Neopolis Akademy.",
+    title: "Mentions légales Neopolis Akademy | Formation IA en ligne",
+    description: "Consultez les mentions légales, les conditions d’utilisation et les informations de protection des données de Neopolis Akademy.",
     keywords: "mentions légales, Neopolis Akademy, plateforme formation IA, protection des données, conditions d’utilisation",
   },
   "/refer": {
-    title: "Parrainage | Neopolis Akademy",
-    description: "Partagez les parcours pratiques Neopolis Akademy avec votre réseau professionnel.",
-    keywords: "parrainage formation IA, recommander formation IA, réseau professionnel, parcours IA, Neopolis Akademy",
+    title: "Parrainage formations IA gratuites | Neopolis Akademy",
+    description: "Partagez les formations IA gratuites par métier de Neopolis Akademy avec votre réseau et découvrez des parcours pratiques adaptés aux professionnels.",
+    keywords: "parrainage formation IA, recommander formation IA, formations IA gratuites, réseau professionnel, parcours IA, Neopolis Akademy",
   },
   "/training": {
     title: "Formations en intelligence artificielle | Neopolis Akademy",
@@ -191,7 +191,12 @@ export function getSeoPage(requestUrl: string): SeoPage {
     };
   }
 
-  return { ...DEFAULT_PAGE, path };
+  return {
+    title: `Page introuvable | ${SITE_NAME}`,
+    description: "La page demandée est introuvable sur Neopolis Akademy.",
+    path,
+    noindex: true,
+  };
 }
 
 function escapeHtml(value: string) {
