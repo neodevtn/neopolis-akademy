@@ -149,7 +149,9 @@ export function createDataLayerGtag(dataLayer: unknown[]): GtagCommand {
 export function initializeAnalytics() {
   if (typeof window === "undefined" || !MEASUREMENT_ID) return Promise.resolve(false);
   if (window.gtag) {
-    dispatchAnalyticsConsent(hasAnalyticsConsent());
+    const granted = hasAnalyticsConsent();
+    if (granted) dispatchAnalyticsConsent(true);
+    else lastAnalyticsConsent = false;
     return Promise.resolve(true);
   }
   if (scriptPromise) return scriptPromise.then(() => true);
@@ -173,7 +175,9 @@ export function initializeAnalytics() {
   });
   return scriptPromise.then((loaded) => {
     if (!loaded) return false;
-    dispatchAnalyticsConsent(hasAnalyticsConsent());
+    const granted = hasAnalyticsConsent();
+    if (granted) dispatchAnalyticsConsent(true);
+    else lastAnalyticsConsent = false;
     return true;
   });
 }
