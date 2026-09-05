@@ -51,10 +51,11 @@ function checkRateLimit(ip: string, prefix: string, maxRequests: number, windowM
 const GA4_SCRIPT_ORIGINS = ["https://www.googletagmanager.com"] as const;
 const GA4_CONNECT_ORIGINS = [
   "https://www.googletagmanager.com",
-  "https://www.google-analytics.com",
-  "https://region1.google-analytics.com",
+  "https://*.google-analytics.com",
+  "https://*.analytics.google.com",
   "https://analytics.google.com",
 ] as const;
+const GA4_IMAGE_ORIGINS = ["https://www.googletagmanager.com", "https://*.google-analytics.com"] as const;
 
 /**
  * Politique CSP commune. Les hôtes Analytics sont explicitement listés : aucun
@@ -77,7 +78,7 @@ export function buildContentSecurityPolicy(isDev = process.env.NODE_ENV === "dev
     `script-src ${scriptSources.join(" ")}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https: blob:",
+    `img-src 'self' data: https: blob: ${GA4_IMAGE_ORIGINS.join(" ")}`,
     "media-src 'self' blob: https:",
     "worker-src 'self' blob:",
     `connect-src ${connectSources.join(" ")}`,

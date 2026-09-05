@@ -2,8 +2,8 @@ import { chromium } from "playwright-core";
 
 const baseUrl = process.env.GA4_PUBLIC_URL || "https://akademy.neodev.click";
 const googleTagHostnames = new Set(["www.googletagmanager.com"]);
-const googleCollectionHostnames = new Set(["www.google-analytics.com", "region1.google-analytics.com", "analytics.google.com"]);
-const googleTelemetryHostnames = new Set([...googleTagHostnames, ...googleCollectionHostnames]);
+const isGoogleCollectionHostname = (hostname) =>
+  hostname === "analytics.google.com" || hostname.endsWith(".google-analytics.com") || hostname.endsWith(".analytics.google.com");
 const isGtagEvent = (entry, eventName) => Array.from(entry || []).slice(0, 2).every((value, index) => ["event", eventName][index] === value);
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium",
@@ -12,7 +12,17 @@ const browser = await chromium.launch({
 });
 
 try {
-  const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 720 },
+    locale: "fr-FR",
+    userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+  });
+  // La sonde vérifie la collecte du site, pas la politique de filtrage des
+  // navigateurs de test par Google. Présenter le contexte comme un navigateur
+  // standard évite un faux négatif propre au runtime automatisé.
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, "webdriver", { configurable: true, get: () => undefined });
+  });
   const page = await context.newPage();
   const cspErrors = [];
   const googleRequests = [];
@@ -31,7 +41,7 @@ try {
     if (hostname.includes("google")) {
       googleRelatedRequests.push({ hostname, resourceType: request.resourceType() });
     }
-    if (googleTelemetryHostnames.has(hostname)) {
+    if (googleTagHostnames.has(hostname) || isGoogleCollectionHostname(hostname)) {
       googleRequests.push({ hostname, resourceType: request.resourceType() });
     }
   });
@@ -40,13 +50,13 @@ try {
     if (googleTagHostnames.has(hostname)) {
       googleTagResponses.push(response.status());
     }
-    if (googleCollectionHostnames.has(hostname)) {
+    if (isGoogleCollectionHostname(hostname)) {
       googleResponses.push({ hostname, status: response.status() });
     }
   });
   page.on("requestfailed", (request) => {
     const hostname = new URL(request.url()).hostname;
-    if (googleCollectionHostnames.has(hostname)) {
+    if (isGoogleCollectionHostname(hostname)) {
       googleRequestFailures.push({ hostname, error: request.failure()?.errorText || "unknown" });
     }
   });
@@ -75,7 +85,7 @@ try {
     gtagReady: await page.evaluate(() => typeof window.gtag === "function"),
     pageViewQueued: await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.some((entry) => Array.from(entry || []).slice(0, 2).join("|") === "event|page_view")),
     googleScriptRequested: googleRequests.some((request) => googleTagHostnames.has(request.hostname)),
-    googleCollectionRequested: googleRequests.some((request) => googleCollectionHostnames.has(request.hostname)),
+    googleCollectionRequested: googleRequests.some((request) => isGoogleCollectionHostname(request.hostname)),
     googleCollectionResponseSuccess: googleResponses.some((response) => response.status >= 200 && response.status < 400),
     googleCollectionFailureCount: googleRequestFailures.length,
     googleTagResponseSuccess: googleTagResponses.some((status) => status >= 200 && status < 400),

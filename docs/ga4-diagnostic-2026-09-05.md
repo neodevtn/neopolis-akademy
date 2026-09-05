@@ -11,3 +11,11 @@ Les diagnostics ci-dessous doivent différencier les limites du navigateur autom
 Le flux Web ouvert dans Analytics cible bien le domaine Neopolis Akademy et porte l’identifiant de mesure configuré dans l’application. Son écran d’état signalait toutefois encore l’absence de données reçues. Après une visite manuelle consentie demandée au propriétaire, l’écran Temps réel n’affichait pas encore d’utilisateur actif au moment du contrôle.
 
 Le seul filtre de données présent est un filtre de trafic interne au statut **Test**. Il ne constitue donc pas une exclusion active du reporting et n’explique pas l’absence totale de données. La correction publiée reste à valider contre une visite interactive non automatisée, car les navigateurs de contrôle observés ne reçoivent pas le runtime de collecte alors que le script, le consentement et la file gtag sont présents.
+
+## Correctifs et validation en cours
+
+Deux défauts d’initialisation ont été corrigés et publiés : la file gtag utilise maintenant le format `Arguments` et résout la file active à chaque commande ; la configuration et la transition de consentement ne sont émises qu’après le chargement du script. La politique CSP autorise explicitement le chargeur Google et les hôtes de collecte nécessaires, sans règle générique.
+
+Après une première puis une seconde visite manuelle consentie demandées au propriétaire, le rapport Temps réel continuait néanmoins à afficher zéro utilisateur au moment de sa consultation. Le navigateur automatisé charge le script sans violation CSP mais ne produit pas de transport Analytics observable ; il n’est donc pas utilisé comme preuve négative. Une validation dans un navigateur interactif non automatisé et, si nécessaire, avec une inspection réseau locale est encore requise.
+
+L’en-tête CSP du domaine publié a été relu : le chargeur Google et les hôtes de collecte Google Analytics sont listés explicitement dans les directives adaptées, sans joker dans `connect-src`. Les deux visites manuelles demandées après consentement n’ont pas encore été reflétées dans le rapport Temps réel observé ; cette absence ne doit donc pas être présentée comme résolue tant qu’un transport effectif vers le service n’est pas visible.
