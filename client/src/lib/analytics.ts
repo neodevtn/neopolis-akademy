@@ -148,7 +148,10 @@ export function createDataLayerGtag(dataLayer: unknown[]): GtagCommand {
 
 export function initializeAnalytics() {
   if (typeof window === "undefined" || !MEASUREMENT_ID) return Promise.resolve(false);
-  if (window.gtag) return Promise.resolve(true);
+  if (window.gtag) {
+    dispatchAnalyticsConsent(hasAnalyticsConsent());
+    return Promise.resolve(true);
+  }
   if (scriptPromise) return scriptPromise.then(() => true);
 
   window.dataLayer = window.dataLayer || [];

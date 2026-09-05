@@ -2756,3 +2756,4 @@
 - [x] Activer le Consent Mode avancé : page vue minimale sans stockage avant choix, événements pédagogiques détaillés uniquement après acceptation, publicité toujours refusée — mode par défaut refusé et passage accordé après choix observés dans la sonde ; aucune finalité publicitaire activée
 - [ ] Reproduire sur Chromium non authentifié avec un profil temporaire vierge, capturer l’état du stockage, la visibilité du bandeau et les erreurs console sans intervention utilisateur
 - [ ] Mettre en file `js` et `config` avant le chargement du script externe, conformément au snippet standard, afin que le runtime découvre la destination et prenne en charge les commandes ultérieures
+- [ ] Amorcer dataLayer et gtag depuis un script classique auto-hébergé chargé avant l’application, afin de reproduire exactement la sonde isolée qui émet `/g/collect`

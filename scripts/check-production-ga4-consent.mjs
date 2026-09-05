@@ -1,6 +1,7 @@
 import { chromium } from "playwright-core";
 
 const baseUrl = process.env.GA4_PUBLIC_URL || "https://akademy.neodev.click";
+const cacheBuster = Date.now();
 const googleTagHostnames = new Set(["www.googletagmanager.com"]);
 const isGoogleCollectionHostname = (hostname) =>
   hostname === "analytics.google.com" || hostname.endsWith(".google-analytics.com") || hostname.endsWith(".analytics.google.com");
@@ -61,7 +62,7 @@ try {
     }
   });
 
-  await page.goto(`${baseUrl}/?ga4-consent-qa=1`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${baseUrl}/?ga4-consent-qa=${cacheBuster}`, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(2_000);
   const scriptsBeforeConsent = await page.locator('script[src*="www.googletagmanager.com"]').count();
   const deniedByDefault = await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.some((entry) => {
@@ -79,8 +80,20 @@ try {
 
   // Une navigation distincte, toujours avec le consentement conservé, vérifie que
   // la collecte ne dépend pas seulement de l'initialisation de l'accueil.
-  await page.goto(`${baseUrl}/ai-news?ga4-consent-qa=1`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${baseUrl}/ai-news?ga4-consent-qa=${cacheBuster}`, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(5_000);
+
+  const destinationState = await page.evaluate(async () => await new Promise((resolve) => {
+    let settled = false;
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      resolve(result);
+    };
+    if (!Array.isArray(window.dataLayer)) return finish({ callbackInvoked: false, valuePresent: false });
+    (function pushGtagGet() { window.dataLayer.push(arguments); })("get", "G-ZPHNKHDHS6", "client_id", (value) => finish({ callbackInvoked: true, valuePresent: Boolean(value) }));
+    setTimeout(() => finish({ callbackInvoked: false, valuePresent: false }), 5_000);
+  }));
 
   const scriptsAfterConsent = await page.locator('script[src*="www.googletagmanager.com"]').count();
   const result = {
@@ -102,6 +115,9 @@ try {
     dataLayerUsesArguments: await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.every((entry) => !Array.isArray(entry))),
     dataLayerPushPatched: await page.evaluate(() => typeof window.dataLayer?.push === "function" && !String(window.dataLayer.push).includes("[native code]")),
     runtimeObjectsPresent: await page.evaluate(() => Boolean(window.google_tag_manager) && Boolean(window.google_tag_data)),
+    expectedDestinationPresent: await page.evaluate(() => Boolean(window.google_tag_manager && Object.prototype.hasOwnProperty.call(window.google_tag_manager, "G-ZPHNKHDHS6"))),
+    destinationCallbackInvoked: destinationState.callbackInvoked,
+    destinationValuePresent: destinationState.valuePresent,
     queuedCommandOrder: await page.evaluate(() => Array.isArray(window.dataLayer) ? window.dataLayer.slice(0, 8).map((entry) => {
       const values = Array.from(entry || []);
       return [typeof values[0] === "string" ? values[0] : "unknown", typeof values[1] === "string" ? values[1] : (values[1] instanceof Date ? "date" : "value")];
@@ -111,7 +127,7 @@ try {
   };
 
   console.log(JSON.stringify(result));
-  if (result.scriptsBeforeConsent !== 1 || result.scriptsAfterConsent !== 1 || !result.deniedByDefault || !result.grantedAfterChoice || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.dataLayerPushPatched || !result.runtimeObjectsPresent || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.googleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
+  if (result.scriptsBeforeConsent !== 1 || result.scriptsAfterConsent !== 1 || !result.deniedByDefault || !result.grantedAfterChoice || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.dataLayerPushPatched || !result.runtimeObjectsPresent || !result.expectedDestinationPresent || !result.destinationCallbackInvoked || !result.destinationValuePresent || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.googleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
     throw new Error(`GA4 production consent QA failed: ${JSON.stringify(result)}`);
   }
   await context.close();
