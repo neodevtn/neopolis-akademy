@@ -90,7 +90,7 @@ describe("pages publiques de formations IA", () => {
     const sitemap = renderPublicTrainingSitemap();
     expect(sitemap).toContain("https://akademy.neodev.click/");
     expect(sitemap).toContain("https://akademy.neodev.click/ai-news");
-    expect(sitemap).toContain("https://akademy.neodev.click/apply");
+    expect(sitemap).not.toContain("https://akademy.neodev.click/apply");
     expect(sitemap).toContain("https://akademy.neodev.click/mentions-legales");
     expect(sitemap).toContain("https://akademy.neodev.click/formations-ia");
     expect(sitemap).toContain("comptabilite-finance");

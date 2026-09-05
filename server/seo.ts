@@ -64,6 +64,8 @@ const ROUTE_PAGES: Record<string, Omit<SeoPage, "path">> = {
     description:
       "Candidatez pour accéder aux formations IA gratuites par métier de Neopolis Akademy et développer des compétences adaptées à votre parcours professionnel.",
     keywords: "candidature formation IA, formations IA gratuites, parcours IA par métier, compétences IA, formation professionnelle, Neopolis Akademy",
+    // Le formulaire reste public pour candidater, mais ce n'est pas une ressource éditoriale à indexer.
+    noindex: true,
   },
   "/ai-news": {
     title: "AI News : actualités et veille IA | Neopolis Akademy",
@@ -285,14 +287,6 @@ const PUBLIC_CRAWLER_FALLBACKS: Record<string, PublicFallback> = {
     links: [
       { href: "/formations-ia", label: "Explorer les formations IA" },
       { href: "/apply", label: "Découvrir les modalités d’accès" },
-    ],
-  },
-  "/apply": {
-    heading: "Candidature à Neopolis Akademy",
-    description: "Déposez votre candidature pour accéder aux parcours de formation Neopolis Akademy en intelligence artificielle.",
-    links: [
-      { href: "/formations-ia", label: "Voir les formations disponibles" },
-      { href: "/", label: "Découvrir le programme" },
     ],
   },
   "/refer": {

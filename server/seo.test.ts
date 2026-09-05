@@ -47,7 +47,7 @@ describe("server-rendered sharing metadata", () => {
     expect(metadata).toContain(`<meta property="og:image:alt" content="${SHARE_IMAGE_ALT}" />`);
     expect(metadata).toContain('<meta name="twitter:card" content="summary_large_image" />');
     expect(metadata).toContain(`<meta name="twitter:image" content="${X_SHARE_IMAGE_URL}" />`);
-    expect(metadata).toContain('<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />');
+    expect(metadata).toContain('<meta name="robots" content="noindex, nofollow" />');
     expect(metadata).toContain(`<meta property="og:image:url" content="${SHARE_IMAGE_URL}" />`);
   });
 
@@ -142,6 +142,12 @@ describe("server-rendered sharing metadata", () => {
     expect(getSeoPage("/training?tab=catalog").noindex).toBe(true);
     expect(getSeoPage("/training/formation-exemple").noindex).toBe(true);
     expect(renderSeoHead("/training/formation-exemple")).toContain('name="robots" content="noindex, nofollow"');
+  });
+
+  it("garde le formulaire de candidature accessible mais exclu des moteurs et du contenu de secours", () => {
+    expect(getSeoPage("/apply").noindex).toBe(true);
+    expect(renderSeoHead("/apply")).toContain('name="robots" content="noindex, nofollow"');
+    expect(renderPublicCrawlerFallback("/apply")).toBe("");
   });
 
   it("inserts a single escaped head block in the server HTML template", () => {

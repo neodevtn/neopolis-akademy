@@ -2732,3 +2732,8 @@
 - [x] Préparer l’audit et les adaptations par vagues, en priorité pour Anthropic puis DataCamp — inventaire reproductible, méthode de décision par source et interdiction explicite d’activer une réponse libre sans rubrique exploitable
 - [x] Auditer le lot Anthropic : 25 cours, 556 écrans, 328 interactions déterministes et aucune réponse libre dotée d’une rubrique source activable
 - [x] Normaliser quatre consignes Anthropic confirmées de tri/association qui imposaient gauche/droite, sans modifier leur réponse attendue ni leur verrouillage
+
+## Correctif post-publication — CSP GA4 et indexabilité de candidature
+- [x] Auditer la CSP réellement servie, autoriser de manière minimale le script gtag et les endpoints de collecte GA4, puis couvrir le contrat par tests — `script-src` autorise uniquement gtag, et `connect-src` uniquement la télémétrie existante, Sentry et les endpoints GA4 nécessaires, sans joker `https:` ; contrat de tests ajouté
+- [x] Confirmer si `/apply` est volontairement indexable ; sinon la retirer du sitemap et appliquer `noindex, nofollow` — la candidature reste publiquement accessible mais transactionnelle, donc exclue des moteurs, des données structurées et du sitemap ; les aperçus sociaux des liens parrainés restent canoniques vers `/refer`
+- [ ] Publier le correctif, vérifier les en-têtes CSP et l’absence de violation GA4 sur le domaine public, puis consigner le diagnostic Sitemap Search Console

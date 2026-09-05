@@ -48,6 +48,45 @@ function checkRateLimit(ip: string, prefix: string, maxRequests: number, windowM
   return true; // allowed
 }
 
+const GA4_SCRIPT_ORIGINS = ["https://www.googletagmanager.com"] as const;
+const GA4_CONNECT_ORIGINS = [
+  "https://www.google-analytics.com",
+  "https://region1.google-analytics.com",
+] as const;
+
+/**
+ * Politique CSP commune. Les hôtes Analytics sont explicitement listés : aucun
+ * joker de type `https:` n'est admis dans connect-src.
+ */
+export function buildContentSecurityPolicy(isDev = process.env.NODE_ENV === "development") {
+  const scriptSources = ["'self'", "'unsafe-inline'", "https://manus-analytics.com", "https://www.youtube.com", ...GA4_SCRIPT_ORIGINS];
+  if (isDev) scriptSources.push("'unsafe-eval'");
+
+  const connectSources = [
+    "'self'",
+    "https://manus-analytics.com",
+    "https://sentry.neopolis-dev.com",
+    ...GA4_CONNECT_ORIGINS,
+  ];
+  if (isDev) connectSources.push("ws:", "wss:");
+
+  return [
+    "default-src 'self'",
+    `script-src ${scriptSources.join(" ")}`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data: https: blob:",
+    "media-src 'self' blob: https:",
+    "worker-src 'self' blob:",
+    `connect-src ${connectSources.join(" ")}`,
+    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "upgrade-insecure-requests",
+  ].join("; ");
+}
+
 // ─── Security Headers Middleware (F-001, F-002) ───
 export function securityHeaders(req: Request, res: Response, next: NextFunction) {
   // Remove X-Powered-By (F-002)
@@ -68,31 +107,7 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
     "camera=(self), microphone=(self), geolocation=()"
   );
 
-  // Content Security Policy (hardened)
-  const isDev = process.env.NODE_ENV === "development";
-  const scriptSrc = isDev
-    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://manus-analytics.com https://www.youtube.com" // unsafe-eval needed for Vite HMR in dev
-    : "script-src 'self' 'unsafe-inline' https://manus-analytics.com https://www.youtube.com"; // YouTube IFrame API needs script loading
-  res.setHeader(
-    "Content-Security-Policy",
-    [
-      "default-src 'self'",
-      scriptSrc,
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https: blob:",
-      "media-src 'self' blob: https:",
-      // Le visualiseur de contenu utilise un Worker Blob local. La directive est limitée
-      // au même site et aux blobs, sans élargir script-src.
-      "worker-src 'self' blob:",
-      "connect-src 'self' https: wss:", // needed for tRPC, OAuth, analytics, Vite HMR
-      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com",
-      "frame-ancestors 'none'",
-      "base-uri 'self'", // Prevent base tag injection
-      "form-action 'self'", // Restrict form submissions to same origin
-      "upgrade-insecure-requests", // Force HTTPS for all subresources
-    ].join("; ")
-  );
+  res.setHeader("Content-Security-Policy", buildContentSecurityPolicy());
   // Strict-Transport-Security (HSTS) - enforce HTTPS for 1 year
   res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 

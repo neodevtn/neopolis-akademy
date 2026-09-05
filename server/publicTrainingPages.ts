@@ -38,7 +38,7 @@ const X_SHARE_IMAGE_URL = `${ORIGIN}${PUBLIC_SOCIAL_ASSETS.x.path}`;
 const SHARE_IMAGE_ALT = "Neopolis Akademy — Formation certifiante en intelligence artificielle";
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 const OECD_URL = "https://www.oecd.org/en/publications/generative-ai-and-the-sme-workforce_2d08b99d-en.html";
-const CORE_PUBLIC_SITEMAP_PATHS = ["/", "/en", "/ar", "/ai-news", "/apply", "/refer", "/mentions-legales"] as const;
+const CORE_PUBLIC_SITEMAP_PATHS = ["/", "/en", "/ar", "/ai-news", "/refer", "/mentions-legales"] as const;
 
 const escapeHtml = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const toJson = (value: unknown) => JSON.stringify(value).replace(/</g, "\\u003c");
