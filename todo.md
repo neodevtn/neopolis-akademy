@@ -2762,4 +2762,4 @@
 ## Correctif fiche apprenant administration
 - [x] Reproduire le défaut sur la fiche apprenant fournie avec une session administrateur et relever uniquement les erreurs techniques non personnelles — une note historique hors échelle provoquait `String.repeat(-2)` et interrompait le rendu avant les indicateurs
 - [x] Corriger la cause dans la vue de suivi apprenant, puis ajouter un test de non-régression ciblé — la note est désormais bornée entre 0 et 3 avant le rendu, avec deux tests dédiés et une reproduction locale de la fiche complète
-- [ ] Publier et contrôler la fiche apprenant ainsi que la liste des apprenants sans dégrader la navigation administrative
+- [x] Publier et contrôler la fiche apprenant ainsi que la liste des apprenants sans dégrader la navigation administrative — sur la version publiée, la fiche se rend avec les six indicateurs et les sept onglets, sans erreur de page ; les seuls avertissements de police proviennent de l’en-tête QA interne appliqué aux polices externes et ne concernent pas les visiteurs
