@@ -4,16 +4,36 @@ import { describe, expect, it } from "vitest";
 import { CANONICAL_ORIGIN, ORGANIZATION_SOCIAL_PROFILES, SHARE_IMAGE_ALT, SHARE_IMAGE_URL, X_SHARE_IMAGE_URL, getSeoPage, injectSeoHead, renderPublicCrawlerFallback, renderSeoHead } from "./seo";
 
 describe("server-rendered sharing metadata", () => {
-  it("publie un titre d’accueil borné et exactement six mots-clés ciblés", () => {
+  it("publie un titre et une description d’accueil dans les plages recommandées avec exactement six mots-clés ciblés", () => {
     const metadata = renderSeoHead("/");
-    const title = getSeoPage("/").title;
-    const keywords = getSeoPage("/").keywords?.split(",").map((keyword) => keyword.trim()).filter(Boolean) || [];
+    const page = getSeoPage("/");
+    const keywords = page.keywords?.split(",").map((keyword) => keyword.trim()).filter(Boolean) || [];
 
-    expect(title.length).toBeGreaterThanOrEqual(30);
-    expect(title.length).toBeLessThanOrEqual(60);
-    expect(title).toBe("Formations IA gratuites | Neopolis Akademy");
+    expect(page.title.length).toBeGreaterThanOrEqual(50);
+    expect(page.title.length).toBeLessThanOrEqual(60);
+    expect(page.description.length).toBeGreaterThanOrEqual(120);
+    expect(page.description.length).toBeLessThanOrEqual(160);
+    expect(page.title).toBe("Formations IA gratuites par métier | Neopolis Akademy");
     expect(keywords).toHaveLength(6);
-    expect(metadata).toContain('<meta name="keywords" content="formation IA gratuite, formations IA par métier, intelligence artificielle, compétences IA, formation professionnelle, MENA" />');
+    expect(metadata).toContain('<meta name="keywords" content="formations IA gratuites par métier, formation IA gratuite, intelligence artificielle, compétences IA, certification IA, formation professionnelle" />');
+  });
+
+  it("publie des variantes d’accueil FR, EN et AR avec hreflang réciproque, langue et canonical propres", () => {
+    const fr = renderSeoHead("/");
+    const en = renderSeoHead("/en");
+    const ar = renderSeoHead("/ar");
+
+    [fr, en, ar].forEach((head) => {
+      expect(head).toContain(`<link rel="alternate" hreflang="fr" href="${CANONICAL_ORIGIN}/" />`);
+      expect(head).toContain(`<link rel="alternate" hreflang="en" href="${CANONICAL_ORIGIN}/en" />`);
+      expect(head).toContain(`<link rel="alternate" hreflang="ar" href="${CANONICAL_ORIGIN}/ar" />`);
+      expect(head).toContain(`<link rel="alternate" hreflang="x-default" href="${CANONICAL_ORIGIN}/" />`);
+    });
+    expect(en).toContain(`<link rel="canonical" href="${CANONICAL_ORIGIN}/en" />`);
+    expect(en).toContain('<meta property="og:locale" content="en_US" />');
+    expect(ar).toContain(`<link rel="canonical" href="${CANONICAL_ORIGIN}/ar" />`);
+    expect(ar).toContain('<meta property="og:locale" content="ar_AR" />');
+    expect(injectSeoHead('<html lang="fr"><head><!--seo-head--></head>', "/ar")).toContain('<html lang="ar" dir="rtl">');
   });
 
   it("builds canonical social metadata without query parameters", () => {
@@ -114,10 +134,22 @@ describe("server-rendered sharing metadata", () => {
     const referral = renderPublicCrawlerFallback("/refer?ref=NEO-AB12CD34");
 
     expect(home).toContain("Formations IA gratuites par métier");
+    expect(home).not.toContain("<h1>");
     expect(home).toContain('href="/formations-ia"');
+    expect(renderPublicCrawlerFallback("/en")).toContain("Free AI training by profession");
+    expect(renderPublicCrawlerFallback("/ar")).toContain("تدريب مجاني في الذكاء الاصطناعي حسب المهنة");
     expect(referral).toContain("Parrainage Neopolis Akademy");
     expect(referral).not.toContain("NEO-AB12CD34");
     expect(renderPublicCrawlerFallback("/admin/training")).toBe("");
+  });
+
+  it("préserve un H1 unique et aligné sur les formations IA par métier dans l’accueil visible", () => {
+    const home = readFileSync(resolve(process.cwd(), "client/src/pages/Home.tsx"), "utf8");
+    const headings = home.match(/<(?:motion\.)?h1\b/g) || [];
+
+    expect(headings).toHaveLength(1);
+    expect(home).toContain('fr: "Formations IA gratuites"');
+    expect(home).toContain('fr: "par métier"');
   });
 
   it("publishes an agent-readable llms.txt with a Markdown H1 and canonical links", () => {

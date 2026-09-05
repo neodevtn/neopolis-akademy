@@ -18,16 +18,44 @@ type SeoPage = {
   path: string;
   keywords?: string;
   openGraphPath?: string;
+  locale?: "fr" | "en" | "ar";
   noindex?: boolean;
 };
 
 const DEFAULT_PAGE: SeoPage = {
-  title: "Formations IA gratuites | Neopolis Akademy",
+  title: "Formations IA gratuites par métier | Neopolis Akademy",
   description:
-    "Développez vos compétences en intelligence artificielle avec les parcours certifiants de Neopolis Akademy.",
-  keywords: "formation IA gratuite, formations IA par métier, intelligence artificielle, compétences IA, formation professionnelle, MENA",
+    "Découvrez des formations IA gratuites par métier, des parcours pratiques et des certifications pour développer vos compétences avec Neopolis Akademy.",
+  keywords: "formations IA gratuites par métier, formation IA gratuite, intelligence artificielle, compétences IA, certification IA, formation professionnelle",
   path: "/",
+  locale: "fr",
 };
+
+const LOCALIZED_HOME_PAGES: Record<"fr" | "en" | "ar", SeoPage> = {
+  fr: DEFAULT_PAGE,
+  en: {
+    title: "Free AI training by profession | Neopolis Akademy",
+    description:
+      "Explore free AI training by profession, practical learning paths and certifications to build job-ready skills with Neopolis Akademy.",
+    keywords: "free AI training by profession, free AI courses, artificial intelligence training, AI skills, AI certification, professional training",
+    path: "/en",
+    locale: "en",
+  },
+  ar: {
+    title: "تدريب مجاني في الذكاء الاصطناعي حسب المهنة | نيوبوليس أكاديمي",
+    description:
+      "اكتشف تدريبات مجانية في الذكاء الاصطناعي حسب المهنة، ومسارات عملية وشهادات لتطوير مهاراتك المهنية مع نيوبوليس أكاديمي الآن.",
+    keywords: "تدريب مجاني ذكاء اصطناعي, دورات ذكاء اصطناعي للمهن, مهارات الذكاء الاصطناعي, شهادات ذكاء اصطناعي, تدريب مهني, نيوبوليس أكاديمي",
+    path: "/ar",
+    locale: "ar",
+  },
+};
+
+const LOCALE_METADATA = {
+  fr: { hreflang: "fr", ogLocale: "fr_FR", inLanguage: "fr-FR", dir: "ltr" },
+  en: { hreflang: "en", ogLocale: "en_US", inLanguage: "en", dir: "ltr" },
+  ar: { hreflang: "ar", ogLocale: "ar_AR", inLanguage: "ar", dir: "rtl" },
+} as const;
 
 const ROUTE_PAGES: Record<string, Omit<SeoPage, "path">> = {
   "/apply": {
@@ -138,6 +166,8 @@ function referralSeoPage(url: URL): SeoPage {
 export function getSeoPage(requestUrl: string): SeoPage {
   const request = new URL(requestUrl, CANONICAL_ORIGIN);
   const path = normalizedPath(requestUrl);
+  const localizedHome = Object.values(LOCALIZED_HOME_PAGES).find((page) => page.path === path);
+  if (localizedHome) return localizedHome;
   if ((path === "/refer" || path === "/apply") && request.searchParams.get("ref")) return referralSeoPage(request);
   const exact = ROUTE_PAGES[path];
   if (exact) return { ...exact, path };
@@ -182,6 +212,7 @@ function toJsonLd(value: unknown) {
 }
 
 function publicPageSchema(page: SeoPage, canonicalUrl: string) {
+  const locale = LOCALE_METADATA[page.locale || "fr"];
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -197,7 +228,7 @@ function publicPageSchema(page: SeoPage, canonicalUrl: string) {
         name: page.title,
         description: page.description,
         url: canonicalUrl,
-        inLanguage: "fr-FR",
+        inLanguage: locale.inLanguage,
         isPartOf: {
           "@type": "WebSite",
           name: SITE_NAME,
@@ -222,6 +253,24 @@ const PUBLIC_CRAWLER_FALLBACKS: Record<string, PublicFallback> = {
       { href: "/formations-ia", label: "Explorer les formations IA par métier" },
       { href: "/apply", label: "Déposer une candidature" },
       { href: "/ai-news", label: "Consulter AI News" },
+    ],
+  },
+  "/en": {
+    heading: "Free AI training by profession",
+    description: "Neopolis Akademy offers practical artificial intelligence learning paths designed to develop professional skills.",
+    links: [
+      { href: "/en/ai-training", label: "Explore AI training by profession" },
+      { href: "/apply", label: "Submit an application" },
+      { href: "/ai-news", label: "Read AI News" },
+    ],
+  },
+  "/ar": {
+    heading: "تدريب مجاني في الذكاء الاصطناعي حسب المهنة",
+    description: "تقدم نيوبوليس أكاديمي مسارات عملية في الذكاء الاصطناعي لتنمية مهارات مهنية مرتبطة بالمهن.",
+    links: [
+      { href: "/ar/ai-training", label: "استكشف تدريبات الذكاء الاصطناعي حسب المهنة" },
+      { href: "/apply", label: "قدّم طلبك" },
+      { href: "/ai-news", label: "اقرأ أخبار الذكاء الاصطناعي" },
     ],
   },
   "/ai-news": {
@@ -264,11 +313,13 @@ export function renderPublicCrawlerFallback(requestUrl: string) {
   const fallback = PUBLIC_CRAWLER_FALLBACKS[page.path];
   if (!fallback) return "";
 
-  return `<main style="max-width:78rem;margin:0 auto;padding:2rem 1.25rem;font-family:Inter,Arial,sans-serif;color:#172033;background:#fff"><h1>${escapeHtml(fallback.heading)}</h1><p>${escapeHtml(fallback.description)}</p><nav aria-label="Navigation publique"><ul>${fallback.links.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a></li>`).join("")}</ul></nav></main>`;
+  const locale = LOCALE_METADATA[page.locale || "fr"];
+  return `<main style="max-width:78rem;margin:0 auto;padding:2rem 1.25rem;font-family:Inter,Arial,sans-serif;color:#172033;background:#fff" dir="${locale.dir}"><h2>${escapeHtml(fallback.heading)}</h2><p>${escapeHtml(fallback.description)}</p><nav aria-label="Navigation publique"><ul>${fallback.links.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a></li>`).join("")}</ul></nav></main>`;
 }
 
 export function renderSeoHead(requestUrl: string) {
   const page = getSeoPage(requestUrl);
+  const locale = LOCALE_METADATA[page.locale || "fr"];
   const title = escapeHtml(page.title);
   const description = escapeHtml(page.description);
   const keywords = page.keywords ? `<meta name="keywords" content="${escapeHtml(page.keywords)}" />` : "";
@@ -280,6 +331,12 @@ export function renderSeoHead(requestUrl: string) {
   const structuredData = page.noindex
     ? ""
     : `<script type="application/ld+json">${toJsonLd(publicPageSchema(page, canonicalUrl))}</script>`;
+  const homeAlternates = Object.values(LOCALIZED_HOME_PAGES).some((home) => home.path === page.path)
+    ? [
+        ...Object.values(LOCALIZED_HOME_PAGES).map((home) => `<link rel="alternate" hreflang="${LOCALE_METADATA[home.locale || "fr"].hreflang}" href="${CANONICAL_ORIGIN}${home.path}" />`),
+        `<link rel="alternate" hreflang="x-default" href="${CANONICAL_ORIGIN}/" />`,
+      ]
+    : [];
 
   return [
     `<title>${title}</title>`,
@@ -288,7 +345,7 @@ export function renderSeoHead(requestUrl: string) {
     `<link rel="canonical" href="${canonicalUrl}" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="${SITE_NAME}" />`,
-    '<meta property="og:locale" content="fr_FR" />',
+    `<meta property="og:locale" content="${locale.ogLocale}" />`,
     `<meta property="og:title" content="${title}" />`,
     `<meta property="og:description" content="${description}" />`,
     `<meta property="og:url" content="${escapeHtml(openGraphUrl)}" />`,
@@ -306,11 +363,15 @@ export function renderSeoHead(requestUrl: string) {
     `<meta name="twitter:image:alt" content="${SHARE_IMAGE_ALT}" />`,
     robots,
     structuredData,
+    ...homeAlternates,
   ].filter(Boolean).join("\n    ");
 }
 
 export function injectSeoHead(template: string, requestUrl: string) {
+  const page = getSeoPage(requestUrl);
+  const locale = LOCALE_METADATA[page.locale || "fr"];
   return template
+    .replace(/<html\s+lang="[^"]+"(?:\s+dir="[^"]+")?>/, `<html lang="${locale.hreflang}" dir="${locale.dir}">`)
     .replace("<!--seo-head-->", () => renderSeoHead(requestUrl))
     .replace("<!--seo-content-->", () => renderPublicCrawlerFallback(requestUrl));
 }

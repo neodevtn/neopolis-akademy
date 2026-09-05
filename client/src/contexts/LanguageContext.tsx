@@ -11,8 +11,17 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+function languageFromHomePath(): Language | null {
+  if (typeof window === "undefined") return null;
+  if (window.location.pathname === "/en") return "en";
+  if (window.location.pathname === "/ar") return "ar";
+  return null;
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Language>(() => {
+    const pathLanguage = languageFromHomePath();
+    if (pathLanguage) return pathLanguage;
     const stored = localStorage.getItem("neopolis_lang");
     if (stored === "en" || stored === "fr" || stored === "ar") return stored;
     return "fr";
@@ -24,6 +33,15 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.setAttribute("dir", isRTL ? "rtl" : "ltr");
     document.documentElement.setAttribute("lang", lang);
   }, [lang, isRTL]);
+
+  useEffect(() => {
+    const syncLanguageFromHistory = () => {
+      const pathLanguage = languageFromHomePath();
+      if (pathLanguage) setLangState(pathLanguage);
+    };
+    window.addEventListener("popstate", syncLanguageFromHistory);
+    return () => window.removeEventListener("popstate", syncLanguageFromHistory);
+  }, []);
 
   const setLang = useCallback((l: Language) => {
     setLangState(l);

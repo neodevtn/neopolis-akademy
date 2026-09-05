@@ -33,6 +33,7 @@ const labels = {
 
 function localizedPath(location: string, locale: Language) {
   const normalized = location.split("?")[0] || "/";
+  if (/^\/(?:en|ar)?$/.test(normalized)) return locale === "fr" ? "/" : `/${locale}`;
   const match = normalized.match(/^\/(?:formations-ia|en\/ai-training|ar\/ai-training)(?:\/([^/]+))?$/);
   return match ? publicTrainingPath(locale, match[1]) : location;
 }

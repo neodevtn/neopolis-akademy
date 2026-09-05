@@ -205,8 +205,8 @@ export default function Home() {
 
               {/* Title */}
               <motion.h1 variants={fadeInUp} className="wise-display-mega mb-5" style={{ textWrap: "balance" }}>
-                {t({ fr: "Transformez la menace de l'IA", en: "Turn the AI threat", ar: "حوّل تهديد الذكاء الاصطناعي" })}{" "}
-                <span className="wise-highlight">{t({ fr: "en opportunité", en: "into opportunity", ar: "إلى فرصة" })}</span>
+                {t({ fr: "Formations IA gratuites", en: "Free AI training", ar: "تدريبات مجانية في الذكاء الاصطناعي" })}{" "}
+                <span className="wise-highlight">{t({ fr: "par métier", en: "by profession", ar: "حسب المهنة" })}</span>
               </motion.h1>
 
               {/* Lede */}

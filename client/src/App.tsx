@@ -64,6 +64,8 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path={"/"} component={Home} />
+        <Route path={"/en"} component={Home} />
+        <Route path={"/ar"} component={Home} />
         <Route path={"/ai-news"} component={AiNews} />
         <Route path={"/formations-ia"} component={PublicTrainingThemes} />
         <Route path={"/formations-ia/:themeSlug"} component={PublicTrainingThemes} />

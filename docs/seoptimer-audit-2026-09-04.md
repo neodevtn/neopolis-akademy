@@ -61,6 +61,45 @@ Les tests TypeScript, les 554 tests automatisés (2 ignorés) et la matrice `qa:
 
 Après propagation du checkpoint `7f494abb`, les contrôles ont été rejoués sur `https://akademy.neodev.click`. Les pages publiques d’accueil, AI News, candidature, parrainage et mentions légales servent la directive `index, follow` enrichie, les images Open Graph, les données structurées et les contenus de secours prévus. La page Formation et ses variantes FR/EN/AR conservent canonical, `hreflang`, images sociales, JSON-LD et l’absence de débordement aux largeurs 1280, 390 et 375 pixels. Les thèmes inexistants répondent HTTP 404 avec `noindex`, tandis que les redirections des anciens thèmes renvoient HTTP 301 vers les nouveaux domaines. Les routes d’apprentissage restent `noindex, nofollow`.
 
+## Relevé SEOptimer du 5 septembre 2026
+
+Le rapport actualisé, généré à 11:19 UTC, attribue un score global **B**, avec **11 recommandations** : Référencement **A-**, Liens **A-**, Convivialité **F**, Performance **A** et Réseaux sociaux **A+**. Cette grille confirme que les aperçus sociaux sont désormais reconnus, mais elle n’affiche pas les détails de recommandation dans le premier rendu du rapport. L’interface indique que les informations détaillées sont chargées dynamiquement ; elles doivent donc être extraites avant toute correction supplémentaire, afin de ne pas déduire à tort la cause du score de convivialité.
+
+L’inspection du DOM n’expose encore que le libellé « Recommandations » et le nombre agrégé. Les entrées de ressources montrent cependant le script `https://www.seoptimer.com/assets/4da1e2ff/js/audit.js?v=1752304645`, qui pilote le chargement dynamique du rapport. La consultation de ce script et de ses appels réseau est nécessaire pour retrouver les onze constats détaillés de manière vérifiable.
+
+## Comportement du rapport actualisé
+
+Une relance depuis le bouton « Voir l’audit en direct » a généré un état intermédiaire qui affiche temporairement zéro recommandation et ne rend pas les sous-scores. L’onglet automatisé a ensuite été redirigé vers une page vide, sans contenu d’audit. Ce comportement empêche de tirer une conclusion fiable du seul score global ou du compteur de recommandations affiché par SEOptimer à cet instant. Les réponses HTML de la plateforme, contrôlées directement sur le domaine public, restent la source de vérification pour les balises, le sitemap et les directives de robots.
+
+## Détails du nouveau rapport complet
+
+Un chargement ultérieur du même rapport a produit un audit différent : score global **C**, 20 recommandations, Référencement **B+**, GEO **B+**, Liens **F**, Convivialité **C+** et Performance **B+**. Le compteur et la date de génération changent donc entre deux consultations successives : il convient de traiter les détails visibles de ce rapport, et non de comparer mécaniquement le score global à une version intermédiaire.
+
+Les contrôles détaillés signalent : titre de 42 caractères au lieu de la cible SEOptimer de 50–60 ; meta-description de 106 caractères au lieu de 120–160 ; absence d’alternates `hreflang` sur la racine ; plusieurs H1 ; mots-clés d’analyse centrés sur l’ancien texte métier ; analytics non détecté ; réponse serveur de 0,593 s, fin de scripts à 2,6 s ; audit PageSpeed mobile à 77 avec FCP 3 s, LCP 4,1 s, TTI 4,4 s et TBT 0,01 s. Ces éléments sont des candidats applicatifs vérifiables.
+
+Les autres recommandations portent sur le maillage de liens entrants, les URL de liens, la présence de coordonnées / LocalBusiness, pixel Meta, SPF/DMARC, profils sociaux complémentaires et styles inline. Elles demandent soit une décision éditoriale ou marketing, soit une configuration DNS ou de comptes externes : elles ne doivent pas être « corrigées » par l’invention de données, de profils ou de pixels.
+
+## Priorisation de correction du rapport actualisé
+
+| Signal SEOptimer | Décision | Motif vérifiable |
+| --- | --- | --- |
+| Titre de 42 caractères | Corriger | Un titre de 50 à 60 caractères peut conserver le ciblage « formations IA gratuites par métier » tout en respectant la limite strictement demandée par l’utilisateur. |
+| Description de 106 caractères | Corriger | Une formulation de 120 à 160 caractères peut rester fidèle au catalogue et au programme. |
+| H1 en double | Corriger | Le H1 du contenu React et le H1 du fallback `noscript` sont comptés ensemble par l’auditeur. Le H1 principal doit rester celui de l’accueil visible. |
+| `hreflang` absent sur `/` | Corriger | Les contenus FR/EN/AR de l’accueil doivent disposer d’URL propres avec titres, descriptions et alternates réciproques. |
+| Cohérence du mot-clé | Corriger | Le H1, le titre et la description seront alignés sur « formations IA gratuites par métier » sans supprimer les contenus éditoriaux existants. |
+| Analytics non détecté | Ne pas dégrader la confidentialité | L’analytics est volontairement conditionné au consentement. Le rendre détectable imposerait un script avant consentement et n’est pas justifié. |
+| Réponse serveur, redirections PageSpeed, backlinks, SPF/DMARC | Hors correctif applicatif direct | Les observations dépendent de la région d’audit, de l’hébergement/edge, du DNS et des actions de communication externes. |
+| Adresse/téléphone, LocalBusiness, Meta pixel, profils sociaux absents | En attente d’informations métier | Ne pas inventer de coordonnées, profils ni identifiant de pixel. |
+
+## Correctifs appliqués au rapport actualisé
+
+La racine française sert maintenant un titre de **53 caractères** — « Formations IA gratuites par métier | Neopolis Akademy » — et une meta-description de **149 caractères**. Ces deux longueurs sont dans les plages recommandées par SEOptimer. Le H1 visible de l’accueil reprend le même thème ; le fallback `noscript` utilise désormais un H2 afin que l’auditeur ne compte plus deux H1.
+
+Les trois variantes d’accueil disposent d’URL propres : `/` pour le français, `/en` pour l’anglais et `/ar` pour l’arabe. Elles publient chacune un canonical, une langue de document, une locale Open Graph, un titre, une description, des mots-clés localisés et les quatre liens alternates réciproques `fr`, `en`, `ar` et `x-default`. Les liens du sélecteur de langue de l’en-tête suivent aussi ces URL, et l’arabe reçoit `dir="rtl"` dès le HTML initial.
+
+Le typage TypeScript, les 17 contrats SEO ciblés, la suite complète (556 tests réussis, 2 ignorés) et la matrice de publication sont passés localement. La confirmation des réponses du domaine public reste à effectuer après checkpoint. Le rapport SEOptimer lui-même doit être relancé lorsqu’une exécution gratuite sera disponible : son score et son nombre de recommandations varient entre deux générations, et son cache ne peut pas être forcé depuis l’application.
+
 ## Références
 
 [1] [Chrome for Developers — *Reduce unused JavaScript*](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript)
