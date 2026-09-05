@@ -15,7 +15,8 @@ Les événements `login`, `sign_up` et `search` font partie du vocabulaire recom
 | Consentement | `analytics_storage`, `ad_storage`, `ad_user_data` et `ad_personalization` refusés par défaut ; acceptation limitée à `analytics_storage` accordé, les paramètres publicitaires restant refusés. |
 | `page_view` SPA | Configuration GA4 avec `send_page_view: false`, suivie d’une vue contrôlée au démarrage et à chaque changement effectif `pathname + search` nettoyé. |
 | Paramètres | Liste blanche de chaînes techniques sans caractères à risque, valeurs bornées et suppression systématique des query strings. |
-| Sitemap | Uniquement routes réellement publiques et indexables : pages éditoriales, index/domaines Formation, catalogue, fiches de formation et fiches de cours, avec variantes de langue réellement rendues ; aucune route privée, query string, redirection, brouillon ou 404. |
+| Sitemap | Uniquement routes réellement publiques et indexables : pages éditoriales, index/domaines Formation, catalogue, fiches de formation et fiches de cours, avec variantes de langue réellement rendues ; aucune route privée, query string, redirection, brouillon, candidature transactionnelle ou 404. |
+| CSP GA4 | `script-src` autorise explicitement `www.googletagmanager.com`; `connect-src` autorise explicitement les points de collecte GA4, Sentry et la télémétrie existante, sans joker `https:`. |
 
 ## Dictionnaire d’événements GA4
 
@@ -43,13 +44,21 @@ Le catalogue canonique alimente désormais des fiches publiques séparées, sous
 
 Les routes sont disponibles en français, anglais et arabe, avec canonical absolue auto-référente, alternatives `hreflang` réciproques, Open Graph, carte X et données structurées `BreadcrumbList` et `Course`. Les appels à l’action mènent vers la connexion ou la candidature ; aucun lien public ne donne accès au lecteur `/training`.
 
-La sonde locale du 5 septembre 2026 a analysé le XML puis contrôlé chaque URL listée. Elle a validé **910 URL indexables** : 9 pages éditoriales et index, 1 actualité, 21 pages de catégories, 3 index de catalogue, 345 fiches de formation et 531 fiches de cours. La répartition est de 306 URL françaises, 302 anglaises et 302 arabes. Le précédent état externe signalait 28 URL. Aucun `lastmod` synthétique n’est émis, car le catalogue ne fournit pas de date de publication fiable par fiche.
+La sonde locale du 5 septembre 2026 a analysé le XML puis contrôlé chaque URL listée. Elle a initialement validé 910 URL indexables. Après la désindexation volontaire de `/apply`, le sitemap publié comprend **909 URL indexables** : 6 pages éditoriales et index, 1 actualité, 21 pages de catégories, 3 index de catalogue, 345 fiches de formation et 531 fiches de cours. La répartition est de 306 URL françaises, 302 anglaises et 301 arabes. Aucun `lastmod` synthétique n’est émis, car le catalogue ne fournit pas de date de publication fiable par fiche.
 
 ## Contrôle local avant consentement
 
 Le 5 septembre 2026, l’accueil local a été ouvert dans un profil navigateur sans choix de consentement. La clé `neopolis_cookie_consent` était absente, aucune ressource `googletagmanager.com` ou `google-analytics.com` n’était chargée et `window.gtag` était absent. Ce contrôle confirme que le chargement GA4 reste bloqué avant une acceptation explicite.
 
 Après une acceptation explicite via le bandeau, le navigateur a chargé une unique ressource `gtag/js`, a initialisé la configuration avec `send_page_view: false` et a envoyé une seule vue de page normalisée. La `dataLayer` confirme que `analytics_storage` est accordé seulement après l’action de l’utilisateur, tandis que `ad_storage`, `ad_user_data` et `ad_personalization` restent refusés. Aucun paramètre d’adresse, de nom, de requête de recherche, de lien de parrainage ou de formulaire n’est présent dans la vue de page vérifiée.
+
+## Contrôle de production et diagnostic Search Console
+
+Après publication du correctif CSP, une sonde navigateur indépendante a confirmé sur le domaine public : aucune balise GA4 avant consentement, une seule balise `gtag/js` après acceptation, `gtag` prêt, une unique `page_view` mise en file et aucune erreur console liée à la CSP, au chargeur Google ou à la collecte Analytics. Le chargement du script externe a été observé. L’absence d’appel de collecte immédiatement visible dans cette courte fenêtre de test ne constitue pas une erreur : la file locale, l’initialisation et le script sont vérifiés ; le constat dans DebugView dépend de l’accès à la propriété et d’un délai de réception côté Google.
+
+La candidature `/apply` reste accessible au public pour déposer un dossier, mais elle est désormais `noindex, nofollow`, sans données structurées, sans contenu de secours pour robot et sans entrée sitemap. Les liens de recommandation continuent d’utiliser la page publique canonique `/refer` pour leurs aperçus sociaux.
+
+Le sitemap actuellement servi répond HTTP 200, `application/xml; charset=utf-8`, avec 909 balises `<loc>` et une déclaration XML valide. `robots.txt` y référence l’URL canonique. Le même test avec un en-tête User-Agent déclarant Googlebot retourne le même statut et le même volume, ce qui écarte un filtrage applicatif simple par User-Agent. Ce test ne prouve pas l’identité réseau d’un robot Google ni l’état interne Search Console. Le message « Impossible de récupérer le sitemap » reçu juste après publication doit donc être réessayé depuis Search Console après propagation ; si l’erreur persiste, il faudra examiner les journaux de la couche d’hébergement ou de protection réseau au moment précis de la tentative Google.
 
 ## Références
 
