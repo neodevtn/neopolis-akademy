@@ -14,16 +14,14 @@ export default function DeferredCookieConsent() {
   useEffect(() => {
     if (window.localStorage.getItem(COOKIE_CONSENT_KEY)) return;
 
-    const schedule = window.requestIdleCallback
-      ? window.requestIdleCallback(() => setShouldLoad(true), { timeout: 1200 })
-      : window.setTimeout(() => setShouldLoad(true), 900);
+    // `requestIdleCallback` peut rester différé plusieurs secondes dans Chrome
+    // lorsque l’accueil exécute encore ses animations et requêtes. Le bandeau de
+    // confidentialité doit être déterministe : le chargement dynamique commence
+    // juste après le premier rendu sans entrer dans le chemin critique initial.
+    const schedule = window.setTimeout(() => setShouldLoad(true), 250);
 
     return () => {
-      if (typeof schedule === "number") {
-        window.clearTimeout(schedule);
-      } else {
-        window.cancelIdleCallback?.(schedule);
-      }
+      window.clearTimeout(schedule);
     };
   }, []);
 
