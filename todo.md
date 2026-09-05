@@ -2772,3 +2772,9 @@
 - [x] Renforcer le bornage réutilisable des valeurs utilisées par `String.repeat` pour les données négatives, incohérentes ou historiques, avec tests dédiés — bornage 0–3 testé avec valeurs négatives, décimales, excessives, infinies et textuelles
 - [x] Exécuter la suite complète, publier, vérifier chaque sitemap sur le domaine public et produire le rapport par fichier — 586 tests réussis, matrice de publication en neuf étapes réussie, puis six fichiers et 909 URL validés sur `akademy.neodev.click` avec Googlebot desktop/mobile
 - [x] Stabiliser le contrôle navigateur desktop sous charge de publication en relançant une fois uniquement les blocs momentanément absents ou limités, sans masquer un échec persistant — la matrice complète passe désormais ses neuf étapes
+
+## Correctif navigation par ancres sur l’accueil
+- [x] Reproduire les liens `/#formule`, `/#pourquoi`, `/#partenaires` et `/#faq` depuis l’accueil et depuis une autre page publique — les clics successifs sur l’accueil conservaient le premier défilement malgré le changement de hash
+- [x] Corriger la gestion du hash sur `/` sans modifier le contenu, le menu partagé ni les routes publiques — liens hash-only retirés de l’interception Wouter, hash mis à jour explicitement et défilement recalculé après stabilisation du layout
+- [x] Ajouter un test de non-régression pour clic sur ancre déjà présente et navigation depuis une autre route — 24 scénarios validés en 1280×720 et 390×844, pour clic accueil, URL directe et navigation depuis une autre page
+- [ ] Publier puis vérifier les quatre ancres sur desktop et mobile dans le domaine public

@@ -141,13 +141,15 @@ function AnimatedSection({ children, className, style, id }: { children: React.R
 function HomeHashAnchorSync() {
   useEffect(() => {
     let retryTimer: number | undefined;
+    let stabilizationTimer: number | undefined;
     let animationFrame: number | undefined;
 
     const sync = () => {
       animationFrame = window.requestAnimationFrame(() => {
-        if (scrollToHomePublicAnchor(window.location.hash)) return;
-        retryTimer = window.setTimeout(() => scrollToHomePublicAnchor(window.location.hash), 180);
+        scrollToHomePublicAnchor(window.location.hash);
       });
+      retryTimer = window.setTimeout(() => scrollToHomePublicAnchor(window.location.hash), 180);
+      stabilizationTimer = window.setTimeout(() => scrollToHomePublicAnchor(window.location.hash), 700);
     };
 
     sync();
@@ -156,6 +158,7 @@ function HomeHashAnchorSync() {
       window.removeEventListener("hashchange", sync);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
       if (retryTimer) window.clearTimeout(retryTimer);
+      if (stabilizationTimer) window.clearTimeout(stabilizationTimer);
     };
   }, []);
 

@@ -6,6 +6,7 @@ import { type Language, useLanguage } from "@/contexts/LanguageContext";
 import { trackEvent } from "@/lib/analytics";
 import { publicTrainingCataloguePath, publicTrainingPath } from "@shared/publicTrainingLocale";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
+import { navigateToHomePublicAnchor } from "@/lib/homePublicAnchors";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
@@ -81,17 +82,41 @@ function NavigationLinks({ page, onNavigate }: { page: PublicPage; onNavigate?: 
   const { lang, t } = useLanguage();
   return (
     <>
-      {publicLinks(lang, page).map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          onClick={onNavigate}
-          aria-current={item.active ? "page" : undefined}
-          className="public-chrome-nav-link"
-        >
-          {t(item.label)}
-        </Link>
-      ))}
+      {publicLinks(lang, page).map((item) => {
+        if (page === "home" && item.href.startsWith("#")) {
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={(event) => {
+                event.preventDefault();
+                onNavigate?.();
+                if (onNavigate) {
+                  window.setTimeout(() => navigateToHomePublicAnchor(item.href), 120);
+                  window.setTimeout(() => navigateToHomePublicAnchor(item.href), 700);
+                } else {
+                  navigateToHomePublicAnchor(item.href);
+                  window.setTimeout(() => navigateToHomePublicAnchor(item.href), 500);
+                }
+              }}
+              className="public-chrome-nav-link"
+            >
+              {t(item.label)}
+            </a>
+          );
+        }
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            aria-current={item.active ? "page" : undefined}
+            className="public-chrome-nav-link"
+          >
+            {t(item.label)}
+          </Link>
+        );
+      })}
     </>
   );
 }
