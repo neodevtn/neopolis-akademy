@@ -2758,3 +2758,8 @@
 - [x] Mettre en file `js` et `config` avant le chargement du script externe, conformément au snippet standard, afin que le runtime découvre la destination et prenne en charge les commandes ultérieures — ordre imposé par test avant injection du script
 - [x] Amorcer dataLayer et gtag depuis un script classique auto-hébergé chargé avant l’application, afin de reproduire exactement la sonde isolée qui émet `/g/collect` — preuve locale : destination active, collecte envoyée et réponse 2xx
 - [x] Conserver uniquement le consentement `default denied` avant choix et n’émettre `consent update` qu’après une décision explicite, conformément au Consent Mode avancé — absence de mise à jour refusée redondante et transition accordée après clic validées
+
+## Correctif fiche apprenant administration
+- [x] Reproduire le défaut sur la fiche apprenant fournie avec une session administrateur et relever uniquement les erreurs techniques non personnelles — une note historique hors échelle provoquait `String.repeat(-2)` et interrompait le rendu avant les indicateurs
+- [x] Corriger la cause dans la vue de suivi apprenant, puis ajouter un test de non-régression ciblé — la note est désormais bornée entre 0 et 3 avant le rendu, avec deux tests dédiés et une reproduction locale de la fiche complète
+- [ ] Publier et contrôler la fiche apprenant ainsi que la liste des apprenants sans dégrader la navigation administrative

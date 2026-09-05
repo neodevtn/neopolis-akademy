@@ -45,6 +45,13 @@ function courseTitleLabel(course: any): string {
   return resolveLocalizedText(course?.title, course?.id || "Formation sans titre");
 }
 
+/** Les avis historiques peuvent précéder l’échelle actuelle de trois étoiles. */
+export function displayCourseFeedbackRating(value: unknown): number {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return 0;
+  return Math.min(3, Math.max(0, Math.round(numericValue)));
+}
+
 /* ─── Animation ─── */
 const fadeIn = {
   hidden: { opacity: 0, y: 16 },
@@ -779,7 +786,8 @@ export default function AdminTraining() {
                 <p className="mt-1 text-sm text-muted-foreground">Retours privés déposés par l’apprenant.</p>
                 {courseFeedback.length === 0 ? <p className="mt-4 text-sm italic text-muted-foreground">Aucun avis de cours.</p> : <div className="mt-4 space-y-3">{courseFeedback.map((feedback: any) => {
                   const feedbackCourse = (trainingIndex.courses as any[]).find((item) => item.id === feedback.courseId);
-                  return <article key={feedback.id} className="rounded-xl border border-border bg-muted/25 p-3"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-foreground">{feedbackCourse?.title?.fr || feedbackCourse?.title?.en || feedback.courseId}</p><p className="mt-1 text-sm text-amber-500" aria-label={`${feedback.rating} étoiles sur 3`}>{"★".repeat(feedback.rating)}{"☆".repeat(3 - feedback.rating)} <span className="ml-1 text-xs text-muted-foreground">{feedback.rating}/3</span></p></div><time className="text-xs text-muted-foreground">{new Date(feedback.updatedAt).toLocaleDateString("fr-FR")}</time></div>{feedback.comment ? <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">{feedback.comment}</p> : <p className="mt-2 text-xs italic text-muted-foreground">Sans commentaire.</p>}</article>;
+                  const rating = displayCourseFeedbackRating(feedback.rating);
+                  return <article key={feedback.id} className="rounded-xl border border-border bg-muted/25 p-3"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-foreground">{feedbackCourse?.title?.fr || feedbackCourse?.title?.en || feedback.courseId}</p><p className="mt-1 text-sm text-amber-500" aria-label={`${rating} étoiles sur 3`}>{"★".repeat(rating)}{"☆".repeat(3 - rating)} <span className="ml-1 text-xs text-muted-foreground">{rating}/3</span></p></div><time className="text-xs text-muted-foreground">{new Date(feedback.updatedAt).toLocaleDateString("fr-FR")}</time></div>{feedback.comment ? <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">{feedback.comment}</p> : <p className="mt-2 text-xs italic text-muted-foreground">Sans commentaire.</p>}</article>;
                 })}</div>}
               </section>
               <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
