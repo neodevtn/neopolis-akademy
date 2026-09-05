@@ -2743,3 +2743,4 @@
 - [x] Contrôler la configuration de propriété disponible et distinguer un délai de réception d’un défaut de balise ou de flux — le flux Web vise le domaine Neopolis Akademy et l’identifiant configuré ; le filtre de trafic interne reste au statut Test et ne bloque pas le reporting
 - [ ] Corriger, publier et documenter uniquement une anomalie applicative confirmée ; sinon fournir les étapes de validation côté propriété Analytics
 - [ ] Autoriser explicitement l’hôte gtag dans `connect-src`, avec les seuls endpoints Analytics requis, puis vérifier que le runtime de collecte s’initialise après consentement
+- [ ] Préserver le pointeur dynamique vers `window.dataLayer` après chargement de gtag afin que les événements postérieurs à l’initialisation soient traités par le runtime Google

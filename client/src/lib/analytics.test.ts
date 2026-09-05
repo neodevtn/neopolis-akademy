@@ -60,6 +60,21 @@ describe("analytics privacy guards", () => {
     expect(Array.from(dataLayer[0] as ArrayLike<unknown>)).toEqual(["config", "measurement-test", { send_page_view: false }]);
   });
 
+  it("résout la file active au moment de l’événement après l’initialisation de gtag", () => {
+    const initialDataLayer: unknown[] = [];
+    const activeDataLayer: unknown[] = [];
+    const previousWindow = globalThis.window;
+    Object.defineProperty(globalThis, "window", { configurable: true, value: { dataLayer: activeDataLayer } });
+
+    try {
+      createDataLayerGtag(initialDataLayer)("event", "page_view", { content_type: "public_page" });
+      expect(initialDataLayer).toEqual([]);
+      expect(Array.from(activeDataLayer[0] as ArrayLike<unknown>)).toEqual(["event", "page_view", { content_type: "public_page" }]);
+    } finally {
+      Object.defineProperty(globalThis, "window", { configurable: true, value: previousWindow });
+    }
+  });
+
   it("supprime les paramètres de parrainage et les fragments des vues de page", () => {
     expect(sanitizeAnalyticsLocation("https://akademy.neodev.click/refer?ref=NEO-123&utm_source=linkedin#share")).toBe("https://akademy.neodev.click/refer");
     expect(sanitizeAnalyticsLocation("/training/a/b?lesson=2&chapter=3&email=test@example.test", "https://akademy.neodev.click")).toBe("https://akademy.neodev.click/training/a/b?lesson=2&chapter=3");

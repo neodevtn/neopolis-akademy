@@ -125,7 +125,11 @@ function dispatchGtag(command: Parameters<GtagCommand>[0], target: Parameters<Gt
  */
 export function createDataLayerGtag(dataLayer: unknown[]): GtagCommand {
   return function gtag(command, target, params) {
-    dataLayer.push(arguments);
+    // gtag.js peut remplacer la référence `window.dataLayer` pendant son
+    // initialisation. Résoudre la file au moment de chaque appel garantit que
+    // les événements ultérieurs sont bien vus par le runtime chargé.
+    const activeDataLayer = typeof window === "undefined" ? dataLayer : window.dataLayer || dataLayer;
+    activeDataLayer.push(arguments);
   };
 }
 
