@@ -35,3 +35,15 @@ Une comparaison sous les mêmes en-têtes de sécurité a montré que le runtime
 La sonde locale après ce correctif confirme une destination active, un callback client disponible sans en consigner la valeur, une requête `/g/collect`, une réponse Google 2xx, aucune erreur CSP et aucun échec réseau. Le profil Chromium privé confirme également zéro cookie initial, un stockage de consentement vide et un bandeau visible sans erreur.
 
 Au dernier contrôle, le domaine public servait encore l’ancien HTML sans référence au bootstrap, après un échec de déploiement lié au quota Cloud Run `ServicesPerProject`. Le code est donc validé mais la preuve publique finale dépend de la propagation d’un checkpoint lorsque ce quota externe redevient disponible.
+
+## Validation publique finale
+
+Après propagation du bootstrap, la sonde publique a confirmé que le runtime reprend `dataLayer`, que la destination attendue est active, que la transition de consentement passe de `denied` à `granted` après choix et qu’une requête de collecte reçoit une réponse Google 2xx. Aucune violation CSP ni erreur de transport inattendue n’a été observée ; les seules annulations étaient des `ERR_ABORTED` liées à la fin de requêtes remplacées pendant la navigation et au moins une collecte a abouti.
+
+Le rapport Analytics de la propriété affiche désormais **5 utilisateurs actifs au cours des 30 dernières minutes**. Le panneau d’accueil conserve encore son message d’initialisation et ses agrégats historiques à zéro, ce qui relève du délai de mise à jour de l’interface : la réception temps réel prouve que le flux collecte effectivement.
+
+### Références officielles
+
+- [Consent Mode sur les sites et applications](https://developers.google.com/tag-platform/security/guides/consent)
+- [Content Security Policy et Google Tag](https://developers.google.com/tag-platform/security/guides/csp)
+- [Filtres de données GA4](https://support.google.com/analytics/answer/10108813)

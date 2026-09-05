@@ -78,9 +78,10 @@ try {
   }, { timeout: 15_000 });
   await page.waitForTimeout(5_000);
 
-  // Une navigation distincte, toujours avec le consentement conservé, vérifie que
-  // la collecte ne dépend pas seulement de l'initialisation de l'accueil.
-  await page.goto(`${baseUrl}/ai-news?ga4-consent-qa=${cacheBuster}`, { waitUntil: "domcontentloaded" });
+  // Une navigation SPA réelle évite d'annuler les beacons en cours par un
+  // rechargement complet et vérifie le suivi des routes sans double initialisation.
+  await page.getByRole("link", { name: "AI News", exact: true }).first().click();
+  await page.waitForURL(/\/ai-news/);
   await page.waitForTimeout(5_000);
 
   const destinationState = await page.evaluate(async () => await new Promise((resolve) => {
@@ -96,6 +97,7 @@ try {
   }));
 
   const scriptsAfterConsent = await page.locator('script[src*="www.googletagmanager.com"]').count();
+  const unexpectedGoogleRequestFailures = googleRequestFailures.filter((failure) => failure.error !== "net::ERR_ABORTED");
   const result = {
     scriptsBeforeConsent,
     scriptsAfterConsent,
@@ -110,6 +112,8 @@ try {
     googleCollectionRequested: googleRequests.some((request) => isGoogleCollectionHostname(request.hostname)),
     googleCollectionResponseSuccess: googleResponses.some((response) => response.status >= 200 && response.status < 400),
     googleCollectionFailureCount: googleRequestFailures.length,
+    googleCollectionFailureReasons: [...new Set(googleRequestFailures.map((failure) => failure.error))].sort(),
+    unexpectedGoogleCollectionFailureCount: unexpectedGoogleRequestFailures.length,
     googleTagResponseSuccess: googleTagResponses.some((status) => status >= 200 && status < 400),
     googleRuntimeLoaded: await page.evaluate(() => Boolean(window.google_tag_manager)),
     dataLayerUsesArguments: await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.every((entry) => !Array.isArray(entry))),
@@ -127,7 +131,7 @@ try {
   };
 
   console.log(JSON.stringify(result));
-  if (result.scriptsBeforeConsent !== 1 || result.scriptsAfterConsent !== 1 || !result.deniedByDefault || !result.grantedAfterChoice || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.dataLayerPushPatched || !result.runtimeObjectsPresent || !result.expectedDestinationPresent || !result.destinationCallbackInvoked || !result.destinationValuePresent || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.googleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
+  if (result.scriptsBeforeConsent !== 1 || result.scriptsAfterConsent !== 1 || !result.deniedByDefault || !result.grantedAfterChoice || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.dataLayerPushPatched || !result.runtimeObjectsPresent || !result.expectedDestinationPresent || !result.destinationCallbackInvoked || !result.destinationValuePresent || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.unexpectedGoogleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
     throw new Error(`GA4 production consent QA failed: ${JSON.stringify(result)}`);
   }
   await context.close();
