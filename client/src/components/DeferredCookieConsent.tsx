@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 
 const CookieConsent = lazy(() => import("./CookieConsent"));
-const COOKIE_CONSENT_KEY = "neopolis_cookie_consent";
+import { COOKIE_CONSENT_KEY } from "@/lib/cookieConsentState";
 
 /**
  * The consent banner has no bearing on the first visible screen. Loading it once
@@ -15,8 +15,8 @@ export default function DeferredCookieConsent() {
     if (window.localStorage.getItem(COOKIE_CONSENT_KEY)) return;
 
     const schedule = window.requestIdleCallback
-      ? window.requestIdleCallback(() => setShouldLoad(true), { timeout: 6500 })
-      : window.setTimeout(() => setShouldLoad(true), 6000);
+      ? window.requestIdleCallback(() => setShouldLoad(true), { timeout: 1200 })
+      : window.setTimeout(() => setShouldLoad(true), 900);
 
     return () => {
       if (typeof schedule === "number") {

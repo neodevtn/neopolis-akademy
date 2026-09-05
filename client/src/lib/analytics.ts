@@ -74,6 +74,7 @@ const ALLOWED_QUERY_PARAMS = new Set(["tab", "lesson", "chapter"]);
 const trackedPageLocations = new Set<string>();
 const trackedEventKeys = new Set<string>();
 let scriptPromise: Promise<boolean> | null = null;
+let lastAnalyticsConsent: boolean | null = null;
 
 function looksLikePersonalOrSensitiveValue(value: string) {
   return /\b[\w.+-]+@[\w-]+\.[\w.-]+\b|https?:\/\/|\b(?:token|password|bearer|secret)\b|(?:\+?\d[\s.-]?){7,}\d/.test(value);
@@ -118,6 +119,18 @@ function dispatchGtag(command: Parameters<GtagCommand>[0], target: Parameters<Gt
   return true;
 }
 
+function dispatchAnalyticsConsent(granted: boolean) {
+  if (lastAnalyticsConsent === granted) return true;
+  const dispatched = dispatchGtag("consent", "update", {
+    analytics_storage: granted ? "granted" : "denied",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
+  if (dispatched) lastAnalyticsConsent = granted;
+  return dispatched;
+}
+
 /**
  * gtag.js lit des objets `Arguments` dans dataLayer, conformément au snippet
  * officiel. Des tableaux ordinaires visualisent bien les commandes locales,
@@ -156,7 +169,7 @@ export function initializeAnalytics() {
     // est plus fiable pour une balise injectée après un consentement explicite.
     dispatchGtag("js", new Date());
     dispatchGtag("config", MEASUREMENT_ID, { send_page_view: false, anonymize_ip: true });
-    dispatchGtag("consent", "update", { analytics_storage: "granted" });
+    dispatchAnalyticsConsent(hasAnalyticsConsent());
     return true;
   });
 }
@@ -165,11 +178,13 @@ export function updateAnalyticsConsent(granted: boolean) {
   if (typeof window === "undefined") return;
   if (granted) {
     void initializeAnalytics().then((loaded) => {
-      if (loaded) trackPageView();
+      if (!loaded) return;
+      dispatchAnalyticsConsent(true);
+      trackPageView();
     });
     return;
   }
-  dispatchGtag("consent", "update", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+  dispatchAnalyticsConsent(false);
 }
 
 export function trackEvent(name: AnalyticsEventName, params: SafeEventParams = {}) {
@@ -204,4 +219,5 @@ export function resetAnalyticsForTests() {
   trackedPageLocations.clear();
   trackedEventKeys.clear();
   scriptPromise = null;
+  lastAnalyticsConsent = null;
 }

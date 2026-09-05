@@ -2745,3 +2745,11 @@
 - [ ] Autoriser explicitement l’hôte gtag dans `connect-src`, avec les seuls endpoints Analytics requis, puis vérifier que le runtime de collecte s’initialise après consentement
 - [ ] Préserver le pointeur dynamique vers `window.dataLayer` après chargement de gtag afin que les événements postérieurs à l’initialisation soient traités par le runtime Google
 - [ ] Émettre la mise à jour de consentement après l’initialisation effective de gtag afin que le runtime interprète la transition accordée dans l’ordre documenté
+
+## Analyse HAR et stratégie de consentement GA4
+- [x] Auditer le HAR fourni en masquant toute URL, cookie, en-tête ou identifiant susceptible de contenir une donnée personnelle — 63 entrées analysées ; seul l’hôte, le type de ressource et le statut ont été extraits
+- [x] Déterminer si l’absence de collecte provient du site, du navigateur, de la CSP, d’un bloqueur ou du flux Analytics — gtag est chargé avec succès sur le bon flux, sans DNT/GPC, mais aucune requête de collecte n’est émise ; le chemin d’acceptation sautait la transition `granted` lorsque gtag existait déjà
+- [x] Comparer le maintien du consentement explicite au Consent Mode avancé sans stockage avant accord, sans activer de publicité ni transmettre de PII — décision : conserver le consentement explicite, car le défaut applicatif est identifié et corrigeable sans collecte préalable
+- [ ] Appliquer, tester et publier uniquement la stratégie retenue après preuve technique et consigner la validation dans GA4
+- [ ] Corriger le chemin où `window.gtag` existe déjà afin que le clic d’acceptation émette toujours la transition `analytics_storage: granted`
+- [ ] Garantir que le bandeau de consentement apparaît dans une session vierge et reste accessible même lorsqu’un communiqué important est superposé

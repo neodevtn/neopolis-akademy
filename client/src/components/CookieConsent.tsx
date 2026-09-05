@@ -4,8 +4,7 @@ import { Cookie, Shield } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "../contexts/LanguageContext";
 import { updateAnalyticsConsent } from "@/lib/analytics";
-
-const COOKIE_CONSENT_KEY = "neopolis_cookie_consent";
+import { COOKIE_CONSENT_KEY, notifyCookieConsentUpdated } from "@/lib/cookieConsentState";
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
@@ -14,7 +13,7 @@ export default function CookieConsent() {
   useEffect(() => {
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!consent) {
-      const timer = setTimeout(() => setVisible(true), 1500);
+      const timer = setTimeout(() => setVisible(true), 150);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -22,12 +21,14 @@ export default function CookieConsent() {
   const handleAccept = () => {
     localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
     updateAnalyticsConsent(true);
+    notifyCookieConsentUpdated("accepted");
     setVisible(false);
   };
 
   const handleRefuse = () => {
     localStorage.setItem(COOKIE_CONSENT_KEY, "refused");
     updateAnalyticsConsent(false);
+    notifyCookieConsentUpdated("refused");
     setVisible(false);
   };
 

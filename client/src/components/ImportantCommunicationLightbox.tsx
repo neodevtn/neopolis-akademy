@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import { COOKIE_CONSENT_UPDATED_EVENT, hasStoredCookieConsent } from "@/lib/cookieConsentState";
 
 /**
  * Acknowledgement-required broadcast shown after authentication and retained across route changes.
- * Its standard Dialog layer intentionally takes priority over the lower cookie-consent banner:
- * the learner must acknowledge the important communication before selecting a cookie preference.
+ * Le choix de confidentialité reste prioritaire dans une session vierge. Le
+ * communiqué reprend ensuite son comportement bloquant jusqu’à accusé de réception.
  */
 export function ImportantCommunicationLightbox() {
   const { user, isAuthenticated } = useAuth();
@@ -18,6 +19,7 @@ export function ImportantCommunicationLightbox() {
   const communicationsQuery = trpc.training.getCommunications.useQuery(undefined, { enabled: isAuthenticated, refetchOnWindowFocus: true });
   const refetchCommunications = communicationsQuery.refetch;
   const [acknowledged, setAcknowledged] = useState(false);
+  const [cookieChoiceRecorded, setCookieChoiceRecorded] = useState(() => hasStoredCookieConsent());
   const communication = communicationsQuery.data?.pendingImportant?.[0];
   const acknowledgeMutation = trpc.training.acknowledgeCommunication.useMutation({
     onSuccess: () => { setAcknowledged(false); communicationsQuery.refetch(); },
@@ -25,11 +27,17 @@ export function ImportantCommunicationLightbox() {
   const markReadMutation = trpc.training.markCommunicationRead.useMutation({ onSuccess: () => communicationsQuery.refetch() });
 
   useEffect(() => { setAcknowledged(false); }, [communication?.id]);
+  useEffect(() => {
+    if (cookieChoiceRecorded) return;
+    const revealCommunication = () => setCookieChoiceRecorded(true);
+    window.addEventListener(COOKIE_CONSENT_UPDATED_EVENT, revealCommunication);
+    return () => window.removeEventListener(COOKIE_CONSENT_UPDATED_EVENT, revealCommunication);
+  }, [cookieChoiceRecorded]);
   useEffect(() => { if (isAuthenticated) refetchCommunications(); }, [location, isAuthenticated, refetchCommunications]);
   useEffect(() => {
     if (communication && !communication.isRead && !markReadMutation.isPending) markReadMutation.mutate({ communicationId: communication.id });
   }, [communication, markReadMutation]);
-  if (!communication) return null;
+  if (!communication || !cookieChoiceRecorded) return null;
 
   return (
     <Dialog open onOpenChange={() => undefined}>
