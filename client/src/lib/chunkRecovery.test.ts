@@ -46,6 +46,12 @@ describe("isStaleClientBundleError", () => {
     expect(isStaleClientBundleError(new TypeError('can\'t access property "default", S._result is undefined'))).toBe(true);
   });
 
+  it("recognizes Safari’s undefined lazy result signature from an obsolete lazy chunk", () => {
+    const error = new TypeError("undefined is not an object (evaluating 'E._result.default')");
+    expect(isStaleClientBundleError(error)).toBe(true);
+    expect(getClientBundleRecoveryScope(error)).toBe("lazy-default");
+  });
+
   it("uses a separate recovery scope for an obsolete lazy default after another refresh", () => {
     expect(getClientBundleRecoveryScope(new TypeError("Cannot read properties of undefined (reading 'default')"))).toBe("lazy-default");
     expect(getClientBundleRecoveryScope(new Error("vite:preloadError"))).toBe("stale-chunk");

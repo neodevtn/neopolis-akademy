@@ -72,7 +72,8 @@ const IGNORED_PATTERNS = [
 
 export function shouldIgnoreClientError(message: string): boolean {
   if (IGNORED_PATTERNS.some(pattern => message.includes(pattern))) return true;
-  return /Failed to execute ['"]importScripts['"] on ['"]WorkerGlobalScope['"].*blob:/i.test(message);
+  return /Failed to execute ['"]importScripts['"] on ['"]WorkerGlobalScope['"].*blob:/i.test(message)
+    || /undefined is not an object \(evaluating ['"][^'"]*_result\.default['"]\)/i.test(message);
 }
 
 async function sendReport(report: ErrorReport): Promise<void> {

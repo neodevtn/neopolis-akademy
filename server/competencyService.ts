@@ -143,15 +143,16 @@ export async function applyCompetencyEvent(event: CompetencyEvent) {
   ));
   const tags = new Set(event.competencyTags || []);
   const eligible = rules.filter((rule) => tags.has(rule.competencyId) && (rule.minScore === null || (event.score ?? 0) >= Number(rule.minScore)));
-  const created: Array<{ competencyId: string; points: number }> = [];
-  for (const rule of eligible) {
-    const duplicate = await db.select({ id: learnerCompetencyContributions.id }).from(learnerCompetencyContributions).where(and(
+  if (!eligible.length) return [];
+  const existing = await db.select({ ruleId: learnerCompetencyContributions.ruleId }).from(learnerCompetencyContributions).where(and(
       eq(learnerCompetencyContributions.userId, event.userId),
-      eq(learnerCompetencyContributions.ruleId, rule.id),
       eq(learnerCompetencyContributions.eventKey, event.eventKey),
-    )).limit(1);
-    if (duplicate.length) continue;
-    await db.insert(learnerCompetencyContributions).values({
+      inArray(learnerCompetencyContributions.ruleId, eligible.map((rule) => rule.id)),
+    ));
+  const existingRuleIds = new Set(existing.map((row) => row.ruleId));
+  const pending = eligible.filter((rule) => !existingRuleIds.has(rule.id));
+  if (!pending.length) return [];
+  await db.insert(learnerCompetencyContributions).values(pending.map((rule) => ({
       userId: event.userId,
       competencyId: rule.competencyId,
       ruleId: rule.id,
@@ -161,10 +162,8 @@ export async function applyCompetencyEvent(event: CompetencyEvent) {
       points: rule.points,
       score: event.score === undefined || event.score === null ? null : event.score.toFixed(2),
       evidence: event.evidence || null,
-    });
-    created.push({ competencyId: rule.competencyId, points: Number(rule.points) });
-  }
-  return created;
+    }))).onDuplicateKeyUpdate({ set: { id: sql`${learnerCompetencyContributions.id}` } });
+  return pending.map((rule) => ({ competencyId: rule.competencyId, points: Number(rule.points) }));
 }
 
 export async function getUserCompetencies(userId: number) {

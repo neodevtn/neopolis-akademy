@@ -30,6 +30,7 @@ export const BUILD_ERROR_PATTERNS = [
   '%ChunkLoadError%',
   "%Cannot read properties of undefined (reading 'default')%",
   '%can\'t access property "default", %_result is undefined%',
+  "%undefined is not an object (evaluating '%_result.default')%",
   "%Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at 'blob:%",
   '%Test error from integration test%',
 ];
@@ -46,7 +47,8 @@ export function isIgnoredClientErrorMessage(message: string): boolean {
     'Test error from integration test',
   ];
   return ignoredMessages.some((pattern) => message.includes(pattern))
-    || /Failed to execute ['"]importScripts['"] on ['"]WorkerGlobalScope['"].*blob:/i.test(message);
+    || /Failed to execute ['"]importScripts['"] on ['"]WorkerGlobalScope['"].*blob:/i.test(message)
+    || /undefined is not an object \(evaluating ['"][^'"]*_result\.default['"]\)/i.test(message);
 }
 
 export const systemRouter = router({

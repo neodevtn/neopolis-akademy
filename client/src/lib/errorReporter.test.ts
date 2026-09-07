@@ -36,6 +36,7 @@ describe("reportBoundaryError", () => {
 
   it("filters obsolete lazy chunks and blob workers while preserving application errors", () => {
     expect(shouldIgnoreClientError(new TypeError("Cannot read properties of undefined (reading 'default')").message)).toBe(true);
+    expect(shouldIgnoreClientError("undefined is not an object (evaluating 'E._result.default')")).toBe(true);
     expect(shouldIgnoreClientError("Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at 'blob:https://example.invalid/id' failed to load.")).toBe(true);
     expect(shouldIgnoreClientError("Invalid count value: -2")).toBe(false);
     expect(shouldIgnoreClientError("Failed to execute 'removeChild' on 'Node'")).toBe(false);

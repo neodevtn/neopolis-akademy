@@ -369,6 +369,17 @@ describe("System Router - Error Reporting", () => {
     })).resolves.toEqual({ accepted: false, reason: "build_error_filtered" });
   });
 
+  it("system.reportError filters Safari obsolete lazy chunks before persistence", async () => {
+    const caller = appRouter.createCaller(createAnonymousContext());
+    await expect(caller.system.reportError({
+      message: "undefined is not an object (evaluating 'E._result.default')",
+      source: "boundary",
+      stack: "at Lazy",
+      url: "https://akademy.neodev.click/login",
+      timestamp: Date.now(),
+    })).resolves.toEqual({ accepted: false, reason: "build_error_filtered" });
+  });
+
   it("system.reportError filters blob worker failures from external Chrome contexts", async () => {
     const caller = appRouter.createCaller(createAnonymousContext());
     await expect(caller.system.reportError({

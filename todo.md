@@ -2788,3 +2788,13 @@
 - [x] Récupérer une seule fois les erreurs DOM `removeChild` comme les arbres React obsolètes, sans boucle de rechargement — portée `react-tree` testée avec un seul remplacement de page par route
 - [x] Empêcher les tests d’intégration de persister de faux crashs `/test` dans le monitoring réel — garde-fou `NODE_ENV`/`VITEST` vérifié sans journal serveur
 - [x] Filtrer l’erreur `WorkerGlobalScope importScripts` provenant d’un contexte blob externe, l’application ne déclarant aucun Web Worker — filtrage client et serveur testé sans masquer les erreurs DOM applicatives
+
+## Audit et correction des issues Sentry
+- [x] Collecter les issues et feedbacks Sentry récents du projet sans consigner de donnée personnelle ni d’URL paramétrée — 11 issues non résolues examinées par métadonnées et piles anonymisées ; aucun feedback courant retourné par l’API du projet
+- [x] Dédupliquer les signatures et les rapprocher des correctifs de monitoring déjà publiés — 2 mutations DOM/Worker déjà traitées, 2 AdminTraining bornées, 4 anciens bundles Lazy, 2 erreurs de développement historiques et 1 N+1 de développement confirmé
+- [x] Reproduire et corriger chaque erreur applicative encore active, avec tests ciblés — variante Safari ajoutée à la récupération/filtrage et attribution de compétences regroupée en une lecture plus une insertion idempotente
+- [x] Exécuter la suite complète et vérifier les parcours concernés en desktop/mobile — 598 tests réussis, 2 ignorés et matrice de publication 9/9 ; les parcours candidature et administration déjà corrigés restent couverts
+- [ ] Publier puis confirmer l’état des issues Sentry et documenter les incidents anciens ou externes
+- [x] Couvrir la variante Safari `undefined is not an object (..._result.default)` dans la récupération et le filtrage des anciens bundles Lazy — portée `lazy-default`, rechargement unique et filtres client/serveur testés
+- [x] Remplacer les sept vérifications et insertions séquentielles de contributions de compétences par une lecture et une insertion groupées idempotentes — contrainte unique conservée et test dédié vérifiant trois sélections totales puis une seule insertion multi-lignes
+- [x] Confirmer que l’export `claimExamReminder` et le rendu sitemap signalés en développement compilent dans la révision courante — export présent, service importable, TypeScript et contrôles sitemap réussis
