@@ -41,4 +41,8 @@ Une barrière de non-régression, `server/courseContentHygiene.test.ts`, interdi
 | Vérification des diffs | Réussie (`git diff --check`) |
 | Matrice de publication | 9 étapes sur 9 réussies |
 
-La vérification de production complète, y compris la propagation du checkpoint et les contrôles de routes représentatives, est réalisée séparément après création du checkpoint auto-publié.
+## Vérification de production
+
+La première construction a été refusée car l’image de build utilisait pnpm 10.4.1 alors que le lockfile avait été produit avec les overrides de pnpm 10.18.0. Le manifeste a été aligné sur pnpm 10.18.0, puis l’installation gelée et le build local ont été rejoués avec succès. La version `6be17752` a ensuite été déployée avec succès.
+
+Après propagation, les dix fichiers de cours concernés répondent publiquement en JSON valide et ne contiennent ni référence `DataLab`, ni clé `DatalabExercise`, ni champ ou libellé XP externe. Le lecteur apprenant représentatif affiche l’instruction d’environnement de développement local et son média local. Une sonde administrateur authentifiée a également validé le catalogue, les compteurs de formation et la progression d’un parcours sur le domaine publié, sans écrire de donnée pédagogique.
