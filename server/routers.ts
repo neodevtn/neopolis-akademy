@@ -33,6 +33,7 @@ import { evaluateFreeResponseWithOpenRouter } from "./openrouterEvaluation";
 import { buildCourseAssistantMessages, extractCourseAssistantText, isClearlyOutOfScopeCourseAssistantQuestion, outOfScopeCourseAssistantReply } from "./courseAssistant";
 import { getAiNewsFeed } from "./aiNews";
 import { isAdministrativeRole, isSuperAdmin } from "@shared/roles";
+import { getLearningIntegrityGateDecision, requireLearningIntegrityClearance, verifyLearningIntegrityPresence } from "./learningIntegrityGate";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -137,6 +138,7 @@ export const appRouter = router({
     recordAssessmentOutcome: protectedProcedure
       .input(z.object({ sourceType: z.enum(["quiz_passed", "checkpoint_passed", "exercise_passed"]), sourceKey: z.string().min(1).max(255), eventKey: z.string().min(1).max(255), score: z.number().min(0).max(100), certificationId: z.string().optional(), courseId: z.string().optional(), lessonIndex: z.number().int().optional(), chapterIndex: z.number().int().optional() }))
       .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         await recordLearningEvent({ userId: ctx.user.id, eventType: input.sourceType, certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, chapterIndex: input.chapterIndex, score: Math.round(input.score), success: 1, metadata: { eventKey: input.eventKey } });
         const competencyTags = getContentCompetencyTags({ courseId: input.courseId, lessonIndex: input.lessonIndex, certificationId: input.certificationId });
         return { contributions: await applyCompetencyEvent({ userId: ctx.user.id, sourceType: input.sourceType, sourceKey: input.sourceKey, eventKey: input.eventKey, score: input.score, competencyTags, evidence: { certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, chapterIndex: input.chapterIndex, competencyTags } }) };
@@ -514,6 +516,16 @@ export const appRouter = router({
 
   // ============ Training Progress ============
   training: router({
+    getIntegrityGate: protectedProcedure.query(async ({ ctx }) =>
+      getLearningIntegrityGateDecision(ctx.user.id, ctx.user.role)),
+
+    verifyIntegrityPresence: protectedProcedure
+      .input(z.object({ turnstileToken: z.string().min(20).max(2048) }))
+      .mutation(async ({ ctx, input }) => {
+        const hostname = ctx.req.hostname || ctx.req.get("host")?.split(":")[0] || "akademy.neodev.click";
+        return verifyLearningIntegrityPresence({ userId: ctx.user.id, token: input.turnstileToken, hostname });
+      }),
+
     getProgress: protectedProcedure
       .input(z.object({ certificationId: z.string().optional() }).optional())
       .query(async ({ ctx, input }) => {
@@ -527,6 +539,7 @@ export const appRouter = router({
         lessonIndex: z.number(),
       }))
       .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         const result = await markLessonComplete(ctx.user.id, input.certificationId, input.courseId, input.lessonIndex);
         await recordLearningEvent({ userId: ctx.user.id, eventType: "lesson_completed", certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, success: 1 });
         const achievement = await awardCourseCompletionBadge(ctx.user, input.certificationId, input.courseId);
@@ -576,6 +589,7 @@ export const appRouter = router({
     startExamSession: protectedProcedure
       .input(z.object({ certificationId: z.string().min(2).max(200) }))
       .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         const definition = await getExamDefinition(input.certificationId);
         if (!definition?.isPublished) throw new TRPCError({ code: "NOT_FOUND", message: "Cet examen blanc n’est pas disponible." });
         const lessonCounts = getCertificationLessonCounts(input.certificationId);
@@ -596,6 +610,7 @@ export const appRouter = router({
         answers: z.array(z.object({ questionId: z.string().min(1).max(240), selectedIds: z.array(z.string().min(1).max(80)).max(10) })).max(500),
       }))
       .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         const session = await getExamSession(ctx.user.id, input.certificationId);
         if (!session) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Aucune session d’examen active à soumettre." });
         const definition = await getExamDefinition(input.certificationId);
@@ -729,6 +744,7 @@ export const appRouter = router({
         totalChapters: z.number(),
       }))
       .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         const result = await upsertChapterProgress(ctx.user.id, input.courseId, input.lessonIndex, input.chapterIndex, input.totalChapters);
         await recordLearningEvent({ userId: ctx.user.id, eventType: "chapter_progress", courseId: input.courseId, lessonIndex: input.lessonIndex, chapterIndex: input.chapterIndex, metadata: { totalChapters: input.totalChapters } });
         return result;
@@ -772,6 +788,7 @@ export const appRouter = router({
         lang: z.enum(["fr", "en"]).default("fr"),
       }))
       .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         if (input.passingScore > input.maxScore) throw new TRPCError({ code: "BAD_REQUEST", message: "Le seuil de réussite ne peut pas dépasser le score maximal." });
         let evaluation;
         try {
@@ -1223,6 +1240,7 @@ export const appRouter = router({
         })),
       }))
       .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         // Store exercise results in DB
         const { saveExerciseResult } = await import("./db");
         const priorResults = await (await import("./db")).getExerciseResults(String(ctx.user.id), input.courseId);

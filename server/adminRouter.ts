@@ -204,7 +204,7 @@ export const adminEnhancedRouter = router({
     }),
     review: protectedProcedure.input(z.object({
       userId: z.number(),
-      status: z.enum(["review_required", "confirmed", "dismissed"]),
+      status: z.enum(["review_required", "confirmed", "dismissed", "temporary_hold"]),
       notes: z.string().max(3000).optional(),
     })).mutation(async ({ ctx, input }) => {
       assertAdmin(ctx);

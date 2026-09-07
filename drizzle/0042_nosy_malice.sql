@@ -1,0 +1,1 @@
+ALTER TABLE `learner_integrity_reviews` MODIFY COLUMN `status` enum('review_required','confirmed','temporary_hold','dismissed') NOT NULL DEFAULT 'review_required';

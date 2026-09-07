@@ -27,8 +27,9 @@ describe("securityHeaders", () => {
   it("autorise explicitement le chargement et la collecte GA4 en production", () => {
     const policy = buildContentSecurityPolicy(false);
 
-    expect(policy).toContain("script-src 'self' 'unsafe-inline' https://manus-analytics.com https://www.youtube.com https://www.googletagmanager.com");
-    expect(policy).toContain("connect-src 'self' https://manus-analytics.com https://sentry.neopolis-dev.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.google.com");
+    expect(policy).toContain("script-src 'self' 'unsafe-inline' https://manus-analytics.com https://www.youtube.com https://www.googletagmanager.com https://challenges.cloudflare.com");
+    expect(policy).toContain("connect-src 'self' https://manus-analytics.com https://sentry.neopolis-dev.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.google.com https://challenges.cloudflare.com");
+    expect(policy).toContain("frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com https://challenges.cloudflare.com");
     expect(policy).toContain("img-src 'self' data: https: blob: https://www.googletagmanager.com https://*.google-analytics.com");
     expect(policy).not.toMatch(/connect-src[^;]*\shttps:\s/);
     expect(policy).not.toContain("doubleclick.net");

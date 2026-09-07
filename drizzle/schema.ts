@@ -825,7 +825,7 @@ export type InsertLearningEvent = typeof learningEvents.$inferInsert;
 export const learnerIntegrityReviews = mysqlTable("learner_integrity_reviews", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
-  status: mysqlEnum("status", ["review_required", "confirmed", "dismissed"]).notNull().default("review_required"),
+  status: mysqlEnum("status", ["review_required", "confirmed", "temporary_hold", "dismissed"]).notNull().default("review_required"),
   riskScore: int("riskScore").notNull().default(0),
   signals: json("signals").notNull(),
   reviewerId: int("reviewerId"),

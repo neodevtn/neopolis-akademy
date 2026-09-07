@@ -56,13 +56,14 @@ const GA4_CONNECT_ORIGINS = [
   "https://analytics.google.com",
 ] as const;
 const GA4_IMAGE_ORIGINS = ["https://www.googletagmanager.com", "https://*.google-analytics.com"] as const;
+const TURNSTILE_ORIGIN = "https://challenges.cloudflare.com";
 
 /**
  * Politique CSP commune. Les hôtes Analytics sont explicitement listés : aucun
  * joker de type `https:` n'est admis dans connect-src.
  */
 export function buildContentSecurityPolicy(isDev = process.env.NODE_ENV === "development") {
-  const scriptSources = ["'self'", "'unsafe-inline'", "https://manus-analytics.com", "https://www.youtube.com", ...GA4_SCRIPT_ORIGINS];
+  const scriptSources = ["'self'", "'unsafe-inline'", "https://manus-analytics.com", "https://www.youtube.com", ...GA4_SCRIPT_ORIGINS, TURNSTILE_ORIGIN];
   if (isDev) scriptSources.push("'unsafe-eval'");
 
   const connectSources = [
@@ -70,6 +71,7 @@ export function buildContentSecurityPolicy(isDev = process.env.NODE_ENV === "dev
     "https://manus-analytics.com",
     "https://sentry.neopolis-dev.com",
     ...GA4_CONNECT_ORIGINS,
+    TURNSTILE_ORIGIN,
   ];
   if (isDev) connectSources.push("ws:", "wss:");
 
@@ -82,7 +84,7 @@ export function buildContentSecurityPolicy(isDev = process.env.NODE_ENV === "dev
     "media-src 'self' blob: https:",
     "worker-src 'self' blob:",
     `connect-src ${connectSources.join(" ")}`,
-    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com",
+    `frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com ${TURNSTILE_ORIGIN}`,
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",

@@ -702,9 +702,9 @@ export default function AdminTraining() {
                     <h3 className="font-semibold text-foreground">Intégrité pédagogique · revue humaine</h3>
                     {integrity && <span className="rounded-full bg-background px-2 py-0.5 text-xs font-semibold text-foreground">Score de revue : {integrity.assessment.riskScore}/100</span>}
                   </div>
-                  <p className="mt-1 max-w-3xl text-xs text-muted-foreground">Les signaux sont des éléments de contexte pédagogiques. Ils ne prouvent pas une utilisation d’IA et ne bloquent jamais un compte automatiquement.</p>
+                  <p className="mt-1 max-w-3xl text-xs text-muted-foreground">Les signaux sont des éléments de contexte pédagogiques. Ils ne prouvent pas une utilisation d’IA ; une suspension ne concerne que les validations et les examens, et reste levable après revue.</p>
                 </div>
-                {integrity?.review && <span className="rounded-full bg-background px-2.5 py-1 text-xs font-medium text-foreground">Statut : {integrity.review.status === "dismissed" ? "Écarté" : integrity.review.status === "confirmed" ? "Suivi renforcé" : "À vérifier"}</span>}
+                {integrity?.review && <span className="rounded-full bg-background px-2.5 py-1 text-xs font-medium text-foreground">Statut : {integrity.review.status === "dismissed" ? "Écarté" : integrity.review.status === "confirmed" ? "Suivi renforcé" : integrity.review.status === "temporary_hold" ? "Validations suspendues" : "À vérifier"}</span>}
               </div>
               {learnerIntegrityQuery.isLoading ? <div className="mt-4 h-16 animate-pulse rounded-lg bg-muted" /> : integrity && (
                 <>
@@ -721,6 +721,7 @@ export default function AdminTraining() {
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "review_required" })}><AlertTriangle className="mr-1.5 h-3.5 w-3.5" />Ajouter à la revue</Button>
                     <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "confirmed" })}><Shield className="mr-1.5 h-3.5 w-3.5" />Conserver le tag de suivi</Button>
+                    {integrity?.review?.status !== "temporary_hold" ? <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "temporary_hold" })}><AlertTriangle className="mr-1.5 h-3.5 w-3.5" />Suspendre temporairement les validations</Button> : <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "dismissed" })}><ShieldCheck className="mr-1.5 h-3.5 w-3.5" />Lever la suspension</Button>}
                     <Button size="sm" variant="ghost" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "dismissed" })}>Écarter après revue</Button>
                   </div>
                 </>

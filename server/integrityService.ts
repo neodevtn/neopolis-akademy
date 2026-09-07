@@ -6,7 +6,7 @@ import { assessLearningIntegrity, type IntegrityAssessment } from "../shared/int
 const INTEGRITY_TAG_NAME = "Suspicion d’intégrité · à vérifier";
 const INTEGRITY_TAG_COLOR = "#d97706";
 
-type ReviewStatus = "review_required" | "confirmed" | "dismissed";
+type ReviewStatus = "review_required" | "confirmed" | "dismissed" | "temporary_hold";
 
 async function assessmentForUser(userId: number): Promise<IntegrityAssessment> {
   const assessments = await assessmentsForUsers([userId]);

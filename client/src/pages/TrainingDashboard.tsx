@@ -361,7 +361,7 @@ export default function TrainingDashboard() {
 
           <div className="mb-6 flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3 text-sm text-muted-foreground">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-            <p>{t({ en: "Integrity reminder: complete activities yourself and use learning support responsibly. Unusual activity patterns may be reviewed by the academic team; no account is blocked automatically.", fr: "Rappel d’intégrité : réalisez les activités vous-même et utilisez les outils d’aide de manière responsable. Des comportements inhabituels peuvent être revus par l’équipe pédagogique ; aucun compte n’est bloqué automatiquement." })}</p>
+            <p>{t({ en: "Integrity reminder: complete activities yourself and use learning support responsibly. Unusual activity may trigger a short presence verification or a temporary review of validations and exams; access to course content and previously earned progress remain available.", fr: "Rappel d’intégrité : réalisez les activités vous-même et utilisez les outils d’aide de manière responsable. Une activité inhabituelle peut déclencher une courte vérification de présence ou une revue temporaire des validations et examens ; l’accès aux cours et les progrès déjà acquis restent disponibles." })}</p>
           </div>
 
           {orientationAccess.showReminder && (
