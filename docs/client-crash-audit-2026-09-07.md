@@ -55,3 +55,7 @@ La variante Safari `undefined is not an object (evaluating 'E._result.default')`
 L’export `claimExamReminder` est bien présent dans `server/db.ts` et importé par le service actif. Le rendu sitemap compile et ses contrôles publics restent réussis ; les deux issues de développement correspondantes sont donc historiques.
 
 L’API Sentry des feedbacks du projet ne retourne aucun feedback dans l’état courant. Aucun défaut fonctionnel supplémentaire n’a été identifié par cette source lors de cet audit.
+
+Après propagation du correctif, le bundle public contient la nouvelle signature Safari de récupération. La page `/login`, concernée par l’ancienne issue Safari, a été chargée sur la révision publiée : formulaire complet rendu, aucune ErrorBoundary et aucune erreur Lazy visible.
+
+La relecture Sentry post-publication retourne toujours 11 groupes non résolus administrativement, mais aucune date de dernière occurrence n’a évolué : le plus récent reste la mutation `removeChild` du 6 septembre, antérieure à sa correction. Les groupes AdminTraining datent du 5 septembre, les quatre bundles Lazy du 31 août au 3 septembre, le N+1 et l’export serveur du 1er septembre. Aucun nouvel événement n’est apparu après la publication de cette révision. Les groupes n’ont pas été marqués « résolus » dans Sentry, car cette action modifierait leur statut externe ; le présent audit se limite à la correction, à la qualification et à la vérification en lecture seule.
