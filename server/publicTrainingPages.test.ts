@@ -212,6 +212,19 @@ describe("pages publiques de formations IA", () => {
       const robotsResponse = await fetch(`${baseUrl}/robots.txt`, { redirect: "manual" });
       expect(robotsResponse.status).toBe(200);
       expect(await robotsResponse.text()).toContain("Sitemap: https://akademy.neodev.click/sitemap.xml");
+
+      // Search Console peut conserver des sous-sitemaps envoyés avant la migration
+      // vers /sitemaps/. Ils doivent rester lisibles sans redirection.
+      for (const sitemapFile of getPublicTrainingSitemapFiles()) {
+        const legacyPath = sitemapFile.path.replace("/sitemaps/", "/");
+        const legacyResponse = await fetch(`${baseUrl}${legacyPath}`, { redirect: "manual", headers: { "user-agent": userAgents[0] } });
+        const legacyBody = await legacyResponse.text();
+        expect(legacyResponse.status).toBe(200);
+        expect(legacyResponse.headers.get("content-type")).toBe("application/xml; charset=utf-8");
+        expect(legacyResponse.headers.get("location")).toBeNull();
+        expect(legacyResponse.headers.get("set-cookie")).toBeNull();
+        expect(legacyBody).toBe(sitemapFile.xml);
+      }
     } finally {
       await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
     }

@@ -448,5 +448,12 @@ export function registerPublicTrainingPages(app: Express) {
     const sitemap = renderPublicTrainingSitemapFile(`/sitemaps/${req.params.sitemapFile}`);
     return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");
   });
+  // Search Console conserve les soumissions directes historiques. Ces alias doivent
+  // donc rester des documents XML 200 (et non des redirections ou le repli SPA).
+  app.get(/^\/(static|formations-[1-9]\d*)\.xml$/, (req: Request, res: Response) => {
+    const sitemapName = req.params[0];
+    const sitemap = sitemapName ? renderPublicTrainingSitemapFile(`/sitemaps/${sitemapName}.xml`) : null;
+    return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");
+  });
   app.get("/robots.txt", (_req: Request, res: Response) => res.status(200).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send(`User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml\n`));
 }

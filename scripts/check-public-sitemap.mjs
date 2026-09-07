@@ -102,6 +102,12 @@ try {
       const result = await text(`${baseUrl}${sitemapPath}`, { "user-agent": userAgent });
       assertXmlResponse(result.response, result.body, `${sitemapPath} (${agent})`, "urlset");
       userAgentChecks.push({ agent, path: sitemapPath, status: result.response.status, contentType: result.response.headers.get("content-type") });
+
+      const legacyPath = sitemapPath.replace("/sitemaps/", "/");
+      const legacy = await text(`${baseUrl}${legacyPath}`, { "user-agent": userAgent });
+      assertXmlResponse(legacy.response, legacy.body, `${legacyPath} historique (${agent})`, "urlset");
+      if (legacy.body !== result.body) fail(`${legacyPath}: le sitemap historique diffère du sitemap actif ${sitemapPath}.`);
+      userAgentChecks.push({ agent, path: legacyPath, status: legacy.response.status, contentType: legacy.response.headers.get("content-type"), legacy: true });
     }
   }
 
