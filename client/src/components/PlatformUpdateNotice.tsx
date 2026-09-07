@@ -3,7 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { extractPlatformVersion, isLearnerLearningRoute, shouldShowVersionUpdate } from "@/lib/platformUpdate";
 
-const POLL_INTERVAL_MS = 60_000;
+// Une vérification régulière, complétée par le retour au premier plan, limite
+// la fenêtre pendant laquelle une session ouverte peut conserver un bundle obsolète.
+const POLL_INTERVAL_MS = 45_000;
 
 export function PlatformUpdateNotice() {
   const [updateAvailable, setUpdateAvailable] = useState(false);
