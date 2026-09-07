@@ -395,6 +395,17 @@ describe("System Router - Error Reporting", () => {
     })).resolves.toEqual({ accepted: false, reason: "build_error_filtered" });
   });
 
+  it("system.reportError filters obsolete named overlay imports before persistence", async () => {
+    const caller = appRouter.createCaller(createAnonymousContext());
+    await expect(caller.system.reportError({
+      message: "Cannot read properties of undefined (reading 'DeferredAuthenticatedOverlays')",
+      source: "boundary",
+      stack: "at Lazy",
+      url: "https://akademy.neodev.click/training?tab=parrainage",
+      timestamp: Date.now(),
+    })).resolves.toEqual({ accepted: false, reason: "build_error_filtered" });
+  });
+
   it("system.reportError filters Safari obsolete lazy chunks before persistence", async () => {
     const caller = appRouter.createCaller(createAnonymousContext());
     await expect(caller.system.reportError({

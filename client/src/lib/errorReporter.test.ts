@@ -36,6 +36,7 @@ describe("reportBoundaryError", () => {
 
   it("filters obsolete lazy chunks and blob workers while preserving application errors", () => {
     expect(shouldIgnoreClientError(new TypeError("Cannot read properties of undefined (reading 'default')").message)).toBe(true);
+    expect(shouldIgnoreClientError(new TypeError("Cannot read properties of undefined (reading 'DeferredAuthenticatedOverlays')").message)).toBe(true);
     expect(shouldIgnoreClientError("undefined is not an object (evaluating 'E._result.default')")).toBe(true);
     expect(shouldIgnoreClientError("Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at 'blob:https://example.invalid/id' failed to load.")).toBe(true);
     expect(shouldIgnoreClientError("Invalid count value: -2")).toBe(false);
@@ -45,6 +46,14 @@ describe("reportBoundaryError", () => {
   it("does not forward an obsolete lazy chunk to Sentry or the internal monitor", async () => {
     const fetchSpy = vi.mocked(fetch);
     reportBoundaryError(new TypeError("Cannot read properties of undefined (reading 'default')"), "at Lazy");
+    await Promise.resolve();
+    expect(captureException).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("does not forward an obsolete named overlay import to Sentry or the internal monitor", async () => {
+    const fetchSpy = vi.mocked(fetch);
+    reportBoundaryError(new TypeError("Cannot read properties of undefined (reading 'DeferredAuthenticatedOverlays')"), "at Lazy");
     await Promise.resolve();
     expect(captureException).not.toHaveBeenCalled();
     expect(fetchSpy).not.toHaveBeenCalled();

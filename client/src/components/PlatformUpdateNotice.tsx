@@ -1,14 +1,19 @@
 import { RefreshCw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "wouter";
 import { extractPlatformVersion, isLearnerLearningRoute, shouldShowVersionUpdate } from "@/lib/platformUpdate";
 
 const POLL_INTERVAL_MS = 60_000;
 
 export function PlatformUpdateNotice() {
   const [updateAvailable, setUpdateAvailable] = useState(false);
-  const [dismissed, setDismissed] = useState(() => typeof window !== "undefined" && sessionStorage.getItem("neopolis-update-dismissed") === "true");
+  const [availableVersion, setAvailableVersion] = useState<string | null>(null);
+  const [dismissedVersion, setDismissedVersion] = useState(() =>
+    typeof window !== "undefined" ? sessionStorage.getItem("neopolis-update-dismissed-version") : null,
+  );
   const loadedVersionRef = useRef<string | null>(null);
-  const enabled = typeof window !== "undefined" && isLearnerLearningRoute(window.location.pathname);
+  const [location] = useLocation();
+  const enabled = isLearnerLearningRoute(location);
 
   useEffect(() => {
     if (!enabled) {
@@ -29,6 +34,7 @@ export function PlatformUpdateNotice() {
           return;
         }
         if (!cancelled && shouldShowVersionUpdate(loadedVersion, availableVersion)) {
+          setAvailableVersion(availableVersion);
           setUpdateAvailable(true);
         }
       } catch {
@@ -38,12 +44,20 @@ export function PlatformUpdateNotice() {
 
     void checkForUpdate();
     const interval = window.setInterval(() => void checkForUpdate(), POLL_INTERVAL_MS);
+    const checkWhenVisible = () => {
+      if (document.visibilityState === "visible") void checkForUpdate();
+    };
+    window.addEventListener("focus", checkWhenVisible);
+    document.addEventListener("visibilitychange", checkWhenVisible);
     return () => {
       cancelled = true;
       window.clearInterval(interval);
+      window.removeEventListener("focus", checkWhenVisible);
+      document.removeEventListener("visibilitychange", checkWhenVisible);
     };
   }, [enabled]);
 
+  const dismissed = Boolean(availableVersion && dismissedVersion === availableVersion);
   if (!enabled || !updateAvailable || dismissed) return null;
 
   return (
@@ -53,7 +67,7 @@ export function PlatformUpdateNotice() {
           <p className="text-sm font-semibold">Une mise à jour de Neopolis Akademy est disponible.</p>
           <p className="text-sm">Rafraîchissez maintenant pour poursuivre votre cours avec la version la plus récente.</p>
         </div>
-        <div className="flex items-center gap-2"><button type="button" onClick={() => window.location.reload()} className="inline-flex shrink-0 items-center justify-center gap-2 bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><RefreshCw className="h-4 w-4" aria-hidden="true" />Rafraîchir</button><button type="button" aria-label="Masquer cette notification" onClick={() => { sessionStorage.setItem("neopolis-update-dismissed", "true"); setDismissed(true); }} className="rounded-md p-2 text-amber-950 hover:bg-amber-100"><X className="h-4 w-4" /></button></div>
+        <div className="flex items-center gap-2"><button type="button" onClick={() => window.location.reload()} className="inline-flex shrink-0 items-center justify-center gap-2 bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><RefreshCw className="h-4 w-4" aria-hidden="true" />Rafraîchir</button><button type="button" aria-label="Masquer cette notification" onClick={() => { if (availableVersion) sessionStorage.setItem("neopolis-update-dismissed-version", availableVersion); setDismissedVersion(availableVersion); }} className="rounded-md p-2 text-amber-950 hover:bg-amber-100"><X className="h-4 w-4" /></button></div>
       </div>
     </div>
   );

@@ -25,5 +25,6 @@ export function shouldShowVersionUpdate(
 }
 
 export function isLearnerLearningRoute(pathname: string): boolean {
-  return pathname === "/training" || pathname.startsWith("/training/") || pathname.startsWith("/mock-exam/");
+  const routePath = pathname.split(/[?#]/, 1)[0] || "/";
+  return routePath === "/training" || routePath.startsWith("/training/") || routePath.startsWith("/mock-exam/");
 }

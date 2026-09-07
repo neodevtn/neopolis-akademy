@@ -110,6 +110,13 @@ describe("isStaleClientBundleError", () => {
     expect(replace).toHaveBeenCalledOnce();
   });
 
+  it("autorise une récupération distincte pour deux imports nommés obsolètes sur la même route", () => {
+    const { replace } = installRecoveryWindow();
+    expect(retryStaleClientBundle(new TypeError("Cannot read properties of undefined (reading 'DeferredAuthenticatedOverlays')"))).toBe(true);
+    expect(retryStaleClientBundle(new TypeError("Cannot read properties of undefined (reading 'PlatformUpdateNotice')"))).toBe(true);
+    expect(replace).toHaveBeenCalledTimes(2);
+  });
+
   it("autorise un seul rechargement distinct si la signature suivante est celle d’un arbre React obsolète", () => {
     const { replace } = installRecoveryWindow();
     expect(retryStaleClientBundle(new TypeError("Cannot read properties of undefined (reading 'default')"))).toBe(true);

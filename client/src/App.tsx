@@ -9,6 +9,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import DeferredCookieConsent from "./components/DeferredCookieConsent";
+import DeferredAuthenticatedOverlays from "./components/DeferredAuthenticatedOverlays";
 
 // ─── Code-splitting: lazy-load all heavy pages ───
 const Home = lazy(() => import("./pages/Home"));
@@ -33,7 +34,6 @@ const AdvancedDiagnosticIA = lazy(() => import("./pages/AdvancedDiagnosticIA"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const TrainingProgressArea = lazy(() => import("./components/TrainingProgressArea"));
-const DeferredAuthenticatedOverlays = lazy(() => import("./components/DeferredAuthenticatedOverlays"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -116,7 +116,7 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <AnalyticsRouteTracker />
-            <Suspense fallback={null}><DeferredAuthenticatedOverlays /></Suspense>
+            <DeferredAuthenticatedOverlays />
             <Router />
             <DeferredCookieConsent />
           </TooltipProvider>

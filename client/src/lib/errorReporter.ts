@@ -67,6 +67,11 @@ const IGNORED_PATTERNS = [
   'Loading chunk',
   'ChunkLoadError',
   "Cannot read properties of undefined (reading 'default')",
+  "Cannot read properties of undefined (reading 'DeferredAuthenticatedOverlays')",
+  "Cannot read properties of undefined (reading 'SentryUserSync')",
+  "Cannot read properties of undefined (reading 'PlatformUpdateNotice')",
+  "Cannot read properties of undefined (reading 'AchievementCelebration')",
+  "Cannot read properties of undefined (reading 'ImportantCommunicationLightbox')",
   'can\'t access property "default"',
 ];
 

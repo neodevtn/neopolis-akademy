@@ -27,6 +27,12 @@ export function getClientBundleRecoveryScope(error: unknown): "stale-chunk" | "l
   return "stale-chunk";
 }
 
+function getClientBundleRecoveryDiscriminator(error: unknown): string {
+  const message = error instanceof Error ? `${error.message}\n${error.stack || ""}` : String(error || "");
+  const namedImport = message.match(/reading ['"](DeferredAuthenticatedOverlays|SentryUserSync|PlatformUpdateNotice|AchievementCelebration|ImportantCommunicationLightbox|ProcessStepper|default)['"]/i)?.[1];
+  return namedImport ? namedImport.toLowerCase() : "generic";
+}
+
 /**
  * Retries once after a deployment when a cached HTML page references an old
  * hashed JavaScript chunk. A second failure remains visible instead of looping.
@@ -35,7 +41,8 @@ export function retryStaleClientBundle(error: unknown): boolean {
   if (typeof window === "undefined" || !isRecoverableClientRenderError(error)) return false;
 
   try {
-    const retryKey = `${RECOVERY_KEY}:${window.location.pathname}:${getClientBundleRecoveryScope(error)}`;
+    const scope = getClientBundleRecoveryScope(error);
+    const retryKey = `${RECOVERY_KEY}:${window.location.pathname}:${scope}:${scope === "lazy-default" ? getClientBundleRecoveryDiscriminator(error) : "generic"}`;
     if (window.sessionStorage.getItem(retryKey)) return false;
     window.sessionStorage.setItem(retryKey, "1");
     const recoveryUrl = new URL(window.location.href);

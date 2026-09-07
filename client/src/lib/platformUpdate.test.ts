@@ -14,8 +14,9 @@ describe("platform update detection", () => {
     expect(shouldShowPlatformUpdate(null, "/assets/index-new.js")).toBe(false);
   });
 
-  it("limits the notification to learner learning routes", () => {
+  it("active la notification sur les parcours, y compris l’onglet Parrainage", () => {
     expect(isLearnerLearningRoute("/training")).toBe(true);
+    expect(isLearnerLearningRoute("/training?tab=parrainage")).toBe(true);
     expect(isLearnerLearningRoute("/training/ai_pour_les_nuls/ia_pour_les_nuls__01")).toBe(true);
     expect(isLearnerLearningRoute("/mock-exam/claude_certified_developer_foundations")).toBe(true);
     expect(isLearnerLearningRoute("/admin/training")).toBe(false);
