@@ -22,7 +22,7 @@ import { createAdminNotification } from "./notificationsDb";
 import { createLearnerGroup, getCourseLifecycleState, getLearnerGroupDetail, listLearnerGroups, replaceLearnerGroupCourses, replaceLearnerGroupMembers, userCanAccessCourse } from "./db";
 import { updateExamSessionState } from "./db";
 import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getContentCompetencyTags, getGamificationConfig, getUserCompetencies, getUserGamification, replaceCompetencyFramework, saveGamificationConfig } from "./competencyService";
-import { getCertificationLessonCounts, getExamDefinition, getQuestionsForCertification, selectExamQuestions, toLearnerExamQuestions, type ExamQuestion } from "./examDefinition";
+import { getCertificationLessonCounts, getExamDefinition, getQuestionsForCertification, selectExamQuestions, toLearnerExamQuestions, toLearnerExamReview, type ExamQuestion } from "./examDefinition";
 import { scoreStoredExamSession, type StoredExamAnswer } from "./examAttemptScoring";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
@@ -626,7 +626,7 @@ export const appRouter = router({
         const attempt = await createExamAttempt({ userId: ctx.user.id, certificationId: input.certificationId, score: result.scaled, totalQuestions: result.total, correctAnswers: result.correct, passed: result.passed ? 1 : 0, domainScores: result.domainResults, startedAt: session.startedAt, timeLimitMinutes: definition.timeLimit, timedOut: result.timedOut ? 1 : 0 });
         await clearExamSession(ctx.user.id, input.certificationId);
         const achievement = result.passed ? await awardCertification(ctx.user, input.certificationId, result.scaled, Number(attempt.id)) : null;
-        return { ...attempt, ...result, achievement };
+        return { ...attempt, ...result, achievement, reviewQuestions: toLearnerExamReview(questions) };
       }),
 
     getExamHistory: protectedProcedure

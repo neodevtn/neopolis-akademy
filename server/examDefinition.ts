@@ -175,11 +175,25 @@ export function selectExamQuestions(questions: ExamQuestion[], configuration: Ex
 
 /** Projection sans correction destinée exclusivement au navigateur pendant l’épreuve. */
 export function toLearnerExamQuestions(questions: ExamQuestion[]) {
-  return questions.map(({ id, certificationId, domain, question, choices }) => ({
+  return questions.map(({ id, certificationId, domain, question, choices, correctChoiceIds }) => ({
     id,
     certificationId,
     domain,
     question,
     choices: choices.map(({ id: choiceId, text }) => ({ id: choiceId, text })),
+    // Le nombre de réponses attendues guide l’interface sans révéler les choix corrects.
+    requiredSelections: Math.max(1, correctChoiceIds.length),
+  }));
+}
+
+/** Revue détaillée rendue uniquement après une soumission d’examen validée côté serveur. */
+export function toLearnerExamReview(questions: ExamQuestion[]) {
+  return questions.map(({ id, domain, question, choices, correctChoiceIds, explanation }) => ({
+    id,
+    domain,
+    question,
+    choices: choices.map(({ id: choiceId, text }) => ({ id: choiceId, text })),
+    correctChoiceIds: [...correctChoiceIds],
+    explanation,
   }));
 }

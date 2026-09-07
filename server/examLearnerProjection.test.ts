@@ -10,7 +10,7 @@ describe("projection apprenant d’examen", () => {
       choices: [{ id: "a", text: "A" }, { id: "b", text: "B" }],
       correctChoiceIds: ["a"], explanation: "Correction réservée au serveur",
     }]);
-    expect(question).toEqual({ id: "question_test", certificationId: "certification_test", domain: "Fondamentaux", question: "Question ?", choices: [{ id: "a", text: "A" }, { id: "b", text: "B" }] });
+    expect(question).toEqual({ id: "question_test", certificationId: "certification_test", domain: "Fondamentaux", question: "Question ?", choices: [{ id: "a", text: "A" }, { id: "b", text: "B" }], requiredSelections: 1 });
     expect(JSON.stringify(question)).not.toContain("correctChoiceIds");
     expect(JSON.stringify(question)).not.toContain("Correction réservée");
   });

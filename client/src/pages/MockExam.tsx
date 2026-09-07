@@ -70,6 +70,7 @@ export default function MockExam() {
 
   // Exam state
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
+  const [reviewQuestions, setReviewQuestions] = useState<any[]>([]);
   const [examState, setExamState] = useState<ExamState>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -104,6 +105,7 @@ export default function MockExam() {
         trackEvent("certificate_earned", { certification_id: certId, content_type: "certificate" });
       }
       setVerifiedScore(result);
+      setReviewQuestions(Array.isArray(result?.reviewQuestions) ? result.reviewQuestions : []);
       if (result.achievement) announceAchievement(result.achievement);
       if (result.passed && !confettiFired.current) {
         confettiFired.current = true;
@@ -115,6 +117,7 @@ export default function MockExam() {
     onSuccess: (session) => {
       if (certId) trackEvent("certificate_mock_start", { certification_id: certId, content_type: "certification_mock", language: lang });
       setExamQuestions(session.questions);
+      setReviewQuestions([]);
       setAnswers([]);
       setCurrentIndex(0);
       setSelectedForCurrent([]);
@@ -435,6 +438,7 @@ export default function MockExam() {
     const isLowTime = timeRemaining < 300;
     const hasSelection = selectedForCurrent.length > 0;
     const isLastQuestion = currentIndex === examQuestions.length - 1;
+    const requiredSelections = Number.isInteger(currentQ.requiredSelections) ? Math.max(1, currentQ.requiredSelections) : 1;
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -483,9 +487,9 @@ export default function MockExam() {
               {typeof currentQ.question === "object" ? t(currentQ.question) : currentQ.question}
             </p>
 
-            {currentQ.correctChoiceIds.length > 1 && (
+            {requiredSelections > 1 && (
               <p className="text-xs text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg mb-4 inline-block">
-                {t({ en: `Select ${currentQ.correctChoiceIds.length} answers`, fr: `Sélectionnez ${currentQ.correctChoiceIds.length} réponses` })}
+                {t({ en: `Select ${requiredSelections} answers`, fr: `Sélectionnez ${requiredSelections} réponses` })}
               </p>
             )}
 
@@ -630,12 +634,13 @@ export default function MockExam() {
           </div>
         )}
 
-        {/* Question Review */}
-        <h2 className="font-semibold text-slate-800 mb-4">
-          {t({ en: "Question Review", fr: "Révision des questions" })}
-        </h2>
-        <div className="space-y-4">
-          {examQuestions.map((q: any, idx: number) => {
+        {/* Question Review — les corrections ne sont renvoyées qu’après validation serveur. */}
+        {score && reviewQuestions.length > 0 ? <>
+          <h2 className="font-semibold text-slate-800 mb-4">
+            {t({ en: "Question Review", fr: "Révision des questions" })}
+          </h2>
+          <div className="space-y-4">
+          {reviewQuestions.map((q: any, idx: number) => {
             const answer = answers.find((a) => a.questionId === q.id);
             const correctIds = q.correctChoiceIds;
             const selectedIds = answer?.selectedIds || [];
@@ -694,7 +699,10 @@ export default function MockExam() {
               </div>
             );
           })}
-        </div>
+          </div>
+        </> : score && <div className="mb-6 rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
+          {t({ en: "Your result has been validated. Detailed correction is not available for this attempt.", fr: "Votre résultat a été validé. La correction détaillée n’est pas disponible pour cette tentative." })}
+        </div>}
 
         {/* Actions */}
         <div className="flex items-center justify-center gap-4 mt-8 pb-8">
