@@ -33,7 +33,7 @@ const AdvancedDiagnosticIA = lazy(() => import("./pages/AdvancedDiagnosticIA"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const TrainingProgressArea = lazy(() => import("./components/TrainingProgressArea"));
-const DeferredAuthenticatedOverlays = lazy(() => import("./components/DeferredAuthenticatedOverlays").then((module) => ({ default: module.DeferredAuthenticatedOverlays })));
+const DeferredAuthenticatedOverlays = lazy(() => import("./components/DeferredAuthenticatedOverlays"));
 
 // ─── Loading fallback ───
 function PageLoader() {

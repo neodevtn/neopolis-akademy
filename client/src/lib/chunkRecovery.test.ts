@@ -42,6 +42,16 @@ describe("isStaleClientBundleError", () => {
     expect(isStaleClientBundleError(new TypeError("Cannot read properties of undefined (reading 'default')"))).toBe(true);
   });
 
+  it("recognizes an obsolete named authenticated overlay import", () => {
+    const error = new TypeError("Cannot read properties of undefined (reading 'DeferredAuthenticatedOverlays')");
+    expect(isStaleClientBundleError(error)).toBe(true);
+    expect(getClientBundleRecoveryScope(error)).toBe("lazy-default");
+  });
+
+  it("recognizes an obsolete named homepage module import", () => {
+    expect(isStaleClientBundleError(new TypeError("Cannot read properties of undefined (reading 'ProcessStepper')"))).toBe(true);
+  });
+
   it("recognizes Firefox’s undefined lazy result signature from an obsolete lazy chunk", () => {
     expect(isStaleClientBundleError(new TypeError('can\'t access property "default", S._result is undefined'))).toBe(true);
   });

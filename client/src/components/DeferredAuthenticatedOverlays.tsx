@@ -38,3 +38,5 @@ export function DeferredAuthenticatedOverlays() {
     </Suspense>
   );
 }
+
+export default DeferredAuthenticatedOverlays;
