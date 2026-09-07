@@ -13,6 +13,7 @@ Cette livraison traite les trois constats critiques identifiés par l’audit in
 | Rejeu webhook | Chaque événement signé est inscrit avec une clé unique; les mises à jour de livraison sont idempotentes et peuvent être rejouées après un incident transitoire. | La migration ajoute `webhookEventId` et son index unique à `email_events`. |
 | Invitations | La création de compte exige un mot de passe de 12 à 128 caractères. Une invitation pour une adresse déjà inscrite ne modifie jamais le mot de passe. | Le compte doit se connecter, puis revendiquer l’invitation avec une adresse qui correspond exactement à son compte. |
 | Banque d’examen | Les fichiers de questions et de configuration ont quitté `client/public` pour `server/data`, copié uniquement dans `dist/data` au build serveur. | Aucune URL statique ne sert plus la banque d’examen ; le repli de quiz demande une projection authentifiée, puis une correction serveur après réponse. |
+| Révocation historique | Les deux anciennes URLs publiques sont interceptées avant le middleware de fichiers statiques. | Toute demande reçoit `410 Gone` avec `Cache-Control: no-store, max-age=0`, y compris si un cache a connu une version antérieure du fichier. |
 
 ## Validation locale
 

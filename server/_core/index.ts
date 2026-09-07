@@ -19,6 +19,7 @@ import { scheduledCommunicationSendHandler } from "../scheduledCommunicationSend
 import { scheduledExamReminderHandler } from "../scheduledExamReminder";
 import resendWebhookRouter from "../resendWebhook";
 import { registerPublicTrainingPages } from "../publicTrainingPages";
+import { registerExamAssetRevocations } from "../examAssetRevocation";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -91,6 +92,7 @@ async function startServer() {
       createContext,
     })
   );
+  registerExamAssetRevocations(app);
   registerPublicTrainingPages(app);
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {

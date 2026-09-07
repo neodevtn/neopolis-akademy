@@ -2805,7 +2805,7 @@
 - [x] Relire la liste Sentry après l’opération, consigner les éventuelles issues restantes et publier le suivi final — API Sentry : zéro issue non résolue sur sept jours et onze groupes cibles confirmés au statut résolu
 
 ## Remédiations critiques issues de l’audit plateforme
-- [x] Empêcher toute exposition des corrections et réponses attendues d’examen avant soumission, sans modifier le verrouillage, la minuterie ou le score serveur — projection apprenant sans réponse attendue ni explication, test dédiée
+- [x] Empêcher toute exposition des corrections et réponses attendues d’examen avant soumission, sans modifier le verrouillage, la minuterie ou le score serveur — projection apprenant sans réponse attendue ni explication, banque déplacée hors des assets publics et anciennes URLs révoquées en `410 no-store`
 - [x] Authentifier les webhooks Resend, imposer une protection anti-rejeu et minimiser les journaux sans donnée personnelle — signature Svix sur corps brut, horodatage borné, reçu durable unique et test HTTP local
 - [x] Sécuriser l’acceptation des invitations : politique de mot de passe homogène, limitation dédiée et interdiction de réinitialiser le mot de passe d’un compte existant — connexion et correspondance d’adresse obligatoires pour revendiquer une invitation existante
 - [x] Ajouter les migrations, secrets et tests de non-régression nécessaires aux garanties d’intégrité et d’idempotence — migration email_events, index unique, secret sécurisé et neuf tests ciblés réussis
