@@ -25,6 +25,14 @@ Le correctif conserve les chemins canoniques sous `/sitemaps/`, mais sert désor
 
 La suite complète a validé 611 tests réussis et 2 ignorés. Le contrôle sitemap a validé 6 fichiers, 909 URL publiques, sans doublon ni route privée ; la distribution contrôlée est de 305 URLs françaises, 302 anglaises et 302 arabes. La sonde vérifie aussi les anciens chemins racine auprès de Googlebot desktop et smartphone.
 
+## Vérification de production après publication
+
+Après propagation de la version `d8f79ef0`, l’index, les six chemins canoniques et les six alias historiques répondent en HTTP 200 avec `application/xml; charset=utf-8` et une déclaration XML UTF-8, pour les profils Googlebot desktop et smartphone. Aucun de ces chemins ne redirige, ne demande de cookie ou ne bascule vers le HTML de l’application.
+
+La sonde exhaustive de production a ensuite validé les 6 fichiers, les 909 URLs publiques et les alias historiques. Le contrôle utilise désormais un débit prudent et des reprises limitées pour ne pas assimiler une limitation transitoire HTTP 429 de la sonde elle-même à une erreur de sitemap.
+
+Search Console peut conserver l’état de dernière récupération antérieur jusqu’à sa prochaine lecture. Désormais, les URLs exactes affichées dans la capture retournent un XML valide ; il est donc recommandé de conserver uniquement `/sitemap.xml` comme soumission principale et de laisser Google réexplorer les anciens enregistrements, sans recréer de nouveaux sous-sitemaps manuellement.
+
 ## Références
 
 [1]: https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap "Google Search Central — Build and submit a sitemap"

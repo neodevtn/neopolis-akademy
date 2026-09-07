@@ -9,13 +9,24 @@ const fail = (message) => {
   throw new Error(message);
 };
 
+const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
 const text = async (url, headers = {}) => {
-  const response = await fetch(url, {
-    redirect: "manual",
-    signal: AbortSignal.timeout(15_000),
-    headers: { "x-neopolis-qa-probe": "1", ...headers },
-  });
-  return { response, body: await response.text() };
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const response = await fetch(url, {
+      redirect: "manual",
+      signal: AbortSignal.timeout(15_000),
+      headers: { "x-neopolis-qa-probe": "1", ...headers },
+    });
+    const body = await response.text();
+    const retryable = response.status === 408 || response.status === 429 || response.status >= 500;
+    if (!retryable || attempt === 4) return { response, body };
+
+    const retryAfter = Number(response.headers.get("retry-after"));
+    await wait(Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1_000 : 500 * (attempt + 1));
+  }
+
+  throw new Error(`Sonde sitemap injoignable : ${url}`);
 };
 
 const googleUserAgents = {
@@ -126,7 +137,9 @@ try {
   if (!urls.length) fail("Le sitemap ne contient aucune URL.");
   if (new Set(urls).size !== urls.length) fail("Le sitemap contient des URL dupliquées.");
 
-  const checks = await inBatches(urls, 12, inspectUrl);
+  const requestedBatchSize = Number(process.env.SITEMAP_QA_BATCH_SIZE || 3);
+  const batchSize = Number.isInteger(requestedBatchSize) && requestedBatchSize >= 1 && requestedBatchSize <= 12 ? requestedBatchSize : 3;
+  const checks = await inBatches(urls, batchSize, inspectUrl);
   const distribution = checks.reduce((totals, check) => {
     totals.byType[check.type] = (totals.byType[check.type] || 0) + 1;
     totals.byLanguage[check.language] = (totals.byLanguage[check.language] || 0) + 1;
