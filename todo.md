@@ -2798,3 +2798,8 @@
 - [x] Couvrir la variante Safari `undefined is not an object (..._result.default)` dans la récupération et le filtrage des anciens bundles Lazy — portée `lazy-default`, rechargement unique et filtres client/serveur testés
 - [x] Remplacer les sept vérifications et insertions séquentielles de contributions de compétences par une lecture et une insertion groupées idempotentes — contrainte unique conservée et test dédié vérifiant trois sélections totales puis une seule insertion multi-lignes
 - [x] Confirmer que l’export `claimExamReminder` et le rendu sitemap signalés en développement compilent dans la révision courante — export présent, service importable, TypeScript et contrôles sitemap réussis
+
+## Résolution des anciennes issues Sentry
+- [x] Vérifier en lecture seule qu’aucune issue n’a reçu de nouvelle occurrence depuis le dernier déploiement corrigé — la dernière occurrence reste datée du 6 septembre à 21:11 UTC, avant le déploiement du 7 septembre
+- [x] Marquer comme résolues uniquement les issues historiques couvertes ou qualifiées, sans supprimer leur historique — 11 groupes résolus avec succès après confirmation explicite du propriétaire
+- [x] Relire la liste Sentry après l’opération, consigner les éventuelles issues restantes et publier le suivi final — API Sentry : zéro issue non résolue sur sept jours et onze groupes cibles confirmés au statut résolu
