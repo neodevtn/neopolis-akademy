@@ -22,3 +22,7 @@ Les tests ciblés couvrent la projection d’examen, l’absence de banque stati
 ## Exploitation
 
 Le secret de signature Resend est configuré exclusivement dans l’environnement sécurisé et ne doit jamais être ajouté au dépôt, à un journal ou à un rapport. Les tentatives de webhook ne journalisent que le type d’événement et la présence d’un identifiant de message, sans adresse ou contenu de message.
+
+## Vérification publiée
+
+Sur le domaine public, les deux anciennes URLs de fichiers d’examen répondent `410 Gone`, avec `Cache-Control: no-store, max-age=0`, sans marqueur de réponse correcte dans le corps. Un POST de webhook sans signature est rejeté en `401`. Cette vérification ne simule pas un événement Resend réel signé ; le test HTTP local signé couvre cette branche avec le secret sécurisé.

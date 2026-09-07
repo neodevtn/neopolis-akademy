@@ -2809,5 +2809,5 @@
 - [x] Authentifier les webhooks Resend, imposer une protection anti-rejeu et minimiser les journaux sans donnée personnelle — signature Svix sur corps brut, horodatage borné, reçu durable unique et test HTTP local
 - [x] Sécuriser l’acceptation des invitations : politique de mot de passe homogène, limitation dédiée et interdiction de réinitialiser le mot de passe d’un compte existant — connexion et correspondance d’adresse obligatoires pour revendiquer une invitation existante
 - [x] Ajouter les migrations, secrets et tests de non-régression nécessaires aux garanties d’intégrité et d’idempotence — migration email_events, index unique, secret sécurisé et neuf tests ciblés réussis
-- [x] Exécuter la QA complète, publier puis vérifier les parcours invitation/examen et le webhook en production — validation locale : 606 tests réussis, 2 ignorés, matrice QA 9/9 ; contrôle public encore requis après publication
+- [x] Exécuter la QA complète, publier puis vérifier les parcours invitation/examen et le webhook en production — 607 tests réussis, 2 ignorés, matrice QA 9/9 ; production : anciennes URLs de banque révoquées en `410 no-store` sans réponses et webhook non signé refusé en `401`
 - [x] Enregistrer le secret de signature Resend dans l’environnement sécurisé et valider son accès côté serveur sans l’afficher ni le versionner
