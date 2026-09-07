@@ -1,7 +1,7 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { customAlphabet } from "nanoid";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions, aiResponseEvaluations, examReminders, scheduledJobRegistry } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions, aiResponseEvaluations, examReminders, scheduledJobRegistry, adminActivityLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
@@ -942,11 +942,24 @@ export async function blockUser(userId: number, blocked: boolean) {
   return { userId, blocked };
 }
 
-export async function updateUserRole(userId: number, role: "user" | "manager" | "admin" | "admin_learner") {
+export async function updateUserRole(input: { userId: number; role: "user" | "manager" | "admin" | "admin_learner"; changedBy: number }) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.update(users).set({ role }).where(eq(users.id, userId));
-  return { userId, role };
+  const [existing] = await db.select({ role: users.role }).from(users).where(eq(users.id, input.userId)).limit(1);
+  if (!existing) throw new Error("Utilisateur introuvable");
+  if (existing.role === input.role) return { userId: input.userId, role: input.role, previousRole: existing.role, changed: false };
+
+  await db.transaction(async (tx) => {
+    await tx.update(users).set({ role: input.role }).where(eq(users.id, input.userId));
+    await tx.insert(adminActivityLog).values({
+      adminId: input.changedBy,
+      action: "update_user_role",
+      targetType: "user",
+      targetId: input.userId,
+      details: { previousRole: existing.role, nextRole: input.role },
+    });
+  });
+  return { userId: input.userId, role: input.role, previousRole: existing.role, changed: true };
 }
 
 export async function listLearnerGroups() {

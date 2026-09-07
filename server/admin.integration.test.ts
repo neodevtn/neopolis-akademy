@@ -55,6 +55,25 @@ function createUserContext(): TrpcContext {
   };
 }
 
+function createAdminLearnerContext(): TrpcContext {
+  const user: AuthenticatedUser = {
+    id: 3,
+    openId: "admin-learner-003",
+    email: "admin-learner@neopolis.test",
+    name: "Admin Learner Test",
+    loginMethod: "manus",
+    role: "admin_learner",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+  };
+  return {
+    user,
+    req: { protocol: "https", headers: {} } as TrpcContext["req"],
+    res: { clearCookie: () => {}, cookie: () => {} } as unknown as TrpcContext["res"],
+  };
+}
+
 function createAnonymousContext(): TrpcContext {
   return {
     user: null,
@@ -95,7 +114,14 @@ describe("Admin API - Authorization", () => {
     const caller = appRouter.createCaller(createUserContext());
     await expect(
       caller.admin.updateUserRole({ userId: 1, role: "admin" })
-    ).rejects.toThrow("Admin access required");
+    ).rejects.toThrow("administrateur principal");
+  });
+
+  it("admin.updateUserRole rejects admin-learners to prevent privilege escalation", async () => {
+    const caller = appRouter.createCaller(createAdminLearnerContext());
+    await expect(
+      caller.admin.updateUserRole({ userId: 1, role: "admin" })
+    ).rejects.toThrow("administrateur principal");
   });
 
   it("admin.createInvitation rejects non-admin users", async () => {

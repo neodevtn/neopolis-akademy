@@ -6,6 +6,11 @@ export function isAdministrativeRole(role: string | null | undefined): role is E
   return role === "admin" || role === "admin_learner";
 }
 
+/** Les changements d’identité et de privilèges relèvent uniquement du super-administrateur historique. */
+export function isSuperAdmin(role: string | null | undefined): role is Extract<UserRole, "admin"> {
+  return role === "admin";
+}
+
 /**
  * The legacy admin role retains unrestricted content review. An admin-learner
  * deliberately follows the learner sequence so the recorded progress remains meaningful.

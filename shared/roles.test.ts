@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { canBypassLearningSequence, isAdministrativeRole, isLearnerStatisticsRole, userRoleLabel } from "./roles";
+import { canBypassLearningSequence, isAdministrativeRole, isLearnerStatisticsRole, isSuperAdmin, userRoleLabel } from "./roles";
 
 describe("admin-learner role contract", () => {
   it("retains administrative access without becoming a sequence-bypass role", () => {
     expect(isAdministrativeRole("admin_learner")).toBe(true);
+    expect(isSuperAdmin("admin_learner")).toBe(false);
+    expect(isSuperAdmin("admin")).toBe(true);
     expect(canBypassLearningSequence("admin_learner")).toBe(false);
   });
 

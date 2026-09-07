@@ -37,7 +37,7 @@ import { buildNavigationUrl } from "@shared/navigationUrls";
 import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
 import { buildRecentDailyActivity, summarizeLearningActivity } from "./admin/learningActivityAudit";
 import { resolveLocalizedText } from "@shared/localizedText";
-import { isAdministrativeRole } from "@shared/roles";
+import { isAdministrativeRole, isSuperAdmin } from "@shared/roles";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
@@ -71,6 +71,7 @@ function AuditStat({ label, value, detail }: { label: string; value: number; det
 export default function AdminTraining() {
   const { user, loading, isAuthenticated } = useAuth();
   const isAdmin = isAdministrativeRole(user?.role);
+  const canManageRoles = isSuperAdmin(user?.role);
   const [, navigate] = useLocation();
   const urlSearch = useSearch();
   const [activeTab, setActiveTab] = useState(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search).get("tab") || "learners");
@@ -313,8 +314,9 @@ export default function AdminTraining() {
 
   const roleMutation = trpc.admin.updateUserRole.useMutation({
     onSuccess: (data) => {
-      toast.success(`Rôle mis à jour : ${data.role}`);
+      toast.success(data.changed ? `Rôle mis à jour : ${data.role}` : "Ce compte possède déjà ce rôle");
       learnersQuery.refetch();
+      detailQuery.refetch();
     },
     onError: (err) => toast.error(err.message),
   });
@@ -573,6 +575,24 @@ export default function AdminTraining() {
                   </DropdownMenu>
                 </div>
               </div>
+              {canManageRoles && selectedLearner && selectedLearner.id !== user?.id && (
+                <div className="mt-5 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Accès et rôle</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Seul l’administrateur principal peut modifier les privilèges. Chaque changement est inscrit dans le journal d’activité.</p>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2"><UserCog className="h-4 w-4" /> Gérer le rôle</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {selectedLearner.role !== "user" && <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: selectedUserId, role: "user" })} className="gap-2"><UserCheck className="h-4 w-4" /> Définir apprenant</DropdownMenuItem>}
+                      {selectedLearner.role !== "admin_learner" && <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: selectedUserId, role: "admin_learner" })} className="gap-2"><ShieldCheck className="h-4 w-4" /> Définir admin-apprenant</DropdownMenuItem>}
+                      {selectedLearner.role !== "admin" && <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: selectedUserId, role: "admin" })} className="gap-2"><Shield className="h-4 w-4" /> Définir administrateur</DropdownMenuItem>}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              )}
             </div>
 
             {/* Quick stats */}
@@ -1161,17 +1181,17 @@ export default function AdminTraining() {
                                       {learner.blocked ? <UserCheck className="w-4 h-4" /> : <UserX className="w-4 h-4" />}
                                       {learner.blocked ? "Débloquer" : "Bloquer"}
                                     </DropdownMenuItem>
-                                    {learner.role !== "user" && (
+                                    {canManageRoles && learner.id !== user?.id && learner.role !== "user" && (
                                       <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: learner.id, role: "user" })} className="gap-2">
                                         <UserCheck className="w-4 h-4" /> Définir apprenant
                                       </DropdownMenuItem>
                                     )}
-                                    {learner.role !== "admin_learner" && (
+                                    {canManageRoles && learner.id !== user?.id && learner.role !== "admin_learner" && (
                                       <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: learner.id, role: "admin_learner" })} className="gap-2">
                                         <ShieldCheck className="w-4 h-4" /> Définir admin-apprenant
                                       </DropdownMenuItem>
                                     )}
-                                    {learner.role !== "admin" && (
+                                    {canManageRoles && learner.id !== user?.id && learner.role !== "admin" && (
                                       <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: learner.id, role: "admin" })} className="gap-2">
                                         <Shield className="w-4 h-4" /> Définir administrateur
                                       </DropdownMenuItem>

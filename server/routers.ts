@@ -32,7 +32,7 @@ import { invokeLLM } from "./_core/llm";
 import { evaluateFreeResponseWithOpenRouter } from "./openrouterEvaluation";
 import { buildCourseAssistantMessages, extractCourseAssistantText, isClearlyOutOfScopeCourseAssistantQuestion, outOfScopeCourseAssistantReply } from "./courseAssistant";
 import { getAiNewsFeed } from "./aiNews";
-import { isAdministrativeRole } from "@shared/roles";
+import { isAdministrativeRole, isSuperAdmin } from "@shared/roles";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -896,13 +896,13 @@ export const appRouter = router({
     updateUserRole: protectedProcedure
       .input(z.object({ userId: z.number(), role: z.enum(["user", "manager", "admin", "admin_learner"]) }))
       .mutation(async ({ ctx, input }) => {
-        if (!isAdministrativeRole(ctx.user.role)) {
-          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        if (!isSuperAdmin(ctx.user.role)) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Seul l’administrateur principal peut modifier les rôles." });
         }
         if (input.userId === ctx.user.id) {
           throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot change your own role" });
         }
-        return await updateUserRole(input.userId, input.role);
+        return await updateUserRole({ ...input, changedBy: ctx.user.id });
       }),
 
     listLearnerGroups: protectedProcedure.query(async ({ ctx }) => {
