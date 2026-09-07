@@ -21,3 +21,9 @@ Les journaux serveur récents ne montrent pas d’autre exception backend active
 Le module de récupération client reconnaît désormais `removeChild` comme une mutation d’arbre récupérable une seule fois par route. Les champs Select de la candidature interdisent la traduction automatique de leur sous-arbre, la page disposant déjà de traductions internes FR/EN/AR. Le reporter et le serveur filtrent les Workers blob externes et les exports Lazy obsolètes. Les tests n’écrivent plus de faux incidents dans la base réelle.
 
 La suite finale comporte 595 tests réussis et 2 tests ignorés. La matrice de publication passe ses neuf étapes, y compris les contrôles desktop et mobile.
+
+## Validation publique
+
+Après propagation, le parcours `/apply` a été rejoué en production en 1280×720 et 390×844. Les sélections de pays et de secteur ont été changées plusieurs fois, puis le formulaire a navigué vers l’étape précédente et suivante sans soumission. Les deux scénarios affichent zéro ErrorBoundary, zéro pageerror, zéro erreur console et zéro ressource applicative en échec.
+
+Le monitoring filtré ne conserve plus que deux signatures historiques réelles : le `removeChild` unique du 6 septembre et les huit occurrences AdminTraining du 5 septembre. Aucune nouvelle occurrence n’est apparue après les correctifs. Les erreurs de test, de Worker blob externe et de chunks Lazy obsolètes sont exclues des listes opérationnelles, sans suppression des enregistrements historiques en base.
