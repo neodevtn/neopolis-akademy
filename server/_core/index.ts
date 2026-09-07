@@ -20,6 +20,7 @@ import { scheduledExamReminderHandler } from "../scheduledExamReminder";
 import resendWebhookRouter from "../resendWebhook";
 import { registerPublicTrainingPages } from "../publicTrainingPages";
 import { registerExamAssetRevocations } from "../examAssetRevocation";
+import { getRuntimeVersionManifest } from "../versionManifest";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -93,6 +94,15 @@ async function startServer() {
     })
   );
   registerExamAssetRevocations(app);
+  // This endpoint must be registered before the SEO/SPA fallbacks. It is used
+  // by open learner sessions to detect a new Vite document after deployment.
+  app.get("/__manus__/version.json", (_req, res) => {
+    res.status(200).set({
+      "Cache-Control": "no-store, max-age=0",
+      "Content-Type": "application/json; charset=utf-8",
+      "X-Content-Type-Options": "nosniff",
+    }).json(getRuntimeVersionManifest());
+  });
   registerPublicTrainingPages(app);
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
