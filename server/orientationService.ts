@@ -1,5 +1,6 @@
-import { and, desc, eq, inArray, isNotNull, isNull, ne, or } from "drizzle-orm";
-import { learnerCompetencyContributions, learnerOrientationProfiles, learnerOrientationProposals, users } from "../drizzle/schema";
+import { and, asc, desc, eq, inArray, isNotNull, isNull, ne, or } from "drizzle-orm";
+import { competencyDefinitions, learnerCompetencyContributions, learnerOrientationProfiles, learnerOrientationProposals, users } from "../drizzle/schema";
+import { clampCompetencyLevel } from "../shared/competencyFramework";
 import {
   buildOrientationRecommendations,
   getDiagnosticPoints,
@@ -10,7 +11,7 @@ import {
 } from "../shared/orientationFramework";
 import { buildOrientationTrajectory } from "../shared/orientationTrajectory";
 import { getDb } from "./db";
-import { getUserCompetencies } from "./competencyService";
+import { ensureCompetencyFramework, getUserCompetencies } from "./competencyService";
 import { createCommunication } from "./adminDb";
 
 type StoredAssessment = {
@@ -18,6 +19,11 @@ type StoredAssessment = {
   diagnosticPoints: Record<string, number>;
   completedAt: string;
 };
+
+type OrientationProfile = typeof learnerOrientationProfiles.$inferSelect;
+type OrientationProposal = typeof learnerOrientationProposals.$inferSelect;
+type CompetencyDefinition = typeof competencyDefinitions.$inferSelect;
+type CompetencyContribution = typeof learnerCompetencyContributions.$inferSelect;
 
 function parseGoals(value: unknown): OrientationGoal[] {
   if (!Array.isArray(value)) return [];
@@ -260,6 +266,7 @@ export async function respondToOrientationProposal(input: { userId: number; prop
 }
 
 export async function getAdminOrientationOverview(input: { userId?: number; limit?: number }) {
+  await ensureCompetencyFramework();
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const conditions = input.userId ? [eq(learnerOrientationProfiles.userId, input.userId)] : [];
@@ -272,10 +279,107 @@ export async function getAdminOrientationOverview(input: { userId?: number; limi
     .orderBy(desc(learnerOrientationProfiles.updatedAt))
     .limit(Math.max(1, Math.min(input.limit || 100, 200)));
 
-  return Promise.all(rows.map(async ({ profile, user }) => ({
-    user,
-    orientation: await buildOrientationView(user.id, profile),
-  })));
+  const userIds = rows.map(({ user }) => user.id);
+  if (!userIds.length) return [];
+  const [definitions, contributionRows, pendingProposalRows] = await Promise.all([
+    db.select().from(competencyDefinitions)
+      .where(eq(competencyDefinitions.active, 1))
+      .orderBy(asc(competencyDefinitions.sortOrder)),
+    db.select().from(learnerCompetencyContributions)
+      .where(inArray(learnerCompetencyContributions.userId, userIds)),
+    db.select().from(learnerOrientationProposals)
+      .where(and(inArray(learnerOrientationProposals.userId, userIds), eq(learnerOrientationProposals.status, "pending")))
+      .orderBy(desc(learnerOrientationProposals.createdAt)),
+  ]);
+  const contributionsByUser = new Map<number, CompetencyContribution[]>();
+  const contributionsByUserAndCompetency = new Map<number, Map<string, CompetencyContribution[]>>();
+  for (const contribution of contributionRows) {
+    const entries = contributionsByUser.get(contribution.userId) || [];
+    entries.push(contribution);
+    contributionsByUser.set(contribution.userId, entries);
+
+    const byCompetency = contributionsByUserAndCompetency.get(contribution.userId) || new Map<string, CompetencyContribution[]>();
+    const competencyEntries = byCompetency.get(contribution.competencyId) || [];
+    competencyEntries.push(contribution);
+    byCompetency.set(contribution.competencyId, competencyEntries);
+    contributionsByUserAndCompetency.set(contribution.userId, byCompetency);
+  }
+  const pendingProposalByUser = new Map<number, OrientationProposal>();
+  for (const proposal of pendingProposalRows) {
+    if (!pendingProposalByUser.has(proposal.userId)) pendingProposalByUser.set(proposal.userId, proposal);
+  }
+
+  return rows.map(({ profile, user }) => {
+    const goals = parseGoals(profile.goals);
+    const assessment = parseAssessment(profile.assessment);
+    const contributions = contributionsByUser.get(user.id) || [];
+    const contributionsByCompetency = contributionsByUserAndCompetency.get(user.id) || new Map<string, CompetencyContribution[]>();
+    const competencies = definitions.map((definition) => {
+      const entries = contributionsByCompetency.get(definition.id) || [];
+      const rawPoints = entries.reduce((total, entry) => total + Number(entry.points), 0);
+      return { ...definition, rawPoints, level: clampCompetencyLevel(rawPoints, Number(definition.maxPoints)) };
+    });
+    const competencyPoints = Object.fromEntries(competencies.map((competency) => [competency.id, competency.level]));
+    const wantsOfficialCertification = profile.wantsOfficialCertification === 1;
+    const officialCertificationIds = parseStringList(profile.officialCertificationIds);
+    const certificationTargetDates = parseCertificationTargetDates(profile.certificationTargetDates);
+    const targetDate = Object.values(certificationTargetDates).sort()[0] || null;
+    const targetPoints = goals.reduce((sum, goal) => sum + ORIENTATION_TARGETS[goal.targetLevel].points, 0);
+    const goalIds = new Set(goals.map((goal) => goal.competencyId));
+    const trajectory = buildOrientationTrajectory({
+      startedAt: profile.startedAt,
+      targetDate,
+      targetPoints,
+      contributions: profile.startedAt && targetDate && goals.length
+        ? contributions.filter((contribution) => goalIds.has(contribution.competencyId)).map((contribution) => ({ awardedAt: contribution.awardedAt, points: Number(contribution.points) || 0 }))
+        : [],
+    });
+    const pendingProposal = pendingProposalByUser.get(user.id);
+    return {
+      user,
+      orientation: {
+        profile: {
+          id: profile.id,
+          status: profile.status,
+          goals,
+          wantsOfficialCertification,
+          officialCertificationIds,
+          certificationTargetDates,
+          assessment,
+          startedAt: profile.startedAt,
+          completedAt: profile.completedAt,
+          updatedAt: profile.updatedAt,
+        },
+        competencies: competencies.map((competency) => ({
+          id: competency.id,
+          title: competency.title,
+          description: competency.description,
+          icon: competency.icon,
+          color: competency.color,
+          level: competency.level,
+          rawPoints: competency.rawPoints,
+          targetPoints: goals.find((goal) => goal.competencyId === competency.id)
+            ? ORIENTATION_TARGETS[goals.find((goal) => goal.competencyId === competency.id)!.targetLevel].points
+            : null,
+        })),
+        questions: getOrientationQuestions(goals).map(({ correctChoiceId, rationale, ...question }) => question),
+        recommendations: goals.length
+          ? buildOrientationRecommendations({ goals, competencyPoints, diagnosticPoints: assessment?.diagnosticPoints || {}, wantsOfficialCertification, officialCertificationIds })
+          : [],
+        trajectory,
+        pendingProposal: pendingProposal ? {
+          id: pendingProposal.id,
+          goals: parseGoals(pendingProposal.goals),
+          wantsOfficialCertification: pendingProposal.wantsOfficialCertification === 1,
+          officialCertificationIds: parseStringList(pendingProposal.officialCertificationIds),
+          certificationTargetDates: parseCertificationTargetDates(pendingProposal.certificationTargetDates),
+          justification: pendingProposal.justification,
+          createdAt: pendingProposal.createdAt,
+        } : null,
+        needsOrientation: profile.status !== "completed",
+      },
+    };
+  });
 }
 
 /** Crée un brouillon révisable : aucune communication n’est expédiée par cette fonction. */

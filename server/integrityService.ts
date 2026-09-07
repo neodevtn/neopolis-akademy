@@ -9,14 +9,40 @@ const INTEGRITY_TAG_COLOR = "#d97706";
 type ReviewStatus = "review_required" | "confirmed" | "dismissed";
 
 async function assessmentForUser(userId: number): Promise<IntegrityAssessment> {
+  const assessments = await assessmentsForUsers([userId]);
+  return assessments.get(userId) || assessLearningIntegrity({ events: [], watchedVideoCount: 0, exerciseResults: [] });
+}
+
+function rowsByUser<T extends { userId: number | string }>(rows: T[]) {
+  const grouped = new Map<number, T[]>();
+  for (const row of rows) {
+    const userId = Number(row.userId);
+    if (!Number.isFinite(userId)) continue;
+    const entries = grouped.get(userId) || [];
+    entries.push(row);
+    grouped.set(userId, entries);
+  }
+  return grouped;
+}
+
+async function assessmentsForUsers(userIds: number[]) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  const uniqueUserIds = Array.from(new Set(userIds.filter((userId) => Number.isInteger(userId) && userId > 0)));
+  if (!uniqueUserIds.length) return new Map<number, IntegrityAssessment>();
   const [events, videos, exercises] = await Promise.all([
-    db.select().from(learningEvents).where(eq(learningEvents.userId, userId)).orderBy(learningEvents.createdAt),
-    db.select().from(videoProgress).where(eq(videoProgress.userId, userId)),
-    db.select().from(exerciseResults).where(eq(exerciseResults.userId, String(userId))),
+    db.select().from(learningEvents).where(inArray(learningEvents.userId, uniqueUserIds)).orderBy(learningEvents.createdAt),
+    db.select().from(videoProgress).where(inArray(videoProgress.userId, uniqueUserIds)),
+    db.select().from(exerciseResults).where(inArray(exerciseResults.userId, uniqueUserIds.map(String))),
   ]);
-  return assessLearningIntegrity({ events, watchedVideoCount: videos.length, exerciseResults: exercises });
+  const eventsByUser = rowsByUser(events);
+  const videosByUser = rowsByUser(videos);
+  const exercisesByUser = rowsByUser(exercises);
+  return new Map(uniqueUserIds.map((userId) => [userId, assessLearningIntegrity({
+    events: eventsByUser.get(userId) || [],
+    watchedVideoCount: (videosByUser.get(userId) || []).length,
+    exerciseResults: exercisesByUser.get(userId) || [],
+  })]));
 }
 
 async function getIntegrityTagId(createdBy: number) {
@@ -58,9 +84,11 @@ export async function getIntegrityReviewQueue() {
     db.select().from(learnerIntegrityReviews).orderBy(desc(learnerIntegrityReviews.updatedAt)),
   ]);
   const reviewByUser = new Map(reviews.map((review) => [review.userId, review]));
-  const rows = await Promise.all(learners.map(async (learner) => {
-    const assessment = await assessmentForUser(learner.id);
-    return { ...learner, assessment, review: reviewByUser.get(learner.id) || null };
+  const assessments = await assessmentsForUsers(learners.map((learner) => learner.id));
+  const rows = learners.map((learner) => ({
+    ...learner,
+    assessment: assessments.get(learner.id) || assessLearningIntegrity({ events: [], watchedVideoCount: 0, exerciseResults: [] }),
+    review: reviewByUser.get(learner.id) || null,
   }));
   return rows
     .filter((row) => row.assessment.riskScore >= 20 || row.review)
