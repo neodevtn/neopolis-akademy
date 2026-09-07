@@ -1,5 +1,5 @@
 import { and, desc, eq } from "drizzle-orm";
-import { learningEvents } from "../drizzle/schema";
+import { learnerIntegrityReviews, learningEvents } from "../drizzle/schema";
 import { getDb, recordLearningEvent } from "./db";
 import { getLearnerIntegrityReview } from "./integrityService";
 import { TRPCError } from "@trpc/server";
@@ -17,6 +17,7 @@ export type LearningIntegrityGateDecision = {
 };
 
 const PRESENCE_EVENT = "integrity_presence_verified";
+const EXAM_HONEYPOT_EVENT = "integrity_exam_honeypot_triggered";
 const PRESENCE_WINDOW_MS = 15 * 60 * 1000;
 
 export function resolveLearningIntegrityGate(input: {
@@ -111,4 +112,40 @@ export async function verifyLearningIntegrityPresence(input: { userId: number; t
   }
   await recordLearningEvent({ userId: input.userId, eventType: PRESENCE_EVENT, success: 1, metadata: { action: result.action } });
   return getLearningIntegrityGateDecision(input.userId);
+}
+
+/**
+ * Records only the existence of an automated honeypot trigger. The bait value
+ * is intentionally never retained so it cannot leak through admin activity.
+ */
+export async function flagExamHoneypotTrigger(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  const signals = [{
+    id: "exam_honeypot_triggered",
+    label: "Champ de contrôle d’examen renseigné",
+    details: "Le champ de contrôle invisible aux apprenants a été renseigné lors d’une soumission. La valeur n’est pas conservée.",
+    weight: 100,
+    evidence: { surface: "exam_submission" },
+  }];
+  await db.insert(learnerIntegrityReviews).values({
+    userId,
+    status: "temporary_hold",
+    riskScore: 100,
+    signals,
+    reviewerId: null,
+    reviewerNotes: "Signal automatique : soumission d’examen interrompue pour revue humaine.",
+    reviewedAt: now,
+  }).onDuplicateKeyUpdate({
+    set: {
+      status: "temporary_hold",
+      riskScore: 100,
+      signals,
+      reviewerId: null,
+      reviewerNotes: "Signal automatique : soumission d’examen interrompue pour revue humaine.",
+      reviewedAt: now,
+    },
+  });
+  await recordLearningEvent({ userId, eventType: EXAM_HONEYPOT_EVENT, success: 0, metadata: { surface: "exam_submission" } });
 }

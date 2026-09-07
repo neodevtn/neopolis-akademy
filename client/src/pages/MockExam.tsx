@@ -78,6 +78,7 @@ export default function MockExam() {
   const [sessionRestored, setSessionRestored] = useState(false);
 
   const [verifiedScore, setVerifiedScore] = useState<any>(null);
+  const [integrityMarker, setIntegrityMarker] = useState("");
   const submittedAttemptRef = useRef(false);
   const confettiFired = useRef(false);
 
@@ -216,8 +217,8 @@ export default function MockExam() {
   useEffect(() => {
     if (examState !== "review" || !certId || submittedAttemptRef.current) return;
     submittedAttemptRef.current = true;
-    submitAttemptMutation.mutate({ certificationId: certId, answers });
-  }, [examState, certId, answers, submitAttemptMutation]);
+    submitAttemptMutation.mutate({ certificationId: certId, answers, integrityMarker });
+  }, [examState, certId, answers, integrityMarker, submitAttemptMutation]);
 
   // Le résultat local ne sert qu’à conserver les réponses dans l’interface.
   // Aucun score, succès ou certificat n’est présenté avant la confirmation du serveur.
@@ -463,6 +464,10 @@ export default function MockExam() {
         </header>
 
         <main className="max-w-3xl mx-auto px-4 py-8">
+          <div aria-hidden="true" hidden>
+            <label htmlFor="exam-integrity-marker">Leave this field empty</label>
+            <input id="exam-integrity-marker" name="website" type="text" value={integrityMarker} onChange={(event) => setIntegrityMarker(event.target.value)} tabIndex={-1} autoComplete="off" />
+          </div>
           {/* Question Card */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 mb-6">
             <div className="flex items-center justify-between mb-6">

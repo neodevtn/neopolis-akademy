@@ -33,7 +33,7 @@ import { evaluateFreeResponseWithOpenRouter } from "./openrouterEvaluation";
 import { buildCourseAssistantMessages, extractCourseAssistantText, isClearlyOutOfScopeCourseAssistantQuestion, outOfScopeCourseAssistantReply } from "./courseAssistant";
 import { getAiNewsFeed } from "./aiNews";
 import { isAdministrativeRole, isSuperAdmin } from "@shared/roles";
-import { getLearningIntegrityGateDecision, requireLearningIntegrityClearance, verifyLearningIntegrityPresence } from "./learningIntegrityGate";
+import { flagExamHoneypotTrigger, getLearningIntegrityGateDecision, requireLearningIntegrityClearance, verifyLearningIntegrityPresence } from "./learningIntegrityGate";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -608,8 +608,13 @@ export const appRouter = router({
       .input(z.object({
         certificationId: z.string().min(2).max(200),
         answers: z.array(z.object({ questionId: z.string().min(1).max(240), selectedIds: z.array(z.string().min(1).max(80)).max(10) })).max(500),
+        integrityMarker: z.string().max(120).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
+        if (input.integrityMarker?.trim()) {
+          await flagExamHoneypotTrigger(ctx.user.id);
+          throw new TRPCError({ code: "FORBIDDEN", message: "La soumission nécessite une vérification par l’équipe pédagogique avant toute reprise de l’examen." });
+        }
         await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         const session = await getExamSession(ctx.user.id, input.certificationId);
         if (!session) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Aucune session d’examen active à soumettre." });

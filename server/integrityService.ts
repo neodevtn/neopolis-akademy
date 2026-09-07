@@ -8,6 +8,15 @@ const INTEGRITY_TAG_COLOR = "#d97706";
 
 type ReviewStatus = "review_required" | "confirmed" | "dismissed" | "temporary_hold";
 
+function mergeStoredReviewSignals(assessment: IntegrityAssessment, review: { status: ReviewStatus; riskScore: number; signals: unknown } | null) {
+  if (!review || review.status !== "temporary_hold" || !Array.isArray(review.signals)) return assessment;
+  const storedSignals = review.signals.filter((signal): signal is IntegrityAssessment["signals"][number] =>
+    Boolean(signal) && typeof signal === "object" && typeof (signal as { id?: unknown }).id === "string" && typeof (signal as { label?: unknown }).label === "string",
+  );
+  const signals = Array.from(new Map([...assessment.signals, ...storedSignals].map((signal) => [signal.id, signal])).values());
+  return { ...assessment, riskScore: Math.max(assessment.riskScore, review.riskScore), level: "priority_review", signals };
+}
+
 async function assessmentForUser(userId: number): Promise<IntegrityAssessment> {
   const assessments = await assessmentsForUsers([userId]);
   return assessments.get(userId) || assessLearningIntegrity({ events: [], watchedVideoCount: 0, exerciseResults: [] });
@@ -73,7 +82,8 @@ export async function getLearnerIntegrityReview(userId: number) {
     assessmentForUser(userId),
     db.select().from(learnerIntegrityReviews).where(eq(learnerIntegrityReviews.userId, userId)).limit(1),
   ]);
-  return { assessment, review: reviews[0] || null };
+  const review = reviews[0] || null;
+  return { assessment: mergeStoredReviewSignals(assessment, review), review };
 }
 
 export async function getIntegrityReviewQueue() {
@@ -87,7 +97,7 @@ export async function getIntegrityReviewQueue() {
   const assessments = await assessmentsForUsers(learners.map((learner) => learner.id));
   const rows = learners.map((learner) => ({
     ...learner,
-    assessment: assessments.get(learner.id) || assessLearningIntegrity({ events: [], watchedVideoCount: 0, exerciseResults: [] }),
+    assessment: mergeStoredReviewSignals(assessments.get(learner.id) || assessLearningIntegrity({ events: [], watchedVideoCount: 0, exerciseResults: [] }), reviewByUser.get(learner.id) || null),
     review: reviewByUser.get(learner.id) || null,
   }));
   return rows
