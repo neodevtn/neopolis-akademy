@@ -59,7 +59,11 @@ try {
     await page.waitForTimeout(500);
 
     const bodyText = await page.locator("body").innerText();
-    const relevantFailedResources = failedResources.filter((entry) => !entry.startsWith("font:fonts.gstatic.com:"));
+    const relevantFailedResources = failedResources.filter((entry) => {
+      if (entry.startsWith("font:fonts.gstatic.com:")) return false;
+      if (/^fetch:(www\.|region\d+\.)?google-analytics\.com:net::ERR_ABORTED$/.test(entry)) return false;
+      return true;
+    });
     const relevantConsoleErrors = consoleErrors.filter((message) => {
       if (/favicon|font|third-party/i.test(message)) return false;
       if (/Failed to load resource: net::ERR_FAILED/i.test(message) && relevantFailedResources.length === 0) return false;

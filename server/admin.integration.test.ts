@@ -5,6 +5,7 @@
 import { describe, expect, it, beforeAll, vi } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
+import { BUILD_ERROR_PATTERNS, isIgnoredClientErrorMessage } from "./_core/systemRouter";
 
 // ─── Test Helpers ───
 
@@ -345,7 +346,7 @@ describe("System Router - Error Reporting", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const caller = appRouter.createCaller(createAnonymousContext());
     const result = await caller.system.reportError({
-      message: "Test error from integration test",
+      message: "Synthetic runtime error",
       source: "window",
       stack: "Error: Test\n    at test.ts:1:1",
       url: "https://akademy.neodev.click/test",
@@ -377,6 +378,12 @@ describe("System Router - Error Reporting", () => {
       url: "https://akademy.neodev.click/",
       timestamp: Date.now(),
     })).resolves.toEqual({ accepted: false, reason: "build_error_filtered" });
+  });
+
+  it("system.getClientErrors excludes historical integration-test artifacts from the monitoring query", async () => {
+    expect(BUILD_ERROR_PATTERNS).toContain("%Test error from integration test%");
+    expect(isIgnoredClientErrorMessage("Test error from integration test")).toBe(true);
+    expect(isIgnoredClientErrorMessage("Invalid count value: -2")).toBe(false);
   });
 
   it("system.reportError validates required fields", async () => {

@@ -22,7 +22,7 @@ function checkReportRateLimit(ip: string): boolean {
 }
 
 // Patterns to filter out (build/deploy artifacts)
-const BUILD_ERROR_PATTERNS = [
+export const BUILD_ERROR_PATTERNS = [
   '%Failed to fetch dynamically imported module%',
   '%Importing a module script failed%',
   '%Loading module from%',
@@ -31,7 +31,23 @@ const BUILD_ERROR_PATTERNS = [
   "%Cannot read properties of undefined (reading 'default')%",
   '%can\'t access property "default", %_result is undefined%',
   "%Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at 'blob:%",
+  '%Test error from integration test%',
 ];
+
+export function isIgnoredClientErrorMessage(message: string): boolean {
+  const ignoredMessages = [
+    'Failed to fetch dynamically imported module',
+    'Importing a module script failed',
+    'Loading module from',
+    'Loading chunk',
+    'ChunkLoadError',
+    "Cannot read properties of undefined (reading 'default')",
+    'can\'t access property "default"',
+    'Test error from integration test',
+  ];
+  return ignoredMessages.some((pattern) => message.includes(pattern))
+    || /Failed to execute ['"]importScripts['"] on ['"]WorkerGlobalScope['"].*blob:/i.test(message);
+}
 
 export const systemRouter = router({
   health: publicProcedure
@@ -78,19 +94,7 @@ export const systemRouter = router({
       }
 
       // Filter out build/deploy errors server-side too
-      const isBuildError = [
-        'Failed to fetch dynamically imported module',
-        'Importing a module script failed',
-        'Loading module from',
-        'Loading chunk',
-        'ChunkLoadError',
-        "Cannot read properties of undefined (reading 'default')",
-        'can\'t access property "default"',
-      ].some(pattern => input.message.includes(pattern));
-
-      const isExternalWorkerError = /Failed to execute ['"]importScripts['"] on ['"]WorkerGlobalScope['"].*blob:/i.test(input.message);
-      
-      if (isBuildError || isExternalWorkerError) {
+      if (isIgnoredClientErrorMessage(input.message)) {
         return { accepted: false, reason: 'build_error_filtered' } as const;
       }
 
