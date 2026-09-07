@@ -34,9 +34,29 @@ export default function LessonQuiz({
   const [answers, setAnswers] = useState<Array<{ correct: boolean; questionIdx: number; selectedId: string | null }>>([]);
   const [shakeError, setShakeError] = useState(false);
   const [showErrorReview, setShowErrorReview] = useState(false);
+  const [requiresServerFallback, setRequiresServerFallback] = useState(false);
+  const [usingServerFallback, setUsingServerFallback] = useState(false);
+  const [serverResults, setServerResults] = useState<Record<string, { correct: boolean; correctChoiceIds: string[]; explanation?: unknown }>>({});
   const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
+  const fallbackQuizQuery = trpc.training.getLessonQuizFallback.useQuery(
+    { certificationId: certId, questionCount: 3 },
+    { enabled: Boolean(certId) && requiresServerFallback },
+  );
+  const gradeFallbackAnswer = trpc.training.gradeLessonQuizFallbackAnswer.useMutation();
+  const correctChoiceIdsFor = (question: any) => usingServerFallback
+    ? (serverResults[question.id]?.correctChoiceIds || [])
+    : (question.correctChoiceIds || []);
+  const explanationFor = (question: any) => usingServerFallback
+    ? serverResults[question.id]?.explanation
+    : question.explanation;
+  const isCorrectFor = (question: any, selectedId: string | null) => usingServerFallback
+    ? Boolean(serverResults[question.id]?.correct)
+    : Boolean(selectedId && correctChoiceIdsFor(question).includes(selectedId));
 
   useEffect(() => {
+    setRequiresServerFallback(false);
+    setUsingServerFallback(false);
+    setServerResults({});
     // Try lesson-specific quizzes first, fall back to cert-level questions
     fetch("/data/lessonQuizzes.json")
       .then((r) => r.json())
@@ -75,29 +95,21 @@ export default function LessonQuiz({
           }));
           setQuestions(mapped);
         } else {
-          // Fallback to cert-level questions
-          fetch("/data/mockExamQuestions.json")
-            .then((r2) => r2.json())
-            .then((allQ: any[]) => {
-              const certQuestions = allQ.filter((q: any) => q.certificationId === certId);
-              const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
-              setQuestions(shuffled.slice(0, 3));
-            })
-            .catch(() => setQuestions([]));
+          setRequiresServerFallback(true);
         }
       })
       .catch(() => {
-        // Fallback to cert-level questions
-        fetch("/data/mockExamQuestions.json")
-          .then((r) => r.json())
-          .then((allQ: any[]) => {
-            const certQuestions = allQ.filter((q: any) => q.certificationId === certId);
-            const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
-            setQuestions(shuffled.slice(0, 3));
-          })
-          .catch(() => setQuestions([]));
+        setRequiresServerFallback(true);
       });
     }, [certId, courseId, lessonIndex]);
+
+  useEffect(() => {
+    if (!requiresServerFallback) return;
+    if (fallbackQuizQuery.data) {
+      setQuestions(fallbackQuizQuery.data as any[]);
+      setUsingServerFallback(true);
+    }
+  }, [fallbackQuizQuery.data, requiresServerFallback]);
 
   // MUST declare all hooks before any early return to respect React rules
   const q = questions[currentQ];
@@ -222,6 +234,7 @@ export default function LessonQuiz({
                     setQuizComplete(false);
                     setQuizPassed(false);
                     setAnswers([]);
+                    setServerResults({});
                     setShowErrorReview(false);
                     fetch("/data/lessonQuizzes.json")
                       .then((r) => r.json())
@@ -385,7 +398,7 @@ export default function LessonQuiz({
                       <div className="ml-8 space-y-1.5">
                         {question.choices.map((choice: any) => {
                           const wasSelected = answer.selectedId === choice.id;
-                          const isCorrectChoice = question.correctChoiceIds.includes(choice.id);
+                          const isCorrectChoice = correctChoiceIdsFor(question).includes(choice.id);
                           let style = "bg-secondary/50 text-muted-foreground";
                           if (isCorrectChoice) style = "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700";
                           else if (wasSelected && !isCorrectChoice) style = "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 line-through";
@@ -400,10 +413,10 @@ export default function LessonQuiz({
                         })}
                       </div>
 
-                      {!isQCorrect && question.explanation && (
+                      {!isQCorrect && explanationFor(question) && (
                         <div className="ml-8 mt-2.5 p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-xs text-blue-800 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
                           <span className="font-semibold">{t({ en: "Explanation:", fr: "Explication :" })}</span>{" "}
-                          {resolveI18n(question.explanation, lang)}
+                          {resolveI18n(explanationFor(question) as any, lang)}
                         </div>
                       )}
 
@@ -434,6 +447,7 @@ export default function LessonQuiz({
                   setQuizComplete(false);
                   setQuizPassed(false);
                   setAnswers([]);
+                  setServerResults({});
                   setShowErrorReview(false);
                   fetch("/data/lessonQuizzes.json")
                     .then((r) => r.json())
@@ -467,7 +481,7 @@ export default function LessonQuiz({
 
   if (!q) return null;
 
-  const _isCorrect = selected && q.correctChoiceIds.includes(selected);
+  const _isCorrect = isCorrectFor(q, selected);
 
   return (
     <motion.div
@@ -503,7 +517,7 @@ export default function LessonQuiz({
       <div className="space-y-3 mb-5">
         {shuffledChoices.map((choice: any, idx: number) => {
           const isSelected = selected === choice.id;
-          const isCorrectChoice = q.correctChoiceIds.includes(choice.id);
+          const isCorrectChoice = correctChoiceIdsFor(q).includes(choice.id);
           const letter = OPTION_LETTERS[idx] || choice.id.toUpperCase();
 
           let containerClass = "bg-white dark:bg-card border-gray-200 dark:border-border hover:border-[#c75b3a]/50";
@@ -540,9 +554,9 @@ export default function LessonQuiz({
       </div>
 
       {/* Explanation after answer */}
-      {showResult && q.explanation && (
+      {showResult && explanationFor(q) && (
         <div className="text-sm p-3 rounded-lg mb-4 bg-white dark:bg-secondary border border-gray-200 dark:border-border text-gray-700 dark:text-muted-foreground italic">
-          {resolveI18n(q.explanation, lang)}
+          {resolveI18n(explanationFor(q) as any, lang)}
         </div>
       )}
 
@@ -550,14 +564,28 @@ export default function LessonQuiz({
       {!showResult ? (
         <Button
           onClick={() => {
-            setShowResult(true);
-            const correct = !!(selected && q.correctChoiceIds.includes(selected));
-            if (!correct) {
-              setShakeError(true);
-              setTimeout(() => setShakeError(false), 400);
+            if (!selected) return;
+            if (!usingServerFallback) {
+              setShowResult(true);
+              const correct = isCorrectFor(q, selected);
+              if (!correct) {
+                setShakeError(true);
+                setTimeout(() => setShakeError(false), 400);
+              }
+              return;
             }
+            gradeFallbackAnswer.mutate({ certificationId: certId, questionId: q.id, selectedId: selected }, {
+              onSuccess: (result) => {
+                setServerResults((current) => ({ ...current, [q.id]: result }));
+                setShowResult(true);
+                if (!result.correct) {
+                  setShakeError(true);
+                  setTimeout(() => setShakeError(false), 400);
+                }
+              },
+            });
           }}
-          disabled={!selected}
+          disabled={!selected || gradeFallbackAnswer.isPending}
           className="bg-[#c75b3a] hover:bg-[#a84a2e] text-white w-full"
           size="sm"
         >
@@ -566,7 +594,7 @@ export default function LessonQuiz({
       ) : (
         <Button
           onClick={() => {
-            const correct = !!(selected && q.correctChoiceIds.includes(selected));
+            const correct = isCorrectFor(q, selected);
             const newCorrect = correctCount + (correct ? 1 : 0);
             setCorrectCount(newCorrect);
             setAnswers((prev) => [...prev, { correct, questionIdx: currentQ, selectedId: selected }]);

@@ -1698,11 +1698,17 @@ export async function updateInvitationDeliveryStatus(resendMessageId: string, st
     .where(eq(userInvitations.resendMessageId, resendMessageId));
 }
 
-export async function createEmailEvent(resendMessageId: string, type: "sent" | "delivered" | "bounced" | "complained" | "opened" | "clicked", email: string, reason?: string) {
+export async function createEmailEvent(resendMessageId: string, type: "sent" | "delivered" | "bounced" | "complained" | "opened" | "clicked", email: string, reason?: string, webhookEventId?: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  await db.insert(emailEvents).values({ resendMessageId, type, email, reason });
+  try {
+    await db.insert(emailEvents).values({ resendMessageId, type, email, reason, webhookEventId });
+    return true;
+  } catch (error: unknown) {
+    if (webhookEventId && typeof error === "object" && error && (error as { code?: unknown }).code === "ER_DUP_ENTRY") return false;
+    throw error;
+  }
 }
 
 export async function getEmailDeliveryStats() {

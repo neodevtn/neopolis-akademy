@@ -23,6 +23,10 @@ export function shouldSkipLoginRateLimit(req: Pick<Request, "get">, isProduction
   return !isProduction && req.get("x-neopolis-qa-probe") === "1";
 }
 
+export function isValidPassword(value: unknown): value is string {
+  return typeof value === "string" && value.length >= MIN_PASSWORD_LENGTH && value.length <= 128;
+}
+
 export function registerAuthRoutes(app: Express) {
   // Rate limiter for login: max 5 attempts per IP per 15 minutes
   const loginLimiter = rateLimit({
@@ -57,6 +61,15 @@ export function registerAuthRoutes(app: Express) {
     standardHeaders: true,
     legacyHeaders: false,
     message: { valid: false, error: "Trop de vérifications. Veuillez réessayer dans 15 minutes." },
+  });
+
+  const invitationLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => shouldSkipLoginRateLimit(req),
+    message: { error: "Trop de tentatives liées à cette invitation. Veuillez réessayer dans 15 minutes." },
   });
 
   // POST /api/auth/login - Authenticate with email/password
@@ -206,7 +219,7 @@ export function registerAuthRoutes(app: Express) {
       return;
     }
 
-    if (typeof password !== "string" || password.length < MIN_PASSWORD_LENGTH || password.length > 128) {
+    if (!isValidPassword(password)) {
       res.status(400).json({ error: `Le mot de passe doit contenir entre ${MIN_PASSWORD_LENGTH} et 128 caractères` });
       return;
     }
@@ -269,7 +282,7 @@ export function registerAuthRoutes(app: Express) {
   });
 
   // GET /api/auth/validate-invitation?token=xxx - Validate an invitation token
-  app.get("/api/auth/validate-invitation", async (req: Request, res: Response) => {
+  app.get("/api/auth/validate-invitation", invitationLimiter, async (req: Request, res: Response) => {
     const { token } = req.query;
     if (!token || typeof token !== "string") {
       res.status(400).json({ error: "Token d'invitation manquant" });
@@ -297,7 +310,7 @@ export function registerAuthRoutes(app: Express) {
   });
 
   // POST /api/auth/accept-invitation - Create account from invitation token
-  app.post("/api/auth/accept-invitation", async (req: Request, res: Response) => {
+  app.post("/api/auth/accept-invitation", invitationLimiter, async (req: Request, res: Response) => {
     const { token, password, name } = req.body || {};
 
     if (!token || !password) {
@@ -305,8 +318,8 @@ export function registerAuthRoutes(app: Express) {
       return;
     }
 
-    if (password.length < 6) {
-      res.status(400).json({ error: "Le mot de passe doit contenir au moins 6 caract\u00e8res" });
+    if (!isValidPassword(password)) {
+      res.status(400).json({ error: `Le mot de passe doit contenir entre ${MIN_PASSWORD_LENGTH} et 128 caractères` });
       return;
     }
 
@@ -331,18 +344,9 @@ export function registerAuthRoutes(app: Express) {
       // Check if email already exists
       const existingUser = await db.getUserByEmail(normalizedEmail);
       if (existingUser) {
-        // User already exists - just set password and mark invitation accepted
-        await db.setUserPasswordHash(existingUser.openId, await bcrypt.hash(password, SALT_ROUNDS));
-        await db.applyInvitationGroupsToUser(token, existingUser.id);
-        await db.markInvitationAccepted(token);
-
-        const sessionToken = await sdk.createSessionToken(existingUser.openId, {
-          name: existingUser.name || finalName,
-          expiresInMs: SESSION_DURATION_MS,
-        });
-        const cookieOptions = getSessionCookieOptions(req);
-        res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: SESSION_DURATION_MS });
-        res.json({ success: true, name: existingUser.name || finalName });
+        // A bearer invitation does not prove ownership of an existing account.
+        // Its password must only be changed through authenticated reset flows.
+        res.status(409).json({ code: "EXISTING_ACCOUNT_LOGIN_REQUIRED", error: "Un compte existe déjà pour cette invitation. Connectez-vous pour la revendiquer." });
         return;
       }
 
@@ -383,7 +387,37 @@ export function registerAuthRoutes(app: Express) {
       res.json({ success: true, name: finalName });
     } catch (error) {
       console.error("[Auth] Accept invitation failed", error);
-      res.status(500).json({ error: "Erreur lors de la cr\u00e9ation du compte" });
+      res.status(500).json({ error: "Erreur lors de la création du compte" });
+    }
+  });
+
+  // A logged-in account can claim an invitation only when its account email
+  // matches the invitation recipient. This permits group assignment without
+  // making a bearer invitation a password-reset mechanism.
+  app.post("/api/auth/claim-invitation", invitationLimiter, async (req: Request, res: Response) => {
+    const { token } = req.body || {};
+    if (typeof token !== "string" || !token) {
+      return res.status(400).json({ error: "Token d'invitation manquant" });
+    }
+
+    try {
+      const authenticatedUser = await sdk.authenticateRequest(req);
+      const invitation = await db.getInvitationByToken(token);
+      if (!invitation || invitation.status === "accepted" || invitation.status === "expired" || new Date(invitation.expiresAt) < new Date()) {
+        return res.status(410).json({ error: "Invitation invalide, expirée ou déjà utilisée" });
+      }
+
+      const accountEmail = authenticatedUser.email?.toLowerCase().trim();
+      if (!accountEmail || accountEmail !== invitation.email.toLowerCase().trim()) {
+        return res.status(403).json({ error: "Connectez-vous au compte correspondant à cette invitation" });
+      }
+
+      await db.applyInvitationGroupsToUser(token, authenticatedUser.id);
+      await db.markInvitationAccepted(token);
+      return res.json({ success: true, name: authenticatedUser.name || invitation.name || "Apprenant" });
+    } catch (error) {
+      console.error("[Auth] Claim invitation failed", error);
+      return res.status(401).json({ error: "Connexion requise pour revendiquer cette invitation" });
     }
   });
 }

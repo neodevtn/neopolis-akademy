@@ -22,7 +22,7 @@ import { createAdminNotification } from "./notificationsDb";
 import { createLearnerGroup, getCourseLifecycleState, getLearnerGroupDetail, listLearnerGroups, replaceLearnerGroupCourses, replaceLearnerGroupMembers, userCanAccessCourse } from "./db";
 import { updateExamSessionState } from "./db";
 import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getContentCompetencyTags, getGamificationConfig, getUserCompetencies, getUserGamification, replaceCompetencyFramework, saveGamificationConfig } from "./competencyService";
-import { getCertificationLessonCounts, getExamDefinition, getQuestionsForCertification, selectExamQuestions, type ExamQuestion } from "./examDefinition";
+import { getCertificationLessonCounts, getExamDefinition, getQuestionsForCertification, selectExamQuestions, toLearnerExamQuestions, type ExamQuestion } from "./examDefinition";
 import { scoreStoredExamSession, type StoredExamAnswer } from "./examAttemptScoring";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
@@ -550,6 +550,29 @@ export const appRouter = router({
         return definition?.isPublished ? definition : null;
       }),
 
+    getLessonQuizFallback: protectedProcedure
+      .input(z.object({ certificationId: z.string().min(2).max(200), questionCount: z.number().int().min(1).max(5).default(3) }))
+      .query(async ({ input }) => {
+        const questions = (await getQuestionsForCertification(input.certificationId))
+          .sort(() => Math.random() - 0.5)
+          .slice(0, input.questionCount)
+          .map((question) => ({ ...question, choices: [...question.choices].sort(() => Math.random() - 0.5) }));
+        return toLearnerExamQuestions(questions);
+      }),
+
+    gradeLessonQuizFallbackAnswer: protectedProcedure
+      .input(z.object({ certificationId: z.string().min(2).max(200), questionId: z.string().min(1).max(240), selectedId: z.string().min(1).max(80) }))
+      .mutation(async ({ input }) => {
+        const question = (await getQuestionsForCertification(input.certificationId)).find((candidate) => candidate.id === input.questionId);
+        if (!question) throw new TRPCError({ code: "NOT_FOUND", message: "Question de quiz introuvable." });
+        if (!question.choices.some((choice) => choice.id === input.selectedId)) throw new TRPCError({ code: "BAD_REQUEST", message: "Choix de réponse invalide." });
+        return {
+          correct: question.correctChoiceIds.includes(input.selectedId),
+          correctChoiceIds: question.correctChoiceIds,
+          explanation: question.explanation,
+        };
+      }),
+
     startExamSession: protectedProcedure
       .input(z.object({ certificationId: z.string().min(2).max(200) }))
       .mutation(async ({ ctx, input }) => {
@@ -564,7 +587,7 @@ export const appRouter = router({
         const startedAt = new Date();
         const expiresAt = new Date(startedAt.getTime() + definition.timeLimit * 60_000);
         await saveExamSession({ userId: ctx.user.id, certificationId: input.certificationId, questions, answers: [], currentIndex: 0, selectedIds: [], startedAt, expiresAt });
-        return { questions, startedAt, expiresAt, configuration: definition };
+        return { questions: toLearnerExamQuestions(questions), startedAt, expiresAt, configuration: definition };
       }),
 
     submitExamAttempt: protectedProcedure
@@ -592,8 +615,12 @@ export const appRouter = router({
         return await getExamAttempts(ctx.user.id, input?.certificationId);
       }),
 
-    getExamSession: protectedProcedure.input(z.object({ certificationId: z.string() })).query(async ({ ctx, input }) =>
-      getExamSession(ctx.user.id, input.certificationId)),
+    getExamSession: protectedProcedure.input(z.object({ certificationId: z.string() })).query(async ({ ctx, input }) => {
+      const session = await getExamSession(ctx.user.id, input.certificationId);
+      if (!session) return null;
+      const questions = Array.isArray(session.questions) ? session.questions as ExamQuestion[] : [];
+      return { ...session, questions: toLearnerExamQuestions(questions) };
+    }),
 
     saveExamSession: protectedProcedure.input(z.object({
       certificationId: z.string(), answers: z.array(z.any()), currentIndex: z.number().int().min(0), selectedIds: z.array(z.string()),

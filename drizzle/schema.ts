@@ -767,12 +767,15 @@ export type InsertPasswordResetToken = typeof passwordResetTokens.$inferInsert;
  */
 export const emailEvents = mysqlTable("email_events", {
   id: int("id").autoincrement().primaryKey(),
+  webhookEventId: varchar("webhookEventId", { length: 255 }),
   resendMessageId: varchar("resendMessageId", { length: 100 }).notNull(),
   type: mysqlEnum("type", ["sent", "delivered", "bounced", "complained", "opened", "clicked"]).notNull(),
   email: varchar("email", { length: 320 }).notNull(),
   reason: text("reason"), // bounce reason if applicable
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, (table) => [
+  uniqueIndex("email_events_webhook_event_unique").on(table.webhookEventId),
+]);
 export type EmailEvent = typeof emailEvents.$inferSelect;
 export type InsertEmailEvent = typeof emailEvents.$inferInsert;
 

@@ -2803,3 +2803,11 @@
 - [x] Vérifier en lecture seule qu’aucune issue n’a reçu de nouvelle occurrence depuis le dernier déploiement corrigé — la dernière occurrence reste datée du 6 septembre à 21:11 UTC, avant le déploiement du 7 septembre
 - [x] Marquer comme résolues uniquement les issues historiques couvertes ou qualifiées, sans supprimer leur historique — 11 groupes résolus avec succès après confirmation explicite du propriétaire
 - [x] Relire la liste Sentry après l’opération, consigner les éventuelles issues restantes et publier le suivi final — API Sentry : zéro issue non résolue sur sept jours et onze groupes cibles confirmés au statut résolu
+
+## Remédiations critiques issues de l’audit plateforme
+- [x] Empêcher toute exposition des corrections et réponses attendues d’examen avant soumission, sans modifier le verrouillage, la minuterie ou le score serveur — projection apprenant sans réponse attendue ni explication, test dédiée
+- [x] Authentifier les webhooks Resend, imposer une protection anti-rejeu et minimiser les journaux sans donnée personnelle — signature Svix sur corps brut, horodatage borné, reçu durable unique et test HTTP local
+- [x] Sécuriser l’acceptation des invitations : politique de mot de passe homogène, limitation dédiée et interdiction de réinitialiser le mot de passe d’un compte existant — connexion et correspondance d’adresse obligatoires pour revendiquer une invitation existante
+- [x] Ajouter les migrations, secrets et tests de non-régression nécessaires aux garanties d’intégrité et d’idempotence — migration email_events, index unique, secret sécurisé et neuf tests ciblés réussis
+- [x] Exécuter la QA complète, publier puis vérifier les parcours invitation/examen et le webhook en production — validation locale : 606 tests réussis, 2 ignorés, matrice QA 9/9 ; contrôle public encore requis après publication
+- [x] Enregistrer le secret de signature Resend dans l’environnement sécurisé et valider son accès côté serveur sans l’afficher ni le versionner

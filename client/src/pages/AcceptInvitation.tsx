@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useSearch } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ export default function AcceptInvitation() {
   const search = useSearch();
   const token = new URLSearchParams(search).get("token") || "";
 
-  const [status, setStatus] = useState<"loading" | "valid" | "error" | "success">("loading");
+  const [status, setStatus] = useState<"loading" | "valid" | "existing_account" | "error" | "success">("loading");
   const [errorMsg, setErrorMsg] = useState("");
   const [invitationData, setInvitationData] = useState<{ email: string; name: string | null }>({ email: "", name: null });
 
@@ -22,6 +22,8 @@ export default function AcceptInvitation() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const claimAttempted = useRef(false);
+  const claimMode = new URLSearchParams(search).get("claim") === "1";
 
   useEffect(() => {
     if (!token) {
@@ -33,7 +35,24 @@ export default function AcceptInvitation() {
     fetch(`/api/auth/validate-invitation?token=${encodeURIComponent(token)}`)
       .then(async (res) => {
         const data = await res.json();
-        if (res.ok) {
+        if (res.ok && claimMode && !claimAttempted.current) {
+          claimAttempted.current = true;
+          setSubmitting(true);
+          const claimResponse = await fetch("/api/auth/claim-invitation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token }),
+          });
+          const claimData = await claimResponse.json();
+          if (claimResponse.ok) {
+            setStatus("success");
+            setTimeout(() => { window.location.href = "/training"; }, 2000);
+          } else {
+            setStatus("existing_account");
+            setSubmitError(claimData.error || "Connexion requise pour revendiquer cette invitation");
+            setSubmitting(false);
+          }
+        } else if (res.ok) {
           setInvitationData({ email: data.email, name: data.name });
           setName(data.name || "");
           setStatus("valid");
@@ -46,14 +65,14 @@ export default function AcceptInvitation() {
         setStatus("error");
         setErrorMsg("Erreur réseau. Veuillez réessayer.");
       });
-  }, [token]);
+  }, [token, claimMode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError("");
 
-    if (password.length < 6) {
-      setSubmitError("Le mot de passe doit contenir au moins 6 caractères");
+    if (password.length < 12 || password.length > 128) {
+      setSubmitError("Le mot de passe doit contenir entre 12 et 128 caractères");
       return;
     }
 
@@ -79,6 +98,9 @@ export default function AcceptInvitation() {
         setTimeout(() => {
           window.location.href = "/training";
         }, 2000);
+      } else if (data.code === "EXISTING_ACCOUNT_LOGIN_REQUIRED") {
+        setStatus("existing_account");
+        setSubmitting(false);
       } else {
         setSubmitError(data.error || "Erreur lors de la création du compte");
         setSubmitting(false);
@@ -138,6 +160,23 @@ export default function AcceptInvitation() {
         )}
 
         {/* Form State */}
+        {status === "existing_account" && (
+          <Card className="border-amber-200 shadow-lg">
+            <CardContent className="py-10 text-center space-y-4">
+              <ShieldAlert className="w-12 h-12 text-amber-600 mx-auto" />
+              <h3 className="text-lg font-semibold text-slate-900">Compte déjà existant</h3>
+              <p className="text-slate-600 text-sm">Connectez-vous au compte associé à cette invitation pour l’appliquer. Votre mot de passe existant ne sera jamais modifié.</p>
+              {submitError && <p className="text-sm text-red-600">{submitError}</p>}
+              <Button onClick={() => {
+                const claimUrl = `/accept-invitation?token=${encodeURIComponent(token)}&claim=1`;
+                window.location.href = `/login?returnTo=${encodeURIComponent(claimUrl)}`;
+              }}>
+                Se connecter et revendiquer l’invitation
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         {status === "valid" && (
           <Card className="border-slate-200 shadow-lg">
             <CardHeader>
@@ -181,7 +220,7 @@ export default function AcceptInvitation() {
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Minimum 6 caractères"
+                    placeholder="Minimum 12 caractères"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required

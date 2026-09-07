@@ -18,14 +18,14 @@ export type ExamQuestion = {
 
 type StoredConfigurations = Record<string, Partial<ExamConfiguration> & { questionCount?: number }>;
 
-function publicDataPath(filename: string): string {
-  const root = process.env.NODE_ENV === "production" ? "dist/public/data" : "client/public/data";
+function privateDataPath(filename: string): string {
+  const root = process.env.NODE_ENV === "production" ? "dist/data" : "server/data";
   return path.resolve(import.meta.dirname, "..", root, filename);
 }
 
 async function readJsonFile<T>(filename: string, fallback: T): Promise<T> {
   try {
-    return JSON.parse(await fs.readFile(publicDataPath(filename), "utf8")) as T;
+    return JSON.parse(await fs.readFile(privateDataPath(filename), "utf8")) as T;
   } catch {
     return fallback;
   }
@@ -170,5 +170,16 @@ export function selectExamQuestions(questions: ExamQuestion[], configuration: Ex
   return pool.slice(0, configuration.totalQuestions).map((question) => ({
     ...question,
     choices: configuration.shuffleChoices ? [...question.choices].sort(() => Math.random() - 0.5) : question.choices,
+  }));
+}
+
+/** Projection sans correction destinée exclusivement au navigateur pendant l’épreuve. */
+export function toLearnerExamQuestions(questions: ExamQuestion[]) {
+  return questions.map(({ id, certificationId, domain, question, choices }) => ({
+    id,
+    certificationId,
+    domain,
+    question,
+    choices: choices.map(({ id: choiceId, text }) => ({ id: choiceId, text })),
   }));
 }

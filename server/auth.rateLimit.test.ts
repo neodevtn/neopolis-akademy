@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shouldSkipLoginRateLimit } from "./auth";
+import { isValidPassword, shouldSkipLoginRateLimit } from "./auth";
 
 describe("shouldSkipLoginRateLimit", () => {
   const previewProbe = { get: (header: string) => header === "x-neopolis-qa-probe" ? "1" : undefined };
@@ -12,5 +12,13 @@ describe("shouldSkipLoginRateLimit", () => {
 
   it("ne permet jamais cette exemption en production", () => {
     expect(shouldSkipLoginRateLimit(previewProbe as never, true)).toBe(false);
+  });
+});
+
+describe("isValidPassword", () => {
+  it("impose la même plage de longueur aux invitations et à la réinitialisation", () => {
+    expect(isValidPassword("court")).toBe(false);
+    expect(isValidPassword("douze-caract")).toBe(true);
+    expect(isValidPassword("x".repeat(129))).toBe(false);
   });
 });

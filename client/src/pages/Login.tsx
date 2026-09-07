@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useSearch } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,10 @@ import { trackEvent } from "@/lib/analytics";
 
 export default function Login() {
   const [, navigate] = useLocation();
+  const search = useSearch();
   const { t } = useLanguage();
+  const returnTo = new URLSearchParams(search).get("returnTo");
+  const safeReturnTo = returnTo && returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : null;
 
   // Login state
   const [loginEmail, setLoginEmail] = useState("");
@@ -39,9 +42,12 @@ export default function Login() {
         return;
       }
 
-      // Redirect based on role
+      // A same-origin return URL is used only for flows that require a prior
+      // authentication step, such as claiming an invitation for an existing account.
       trackEvent("login", { method: "password", role_type: data.role === "admin" ? "admin" : "learner" });
-      if (data.role === "admin") {
+      if (safeReturnTo) {
+        window.location.href = safeReturnTo;
+      } else if (data.role === "admin") {
         window.location.href = "/admin";
       } else {
         window.location.href = "/training";
