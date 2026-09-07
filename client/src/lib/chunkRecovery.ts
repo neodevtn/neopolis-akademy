@@ -13,7 +13,7 @@ export function isStaleClientBundleError(error: unknown): boolean {
 export function isRecoverableClientRenderError(error: unknown): boolean {
   if (isStaleClientBundleError(error)) return true;
   const message = error instanceof Error ? `${error.message}\n${error.stack || ""}` : String(error || "");
-  return /failed to execute .?insertbefore.? on .?node.?|node before which the new node is to be inserted is not a child/i.test(message);
+  return /failed to execute .?(insertbefore|removechild).? on .?node.?|node before which the new node is to be inserted is not a child|node to be removed is not a child/i.test(message);
 }
 
 export function getClientBundleRecoveryScope(error: unknown): "stale-chunk" | "lazy-default" | "react-tree" {
@@ -21,7 +21,7 @@ export function getClientBundleRecoveryScope(error: unknown): "stale-chunk" | "l
   if (/cannot read properties of undefined \(reading ['"]default['"]\)|can['’]t access property ['"]default['"], .*_result is undefined/i.test(message)) {
     return "lazy-default";
   }
-  if (/failed to execute .?insertbefore.? on .?node.?|node before which the new node is to be inserted is not a child/i.test(message)) {
+  if (/failed to execute .?(insertbefore|removechild).? on .?node.?|node before which the new node is to be inserted is not a child|node to be removed is not a child/i.test(message)) {
     return "react-tree";
   }
   return "stale-chunk";

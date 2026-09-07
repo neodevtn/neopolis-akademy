@@ -28,6 +28,9 @@ const BUILD_ERROR_PATTERNS = [
   '%Loading module from%',
   '%Loading chunk%',
   '%ChunkLoadError%',
+  "%Cannot read properties of undefined (reading 'default')%",
+  '%can\'t access property "default", %_result is undefined%',
+  "%Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at 'blob:%",
 ];
 
 export const systemRouter = router({
@@ -81,10 +84,18 @@ export const systemRouter = router({
         'Loading module from',
         'Loading chunk',
         'ChunkLoadError',
+        "Cannot read properties of undefined (reading 'default')",
+        'can\'t access property "default"',
       ].some(pattern => input.message.includes(pattern));
+
+      const isExternalWorkerError = /Failed to execute ['"]importScripts['"] on ['"]WorkerGlobalScope['"].*blob:/i.test(input.message);
       
-      if (isBuildError) {
+      if (isBuildError || isExternalWorkerError) {
         return { accepted: false, reason: 'build_error_filtered' } as const;
+      }
+
+      if (process.env.NODE_ENV === "test" || process.env.VITEST === "true") {
+        return { accepted: true } as const;
       }
 
       // Persist to database

@@ -70,6 +70,15 @@ describe("isStaleClientBundleError", () => {
     ).toBe(true);
   });
 
+  it("recovers the removeChild DOM failure caused by a stale or externally mutated React tree", () => {
+    const error = new DOMException(
+      "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.",
+      "NotFoundError",
+    );
+    expect(isRecoverableClientRenderError(error)).toBe(true);
+    expect(getClientBundleRecoveryScope(error)).toBe("react-tree");
+  });
+
   it("does not reload for an unrelated React rendering failure", () => {
     expect(isRecoverableClientRenderError(new Error("Objects are not valid as a React child"))).toBe(false);
   });
@@ -90,5 +99,13 @@ describe("isStaleClientBundleError", () => {
     expect(retryStaleClientBundle(new TypeError("Cannot read properties of undefined (reading 'default')"))).toBe(true);
     expect(retryStaleClientBundle(new DOMException("Failed to execute 'insertBefore' on 'Node'", "NotFoundError"))).toBe(true);
     expect(replace).toHaveBeenCalledTimes(2);
+  });
+
+  it("ne recharge qu’une fois une erreur removeChild sur la même route", () => {
+    const { replace } = installRecoveryWindow();
+    const error = new DOMException("Failed to execute 'removeChild' on 'Node'", "NotFoundError");
+    expect(retryStaleClientBundle(error)).toBe(true);
+    expect(retryStaleClientBundle(error)).toBe(false);
+    expect(replace).toHaveBeenCalledOnce();
   });
 });

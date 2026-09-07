@@ -66,15 +66,18 @@ const IGNORED_PATTERNS = [
   'Loading module from',
   'Loading chunk',
   'ChunkLoadError',
+  "Cannot read properties of undefined (reading 'default')",
+  'can\'t access property "default"',
 ];
 
-function shouldIgnoreError(message: string): boolean {
-  return IGNORED_PATTERNS.some(pattern => message.includes(pattern));
+export function shouldIgnoreClientError(message: string): boolean {
+  if (IGNORED_PATTERNS.some(pattern => message.includes(pattern))) return true;
+  return /Failed to execute ['"]importScripts['"] on ['"]WorkerGlobalScope['"].*blob:/i.test(message);
 }
 
 async function sendReport(report: ErrorReport): Promise<void> {
   // Ignore build/deploy errors (stale chunks after new deployment)
-  if (shouldIgnoreError(report.message)) return;
+  if (shouldIgnoreClientError(report.message)) return;
 
   // Rate limiting
   if (reportCount >= MAX_REPORTS_PER_SESSION) return;
@@ -118,6 +121,7 @@ async function sendReport(report: ErrorReport): Promise<void> {
  * Report an error from React ErrorBoundary
  */
 export function reportBoundaryError(error: Error, componentStack?: string): void {
+  if (shouldIgnoreClientError(error.message)) return;
   // React Error Boundaries consume rendering exceptions before they reach the
   // browser's global error event. Load Sentry only at error time so the
   // monitoring SDK does not delay the public landing page's first render.

@@ -610,8 +610,8 @@ export default function Apply() {
             <div className="space-y-2">
               <Label>{t({fr: "Pays de résidence", en: "Country of Residence", ar: "دولة الإقامة"})} *</Label>
               <Select value={formData.country} onValueChange={v => updateField("country", v)}>
-                <SelectTrigger className={errors.country ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez votre pays", en: "Select your country", ar: "اختر بلدك"})} /></SelectTrigger>
-                <SelectContent>{africanCountriesData.map(c => <SelectItem key={c.fr} value={c.fr}>{t(c)}</SelectItem>)}</SelectContent>
+                <SelectTrigger translate="no" className={errors.country ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez votre pays", en: "Select your country", ar: "اختر بلدك"})} /></SelectTrigger>
+                <SelectContent translate="no">{africanCountriesData.map(c => <SelectItem key={c.fr} value={c.fr}>{t(c)}</SelectItem>)}</SelectContent>
               </Select>
               <FieldError error={errors.country} />
             </div>
@@ -623,8 +623,8 @@ export default function Apply() {
             <div className="space-y-2">
               <Label>{t({fr: "Secteur d'activité", en: "Industry Sector", ar: "قطاع النشاط"})} *</Label>
               <Select value={formData.sector} onValueChange={v => updateField("sector", v)}>
-                <SelectTrigger className={errors.sector ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez votre secteur", en: "Select your sector", ar: "اختر قطاعك"})} /></SelectTrigger>
-                <SelectContent>{sectorsData.map(s => <SelectItem key={s.fr} value={s.fr}>{t(s)}</SelectItem>)}</SelectContent>
+                <SelectTrigger translate="no" className={errors.sector ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez votre secteur", en: "Select your sector", ar: "اختر قطاعك"})} /></SelectTrigger>
+                <SelectContent translate="no">{sectorsData.map(s => <SelectItem key={s.fr} value={s.fr}>{t(s)}</SelectItem>)}</SelectContent>
               </Select>
               <FieldError error={errors.sector} />
             </div>
@@ -1107,8 +1107,8 @@ function SelectField({ label, value, onChange, error, options }: {
     <div className="space-y-2">
       <Label>{label}</Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className={error ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez...", en: "Select...", ar: "اختر..."})} /></SelectTrigger>
-        <SelectContent>{options.map(([val, label]) => <SelectItem key={val} value={val}>{label}</SelectItem>)}</SelectContent>
+        <SelectTrigger translate="no" className={error ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez...", en: "Select...", ar: "اختر..."})} /></SelectTrigger>
+        <SelectContent translate="no">{options.map(([val, label]) => <SelectItem key={val} value={val}>{label}</SelectItem>)}</SelectContent>
       </Select>
       <FieldError error={error} />
     </div>

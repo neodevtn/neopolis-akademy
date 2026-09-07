@@ -2,7 +2,7 @@
  * Integration tests for admin tRPC endpoints
  * Tests authorization, input validation, and business logic
  */
-import { describe, expect, it, beforeAll } from "vitest";
+import { describe, expect, it, beforeAll, vi } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
@@ -342,6 +342,7 @@ describe("Learner API - Communications", () => {
 
 describe("System Router - Error Reporting", () => {
   it("system.reportError accepts valid error data", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const caller = appRouter.createCaller(createAnonymousContext());
     const result = await caller.system.reportError({
       message: "Test error from integration test",
@@ -351,7 +352,31 @@ describe("System Router - Error Reporting", () => {
       timestamp: Date.now(),
     });
     
-    expect(result).toBeDefined();
+    expect(result).toEqual({ accepted: true });
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it("system.reportError filters obsolete lazy chunks before persistence", async () => {
+    const caller = appRouter.createCaller(createAnonymousContext());
+    await expect(caller.system.reportError({
+      message: "Cannot read properties of undefined (reading 'default')",
+      source: "boundary",
+      stack: "at Lazy",
+      url: "https://akademy.neodev.click/training/example",
+      timestamp: Date.now(),
+    })).resolves.toEqual({ accepted: false, reason: "build_error_filtered" });
+  });
+
+  it("system.reportError filters blob worker failures from external Chrome contexts", async () => {
+    const caller = appRouter.createCaller(createAnonymousContext());
+    await expect(caller.system.reportError({
+      message: "Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at 'blob:https://example.invalid/id' failed to load.",
+      source: "window",
+      stack: "",
+      url: "https://akademy.neodev.click/",
+      timestamp: Date.now(),
+    })).resolves.toEqual({ accepted: false, reason: "build_error_filtered" });
   });
 
   it("system.reportError validates required fields", async () => {

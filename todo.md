@@ -2778,3 +2778,13 @@
 - [x] Corriger la gestion du hash sur `/` sans modifier le contenu, le menu partagé ni les routes publiques — liens hash-only retirés de l’interception Wouter, hash mis à jour explicitement et défilement recalculé après stabilisation du layout
 - [x] Ajouter un test de non-régression pour clic sur ancre déjà présente et navigation depuis une autre route — 24 scénarios validés en 1280×720 et 390×844, pour clic accueil, URL directe et navigation depuis une autre page
 - [x] Publier puis vérifier les quatre ancres sur desktop et mobile dans le domaine public — nouvelle révision propagée après libération du quota ; 24 scénarios publics réussis en 1280×720 et 390×844, avec hash correct et section visible sous le header
+
+## Analyse et correction des crashs récents
+- [x] Collecter les crashs récents du monitoring interne et des journaux de production sans consigner de donnée personnelle — 90 enregistrements agrégés en 7 signatures, avec routes sans paramètres, familles de navigateur et piles minimisées
+- [x] Dédupliquer et classer chaque signature entre incident de déploiement, erreur ancienne et bug applicatif encore reproductible — 77 faux incidents de test, 3 anciens chunks Lazy, 1 Worker blob externe, 8 erreurs AdminTraining déjà corrigées et 1 mutation DOM récente sur `/apply`
+- [x] Corriger les causes actives et ajouter des tests de non-régression ciblés — récupération unique de `removeChild`, Select protégés de la traduction automatique, filtres Worker/Lazy et garde-fou Vitest ajoutés
+- [x] Exécuter la suite complète et vérifier les parcours affectés dans un navigateur isolé — candidature rejouée en desktop/mobile avec changements répétés des deux Select, zéro ErrorBoundary, zéro pageerror et zéro ressource applicative en échec ; 594 tests réussis et matrice 9/9
+- [ ] Publier puis confirmer sur le domaine public la disparition des crashs reproductibles et documenter les incidents seulement qualifiés
+- [x] Récupérer une seule fois les erreurs DOM `removeChild` comme les arbres React obsolètes, sans boucle de rechargement — portée `react-tree` testée avec un seul remplacement de page par route
+- [x] Empêcher les tests d’intégration de persister de faux crashs `/test` dans le monitoring réel — garde-fou `NODE_ENV`/`VITEST` vérifié sans journal serveur
+- [x] Filtrer l’erreur `WorkerGlobalScope importScripts` provenant d’un contexte blob externe, l’application ne déclarant aucun Web Worker — filtrage client et serveur testé sans masquer les erreurs DOM applicatives
