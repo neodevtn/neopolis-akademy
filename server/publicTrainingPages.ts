@@ -425,6 +425,7 @@ export function registerPublicTrainingPages(app: Express) {
       "Content-Length": String(payload.byteLength),
       "X-Content-Type-Options": "nosniff",
       "X-Robots-Tag": "noindex",
+      "X-Neopolis-Sitemap-Version": "2026-09-08-small-batches-v1",
     }).end(payload);
   };
   const sitemapFiles = getPublicTrainingSitemapFiles();

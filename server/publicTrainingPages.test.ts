@@ -208,6 +208,7 @@ describe("pages publiques de formations IA", () => {
           expect(response.headers.get("set-cookie")).toBeNull();
           expect(response.headers.get("content-encoding")).toBeNull();
           expect(Number(response.headers.get("content-length"))).toBe(Buffer.byteLength(body, "utf8"));
+          expect(response.headers.get("x-neopolis-sitemap-version")).toBe("2026-09-08-small-batches-v1");
           expect(body).toMatch(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset/);
         }
       }
