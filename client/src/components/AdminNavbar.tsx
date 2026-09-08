@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { BrandLogo } from "@/components/BrandLogo";
-import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, ChevronDown, ClipboardCheck, FileImage, Gift, Layers, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
+import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, BriefcaseBusiness, ChevronDown, ClipboardCheck, FileImage, Gift, Layers, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
 
-type AdminPage = "candidatures" | "training" | "content" | "media" | "errors";
+type AdminPage = "candidatures" | "training" | "talent" | "content" | "media" | "errors";
 type NavItem = { label: string; href: string; icon: typeof LayoutDashboard; page: AdminPage; description: string };
 
 const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
@@ -20,6 +20,7 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
   {
     label: "Apprenants",
     items: [
+      { label: "Talents & réseau", href: "/admin/talents", icon: BriefcaseBusiness, page: "talent", description: "Parcours, entretiens et opportunités" },
       { label: "Suivi des apprenants", href: "/admin/training?tab=learners", icon: Users, page: "training", description: "Progression et engagement" },
       { label: "Suivi des examens", href: "/admin/training?tab=exams", icon: ClipboardCheck, page: "training", description: "Résultats et durées" },
       { label: "Groupes d’apprenants", href: "/admin/training?tab=groups", icon: Layers, page: "training", description: "Accès aux formations" },

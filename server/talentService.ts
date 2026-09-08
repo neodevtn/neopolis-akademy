@@ -1,5 +1,6 @@
 import { and, asc, count, desc, eq, inArray, like, or, sql } from "drizzle-orm";
-import { getDb } from "./db";
+import { getDb, getLearnerProgress } from "./db";
+import trainingIndex from "../client/src/data/trainingIndex.json";
 import {
   applications,
   talentAssignments,
@@ -22,6 +23,13 @@ export const DEFAULT_TALENT_STAGES = [
   { key: "alumni", label: { fr: "Alumni", en: "Alumni", ar: "الخريجون" }, description: { fr: "Membre historique du réseau à maintenir dans le suivi.", en: "Former network member retained for follow-up.", ar: "عضو سابق في الشبكة تتم متابعة مساره." }, color: "#b45309", icon: "badge-check", sortOrder: 70 },
   { key: "inactive", label: { fr: "Inactif", en: "Inactive", ar: "غير نشط" }, description: { fr: "Suivi suspendu sans suppression de l’historique.", en: "Follow-up paused without deleting history.", ar: "تم تعليق المتابعة دون حذف السجل." }, color: "#475569", icon: "circle-pause", sortOrder: 80 },
 ] as const;
+
+const certificationTitles = new Map(
+  trainingIndex.certifications.map((certification) => [
+    certification.id,
+    certification.title.fr || certification.title.en || certification.id,
+  ]),
+);
 
 type Db = NonNullable<Awaited<ReturnType<typeof getDb>>>;
 
@@ -199,15 +207,37 @@ export async function getTalentProfileDetail(userId: number, actorId: number) {
   if (!user) throw new Error("Talent user not found");
   const [stage] = profile.stageId ? await db.select().from(talentStages).where(eq(talentStages.id, profile.stageId)).limit(1) : [];
   const [application] = profile.sourceApplicationId ? await db.select({ id: applications.id, currentRole: applications.currentRole, sector: applications.sector, country: applications.country, city: applications.city, scoreTotal: applications.scoreTotal, status: applications.status, createdAt: applications.createdAt }).from(applications).where(eq(applications.id, profile.sourceApplicationId)).limit(1) : [];
-  const [history, events, evaluations, assignments, tasks] = await Promise.all([
+  const [history, events, evaluations, assignments, tasks, learning] = await Promise.all([
     db.select({ history: talentStageHistory, fromStage: { id: talentStages.id, label: talentStages.label } }).from(talentStageHistory).leftJoin(talentStages, eq(talentStages.id, talentStageHistory.fromStageId)).where(eq(talentStageHistory.userId, userId)).orderBy(desc(talentStageHistory.createdAt)),
     db.select().from(talentEvents).where(eq(talentEvents.userId, userId)).orderBy(desc(talentEvents.startsAt), desc(talentEvents.createdAt)),
     db.select().from(talentEvaluations).where(eq(talentEvaluations.userId, userId)).orderBy(desc(talentEvaluations.createdAt)),
     db.select().from(talentAssignments).where(eq(talentAssignments.userId, userId)).orderBy(desc(talentAssignments.createdAt)),
     db.select().from(talentTasks).where(eq(talentTasks.userId, userId)).orderBy(asc(talentTasks.status), asc(talentTasks.dueAt), desc(talentTasks.createdAt)),
+    getLearnerProgress(userId),
   ]);
   const stages = await ensureTalentStages(db);
-  return { profile, user, stage: stage || null, application: application || null, stages, history, events, evaluations, assignments, tasks };
+  return {
+    profile,
+    user,
+    stage: stage || null,
+    application: application || null,
+    stages,
+    history,
+    events,
+    evaluations,
+    assignments,
+    tasks,
+    learning: {
+      metrics: learning.metrics,
+      certificationProgress: learning.certificationProgress.map((item) => ({
+        ...item,
+        title: certificationTitles.get(item.certificationId) || item.certificationId,
+      })),
+      groups: learning.groups,
+      milestones: learning.milestones,
+      competencies: learning.competencies,
+    },
+  };
 }
 
 export async function updateTalentProfile(input: { userId: number; priority: "low" | "normal" | "high" | "urgent"; availability: "unknown" | "available" | "busy" | "unavailable"; headline?: string; summary?: string; ownerId?: number | null; nextReviewAt?: Date | null }, actorId: number) {

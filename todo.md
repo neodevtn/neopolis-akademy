@@ -2828,16 +2828,19 @@
 - [x] Vérifier et rétablir la notification de nouvelle version afin que les sessions ouvertes détectent une publication et proposent un rafraîchissement sans interrompre l’apprentissage — route JSON serveur prioritaire `no-store`, calculée depuis le document livré ; routes avec paramètres reconnues, contrôle au retour au premier plan et toutes les 45 secondes, masquage limité à la version rejetée ; bundle publié et réponse JSON contrôlés
 
 ## Talent CRM et gestion longitudinale du réseau
-- [ ] Cartographier les fonctions existantes de profil, candidature, groupes, examens, communications, activité, rôles et parrainage afin d’éviter les doublons
-- [ ] Concevoir un dossier membre longitudinal avec étapes configurables, historique, tâches, rendez-vous, évaluations, certifications, affectations, recrutement et statut d’ambassadeur
-- [ ] Définir les règles d’accès, de confidentialité, de traçabilité et les transitions de statut, sans mécanisme de rémunération pyramidale
-- [ ] Implémenter le modèle de données et les procédures administratives transactionnelles du Talent CRM
-- [ ] Construire l’espace administratif avec vue portefeuille, dossier 360°, timeline, actions, filtres et indicateurs standards Neopolis
-- [ ] Ajouter les convocations visio/présentiel, demandes de certification, groupes de travail, opportunités et décisions avec notifications traçables
-- [ ] Tester les permissions, migrations, parcours admin/apprenant, responsive et non-régression ; publier puis vérifier la production
+- [x] Cartographier les fonctions existantes de profil, candidature, groupes, examens, communications, activité, rôles et parrainage afin d’éviter les doublons
+- [x] Concevoir un dossier membre longitudinal avec étapes configurables, historique, tâches, rendez-vous, évaluations, certifications, affectations, recrutement et statut d’ambassadeur
+- [x] Définir les règles d’accès, de confidentialité, de traçabilité et les transitions de statut, sans mécanisme de rémunération pyramidale
+- [x] Implémenter le modèle de données et les procédures administratives transactionnelles du Talent CRM — migration non destructive 0043 appliquée, services administrateur et apprenant typés
+- [x] Construire l’espace administratif avec vue portefeuille, dossier 360°, timeline, actions, filtres et indicateurs standards Neopolis — métriques pédagogiques existantes réutilisées sans recalcul parallèle
+- [x] Ajouter les convocations visio/présentiel, demandes de certification, groupes de travail, opportunités et décisions avec notifications traçables
+- [ ] Tester les permissions, migrations, parcours admin/apprenant, responsive et non-régression ; publier puis vérifier la production — 632 tests réussis, 2 ignorés, TypeScript et QA 9/9 validés localement
+- [x] Ajouter une table paginée et recherchable des membres avec filtres par étape et priorité, lignes cliquables et colonne Actions
+- [x] Ajouter les formulaires administrateur standardisés pour rendez-vous, évaluation, tâche et affectation, sans ressaisie des données déjà présentes dans le dossier membre
+- [x] Ajouter l’onglet apprenant « Évolution » avec acceptation, refus ou demande de replanification d’une convocation et visibilité contrôlée des opportunités
 
 ## Stabilisation Search Console — transferts XML intermittents
 - [x] Reproduire l’échec réel derrière l’état Search Console : certaines réponses XML démarrent en HTTP 200 puis restent partielles jusqu’au timeout, notamment les anciens lots d’environ 190 Ko
 - [x] Réduire les lots à 50 URL maximum, préconstruire les XML en mémoire et servir une longueur exacte avec cache public contrôlé
 - [x] Valider localement 19 fichiers canoniques, tous inférieurs à 64 Ko et servis en moins de 10 ms sur l’instance chaude
-- [ ] Publier puis contrôler avec Googlebot desktop/mobile les 19 fichiers canoniques et les alias historiques sans réponse partielle ni timeout
+- [x] Publier puis contrôler avec Googlebot desktop/mobile les 19 fichiers canoniques et les alias historiques sans réponse partielle ni timeout — version `818c2770` propagée, index à 19 fichiers, sonde exhaustive publique réussie sur 909 URL

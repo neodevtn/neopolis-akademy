@@ -124,6 +124,16 @@ describe("Admin API - Authorization", () => {
     ).rejects.toThrow("administrateur principal");
   });
 
+  it("talentAdmin rejects regular learners", async () => {
+    const caller = appRouter.createCaller(createUserContext());
+    await expect(caller.talentAdmin.overview()).rejects.toThrow("Accès réservé aux administrateurs");
+  });
+
+  it("talent learner journey rejects unauthenticated access", async () => {
+    const caller = appRouter.createCaller(createAnonymousContext());
+    await expect(caller.talent.getMine()).rejects.toThrow();
+  });
+
   it("admin.createInvitation rejects non-admin users", async () => {
     const caller = appRouter.createCaller(createUserContext());
     await expect(

@@ -6,6 +6,7 @@ describe("learner dashboard navigation", () => {
     expect(getLearnerDashboardTab("?tab=catalog")).toBe("catalog");
     expect(getLearnerDashboardTab("?tab=achievements")).toBe("achievements");
     expect(getLearnerDashboardTab("?tab=communications")).toBe("communications");
+    expect(getLearnerDashboardTab("?tab=evolution")).toBe("evolution");
     expect(getLearnerDashboardTab("?tab=parrainage")).toBe("parrainage");
     expect(getLearnerDashboardTab("?tab=parainnage")).toBe("parrainage");
     expect(getLearnerDashboardTab("?tab=unknown")).toBe("my-path");

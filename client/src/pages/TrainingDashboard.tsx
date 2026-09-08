@@ -36,6 +36,7 @@ import {
   SlidersHorizontal,
   X,
   Gift,
+  BriefcaseBusiness,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -58,6 +59,7 @@ import { ReferralProgramTab } from "@/components/ReferralProgramTab";
 import { extractTargetJobRoles, getTrainingFormatDefinitions, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 import { isAdministrativeRole } from "@shared/roles";
+import { TalentJourneyTab } from "@/components/TalentJourneyTab";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -294,6 +296,7 @@ export default function TrainingDashboard() {
   const tabs: { id: LearnerDashboardTab; label: { en: string; fr: string }; icon: React.ReactNode }[] = [
     { id: "orientation", label: { en: "My Orientation", fr: "Mon orientation" }, icon: <Compass className="w-4 h-4" /> },
     { id: "my-path", label: { en: "My Progress", fr: "Mon Parcours" }, icon: <Compass className="w-4 h-4" /> },
+    { id: "evolution", label: { en: "My Journey", fr: "Mon évolution" }, icon: <BriefcaseBusiness className="w-4 h-4" /> },
     { id: "achievements", label: { en: "My Achievements", fr: "Mes acquis" }, icon: <Trophy className="w-4 h-4" /> },
     { id: "skills", label: { en: "My Skills", fr: "Mes compétences" }, icon: <Sparkles className="w-4 h-4" /> },
     { id: "catalog", label: { en: "Catalog", fr: "Catalogue" }, icon: <Library className="w-4 h-4" /> },
@@ -453,6 +456,17 @@ export default function TrainingDashboard() {
                 onCompleteDiagnostic={(answers) => completeOrientationMutation.mutate({ answers })}
                 onRespondToProposal={(input) => respondToOrientationProposalMutation.mutate(input)}
               />
+            </motion.div>
+          )}
+          {activeTab === "evolution" && (
+            <motion.div
+              key="evolution"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: easeOut }}
+            >
+              <TalentJourneyTab />
             </motion.div>
           )}
           {activeTab === "catalog" && (

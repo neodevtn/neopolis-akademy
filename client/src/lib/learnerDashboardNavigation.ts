@@ -1,6 +1,7 @@
 export const LEARNER_DASHBOARD_TABS = [
   "orientation",
   "my-path",
+  "evolution",
   "achievements",
   "skills",
   "catalog",

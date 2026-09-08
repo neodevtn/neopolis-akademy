@@ -22,6 +22,7 @@ const AdminTraining = lazy(() => import("./pages/AdminTraining"));
 const AdminContentManager = lazy(() => import("./pages/AdminContentManager"));
 const AdminMediaLibrary = lazy(() => import("./pages/AdminMediaLibrary"));
 const AdminErrors = lazy(() => import("./pages/AdminErrors"));
+const AdminTalentCRM = lazy(() => import("./pages/AdminTalentCRM"));
 const MentionsLegales = lazy(() => import("./pages/MentionsLegales"));
 const TrainingDashboard = lazy(() => import("./pages/TrainingDashboard"));
 const TrainingCertification = lazy(() => import("./pages/TrainingCertification"));
@@ -81,6 +82,7 @@ function Router() {
         <Route path={"/admin/content"} component={AdminContentManager} />
         <Route path={"/admin/media"} component={AdminMediaLibrary} />
         <Route path={"/admin/errors"} component={AdminErrors} />
+        <Route path={"/admin/talents"} component={AdminTalentCRM} />
         <Route path={"/mentions-legales"} component={MentionsLegales} />
         <Route path={"/training"} component={TrainingDashboardRoute} />
         <Route path={"/training/:certId"} component={TrainingCertificationRoute} />
