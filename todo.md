@@ -2834,7 +2834,7 @@
 - [x] Implémenter le modèle de données et les procédures administratives transactionnelles du Talent CRM — migration non destructive 0043 appliquée, services administrateur et apprenant typés
 - [x] Construire l’espace administratif avec vue portefeuille, dossier 360°, timeline, actions, filtres et indicateurs standards Neopolis — métriques pédagogiques existantes réutilisées sans recalcul parallèle
 - [x] Ajouter les convocations visio/présentiel, demandes de certification, groupes de travail, opportunités et décisions avec notifications traçables
-- [ ] Tester les permissions, migrations, parcours admin/apprenant, responsive et non-régression ; publier puis vérifier la production — 632 tests réussis, 2 ignorés, TypeScript et QA 9/9 validés localement
+- [x] Tester les permissions, migrations, parcours admin/apprenant, responsive et non-régression ; publier puis vérifier la production — version `ee5a3b0c` propagée, 632 tests réussis, 2 ignorés, TypeScript et QA 9/9 ; sonde authentifiée : portefeuille visible, dossier membre à 6 onglets et espace apprenant Évolution visible sans journalisation de données personnelles
 - [x] Ajouter une table paginée et recherchable des membres avec filtres par étape et priorité, lignes cliquables et colonne Actions
 - [x] Ajouter les formulaires administrateur standardisés pour rendez-vous, évaluation, tâche et affectation, sans ressaisie des données déjà présentes dans le dossier membre
 - [x] Ajouter l’onglet apprenant « Évolution » avec acceptation, refus ou demande de replanification d’une convocation et visibilité contrôlée des opportunités
