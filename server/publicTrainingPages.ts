@@ -362,13 +362,17 @@ export function renderPublicTrainingNotFound(locale: PublicTrainingLocale = "fr"
   return layout(`<main class="content-shell" style="padding:72px 0"><h1>${escapeHtml(copy.notFoundTitle)}</h1><p class="section-intro">${escapeHtml(copy.notFoundText)}</p><a class="button" style="background:#173f7b;color:#fff" href="${publicTrainingPath(locale)}">${escapeHtml(copy.notFoundLink)}</a></main>`, { locale, title: `${copy.notFoundTitle} | ${SITE_NAME}`, description: copy.notFoundText, canonicalPath: publicTrainingPath(locale), noindex: true, schema: { "@context": "https://schema.org", "@type": "WebPage", name: copy.notFoundTitle } });
 }
 
-const PUBLIC_SITEMAP_BATCH_SIZE = 200;
+// Des lots courts limitent le temps de transfert sur les instances serverless et
+// évitent qu’un ralentissement réseau transforme un XML valide en lecture partielle.
+const PUBLIC_SITEMAP_BATCH_SIZE = 50;
 
 export type PublicSitemapFile = {
   path: string;
   urlCount: number;
   xml: string;
 };
+
+let publicSitemapFilesCache: PublicSitemapFile[] | null = null;
 
 function sitemapUrl(path: string, alternates?: { locale: PublicTrainingLocale; href: string }[], xDefaultPath?: string) {
   return `<url><loc>${escapeHtml(absolute(path))}</loc>${alternates?.map((alternate) => `<xhtml:link rel="alternate" hreflang="${escapeHtml(publicTrainingLocaleMeta[alternate.locale].languageTag)}" href="${escapeHtml(absolute(alternate.href))}" />`).join("") || ""}${alternates ? `<xhtml:link rel="alternate" hreflang="x-default" href="${escapeHtml(absolute(xDefaultPath || alternates.find((item) => item.locale === "fr")?.href || path))}" />` : ""}</url>`;
@@ -379,6 +383,7 @@ function sitemapUrlset(entries: string[]) {
 }
 
 export function getPublicTrainingSitemapFiles(): PublicSitemapFile[] {
+  if (publicSitemapFilesCache) return publicSitemapFilesCache;
   const staticEntries = [
     ...CORE_PUBLIC_SITEMAP_PATHS.map((path) => sitemapUrl(path)),
     ...publicTrainingLocales.flatMap((locale) => [
@@ -397,7 +402,8 @@ export function getPublicTrainingSitemapFiles(): PublicSitemapFile[] {
     const entries = formationEntries.slice(index, index + PUBLIC_SITEMAP_BATCH_SIZE);
     files.push({ path: `/sitemaps/formations-${Math.floor(index / PUBLIC_SITEMAP_BATCH_SIZE) + 1}.xml`, urlCount: entries.length, xml: sitemapUrlset(entries) });
   }
-  return files;
+  publicSitemapFilesCache = files;
+  return publicSitemapFilesCache;
 }
 
 export function renderPublicTrainingSitemap() {
@@ -411,7 +417,19 @@ export function renderPublicTrainingSitemapFile(pathname: string) {
 
 export function registerPublicTrainingPages(app: Express) {
   const sendHtml = (res: Response, html: string, status = 200) => res.status(status).set({ "Cache-Control": "no-cache", "Content-Type": "text/html; charset=utf-8" }).send(html);
-  const sendXml = (res: Response, xml: string) => res.status(200).set({ "Cache-Control": "public, max-age=300, stale-while-revalidate=3600", "Content-Type": "application/xml; charset=utf-8", "X-Content-Type-Options": "nosniff" }).send(xml);
+  const sendXml = (res: Response, xml: string) => {
+    const payload = Buffer.from(xml, "utf8");
+    return res.status(200).set({
+      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+      "Content-Type": "application/xml; charset=utf-8",
+      "Content-Length": String(payload.byteLength),
+      "X-Content-Type-Options": "nosniff",
+      "X-Robots-Tag": "noindex",
+    }).end(payload);
+  };
+  const sitemapFiles = getPublicTrainingSitemapFiles();
+  const sitemapByPath = new Map(sitemapFiles.map((file) => [file.path, file]));
+  const sitemapIndexXml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapFiles.map((file) => `<sitemap><loc>${escapeHtml(absolute(file.path))}</loc></sitemap>`).join("")}</sitemapindex>`;
   const index = (locale: PublicTrainingLocale) => (_req: Request, res: Response) => sendHtml(res, renderPublicTrainingIndex(locale));
   const theme = (locale: PublicTrainingLocale) => (req: Request, res: Response) => {
     const resolved = getPublicTrainingTheme(req.params.themeSlug, locale);
@@ -443,16 +461,16 @@ export function registerPublicTrainingPages(app: Express) {
   app.get("/formations-ia/:themeSlug", theme("fr"));
   app.get("/en/ai-training/:themeSlug", theme("en"));
   app.get("/ar/ai-training/:themeSlug", theme("ar"));
-  app.get("/sitemap.xml", (_req: Request, res: Response) => sendXml(res, renderPublicTrainingSitemap()));
+  app.get("/sitemap.xml", (_req: Request, res: Response) => sendXml(res, sitemapIndexXml));
   app.get("/sitemaps/:sitemapFile", (req: Request, res: Response) => {
-    const sitemap = renderPublicTrainingSitemapFile(`/sitemaps/${req.params.sitemapFile}`);
+    const sitemap = sitemapByPath.get(`/sitemaps/${req.params.sitemapFile}`);
     return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");
   });
   // Search Console conserve les soumissions directes historiques. Ces alias doivent
   // donc rester des documents XML 200 (et non des redirections ou le repli SPA).
   app.get(/^\/(static|formations-[1-9]\d*)\.xml$/, (req: Request, res: Response) => {
     const sitemapName = req.params[0];
-    const sitemap = sitemapName ? renderPublicTrainingSitemapFile(`/sitemaps/${sitemapName}.xml`) : null;
+    const sitemap = sitemapName ? sitemapByPath.get(`/sitemaps/${sitemapName}.xml`) : null;
     return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");
   });
   app.get("/robots.txt", (_req: Request, res: Response) => res.status(200).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send(`User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml\n`));

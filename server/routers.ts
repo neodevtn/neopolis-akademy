@@ -34,6 +34,7 @@ import { buildCourseAssistantMessages, extractCourseAssistantText, isClearlyOutO
 import { getAiNewsFeed } from "./aiNews";
 import { isAdministrativeRole, isSuperAdmin } from "@shared/roles";
 import { flagExamHoneypotTrigger, getLearningIntegrityGateDecision, requireLearningIntegrityClearance, verifyLearningIntegrityPresence } from "./learningIntegrityGate";
+import { talentAdminRouter, talentLearnerRouter } from "./talentRouter";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -42,6 +43,8 @@ const orientationGoalsSchema = z.array(z.object({
 
 export const appRouter = router({
   system: systemRouter,
+  talent: talentLearnerRouter,
+  talentAdmin: talentAdminRouter,
   aiNews: router({
     getFeed: publicProcedure.query(async () => getAiNewsFeed()),
   }),

@@ -156,7 +156,7 @@ describe("pages publiques de formations IA", () => {
     expect(sitemap).toContain('hreflang="x-default"');
   });
 
-  it("partitionne toutes les URL canoniques en fichiers XML uniques de 200 URL maximum", () => {
+  it("partitionne toutes les URL canoniques en petits fichiers XML uniques et rapides à transférer", () => {
     const sitemapFiles = getPublicTrainingSitemapFiles();
     const index = renderPublicTrainingSitemap();
     const indexLocations = [...index.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
@@ -166,7 +166,8 @@ describe("pages publiques de formations IA", () => {
     expect(index).toMatch(/<\/sitemapindex>$/);
     expect(indexLocations).toEqual(sitemapFiles.map((file) => `https://akademy.neodev.click${file.path}`));
     expect(sitemapFiles[0]?.path).toBe("/sitemaps/static.xml");
-    expect(sitemapFiles.every((file) => file.urlCount > 0 && file.urlCount <= 200)).toBe(true);
+    expect(sitemapFiles.every((file) => file.urlCount > 0 && file.urlCount <= 50)).toBe(true);
+    expect(sitemapFiles.every((file) => Buffer.byteLength(file.xml, "utf8") < 65_536)).toBe(true);
     expect(sitemapFiles.every((file) => file.xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n<urlset'))).toBe(true);
     expect(sitemapFiles.every((file) => file.xml.endsWith("</urlset>"))).toBe(true);
     expect(sitemapFiles.every((file) => (file.xml.match(/<url>/g) || []).length === file.urlCount)).toBe(true);
@@ -206,6 +207,7 @@ describe("pages publiques de formations IA", () => {
           expect(response.headers.get("location")).toBeNull();
           expect(response.headers.get("set-cookie")).toBeNull();
           expect(response.headers.get("content-encoding")).toBeNull();
+          expect(Number(response.headers.get("content-length"))).toBe(Buffer.byteLength(body, "utf8"));
           expect(body).toMatch(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset/);
         }
       }

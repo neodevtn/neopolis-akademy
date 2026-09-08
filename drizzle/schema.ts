@@ -593,6 +593,150 @@ export const adminNotes = mysqlTable("admin_notes", {
 export type AdminNote = typeof adminNotes.$inferSelect;
 export type InsertAdminNote = typeof adminNotes.$inferInsert;
 
+/** Étapes administrables du cycle de vie d’un talent ou membre du réseau. */
+export const talentStages = mysqlTable("talent_stages", {
+  id: int("id").autoincrement().primaryKey(),
+  key: varchar("key", { length: 80 }).notNull().unique(),
+  label: json("label").notNull(),
+  description: json("description"),
+  color: varchar("color", { length: 20 }).notNull().default("#2563eb"),
+  icon: varchar("icon", { length: 80 }).notNull().default("user-round-search"),
+  sortOrder: int("sortOrder").notNull().default(0),
+  active: int("active").notNull().default(1),
+  isSystem: int("isSystem").notNull().default(0),
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("talent_stage_active_order_idx").on(table.active, table.sortOrder)]);
+export type TalentStage = typeof talentStages.$inferSelect;
+
+/** Synthèse RH durable d’un utilisateur, distincte de son rôle technique et de ses accès pédagogiques. */
+export const talentProfiles = mysqlTable("talent_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  stageId: int("stageId"),
+  ownerId: int("ownerId"),
+  sourceApplicationId: int("sourceApplicationId"),
+  priority: mysqlEnum("priority", ["low", "normal", "high", "urgent"]).notNull().default("normal"),
+  availability: mysqlEnum("availability", ["unknown", "available", "busy", "unavailable"]).notNull().default("unknown"),
+  headline: varchar("headline", { length: 300 }),
+  summary: text("summary"),
+  nextReviewAt: timestamp("nextReviewAt"),
+  active: int("active").notNull().default(1),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("talent_profile_user_once").on(table.userId),
+  index("talent_profile_stage_priority_idx").on(table.stageId, table.priority),
+  index("talent_profile_owner_review_idx").on(table.ownerId, table.nextReviewAt),
+]);
+export type TalentProfile = typeof talentProfiles.$inferSelect;
+
+/** Historique immuable des changements d’étape du parcours membre. */
+export const talentStageHistory = mysqlTable("talent_stage_history", {
+  id: int("id").autoincrement().primaryKey(),
+  profileId: int("profileId").notNull(),
+  userId: int("userId").notNull(),
+  fromStageId: int("fromStageId"),
+  toStageId: int("toStageId").notNull(),
+  reason: text("reason"),
+  changedBy: int("changedBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [index("talent_stage_history_user_idx").on(table.userId, table.createdAt)]);
+
+/** Convocations et jalons : entretien, évaluation, certification ou rendez-vous de suivi. */
+export const talentEvents = mysqlTable("talent_events", {
+  id: int("id").autoincrement().primaryKey(),
+  profileId: int("profileId").notNull(),
+  userId: int("userId").notNull(),
+  type: mysqlEnum("type", ["interview", "evaluation", "certification_test", "certification_review", "onboarding", "follow_up", "other"]).notNull(),
+  title: varchar("title", { length: 300 }).notNull(),
+  description: text("description"),
+  modality: mysqlEnum("modality", ["video", "in_person", "phone", "platform", "external", "other"]).notNull().default("video"),
+  status: mysqlEnum("status", ["requested", "scheduled", "completed", "cancelled", "missed"]).notNull().default("requested"),
+  responseStatus: mysqlEnum("responseStatus", ["pending", "accepted", "declined", "reschedule_requested"]).notNull().default("pending"),
+  startsAt: timestamp("startsAt"),
+  endsAt: timestamp("endsAt"),
+  timezone: varchar("timezone", { length: 80 }).notNull().default("UTC"),
+  location: varchar("location", { length: 500 }),
+  meetingUrl: varchar("meetingUrl", { length: 1000 }),
+  certificationId: varchar("certificationId", { length: 200 }),
+  learnerInstructions: text("learnerInstructions"),
+  privateNotes: text("privateNotes"),
+  visibleToLearner: int("visibleToLearner").notNull().default(1),
+  learnerResponseNote: text("learnerResponseNote"),
+  respondedAt: timestamp("respondedAt"),
+  notificationStatus: mysqlEnum("notificationStatus", ["not_requested", "sent", "failed"]).notNull().default("not_requested"),
+  notifiedAt: timestamp("notifiedAt"),
+  lastNotificationError: varchar("lastNotificationError", { length: 500 }),
+  createdBy: int("createdBy").notNull(),
+  updatedBy: int("updatedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  index("talent_event_user_start_idx").on(table.userId, table.startsAt),
+  index("talent_event_status_start_idx").on(table.status, table.startsAt),
+]);
+export type TalentEvent = typeof talentEvents.$inferSelect;
+
+/** Évaluation structurée liée ou non à une convocation. */
+export const talentEvaluations = mysqlTable("talent_evaluations", {
+  id: int("id").autoincrement().primaryKey(),
+  profileId: int("profileId").notNull(),
+  eventId: int("eventId"),
+  userId: int("userId").notNull(),
+  evaluationType: varchar("evaluationType", { length: 120 }).notNull(),
+  score: decimal("score", { precision: 7, scale: 2 }),
+  maxScore: decimal("maxScore", { precision: 7, scale: 2 }),
+  recommendation: mysqlEnum("recommendation", ["continue", "develop", "certify", "assign", "recruit", "ambassador", "hold", "decline"]).notNull().default("continue"),
+  rubric: json("rubric"),
+  strengths: text("strengths"),
+  improvements: text("improvements"),
+  learnerFeedback: text("learnerFeedback"),
+  privateNotes: text("privateNotes"),
+  visibleToLearner: int("visibleToLearner").notNull().default(0),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [index("talent_evaluation_user_created_idx").on(table.userId, table.createdAt)]);
+
+/** Affectations cumulables, sans impact automatique sur le rôle technique du compte. */
+export const talentAssignments = mysqlTable("talent_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  profileId: int("profileId").notNull(),
+  userId: int("userId").notNull(),
+  kind: mysqlEnum("kind", ["workgroup", "mission", "opportunity", "recruitment", "ambassador", "partnership"]).notNull(),
+  title: varchar("title", { length: 300 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["proposed", "active", "paused", "completed", "declined", "withdrawn"]).notNull().default("proposed"),
+  startsAt: timestamp("startsAt"),
+  endsAt: timestamp("endsAt"),
+  visibleToLearner: int("visibleToLearner").notNull().default(1),
+  metadata: json("metadata"),
+  assignedBy: int("assignedBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [index("talent_assignment_user_status_idx").on(table.userId, table.status)]);
+
+/** Actions internes de suivi RH, séparées des tâches pédagogiques. */
+export const talentTasks = mysqlTable("talent_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  profileId: int("profileId").notNull(),
+  userId: int("userId").notNull(),
+  title: varchar("title", { length: 300 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["open", "in_progress", "completed", "cancelled"]).notNull().default("open"),
+  priority: mysqlEnum("priority", ["low", "normal", "high", "urgent"]).notNull().default("normal"),
+  dueAt: timestamp("dueAt"),
+  ownerId: int("ownerId"),
+  completedAt: timestamp("completedAt"),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  index("talent_task_owner_status_due_idx").on(table.ownerId, table.status, table.dueAt),
+  index("talent_task_user_idx").on(table.userId, table.createdAt),
+]);
+
 /**
  * Admin tags - custom labels for segmenting learners
  */

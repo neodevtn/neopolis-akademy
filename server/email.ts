@@ -222,6 +222,55 @@ export interface AchievementEmailData {
   pdf: Buffer;
 }
 
+export interface TalentEventEmailData {
+  to: string;
+  name: string;
+  title: string;
+  description?: string | null;
+  modality: string;
+  startsAt?: Date | null;
+  timezone: string;
+  location?: string | null;
+  meetingUrl?: string | null;
+  instructions?: string | null;
+}
+
+/** Convocation individuelle créée dans le Talent CRM, avec réponse attendue dans l’espace apprenant. */
+export async function sendTalentEventEmail(data: TalentEventEmailData): Promise<boolean> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) return false;
+  const journeyUrl = "https://akademy.neodev.click/training?tab=evolution";
+  const when = data.startsAt
+    ? data.startsAt.toLocaleString("fr-FR", { timeZone: data.timezone || "UTC", dateStyle: "full", timeStyle: "short" })
+    : "Date à confirmer";
+  const html = emailWrapper(`
+    ${emailHeader("Évolution et opportunités")}
+    <div style="padding: 32px; color: #172033;">
+      <h2 style="margin: 0 0 12px; font-size: 24px;">Bonjour ${escapeEmailHtml(data.name || "")},</h2>
+      <p style="margin: 0 0 20px; line-height: 1.6;">Neopolis vous adresse une nouvelle demande dans le cadre de votre parcours.</p>
+      <div style="border-left: 4px solid #2563eb; background: #f8fafc; padding: 18px; margin: 0 0 22px;">
+        <p style="margin: 0 0 8px; color: #0f3b67; font-weight: 700;">${escapeEmailHtml(data.title)}</p>
+        <p style="margin: 0 0 6px; color: #475569;">${escapeEmailHtml(when)} · ${escapeEmailHtml(data.modality)}</p>
+        ${data.location ? `<p style="margin: 0 0 6px; color: #475569;">Lieu : ${escapeEmailHtml(data.location)}</p>` : ""}
+        ${data.description ? `<p style="margin: 10px 0 0; line-height: 1.6;">${escapeEmailHtml(data.description)}</p>` : ""}
+        ${data.instructions ? `<p style="margin: 10px 0 0; line-height: 1.6;"><strong>Préparation :</strong> ${escapeEmailHtml(data.instructions)}</p>` : ""}
+      </div>
+      <p style="margin: 0 0 20px; line-height: 1.6;">Connectez-vous pour confirmer, refuser ou demander une replanification.</p>
+      ${emailCtaButton("Consulter et répondre", journeyUrl)}
+    </div>
+    ${emailFooter("fr")}`);
+  const resend = new Resend(resendApiKey);
+  const { error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: [data.to],
+    subject: `Neopolis Akademy — ${data.title}`,
+    html,
+    text: `${data.title}. ${when}. Consultez et répondez : ${journeyUrl}`,
+  });
+  if (error) throw new Error(`Talent event email failed: ${error.message}`);
+  return true;
+}
+
 /** Send an official credential notification once, with the generated PDF attached. */
 export async function sendAchievementEmail(data: AchievementEmailData): Promise<boolean> {
   const resendApiKey = process.env.RESEND_API_KEY;

@@ -2826,3 +2826,18 @@
 - [x] Vérifier les derniers crashs post-déploiement, qualifier toute nouvelle signature et corriger les causes reproductibles avant clôture — cinq occurrences `MockExam` de lecture `length` observées entre 16:59 et 17:00, toutes antérieures à la publication ; projection apprenant enrichie avec le nombre de sélections requis sans correction, revue détaillée strictement post-soumission ; 622 tests et QA 9/9, route d’examen publiée sans erreur console
 - [x] Diagnostiquer et corriger l’alerte ErrorBoundary `DeferredAuthenticatedOverlays` sur l’onglet Parrainage, y compris les scénarios de cache de bundle obsolète, puis vérifier la production — overlay racine chargé directement, récupération par signature nommée renforcée et filtrage limité aux imports de bundles obsolètes ; parcours Parrainage publié rejoué sans ErrorBoundary ni erreur console
 - [x] Vérifier et rétablir la notification de nouvelle version afin que les sessions ouvertes détectent une publication et proposent un rafraîchissement sans interrompre l’apprentissage — route JSON serveur prioritaire `no-store`, calculée depuis le document livré ; routes avec paramètres reconnues, contrôle au retour au premier plan et toutes les 45 secondes, masquage limité à la version rejetée ; bundle publié et réponse JSON contrôlés
+
+## Talent CRM et gestion longitudinale du réseau
+- [ ] Cartographier les fonctions existantes de profil, candidature, groupes, examens, communications, activité, rôles et parrainage afin d’éviter les doublons
+- [ ] Concevoir un dossier membre longitudinal avec étapes configurables, historique, tâches, rendez-vous, évaluations, certifications, affectations, recrutement et statut d’ambassadeur
+- [ ] Définir les règles d’accès, de confidentialité, de traçabilité et les transitions de statut, sans mécanisme de rémunération pyramidale
+- [ ] Implémenter le modèle de données et les procédures administratives transactionnelles du Talent CRM
+- [ ] Construire l’espace administratif avec vue portefeuille, dossier 360°, timeline, actions, filtres et indicateurs standards Neopolis
+- [ ] Ajouter les convocations visio/présentiel, demandes de certification, groupes de travail, opportunités et décisions avec notifications traçables
+- [ ] Tester les permissions, migrations, parcours admin/apprenant, responsive et non-régression ; publier puis vérifier la production
+
+## Stabilisation Search Console — transferts XML intermittents
+- [x] Reproduire l’échec réel derrière l’état Search Console : certaines réponses XML démarrent en HTTP 200 puis restent partielles jusqu’au timeout, notamment les anciens lots d’environ 190 Ko
+- [x] Réduire les lots à 50 URL maximum, préconstruire les XML en mémoire et servir une longueur exacte avec cache public contrôlé
+- [x] Valider localement 19 fichiers canoniques, tous inférieurs à 64 Ko et servis en moins de 10 ms sur l’instance chaude
+- [ ] Publier puis contrôler avec Googlebot desktop/mobile les 19 fichiers canoniques et les alias historiques sans réponse partielle ni timeout
