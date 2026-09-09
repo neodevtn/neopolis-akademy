@@ -36,4 +36,11 @@ describe("Talent CRM interface contract", () => {
     expect(app).toContain('<Route path={"/admin/talents"} component={AdminTalentCRM} />');
     expect(learnerNav).toContain('"evolution"');
   });
+
+  it("keeps stage management in its dedicated tab and removes the desktop content gutter", () => {
+    const source = readFileSync(resolve(root, "client/src/pages/AdminTalentCRM.tsx"), "utf8");
+    expect(source).toContain('<TabsTrigger value="stages">Étapes du parcours</TabsTrigger>');
+    expect(source).toContain('className="px-4 py-8 lg:px-0"');
+    expect(source).not.toContain("Configurer les étapes");
+  });
 });

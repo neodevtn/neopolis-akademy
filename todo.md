@@ -2839,6 +2839,11 @@
 - [x] Ajouter les formulaires administrateur standardisés pour rendez-vous, évaluation, tâche et affectation, sans ressaisie des données déjà présentes dans le dossier membre
 - [x] Ajouter l’onglet apprenant « Évolution » avec acceptation, refus ou demande de replanification d’une convocation et visibilité contrôlée des opportunités
 
+## Correctifs de cohérence visuelle — Talent CRM
+- [x] Aligner le conteneur principal de `/admin/talents` avec la navigation administrateur, sans espace latéral résiduel sur desktop ni régression mobile
+- [x] Supprimer la commande redondante « Configurer les étapes » et conserver « Étapes du parcours » comme point unique de gestion
+- [ ] Vérifier le rendu administrateur desktop/mobile, publier et contrôler la page de production
+
 ## Stabilisation Search Console — transferts XML intermittents
 - [x] Reproduire l’échec réel derrière l’état Search Console : certaines réponses XML démarrent en HTTP 200 puis restent partielles jusqu’au timeout, notamment les anciens lots d’environ 190 Ko
 - [x] Réduire les lots à 50 URL maximum, préconstruire les XML en mémoire et servir une longueur exacte avec cache public contrôlé

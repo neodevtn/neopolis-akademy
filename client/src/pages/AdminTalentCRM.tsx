@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
 import { isAdministrativeRole } from "@shared/roles";
-import { AlertTriangle, ArrowLeft, ArrowRight, BriefcaseBusiness, CalendarDays, CheckCircle2, ClipboardCheck, Clock3, Filter, Loader2, Plus, Search, Settings2, Target, UserRoundSearch, UsersRound } from "lucide-react";
+import { AlertTriangle, ArrowLeft, ArrowRight, BriefcaseBusiness, CalendarDays, CheckCircle2, ClipboardCheck, Clock3, Filter, Loader2, Plus, Search, Target, UserRoundSearch, UsersRound } from "lucide-react";
 import { toast } from "sonner";
 
 const PRIORITY_LABELS = { low: "Faible", normal: "Normale", high: "Haute", urgent: "Urgente" } as const;
@@ -118,10 +118,9 @@ export default function AdminTalentCRM() {
 
   return <div className="min-h-screen bg-slate-50 lg:pl-64">
     <AdminNavbar activePage="talent" accessRole={user?.role} />
-    <main className="px-4 py-8 lg:px-8">
+    <main className="px-4 py-8 lg:px-0">
       <div className="mb-8 flex flex-col justify-between gap-4 xl:flex-row xl:items-end">
         <div><p className="text-xs font-bold uppercase tracking-[0.15em] text-blue-700">Gestion longitudinale</p><h1 className="mt-1 text-3xl font-semibold text-slate-950">Talents & réseau</h1><p className="mt-2 max-w-3xl text-sm text-slate-600">Suivez chaque membre depuis sa candidature jusqu’aux évaluations, certifications, missions, recrutements ou responsabilités d’ambassadeur.</p></div>
-        <Button variant="outline" onClick={() => openDialog("stage", { color: "#2563eb", sortOrder: "100", active: true })}><Settings2 className="mr-2 h-4 w-4" />Configurer les étapes</Button>
       </div>
 
       <div className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]">
