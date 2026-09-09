@@ -29,6 +29,7 @@ try {
   const page = await context.newPage();
   await page.goto(`${baseUrl}/admin/talents`, { waitUntil: "commit", timeout: 60_000 });
   await page.getByRole("heading", { name: "Talents & réseau" }).waitFor({ state: "visible", timeout: 45_000 });
+  await page.waitForTimeout(500);
   const closeNotice = page.getByRole("button", { name: "Close" });
   if (await closeNotice.isVisible().catch(() => false)) await closeNotice.click();
   const sidebar = await page.locator("aside").boundingBox();

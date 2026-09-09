@@ -2842,7 +2842,7 @@
 ## Correctifs de cohérence visuelle — Talent CRM
 - [x] Aligner le conteneur principal de `/admin/talents` avec la navigation administrateur, sans espace latéral résiduel sur desktop ni régression mobile
 - [x] Supprimer la commande redondante « Configurer les étapes » et conserver « Étapes du parcours » comme point unique de gestion
-- [ ] Vérifier le rendu administrateur desktop/mobile, publier et contrôler la page de production
+- [x] Vérifier le rendu administrateur desktop/mobile, publier et contrôler la page de production — version `a93d6f93` propagée ; sonde authentifiée : retrait entre navigation et contenu = 0 px, commande redondante absente, portefeuille et dossier membre disponibles
 
 ## Stabilisation Search Console — transferts XML intermittents
 - [x] Reproduire l’échec réel derrière l’état Search Console : certaines réponses XML démarrent en HTTP 200 puis restent partielles jusqu’au timeout, notamment les anciens lots d’environ 190 Ko
