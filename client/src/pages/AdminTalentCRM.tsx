@@ -116,7 +116,7 @@ export default function AdminTalentCRM() {
   if (loading) return <div className="flex min-h-screen items-center justify-center bg-slate-50"><Loader2 className="h-8 w-8 animate-spin text-blue-700" /></div>;
   if (!isAuthenticated || !isAdmin) return <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-50"><AlertTriangle className="h-12 w-12 text-slate-400" /><p className="text-lg font-semibold text-slate-900">Accès réservé aux administrateurs</p><a href={getLoginUrl()} className="rounded-md bg-blue-800 px-5 py-2.5 text-sm font-semibold text-white">Se connecter</a></div>;
 
-  return <div className="min-h-screen bg-slate-50 lg:pl-64">
+  return <div className="min-h-screen bg-slate-50">
     <AdminNavbar activePage="talent" accessRole={user?.role} />
     <main className="px-4 py-8 lg:px-0">
       <div className="mb-8 flex flex-col justify-between gap-4 xl:flex-row xl:items-end">

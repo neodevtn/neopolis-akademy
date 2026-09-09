@@ -31,6 +31,14 @@ try {
   await page.getByRole("heading", { name: "Talents & réseau" }).waitFor({ state: "visible", timeout: 45_000 });
   const closeNotice = page.getByRole("button", { name: "Close" });
   if (await closeNotice.isVisible().catch(() => false)) await closeNotice.click();
+  const sidebar = await page.locator("aside").boundingBox();
+  const title = await page.locator("main h1").boundingBox();
+  if (!sidebar || !title) throw new Error("La navigation ou le titre Talent CRM est introuvable.");
+  const contentGutter = Math.round(title.x - (sidebar.x + sidebar.width));
+  if (contentGutter > 1) throw new Error(`Le contenu Talent CRM conserve un retrait de ${contentGutter}px après la navigation.`);
+  if (await page.getByRole("button", { name: "Configurer les étapes" }).count()) {
+    throw new Error("La commande redondante de configuration des étapes est encore visible.");
+  }
   await page.getByText("Portefeuille", { exact: true }).waitFor({ state: "visible", timeout: 30_000 });
   await page.getByRole("button", { name: "Ouvrir" }).first().click();
   for (const tab of ["Synthèse", "Formation", "Rendez-vous", "Affectations", "Évaluations", "Tâches"]) {
@@ -46,6 +54,8 @@ try {
 
   console.table({
     adminPortfolio: "visible",
+    contentGutterPx: contentGutter,
+    redundantStageButton: false,
     memberRecordTabs: 6,
     learnerEvolution: "visible",
     personalDataLogged: false,

@@ -41,6 +41,7 @@ describe("Talent CRM interface contract", () => {
     const source = readFileSync(resolve(root, "client/src/pages/AdminTalentCRM.tsx"), "utf8");
     expect(source).toContain('<TabsTrigger value="stages">Étapes du parcours</TabsTrigger>');
     expect(source).toContain('className="px-4 py-8 lg:px-0"');
+    expect(source).not.toContain('bg-slate-50 lg:pl-64');
     expect(source).not.toContain("Configurer les étapes");
   });
 });
