@@ -17,6 +17,7 @@ import { getCertificationCatalogMetrics, getCourseCatalogMetrics } from "@/lib/c
 import { IA_APPLIQUEE_METIERS_COLLECTION_ID, isStandaloneTpCertification } from "@/lib/iaAppliedMetiersCatalog";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 import { trackEvent } from "@/lib/analytics";
+import { resolveTrainingVisualAsset } from "@shared/trainingVisualAssets";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -40,6 +41,7 @@ export default function TrainingCertification() {
 
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
   const courses = cert ? trainingIndex.courses.filter((c) => c.certId === certId) : [];
+  const trainingVisual = resolveTrainingVisualAsset(certId, (cert as any)?.visualAssets);
 
   useEffect(() => {
     if (!isAuthenticated || !certId || !cert || viewedCertificationRef.current === certId) return;
@@ -238,6 +240,11 @@ export default function TrainingCertification() {
       >
         {/* Cert Header Card */}
         <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 md:p-8 mb-6 shadow-sm">
+          {trainingVisual && (
+            <div className="mb-6 aspect-[4/3] overflow-hidden rounded-xl border border-border bg-muted/30">
+              <img src={trainingVisual.cardPath} alt="" className="h-full w-full object-cover" />
+            </div>
+          )}
           <div className="flex items-start gap-4 mb-5">
             <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-3xl flex-shrink-0">
               {cert.icon}

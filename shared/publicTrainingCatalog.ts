@@ -3,6 +3,7 @@ import { getCertificationCatalogMetrics, getCourseCatalogMetrics } from "../clie
 import { extractTargetJobRoles, resolveTrainingFormat } from "../client/src/lib/trainingCatalogTaxonomy";
 import { getPublicTrainingThemes } from "./publicTrainingThemes";
 import { localizePublicTrainingText, type PublicTrainingLocale } from "./publicTrainingLocale";
+import { resolveTrainingVisualAsset, type TrainingVisualAsset, type TrainingVisualOverride } from "./trainingVisualAssets";
 
 type LocalizedText = { fr?: string; en?: string; ar?: string };
 type CatalogCourse = {
@@ -30,6 +31,7 @@ type CatalogCertification = {
   group?: string;
   trainingFormat?: string;
   isStandaloneTP?: boolean;
+  visualAssets?: TrainingVisualOverride;
 };
 
 const source = trainingIndex as unknown as { certifications: CatalogCertification[]; courses: CatalogCourse[] };
@@ -94,6 +96,7 @@ export type PublicCatalogueTraining = {
   skills: string[];
   relatedDomains: { slug: string; title: string }[];
   courses: PublicCatalogueCourse[];
+  visual: TrainingVisualAsset;
 };
 
 function formatLabel(certification: CatalogCertification, locale: PublicTrainingLocale) {
@@ -130,6 +133,7 @@ function trainingFromCertification(certification: CatalogCertification, locale: 
     roles,
     skills,
     relatedDomains: relatedDomains(certification.id, locale),
+    visual: resolveTrainingVisualAsset(certification.id, certification.visualAssets),
     courses: certificationCourses.map((course) => ({
       slug: courseSlugs.get(course.id) || "cours-ia",
       title: localize(course.title, locale, "Cours IA"),

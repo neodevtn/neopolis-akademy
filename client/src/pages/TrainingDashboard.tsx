@@ -60,6 +60,7 @@ import { extractTargetJobRoles, getTrainingFormatDefinitions, resolveTrainingFor
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 import { isAdministrativeRole } from "@shared/roles";
 import { TalentJourneyTab } from "@/components/TalentJourneyTab";
+import { resolveTrainingVisualAsset } from "@shared/trainingVisualAssets";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -995,12 +996,18 @@ function CatalogTab({
           const groupCfg = GROUP_CONFIG[cert.group as GroupKey] || GROUP_CONFIG.divers;
           const level = (((cert.level as any)?.en || "beginner") as string).toLowerCase() as keyof typeof levelConfig;
           const config = levelConfig[level] || levelConfig.beginner;
+          const trainingVisual = resolveTrainingVisualAsset(cert.id, (cert as any).visualAssets);
           return (
             <motion.div key={cert.id} variants={fadeInUp}>
               <Link
                 href={`/training/${cert.id}`}
                 className={`group block bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md ${groupCfg.hoverBorder} transition-all duration-200`}
               >
+                {trainingVisual && (
+                  <div className="-mx-6 -mt-6 mb-5 aspect-[4/3] overflow-hidden rounded-t-2xl border-b border-border bg-muted/30">
+                    <img src={trainingVisual.cardPath} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  </div>
+                )}
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-12 h-12 rounded-xl ${groupCfg.iconBg} flex items-center justify-center text-2xl`}>{cert.icon}</div>
                   <div className="flex flex-wrap justify-end gap-1.5">

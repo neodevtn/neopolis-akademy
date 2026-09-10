@@ -14,6 +14,7 @@ import {
   renderPublicTrainingTheme,
 } from "./publicTrainingPages";
 import { getPublicCatalogueTrainings, getPublicCatalogueSitemapEntries } from "@shared/publicTrainingCatalog";
+import { getTrainingVisualAsset } from "@shared/trainingVisualAssets";
 
 describe("pages publiques de formations IA", () => {
   it("rend l’index avec contenu, SEO et données structurées", () => {
@@ -62,6 +63,11 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain('"@type":"Organization"');
     expect(html).toContain('"sameAs"');
     expect(html).not.toContain('href="/training/');
+    const visual = getTrainingVisualAsset(theme!.certifications[0].id);
+    expect(visual).toBeDefined();
+    expect(html).toContain(`src="${visual!.cardPath}"`);
+    expect(html).toContain(`width="${visual!.cardWidth}"`);
+    expect(html).toContain(`height="${visual!.cardHeight}"`);
   });
 
   it("rend le catalogue, une formation et un cours comme des pages publiques distinctes", () => {
@@ -80,6 +86,36 @@ describe("pages publiques de formations IA", () => {
     expect(courseHtml).toContain('"@type":"Course"');
     expect(courseHtml).toContain('hreflang="en"');
     expect(courseHtml).not.toContain('href="/training/');
+  });
+
+  it("utilise le visuel social et la carte validés lorsqu’une formation possède un asset dédié", () => {
+    const pilot = getPublicCatalogueTrainings("fr").find((item) => item.visual?.socialPath.includes("claude-certified-associate-foundations"));
+    expect(pilot?.visual).toBeDefined();
+
+    const catalogueHtml = renderPublicTrainingCatalogue("fr");
+    const trainingHtml = renderPublicCatalogueTraining(pilot!, "fr");
+    const courseHtml = renderPublicCatalogueCourse(pilot!, pilot!.courses[0]!, "fr");
+    const socialUrl = `https://akademy.neodev.click${pilot!.visual!.socialPath}`;
+
+    expect(catalogueHtml).toContain(pilot!.visual!.cardPath);
+    expect(trainingHtml).toContain(`class="hero-visual" src="${pilot!.visual!.cardPath}"`);
+    expect(trainingHtml).toContain(`<meta property="og:image" content="${socialUrl}" />`);
+    expect(trainingHtml).toContain(`<meta name="twitter:image" content="${socialUrl}" />`);
+    expect(courseHtml).toContain(`<meta property="og:image" content="${socialUrl}" />`);
+  });
+
+  it("expose une carte et une image sociale non vides pour chaque formation publique dans chaque langue", () => {
+    (['fr', 'en', 'ar'] as const).forEach((locale) => {
+      const trainings = getPublicCatalogueTrainings(locale);
+      expect(trainings).toHaveLength(115);
+      trainings.forEach((training) => {
+        expect(training.visual.cardPath).toMatch(/^\//);
+        expect(training.visual.socialPath).toMatch(/^\//);
+        expect(training.visual.cardWidth).toBeGreaterThan(0);
+        expect(training.visual.socialWidth).toBe(1200);
+        expect(training.visual.alt[locale]).not.toBe("");
+      });
+    });
   });
 
   it("ne divulgue pas la provenance d’import dans le HTML de catalogue public", () => {

@@ -2849,3 +2849,16 @@
 - [x] Réduire les lots à 50 URL maximum, préconstruire les XML en mémoire et servir une longueur exacte avec cache public contrôlé
 - [x] Valider localement 19 fichiers canoniques, tous inférieurs à 64 Ko et servis en moins de 10 ms sur l’instance chaude
 - [x] Publier puis contrôler avec Googlebot desktop/mobile les 19 fichiers canoniques et les alias historiques sans réponse partielle ni timeout — version `818c2770` propagée, index à 19 fichiers, sonde exhaustive publique réussie sur 909 URL
+
+## Images de formation — partage social, SEO et catalogue
+- [x] Auditer les attributs réels des formations et les emplacements d’images de métadonnées, carte catalogue et page détail
+- [x] Préparer et faire valider une proposition visuelle pilote comprenant une image sociale 1200×630 et une carte 4:3, sans générer la série complète avant validation
+- [x] Utiliser exclusivement le logo officiel Neopolis Akademy fourni dans chaque visuel pilote, image sociale et carte de formation
+- [x] Transmettre directement à l’utilisateur les deux visuels pilotes finalisés pour validation avant toute intégration au site
+- [x] Générer les images validées, les téléverser dans la bibliothèque média, les raccorder aux métadonnées Open Graph/Twitter et aux composants de carte/détail
+- [x] Afficher la carte 4:3 validée dans les cartes et en-têtes des pages publiques de catalogue ainsi que sur la fiche publique de la formation pilote
+- [x] Sélectionner automatiquement l’image sociale propre à chaque formation dans les métadonnées Open Graph et Twitter, avec repli générique uniquement si aucun visuel dédié n’existe
+- [x] Générer pour chaque formation un duo d’images exclusif, avec attributs et illustration du sujet propres, tout en conservant le template de marque validé — 115 images sociales 1200×630 et 115 cartes 1200×900 rendues, téléversées et associées au registre
+- [x] Contrôler les images sociales, les cartes desktop/mobile et la publication avant généralisation à toutes les formations — échantillons finance, automatisation et systèmes agentiques relus ; asset social publié contrôlé en PNG 1200×630 ; catalogue public, fiche dédiée et éditeur catalogue vérifiés localement
+- [x] Ajouter aux formations des attributs administrables pour la carte 4:3 et l’image sociale, avec réinitialisation et images Neopolis par défaut fiables — `visualAssets` validé, resolver à trois niveaux (override, registre, repli officiel) et tests associés ajoutés
+- [x] Exposer ces attributs dans la gestion administrative du catalogue et relier leurs valeurs aux cartes, en-têtes et métadonnées publiques — sélection par bibliothèque média, remise à défaut, catalogue SSR, thèmes, fiche publique et surfaces apprenant raccordés

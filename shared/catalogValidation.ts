@@ -10,5 +10,11 @@ export function validateCatalogIndex(data: any): string | null {
   if (unknownCertification) return `Le cours ${unknownCertification.id} référence une certification absente.`;
   const unknownCategory = data.certifications.find((certification: any) => certification?.group && categoryIds.length > 0 && !categoryIds.includes(certification.group));
   if (unknownCategory) return `La certification ${unknownCategory.id} référence une catégorie absente.`;
+  const invalidVisual = data.certifications.find((certification: any) => {
+    const visualAssets = certification?.visualAssets;
+    if (!visualAssets) return false;
+    return [visualAssets.cardPath, visualAssets.socialPath].some((value) => value !== undefined && (typeof value !== "string" || !value.startsWith("/")));
+  });
+  if (invalidVisual) return `La formation ${invalidVisual.id} contient une URL de visuel invalide. Utilisez un chemin interne commençant par /. `;
   return null;
 }
