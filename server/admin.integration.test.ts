@@ -124,6 +124,16 @@ describe("Admin API - Authorization", () => {
     ).rejects.toThrow("administrateur principal");
   });
 
+  it("admin.updateLearnerEmail rejects regular learners", async () => {
+    const caller = appRouter.createCaller(createUserContext());
+    await expect(caller.admin.updateLearnerEmail({ userId: 1, email: "new@example.com" })).rejects.toThrow("administrateur principal");
+  });
+
+  it("admin.requestLearnerPasswordReset rejects admin-learners", async () => {
+    const caller = appRouter.createCaller(createAdminLearnerContext());
+    await expect(caller.admin.requestLearnerPasswordReset({ userId: 1 })).rejects.toThrow("administrateur principal");
+  });
+
   it("talentAdmin rejects regular learners", async () => {
     const caller = appRouter.createCaller(createUserContext());
     await expect(caller.talentAdmin.overview()).rejects.toThrow("Accès réservé aux administrateurs");
@@ -183,6 +193,11 @@ describe("Admin API - Input Validation", () => {
     await expect(
       caller.admin.createInvitation({ email: "not-an-email" })
     ).rejects.toThrow();
+  });
+
+  it("admin.updateLearnerEmail validates the e-mail format before any update", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    await expect(caller.admin.updateLearnerEmail({ userId: 1, email: "not-an-email" })).rejects.toThrow();
   });
 
   it("admin.updateUserRole validates role enum", async () => {

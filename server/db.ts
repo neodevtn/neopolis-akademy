@@ -1439,15 +1439,62 @@ export async function getUserByEmail(email: string) {
     return undefined;
   }
 
-  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  const result = await db.select().from(users).where(eq(users.email, email.trim().toLowerCase())).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function setUserPasswordHash(openId: string, passwordHash: string) {
+export async function setUserPasswordHash(openId: string, passwordHash: string, invalidateSessions = true) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  await db.update(users).set({ passwordHash }).where(eq(users.openId, openId));
+  if (invalidateSessions) {
+    await db.update(users).set({ passwordHash, sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.openId, openId));
+  } else {
+    await db.update(users).set({ passwordHash }).where(eq(users.openId, openId));
+  }
+
+  const [updated] = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  if (!updated) throw new Error("Utilisateur introuvable");
+  return updated;
+}
+
+export async function updateUserEmail(input: { userId: number; email: string; actor: "self" | "admin" }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const email = input.email.trim().toLowerCase();
+  return db.transaction(async (tx) => {
+    const [user] = await tx.select().from(users).where(eq(users.id, input.userId)).limit(1);
+    if (!user) throw new Error("Utilisateur introuvable");
+    if (user.email?.trim().toLowerCase() === email) return { user, changed: false };
+
+    const [existing] = await tx.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
+    if (existing && existing.id !== input.userId) {
+      const conflict = new Error("Cette adresse e-mail est déjà utilisée par un autre compte.");
+      (conflict as Error & { code?: string }).code = "EMAIL_IN_USE";
+      throw conflict;
+    }
+
+    const previousEmail = user.email?.trim().toLowerCase() || null;
+    await tx.update(users).set({ email, sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.id, input.userId));
+    if (previousEmail) {
+      await tx.update(applications).set({ email }).where(eq(applications.email, previousEmail));
+    }
+    await tx.insert(learnerActivityLog).values({
+      userId: input.userId,
+      actionType: input.actor === "admin" ? "account_email_changed_by_admin" : "account_email_changed",
+      metadata: { source: input.actor },
+    });
+    const [updated] = await tx.select().from(users).where(eq(users.id, input.userId)).limit(1);
+    if (!updated) throw new Error("Utilisateur introuvable");
+    return { user: updated, changed: true };
+  });
+}
+
+export async function recordAccountSecurityEvent(input: { userId: number; actionType: "account_password_changed" | "account_password_reset_by_admin" | "account_password_reset" | "account_password_reset_requested_by_admin" }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(learnerActivityLog).values({ userId: input.userId, actionType: input.actionType, metadata: {} });
 }
 
 

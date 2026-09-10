@@ -61,6 +61,7 @@ import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetada
 import { isAdministrativeRole } from "@shared/roles";
 import { TalentJourneyTab } from "@/components/TalentJourneyTab";
 import { resolveTrainingVisualAsset } from "@shared/trainingVisualAssets";
+import { AccountSecurityDialog } from "@/components/AccountSecurityDialog";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -328,6 +329,7 @@ export default function TrainingDashboard() {
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             <LanguageSwitcher />
+            {isAuthenticated && <AccountSecurityDialog email={user?.email} compact />}
             {isAdmin && (
               <Link href="/admin" className="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-400 hover:bg-amber-500/25 transition-colors hidden sm:block">
                 Admin

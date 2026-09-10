@@ -1,10 +1,12 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME, SESSION_DURATION_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
 import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation,
-getAdminAnalytics, getExamMonitoring, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation } from "./db";
+getAdminAnalytics, getExamMonitoring, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation, updateUserEmail, setUserPasswordHash, recordAccountSecurityEvent, getUserById, createPasswordResetToken } from "./db";
 import { getLearnerActivityLogPage } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
@@ -35,6 +37,10 @@ import { getAiNewsFeed } from "./aiNews";
 import { isAdministrativeRole, isSuperAdmin } from "@shared/roles";
 import { flagExamHoneypotTrigger, getLearningIntegrityGateDecision, requireLearningIntegrityClearance, verifyLearningIntegrityPresence } from "./learningIntegrityGate";
 import { talentAdminRouter, talentLearnerRouter } from "./talentRouter";
+import { logAdminActivity } from "./adminDb";
+import { sendPasswordResetEmail } from "./email";
+import { ENV } from "./_core/env";
+import { isValidPassword } from "../shared/accountCredentials";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -165,6 +171,39 @@ export const appRouter = router({
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
+    }),
+    updateMyEmail: protectedProcedure.input(z.object({ email: z.string().trim().email().max(320), currentPassword: z.string().min(1).max(128) })).mutation(async ({ ctx, input }) => {
+      if (!ctx.user.passwordHash || !(await bcrypt.compare(input.currentPassword, ctx.user.passwordHash))) {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Le mot de passe actuel est incorrect." });
+      }
+      const result = await updateUserEmail({ userId: ctx.user.id, email: input.email, actor: "self" });
+      if (!result.changed) return { success: true, changed: false };
+      const sessionToken = await (await import("./_core/sdk")).sdk.createSessionToken(ctx.user.openId, {
+        name: result.user.name || result.user.email || "",
+        expiresInMs: SESSION_DURATION_MS,
+        sessionVersion: result.user.sessionVersion,
+      });
+      const cookieOptions = getSessionCookieOptions(ctx.req);
+      ctx.res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: SESSION_DURATION_MS });
+      return { success: true, changed: true, email: result.user.email };
+    }),
+    changeMyPassword: protectedProcedure.input(z.object({ currentPassword: z.string().min(1).max(128), newPassword: z.string().min(1).max(128) })).mutation(async ({ ctx, input }) => {
+      if (!ctx.user.passwordHash || !(await bcrypt.compare(input.currentPassword, ctx.user.passwordHash))) {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Le mot de passe actuel est incorrect." });
+      }
+      if (!isValidPassword(input.newPassword)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Le nouveau mot de passe doit contenir entre 12 et 128 caractères." });
+      }
+      const updated = await setUserPasswordHash(ctx.user.openId, await bcrypt.hash(input.newPassword, 10));
+      await recordAccountSecurityEvent({ userId: ctx.user.id, actionType: "account_password_changed" });
+      const sessionToken = await (await import("./_core/sdk")).sdk.createSessionToken(ctx.user.openId, {
+        name: updated.name || updated.email || "",
+        expiresInMs: SESSION_DURATION_MS,
+        sessionVersion: updated.sessionVersion,
+      });
+      const cookieOptions = getSessionCookieOptions(ctx.req);
+      ctx.res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: SESSION_DURATION_MS });
+      return { success: true };
     }),
   }),
 
@@ -928,6 +967,30 @@ export const appRouter = router({
           throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot change your own role" });
         }
         return await updateUserRole({ ...input, changedBy: ctx.user.id });
+      }),
+
+    updateLearnerEmail: protectedProcedure
+      .input(z.object({ userId: z.number().int().positive(), email: z.string().trim().email().max(320) }))
+      .mutation(async ({ ctx, input }) => {
+        if (!isSuperAdmin(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Seul l’administrateur principal peut modifier l’adresse e-mail d’un compte." });
+        const result = await updateUserEmail({ userId: input.userId, email: input.email, actor: "admin" });
+        await logAdminActivity({ adminId: ctx.user.id, action: "update_user_email", targetType: "user", targetId: input.userId, details: { changed: result.changed } });
+        return { success: true, changed: result.changed, email: result.user.email };
+      }),
+
+    requestLearnerPasswordReset: protectedProcedure
+      .input(z.object({ userId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        if (!isSuperAdmin(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Seul l’administrateur principal peut réinitialiser un mot de passe." });
+        const learner = await getUserById(input.userId);
+        if (!learner?.email) throw new TRPCError({ code: "BAD_REQUEST", message: "Ce compte ne possède pas d’adresse e-mail utilisable." });
+        const token = crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "").slice(0, 16);
+        await createPasswordResetToken(learner.id, token, new Date(Date.now() + 60 * 60 * 1000));
+        const origin = ENV.isProduction ? "https://akademy.neodev.click" : `${ctx.req.protocol}://${ctx.req.get("host") || "localhost:3000"}`;
+        await sendPasswordResetEmail({ to: learner.email, name: learner.name || learner.email, resetLink: `${origin}/reset-password?token=${token}`, language: "fr" });
+        await recordAccountSecurityEvent({ userId: learner.id, actionType: "account_password_reset_requested_by_admin" });
+        await logAdminActivity({ adminId: ctx.user.id, action: "request_user_password_reset", targetType: "user", targetId: learner.id, details: { delivery: "email_reset_link" } });
+        return { success: true };
       }),
 
     listLearnerGroups: protectedProcedure.query(async ({ ctx }) => {

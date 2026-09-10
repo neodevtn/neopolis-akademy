@@ -7,9 +7,11 @@ import * as db from "./db";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
 import { ENV } from "./_core/env";
+import { MIN_PASSWORD_LENGTH, isValidPassword } from "../shared/accountCredentials";
+
+export { isValidPassword } from "../shared/accountCredentials";
 
 const SALT_ROUNDS = 10;
-const MIN_PASSWORD_LENGTH = 12;
 const PRODUCTION_APP_URL = "https://akademy.neodev.click";
 
 function getPublicAppUrl(req: Request) {
@@ -21,10 +23,6 @@ function getPublicAppUrl(req: Request) {
 
 export function shouldSkipLoginRateLimit(req: Pick<Request, "get">, isProduction = ENV.isProduction) {
   return !isProduction && req.get("x-neopolis-qa-probe") === "1";
-}
-
-export function isValidPassword(value: unknown): value is string {
-  return typeof value === "string" && value.length >= MIN_PASSWORD_LENGTH && value.length <= 128;
 }
 
 export function registerAuthRoutes(app: Express) {
@@ -241,7 +239,8 @@ export function registerAuthRoutes(app: Express) {
 
       // Hash new password and update
       const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-      await db.setUserPasswordHash(user.openId, passwordHash);
+      const updatedUser = await db.setUserPasswordHash(user.openId, passwordHash);
+      await db.recordAccountSecurityEvent({ userId: user.id, actionType: "account_password_reset" });
 
       // Mark token as used
       await db.markPasswordResetTokenUsed(token);
@@ -250,6 +249,7 @@ export function registerAuthRoutes(app: Express) {
       const sessionToken = await sdk.createSessionToken(user.openId, {
         name: user.name || user.email || "",
         expiresInMs: SESSION_DURATION_MS,
+        sessionVersion: updatedUser.sessionVersion,
       });
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: SESSION_DURATION_MS });

@@ -10,6 +10,8 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }),
   passwordHash: varchar("passwordHash", { length: 255 }), // bcrypt hash, null for OAuth-only users
   loginMethod: varchar("loginMethod", { length: 64 }),
+  /** Incrémentée lors d’un changement d’identifiant pour invalider les sessions antérieures. */
+  sessionVersion: int("sessionVersion").notNull().default(0),
   // "admin" représente le Super Admin historique ; "admin_learner" conserve ses droits
   // d’administration tout en suivant le parcours séquentiel et ses statistiques personnelles.
   // "manager" accède uniquement au module Logs.
@@ -20,7 +22,9 @@ export const users = mysqlTable("users", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
-});
+}, (table) => [
+  uniqueIndex("users_email_unique").on(table.email),
+]);
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;

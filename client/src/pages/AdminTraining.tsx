@@ -22,7 +22,7 @@ import {
   UserPlus, Ban, ShieldCheck, Download, BarChart3, Mail,
   MoreVertical, UserX, UserCheck, TrendingUp, Activity,
   Clock, CheckCircle2, AlertTriangle, RefreshCw, Edit2, Send,
-  UserCog, MessageSquareText, Layers,
+  UserCog, MessageSquareText, Layers, KeyRound,
 } from "lucide-react";
 import { FileText, Video, BookMarked, XCircle, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -98,6 +98,9 @@ export default function AdminTraining() {
   const [inviteResults, setInviteResults] = useState<{ email: string; success: boolean; error?: string }[] | null>(null);
   const [editEmailId, setEditEmailId] = useState<number | null>(null);
   const [editEmailValue, setEditEmailValue] = useState("");
+  const [credentialDialogOpen, setCredentialDialogOpen] = useState(false);
+  const [learnerEmailDraft, setLearnerEmailDraft] = useState("");
+  const [passwordResetDialogOpen, setPasswordResetDialogOpen] = useState(false);
   const [orientationProposalOpen, setOrientationProposalOpen] = useState(false);
   const [orientationProposalJustification, setOrientationProposalJustification] = useState("");
   const [orientationProposedGoals, setOrientationProposedGoals] = useState<Array<{ competencyId: string; targetLevel: "bronze" | "silver" | "gold" }>>([]);
@@ -373,6 +376,23 @@ export default function AdminTraining() {
       selectedCandidatesQuery.refetch();
     },
     onError: (err) => toast.error(err.message),
+  });
+
+  const updateLearnerEmailMutation = trpc.admin.updateLearnerEmail.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.changed ? "Adresse e-mail de l’apprenant mise à jour." : "Cette adresse e-mail était déjà enregistrée sur ce compte.");
+      setCredentialDialogOpen(false);
+      learnersQuery.refetch();
+      detailQuery.refetch();
+    },
+    onError: (error) => toast.error(error.message || "Impossible de modifier l’adresse e-mail."),
+  });
+  const requestLearnerPasswordResetMutation = trpc.admin.requestLearnerPasswordReset.useMutation({
+    onSuccess: () => {
+      toast.success("Le lien de réinitialisation a été envoyé à l’adresse e-mail actuelle de l’apprenant.");
+      setPasswordResetDialogOpen(false);
+    },
+    onError: (error) => toast.error(error.message || "Impossible d’envoyer le lien de réinitialisation."),
   });
 
   const cancelInvitationMutation = trpc.admin.cancelInvitation.useMutation({
@@ -651,6 +671,24 @@ export default function AdminTraining() {
 
               <TabsContent value="profile" className="mt-0">
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                  {canManageRoles && selectedLearner && selectedLearner.id !== user?.id && (
+                    <div className="mb-5 flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50/60 p-4 dark:border-amber-900/50 dark:bg-amber-950/20 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <h4 className="flex items-center gap-2 text-sm font-semibold text-foreground"><KeyRound className="h-4 w-4 text-amber-700 dark:text-amber-400" /> Identifiants du compte</h4>
+                        <p className="mt-1 text-xs text-muted-foreground">Actions réservées au super-administrateur, inscrites dans le journal. Aucun mot de passe n’est affiché ni choisi par l’administration.</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Dialog open={credentialDialogOpen} onOpenChange={(open) => { setCredentialDialogOpen(open); if (open) setLearnerEmailDraft(selectedLearner.email || (detail as any).userInfo?.email || ""); }}>
+                          <DialogTrigger asChild><Button variant="outline" size="sm" className="gap-2"><Mail className="h-4 w-4" /> Modifier l’e-mail</Button></DialogTrigger>
+                          <DialogContent className="max-w-md"><DialogHeader><DialogTitle>Modifier l’adresse e-mail</DialogTitle><DialogDescription>L’adresse doit être unique. Les sessions actives de cet apprenant seront invalidées après enregistrement.</DialogDescription></DialogHeader><div className="space-y-2"><label className="text-sm font-medium" htmlFor="learner-account-email">Nouvelle adresse e-mail</label><Input id="learner-account-email" type="email" autoComplete="email" value={learnerEmailDraft} onChange={(event) => setLearnerEmailDraft(event.target.value)} required /></div><DialogFooter><Button type="button" variant="ghost" onClick={() => setCredentialDialogOpen(false)}>Annuler</Button><Button type="button" disabled={!learnerEmailDraft.trim() || updateLearnerEmailMutation.isPending} onClick={() => updateLearnerEmailMutation.mutate({ userId: selectedLearner.id, email: learnerEmailDraft.trim().toLowerCase() })}>{updateLearnerEmailMutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />} Enregistrer</Button></DialogFooter></DialogContent>
+                        </Dialog>
+                        <Dialog open={passwordResetDialogOpen} onOpenChange={setPasswordResetDialogOpen}>
+                          <DialogTrigger asChild><Button variant="outline" size="sm" className="gap-2"><KeyRound className="h-4 w-4" /> Réinitialiser le mot de passe</Button></DialogTrigger>
+                          <DialogContent className="max-w-md"><DialogHeader><DialogTitle>Envoyer un lien de réinitialisation</DialogTitle><DialogDescription>Un lien à usage unique, valide une heure, sera envoyé à l’adresse e-mail actuelle de l’apprenant. Cette action est journalisée.</DialogDescription></DialogHeader><DialogFooter><Button type="button" variant="ghost" onClick={() => setPasswordResetDialogOpen(false)}>Annuler</Button><Button type="button" disabled={requestLearnerPasswordResetMutation.isPending} onClick={() => requestLearnerPasswordResetMutation.mutate({ userId: selectedLearner.id })}>{requestLearnerPasswordResetMutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />} Envoyer le lien</Button></DialogFooter></DialogContent>
+                        </Dialog>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between"><div><h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><FileText className="h-5 w-5 text-primary" /> Profil candidat et accès</h3><p className="mt-1 text-sm text-muted-foreground">Informations issues de la candidature, visibles uniquement à l’administration.</p></div>{candidateProfile ? <span className="self-start rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">Candidature {candidateProfile.status}</span> : <span className="self-start rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">Aucune candidature liée</span>}</div>
                   {candidateProfile ? <div className="mt-5 grid gap-5 lg:grid-cols-2"><div className="grid gap-3 sm:grid-cols-2"><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Situation</p><p className="mt-1 text-sm font-semibold text-foreground">{candidateProfile.currentRole || "—"}</p><p className="mt-1 text-xs text-muted-foreground">{candidateProfile.sector || "Secteur non renseigné"} · {candidateProfile.yearsExperience ?? 0} an(s) d’expérience</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Localisation</p><p className="mt-1 text-sm font-semibold text-foreground">{[candidateProfile.city, candidateProfile.country].filter(Boolean).join(", ") || "—"}</p><p className="mt-1 text-xs text-muted-foreground">Téléphone renseigné : {candidateProfile.phone ? "oui" : "non"}</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Niveaux déclarés</p><p className="mt-1 text-sm text-foreground">IA : {candidateProfile.aiKnowledge || "—"} · Code : {candidateProfile.programmingLevel || "—"}</p><p className="mt-1 text-xs text-muted-foreground">Cloud : {candidateProfile.cloudExperience || "—"}</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Dossier</p><div className="mt-2 flex flex-wrap gap-2">{candidateProfile.cvFileUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.cvFileUrl} target="_blank" rel="noreferrer">Voir le CV</a> : null}{candidateProfile.videoFileUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.videoFileUrl} target="_blank" rel="noreferrer">Voir la vidéo</a> : null}{candidateProfile.linkedinUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a> : null}</div></div></div><div className="rounded-xl border border-border bg-muted/20 p-4"><h4 className="text-sm font-semibold text-foreground">Évaluation de candidature</h4><div className="mt-4 grid grid-cols-2 gap-3"><AuditStat label="Technique" value={Math.round(Number(candidateProfile.scoreTechnique || 0))} detail="Score candidature" /><AuditStat label="Métier" value={Math.round(Number(candidateProfile.scoreMetier || 0))} detail="Score candidature" /><AuditStat label="Communication" value={Math.round(Number(candidateProfile.scoreCommunication || 0))} detail="Score candidature" /><AuditStat label="Total" value={Math.round(Number(candidateProfile.scoreTotal || 0))} detail="Score candidature" /></div><p className="mt-4 text-xs text-muted-foreground">Candidature déposée le {candidateProfile.createdAt ? new Date(candidateProfile.createdAt).toLocaleDateString("fr-FR") : "—"}.</p></div></div> : <p className="mt-5 rounded-xl bg-muted/30 p-4 text-sm text-muted-foreground">Ce compte provient d’une invitation ou ne possède pas de candidature liée.</p>}
                   <div className="mt-5 border-t border-border pt-4"><h4 className="text-sm font-semibold text-foreground">Groupes d’accès</h4>{learnerGroups.length === 0 ? <p className="mt-2 text-sm text-muted-foreground">Aucun groupe n’est actuellement rattaché à ce compte.</p> : <div className="mt-3 flex flex-wrap gap-2">{learnerGroups.map((group: any) => <span key={group.id} className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">{group.name}{group.isSystem ? " · accès total" : ""}</span>)}</div>}</div>
