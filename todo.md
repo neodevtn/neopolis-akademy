@@ -2862,3 +2862,8 @@
 - [x] Contrôler les images sociales, les cartes desktop/mobile et la publication avant généralisation à toutes les formations — échantillons finance, automatisation et systèmes agentiques relus ; asset social publié contrôlé en PNG 1200×630 ; catalogue public, fiche dédiée et éditeur catalogue vérifiés localement
 - [x] Ajouter aux formations des attributs administrables pour la carte 4:3 et l’image sociale, avec réinitialisation et images Neopolis par défaut fiables — `visualAssets` validé, resolver à trois niveaux (override, registre, repli officiel) et tests associés ajoutés
 - [x] Exposer ces attributs dans la gestion administrative du catalogue et relier leurs valeurs aux cartes, en-têtes et métadonnées publiques — sélection par bibliothèque média, remise à défaut, catalogue SSR, thèmes, fiche publique et surfaces apprenant raccordés
+
+## Correction des répétitions de visuels du catalogue
+- [x] Inventorier les doublons binaires, les associations incorrectes et les compositions trop proches parmi les 115 cartes publiées — 115 chemins carte et 115 chemins sociaux uniques, zéro doublon SHA-256 ; cause confirmée : composition de générateur commune, documentée par l’audit de similarité
+- [x] Corriger le registre ou régénérer les seules cartes visuellement redondantes avec une illustration réellement distincte et des attributs factuels — scènes sémantiques de secours, illustrations v2 contextualisées, descriptions visuelles sans provenance partenaire, 230 assets rendus/téléversés et registre reconstruit
+- [ ] Contrôler le catalogue et les images sociales après correction, puis publier et vérifier la version publique
