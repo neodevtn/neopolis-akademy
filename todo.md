@@ -2866,4 +2866,4 @@
 ## Correction des répétitions de visuels du catalogue
 - [x] Inventorier les doublons binaires, les associations incorrectes et les compositions trop proches parmi les 115 cartes publiées — 115 chemins carte et 115 chemins sociaux uniques, zéro doublon SHA-256 ; cause confirmée : composition de générateur commune, documentée par l’audit de similarité
 - [x] Corriger le registre ou régénérer les seules cartes visuellement redondantes avec une illustration réellement distincte et des attributs factuels — scènes sémantiques de secours, illustrations v2 contextualisées, descriptions visuelles sans provenance partenaire, 230 assets rendus/téléversés et registre reconstruit
-- [ ] Contrôler le catalogue et les images sociales après correction, puis publier et vérifier la version publique
+- [x] Contrôler le catalogue et les images sociales après correction, puis publier et vérifier la version publique — catalogue local revu ; fiche publique architecte servie avec la carte `102969a8` et l’image sociale `dbcf36cb`, toutes deux accessibles en HTTP 200 / PNG après publication du checkpoint `499501ce`
