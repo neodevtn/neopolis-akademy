@@ -119,6 +119,7 @@ export default function AdminContentManager() {
   const [examConfigDrafts, setExamConfigDrafts] = useState<Record<string, ExamConfiguration>>({});
   const [examPreviewOpen, setExamPreviewOpen] = useState(false);
   const [catalogSettingsOpen, setCatalogSettingsOpen] = useState(false);
+  const [catalogSettingsCertificationId, setCatalogSettingsCertificationId] = useState<string | undefined>();
 
   const readViewMode = (params: URLSearchParams): ViewMode => {
     const mode = params.get("mode");
@@ -285,7 +286,11 @@ export default function AdminContentManager() {
     if (catalogQuery.isLoading) return <div className="py-10 text-center text-sm text-muted-foreground">Chargement du catalogue…</div>;
     if (!catalogQuery.data) return <div className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Le catalogue est indisponible. Réessayez dans quelques instants.</div>;
     const publishedExamConfig = Object.fromEntries(Object.entries((examConfigurationsQuery.data as Record<string, any> | undefined) || {}).filter(([, configuration]) => configuration?.isPublished !== false));
-    return <div className="space-y-6"><CatalogOperationsConsole courses={coursesQuery.data || []} certifications={(catalogQuery.data as any).certifications || []} categories={(catalogQuery.data as any).categories || []} trainingFormats={(catalogQuery.data as any).trainingFormats || []} examConfig={{ ...((catalogQuery.data as any).examConfig || {}), ...publishedExamConfig }} catalogMode onOpenCatalogSettings={() => setCatalogSettingsOpen(true)} onOpenCourse={(courseId, mode) => { setCourseDraft(null); navigateContent(mode, { courseId, lesson: 0, chapter: 0 }); }} onManageExam={(certificationId) => navigateContent("edit-exam", { certificationId })} onSetLifecycle={applyLifecycle} isSavingLifecycle={setCourseLifecycleMut.isPending || bulkSetCourseLifecycleMut.isPending} /><Dialog open={catalogSettingsOpen} onOpenChange={setCatalogSettingsOpen}><DialogContent className="max-h-[88vh] max-w-6xl overflow-y-auto"><DialogHeader><DialogTitle>Paramètres avancés du catalogue</DialogTitle></DialogHeader><CatalogMetadataEditor value={catalogQuery.data} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} /></DialogContent></Dialog><CompetencyManager /></div>;
+    const openCatalogSettings = (certificationId?: string) => {
+      setCatalogSettingsCertificationId(certificationId);
+      setCatalogSettingsOpen(true);
+    };
+    return <div className="space-y-6"><CatalogOperationsConsole courses={coursesQuery.data || []} certifications={(catalogQuery.data as any).certifications || []} categories={(catalogQuery.data as any).categories || []} trainingFormats={(catalogQuery.data as any).trainingFormats || []} examConfig={{ ...((catalogQuery.data as any).examConfig || {}), ...publishedExamConfig }} catalogMode onOpenCatalogSettings={openCatalogSettings} onOpenCourse={(courseId, mode) => { setCourseDraft(null); navigateContent(mode, { courseId, lesson: 0, chapter: 0 }); }} onManageExam={(certificationId) => navigateContent("edit-exam", { certificationId })} onSetLifecycle={applyLifecycle} isSavingLifecycle={setCourseLifecycleMut.isPending || bulkSetCourseLifecycleMut.isPending} /><Dialog open={catalogSettingsOpen} onOpenChange={(open) => { setCatalogSettingsOpen(open); if (!open) setCatalogSettingsCertificationId(undefined); }}><DialogContent className="max-h-[88vh] w-[calc(100vw-2rem)] sm:!max-w-6xl overflow-y-auto"><DialogHeader><DialogTitle>Gérer les formations et leurs visuels</DialogTitle><DialogDescription>Modifiez les attributs de la formation sélectionnée, dont la carte de catalogue et l’image Open Graph de partage.</DialogDescription></DialogHeader><CatalogMetadataEditor key={catalogSettingsCertificationId || "catalog"} value={catalogQuery.data} initialCertificationId={catalogSettingsCertificationId} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} /></DialogContent></Dialog><CompetencyManager /></div>;
   };
 
   // ─── COURSE VIEW (Consultation) ───

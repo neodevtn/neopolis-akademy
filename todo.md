@@ -2884,4 +2884,10 @@
 - [x] Identifier le chrome public commun, la recherche catalogue existante et les sources de formations indexables — chrome React `PublicSiteChrome`, en-tête SSR partagé et catalogue public localisé de 115 formations confirmés
 - [x] Ajouter une recherche rapide accessible dans toutes les pages publiques avec résultats de formations et liens directs — champ partagé dans `PublicSiteChrome` et en-tête SSR, formulaire GET et fiches publiques ciblées
 - [x] Localiser la recherche en français, anglais et arabe, puis tester clavier, mobile et résultats pertinents — requêtes Finance/Bookkeeping/المحاسبة validées ; champ accessible par label et rendu mobile contrôlé
-- [ ] Publier et vérifier la recherche publique sur le domaine de production
+- [x] Publier et vérifier la recherche publique sur le domaine de production — manifeste public `71e6817a723b6403`, formulaire SSR, résultat Finance et directive noindex vérifiés sans cache
+
+## Découvrabilité des visuels administrables de formation
+- [x] Vérifier la recherche publiée ainsi que le chemin réel de gestion des cartes et images Open Graph dans l’administration — recherche publique confirmée ; visuels existants dans l’éditeur des paramètres catalogue mais accès trop enfoui identifié
+- [x] Rendre la gestion des deux visuels directement repérable depuis la fiche formation du catalogue administrateur, sans modifier les règles de fallback — entrée « Images de formation », actions « Gérer les visuels », dialogue élargi, aperçu du visuel résolu, statut explicite et bibliothèque ouverte sur Images
+- [x] Tester en session administrateur la sélection média, l’aperçu, la remise par défaut et la sauvegarde sans altérer les données publiées — session admin locale, accès direct, dialogue, aperçus résolus, bibliothèque Images et état de remise par défaut contrôlés ; aucun clic de sauvegarde ni aucune modification de `trainingIndex.json`
+- [ ] Publier puis vérifier le chemin et les surfaces publiques associées

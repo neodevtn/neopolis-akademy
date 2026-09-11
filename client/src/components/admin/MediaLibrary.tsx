@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FileImage, FileText, Film, Link2, Music2, Presentation, Search, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -21,12 +21,20 @@ interface MediaLibraryProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSelect: (asset: MediaAsset) => void;
+  initialKind?: MediaKind | "all";
 }
 
 /** Reusable media selector. It references existing `/api/assets/` URLs and never moves learner media. */
-export function MediaLibrary({ assets, open, onOpenChange, onSelect }: MediaLibraryProps) {
+export function MediaLibrary({ assets, open, onOpenChange, onSelect, initialKind = "all" }: MediaLibraryProps) {
   const [query, setQuery] = useState("");
-  const [kind, setKind] = useState<MediaKind | "all">("all");
+  const [kind, setKind] = useState<MediaKind | "all">(initialKind);
+
+  useEffect(() => {
+    if (open) {
+      setKind(initialKind);
+      setQuery("");
+    }
+  }, [initialKind, open]);
 
   const filteredAssets = useMemo(() => assets.filter((asset) => {
     const matchesKind = kind === "all" || asset.kind === kind;
@@ -36,7 +44,7 @@ export function MediaLibrary({ assets, open, onOpenChange, onSelect }: MediaLibr
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-h-[85vh] w-[calc(100vw-2rem)] sm:!max-w-4xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Bibliothèque médias</DialogTitle>
           <DialogDescription>
