@@ -2905,3 +2905,9 @@
 - [x] Afficher l’indicateur et son contexte de revue à côté de l’apprenant dans le classement et le dossier de suivi — badge lié au dossier apprenant, score et information de contexte ; critères de classement visibles et départage déterministe ajouté
 - [x] Corriger le crash résiduel de bibliothèque média causé par des hooks React non importés — import `useEffect`, `useMemo` et `useState` confirmé ; catalogue local chargé sans ErrorBoundary après contrôle
 - [x] Tester les calculs, les autorisations et le rendu responsive, puis publier et vérifier la vue Évaluation — comparateur de classement couvert ; signaux couverts ; 658 tests réussis, 2 ignorés ; QA 9/9 ; vue desktop et mobile contrôlée sans débordement de page ; production confirmée par le manifeste `cadb0f2247773435` et le fragment `AdminDashboard-BTQrSL40.js` contenant les critères et statuts de revue
+
+## Feedback Sentry 934422
+- [x] Consulter le feedback signalé, qualifier son impact et relever les étapes de reproduction sans exposer de données personnelles — feedback : un nouvel apprenant accepté est renvoyé vers « Authentification requise » en ouvrant Training ; flux invitation, création de mot de passe, session et garde `/training` analysés
+- [x] Reproduire et corriger la cause technique confirmée, avec un test de non-régression ciblé — `signSession` omettait `sessionVersion` alors que la définition du mot de passe l’incrémente avant création du cookie ; le jeton transportait donc 0 au lieu de la version compte. La version est désormais signée et couverte par test
+- [x] Valider localement la correction avec TypeScript, tests d’invitation/session, suite complète et matrice QA — 661 tests, dont le nouveau test de version JWT, réussis ; 2 tests ignorés ; QA 9/9 et `git diff --check` validés
+- [ ] Publier et vérifier la correction sur le domaine public
