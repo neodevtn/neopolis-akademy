@@ -2878,4 +2878,4 @@
 - [x] Localiser le bloc « Activities by training programme » et sa source de données sur les pages publiques par thème — rendu SSR identifié dans `renderPublicTrainingTheme` et source de cas d’usage analysée depuis le catalogue canonique
 - [x] Retirer ce bloc et rendre les cas d’usage professionnels associés sur une colonne responsive — graphique d’activités retiré ; liste de cas en colonne unique revue desktop et mobile
 - [x] Corriger la localisation complète des cas d’usage professionnels en français, anglais et arabe, avec test de non-régression — préférence correcte du dictionnaire public quand `en` duplique le français ; compléments arabes et sonde de 28 cas ajoutés
-- [ ] Vérifier le rendu local et public des pages thème dans les trois langues
+- [x] Vérifier le rendu local et public des pages thème dans les trois langues — contrôles desktop/mobile locaux et requêtes publiques FR/EN/AR réussis : bloc d’activités absent, liste `use-case-list` présente, libellés anglais et arabes attendus servis
