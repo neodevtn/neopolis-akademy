@@ -308,6 +308,11 @@ export default function AdminDashboard() {
   }, [commAudience, commCourseId, commCourseProgressStatus, commActivityWithinDays, commUseCompetencyFilter, commCompetencyId, commMinCompetencyLevel, commManualEmails.length, communicationSegmentOptionsQuery.data?.courses, competencyFrameworkQuery.data?.definitions]);
 
   const analyticsQuery = trpc.adminTools.analytics.getLearnerAnalytics.useQuery(undefined, { enabled: activeTab === "analytics" });
+  const integrityQueueQuery = trpc.adminTools.integrity.queue.useQuery(undefined, { enabled: activeTab === "analytics" && isAuthenticated && isAdmin });
+  const integrityByLearnerId = useMemo(
+    () => new Map((integrityQueueQuery.data || []).map((item) => [item.id, item])),
+    [integrityQueueQuery.data],
+  );
   const referralOverviewQuery = trpc.referral.getAdminOverview.useQuery(undefined, { enabled: activeTab === "referrals" && isAuthenticated && isAdmin });
   const updateReferralCampaignMutation = trpc.referral.updateCampaign.useMutation({
     onSuccess: () => { referralOverviewQuery.refetch(); toast.success("Programme de parrainage mis à jour"); },
@@ -961,6 +966,9 @@ export default function AdminDashboard() {
                   <h3 className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--wise-positive)" }}>
                     <BarChart3 className="w-4 h-4 inline mr-2" />Classement — Top apprenants
                   </h3>
+                  <p className="mb-4 max-w-4xl text-xs leading-5 text-muted-foreground">
+                    Ordre de classement : <strong>leçons terminées</strong>, puis, en cas d’égalité, <strong>examens réussis</strong>, <strong>meilleur score</strong> et <strong>dernière activité pédagogique</strong>. Les badges « À vérifier » signalent uniquement une revue pédagogique fondée sur des événements enregistrés ; ils ne constituent ni une preuve ni une sanction.
+                  </p>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
@@ -974,19 +982,38 @@ export default function AdminDashboard() {
                         </tr>
                       </thead>
                       <tbody>
-                        {analyticsQuery.data.leaderboard.map((l: any, i: number) => (
+                        {analyticsQuery.data.leaderboard.map((l: any, i: number) => {
+                          const integrity = integrityByLearnerId.get(l.id);
+                          const integrityScore = integrity?.assessment.riskScore ?? 0;
+                          const integrityLabel = integrity?.review?.status === "dismissed" ? "Écarté après revue" : integrity ? "À vérifier" : null;
+                          const integrityTone = integrity?.review?.status === "dismissed"
+                            ? "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                            : integrityScore >= 60
+                              ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                              : "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
+                          return (
                           <tr key={l.id} className="border-t border-border">
                             <td className="p-3 font-bold text-primary">{i + 1}</td>
                             <td className="p-3">
                               <div className="font-medium text-foreground">{l.name || "—"}</div>
                               <div className="text-xs text-muted-foreground">{l.email}</div>
+                              {integrityLabel && (
+                                <Link
+                                  href={`/admin/training?tab=learners&learner=${l.id}`}
+                                  title="Ouvrir le dossier apprenant et les éléments de revue d’intégrité. Ce signal ne constitue pas une preuve ni une sanction."
+                                  className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${integrityTone}`}
+                                >
+                                  <AlertTriangle className="h-3 w-3" /> {integrityLabel} · {integrityScore}/100
+                                </Link>
+                              )}
                             </td>
                             <td className="p-3 font-semibold">{l.lessonsCompleted}</td>
                             <td className="p-3">{l.examStats.passed}/{l.examStats.attempts}</td>
                             <td className="p-3 font-semibold" style={{ color: l.examStats.bestScore >= 720 ? "var(--wise-positive)" : "var(--wise-negative)" }}>{l.examStats.bestScore || "—"}</td>
-                            <td className="p-3 text-xs text-muted-foreground">{l.lastSignedIn ? new Date(l.lastSignedIn).toLocaleDateString("fr-FR") : "—"}</td>
+                            <td className="p-3 text-xs text-muted-foreground">{l.lastActivityAt ? new Date(l.lastActivityAt).toLocaleDateString("fr-FR") : "—"}</td>
                           </tr>
-                        ))}
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>

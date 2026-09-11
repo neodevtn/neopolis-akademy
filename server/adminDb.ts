@@ -12,6 +12,7 @@ import {
   learnerAchievements, learnerCompetencyContributions, learningEvents,
 } from "../drizzle/schema";
 import type { CommunicationAudience, CommunicationRecipientFilterInput } from "../shared/communicationRecipients";
+import { compareLearnerRanking } from "./learnerRanking";
 
 // ============ Admin Notes ============
 
@@ -518,8 +519,11 @@ export async function getLearnerAnalytics() {
 
   // Progress per user summary
   const progressByUser = new Map<number, number>();
+  const lastActivityByUser = new Map<number, Date>();
   for (const p of allProgress) {
     progressByUser.set(p.userId, (progressByUser.get(p.userId) || 0) + 1);
+    const current = lastActivityByUser.get(p.userId);
+    if (!current || p.completedAt > current) lastActivityByUser.set(p.userId, p.completedAt);
   }
 
   // Exam stats
@@ -530,6 +534,8 @@ export async function getLearnerAnalytics() {
     if (e.passed === 1) current.passed++;
     if (e.score > current.bestScore) current.bestScore = e.score;
     examsByUser.set(e.userId, current);
+    const previousActivity = lastActivityByUser.get(e.userId);
+    if (!previousActivity || e.finishedAt > previousActivity) lastActivityByUser.set(e.userId, e.finishedAt);
   }
 
   return {
@@ -550,8 +556,8 @@ export async function getLearnerAnalytics() {
       id: u.id, name: u.name, email: u.email,
       lessonsCompleted: progressByUser.get(u.id) || 0,
       examStats: examsByUser.get(u.id) || { attempts: 0, passed: 0, bestScore: 0 },
-      lastSignedIn: u.lastSignedIn,
-    })).sort((a, b) => b.lessonsCompleted - a.lessonsCompleted).slice(0, 20),
+      lastActivityAt: lastActivityByUser.get(u.id) || null,
+    })).sort(compareLearnerRanking).slice(0, 20),
   };
 }
 
