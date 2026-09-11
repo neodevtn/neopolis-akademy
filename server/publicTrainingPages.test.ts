@@ -54,8 +54,10 @@ describe("pages publiques de formations IA", () => {
 
     const html = renderPublicTrainingTheme(theme!);
     expect(html).toContain("Formations disponibles dans ce thème");
-    expect(html).toContain("Répartition des activités par formation");
+    expect(html).not.toContain("Répartition des activités par formation");
     expect(html).toContain("Cas d’usage professionnels dans les formations associées");
+    expect(html).toContain('class="use-case-list"');
+    expect(html).not.toContain('class="use-case-grid"');
     expect(html).toContain("Construire un agent de tenue comptable");
     expect(html).toContain(`<title>${theme!.seo.title}</title>`);
     expect(html).toContain(`meta name="keywords" content="${theme!.seo.keywords}"`);
@@ -160,10 +162,13 @@ describe("pages publiques de formations IA", () => {
     expect(theme).not.toBeNull();
 
     const html = renderPublicTrainingTheme(theme!, "ar");
+    const useCasesHtml = html.slice(html.indexOf('id="use-cases-title"'), html.indexOf('id="formations-title"'));
     expect(html).toContain('<html lang="ar" dir="rtl">');
     expect(html).toContain("الدورات المتاحة ضمن هذا الموضوع");
     expect(html).toContain("أتمتة المحاسبة بالذكاء الاصطناعي");
     expect(html).toContain("حالات استخدام مهنية في الدورات المرتبطة");
+    expect(useCasesHtml).toContain("بناء وكيل لمسك الدفاتر المحاسبية");
+    expect(useCasesHtml).not.toContain("Construire un agent de tenue comptable");
     expect(html).toContain(`meta name="keywords" content="${theme!.seo.keywords}"`);
     expect(html).toContain('hreflang="en" href="https://akademy.neodev.click/en/ai-training/comptabilite-finance"');
     expect(html).toContain('"inLanguage":"ar"');

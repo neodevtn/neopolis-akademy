@@ -2873,3 +2873,9 @@
 - [x] Ajouter des procédures sécurisées de changement d’e-mail et de mot de passe, avec validation, droits, unicité et journalisation — unicité BD, version de session, e-mail auto-service avec mot de passe actuel, changement de mot de passe, reset administratif par lien à usage unique et journaux ajoutés
 - [x] Ajouter les actions d’identifiants dans le profil apprenant et le dossier administrateur, sans exposer de mot de passe ni d’information sensible — dialogue Compte apprenant contrôlé ; actions super-admin dans le profil apprenant avec confirmation et sans mot de passe administrateur
 - [x] Tester les permissions, les cas de validation, les sessions après changement et les parcours navigateur avant publication — validation TypeScript, 645 tests réussis (2 ignorés), QA 9/9 ; contrôles de refus admin et format e-mail ajoutés ; dialogue Compte ouvert avec le compte démo sans soumettre de changement réel
+
+## Catalogue public — cas d’usage et traductions
+- [x] Localiser le bloc « Activities by training programme » et sa source de données sur les pages publiques par thème — rendu SSR identifié dans `renderPublicTrainingTheme` et source de cas d’usage analysée depuis le catalogue canonique
+- [x] Retirer ce bloc et rendre les cas d’usage professionnels associés sur une colonne responsive — graphique d’activités retiré ; liste de cas en colonne unique revue desktop et mobile
+- [x] Corriger la localisation complète des cas d’usage professionnels en français, anglais et arabe, avec test de non-régression — préférence correcte du dictionnaire public quand `en` duplique le français ; compléments arabes et sonde de 28 cas ajoutés
+- [ ] Vérifier le rendu local et public des pages thème dans les trois langues

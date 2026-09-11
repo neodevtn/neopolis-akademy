@@ -51,6 +51,21 @@ describe("thèmes publics de formation", () => {
     });
   });
 
+  it("localise les cas d’usage issus des cours même lorsque les données historiques du catalogue dupliquent le français dans en", () => {
+    const financeEnglish = getPublicTrainingTheme("comptabilite-finance", "en");
+    const financeArabic = getPublicTrainingTheme("comptabilite-finance", "ar");
+
+    expect(financeEnglish?.useCases.find((item) => item.courseId === "ia_appliquee_metiers_tp__17")?.title).toBe("Build a bookkeeping agent");
+    expect(financeEnglish?.useCases.find((item) => item.courseId === "ia_appliquee_metiers_tp__20")?.title).toBe("Automated invoicing and reminders for unpaid invoices");
+    expect(financeArabic?.useCases.find((item) => item.courseId === "ia_appliquee_metiers_tp__17")?.title).toBe("بناء وكيل لمسك الدفاتر المحاسبية");
+    expect(financeArabic?.useCases.find((item) => item.courseId === "ia_appliquee_metiers_tp__20")?.title).toBe("الفوترة والمتابعات الآلية للمدفوعات المتأخرة");
+
+    const developmentArabic = getPublicTrainingTheme("informatique-developpement", "ar");
+    const transformationArabic = getPublicTrainingTheme("strategie-transformation-ia", "ar");
+    expect(developmentArabic?.useCases.find((item) => item.courseId === "advanced_rag_evaluation_specialist__01")?.title).toBe("أنماط فشل أنظمة RAG");
+    expect(transformationArabic?.useCases.find((item) => item.courseId === "ai_governance_compliance_responsible_ai_leader__01")?.title).toBe("أسس الذكاء الاصطناعي المسؤول");
+  });
+
   it("conserve des totaux de catalogue cohérents", () => {
     const metrics = getPublicTrainingCatalogMetrics();
 

@@ -20,7 +20,12 @@ export function localizePublicTrainingText(value: string | { fr?: string; en?: s
   if (!value) return fallback;
   if (typeof value === "string") return translate(value, locale);
   if (locale === "ar") return value.ar || translate(value.fr || value.en || fallback, locale);
-  if (locale === "en") return value.en || translate(value.fr || fallback, locale);
+  if (locale === "en") {
+    const source = value.fr || value.en || fallback;
+    // Certains paquets historiques du catalogue ont recopié le français dans
+    // `en`. Dans ce cas, le dictionnaire public reste la source de traduction.
+    return value.en && value.en !== value.fr ? value.en : translate(source, locale);
+  }
   return value.fr || value.en || fallback;
 }
 
