@@ -173,7 +173,7 @@ export function PublicSiteHeader({ active = "home" }: { active?: PublicPage }) {
       <style>{PUBLIC_CHROME_STYLES}</style>
       <header className="public-chrome-header">
       <div className="public-chrome-shell">
-        <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><img src={LOGO_URL} alt="Neopolis Akademy" width={180} height={63} decoding="async" fetchPriority="high" className="public-chrome-logo" /></Link>
+        <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><img src={LOGO_URL} alt="Neopolis Akademy" width={120} height={42} decoding="sync" fetchPriority="high" className="public-chrome-logo" /></Link>
         <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
           <NavigationLinks page={active} />
           <PublicTrainingSearch />

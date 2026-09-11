@@ -23,7 +23,7 @@ export const PUBLIC_CHROME_STYLES = `
     gap: 12px;
   }
   .public-chrome-brand { display: flex; flex: 0 0 auto; align-items: center; }
-  .public-chrome-logo { display: block; width: auto; height: 36px; object-fit: contain; }
+  .public-chrome-logo { display: block; width: 120px; height: 42px; flex: 0 0 120px; object-fit: contain; image-rendering: auto; }
   .public-chrome-nav { display: none; min-width: 0; margin-inline: auto; align-items: center; gap: 2px; }
   .public-chrome-nav-link {
     display: inline-flex;
@@ -146,7 +146,7 @@ export const PUBLIC_CHROME_STYLES = `
   }
   @media (max-width: 639px) {
     .public-chrome-shell { width: min(100% - 24px, 1440px); gap: 8px; }
-    .public-chrome-logo { height: 34px; }
+    .public-chrome-logo { width: 100px; height: 35px; flex-basis: 100px; }
     .public-chrome-apply { min-height: 36px; padding: 0 11px; font-size: 12px; }
   }
 `;

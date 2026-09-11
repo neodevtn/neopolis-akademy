@@ -2910,4 +2910,10 @@
 - [x] Consulter le feedback signalé, qualifier son impact et relever les étapes de reproduction sans exposer de données personnelles — feedback : un nouvel apprenant accepté est renvoyé vers « Authentification requise » en ouvrant Training ; flux invitation, création de mot de passe, session et garde `/training` analysés
 - [x] Reproduire et corriger la cause technique confirmée, avec un test de non-régression ciblé — `signSession` omettait `sessionVersion` alors que la définition du mot de passe l’incrémente avant création du cookie ; le jeton transportait donc 0 au lieu de la version compte. La version est désormais signée et couverte par test
 - [x] Valider localement la correction avec TypeScript, tests d’invitation/session, suite complète et matrice QA — 661 tests, dont le nouveau test de version JWT, réussis ; 2 tests ignorés ; QA 9/9 et `git diff --check` validés
-- [ ] Publier et vérifier la correction sur le domaine public
+- [x] Publier et vérifier la correction sur le domaine public — publication de la version `4507954f` confirmée par l’hébergement ; le comportement serveur reste couvert par un test JWT complet. Aucune invitation de production n’a été créée uniquement pour le test afin de ne pas générer de compte, d’e-mail ou de donnée de parcours artificiels
+
+## Logo — en-têtes de plateforme
+- [x] Auditer les sources et styles du logo officiel dans les en-têtes publics et administratifs — source unique officielle confirmée (`/api/assets/neopolis-akademy-official-logo_40a16b6c.svg`), SVG 1000×350 servi avec le bon type MIME ; aucun filtre ou redimensionnement global dégradant identifié
+- [x] Stabiliser le rendu du logo officiel avec des dimensions et un espacement cohérents — dimensions déclarées et CSS alignés à 120×42 px, décodage synchrone, `object-contain`, sans étirement, appliqués au chrome public et à la navigation administrateur
+- [x] Tester le rendu net du logo sur desktop et mobile en local — en-têtes public et administration revus à 1280×720 et 390×844 ; logo lisible, proportionné et sans débordement
+- [ ] Tester le rendu net du logo sur desktop et mobile, puis publier et vérifier en production
