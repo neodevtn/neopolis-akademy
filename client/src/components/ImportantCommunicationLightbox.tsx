@@ -7,6 +7,7 @@ import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { COOKIE_CONSENT_UPDATED_EVENT, hasStoredCookieConsent } from "@/lib/cookieConsentState";
+import { isAdministrativePath } from "@shared/communicationOverlay";
 
 /**
  * Acknowledgement-required broadcast shown after authentication and retained across route changes.
@@ -16,7 +17,8 @@ import { COOKIE_CONSENT_UPDATED_EVENT, hasStoredCookieConsent } from "@/lib/cook
 export function ImportantCommunicationLightbox() {
   const { user, isAuthenticated } = useAuth();
   const [location] = useLocation();
-  const communicationsQuery = trpc.training.getCommunications.useQuery(undefined, { enabled: isAuthenticated, refetchOnWindowFocus: true });
+  const isAdminRoute = isAdministrativePath(location);
+  const communicationsQuery = trpc.training.getCommunications.useQuery(undefined, { enabled: isAuthenticated && !isAdminRoute, refetchOnWindowFocus: true });
   const refetchCommunications = communicationsQuery.refetch;
   const [acknowledged, setAcknowledged] = useState(false);
   const [cookieChoiceRecorded, setCookieChoiceRecorded] = useState(() => hasStoredCookieConsent());
@@ -33,11 +35,11 @@ export function ImportantCommunicationLightbox() {
     window.addEventListener(COOKIE_CONSENT_UPDATED_EVENT, revealCommunication);
     return () => window.removeEventListener(COOKIE_CONSENT_UPDATED_EVENT, revealCommunication);
   }, [cookieChoiceRecorded]);
-  useEffect(() => { if (isAuthenticated) refetchCommunications(); }, [location, isAuthenticated, refetchCommunications]);
+  useEffect(() => { if (isAuthenticated && !isAdminRoute) refetchCommunications(); }, [location, isAdminRoute, isAuthenticated, refetchCommunications]);
   useEffect(() => {
     if (communication && !communication.isRead && !markReadMutation.isPending) markReadMutation.mutate({ communicationId: communication.id });
   }, [communication, markReadMutation]);
-  if (!communication || !cookieChoiceRecorded) return null;
+  if (isAdminRoute || !communication || !cookieChoiceRecorded) return null;
 
   return (
     <Dialog open onOpenChange={() => undefined}>

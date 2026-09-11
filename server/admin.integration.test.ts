@@ -308,6 +308,32 @@ describe("Admin API - Application Management", () => {
 });
 
 describe("Admin API - Communications ciblées", () => {
+  it("expose une liste paginée et filtrable aux administrateurs", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    const result = await caller.adminTools.communications.list({ page: 1, pageSize: 1, status: "sent" });
+
+    expect(Array.isArray(result.items)).toBe(true);
+    expect(result.page).toBe(1);
+    expect(result.pageSize).toBe(1);
+    expect(typeof result.total).toBe("number");
+    expect(result.items.length).toBeLessThanOrEqual(1);
+  });
+
+  it("refuse la consultation des communications aux non-administrateurs", async () => {
+    const caller = appRouter.createCaller(createUserContext());
+    await expect(caller.adminTools.communications.list({ page: 1, pageSize: 20 })).rejects.toThrow("Accès réservé aux administrateurs");
+  });
+
+  it("refuse une plage de dates incohérente", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    await expect(caller.adminTools.communications.list({
+      page: 1,
+      pageSize: 20,
+      from: new Date("2026-09-11T00:00:00.000Z"),
+      to: new Date("2026-09-10T00:00:00.000Z"),
+    })).rejects.toThrow("La date de début doit précéder la date de fin");
+  });
+
   it("prévisualise un segment sans déclencher d’envoi", async () => {
     const caller = appRouter.createCaller(createAdminContext());
     const result = await caller.adminTools.communications.getRecipientCount({

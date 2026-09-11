@@ -1,4 +1,4 @@
-import { eq, desc, sql, and, count, inArray, gte, lte } from "drizzle-orm";
+import { eq, desc, sql, and, count, inArray, gte, lte, like, or } from "drizzle-orm";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { getDb } from "./db";
@@ -114,13 +114,30 @@ export async function createCommunication(data: Omit<InsertCommunication, "id">)
   return { id: result[0].insertId, ...data, createdAt: new Date() };
 }
 
-export async function getCommunications(page: number = 1, pageSize: number = 20) {
+export async function getCommunications(input: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  status?: CommunicationStatus;
+  from?: Date;
+  to?: Date;
+} = {}) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  const page = input.page || 1;
+  const pageSize = input.pageSize || 20;
   const offset = (page - 1) * pageSize;
+  const search = input.search?.trim();
+  const filters = [
+    search ? or(like(communications.subject, `%${search}%`), like(communications.body, `%${search}%`)) : undefined,
+    input.status ? eq(communications.status, input.status) : undefined,
+    input.from ? gte(communications.createdAt, input.from) : undefined,
+    input.to ? lte(communications.createdAt, input.to) : undefined,
+  ].filter(Boolean);
+  const whereClause = filters.length ? and(...filters) : undefined;
   const items = await db.select().from(communications)
-    .orderBy(desc(communications.createdAt)).limit(pageSize).offset(offset);
-  const [{ total }] = await db.select({ total: count() }).from(communications);
+    .where(whereClause).orderBy(desc(communications.createdAt)).limit(pageSize).offset(offset);
+  const [{ total }] = await db.select({ total: count() }).from(communications).where(whereClause);
   return { items, total, page, pageSize };
 }
 

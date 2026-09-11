@@ -292,10 +292,17 @@ export const adminEnhancedRouter = router({
       .input(z.object({
         page: z.number().min(1).default(1),
         pageSize: z.number().min(1).max(100).default(20),
+        search: z.string().trim().max(160).optional(),
+        status: z.enum(["draft", "scheduled", "sending", "sent", "failed", "cancelled"]).optional(),
+        from: z.date().optional(),
+        to: z.date().optional(),
+      }).refine((input) => !input.from || !input.to || input.from <= input.to, {
+        message: "La date de début doit précéder la date de fin",
+        path: ["to"],
       }).optional())
       .query(async ({ ctx, input }) => {
         assertAdmin(ctx);
-        return await getCommunications(input?.page || 1, input?.pageSize || 20);
+        return await getCommunications(input || {});
       }),
 
     send: protectedProcedure

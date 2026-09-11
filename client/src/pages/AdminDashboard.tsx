@@ -77,6 +77,12 @@ export default function AdminDashboard() {
   const [commSegmentName, setCommSegmentName] = useState("");
   const [commScheduleDialog, setCommScheduleDialog] = useState<{ open: boolean; communication: any | null }>({ open: false, communication: null });
   const [commScheduledAt, setCommScheduledAt] = useState("");
+  const [selectedCommunication, setSelectedCommunication] = useState<any | null>(null);
+  const [communicationPage, setCommunicationPage] = useState(1);
+  const [communicationSearch, setCommunicationSearch] = useState("");
+  const [communicationStatusFilter, setCommunicationStatusFilter] = useState<string>("all");
+  const [communicationFrom, setCommunicationFrom] = useState("");
+  const [communicationTo, setCommunicationTo] = useState("");
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const [activityPage, setActivityPage] = useState(1);
@@ -209,7 +215,15 @@ export default function AdminDashboard() {
     onError: () => toast.error("Erreur lors de la mise à jour en masse"),
   });
 
-  const communicationsQuery = trpc.adminTools.communications.list.useQuery(undefined, { enabled: activeTab === "communications" });
+  const communicationListInput = useMemo(() => ({
+    page: communicationPage,
+    pageSize: 20,
+    ...(communicationSearch.trim() ? { search: communicationSearch.trim() } : {}),
+    ...(communicationStatusFilter !== "all" ? { status: communicationStatusFilter as "draft" | "scheduled" | "sending" | "sent" | "failed" | "cancelled" } : {}),
+    ...(communicationFrom ? { from: new Date(`${communicationFrom}T00:00:00`) } : {}),
+    ...(communicationTo ? { to: new Date(`${communicationTo}T23:59:59.999`) } : {}),
+  }), [communicationFrom, communicationPage, communicationSearch, communicationStatusFilter, communicationTo]);
+  const communicationsQuery = trpc.adminTools.communications.list.useQuery(communicationListInput, { enabled: activeTab === "communications" });
   const communicationSegmentsQuery = trpc.adminTools.communications.segments.list.useQuery(undefined, { enabled: activeTab === "communications" || commDialog });
   const competencyFrameworkQuery = trpc.competencies.getFramework.useQuery(undefined, { enabled: commDialog && isAuthenticated && isAdmin });
   const communicationSegmentOptionsQuery = trpc.adminTools.communications.getSegmentOptions.useQuery(undefined, { enabled: commDialog && isAuthenticated && isAdmin, staleTime: 60_000 });
@@ -436,6 +450,33 @@ export default function AdminDashboard() {
   const getLabel = (value: string | null | undefined) => {
     if (!value) return "—";
     return labelMap[value] || value;
+  };
+
+  const communicationTypeLabel = (type: string) => ({
+    announcement: "Annonce", invitation: "Invitation", reminder: "Rappel", welcome: "Bienvenue", custom: "Personnalisé",
+  }[type] || type);
+  const communicationStatusLabel = (status: string) => ({
+    sent: "Envoyé", draft: "Brouillon", scheduled: "Programmé", sending: "En cours", failed: "Échoué", cancelled: "Annulé",
+  }[status] || status);
+  const communicationStatusClass = (status: string) => ({
+    sent: "wise-badge-positive", draft: "wise-badge-warning", scheduled: "wise-badge-positive", sending: "wise-badge-warning", failed: "wise-badge-negative", cancelled: "wise-badge-negative",
+  }[status] || "wise-badge-warning");
+  const formatCommunicationDate = (communication: any) => {
+    const primaryDate = communication.status === "sent" && communication.sentAt
+      ? communication.sentAt
+      : communication.status === "scheduled" && communication.scheduledAt
+        ? communication.scheduledAt
+        : communication.createdAt;
+    const prefix = communication.status === "sent" && communication.sentAt ? "Envoyé" : communication.status === "scheduled" && communication.scheduledAt ? "Prévu" : "Créé";
+    return { prefix, value: new Date(primaryDate).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) };
+  };
+  const describeCommunicationAudience = (communication: any) => {
+    const filter = communication.recipientFilter || {};
+    const audience = COMMUNICATION_AUDIENCE_LABELS[filter.audience as CommunicationAudience] || "Tous les comptes éligibles";
+    const details = [audience];
+    if (filter.courseId) details.push(`Cours : ${filter.courseId}`);
+    if (filter.manualEmails?.length) details.push(`Sélection manuelle : ${filter.manualEmails.length}`);
+    return details.join(" · ");
   };
 
   const toggleSelect = (id: number) => {
@@ -778,54 +819,58 @@ export default function AdminDashboard() {
         {/* ==================== COMMUNICATIONS TAB ==================== */}
         {activeTab === "communications" && (
           <>
-            <div className="flex items-center justify-between mb-8">
-              <h1 className="wise-display-md">Communications en masse</h1>
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div><h1 className="wise-display-md">Communications en masse</h1><p className="mt-1 text-sm text-muted-foreground">Consultez le contenu, le ciblage, le statut et les dates de chaque envoi.</p></div>
               <Button className="gap-2" onClick={() => openCommunicationEditor()}>
                 <Plus className="w-4 h-4" /> Nouveau communiqué
               </Button>
             </div>
 
+            <div className="mb-5 grid gap-3 rounded-xl border border-border bg-card p-4 md:grid-cols-2 lg:grid-cols-[1.4fr_180px_150px_150px_auto]">
+              <div className="relative"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={communicationSearch} onChange={(event) => { setCommunicationSearch(event.target.value); setCommunicationPage(1); }} placeholder="Rechercher un sujet ou un contenu…" className="pl-9" /></div>
+              <Select value={communicationStatusFilter} onValueChange={(value) => { setCommunicationStatusFilter(value); setCommunicationPage(1); }}><SelectTrigger><SelectValue placeholder="Tous les statuts" /></SelectTrigger><SelectContent><SelectItem value="all">Tous les statuts</SelectItem><SelectItem value="draft">Brouillons</SelectItem><SelectItem value="scheduled">Programmés</SelectItem><SelectItem value="sending">En cours</SelectItem><SelectItem value="sent">Envoyés</SelectItem><SelectItem value="failed">Échoués</SelectItem><SelectItem value="cancelled">Annulés</SelectItem></SelectContent></Select>
+              <div className="space-y-1"><Label htmlFor="communication-from" className="text-xs">Créé après</Label><Input id="communication-from" type="date" value={communicationFrom} onChange={(event) => { setCommunicationFrom(event.target.value); setCommunicationPage(1); }} /></div>
+              <div className="space-y-1"><Label htmlFor="communication-to" className="text-xs">Créé avant</Label><Input id="communication-to" type="date" value={communicationTo} onChange={(event) => { setCommunicationTo(event.target.value); setCommunicationPage(1); }} /></div>
+              <Button type="button" variant="outline" className="gap-2" onClick={() => { setCommunicationSearch(""); setCommunicationStatusFilter("all"); setCommunicationFrom(""); setCommunicationTo(""); setCommunicationPage(1); }}><Filter className="h-4 w-4" /> Réinitialiser</Button>
+            </div>
             <div className="wise-card overflow-hidden">
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto"><table className="w-full min-w-[920px] text-sm">
                 <thead>
                   <tr className="border-b border-border">
+                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Date</th>
                     <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Sujet</th>
                     <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Type</th>
                     <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Destinataires</th>
                     <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Statut</th>
-                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Date</th>
                     <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {communicationsQuery.data?.items?.map((comm: any) => (
-                    <tr key={comm.id} className="border-t border-border">
-                      <td className="p-4 font-medium text-foreground"><div className="flex items-center gap-2">{comm.subject}{comm.isImportant === 1 && <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-900/40 dark:text-amber-300">Important</Badge>}</div></td>
-                      <td className="p-4"><Badge variant="secondary" className="text-xs">{comm.type}</Badge></td>
+                  {communicationsQuery.data?.items?.map((comm: any) => {
+                    const date = formatCommunicationDate(comm);
+                    return <tr key={comm.id} className="cursor-pointer border-t border-border transition-colors hover:bg-secondary/50 focus-within:bg-secondary/50" tabIndex={0} onClick={() => setSelectedCommunication(comm)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedCommunication(comm); } }}>
+                      <td className="p-4 text-xs text-muted-foreground whitespace-nowrap"><p className="font-medium text-foreground">{date.value}</p><p className="mt-0.5">{date.prefix}</p></td>
+                      <td className="p-4 font-medium text-foreground"><button type="button" className="flex items-center gap-2 text-left hover:text-primary hover:underline" onClick={(event) => { event.stopPropagation(); setSelectedCommunication(comm); }}>{comm.subject}{comm.isImportant === 1 && <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-900/40 dark:text-amber-300">Important</Badge>}</button></td>
+                      <td className="p-4"><Badge variant="secondary" className="text-xs">{communicationTypeLabel(comm.type)}</Badge></td>
                       <td className="p-4 text-muted-foreground">{comm.recipientCount}</td>
-                      <td className="p-4">
-                        {comm.status === "sent" && <span className="wise-badge-positive">Envoyé</span>}
-                        {comm.status === "draft" && <span className="wise-badge-warning">Brouillon</span>}
-                        {comm.status === "scheduled" && <span className="wise-badge-positive">Programmé</span>}
-                        {comm.status === "sending" && <span className="wise-badge-warning">En cours...</span>}
-                        {comm.status === "failed" && <span className="wise-badge-negative">Échoué</span>}
-                        {comm.status === "cancelled" && <span className="wise-badge-negative">Annulé</span>}
-                      </td>
-                      <td className="p-4 text-xs text-muted-foreground">{comm.status === "scheduled" && comm.scheduledAt ? `Prévu : ${new Date(comm.scheduledAt).toLocaleString("fr-FR")}` : new Date(comm.createdAt).toLocaleDateString("fr-FR")}</td>
-                      <td className="p-4 whitespace-nowrap">
+                      <td className="p-4"><span className={communicationStatusClass(comm.status)}>{communicationStatusLabel(comm.status)}</span></td>
+                      <td className="p-4 whitespace-nowrap" onClick={(event) => event.stopPropagation()}>
+                        <div className="flex flex-wrap gap-2"><Button size="sm" variant="outline" className="text-xs gap-1" onClick={() => setSelectedCommunication(comm)}><Eye className="w-3 h-3" /> Voir</Button>
                         {comm.status === "draft" && (
-                          <div className="flex flex-wrap gap-2"><Button size="sm" variant="outline" className="text-xs gap-1" onClick={() => openCommunicationEditor(comm)}><FileText className="w-3 h-3" /> Modifier</Button><Button size="sm" variant="outline" className="text-xs gap-1" disabled={sendCommMutation.isPending} onClick={() => { if (window.confirm(`Envoyer maintenant « ${comm.subject} » ?`)) sendCommMutation.mutate({ communicationId: comm.id }); }}><Send className="w-3 h-3" /> Envoyer maintenant</Button><Button size="sm" className="text-xs gap-1" onClick={() => setCommScheduleDialog({ open: true, communication: comm })}><CalendarClock className="w-3 h-3" /> Programmer</Button></div>
+                          <><Button size="sm" variant="outline" className="text-xs gap-1" onClick={() => openCommunicationEditor(comm)}><FileText className="w-3 h-3" /> Modifier</Button><Button size="sm" variant="outline" className="text-xs gap-1" disabled={sendCommMutation.isPending} onClick={() => { if (window.confirm(`Envoyer maintenant « ${comm.subject} » ?`)) sendCommMutation.mutate({ communicationId: comm.id }); }}><Send className="w-3 h-3" /> Envoyer maintenant</Button><Button size="sm" className="text-xs gap-1" onClick={() => setCommScheduleDialog({ open: true, communication: comm })}><CalendarClock className="w-3 h-3" /> Programmer</Button></>
                         )}
                         {comm.status === "scheduled" && <Button size="sm" variant="outline" className="text-xs gap-1 text-destructive" disabled={cancelScheduledCommMutation.isPending} onClick={() => { if (window.confirm(`Annuler l’envoi programmé de « ${comm.subject} » ?`)) cancelScheduledCommMutation.mutate({ communicationId: comm.id }); }}><X className="w-3 h-3" /> Annuler</Button>}
+                        </div>
                       </td>
-                    </tr>
-                  ))}
+                    </tr>;
+                  })}
                   {(!communicationsQuery.data?.items || communicationsQuery.data.items.length === 0) && (
-                    <tr><td colSpan={6} className="p-12 text-center text-muted-foreground">Aucune communication envoyée.</td></tr>
+                    <tr><td colSpan={6} className="p-12 text-center text-muted-foreground">Aucun communiqué ne correspond aux filtres actuels.</td></tr>
                   )}
                 </tbody>
-              </table>
+              </table></div>
             </div>
+            {communicationsQuery.data && communicationsQuery.data.total > 0 && (() => { const totalPages = Math.max(1, Math.ceil(communicationsQuery.data.total / communicationsQuery.data.pageSize)); return <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between"><span className="text-muted-foreground">{communicationsQuery.data.total} communiqué{communicationsQuery.data.total > 1 ? "s" : ""} · page {communicationPage}/{totalPages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={communicationPage <= 1 || communicationsQuery.isFetching} onClick={() => setCommunicationPage((page) => page - 1)}><ChevronLeft className="mr-1 h-4 w-4" /> Précédent</Button><Button variant="outline" size="sm" disabled={communicationPage >= totalPages || communicationsQuery.isFetching} onClick={() => setCommunicationPage((page) => page + 1)}>Suivant <ChevronRight className="ml-1 h-4 w-4" /></Button></div></div>; })()}
           </>
         )}
 
@@ -1255,6 +1300,29 @@ export default function AdminDashboard() {
               )}
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(selectedCommunication)} onOpenChange={(open) => { if (!open) setSelectedCommunication(null); }}>
+        <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-3xl">
+          {selectedCommunication && (() => {
+            const date = formatCommunicationDate(selectedCommunication);
+            return <>
+              <DialogHeader><DialogTitle className="flex flex-wrap items-center gap-2 pr-8"><MessageSquare className="h-5 w-5" /> {selectedCommunication.subject}{selectedCommunication.isImportant === 1 && <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">Important</Badge>}</DialogTitle></DialogHeader>
+              <div className="space-y-5 overflow-y-auto py-2 pr-1 text-sm">
+                <div className="grid gap-3 rounded-xl border border-border bg-muted/20 p-4 sm:grid-cols-2 lg:grid-cols-4">
+                  <div><p className="text-xs text-muted-foreground">Statut</p><p className="mt-1"><span className={communicationStatusClass(selectedCommunication.status)}>{communicationStatusLabel(selectedCommunication.status)}</span></p></div>
+                  <div><p className="text-xs text-muted-foreground">Type</p><p className="mt-1 font-medium">{communicationTypeLabel(selectedCommunication.type)}</p></div>
+                  <div><p className="text-xs text-muted-foreground">Destinataires</p><p className="mt-1 font-medium">{selectedCommunication.recipientCount}</p></div>
+                  <div><p className="text-xs text-muted-foreground">Date principale</p><p className="mt-1 font-medium">{date.value}</p><p className="text-xs text-muted-foreground">{date.prefix}</p></div>
+                </div>
+                <section><h3 className="mb-2 font-semibold">Message envoyé</h3><div className="prose prose-sm max-w-none rounded-xl border border-border bg-background p-4 dark:prose-invert" dangerouslySetInnerHTML={{ __html: selectedCommunication.body }} /><p className="mt-2 text-xs text-muted-foreground">La variable <code>{"{{name}}"}</code> est remplacée par le prénom du destinataire au moment de l’envoi.</p></section>
+                <section className="rounded-xl border border-border bg-card p-4"><h3 className="font-semibold">Ciblage</h3><p className="mt-1 text-sm text-muted-foreground">{describeCommunicationAudience(selectedCommunication)}</p></section>
+                <section className="grid gap-3 rounded-xl border border-border bg-card p-4 sm:grid-cols-3"><div><p className="text-xs text-muted-foreground">Créé le</p><p className="mt-1 font-medium">{new Date(selectedCommunication.createdAt).toLocaleString("fr-FR")}</p></div><div><p className="text-xs text-muted-foreground">Programmé pour</p><p className="mt-1 font-medium">{selectedCommunication.scheduledAt ? new Date(selectedCommunication.scheduledAt).toLocaleString("fr-FR") : "—"}</p></div><div><p className="text-xs text-muted-foreground">Envoyé le</p><p className="mt-1 font-medium">{selectedCommunication.sentAt ? new Date(selectedCommunication.sentAt).toLocaleString("fr-FR") : "—"}</p></div></section>
+              </div>
+              <DialogFooter><Button variant="outline" onClick={() => setSelectedCommunication(null)}>Fermer</Button>{selectedCommunication.status === "draft" && <><Button variant="outline" onClick={() => { setSelectedCommunication(null); openCommunicationEditor(selectedCommunication); }}><FileText className="mr-1 h-4 w-4" /> Modifier</Button><Button disabled={sendCommMutation.isPending} onClick={() => { if (window.confirm(`Envoyer maintenant « ${selectedCommunication.subject} » ?`)) sendCommMutation.mutate({ communicationId: selectedCommunication.id }); }}><Send className="mr-1 h-4 w-4" /> Envoyer maintenant</Button></>}{selectedCommunication.status === "scheduled" && <Button variant="outline" className="text-destructive" disabled={cancelScheduledCommMutation.isPending} onClick={() => { if (window.confirm(`Annuler l’envoi programmé de « ${selectedCommunication.subject} » ?`)) cancelScheduledCommMutation.mutate({ communicationId: selectedCommunication.id }); }}><X className="mr-1 h-4 w-4" /> Annuler l’envoi</Button>}</DialogFooter>
+            </>;
+          })()}
         </DialogContent>
       </Dialog>
 
