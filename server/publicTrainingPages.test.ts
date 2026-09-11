@@ -38,6 +38,7 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain('class="public-chrome-nav-link" href="/#formule">La Formule</a>');
     expect(html).toContain('class="public-chrome-nav-link" href="/ai-news">AI News</a>');
     expect(html).toContain('class="public-chrome-signin" href="/login">Se connecter</a>');
+    expect(html).toContain('role="search" action="/formations-ia/catalogue" method="get"');
     expect(html).toContain('class="public-chrome-apply" href="/apply"><span>Postuler</span>');
     expect(html).toContain('<details class="public-chrome-mobile"><summary aria-label="Programme"><span aria-hidden="true">☰</span></summary>');
     expect(html).toContain('.content-shell { width: 100%; max-width: 78rem; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }');
@@ -88,6 +89,19 @@ describe("pages publiques de formations IA", () => {
     expect(courseHtml).toContain('"@type":"Course"');
     expect(courseHtml).toContain('hreflang="en"');
     expect(courseHtml).not.toContain('href="/training/');
+  });
+
+  it("affiche des résultats de formations publiques pour une recherche et protège cette variante de l’indexation", () => {
+    const frenchHtml = renderPublicTrainingCatalogue("fr", "finance");
+    const englishHtml = renderPublicTrainingCatalogue("en", "bookkeeping");
+    const noResultHtml = renderPublicTrainingCatalogue("fr", "terme impossible");
+
+    expect(frenchHtml).toContain("Résultats pour « finance »");
+    expect(frenchHtml).toContain("L’IA pour la finance");
+    expect(frenchHtml).toContain('name="robots" content="noindex, follow"');
+    expect(englishHtml).toContain("Results for « bookkeeping »");
+    expect(englishHtml).toContain("Build a bookkeeping agent");
+    expect(noResultHtml).toContain("Aucune formation disponible ne correspond à votre recherche.");
   });
 
   it("utilise le visuel social et la carte validés lorsqu’une formation possède un asset dédié", () => {

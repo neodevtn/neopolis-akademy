@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronRight, Menu, X } from "lucide-react";
+import { ChevronRight, Menu, Search, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import DeferredHomeAuth from "@/components/DeferredHomeAuth";
 import { type Language, useLanguage } from "@/contexts/LanguageContext";
@@ -31,6 +31,8 @@ const labels = {
   footerLead: { fr: "Développer des compétences IA utiles dans votre métier.", en: "Build practical AI skills for your profession.", ar: "طوّر مهارات عملية في الذكاء الاصطناعي لمهنتك." },
   menu: { fr: "Menu principal", en: "Main menu", ar: "القائمة الرئيسية" },
   languages: { fr: "Langues", en: "Languages", ar: "اللغات" },
+  searchTraining: { fr: "Rechercher une formation", en: "Search training", ar: "ابحث عن تدريب" },
+  searchPlaceholder: { fr: "Métier, compétence ou formation…", en: "Profession, skill or training…", ar: "مهنة أو مهارة أو تدريب…" },
 } satisfies Record<string, LocalizedText>;
 
 function localizedPath(location: string, locale: Language) {
@@ -121,6 +123,19 @@ function NavigationLinks({ page, onNavigate }: { page: PublicPage; onNavigate?: 
   );
 }
 
+function PublicTrainingSearch({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
+  const { lang, t } = useLanguage();
+  const inputId = mobile ? "public-training-search-mobile" : "public-training-search";
+  return (
+    <form className={`public-chrome-search${mobile ? " public-chrome-search-mobile" : ""}`} role="search" action={publicTrainingCataloguePath(lang)} method="get" onSubmit={onNavigate}>
+      <label className="sr-only" htmlFor={inputId}>{t(labels.searchTraining)}</label>
+      <Search aria-hidden="true" size={15} className="public-chrome-search-icon" />
+      <input id={inputId} name="q" type="search" minLength={2} placeholder={t(labels.searchPlaceholder)} autoComplete="off" />
+      <button type="submit" aria-label={t(labels.searchTraining)}><Search size={15} /></button>
+    </form>
+  );
+}
+
 function MobilePublicMenu({ page }: { page: PublicPage }) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
@@ -140,6 +155,7 @@ function MobilePublicMenu({ page }: { page: PublicPage }) {
         <div id="public-mobile-navigation" className="public-chrome-mobile-panel">
           <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
             <NavigationLinks page={page} onNavigate={() => setOpen(false)} />
+            <PublicTrainingSearch mobile onNavigate={() => setOpen(false)} />
             <Link href="/login" onClick={() => setOpen(false)} className="public-chrome-signin">{t(labels.signIn)}</Link>
             <Link href="/apply" onClick={() => { trackEvent("cta_click", { content_type: "public_navigation", content_id: "apply_mobile_menu" }); setOpen(false); }} className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>
             <LocaleLinks onNavigate={() => setOpen(false)} />
@@ -160,6 +176,7 @@ export function PublicSiteHeader({ active = "home" }: { active?: PublicPage }) {
         <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><img src={LOGO_URL} alt="Neopolis Akademy" width={180} height={63} decoding="async" fetchPriority="high" className="public-chrome-logo" /></Link>
         <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
           <NavigationLinks page={active} />
+          <PublicTrainingSearch />
           <DeferredHomeAuth slot="training" fallback={<Link href="/login" className="public-chrome-signin">{t(labels.signIn)}</Link>} />
         </nav>
         <div className="public-chrome-actions">

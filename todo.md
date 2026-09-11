@@ -2879,3 +2879,9 @@
 - [x] Retirer ce bloc et rendre les cas d’usage professionnels associés sur une colonne responsive — graphique d’activités retiré ; liste de cas en colonne unique revue desktop et mobile
 - [x] Corriger la localisation complète des cas d’usage professionnels en français, anglais et arabe, avec test de non-régression — préférence correcte du dictionnaire public quand `en` duplique le français ; compléments arabes et sonde de 28 cas ajoutés
 - [x] Vérifier le rendu local et public des pages thème dans les trois langues — contrôles desktop/mobile locaux et requêtes publiques FR/EN/AR réussis : bloc d’activités absent, liste `use-case-list` présente, libellés anglais et arabes attendus servis
+
+## Recherche rapide sur le site public
+- [x] Identifier le chrome public commun, la recherche catalogue existante et les sources de formations indexables — chrome React `PublicSiteChrome`, en-tête SSR partagé et catalogue public localisé de 115 formations confirmés
+- [x] Ajouter une recherche rapide accessible dans toutes les pages publiques avec résultats de formations et liens directs — champ partagé dans `PublicSiteChrome` et en-tête SSR, formulaire GET et fiches publiques ciblées
+- [x] Localiser la recherche en français, anglais et arabe, puis tester clavier, mobile et résultats pertinents — requêtes Finance/Bookkeeping/المحاسبة validées ; champ accessible par label et rendu mobile contrôlé
+- [ ] Publier et vérifier la recherche publique sur le domaine de production
