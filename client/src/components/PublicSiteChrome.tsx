@@ -7,8 +7,7 @@ import { trackEvent } from "@/lib/analytics";
 import { publicTrainingCataloguePath, publicTrainingPath } from "@shared/publicTrainingLocale";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 import { navigateToHomePublicAnchor } from "@/lib/homePublicAnchors";
-
-const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
+import { HeaderBrandLogo, OFFICIAL_NEOPOLIS_AKADEMY_LOGO } from "@/components/BrandLogo";
 
 type PublicPage = "home" | "training" | "news" | "apply" | "legal" | "referral";
 
@@ -173,7 +172,7 @@ export function PublicSiteHeader({ active = "home" }: { active?: PublicPage }) {
       <style>{PUBLIC_CHROME_STYLES}</style>
       <header className="public-chrome-header">
       <div className="public-chrome-shell">
-        <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><img src={LOGO_URL} alt="Neopolis Akademy" width={120} height={42} decoding="sync" fetchPriority="high" className="public-chrome-logo" /></Link>
+        <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><HeaderBrandLogo className="public-chrome-logo" /></Link>
         <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
           <NavigationLinks page={active} />
           <PublicTrainingSearch />
@@ -199,7 +198,7 @@ export function PublicSiteFooter() {
       <div className="mx-auto max-w-[1440px] px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <img src={LOGO_URL} alt="Neopolis Akademy" width={137} height={48} decoding="async" className="mb-3 h-11 w-auto object-contain brightness-0 invert" />
+            <img src={OFFICIAL_NEOPOLIS_AKADEMY_LOGO} alt="Neopolis Akademy" width={137} height={48} decoding="async" className="mb-3 h-11 w-auto object-contain brightness-0 invert" />
             <p className="max-w-xs text-sm leading-6 text-slate-300">{t(labels.footerLead)}</p>
           </div>
           <div>

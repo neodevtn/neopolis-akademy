@@ -2917,3 +2917,9 @@
 - [x] Stabiliser le rendu du logo officiel avec des dimensions et un espacement cohérents — dimensions déclarées et CSS alignés à 120×42 px, décodage synchrone, `object-contain`, sans étirement, appliqués au chrome public et à la navigation administrateur
 - [x] Tester le rendu net du logo sur desktop et mobile en local — en-têtes public et administration revus à 1280×720 et 390×844 ; logo lisible, proportionné et sans débordement
 - [ ] Tester le rendu net du logo sur desktop et mobile, puis publier et vérifier en production
+
+## Logo — dérivés PNG sans redimensionnement
+- [x] Extraire le visuel officiel et produire un PNG exact pour les en-têtes, sans altérer la marque — SVG officiel rendu par Chromium sur canevas blanc à sa taille native 120×42, sans réinterprétation graphique
+- [x] Téléverser le PNG dans le stockage web et remplacer les rendus d’en-tête sans interpolation CSS — PNG servi par le proxy d’assets sous `/api/assets/neopolis-akademy-header-120x42-rendered_e0ac12ce.png`, intégré uniquement aux en-têtes public et admin ; SVG conservé dans les autres contextes
+- [x] Contrôler visuellement desktop/mobile et tester le logo net en local — en-têtes contrôlés à 1280×720 et 390×844 ; PNG 120×42 disponible en HTTP 200 et test de chrome public validé
+- [ ] Publier et vérifier le PNG d’en-tête sur le domaine de production
