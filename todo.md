@@ -2923,3 +2923,9 @@
 - [x] Téléverser le PNG dans le stockage web et remplacer les rendus d’en-tête sans interpolation CSS — PNG servi par le proxy d’assets sous `/api/assets/neopolis-akademy-header-120x42-rendered_e0ac12ce.png`, intégré uniquement aux en-têtes public et admin ; SVG conservé dans les autres contextes
 - [x] Contrôler visuellement desktop/mobile et tester le logo net en local — en-têtes contrôlés à 1280×720 et 390×844 ; PNG 120×42 disponible en HTTP 200 et test de chrome public validé
 - [x] Publier et vérifier le PNG d’en-tête sur le domaine de production — manifeste public `0c5ae58c9ed53e83`, accueil publié et image d’en-tête contrôlés ; source PNG 120×42 active et asset HTTP 200 / `image/png`
+
+## Logo d’en-tête fourni par l’utilisateur
+- [x] Téléverser le PNG officiel fourni et contrôler ses dimensions, son format et son affichage à taille native — PNG RGBA 240×84 téléchargé dans le stockage web, servi via `/api/assets/...61aeceeb.png` en HTTP 200 / `image/png`
+- [x] Remplacer le logo des en-têtes public et administratif par ce PNG sans déformation ni interpolation — composant de marque unifié sur le PNG fourni ; affichage CSS 120×42 (densité ×2) dans les en-têtes public, admin et training, sans changement de ratio
+- [x] Tester desktop/mobile et valider la source du nouveau logo en local — public, administration et training contrôlés à 1280×720 et 390×844 ; TypeScript, 661 tests et QA 9/9 validés
+- [ ] Publier et vérifier la source exacte du PNG fourni dans le DOM de production

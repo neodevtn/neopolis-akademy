@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 
-export const OFFICIAL_NEOPOLIS_AKADEMY_LOGO = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
-export const NEOPOLIS_AKADEMY_HEADER_LOGO = "/api/assets/neopolis-akademy-header-120x42-rendered_e0ac12ce.png";
+/** PNG officiel fourni pour les en-têtes : 240×84 px, rendu CSS 120×42 px (densité ×2 nette). */
+export const NEOPOLIS_AKADEMY_HEADER_LOGO = "/api/assets/neopolis-akademy-header-user-supplied-240x84_61aeceeb.png";
+export const OFFICIAL_NEOPOLIS_AKADEMY_LOGO = NEOPOLIS_AKADEMY_HEADER_LOGO;
 
 type BrandLogoProps = {
   className?: string;

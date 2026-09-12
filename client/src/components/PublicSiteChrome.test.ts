@@ -17,7 +17,7 @@ describe("chrome public et recherche de formations", () => {
     expect(html).toContain('name="q"');
     expect(html).toContain('placeholder="Métier, compétence ou formation…"');
     expect(html).toContain('id="public-training-search"');
-    expect(html).toContain('src="/api/assets/neopolis-akademy-header-120x42-rendered_e0ac12ce.png"');
+    expect(html).toContain('src="/api/assets/neopolis-akademy-header-user-supplied-240x84_61aeceeb.png"');
     expect(html).toContain('width="120"');
     expect(html).toContain('height="42"');
   });
