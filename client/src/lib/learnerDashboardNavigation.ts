@@ -8,6 +8,7 @@ export const LEARNER_DASHBOARD_TABS = [
   "parrainage",
   "recommended",
   "communications",
+  "messages",
 ] as const;
 
 export type LearnerDashboardTab = (typeof LEARNER_DASHBOARD_TABS)[number];

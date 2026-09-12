@@ -75,6 +75,13 @@ interface InvitationEmailData {
   message?: string;
 }
 
+export interface PrivateMessageNotificationEmailData {
+  to: string;
+  recipientName?: string | null;
+  subject: string;
+  fromLearner: boolean;
+}
+
 // ============================================================
 // SHARED COMPONENTS
 // ============================================================
@@ -114,6 +121,41 @@ function emailWrapper(content: string): string {
   </div>
 </body>
 </html>`;
+}
+
+/** Private-message notification intentionally excludes the message body from email. */
+export function buildPrivateMessageNotificationEmail(data: PrivateMessageNotificationEmailData) {
+  const name = data.recipientName?.trim() || "";
+  const audience = data.fromLearner ? "un apprenant" : "l’équipe Neopolis";
+  const destination = data.fromLearner ? "https://akademy.neodev.click/admin?tab=messages" : "https://akademy.neodev.click/training?tab=messages";
+  const html = emailWrapper(`
+    ${emailHeader("Messagerie privée")}
+    <div style="padding: 32px; font-family: Arial, Helvetica, sans-serif; color: #172033;">
+      <p style="margin: 0 0 10px; font-size: 15px;">${name ? `Bonjour ${escapeEmailHtml(name)},` : "Bonjour,"}</p>
+      <h2 style="margin: 0 0 16px; font-size: 22px;">Vous avez un nouveau message</h2>
+      <p style="line-height: 1.6;">${audience} a écrit dans la conversation <strong>${escapeEmailHtml(data.subject)}</strong>.</p>
+      <p style="line-height: 1.6; color: #64748b;">Par confidentialité, le contenu du message est disponible uniquement après connexion à Neopolis Akademy.</p>
+      ${emailCtaButton("Ouvrir la conversation", destination)}
+    </div>
+    ${emailFooter("fr")}`);
+  return { destination, html, subject: `Nouveau message — ${data.subject}` };
+}
+
+export async function sendPrivateMessageNotificationEmail(data: PrivateMessageNotificationEmailData): Promise<boolean> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.warn("[Email] RESEND_API_KEY not configured. Private message notification not sent.");
+    return false;
+  }
+  const notification = buildPrivateMessageNotificationEmail(data);
+  try {
+    const resend = new Resend(resendApiKey);
+    await resend.emails.send({ from: FROM_ADDRESS, to: data.to, subject: notification.subject, html: notification.html });
+    return true;
+  } catch (error) {
+    console.error("[Email] Private message notification failed", error instanceof Error ? error.message : "unknown_error");
+    return false;
+  }
 }
 
 /**

@@ -33,6 +33,7 @@ import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard";
 import { AdminFeedbackDashboard } from "@/components/AdminFeedbackDashboard";
 import { ExamMonitoringPanel } from "@/components/admin/ExamMonitoringPanel";
+import { PrivateMessagingAdminPanel } from "@/components/PrivateMessagingAdminPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
 import { buildRecentDailyActivity, summarizeLearningActivity } from "./admin/learningActivityAudit";
@@ -103,6 +104,7 @@ export default function AdminTraining() {
   const [passwordResetDialogOpen, setPasswordResetDialogOpen] = useState(false);
   const [orientationProposalOpen, setOrientationProposalOpen] = useState(false);
   const [orientationProposalJustification, setOrientationProposalJustification] = useState("");
+  const [integrityClarificationDraftOpen, setIntegrityClarificationDraftOpen] = useState(false);
   const [orientationProposedGoals, setOrientationProposedGoals] = useState<Array<{ competencyId: string; targetLevel: "bronze" | "silver" | "gold" }>>([]);
   const [reportingDays, setReportingDays] = useState<7 | 30 | 90>(30);
   const [reportingCertificationId, setReportingCertificationId] = useState("all");
@@ -644,7 +646,7 @@ export default function AdminTraining() {
             </div>
 
             <Tabs value={learnerDetailTab} onValueChange={(tab) => { setLearnerDetailTab(tab); if (tab === "activity") setActivityLogPage(1); }}>
-              <TabsList className="mb-6 grid h-auto w-full grid-cols-2 gap-1 rounded-xl bg-muted/50 p-1 sm:grid-cols-4 lg:grid-cols-7">
+              <TabsList className="mb-6 grid h-auto w-full grid-cols-2 gap-1 rounded-xl bg-muted/50 p-1 sm:grid-cols-4 xl:grid-cols-8">
                 <TabsTrigger value="overview" className="text-xs sm:text-sm">Synthèse</TabsTrigger>
                 <TabsTrigger value="profile" className="text-xs sm:text-sm">Profil</TabsTrigger>
                 <TabsTrigger value="learning" className="text-xs sm:text-sm">Parcours</TabsTrigger>
@@ -652,6 +654,7 @@ export default function AdminTraining() {
                 <TabsTrigger value="skills" className="text-xs sm:text-sm">Compétences</TabsTrigger>
                 <TabsTrigger value="activity" className="text-xs sm:text-sm">Activité</TabsTrigger>
                 <TabsTrigger value="integrity" className="text-xs sm:text-sm">Intégrité</TabsTrigger>
+                <TabsTrigger value="messages" className="text-xs sm:text-sm">Messages</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="mt-0 space-y-6">
@@ -761,10 +764,21 @@ export default function AdminTraining() {
                     <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "confirmed" })}><Shield className="mr-1.5 h-3.5 w-3.5" />Conserver le tag de suivi</Button>
                     {integrity?.review?.status !== "temporary_hold" ? <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "temporary_hold" })}><AlertTriangle className="mr-1.5 h-3.5 w-3.5" />Suspendre temporairement les validations</Button> : <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "dismissed" })}><ShieldCheck className="mr-1.5 h-3.5 w-3.5" />Lever la suspension</Button>}
                     <Button size="sm" variant="ghost" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "dismissed" })}>Écarter après revue</Button>
+                    <Button size="sm" variant="outline" disabled={!integrity.assessment.signals.length} onClick={() => setIntegrityClarificationDraftOpen(true)}><MessageSquareText className="mr-1.5 h-3.5 w-3.5" />Préparer une demande de clarification</Button>
                   </div>
+                  <Dialog open={integrityClarificationDraftOpen} onOpenChange={setIntegrityClarificationDraftOpen}>
+                    <DialogContent className="max-w-xl"><DialogHeader><DialogTitle>Brouillon de demande de clarification</DialogTitle><DialogDescription>Ce brouillon est interne : aucune conversation, notification ou sanction n’est créée tant qu’un administrateur ne le reprend pas explicitement dans l’onglet Messages.</DialogDescription></DialogHeader><div className="space-y-3"><div><p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Sujet proposé</p><p className="mt-1 rounded-lg bg-muted/50 p-3 text-sm font-medium text-foreground">Vérification de votre parcours</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Message proposé</p><p className="mt-1 whitespace-pre-wrap rounded-lg bg-muted/50 p-3 text-sm leading-6 text-foreground">{"Bonjour,\n\nNous souhaitons vous proposer un bref échange afin de mieux comprendre certaines étapes de votre parcours de formation. Il ne s’agit pas d’une conclusion ni d’une sanction. Vous pouvez répondre à ce message pour apporter tout élément utile ou demander de l’aide.\n\nL’équipe Neopolis"}</p></div></div><DialogFooter><Button variant="outline" onClick={() => setIntegrityClarificationDraftOpen(false)}>Fermer</Button><Button onClick={() => { setIntegrityClarificationDraftOpen(false); setLearnerDetailTab("messages"); }}>Ouvrir les messages de l’apprenant</Button></DialogFooter></DialogContent>
+                  </Dialog>
                 </>
               )}
             </section>
+            </TabsContent>
+
+            <TabsContent value="messages" className="mt-0">
+              <PrivateMessagingAdminPanel
+                learnerId={selectedUserId}
+                learnerLabel={selectedLearner?.name || (detail as any).userInfo?.name || selectedLearner?.email || "cet apprenant"}
+              />
             </TabsContent>
 
             <TabsContent value="skills" className="mt-0">

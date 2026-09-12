@@ -32,14 +32,6 @@ const initializeSentry = () => {
         integrations: [
           Sentry.browserTracingIntegration(),
           Sentry.replayIntegration({ maskAllText: false, blockAllMedia: false, maskAllInputs: false }),
-          Sentry.feedbackIntegration({
-            colorScheme: "light", buttonLabel: "Signaler un problème", submitButtonLabel: "Envoyer", cancelButtonLabel: "Annuler",
-            formTitle: "Signaler un problème", nameLabel: "Nom", namePlaceholder: "Votre nom", emailLabel: "Email",
-            emailPlaceholder: "votre@email.com", messageLabel: "Description", messagePlaceholder: "Décrivez le problème rencontré...",
-            successMessageText: "Merci pour votre retour !", isNameRequired: true, isEmailRequired: true,
-            themeLight: { background: "#ffffff", foreground: "#1a1f36", accentBackground: "#1e3a5f", accentForeground: "#ffffff", inputBackground: "#f8f9fc", inputForeground: "#1a1f36", inputBorder: "#e2e4ea", inputBorderFocus: "#1e3a5f", inputOutlineFocus: "rgba(30, 58, 95, 0.2)", formBorderRadius: "12px", submitBackground: "#1e3a5f", submitBackgroundHover: "#162d4a", submitForeground: "#ffffff", submitBorder: "#1e3a5f", submitOutlineFocus: "rgba(30, 58, 95, 0.3)", cancelBackground: "transparent", cancelBackgroundHover: "#f8f9fc", cancelForeground: "#1a1f36", cancelBorder: "#e2e4ea" },
-            triggerLabel: "Signaler un problème", triggerAriaLabel: "Ouvrir le formulaire de feedback",
-          }),
         ],
         tracesSampleRate: isProduction ? 0.2 : 1.0,
         replaysSessionSampleRate: isProduction ? 0.1 : 0.0,

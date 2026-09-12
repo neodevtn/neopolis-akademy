@@ -21,6 +21,7 @@ import resendWebhookRouter from "../resendWebhook";
 import { registerPublicTrainingPages } from "../publicTrainingPages";
 import { registerExamAssetRevocations } from "../examAssetRevocation";
 import { getRuntimeVersionManifest } from "../versionManifest";
+import { registerPrivateMessagingWebSocket } from "../privateMessagingRealtime";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -44,6 +45,7 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  registerPrivateMessagingWebSocket(server);
 
   // Trust proxy (required for rate limiting behind Cloud Run/reverse proxy)
   app.set("trust proxy", 1);

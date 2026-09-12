@@ -830,6 +830,85 @@ export type CommunicationSegment = typeof communicationSegments.$inferSelect;
 export type InsertCommunicationSegment = typeof communicationSegments.$inferInsert;
 
 /**
+ * Private learner ↔ Neopolis team conversations.
+ * This domain is deliberately independent from broadcast communications.
+ */
+export const privateConversations = mysqlTable("private_conversations", {
+  id: int("id").autoincrement().primaryKey(),
+  learnerId: int("learnerId").notNull(),
+  subject: varchar("subject", { length: 220 }).notNull(),
+  status: mysqlEnum("status", ["open", "closed"]).notNull().default("open"),
+  source: mysqlEnum("source", ["learner", "admin", "integrity_review", "problem_report"]).notNull().default("learner"),
+  initiatedByUserId: int("initiatedByUserId"),
+  closedByUserId: int("closedByUserId"),
+  closedAt: timestamp("closedAt"),
+  lastMessageAt: timestamp("lastMessageAt").defaultNow().notNull(),
+  lastMessagePreview: varchar("lastMessagePreview", { length: 280 }),
+  metadata: json("metadata"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  index("private_conversations_learner_idx").on(table.learnerId, table.lastMessageAt),
+  index("private_conversations_status_idx").on(table.status, table.lastMessageAt),
+]);
+export type PrivateConversation = typeof privateConversations.$inferSelect;
+export type InsertPrivateConversation = typeof privateConversations.$inferInsert;
+
+/** Durable message history. Read timestamps are per audience, never shared across learners. */
+export const privateMessages = mysqlTable("private_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  conversationId: int("conversationId").notNull(),
+  authorUserId: int("authorUserId"),
+  authorRole: mysqlEnum("authorRole", ["learner", "admin", "system"]).notNull(),
+  body: text("body").notNull(),
+  learnerReadAt: timestamp("learnerReadAt"),
+  adminReadAt: timestamp("adminReadAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [
+  index("private_messages_conversation_idx").on(table.conversationId, table.createdAt),
+  index("private_messages_learner_unread_idx").on(table.learnerReadAt, table.conversationId),
+  index("private_messages_admin_unread_idx").on(table.adminReadAt, table.conversationId),
+]);
+export type PrivateMessage = typeof privateMessages.$inferSelect;
+export type InsertPrivateMessage = typeof privateMessages.$inferInsert;
+
+/** Immutable lifecycle audit for private conversations and message events. */
+export const privateMessageEvents = mysqlTable("private_message_events", {
+  id: int("id").autoincrement().primaryKey(),
+  conversationId: int("conversationId").notNull(),
+  messageId: int("messageId"),
+  actorUserId: int("actorUserId"),
+  eventType: mysqlEnum("eventType", ["conversation_created", "message_sent", "conversation_closed", "conversation_reopened", "learner_read", "admin_read", "notification_requested", "notification_delivered", "notification_failed"]).notNull(),
+  metadata: json("metadata"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [
+  index("private_message_events_conversation_idx").on(table.conversationId, table.createdAt),
+  index("private_message_events_message_idx").on(table.messageId, table.createdAt),
+]);
+export type PrivateMessageEvent = typeof privateMessageEvents.$inferSelect;
+export type InsertPrivateMessageEvent = typeof privateMessageEvents.$inferInsert;
+
+/** Per-recipient, per-channel state prevents duplicate live/e-mail alerts. */
+export const privateMessageNotificationState = mysqlTable("private_message_notification_state", {
+  id: int("id").autoincrement().primaryKey(),
+  conversationId: int("conversationId").notNull(),
+  messageId: int("messageId").notNull(),
+  recipientUserId: int("recipientUserId").notNull(),
+  channel: mysqlEnum("channel", ["web", "email"]).notNull(),
+  status: mysqlEnum("status", ["pending", "sent", "failed", "suppressed"]).notNull().default("pending"),
+  errorCode: varchar("errorCode", { length: 160 }),
+  attemptedAt: timestamp("attemptedAt"),
+  deliveredAt: timestamp("deliveredAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("private_message_notification_unique").on(table.messageId, table.recipientUserId, table.channel),
+  index("private_message_notification_recipient_idx").on(table.recipientUserId, table.status, table.createdAt),
+]);
+export type PrivateMessageNotificationState = typeof privateMessageNotificationState.$inferSelect;
+export type InsertPrivateMessageNotificationState = typeof privateMessageNotificationState.$inferInsert;
+
+/**
  * Admin activity log - audit trail of admin actions
  */
 export const adminActivityLog = mysqlTable("admin_activity_log", {

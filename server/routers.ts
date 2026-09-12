@@ -41,6 +41,7 @@ import { logAdminActivity } from "./adminDb";
 import { sendPasswordResetEmail } from "./email";
 import { ENV } from "./_core/env";
 import { isValidPassword } from "../shared/accountCredentials";
+import { privateMessagingRouter } from "./privateMessagingRouter";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -49,6 +50,7 @@ const orientationGoalsSchema = z.array(z.object({
 
 export const appRouter = router({
   system: systemRouter,
+  privateMessaging: privateMessagingRouter,
   talent: talentLearnerRouter,
   talentAdmin: talentAdminRouter,
   aiNews: router({

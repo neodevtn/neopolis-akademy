@@ -1,6 +1,7 @@
 export const ADMIN_DASHBOARD_TABS = [
   "candidatures",
   "communications",
+  "messages",
   "invitations",
   "analytics",
   "activity",

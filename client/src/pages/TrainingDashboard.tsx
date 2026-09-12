@@ -37,6 +37,7 @@ import {
   X,
   Gift,
   BriefcaseBusiness,
+  MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -62,6 +63,7 @@ import { isAdministrativeRole } from "@shared/roles";
 import { TalentJourneyTab } from "@/components/TalentJourneyTab";
 import { resolveTrainingVisualAsset } from "@shared/trainingVisualAssets";
 import { AccountSecurityDialog } from "@/components/AccountSecurityDialog";
+import { PrivateMessagingLearnerPanel } from "@/components/PrivateMessagingLearnerPanel";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -120,6 +122,7 @@ export default function TrainingDashboard() {
   const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
   const [communicationInboxFilters, setCommunicationInboxFilters] = useState({ page: 1, pageSize: 20, search: "", readState: "all" as "all" | "unread" | "read", importance: "all" as "all" | "important" });
   const learnerCommunicationsQuery = trpc.training.getCommunications.useQuery(communicationInboxFilters, { enabled: isAuthenticated });
+  const privateMessagingQuery = trpc.privateMessaging.getMine.useQuery(undefined, { enabled: isAuthenticated, refetchOnWindowFocus: true });
   const markCommunicationReadMutation = trpc.training.markCommunicationRead.useMutation();
   const orientationQuery = trpc.orientation.getMine.useQuery(undefined, { enabled: isAuthenticated });
   const saveOrientationGoalsMutation = trpc.orientation.saveGoals.useMutation({ onSuccess: () => orientationQuery.refetch() });
@@ -305,6 +308,7 @@ export default function TrainingDashboard() {
     { id: "parrainage", label: { en: "Referrals", fr: "Parrainage" }, icon: <Gift className="w-4 h-4" /> },
     { id: "recommended", label: { en: "Learning Path", fr: "Parcours recommandé" }, icon: <Route className="w-4 h-4" /> },
     { id: "communications", label: { en: "Notifications", fr: "Communiqués" }, icon: <Bell className="w-4 h-4" /> },
+    { id: "messages", label: { en: "Messages", fr: "Messages" }, icon: <MessageCircle className="w-4 h-4" /> },
   ];
 
   return (
@@ -413,6 +417,7 @@ export default function TrainingDashboard() {
                 {tab.icon}
                 <span className="hidden sm:inline">{t(tab.label)}</span>
                 {tab.id === "communications" && (learnerCommunicationsQuery.data?.unreadCount || 0) > 0 && <span className="min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">{learnerCommunicationsQuery.data?.unreadCount}</span>}
+                {tab.id === "messages" && (privateMessagingQuery.data || []).reduce((total: number, conversation: any) => total + Number(conversation.unreadCount || 0), 0) > 0 && <span className="min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">{Math.min(99, (privateMessagingQuery.data || []).reduce((total: number, conversation: any) => total + Number(conversation.unreadCount || 0), 0))}</span>}
               </button>
             ))}
             </div>
@@ -556,6 +561,11 @@ export default function TrainingDashboard() {
                   await learnerCommunicationsQuery.refetch();
                 }}
               />
+            </motion.div>
+          )}
+          {activeTab === "messages" && (
+            <motion.div key="messages" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3, ease: easeOut }}>
+              <PrivateMessagingLearnerPanel />
             </motion.div>
           )}
         </AnimatePresence>

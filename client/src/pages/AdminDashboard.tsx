@@ -22,6 +22,7 @@ import { COMMUNICATION_AUDIENCE_LABELS, COMMUNICATION_CRITERIA_LOGIC_LABELS, COU
 import { toPreviewMediaUrl } from "@/lib/mediaUrl";
 import { isAdministrativeRole } from "@shared/roles";
 import { resolveAdminDashboardTab, type AdminDashboardTab } from "@/lib/adminDashboardTabs";
+import { PrivateMessagingAdminPanel } from "@/components/PrivateMessagingAdminPanel";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
@@ -878,6 +879,9 @@ export default function AdminDashboard() {
             {communicationsQuery.data && communicationsQuery.data.total > 0 && (() => { const totalPages = Math.max(1, Math.ceil(communicationsQuery.data.total / communicationsQuery.data.pageSize)); return <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between"><span className="text-muted-foreground">{communicationsQuery.data.total} communiqué{communicationsQuery.data.total > 1 ? "s" : ""} · page {communicationPage}/{totalPages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={communicationPage <= 1 || communicationsQuery.isFetching} onClick={() => setCommunicationPage((page) => page - 1)}><ChevronLeft className="mr-1 h-4 w-4" /> Précédent</Button><Button variant="outline" size="sm" disabled={communicationPage >= totalPages || communicationsQuery.isFetching} onClick={() => setCommunicationPage((page) => page + 1)}>Suivant <ChevronRight className="ml-1 h-4 w-4" /></Button></div></div>; })()}
           </>
         )}
+
+        {/* ==================== PRIVATE MESSAGING TAB ==================== */}
+        {activeTab === "messages" && <PrivateMessagingAdminPanel />}
 
         {/* ==================== INVITATIONS TAB ==================== */}
         {activeTab === "invitations" && (

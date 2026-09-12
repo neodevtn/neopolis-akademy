@@ -5,6 +5,7 @@ const SentryUserSync = lazy(() => import("./SentryUserSync").then((module) => ({
 const PlatformUpdateNotice = lazy(() => import("./PlatformUpdateNotice").then((module) => ({ default: module.PlatformUpdateNotice })));
 const AchievementCelebration = lazy(() => import("./AchievementCelebration").then((module) => ({ default: module.AchievementCelebration })));
 const ImportantCommunicationLightbox = lazy(() => import("./ImportantCommunicationLightbox").then((module) => ({ default: module.ImportantCommunicationLightbox })));
+const PrivateMessagingOverlay = lazy(() => import("./PrivateMessagingOverlay").then((module) => ({ default: module.PrivateMessagingOverlay })));
 
 /**
  * Les alertes, succès et synchronisation Sentry sont utiles après authentification,
@@ -35,6 +36,7 @@ export function DeferredAuthenticatedOverlays() {
       <PlatformUpdateNotice />
       <AchievementCelebration />
       <ImportantCommunicationLightbox />
+      <PrivateMessagingOverlay />
     </Suspense>
   );
 }
