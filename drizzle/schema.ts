@@ -908,6 +908,21 @@ export const privateMessageNotificationState = mysqlTable("private_message_notif
 export type PrivateMessageNotificationState = typeof privateMessageNotificationState.$inferSelect;
 export type InsertPrivateMessageNotificationState = typeof privateMessageNotificationState.$inferInsert;
 
+/** Per-user delivery choices for private conversations. Defaults preserve existing alerts. */
+export const privateMessageNotificationPreferences = mysqlTable("private_message_notification_preferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  webEnabled: int("webEnabled").notNull().default(1),
+  emailEnabled: int("emailEnabled").notNull().default(1),
+  soundEnabled: int("soundEnabled").notNull().default(1),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("private_message_notification_preferences_user_unique").on(table.userId),
+]);
+export type PrivateMessageNotificationPreferences = typeof privateMessageNotificationPreferences.$inferSelect;
+export type InsertPrivateMessageNotificationPreferences = typeof privateMessageNotificationPreferences.$inferInsert;
+
 /**
  * Admin activity log - audit trail of admin actions
  */

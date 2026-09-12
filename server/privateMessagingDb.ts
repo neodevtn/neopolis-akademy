@@ -1,7 +1,8 @@
-import { and, asc, count, desc, eq, inArray, isNull, ne } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull, like, ne, or } from "drizzle-orm";
 import {
   privateConversations,
   privateMessageEvents,
+  privateMessageNotificationPreferences,
   privateMessageNotificationState,
   privateMessages,
   users,
@@ -23,6 +24,26 @@ export type PrivateConversationSummary = {
   updatedAt: Date;
   learner?: { id: number; name: string | null; email: string | null };
   unreadCount: number;
+};
+
+export type PrivateConversationPage = {
+  items: PrivateConversationSummary[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
+export type PrivateMessageDeliveryPreferences = {
+  webEnabled: boolean;
+  emailEnabled: boolean;
+  soundEnabled: boolean;
+};
+
+const DEFAULT_PRIVATE_MESSAGE_DELIVERY_PREFERENCES: PrivateMessageDeliveryPreferences = {
+  webEnabled: true,
+  emailEnabled: true,
+  soundEnabled: true,
 };
 
 type ConversationActor = {
@@ -92,6 +113,18 @@ export async function getPrivateConversationForAdmin(actor: ConversationActor, c
   return conversation ?? null;
 }
 
+export async function getIntegrityReviewConversationForLearner(learnerId: number) {
+  const db = await requireDb();
+  const [conversation] = await db.select({ id: privateConversations.id }).from(privateConversations)
+    .where(and(
+      eq(privateConversations.learnerId, learnerId),
+      eq(privateConversations.source, "integrity_review"),
+    ))
+    .orderBy(desc(privateConversations.createdAt), desc(privateConversations.id))
+    .limit(1);
+  return conversation ?? null;
+}
+
 export async function listLearnerPrivateConversations(learnerId: number): Promise<PrivateConversationSummary[]> {
   const db = await requireDb();
   const [conversations, unreadByConversation] = await Promise.all([
@@ -102,26 +135,44 @@ export async function listLearnerPrivateConversations(learnerId: number): Promis
   return conversations.map((conversation) => ({ ...conversation, unreadCount: unreadByConversation.get(conversation.id) ?? 0 }));
 }
 
-export async function listAdminPrivateConversations(actor: ConversationActor, options: { status?: "all" | "open" | "closed"; search?: string; learnerId?: number; limit?: number } = {}): Promise<PrivateConversationSummary[]> {
+export async function listAdminPrivateConversations(actor: ConversationActor, options: { status?: "all" | "open" | "closed"; search?: string; learnerId?: number; page?: number; pageSize?: number } = {}): Promise<PrivateConversationPage> {
   requireAdministrativeActor(actor);
   const db = await requireDb();
-  const limit = Math.min(200, Math.max(1, options.limit ?? 100));
+  const pageSize = Math.min(100, Math.max(10, options.pageSize ?? 25));
+  const requestedPage = Math.max(1, options.page ?? 1);
+  const search = options.search?.trim();
+  const whereClause = and(
+    options.status && options.status !== "all" ? eq(privateConversations.status, options.status) : undefined,
+    options.learnerId ? eq(privateConversations.learnerId, options.learnerId) : undefined,
+    search ? or(
+      like(privateConversations.subject, `%${search}%`),
+      like(users.name, `%${search}%`),
+      like(users.email, `%${search}%`),
+    ) : undefined,
+  );
+  const [{ total: rawTotal }] = await db.select({ total: count() }).from(privateConversations)
+    .innerJoin(users, eq(users.id, privateConversations.learnerId))
+    .where(whereClause);
+  const total = Number(rawTotal ?? 0);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const page = Math.min(requestedPage, totalPages);
   const rows = await db.select({
     conversation: privateConversations,
     learner: { id: users.id, name: users.name, email: users.email },
   }).from(privateConversations)
     .innerJoin(users, eq(users.id, privateConversations.learnerId))
-    .where(and(
-      options.status && options.status !== "all" ? eq(privateConversations.status, options.status) : undefined,
-      options.learnerId ? eq(privateConversations.learnerId, options.learnerId) : undefined,
-    ))
+    .where(whereClause)
     .orderBy(desc(privateConversations.lastMessageAt), desc(privateConversations.id))
-    .limit(limit);
-  const search = options.search?.trim().toLocaleLowerCase("fr-FR");
+    .limit(pageSize)
+    .offset((page - 1) * pageSize);
   const unreadByConversation = await unreadCountsByConversation({ admin: true });
-  return rows
-    .filter(({ conversation, learner }) => !search || `${conversation.subject} ${learner.name || ""} ${learner.email || ""}`.toLocaleLowerCase("fr-FR").includes(search))
-    .map(({ conversation, learner }) => ({ ...conversation, learner, unreadCount: unreadByConversation.get(conversation.id) ?? 0 }));
+  return {
+    items: rows.map(({ conversation, learner }) => ({ ...conversation, learner, unreadCount: unreadByConversation.get(conversation.id) ?? 0 })),
+    total,
+    page,
+    pageSize,
+    totalPages,
+  };
 }
 
 export async function getPrivateConversationDetail(input: { actor: ConversationActor; conversationId: number }) {
@@ -271,6 +322,53 @@ export async function completePrivateNotificationState(input: { stateId: number;
     deliveredAt: input.delivered ? now : null,
     errorCode: input.errorCode?.slice(0, 160) ?? null,
   }).where(eq(privateMessageNotificationState.id, input.stateId));
+}
+
+function toDeliveryPreferences(row: typeof privateMessageNotificationPreferences.$inferSelect | undefined): PrivateMessageDeliveryPreferences {
+  if (!row) return { ...DEFAULT_PRIVATE_MESSAGE_DELIVERY_PREFERENCES };
+  return { webEnabled: Boolean(row.webEnabled), emailEnabled: Boolean(row.emailEnabled), soundEnabled: Boolean(row.soundEnabled) };
+}
+
+export async function getPrivateMessageDeliveryPreferences(userId: number): Promise<PrivateMessageDeliveryPreferences> {
+  const db = await requireDb();
+  const [row] = await db.select().from(privateMessageNotificationPreferences)
+    .where(eq(privateMessageNotificationPreferences.userId, userId)).limit(1);
+  return toDeliveryPreferences(row);
+}
+
+export async function getPrivateMessageDeliveryPreferencesForUsers(userIds: number[]) {
+  const uniqueIds = Array.from(new Set(userIds.filter((userId) => Number.isInteger(userId) && userId > 0)));
+  if (!uniqueIds.length) return new Map<number, PrivateMessageDeliveryPreferences>();
+  const db = await requireDb();
+  const rows = await db.select().from(privateMessageNotificationPreferences)
+    .where(inArray(privateMessageNotificationPreferences.userId, uniqueIds));
+  const byUser = new Map(rows.map((row) => [row.userId, toDeliveryPreferences(row)]));
+  return new Map(uniqueIds.map((userId) => [userId, byUser.get(userId) || { ...DEFAULT_PRIVATE_MESSAGE_DELIVERY_PREFERENCES }]));
+}
+
+export async function updatePrivateMessageDeliveryPreferences(userId: number, input: PrivateMessageDeliveryPreferences) {
+  const db = await requireDb();
+  await db.insert(privateMessageNotificationPreferences).values({
+    userId,
+    webEnabled: input.webEnabled ? 1 : 0,
+    emailEnabled: input.emailEnabled ? 1 : 0,
+    soundEnabled: input.soundEnabled ? 1 : 0,
+  }).onDuplicateKeyUpdate({
+    set: {
+      webEnabled: input.webEnabled ? 1 : 0,
+      emailEnabled: input.emailEnabled ? 1 : 0,
+      soundEnabled: input.soundEnabled ? 1 : 0,
+    },
+  });
+  return getPrivateMessageDeliveryPreferences(userId);
+}
+
+export async function getPrivateMessagingNotificationCenter(actor: ConversationActor, limit = 20) {
+  const safeLimit = Math.min(50, Math.max(1, limit));
+  const items = isAdministrativeRole(actor.role)
+    ? (await listAdminPrivateConversations(actor, { page: 1, pageSize: 100 })).items
+    : await listLearnerPrivateConversations(actor.userId);
+  return items.filter((conversation) => conversation.unreadCount > 0).slice(0, safeLimit);
 }
 
 export async function recordPrivateNotificationEvent(input: { conversationId: number; messageId: number; recipientUserId: number; delivered?: boolean; errorCode?: string }) {

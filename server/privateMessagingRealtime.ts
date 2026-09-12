@@ -9,6 +9,7 @@ export type PrivateMessagingRealtimeEvent = {
   conversationId: number;
   learnerId: number;
   audience: "learner" | "admins" | "both";
+  recipientUserIds?: number[];
 };
 
 type AuthenticatedSocket = WebSocket & { neopolisUserId?: number; neopolisRole?: string };
@@ -42,6 +43,7 @@ function closeUpgrade(socket: Duplex, status = 401, message = "Unauthorized") {
 }
 
 export function shouldReceivePrivateMessagingEvent(socket: Pick<AuthenticatedSocket, "neopolisUserId" | "neopolisRole">, event: PrivateMessagingRealtimeEvent) {
+  if (event.recipientUserIds && (!socket.neopolisUserId || !event.recipientUserIds.includes(socket.neopolisUserId))) return false;
   const isAdmin = isAdministrativeRole(socket.neopolisRole);
   if (event.audience === "admins") return isAdmin;
   if (event.audience === "learner") return socket.neopolisUserId === event.learnerId;

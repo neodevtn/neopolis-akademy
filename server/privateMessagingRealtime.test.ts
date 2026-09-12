@@ -32,4 +32,10 @@ describe("diffusion WebSocket de messagerie privée", () => {
     expect(shouldReceivePrivateMessagingEvent({ neopolisUserId: 8, neopolisRole: "user" }, sharedEvent)).toBe(false);
     expect(shouldReceivePrivateMessagingEvent({ neopolisUserId: 8, neopolisRole: "admin" }, sharedEvent)).toBe(true);
   });
+
+  it("respecte une liste explicite de destinataires web sans affaiblir les droits d’audience", () => {
+    const limitedEvent = { ...event, audience: "both" as const, recipientUserIds: [7] };
+    expect(shouldReceivePrivateMessagingEvent({ neopolisUserId: 7, neopolisRole: "user" }, limitedEvent)).toBe(true);
+    expect(shouldReceivePrivateMessagingEvent({ neopolisUserId: 8, neopolisRole: "admin" }, limitedEvent)).toBe(false);
+  });
 });

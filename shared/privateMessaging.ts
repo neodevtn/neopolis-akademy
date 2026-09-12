@@ -14,6 +14,11 @@ export const PRIVATE_MESSAGE_LIMITS = {
   previewMax: 280,
 } as const;
 
+export const PRIVATE_INTEGRITY_REVIEW_TEMPLATE = {
+  subject: "Activité suspecte détectée — vérification requise",
+  body: "Bonjour,\n\nNos contrôles ont détecté une activité inhabituelle dans votre parcours, susceptible d’indiquer l’utilisation de robots, d’agents ou d’outils d’IA automatisés pour simuler une progression, valider des activités ou contourner des checkpoints. Cette pratique est interdite par les règles d’intégrité de Neopolis Akademy.\n\nUne revue de votre parcours est ouverte. Vous devez répondre à ce message en indiquant tout élément utile à l’examen de votre situation. L’équipe peut demander une vérification complémentaire et, si nécessaire, appliquer une mesure temporaire sur les validations ou examens en attente.\n\nCe message vous informe d’une suspicion en cours de vérification ; il ne constitue pas à lui seul une décision définitive.\n\nL’équipe Neopolis",
+} as const;
+
 export function normalizePrivateMessageText(value: string): string {
   return value.replace(/\r\n?/g, "\n").replace(/[\t\f\v ]+/g, " ").trim();
 }

@@ -51,7 +51,7 @@ import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 import { OrientationPanel } from "@/components/OrientationPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { getCertificationCatalogMetrics } from "@/lib/catalogMetrics";
-import { getLearnerDashboardTab, getLearnerOrientationAccess, type LearnerDashboardTab } from "@/lib/learnerDashboardNavigation";
+import { getLearnerDashboardTab, getLearnerGrowthSection, getLearnerJourneySection, getLearnerOrientationAccess, type LearnerDashboardTab, type LearnerGrowthSection, type LearnerJourneySection } from "@/lib/learnerDashboardNavigation";
 import { buildRecommendedLearningPath } from "@/lib/recommendedLearningPath";
 import { BrandLogo } from "@/components/BrandLogo";
 import { TrainingSearchPanel } from "@/components/TrainingSearchPanel";
@@ -115,8 +115,15 @@ export default function TrainingDashboard() {
   const [, navigate] = useLocation();
   const urlSearch = useSearch();
   const [activeTab, setActiveTab] = useState<LearnerDashboardTab>(() => getLearnerDashboardTab(urlSearch));
-  useEffect(() => { setActiveTab(getLearnerDashboardTab(urlSearch)); }, [urlSearch]);
-  const navigateTrainingDashboard = (tab: LearnerDashboardTab) => navigate(buildNavigationUrl("/training", { tab: tab === "my-path" ? null : tab }));
+  const [journeySection, setJourneySection] = useState<LearnerJourneySection>(() => getLearnerJourneySection(urlSearch));
+  const [growthSection, setGrowthSection] = useState<LearnerGrowthSection>(() => getLearnerGrowthSection(urlSearch));
+  useEffect(() => {
+    setActiveTab(getLearnerDashboardTab(urlSearch));
+    setJourneySection(getLearnerJourneySection(urlSearch));
+    setGrowthSection(getLearnerGrowthSection(urlSearch));
+  }, [urlSearch]);
+  const navigateTrainingDashboard = (tab: LearnerDashboardTab) => navigate(buildNavigationUrl("/training", { tab: tab === "journey" ? null : tab }));
+  const openJourneySection = (section: LearnerJourneySection) => { setJourneySection(section); navigateTrainingDashboard("journey"); };
   const achievementsQuery = trpc.training.getAchievements.useQuery(undefined, { enabled: isAuthenticated });
   const competenciesQuery = trpc.competencies.getMine.useQuery(undefined, { enabled: isAuthenticated });
   const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
@@ -299,11 +306,8 @@ export default function TrainingDashboard() {
   }
 
   const tabs: { id: LearnerDashboardTab; label: { en: string; fr: string }; icon: React.ReactNode }[] = [
-    { id: "orientation", label: { en: "My Orientation", fr: "Mon orientation" }, icon: <Compass className="w-4 h-4" /> },
-    { id: "my-path", label: { en: "My Progress", fr: "Mon Parcours" }, icon: <Compass className="w-4 h-4" /> },
-    { id: "evolution", label: { en: "My Journey", fr: "Mon évolution" }, icon: <BriefcaseBusiness className="w-4 h-4" /> },
-    { id: "achievements", label: { en: "My Achievements", fr: "Mes acquis" }, icon: <Trophy className="w-4 h-4" /> },
-    { id: "skills", label: { en: "My Skills", fr: "Mes compétences" }, icon: <Sparkles className="w-4 h-4" /> },
+    { id: "journey", label: { en: "My Learning Journey", fr: "Mon parcours" }, icon: <Compass className="w-4 h-4" /> },
+    { id: "growth", label: { en: "Skills & Achievements", fr: "Acquis & compétences" }, icon: <Trophy className="w-4 h-4" /> },
     { id: "catalog", label: { en: "Catalog", fr: "Catalogue" }, icon: <Library className="w-4 h-4" /> },
     { id: "parrainage", label: { en: "Referrals", fr: "Parrainage" }, icon: <Gift className="w-4 h-4" /> },
     { id: "recommended", label: { en: "Learning Path", fr: "Parcours recommandé" }, icon: <Route className="w-4 h-4" /> },
@@ -377,7 +381,7 @@ export default function TrainingDashboard() {
           {orientationAccess.showReminder && (
             <div className="mb-6 flex flex-col gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/20 md:flex-row md:items-center md:justify-between" role="status" aria-live="polite">
               <div><p className="font-bold text-foreground">Votre orientation personnalisée est à finaliser</p><p className="mt-1 text-muted-foreground">Définissez vos objectifs et terminez le diagnostic rapide pour obtenir un parcours recommandé. Tous les onglets — parcours, acquis, compétences, catalogue et communiqués — restent disponibles pendant cette étape.</p></div>
-              <Button className="shrink-0" onClick={() => navigateTrainingDashboard("orientation")}>Finaliser mon orientation</Button>
+              <Button className="shrink-0" onClick={() => openJourneySection("orientation")}>Finaliser mon orientation</Button>
             </div>
           )}
 
@@ -426,15 +430,25 @@ export default function TrainingDashboard() {
 
         {/* Tab Content */}
         <AnimatePresence mode="wait">
-          {activeTab === "my-path" && (
+          {activeTab === "journey" && (
             <motion.div
-              key="my-path"
+              key="journey"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.3, ease: easeOut }}
             >
-              <MyPathTab
+              <div className="mb-5 rounded-xl border border-border bg-card p-2 shadow-sm"><div className="flex flex-wrap gap-2"><Button size="sm" variant={journeySection === "orientation" ? "default" : "ghost"} onClick={() => setJourneySection("orientation")}>Mon orientation</Button><Button size="sm" variant={journeySection === "progress" ? "default" : "ghost"} onClick={() => setJourneySection("progress")}>Ma progression</Button><Button size="sm" variant={journeySection === "evolution" ? "default" : "ghost"} onClick={() => setJourneySection("evolution")}>Mon évolution</Button></div></div>
+              {journeySection === "orientation" ? <OrientationPanel
+                orientation={orientationQuery.data}
+                certifications={trainingIndex.certifications as any[]}
+                savingGoals={saveOrientationGoalsMutation.isPending}
+                respondingToProposal={respondToOrientationProposalMutation.isPending}
+                completing={completeOrientationMutation.isPending}
+                onSaveGoals={(input) => saveOrientationGoalsMutation.mutate(input)}
+                onCompleteDiagnostic={(answers) => completeOrientationMutation.mutate({ answers })}
+                onRespondToProposal={(input) => respondToOrientationProposalMutation.mutate(input)}
+              /> : journeySection === "evolution" ? <TalentJourneyTab /> : <><MyPathTab
                 overallPct={overallPct}
                 completedCount={completedCount}
                 totalCount={totalCount}
@@ -444,37 +458,7 @@ export default function TrainingDashboard() {
                 getLastVisitedCourse={getLastVisitedCourse}
               />
               <div className="mt-6"><ReferralShareCard title="Partagez Neopolis Akademy avec votre réseau" /></div>
-            </motion.div>
-          )}
-          {activeTab === "orientation" && (
-            <motion.div
-              key="orientation"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3, ease: easeOut }}
-            >
-              <OrientationPanel
-                orientation={orientationQuery.data}
-                certifications={trainingIndex.certifications as any[]}
-                savingGoals={saveOrientationGoalsMutation.isPending}
-                respondingToProposal={respondToOrientationProposalMutation.isPending}
-                completing={completeOrientationMutation.isPending}
-                onSaveGoals={(input) => saveOrientationGoalsMutation.mutate(input)}
-                onCompleteDiagnostic={(answers) => completeOrientationMutation.mutate({ answers })}
-                onRespondToProposal={(input) => respondToOrientationProposalMutation.mutate(input)}
-              />
-            </motion.div>
-          )}
-          {activeTab === "evolution" && (
-            <motion.div
-              key="evolution"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3, ease: easeOut }}
-            >
-              <TalentJourneyTab />
+              </>}
             </motion.div>
           )}
           {activeTab === "catalog" && (
@@ -504,31 +488,22 @@ export default function TrainingDashboard() {
               <ReferralProgramTab t={t} />
             </motion.div>
           )}
-          {activeTab === "achievements" && (
+          {activeTab === "growth" && (
             <motion.div
-              key="achievements"
+              key="growth"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.3, ease: easeOut }}
             >
-              <AchievementGallery
+              <div className="mb-5 rounded-xl border border-border bg-card p-2 shadow-sm"><div className="flex flex-wrap gap-2"><Button size="sm" variant={growthSection === "achievements" ? "default" : "ghost"} onClick={() => setGrowthSection("achievements")}>Mes acquis</Button><Button size="sm" variant={growthSection === "skills" ? "default" : "ghost"} onClick={() => setGrowthSection("skills")}>Mes compétences</Button></div></div>
+              {growthSection === "achievements" ? <><AchievementGallery
                 achievements={achievementsQuery.data || []}
                 canDownload
                 emptyText="Vos badges et diplômes apparaîtront ici dès la réussite d’un cours ou d’une certification."
               />
               <div className="mt-6"><ReferralShareCard content="achievement" achievementId={achievementsQuery.data?.[0]?.id} title="Partagez vos réussites et invitez votre réseau" /></div>
-            </motion.div>
-          )}
-          {activeTab === "skills" && (
-            <motion.div
-              key="skills"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3, ease: easeOut }}
-            >
-              <div className="space-y-5"><WeeklyGoalCard gamification={gamificationQuery.data} /><CompetencyProfile competencies={competenciesQuery.data || []} ranks={gamificationQuery.data?.ranks} /></div>
+              </> : <div className="space-y-5"><WeeklyGoalCard gamification={gamificationQuery.data} /><CompetencyProfile competencies={competenciesQuery.data || []} ranks={gamificationQuery.data?.ranks} /></div>}
             </motion.div>
           )}
           {activeTab === "recommended" && (

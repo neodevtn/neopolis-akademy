@@ -1,4 +1,6 @@
 export const LEARNER_DASHBOARD_TABS = [
+  "journey",
+  "growth",
   "orientation",
   "my-path",
   "evolution",
@@ -12,13 +14,28 @@ export const LEARNER_DASHBOARD_TABS = [
 ] as const;
 
 export type LearnerDashboardTab = (typeof LEARNER_DASHBOARD_TABS)[number];
+export type LearnerJourneySection = "orientation" | "progress" | "evolution";
+export type LearnerGrowthSection = "achievements" | "skills";
 
 export function getLearnerDashboardTab(search: string): LearnerDashboardTab {
   const requestedTab = new URLSearchParams(search).get("tab");
   if (requestedTab === "parainnage" || requestedTab === "referrals") return "parrainage";
+  if (requestedTab === "orientation" || requestedTab === "my-path" || requestedTab === "evolution") return "journey";
+  if (requestedTab === "achievements" || requestedTab === "skills") return "growth";
   return LEARNER_DASHBOARD_TABS.includes(requestedTab as LearnerDashboardTab)
     ? (requestedTab as LearnerDashboardTab)
-    : "my-path";
+    : "journey";
+}
+
+export function getLearnerJourneySection(search: string): LearnerJourneySection {
+  const requestedTab = new URLSearchParams(search).get("tab");
+  if (requestedTab === "orientation") return "orientation";
+  if (requestedTab === "evolution") return "evolution";
+  return "progress";
+}
+
+export function getLearnerGrowthSection(search: string): LearnerGrowthSection {
+  return new URLSearchParams(search).get("tab") === "skills" ? "skills" : "achievements";
 }
 
 /**

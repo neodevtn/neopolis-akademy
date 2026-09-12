@@ -6,12 +6,14 @@ import { trpc } from "@/lib/trpc";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { privateConversationDisplaySource, privateConversationDisplayStatus, type PrivateConversationSource } from "@shared/privateMessaging";
+import { PRIVATE_INTEGRITY_REVIEW_TEMPLATE, privateConversationDisplaySource, privateConversationDisplayStatus, type PrivateConversationSource } from "@shared/privateMessaging";
+import { PrivateMessagingNotificationCenter } from "@/components/PrivateMessagingNotificationCenter";
 
 type InboxConversation = {
   id: number;
@@ -34,9 +36,48 @@ function formatDate(value: Date | string) {
   return new Date(value).toLocaleString("fr-FR");
 }
 
+function integrityStatusLabel(status: string) {
+  if (status === "confirmed") return "Revue confirmée";
+  if (status === "temporary_hold") return "Revue renforcée";
+  return "À examiner";
+}
+
+function IntegrityClarificationQueue() {
+  const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const utils = trpc.useUtils();
+  const queueQuery = trpc.privateMessaging.getIntegrityClarificationQueue.useQuery(undefined, { enabled: open, refetchOnWindowFocus: true });
+  const createConversations = trpc.privateMessaging.createIntegrityClarificationConversations.useMutation({
+    onSuccess: async (result) => {
+      setConfirmOpen(false);
+      await Promise.all([
+        queueQuery.refetch(),
+        utils.privateMessaging.getAdminInbox.invalidate(),
+      ]);
+      toast.success(`${result.created} conversation${result.created > 1 ? "s" : ""} créée${result.created > 1 ? "s" : ""}${result.skipped ? `, ${result.skipped} déjà existante${result.skipped > 1 ? "s" : ""}` : ""}.`);
+    },
+    onError: (error) => toast.error(error.message),
+  });
+  const rows = queueQuery.data || [];
+  return <>
+    <Button variant="outline" onClick={() => setOpen(true)}>File d’intégrité</Button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="max-w-3xl">
+        <DialogHeader><DialogTitle>Demandes de clarification à examiner</DialogTitle></DialogHeader>
+        <p className="text-sm leading-6 text-slate-600">Cette file provient exclusivement des signaux existants à revue humaine. Aucun fil de messagerie, e-mail, notification, blocage ou sanction n’est créé depuis cet écran.</p>
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950"><p className="font-semibold">Texte approuvé</p><p className="mt-2 text-xs font-medium">Sujet : {PRIVATE_INTEGRITY_REVIEW_TEMPLATE.subject}</p><p className="mt-2 whitespace-pre-wrap text-xs leading-5">{PRIVATE_INTEGRITY_REVIEW_TEMPLATE.body}</p></div>
+        <div className="max-h-72 overflow-auto rounded-lg border border-slate-200"><table className="w-full text-left text-sm"><thead className="sticky top-0 bg-slate-50 text-xs text-slate-500"><tr><th className="px-3 py-2 font-medium">Apprenant</th><th className="px-3 py-2 font-medium">Revue</th><th className="px-3 py-2 font-medium">Signaux</th><th className="px-3 py-2 font-medium">Action</th></tr></thead><tbody>{rows.map((row) => <tr key={row.learnerId} className="border-t border-slate-100"><td className="px-3 py-2"><p className="font-medium text-slate-900">{row.learnerName || "Apprenant"}</p><p className="text-xs text-slate-500">Score de revue : {row.riskScore}/100</p></td><td className="px-3 py-2 text-slate-700">{integrityStatusLabel(row.reviewStatus)}</td><td className="px-3 py-2 text-slate-700">{row.signalCount}</td><td className="px-3 py-2"><Link href={`/admin/training?tab=learners&learner=${row.learnerId}`} className="text-xs font-semibold text-primary hover:underline" onClick={() => setOpen(false)}>Ouvrir la revue</Link></td></tr>)}{!rows.length && !queueQuery.isLoading ? <tr><td colSpan={4} className="px-4 py-8 text-center text-sm text-slate-500">Aucune demande de clarification n’est actuellement à examiner.</td></tr> : null}{queueQuery.isLoading ? <tr><td colSpan={4} className="px-4 py-8 text-center text-sm text-slate-500">Chargement de la file…</td></tr> : null}{queueQuery.isError ? <tr><td colSpan={4} className="px-4 py-8 text-center text-sm text-destructive">La file ne peut pas être chargée pour le moment.</td></tr> : null}</tbody></table></div>
+        <DialogFooter><Button variant="outline" onClick={() => setOpen(false)}>Fermer</Button><Button disabled={!rows.length || createConversations.isPending} onClick={() => setConfirmOpen(true)}>{createConversations.isPending ? "Création…" : `Créer ${rows.length} conversation${rows.length > 1 ? "s" : ""}`}</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Confirmer la création des conversations de revue</AlertDialogTitle><AlertDialogDescription>Cette action créera un fil privé et notifiera chaque apprenant encore présent dans la file, selon ses préférences. Aucun blocage automatique ne sera appliqué. Les conversations existantes de revue seront ignorées.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel disabled={createConversations.isPending}>Annuler</AlertDialogCancel><AlertDialogAction disabled={createConversations.isPending} onClick={() => createConversations.mutate()}>Créer les conversations</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+  </>;
+}
+
 export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerLabel }: PrivateMessagingAdminPanelProps) {
   const [status, setStatus] = useState<"all" | "open" | "closed">("all");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [body, setBody] = useState("");
   const [composeOpen, setComposeOpen] = useState(false);
@@ -45,7 +86,7 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
   const [subject, setSubject] = useState("");
   const [firstMessage, setFirstMessage] = useState("");
   const inboxQuery = trpc.privateMessaging.getAdminInbox.useQuery(
-    { status, search: search.trim() || undefined, learnerId: fixedLearnerId, limit: 200 },
+    { status, search: search.trim() || undefined, learnerId: fixedLearnerId, page, pageSize: 25 },
     { refetchOnWindowFocus: true },
   );
   const learnersQuery = trpc.admin.getLearners.useQuery(
@@ -82,7 +123,8 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
   });
   const markRead = trpc.privateMessaging.markRead.useMutation({ onSuccess: refresh });
   const selected = detailQuery.data?.conversation;
-  const items = (inboxQuery.data || []) as InboxConversation[];
+  const items = (inboxQuery.data?.items || []) as InboxConversation[];
+  const inboxPage = inboxQuery.data;
   const learners = useMemo(() => learnersQuery.data?.users || [], [learnersQuery.data?.users]);
   const targetLearnerId = fixedLearnerId ?? (recipientId ? Number(recipientId) : null);
   const contextTitle = fixedLearnerId ? `Messages de ${learnerLabel || "cet apprenant"}` : "Messagerie privée";
@@ -97,7 +139,7 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
           <h2 className="flex items-center gap-2 text-xl font-semibold text-slate-950"><MessageCircle className="h-5 w-5 text-primary" />{contextTitle}</h2>
           <p className="mt-1 text-sm text-slate-500">{contextDescription}</p>
         </div>
-        <Button className="gap-2" onClick={() => setComposeOpen(true)}><Plus className="h-4 w-4" />Nouvelle conversation</Button>
+        <div className="flex flex-wrap items-center gap-2">{!fixedLearnerId ? <IntegrityClarificationQueue /> : null}<PrivateMessagingNotificationCenter isAdmin onOpenConversation={(conversationId) => { setSelectedId(conversationId); markRead.mutate({ conversationId }); }} /><Button className="gap-2" onClick={() => setComposeOpen(true)}><Plus className="h-4 w-4" />Nouvelle conversation</Button></div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.4fr)]">
@@ -105,14 +147,14 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
           <div className="flex flex-col gap-2 border-b border-slate-100 p-3 sm:flex-row">
             <div className="relative min-w-0 flex-1">
               <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-              <Input className="pl-9" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={fixedLearnerId ? "Rechercher un sujet" : "Rechercher un sujet ou apprenant"} aria-label="Rechercher une conversation" />
+              <Input className="pl-9" value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder={fixedLearnerId ? "Rechercher un sujet" : "Rechercher un sujet ou apprenant"} aria-label="Rechercher une conversation" />
             </div>
-            <Select value={status} onValueChange={(value) => setStatus(value as typeof status)}>
+            <Select value={status} onValueChange={(value) => { setStatus(value as typeof status); setPage(1); }}>
               <SelectTrigger className="w-full sm:w-32" aria-label="Filtrer les conversations"><SelectValue /></SelectTrigger>
               <SelectContent><SelectItem value="all">Toutes</SelectItem><SelectItem value="open">Ouvertes</SelectItem><SelectItem value="closed">Fermées</SelectItem></SelectContent>
             </Select>
           </div>
-          <p className="px-3 pt-2 text-xs text-slate-500">Les 200 conversations les plus récentes sont affichées.</p>
+          <p className="px-3 pt-2 text-xs text-slate-500">{inboxPage ? `${inboxPage.total} conversation${inboxPage.total > 1 ? "s" : ""} · page ${inboxPage.page}/${inboxPage.totalPages}` : "Chargement de l’inbox…"}</p>
           <ScrollArea className="h-[480px]">
             <div className="p-2">
               {items.map((item) => (
@@ -127,6 +169,7 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
               {inboxQuery.isError ? <p className="p-5 text-center text-sm text-destructive">La messagerie ne peut pas être chargée pour le moment.</p> : null}
             </div>
           </ScrollArea>
+          {inboxPage && inboxPage.totalPages > 1 ? <div className="flex items-center justify-between gap-3 border-t border-slate-100 p-3"><Button variant="outline" size="sm" disabled={inboxPage.page <= 1 || inboxQuery.isFetching} onClick={() => setPage((current) => Math.max(1, current - 1))}>Précédent</Button><span className="text-xs text-slate-500">Page {inboxPage.page} sur {inboxPage.totalPages}</span><Button variant="outline" size="sm" disabled={inboxPage.page >= inboxPage.totalPages || inboxQuery.isFetching} onClick={() => setPage((current) => current + 1)}>Suivant</Button></div> : null}
         </section>
 
         <section className="flex min-h-[540px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white">
