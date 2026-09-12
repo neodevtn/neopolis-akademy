@@ -106,8 +106,14 @@ export const privateMessagingRouter = router({
   getIntegrityClarificationQueue: protectedProcedure.query(async ({ ctx }) => {
     requireAdmin(ctx.user);
     const rows = await getIntegrityReviewQueue();
-    return rows
-      .filter((row) => row.review?.status !== "dismissed")
+    const candidates = rows.filter((row) => row.review?.status !== "dismissed");
+    const existingByLearner = await Promise.all(candidates.map(async (row) => ({
+      learnerId: row.id,
+      existing: await getIntegrityReviewConversationForLearner(row.id),
+    })));
+    const contactedLearnerIds = new Set(existingByLearner.filter((entry) => entry.existing).map((entry) => entry.learnerId));
+    return candidates
+      .filter((row) => !contactedLearnerIds.has(row.id))
       .map((row) => ({
         learnerId: row.id,
         learnerName: row.name,
