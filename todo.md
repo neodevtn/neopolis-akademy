@@ -2928,7 +2928,7 @@
 - [x] Téléverser le PNG officiel fourni et contrôler ses dimensions, son format et son affichage à taille native — PNG RGBA 240×84 téléchargé dans le stockage web, servi via `/api/assets/...61aeceeb.png` en HTTP 200 / `image/png`
 - [x] Remplacer le logo des en-têtes public et administratif par ce PNG sans déformation ni interpolation — composant de marque unifié sur le PNG fourni ; affichage CSS 120×42 (densité ×2) dans les en-têtes public, admin et training, sans changement de ratio
 - [x] Tester desktop/mobile et valider la source du nouveau logo en local — public, administration et training contrôlés à 1280×720 et 390×844 ; TypeScript, 661 tests et QA 9/9 validés
-- [ ] Publier et vérifier la source exacte du PNG fourni dans le DOM de production
+- [x] Publier et vérifier la source exacte du PNG fourni dans le DOM de production — source PNG 240×84 confirmée dans les en-têtes sur le domaine public lors des contrôles de publication
 
 ## Messagerie privée « Échanger avec Neopolis » — distincte des communications
 - [x] Auditer les capacités temps réel, notifications, e-mail, signalement de problème et signaux d’intégrité existants — communications de masse, e-mail Resend, alertes admin et revue humaine d’intégrité confirmés comme fondations distinctes ; aucune messagerie privée ni infrastructure WebSocket existante
@@ -2940,4 +2940,4 @@
 - [x] Raccorder l’historique apprenant à `/training?tab=messages` et sécuriser un pavé Messages filtré côté serveur dans le dossier apprenant 360° — e-mails alignés, navigation testée et filtre `learnerId` appliqué dans la couche administrative autorisée
 - [x] Stabiliser les mises à jour WebSocket, les retours accessibles, les sources et le contexte apprenant de l’inbox administrateur — reconnexion progressive, audience testée, source/état visibles, dialogue réinitialisé et lien dossier apprenant
 - [x] Ajouter les tests de droits, de notifications sans contenu privé et des surfaces de messagerie avant l’étape de QA/publication — tests tRPC de droits/validation, notifications e-mail minimales, filtrage WebSocket, contrat et navigation ajoutés
-- [ ] Tester, publier et valider les conversations ainsi que les premiers avertissements d’intégrité avec contrôle humain
+- [x] Tester, publier et valider les conversations ainsi que les premiers avertissements d’intégrité avec contrôle humain — publication Reserved effectuée, historique apprenant et inbox admin contrôlés, handshake WebSocket public authentifié validé ; les avertissements d’intégrité restent au stade de brouillon interne et exigent toujours une décision humaine explicite avant toute création ou tout envoi

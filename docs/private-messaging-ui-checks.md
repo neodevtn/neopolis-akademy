@@ -19,3 +19,5 @@ Le 12 septembre 2026, le brouillon a été ouvert visuellement dans le dossier a
 ## Production — 12 septembre 2026
 
 Après propagation du checkpoint, `https://akademy.neodev.click/training?tab=messages` a été chargé avec une session apprenant. L’onglet Messages, l’historique privé, les actions « Signaler un problème » et « Nouvelle conversation », ainsi que le launcher « Échanger avec Neopolis » sont visibles. Aucun fil, aucune notification e-mail ni aucune communication d’intégrité n’a été créé pendant cette vérification.
+
+Le handshake WebSocket a été rejoué depuis cette session authentifiée sur le canal same-origin `/api/realtime/private-messaging`. Le serveur a répondu par l’événement attendu `private-messaging.ready`. La correction conserve le contrôle d’origine : derrière le proxy de production, l’origine est comparée aux hôtes publics explicitement transmis par le proxy ; une origine tierce reste refusée. Aucun message n’a été envoyé sur le socket, qui demeure notificationnel.
