@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shouldReceivePrivateMessagingEvent } from "./privateMessagingRealtime";
+import { isSameOriginUpgrade, shouldReceivePrivateMessagingEvent } from "./privateMessagingRealtime";
 
 const event = {
   type: "message.created" as const,
@@ -9,6 +9,11 @@ const event = {
 };
 
 describe("diffusion WebSocket de messagerie privée", () => {
+  it("accepte l’origine publique quand un proxy transmet un hôte interne", () => {
+    expect(isSameOriginUpgrade({ headers: { origin: "https://akademy.neodev.click", host: "internal.service", "x-forwarded-host": "akademy.neodev.click" } } as any)).toBe(true);
+    expect(isSameOriginUpgrade({ headers: { origin: "https://akademy.neodev.click", host: "internal.service", "x-forwarded-host": "another.example" } } as any)).toBe(false);
+  });
+
   it("ne transmet un événement apprenant qu’au propriétaire du fil", () => {
     expect(shouldReceivePrivateMessagingEvent({ neopolisUserId: 7, neopolisRole: "user" }, event)).toBe(true);
     expect(shouldReceivePrivateMessagingEvent({ neopolisUserId: 8, neopolisRole: "user" }, event)).toBe(false);

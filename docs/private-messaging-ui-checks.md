@@ -15,3 +15,7 @@ Le contrôle a été fait avec une session administrative de prévisualisation. 
 La revue d’un apprenant présentant un signal permet désormais d’ouvrir le brouillon « Vérification de votre parcours ». Ce brouillon décrit une demande de clarification neutre, rappelle explicitement l’absence de conclusion et de sanction, et ne peut ni créer une conversation ni déclencher une notification. L’administrateur doit encore ouvrir le pavé Messages et décider explicitement de créer un fil ; aucune action collective sur des apprenants existants n’a été exécutée.
 
 Le 12 septembre 2026, le brouillon a été ouvert visuellement dans le dossier apprenant : son texte est désormais affiché avec des paragraphes lisibles, sans caractères d’échappement techniques. Seuls les boutons « Fermer » et « Ouvrir les messages de l’apprenant » sont proposés ; aucun bouton d’envoi, de création de fil ou de modification de statut n’y est présent.
+
+## Production — 12 septembre 2026
+
+Après propagation du checkpoint, `https://akademy.neodev.click/training?tab=messages` a été chargé avec une session apprenant. L’onglet Messages, l’historique privé, les actions « Signaler un problème » et « Nouvelle conversation », ainsi que le launcher « Échanger avec Neopolis » sont visibles. Aucun fil, aucune notification e-mail ni aucune communication d’intégrité n’a été créé pendant cette vérification.

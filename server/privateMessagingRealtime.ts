@@ -15,11 +15,22 @@ type AuthenticatedSocket = WebSocket & { neopolisUserId?: number; neopolisRole?:
 
 let webSocketServer: WebSocketServer | null = null;
 
-function isSameOriginUpgrade(request: IncomingMessage) {
+function requestHostHeader(value: string | string[] | undefined) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw?.split(",")[0]?.trim().toLocaleLowerCase("en-US") || null;
+}
+
+export function isSameOriginUpgrade(request: IncomingMessage) {
   const origin = request.headers.origin;
   if (!origin) return true;
   try {
-    return new URL(origin).host === request.headers.host;
+    const originHost = new URL(origin).host.toLocaleLowerCase("en-US");
+    const candidateHosts = [
+      requestHostHeader(request.headers.host),
+      requestHostHeader(request.headers["x-forwarded-host"]),
+      requestHostHeader(request.headers["x-original-host"]),
+    ];
+    return candidateHosts.includes(originHost);
   } catch {
     return false;
   }
