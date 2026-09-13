@@ -861,6 +861,8 @@ export const privateMessages = mysqlTable("private_messages", {
   authorUserId: int("authorUserId"),
   authorRole: mysqlEnum("authorRole", ["learner", "admin", "system"]).notNull(),
   body: text("body").notNull(),
+  learnerDeliveredAt: timestamp("learnerDeliveredAt"),
+  adminDeliveredAt: timestamp("adminDeliveredAt"),
   learnerReadAt: timestamp("learnerReadAt"),
   adminReadAt: timestamp("adminReadAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -872,13 +874,32 @@ export const privateMessages = mysqlTable("private_messages", {
 export type PrivateMessage = typeof privateMessages.$inferSelect;
 export type InsertPrivateMessage = typeof privateMessages.$inferInsert;
 
+/** Private image/PDF references. File bytes stay in storage and are served only after conversation access checks. */
+export const privateMessageAttachments = mysqlTable("private_message_attachments", {
+  id: int("id").autoincrement().primaryKey(),
+  conversationId: int("conversationId").notNull(),
+  messageId: int("messageId").notNull(),
+  storageKey: varchar("storageKey", { length: 520 }).notNull(),
+  originalName: varchar("originalName", { length: 180 }).notNull(),
+  mimeType: mysqlEnum("mimeType", ["image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]).notNull(),
+  sizeBytes: int("sizeBytes").notNull(),
+  uploadedByUserId: int("uploadedByUserId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [
+  index("private_message_attachments_message_idx").on(table.messageId, table.createdAt),
+  index("private_message_attachments_conversation_idx").on(table.conversationId, table.createdAt),
+  uniqueIndex("private_message_attachments_storage_key_unique").on(table.storageKey),
+]);
+export type PrivateMessageAttachment = typeof privateMessageAttachments.$inferSelect;
+export type InsertPrivateMessageAttachment = typeof privateMessageAttachments.$inferInsert;
+
 /** Immutable lifecycle audit for private conversations and message events. */
 export const privateMessageEvents = mysqlTable("private_message_events", {
   id: int("id").autoincrement().primaryKey(),
   conversationId: int("conversationId").notNull(),
   messageId: int("messageId"),
   actorUserId: int("actorUserId"),
-  eventType: mysqlEnum("eventType", ["conversation_created", "message_sent", "conversation_closed", "conversation_reopened", "learner_read", "admin_read", "notification_requested", "notification_delivered", "notification_failed"]).notNull(),
+  eventType: mysqlEnum("eventType", ["conversation_created", "message_sent", "attachment_uploaded", "conversation_closed", "conversation_reopened", "learner_delivered", "admin_delivered", "learner_read", "admin_read", "notification_requested", "notification_delivered", "notification_failed"]).notNull(),
   metadata: json("metadata"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 }, (table) => [

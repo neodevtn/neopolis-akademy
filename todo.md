@@ -2950,3 +2950,8 @@
 - [x] Fusionner « Mon orientation », « Mon parcours » et « Mon évolution » en une vue apprenant cohérente, sans perdre les liens et états existants — nouvelle vue « Mon parcours » et redirection interne des anciennes URL
 - [x] Fusionner « Mes acquis » et « Mes compétences » en une vue apprenant cohérente, sans perdre les badges, objectifs ni progression — vue « Acquis & compétences » avec sous-navigation
 - [x] Couvrir les changements par tests, QA, publication et vérification du domaine public — 205 suites et 677 tests réussis (2 ignorés), QA 9/9, diff-check, checkpoints publiés, contrôle de l’inbox en prévisualisation et module public de tableau apprenant vérifié après propagation
+
+## Statuts et pièces jointes de messagerie — 12 septembre 2026
+- [x] Rendre les statuts de message explicites et compréhensibles, avec une expérience inspirée de WhatsApp : envoyé, distribué et vu, sans ambiguïté de destinataire — accusés persistés par audience, livraison WebSocket réellement connectée et lecture synchronisée
+- [x] Permettre l’envoi et la consultation sécurisée de pièces jointes privées limitées aux images et PDF de 10 Mo maximum, avec validation serveur, accès autorisé et traçabilité — JPEG/PNG/GIF/WebP/PDF, contrôle des signatures binaires, accès par conversation, cache privé et limite de trois fichiers par message
+- [x] Couvrir les statuts et pièces jointes privées par tests, QA, publication et vérification du domaine public — 206 suites, 681 tests réussis (2 ignorés), QA 9/9, validation TypeScript et contrôles apprenant/admin en prévisualisation

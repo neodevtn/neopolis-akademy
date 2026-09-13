@@ -14,6 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { PRIVATE_INTEGRITY_REVIEW_TEMPLATE, privateConversationDisplaySource, privateConversationDisplayStatus, type PrivateConversationSource } from "@shared/privateMessaging";
 import { PrivateMessagingNotificationCenter } from "@/components/PrivateMessagingNotificationCenter";
+import { PrivateMessageAttachmentPicker, type PendingPrivateMessageAttachment } from "@/components/PrivateMessageAttachmentPicker";
+import { PrivateMessageBubble, type PrivateMessageView } from "@/components/PrivateMessageContent";
 
 type InboxConversation = {
   id: number;
@@ -80,11 +82,13 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [body, setBody] = useState("");
+  const [replyAttachments, setReplyAttachments] = useState<PendingPrivateMessageAttachment[]>([]);
   const [composeOpen, setComposeOpen] = useState(false);
   const [learnerSearch, setLearnerSearch] = useState("");
   const [recipientId, setRecipientId] = useState("");
   const [subject, setSubject] = useState("");
   const [firstMessage, setFirstMessage] = useState("");
+  const [firstMessageAttachments, setFirstMessageAttachments] = useState<PendingPrivateMessageAttachment[]>([]);
   const inboxQuery = trpc.privateMessaging.getAdminInbox.useQuery(
     { status, search: search.trim() || undefined, learnerId: fixedLearnerId, page, pageSize: 25 },
     { refetchOnWindowFocus: true },
@@ -107,9 +111,10 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
     setRecipientId("");
     setSubject("");
     setFirstMessage("");
+    setFirstMessageAttachments([]);
   };
   const sendMutation = trpc.privateMessaging.send.useMutation({
-    onSuccess: () => { setBody(""); refresh(); },
+    onSuccess: () => { setBody(""); setReplyAttachments([]); refresh(); },
     onError: (error) => toast.error(error.message),
   });
   const statusMutation = trpc.privateMessaging.setStatus.useMutation({ onSuccess: refresh, onError: (error) => toast.error(error.message) });
@@ -183,8 +188,8 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
                   {selected ? <Button variant="outline" size="sm" onClick={() => statusMutation.mutate({ conversationId: selectedId, status: selected.status === "open" ? "closed" : "open" })}>{selected.status === "open" ? "Clore" : "Rouvrir"}</Button> : null}
                 </div>
               </header>
-              <ScrollArea className="min-h-0 flex-1 px-4 py-4"><div className="space-y-3">{detailQuery.data?.messages.map((message: any) => <article key={message.id} className={`max-w-[85%] rounded-xl px-3 py-2.5 text-sm ${message.authorRole === "admin" ? "ml-auto bg-primary text-primary-foreground" : "bg-slate-100 text-slate-800"}`}><p className="mb-1 text-[11px] font-semibold opacity-80">{message.authorRole === "admin" ? "Équipe Neopolis" : detailQuery.data?.learner?.name || "Apprenant"}</p><p className="whitespace-pre-wrap break-words">{message.body}</p><p className="mt-1 text-[10px] opacity-70">{formatDate(message.createdAt)}</p></article>)}</div></ScrollArea>
-              <footer className="border-t border-slate-100 p-3">{selected?.status === "open" ? <><Label className="sr-only" htmlFor="admin-private-message-reply">Réponse</Label><Textarea id="admin-private-message-reply" value={body} onChange={(event) => setBody(event.target.value)} className="min-h-20 resize-none" maxLength={5000} placeholder="Répondre au nom de l’équipe Neopolis…" /><div className="mt-2 flex justify-end"><Button size="sm" className="gap-1.5" disabled={!body.trim() || sendMutation.isPending} onClick={() => sendMutation.mutate({ conversationId: selectedId, body })}>{sendMutation.isPending ? "Envoi…" : "Envoyer"}<Send className="h-3.5 w-3.5" /></Button></div></> : <p className="text-sm text-slate-500">Conversation fermée. L’historique est conservé ; vous pouvez la rouvrir.</p>}</footer>
+              <ScrollArea className="min-h-0 flex-1 px-4 py-4"><div className="space-y-3">{detailQuery.data?.messages.map((message: PrivateMessageView) => <PrivateMessageBubble key={message.id} message={message} mine={message.authorRole === "admin"} author={message.authorRole === "admin" ? "Équipe Neopolis" : detailQuery.data?.learner?.name || "Apprenant"} dateLabel={formatDate} />)}</div></ScrollArea>
+              <footer className="border-t border-slate-100 p-3">{selected?.status === "open" ? <><Label className="sr-only" htmlFor="admin-private-message-reply">Réponse</Label><Textarea id="admin-private-message-reply" value={body} onChange={(event) => setBody(event.target.value)} className="min-h-20 resize-none" maxLength={5000} placeholder="Répondre au nom de l’équipe Neopolis…" /><PrivateMessageAttachmentPicker attachments={replyAttachments} onChange={setReplyAttachments} disabled={sendMutation.isPending} /><div className="mt-2 flex justify-end"><Button size="sm" className="gap-1.5" disabled={(!body.trim() && !replyAttachments.length) || sendMutation.isPending} onClick={() => selectedId && sendMutation.mutate({ conversationId: selectedId, body, attachments: replyAttachments.map(({ filename, mimeType, base64 }) => ({ filename, mimeType, base64 })) })}>{sendMutation.isPending ? "Envoi…" : "Envoyer"}<Send className="h-3.5 w-3.5" /></Button></div></> : <p className="text-sm text-slate-500">Conversation fermée. L’historique est conservé ; vous pouvez la rouvrir.</p>}</footer>
             </>
           )}
         </section>
@@ -196,9 +201,9 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
           <div className="space-y-4">
             {fixedLearnerId ? <div className="space-y-2"><Label>Destinataire</Label><Input value={learnerLabel || "Apprenant sélectionné"} readOnly aria-readonly="true" /></div> : <div className="space-y-2"><Label htmlFor="message-learner-search">Destinataire</Label><Input id="message-learner-search" value={learnerSearch} onChange={(event) => setLearnerSearch(event.target.value)} placeholder="Rechercher un apprenant par nom ou e-mail" /><Select value={recipientId} onValueChange={setRecipientId}><SelectTrigger aria-label="Choisir un apprenant"><SelectValue placeholder="Choisir un apprenant" /></SelectTrigger><SelectContent>{learners.map((learner: any) => <SelectItem key={learner.id} value={String(learner.id)}>{learner.name || learner.email || `Apprenant ${learner.id}`}</SelectItem>)}{!learners.length && !learnersQuery.isLoading ? <SelectItem value="no-result" disabled>Aucun apprenant trouvé</SelectItem> : null}</SelectContent></Select></div>}
             <div className="space-y-2"><Label htmlFor="message-subject">Sujet</Label><Input id="message-subject" value={subject} onChange={(event) => setSubject(event.target.value)} maxLength={220} /></div>
-            <div className="space-y-2"><Label htmlFor="message-first">Premier message</Label><Textarea id="message-first" value={firstMessage} onChange={(event) => setFirstMessage(event.target.value)} maxLength={5000} className="min-h-32" /></div>
+            <div className="space-y-2"><Label htmlFor="message-first">Premier message</Label><Textarea id="message-first" value={firstMessage} onChange={(event) => setFirstMessage(event.target.value)} maxLength={5000} className="min-h-32" /><PrivateMessageAttachmentPicker attachments={firstMessageAttachments} onChange={setFirstMessageAttachments} disabled={createMutation.isPending} /></div>
           </div>
-          <DialogFooter><Button variant="outline" onClick={resetComposer}>Annuler</Button><Button disabled={!targetLearnerId || subject.trim().length < 3 || !firstMessage.trim() || createMutation.isPending} onClick={() => targetLearnerId && createMutation.mutate({ learnerId: targetLearnerId, subject, body: firstMessage, source: "admin" })}>{createMutation.isPending ? "Création…" : "Créer et envoyer"}</Button></DialogFooter>
+          <DialogFooter><Button variant="outline" onClick={resetComposer}>Annuler</Button><Button disabled={!targetLearnerId || subject.trim().length < 3 || (!firstMessage.trim() && !firstMessageAttachments.length) || createMutation.isPending} onClick={() => targetLearnerId && createMutation.mutate({ learnerId: targetLearnerId, subject, body: firstMessage, attachments: firstMessageAttachments.map(({ filename, mimeType, base64 }) => ({ filename, mimeType, base64 })), source: "admin" })}>{createMutation.isPending ? "Création…" : "Créer et envoyer"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
     </section>

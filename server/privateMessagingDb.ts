@@ -8,9 +8,10 @@ import {
   users,
 } from "../drizzle/schema";
 import type { PrivateConversationSource, PrivateMessageAuthorRole } from "../shared/privateMessaging";
-import { privateMessagePreview } from "../shared/privateMessaging";
+import { privateMessageAttachmentLabel, privateMessagePreview } from "../shared/privateMessaging";
 import { isAdministrativeRole } from "../shared/roles";
 import { getDb } from "./db";
+import { getPrivateMessageAttachmentByStorageKey, listPrivateMessageAttachments, storePrivateMessageAttachments, type PrivateMessageAttachmentUpload } from "./privateMessagingAttachments";
 
 export type PrivateConversationSummary = {
   id: number;
@@ -67,7 +68,7 @@ async function recordEvent(input: {
   conversationId: number;
   messageId?: number | null;
   actorUserId?: number | null;
-  eventType: "conversation_created" | "message_sent" | "conversation_closed" | "conversation_reopened" | "learner_read" | "admin_read" | "notification_requested" | "notification_delivered" | "notification_failed";
+  eventType: "conversation_created" | "message_sent" | "attachment_uploaded" | "conversation_closed" | "conversation_reopened" | "learner_delivered" | "admin_delivered" | "learner_read" | "admin_read" | "notification_requested" | "notification_delivered" | "notification_failed";
   metadata?: Record<string, unknown>;
 }) {
   const db = await requireDb();
@@ -185,7 +186,12 @@ export async function getPrivateConversationDetail(input: { actor: ConversationA
     db.select().from(privateMessages).where(eq(privateMessages.conversationId, conversation.id)).orderBy(asc(privateMessages.createdAt), asc(privateMessages.id)).limit(1_000),
     db.select({ id: users.id, name: users.name, email: users.email }).from(users).where(eq(users.id, conversation.learnerId)).limit(1),
   ]);
-  return { conversation, learner: learnerRows[0] ?? null, messages };
+  const attachmentsByMessageId = await listPrivateMessageAttachments(messages.map((message) => message.id));
+  return {
+    conversation,
+    learner: learnerRows[0] ?? null,
+    messages: messages.map((message) => ({ ...message, attachments: attachmentsByMessageId.get(message.id) || [] })),
+  };
 }
 
 export async function createPrivateConversation(input: {
@@ -194,6 +200,7 @@ export async function createPrivateConversation(input: {
   body: string;
   source: PrivateConversationSource;
   actor: ConversationActor;
+  attachments?: PrivateMessageAttachmentUpload[];
 }) {
   const db = await requireDb();
   const authorRole: PrivateMessageAuthorRole = isAdministrativeRole(input.actor.role) ? "admin" : "learner";
@@ -205,7 +212,7 @@ export async function createPrivateConversation(input: {
     source: input.source,
     initiatedByUserId: input.actor.userId,
     lastMessageAt: now,
-    lastMessagePreview: privateMessagePreview(input.body),
+    lastMessagePreview: input.body ? privateMessagePreview(input.body) : privateMessageAttachmentLabel(input.attachments?.length || 0),
   }).$returningId();
   const conversationId = conversationResult?.id;
   if (!conversationId) throw new Error("Impossible de créer la conversation");
@@ -219,12 +226,25 @@ export async function createPrivateConversation(input: {
   }).$returningId();
   const messageId = messageResult?.id;
   if (!messageId) throw new Error("Impossible d’enregistrer le premier message");
+  const attachments = await storePrivateMessageAttachments({
+    conversationId,
+    messageId,
+    uploadedByUserId: input.actor.userId,
+    attachments: input.attachments || [],
+  });
+  await Promise.all(attachments.map((attachment) => recordEvent({
+    conversationId,
+    messageId,
+    actorUserId: input.actor.userId,
+    eventType: "attachment_uploaded",
+    metadata: { attachmentId: attachment.id, mimeType: attachment.mimeType, sizeBytes: attachment.sizeBytes },
+  })));
   await recordEvent({ conversationId, actorUserId: input.actor.userId, eventType: "conversation_created", metadata: { source: input.source } });
-  await recordEvent({ conversationId, messageId, actorUserId: input.actor.userId, eventType: "message_sent", metadata: { authorRole } });
-  return { conversationId, messageId, authorRole };
+  await recordEvent({ conversationId, messageId, actorUserId: input.actor.userId, eventType: "message_sent", metadata: { authorRole, attachmentCount: attachments.length } });
+  return { conversationId, messageId, authorRole, attachments };
 }
 
-export async function sendPrivateMessage(input: { actor: ConversationActor; conversationId: number; body: string }) {
+export async function sendPrivateMessage(input: { actor: ConversationActor; conversationId: number; body: string; attachments?: PrivateMessageAttachmentUpload[] }) {
   const conversation = isAdministrativeRole(input.actor.role)
     ? await getPrivateConversationForAdmin(input.actor, input.conversationId)
     : await getPrivateConversationForLearner(input.actor.userId, input.conversationId);
@@ -243,10 +263,23 @@ export async function sendPrivateMessage(input: { actor: ConversationActor; conv
   }).$returningId();
   const messageId = messageResult?.id;
   if (!messageId) throw new Error("Impossible d’enregistrer le message");
-  await db.update(privateConversations).set({ lastMessageAt: now, lastMessagePreview: privateMessagePreview(input.body) })
+  const attachments = await storePrivateMessageAttachments({
+    conversationId: conversation.id,
+    messageId,
+    uploadedByUserId: input.actor.userId,
+    attachments: input.attachments || [],
+  });
+  await Promise.all(attachments.map((attachment) => recordEvent({
+    conversationId: conversation.id,
+    messageId,
+    actorUserId: input.actor.userId,
+    eventType: "attachment_uploaded",
+    metadata: { attachmentId: attachment.id, mimeType: attachment.mimeType, sizeBytes: attachment.sizeBytes },
+  })));
+  await db.update(privateConversations).set({ lastMessageAt: now, lastMessagePreview: input.body ? privateMessagePreview(input.body) : privateMessageAttachmentLabel(attachments.length) })
     .where(eq(privateConversations.id, conversation.id));
-  await recordEvent({ conversationId: conversation.id, messageId, actorUserId: input.actor.userId, eventType: "message_sent", metadata: { authorRole } });
-  return { conversation, messageId, authorRole };
+  await recordEvent({ conversationId: conversation.id, messageId, actorUserId: input.actor.userId, eventType: "message_sent", metadata: { authorRole, attachmentCount: attachments.length } });
+  return { conversation, messageId, authorRole, attachments };
 }
 
 export async function changePrivateConversationStatus(input: { actor: ConversationActor; conversationId: number; status: "open" | "closed" }) {
@@ -278,14 +311,44 @@ export async function markPrivateConversationRead(actor: ConversationActor, conv
   const db = await requireDb();
   const now = new Date();
   const admin = isAdministrativeRole(actor.role);
-  await db.update(privateMessages).set(admin ? { adminReadAt: now } : { learnerReadAt: now })
+  await db.update(privateMessages).set(admin ? { adminReadAt: now, adminDeliveredAt: now } : { learnerReadAt: now, learnerDeliveredAt: now })
     .where(and(
       eq(privateMessages.conversationId, conversation.id),
       admin ? isNull(privateMessages.adminReadAt) : isNull(privateMessages.learnerReadAt),
       ne(privateMessages.authorRole, admin ? "admin" : "learner"),
     ));
   await recordEvent({ conversationId, actorUserId: actor.userId, eventType: admin ? "admin_read" : "learner_read" });
-  return { success: true };
+  return { success: true, conversation };
+}
+
+export async function markPrivateMessageDelivered(input: { conversationId: number; messageId: number; authorRole: PrivateMessageAuthorRole; deliveredRecipientIds: number[] }) {
+  if (!input.deliveredRecipientIds.length) return false;
+  const db = await requireDb();
+  const [conversation] = await db.select({ learnerId: privateConversations.learnerId }).from(privateConversations)
+    .where(eq(privateConversations.id, input.conversationId)).limit(1);
+  if (!conversation) return false;
+  const sentByTeam = input.authorRole === "admin" || input.authorRole === "system";
+  const deliveredToTarget = sentByTeam
+    ? input.deliveredRecipientIds.includes(conversation.learnerId)
+    : input.deliveredRecipientIds.length > 0;
+  if (!deliveredToTarget) return false;
+  const values = sentByTeam ? { learnerDeliveredAt: new Date() } : { adminDeliveredAt: new Date() };
+  const field = sentByTeam ? privateMessages.learnerDeliveredAt : privateMessages.adminDeliveredAt;
+  await db.update(privateMessages).set(values).where(and(eq(privateMessages.id, input.messageId), isNull(field)));
+  await recordEvent({
+    conversationId: input.conversationId,
+    messageId: input.messageId,
+    eventType: sentByTeam ? "learner_delivered" : "admin_delivered",
+    metadata: { recipientCount: input.deliveredRecipientIds.length },
+  });
+  return true;
+}
+
+export async function canAccessPrivateMessageAttachment(actor: ConversationActor, storageKey: string) {
+  const attachment = await getPrivateMessageAttachmentByStorageKey(storageKey);
+  if (!attachment) return false;
+  if (isAdministrativeRole(actor.role)) return Boolean(await getPrivateConversationForAdmin(actor, attachment.conversationId));
+  return Boolean(await getPrivateConversationForLearner(actor.userId, attachment.conversationId));
 }
 
 export async function getPrivateNotificationRecipients(input: { conversationId: number; authorRole: PrivateMessageAuthorRole }) {

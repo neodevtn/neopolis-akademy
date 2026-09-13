@@ -1,10 +1,12 @@
 export const PRIVATE_CONVERSATION_SOURCES = ["learner", "admin", "integrity_review", "problem_report"] as const;
 export const PRIVATE_CONVERSATION_STATUSES = ["open", "closed"] as const;
 export const PRIVATE_MESSAGE_AUTHOR_ROLES = ["learner", "admin", "system"] as const;
+export const PRIVATE_MESSAGE_ATTACHMENT_MIME_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"] as const;
 
 export type PrivateConversationSource = (typeof PRIVATE_CONVERSATION_SOURCES)[number];
 export type PrivateConversationStatus = (typeof PRIVATE_CONVERSATION_STATUSES)[number];
 export type PrivateMessageAuthorRole = (typeof PRIVATE_MESSAGE_AUTHOR_ROLES)[number];
+export type PrivateMessageAttachmentMimeType = (typeof PRIVATE_MESSAGE_ATTACHMENT_MIME_TYPES)[number];
 
 export const PRIVATE_MESSAGE_LIMITS = {
   subjectMin: 3,
@@ -12,6 +14,13 @@ export const PRIVATE_MESSAGE_LIMITS = {
   bodyMin: 1,
   bodyMax: 5_000,
   previewMax: 280,
+} as const;
+
+export const PRIVATE_MESSAGE_ATTACHMENT_LIMITS = {
+  maxBytes: 10 * 1024 * 1024,
+  maxBase64Chars: 14_000_000,
+  maxFilesPerMessage: 3,
+  filenameMax: 180,
 } as const;
 
 export const PRIVATE_INTEGRITY_REVIEW_TEMPLATE = {
@@ -28,6 +37,16 @@ export function privateMessagePreview(value: string): string {
   return normalized.length > PRIVATE_MESSAGE_LIMITS.previewMax
     ? `${normalized.slice(0, PRIVATE_MESSAGE_LIMITS.previewMax - 1).trimEnd()}…`
     : normalized;
+}
+
+export function privateMessageAttachmentLabel(count: number): string {
+  return count === 1 ? "Pièce jointe" : `${count} pièces jointes`;
+}
+
+export function privateMessageReceiptLabel(input: { deliveredAt?: Date | string | null; readAt?: Date | string | null }): "Envoyé" | "Distribué" | "Vu" {
+  if (input.readAt) return "Vu";
+  if (input.deliveredAt) return "Distribué";
+  return "Envoyé";
 }
 
 export function privateConversationDisplayStatus(status: PrivateConversationStatus): string {

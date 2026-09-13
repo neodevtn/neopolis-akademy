@@ -81,11 +81,16 @@ export function registerPrivateMessagingWebSocket(server: Server) {
   return wss;
 }
 
-export function publishPrivateMessagingEvent(event: PrivateMessagingRealtimeEvent) {
-  if (!webSocketServer) return;
+export function publishPrivateMessagingEvent(event: PrivateMessagingRealtimeEvent): number[] {
+  if (!webSocketServer) return [];
   const payload = JSON.stringify(event);
+  const deliveredRecipientIds = new Set<number>();
   for (const socket of Array.from(webSocketServer.clients)) {
     const client = socket as AuthenticatedSocket;
-    if (client.readyState === WebSocket.OPEN && shouldReceivePrivateMessagingEvent(client, event)) client.send(payload);
+    if (client.readyState === WebSocket.OPEN && shouldReceivePrivateMessagingEvent(client, event)) {
+      client.send(payload);
+      if (client.neopolisUserId) deliveredRecipientIds.add(client.neopolisUserId);
+    }
   }
+  return Array.from(deliveredRecipientIds);
 }

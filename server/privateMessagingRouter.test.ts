@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   getPrivateNotificationRecipients: vi.fn(),
   listAdminPrivateConversations: vi.fn(),
   listLearnerPrivateConversations: vi.fn(),
+  markPrivateMessageDelivered: vi.fn(),
   markPrivateConversationRead: vi.fn(),
   publishPrivateMessagingEvent: vi.fn(),
   recordPrivateNotificationEvent: vi.fn(),
@@ -37,6 +38,7 @@ vi.mock("./privateMessagingDb", () => ({
   getPrivateNotificationRecipients: mocks.getPrivateNotificationRecipients,
   listAdminPrivateConversations: mocks.listAdminPrivateConversations,
   listLearnerPrivateConversations: mocks.listLearnerPrivateConversations,
+  markPrivateMessageDelivered: mocks.markPrivateMessageDelivered,
   markPrivateConversationRead: mocks.markPrivateConversationRead,
   recordPrivateNotificationEvent: mocks.recordPrivateNotificationEvent,
   sendPrivateMessage: mocks.sendPrivateMessage,
@@ -66,6 +68,7 @@ describe("routeur de messagerie privée", () => {
     mocks.updatePrivateMessageDeliveryPreferences.mockResolvedValue({ webEnabled: false, emailEnabled: true, soundEnabled: false });
     mocks.createPrivateConversation.mockResolvedValue({ conversationId: 501, messageId: 601, authorRole: "learner" });
     mocks.changePrivateConversationStatus.mockResolvedValue({ conversation: { id: 501, learnerId: learner.id, status: "closed" }, changed: true });
+    mocks.markPrivateMessageDelivered.mockResolvedValue(false);
     mocks.markPrivateConversationRead.mockResolvedValue({ success: true });
   });
 

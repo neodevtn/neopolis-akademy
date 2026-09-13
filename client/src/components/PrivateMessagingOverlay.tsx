@@ -13,6 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { isAdministrativeRole } from "@shared/roles";
 import { privateConversationDisplayStatus } from "@shared/privateMessaging";
 import { PrivateMessagingNotificationCenter } from "@/components/PrivateMessagingNotificationCenter";
+import { PrivateMessageAttachmentPicker, type PendingPrivateMessageAttachment } from "@/components/PrivateMessageAttachmentPicker";
+import { PrivateMessageBubble, type PrivateMessageView } from "@/components/PrivateMessageContent";
 import { usePrivateConversationViewport } from "@/hooks/usePrivateConversationViewport";
 import { usePrivateMessageChime } from "@/hooks/usePrivateMessageChime";
 
@@ -57,11 +59,13 @@ function ConversationWindow({
 }) {
   const { user } = useAuth();
   const [body, setBody] = useState("");
+  const [attachments, setAttachments] = useState<PendingPrivateMessageAttachment[]>([]);
   const detailQuery = trpc.privateMessaging.getConversation.useQuery({ conversationId }, { refetchOnWindowFocus: true });
   const markRead = trpc.privateMessaging.markRead.useMutation({ onSuccess: onUpdated });
   const sendMessage = trpc.privateMessaging.send.useMutation({
     onSuccess: async () => {
       setBody("");
+      setAttachments([]);
       await detailQuery.refetch();
       onUpdated();
     },
@@ -88,8 +92,8 @@ function ConversationWindow({
     onLatestMessageVisible: (id) => markRead.mutate({ conversationId: id }),
   });
   const submit = () => {
-    if (!body.trim() || sendMessage.isPending || conversation?.status !== "open") return;
-    sendMessage.mutate({ conversationId, body });
+    if ((!body.trim() && !attachments.length) || sendMessage.isPending || conversation?.status !== "open") return;
+    sendMessage.mutate({ conversationId, body, attachments: attachments.map(({ filename, mimeType, base64 }) => ({ filename, mimeType, base64 })) });
     scrollToLatest();
   };
 
@@ -108,16 +112,16 @@ function ConversationWindow({
         {detailQuery.isLoading ? <p className="text-sm text-slate-500">Chargement des messages…</p> : null}
         {detailQuery.isError ? <p className="text-sm text-destructive">La conversation est indisponible.</p> : null}
         <div className="space-y-3">
-          {detail?.messages.map((message: any) => {
+          {detail?.messages.map((message: PrivateMessageView) => {
             const mine = message.authorUserId === user?.id || (isAdmin && message.authorRole === "admin");
             const author = message.authorRole === "admin" ? "Équipe Neopolis" : message.authorRole === "system" ? "Neopolis Akademy" : detail?.learner?.name || "Vous";
-            return <article key={message.id} className={`max-w-[88%] rounded-xl px-3 py-2.5 text-sm ${mine ? "ml-auto bg-primary text-primary-foreground" : "bg-slate-100 text-slate-800"}`}><p className={`mb-1 text-[11px] font-semibold ${mine ? "text-primary-foreground/80" : "text-slate-500"}`}>{author}</p><p className="whitespace-pre-wrap break-words leading-relaxed">{message.body}</p><p className={`mt-1.5 text-[10px] ${mine ? "text-primary-foreground/75" : "text-slate-400"}`}>{dateLabel(message.createdAt)}</p></article>;
+            return <PrivateMessageBubble key={message.id} message={message} mine={mine} author={author} dateLabel={dateLabel} />;
           })}
           <div ref={bottomRef} aria-hidden="true" />
         </div>
       </ScrollArea>
       <footer className="border-t border-slate-100 bg-white p-3">
-        {conversation?.status === "open" ? <><Label htmlFor={`private-message-${conversationId}`} className="sr-only">Votre message</Label><Textarea id={`private-message-${conversationId}`} value={body} onChange={(event) => setBody(event.target.value)} placeholder="Écrivez votre message…" className="min-h-20 resize-none" maxLength={5000} onKeyDown={(event) => { if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) { event.preventDefault(); submit(); } }} /><div className="mt-2 flex items-center justify-between gap-2"><Button variant="ghost" size="sm" className="text-slate-600" disabled={statusMutation.isPending} onClick={() => statusMutation.mutate({ conversationId, status: "closed" })}>Clore</Button><Button size="sm" className="gap-1.5" disabled={!body.trim() || sendMessage.isPending} onClick={submit}>{sendMessage.isPending ? "Envoi…" : "Envoyer"}<Send className="h-3.5 w-3.5" /></Button></div></> : <div className="flex items-center justify-between gap-3"><p className="text-xs text-slate-500">Cette conversation est fermée. Son historique reste consultable.</p><Button size="sm" variant="outline" disabled={statusMutation.isPending} onClick={() => statusMutation.mutate({ conversationId, status: "open" })}>Rouvrir</Button></div>}
+        {conversation?.status === "open" ? <><Label htmlFor={`private-message-${conversationId}`} className="sr-only">Votre message</Label><Textarea id={`private-message-${conversationId}`} value={body} onChange={(event) => setBody(event.target.value)} placeholder="Écrivez votre message…" className="min-h-20 resize-none" maxLength={5000} onKeyDown={(event) => { if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) { event.preventDefault(); submit(); } }} /><PrivateMessageAttachmentPicker attachments={attachments} onChange={setAttachments} disabled={sendMessage.isPending} /><div className="mt-2 flex items-center justify-between gap-2"><Button variant="ghost" size="sm" className="text-slate-600" disabled={statusMutation.isPending} onClick={() => statusMutation.mutate({ conversationId, status: "closed" })}>Clore</Button><Button size="sm" className="gap-1.5" disabled={(!body.trim() && !attachments.length) || sendMessage.isPending} onClick={submit}>{sendMessage.isPending ? "Envoi…" : "Envoyer"}<Send className="h-3.5 w-3.5" /></Button></div></> : <div className="flex items-center justify-between gap-3"><p className="text-xs text-slate-500">Cette conversation est fermée. Son historique reste consultable.</p><Button size="sm" variant="outline" disabled={statusMutation.isPending} onClick={() => statusMutation.mutate({ conversationId, status: "open" })}>Rouvrir</Button></div>}
       </footer>
     </section>
   );
@@ -132,6 +136,7 @@ export function PrivateMessagingOverlay() {
   const [composeMode, setComposeMode] = useState<"message" | "report">("message");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
+  const [composeAttachments, setComposeAttachments] = useState<PendingPrivateMessageAttachment[]>([]);
   const [openConversationIds, setOpenConversationIds] = useState<number[]>([]);
   const [realtimeRevision, setRealtimeRevision] = useState(0);
   const socketRef = useRef<WebSocket | null>(null);
@@ -146,6 +151,7 @@ export function PrivateMessagingOverlay() {
     onSuccess: async (created) => {
       setSubject("");
       setBody("");
+      setComposeAttachments([]);
       setComposeOpen(false);
       await learnerQuery.refetch();
       setOpenConversationIds((current) => Array.from(new Set([created.conversationId, ...current])).slice(0, 3));
@@ -210,7 +216,7 @@ export function PrivateMessagingOverlay() {
   };
 
   if (!isAuthenticated || (isAdmin && pathname.startsWith("/admin"))) return null;
-  const openComposer = (mode: "message" | "report") => { setComposeMode(mode); setSubject(mode === "report" ? "Signalement de problème" : ""); setBody(""); setLauncherOpen(false); setComposeOpen(true); };
+  const openComposer = (mode: "message" | "report") => { setComposeMode(mode); setSubject(mode === "report" ? "Signalement de problème" : ""); setBody(""); setComposeAttachments([]); setLauncherOpen(false); setComposeOpen(true); };
   return <>
     <div className="fixed bottom-5 right-5 z-[65] flex items-center gap-2 sm:bottom-6 sm:right-6">
       <PrivateMessagingNotificationCenter isAdmin={isAdmin} onOpenConversation={openConversation} />
@@ -220,6 +226,6 @@ export function PrivateMessagingOverlay() {
       </div>
     </div>
     {openConversationIds.map((conversationId, index) => <ConversationWindow key={conversationId} conversationId={conversationId} isAdmin={isAdmin} stackIndex={index} refreshToken={realtimeRevision} onDismiss={() => setOpenConversationIds((current) => current.filter((id) => id !== conversationId))} onUpdated={refresh} />)}
-    <Dialog open={composeOpen} onOpenChange={setComposeOpen}><DialogContent><DialogHeader><DialogTitle>{composeMode === "report" ? "Signaler un problème à Neopolis" : "Nouvelle conversation avec Neopolis"}</DialogTitle></DialogHeader><div className="space-y-4"><div className="space-y-2"><Label htmlFor="private-conversation-subject">Sujet</Label><Input id="private-conversation-subject" value={subject} onChange={(event) => setSubject(event.target.value)} maxLength={220} placeholder="Ex. Question sur mon parcours" /></div><div className="space-y-2"><Label htmlFor="private-conversation-body">Message</Label><Textarea id="private-conversation-body" value={body} onChange={(event) => setBody(event.target.value)} maxLength={5000} className="min-h-32" placeholder={composeMode === "report" ? "Décrivez le problème rencontré et les étapes concernées…" : "Décrivez votre demande à l’équipe Neopolis…"} /></div></div><DialogFooter><Button variant="outline" onClick={() => setComposeOpen(false)}>Annuler</Button><Button disabled={subject.trim().length < 3 || !body.trim() || createMine.isPending} onClick={() => createMine.mutate({ subject, body, source: composeMode === "report" ? "problem_report" : "learner" })}>{createMine.isPending ? "Création…" : "Ouvrir la conversation"}</Button></DialogFooter></DialogContent></Dialog>
+    <Dialog open={composeOpen} onOpenChange={setComposeOpen}><DialogContent><DialogHeader><DialogTitle>{composeMode === "report" ? "Signaler un problème à Neopolis" : "Nouvelle conversation avec Neopolis"}</DialogTitle></DialogHeader><div className="space-y-4"><div className="space-y-2"><Label htmlFor="private-conversation-subject">Sujet</Label><Input id="private-conversation-subject" value={subject} onChange={(event) => setSubject(event.target.value)} maxLength={220} placeholder="Ex. Question sur mon parcours" /></div><div className="space-y-2"><Label htmlFor="private-conversation-body">Message</Label><Textarea id="private-conversation-body" value={body} onChange={(event) => setBody(event.target.value)} maxLength={5000} className="min-h-32" placeholder={composeMode === "report" ? "Décrivez le problème rencontré et les étapes concernées…" : "Décrivez votre demande à l’équipe Neopolis…"} /><PrivateMessageAttachmentPicker attachments={composeAttachments} onChange={setComposeAttachments} disabled={createMine.isPending} /></div></div><DialogFooter><Button variant="outline" onClick={() => setComposeOpen(false)}>Annuler</Button><Button disabled={subject.trim().length < 3 || (!body.trim() && !composeAttachments.length) || createMine.isPending} onClick={() => createMine.mutate({ subject, body, attachments: composeAttachments.map(({ filename, mimeType, base64 }) => ({ filename, mimeType, base64 })), source: composeMode === "report" ? "problem_report" : "learner" })}>{createMine.isPending ? "Création…" : "Ouvrir la conversation"}</Button></DialogFooter></DialogContent></Dialog>
   </>;
 }

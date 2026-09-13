@@ -1,6 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { isAdministrativeRole } from "../shared/roles";
 import { ENV } from "./_core/env";
+import { canAccessPrivateMessageAttachment } from "./privateMessagingDb";
 
 /**
  * Custom asset proxy that serves storage files directly (piped) instead of
@@ -112,7 +113,8 @@ export function registerAssetProxy(app: Express) {
       res.status(400).send("Missing asset key");
       return;
     }
-    const cacheControl = getAssetCacheControl(key);
+    const privateMessageAttachment = key.startsWith("private-messaging/");
+    const cacheControl = privateMessageAttachment ? "private, no-store" : getAssetCacheControl(key);
 
     // Protect application files - require admin auth
     if (key.startsWith("applications/")) {
@@ -121,6 +123,21 @@ export function registerAssetProxy(app: Express) {
         const user = await sdk.authenticateRequest(req);
         if (!user || !isAdministrativeRole(user.role)) {
           res.status(403).json({ error: "Accès réservé aux administrateurs" });
+          return;
+        }
+      } catch {
+        res.status(401).json({ error: "Authentification requise" });
+        return;
+      }
+    }
+
+    if (privateMessageAttachment) {
+      try {
+        const { sdk } = await import("./_core/sdk");
+        const user = await sdk.authenticateRequest(req);
+        const allowed = await canAccessPrivateMessageAttachment({ userId: user.id, role: user.role }, key);
+        if (!allowed) {
+          res.status(404).send("Asset introuvable");
           return;
         }
       } catch {
@@ -162,7 +179,7 @@ export function registerAssetProxy(app: Express) {
         if (contentLength) res.set("Content-Length", contentLength);
         if (contentRange) res.set("Content-Range", contentRange);
         res.set("Accept-Ranges", "bytes");
-        res.set("Access-Control-Allow-Origin", "*");
+        if (!privateMessageAttachment) res.set("Access-Control-Allow-Origin", "*");
         res.set("Cache-Control", cacheControl);
 
         const arrayBuf = await rangeResp.arrayBuffer();
@@ -181,7 +198,7 @@ export function registerAssetProxy(app: Express) {
         res.set("Content-Type", contentType);
         if (contentLength) res.set("Content-Length", contentLength);
         res.set("Accept-Ranges", "bytes");
-        res.set("Access-Control-Allow-Origin", "*");
+        if (!privateMessageAttachment) res.set("Access-Control-Allow-Origin", "*");
         res.set("Cache-Control", cacheControl);
 
         const arrayBuf = await fileResp.arrayBuffer();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PRIVATE_MESSAGE_LIMITS, normalizePrivateMessageText, privateConversationDisplaySource, privateMessagePreview } from "./privateMessaging";
+import { PRIVATE_MESSAGE_LIMITS, normalizePrivateMessageText, privateConversationDisplaySource, privateMessagePreview, privateMessageReceiptLabel } from "./privateMessaging";
 
 describe("messagerie privée — normalisation", () => {
   it("normalise les espaces et les retours de ligne sans modifier le contenu métier", () => {
@@ -17,5 +17,11 @@ describe("messagerie privée — normalisation", () => {
     expect(privateConversationDisplaySource("problem_report")).toBe("Signalement");
     expect(privateConversationDisplaySource("integrity_review")).toBe("Revue d’intégrité");
     expect(privateConversationDisplaySource("learner")).toBe("Initiative apprenant");
+  });
+
+  it("distingue clairement un message envoyé, distribué et vu", () => {
+    expect(privateMessageReceiptLabel({})).toBe("Envoyé");
+    expect(privateMessageReceiptLabel({ deliveredAt: new Date("2026-09-13T08:00:00Z") })).toBe("Distribué");
+    expect(privateMessageReceiptLabel({ deliveredAt: new Date("2026-09-13T08:00:00Z"), readAt: new Date("2026-09-13T08:01:00Z") })).toBe("Vu");
   });
 });
