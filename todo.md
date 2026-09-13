@@ -2966,3 +2966,7 @@
 - [x] Distinguer visuellement les fils non lus, le dernier message non lu et les fils déjà consultés dans toutes les surfaces de messagerie — fond ambre, badge numérique, aperçu en emphase, état Lu et séparateur « nouveaux messages » avant la première bulle non lue
 - [x] Afficher à côté de l’heure les accusés WhatsApp : horloge pendant l’envoi, une coche après enregistrement, deux coches grises après distribution et deux coches bleues après lecture
 - [x] Vérifier le marquage lu après visibilité réelle, les compteurs, les badges, les tests, la publication et le domaine public — TypeScript, 206 suites / 684 tests réussis (2 ignorés), QA publication 9/9 et diff-check avant checkpoint
+
+## Contraste des accusés vus — 13 septembre 2026
+- [x] Rendre les deux coches de lecture bleues et parfaitement visibles sur une pastille blanche dans les bulles sortantes
+- [x] Tester, publier et vérifier le contraste des accusés de lecture sur le domaine public — TypeScript, 206 suites / 684 tests réussis (2 ignorés), QA publication 9/9 et diff-check avant checkpoint

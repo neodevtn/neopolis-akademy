@@ -40,8 +40,9 @@ function Receipt({ message, isSending = false }: { message: PrivateMessageView; 
   const state = message.authorRole === "admin"
     ? privateMessageReceiptState({ sending: isSending, deliveredAt: message.learnerDeliveredAt, readAt: message.learnerReadAt })
     : privateMessageReceiptState({ sending: isSending, deliveredAt: message.adminDeliveredAt, readAt: message.adminReadAt });
-  const iconClass = state === "read" ? "text-sky-200" : "text-slate-200";
-  return <span className="inline-flex items-center gap-1" title={status} aria-label={`${t({ fr: "Statut du message", en: "Message status", ar: "حالة الرسالة" })} : ${status}`}>
+  const isRead = state === "read";
+  const iconClass = isRead ? "text-sky-600" : "text-slate-200";
+  return <span className={`inline-flex items-center gap-1 ${isRead ? "rounded-full bg-white px-1 py-0.5 shadow-sm ring-1 ring-sky-100" : ""}`} title={status} aria-label={`${t({ fr: "Statut du message", en: "Message status", ar: "حالة الرسالة" })} : ${status}`}>
     {state === "sending" ? <Clock3 className={`h-3.5 w-3.5 ${iconClass}`} aria-hidden="true" /> : state === "sent" ? <Check className={`h-3.5 w-3.5 ${iconClass}`} aria-hidden="true" /> : <CheckCheck className={`h-3.5 w-3.5 ${iconClass}`} aria-hidden="true" />}
     <span className="sr-only">{status}</span>
   </span>;
