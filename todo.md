@@ -3000,6 +3000,12 @@
 - [x] Tester le contrôle de présence avec jeton valide, expiration, échec réseau, widget bloqué et rafraîchissement manuel — tests des transitions, délais, hôte/action Turnstile et erreurs réseau ajoutés sans modifier de progression
 - [x] Publier et vérifier la correction sur le domaine public, puis reprendre la matrice et la publication TekTek interrompues — version publique renouvelée, module Turnstile avec relance bornée confirmé, TekTek testé publiquement et console sans nouvelle erreur
 
+## Validation Turnstile après succès visuel — 13 septembre 2026
+- [x] Identifier pourquoi le serveur refuse un jeton Turnstile pourtant validé par le widget Cloudflare, sans journaliser le jeton ni les données de l’apprenant — le proxy transmettait `localhost` comme hôte attendu, alors que Cloudflare valide le domaine public
+- [x] Corriger la transmission ou la validation serveur du jeton, avec une erreur actionnable lorsque Cloudflare refuse effectivement le contrôle — résolution contrôlée de l’hôte public à partir des en-têtes proxy reconnus, catégories de refus sans jeton ni charge utile journalisés
+- [x] Tester le succès client/serveur, les causes de rejet, la relance et l’absence de modification de progression — six tests ciblés de validation/hôte/rejet et suite complète de 712 tests réussis ; QA de publication 9/9
+- [ ] Publier et vérifier la correction sur le domaine public avant de reprendre les vérifications des interfaces en attente
+
 ## Centre d’assistance unifié — 13 septembre 2026
 - [x] Auditer les entrées actuelles de signalement, messagerie Neopolis, notifications et TekTek afin d’éliminer les doublons et chevauchements visuels — CTA TekTek et launcher de messagerie concurrents retirés visuellement au profit du centre unique
 - [x] Créer un unique appel à l’action global, visible sur les pages publiques, apprenant, cours et administration selon les droits — bouton persistant « Besoin d’aide ? » monté à la racine

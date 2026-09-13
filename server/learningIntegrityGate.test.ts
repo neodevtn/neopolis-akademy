@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isValidTurnstilePresenceResult, resolveLearningIntegrityGate } from "./learningIntegrityGate";
+import { inspectTurnstilePresenceResult, isValidTurnstilePresenceResult, resolveLearningIntegrityGate, resolveTurnstileExpectedHostname } from "./learningIntegrityGate";
 
 describe("Learning Integrity Gate", () => {
   const now = new Date("2026-09-07T12:00:00Z");
@@ -36,5 +36,29 @@ describe("Learning Integrity Gate", () => {
       result: { success: true, hostname: "akademy.neodev.click", action: "other_action" },
       expectedHostname: "akademy.neodev.click",
     })).toBe(false);
+  });
+
+  it("utilise le domaine public transmis par le proxy plutôt que localhost", () => {
+    expect(resolveTurnstileExpectedHostname({
+      host: "localhost:3000",
+      "x-forwarded-host": "akademy.neodev.click",
+    })).toBe("akademy.neodev.click");
+    expect(resolveTurnstileExpectedHostname({
+      host: "localhost:3000",
+      "x-forwarded-host": "attacker.example",
+    })).toBe("akademy.neodev.click");
+  });
+
+  it("qualifie sans secret les causes de refus Turnstile", () => {
+    expect(inspectTurnstilePresenceResult({
+      responseOk: true,
+      result: { success: true, hostname: "akademy.neodev.click", action: "other_action" },
+      expectedHostname: "akademy.neodev.click",
+    })).toEqual({ valid: false, reason: "action_mismatch" });
+    expect(inspectTurnstilePresenceResult({
+      responseOk: true,
+      result: { success: false },
+      expectedHostname: "akademy.neodev.click",
+    })).toEqual({ valid: false, reason: "provider_rejected" });
   });
 });

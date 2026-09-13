@@ -35,7 +35,7 @@ import { evaluateFreeResponseWithOpenRouter } from "./openrouterEvaluation";
 import { buildCourseAssistantMessages, extractCourseAssistantText, isClearlyOutOfScopeCourseAssistantQuestion, outOfScopeCourseAssistantReply } from "./courseAssistant";
 import { getAiNewsFeed } from "./aiNews";
 import { isAdministrativeRole, isSuperAdmin } from "@shared/roles";
-import { flagExamHoneypotTrigger, getLearningIntegrityGateDecision, requireLearningIntegrityClearance, verifyLearningIntegrityPresence } from "./learningIntegrityGate";
+import { flagExamHoneypotTrigger, getLearningIntegrityGateDecision, requireLearningIntegrityClearance, resolveTurnstileExpectedHostname, verifyLearningIntegrityPresence } from "./learningIntegrityGate";
 import { talentAdminRouter, talentLearnerRouter } from "./talentRouter";
 import { logAdminActivity } from "./adminDb";
 import { sendPasswordResetEmail } from "./email";
@@ -568,7 +568,7 @@ export const appRouter = router({
     verifyIntegrityPresence: protectedProcedure
       .input(z.object({ turnstileToken: z.string().min(20).max(2048) }))
       .mutation(async ({ ctx, input }) => {
-        const hostname = ctx.req.hostname || ctx.req.get("host")?.split(":")[0] || "akademy.neodev.click";
+        const hostname = resolveTurnstileExpectedHostname(ctx.req.headers);
         return verifyLearningIntegrityPresence({ userId: ctx.user.id, token: input.turnstileToken, hostname });
       }),
 
