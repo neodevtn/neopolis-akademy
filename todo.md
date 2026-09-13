@@ -3019,3 +3019,18 @@
 - [x] Ajouter un tableau de bord administrateur des requêtes et jetons TekTek par formation, cours et utilisateur, avec recherche et pagination — onglet « Gouvernance IA », tables paginées et regroupements SQL protégés par rôle administratif
 - [x] Ajouter des budgets internes configurables, des seuils d’alerte et un statut d’utilisation sans présenter ces valeurs comme une facture fournisseur — budget mensuel par portée, seuil configurable, comparaison visible et libellé non financier
 - [x] Tester les permissions et agrégats, publier puis vérifier l’interface de gouvernance IA — tests de droits, attribution cours et navigation admin réussis ; agrégats et pagination contrôlés dans l’interface administrative de prévisualisation puis publiés
+
+## Nettoyage pédagogique des formations Anthropic — 14 septembre 2026
+- [x] Recenser automatiquement les paragraphes et sections dupliqués ou quasi dupliqués dans les contenus Anthropic, sans traiter les autres catalogues — script déterministe et inventaire initial des 28 fichiers produits ; les alertes restent soumises à revue humaine
+- [x] Recenser les placeholders textuels remplaçant un visuel ou diagramme source et les mélanges de langue au sein d’un écran Anthropic — chemins, preuves et recommandations consignés dans l’inventaire de travail
+- [x] Vérifier les cas ambigus avec les cours originaux Skilljar, en particulier la structure des scénarios, visuels et activités Anthropic — objectifs de parcours confirmés ; détail SCORM inaccessible par CloudFront, donc aucune restitution spéculative de visuel
+- [x] Définir une règle de conservation pédagogique qui retire les répétitions accidentelles sans supprimer les vidéos, exercices, checkpoints, ressources ou répétitions intentionnelles — règles de décision, niveaux de preuve et contrôles consignés dans `docs/anthropic-content-cleanup-rules.md`
+- [ ] Restructurer les contenus Anthropic retenus avec les blocs standards et la sémantique appropriée : titres, gras, italique, listes, étapes, tableaux et encadrés
+- [ ] Remplacer les placeholders de visuels uniquement par des composants standards factuels et localiser les blocs dans la langue active sans inventer de contenu
+- [ ] Vérifier la cohérence des parcours, le verrouillage séquentiel, les rendus desktop/mobile et publier après contrôle ciblé
+- [x] Corriger et contrôler le premier lot sûr : Associate Foundations 01 puis 02, sans modifier les interactions ni les règles de complétion — modèles/tableaux/scénarios et copies de flip-cards nettoyés, bloc de tri et verrou de cartes contrôlés dans le lecteur ; tests de contrat dédiés réussis
+- [x] Corriger les anomalies sûres de Associate Foundations 03 — second paragraphe redondant retiré, deux cartes françaises localisées et capitalisation de titres normalisée ; test dédié réussi
+- [x] Corriger et contrôler les cours Associate Foundations 04 à 08 avec la même discipline de conservation — tableaux, titres tronqués, métadonnées d’import, reliquats de langue et doublons sûrs traités avec tests de conservation par cours
+- [x] Éliminer sur les 28 fichiers Anthropic les marqueurs génériques non sémantiques confirmés (scénarios illustratifs vides, tags audio, interpolation `${expls}`, instructions brutes de cartes/bascule) sans modifier les structures d’activités — codemod global et test des 28 contenus réussis
+- [ ] Comparer les cas ambigus Anthropic à Skilljar avec une session autorisée, sans télécharger ni réutiliser un média non autorisé et sans écraser les enrichissements Neopolis
+- [ ] Revue source Skilljar après publication en production par l’utilisateur — comparaison authentifiée explicitement contournée pendant cette livraison à cause du 403 CloudFront persistant
