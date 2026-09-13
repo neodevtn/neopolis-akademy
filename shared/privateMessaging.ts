@@ -8,6 +8,8 @@ export type PrivateConversationStatus = (typeof PRIVATE_CONVERSATION_STATUSES)[n
 export type PrivateMessageAuthorRole = (typeof PRIVATE_MESSAGE_AUTHOR_ROLES)[number];
 export type PrivateMessageAttachmentMimeType = (typeof PRIVATE_MESSAGE_ATTACHMENT_MIME_TYPES)[number];
 export type PrivateMessagingLocale = "fr" | "en" | "ar";
+export type PrivateMessageReceiptState = "sending" | "sent" | "delivered" | "read";
+export type PrivateMessageAudience = "learner" | "admin";
 
 export const PRIVATE_MESSAGE_LIMITS = {
   subjectMin: 3,
@@ -46,14 +48,31 @@ export function privateMessageAttachmentLabel(count: number, locale: PrivateMess
   return count === 1 ? "Pièce jointe" : `${count} pièces jointes`;
 }
 
-export function privateMessageReceiptLabel(input: { deliveredAt?: Date | string | null; readAt?: Date | string | null }, locale: PrivateMessagingLocale = "fr"): string {
-  const receipt = input.readAt ? "read" : input.deliveredAt ? "delivered" : "sent";
+export function privateMessageReceiptState(input: { sending?: boolean; deliveredAt?: Date | string | null; readAt?: Date | string | null }): PrivateMessageReceiptState {
+  if (input.sending) return "sending";
+  if (input.readAt) return "read";
+  if (input.deliveredAt) return "delivered";
+  return "sent";
+}
+
+export function privateMessageReceiptLabel(input: { sending?: boolean; deliveredAt?: Date | string | null; readAt?: Date | string | null }, locale: PrivateMessagingLocale = "fr"): string {
+  const receipt = privateMessageReceiptState(input);
   const labels = {
-    fr: { sent: "Envoyé", delivered: "Distribué", read: "Vu" },
-    en: { sent: "Sent", delivered: "Delivered", read: "Seen" },
-    ar: { sent: "تم الإرسال", delivered: "تم التسليم", read: "تمت المشاهدة" },
+    fr: { sending: "Envoi en cours", sent: "Envoyé", delivered: "Distribué", read: "Vu" },
+    en: { sending: "Sending", sent: "Sent", delivered: "Delivered", read: "Seen" },
+    ar: { sending: "جارٍ الإرسال", sent: "تم الإرسال", delivered: "تم التسليم", read: "تمت المشاهدة" },
   } as const;
   return labels[locale][receipt];
+}
+
+export function privateMessageIsUnreadForAudience(input: {
+  authorRole: PrivateMessageAuthorRole;
+  learnerReadAt?: Date | string | null;
+  adminReadAt?: Date | string | null;
+}, audience: PrivateMessageAudience): boolean {
+  return audience === "admin"
+    ? input.authorRole !== "admin" && !input.adminReadAt
+    : input.authorRole !== "learner" && !input.learnerReadAt;
 }
 
 export function privateConversationDisplayStatus(status: PrivateConversationStatus, locale: PrivateMessagingLocale = "fr"): string {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PRIVATE_MESSAGE_LIMITS, normalizePrivateMessageText, privateConversationDisplaySource, privateConversationDisplayStatus, privateMessagePreview, privateMessageReceiptLabel } from "./privateMessaging";
+import { PRIVATE_MESSAGE_LIMITS, normalizePrivateMessageText, privateConversationDisplaySource, privateConversationDisplayStatus, privateMessageIsUnreadForAudience, privateMessagePreview, privateMessageReceiptLabel, privateMessageReceiptState } from "./privateMessaging";
 
 describe("messagerie privée — normalisation", () => {
   it("normalise les espaces et les retours de ligne sans modifier le contenu métier", () => {
@@ -23,6 +23,22 @@ describe("messagerie privée — normalisation", () => {
     expect(privateMessageReceiptLabel({})).toBe("Envoyé");
     expect(privateMessageReceiptLabel({ deliveredAt: new Date("2026-09-13T08:00:00Z") })).toBe("Distribué");
     expect(privateMessageReceiptLabel({ deliveredAt: new Date("2026-09-13T08:00:00Z"), readAt: new Date("2026-09-13T08:01:00Z") })).toBe("Vu");
+  });
+
+  it("représente les quatre accusés WhatsApp sans confondre l’envoi et la livraison", () => {
+    expect(privateMessageReceiptState({ sending: true })).toBe("sending");
+    expect(privateMessageReceiptState({})).toBe("sent");
+    expect(privateMessageReceiptState({ deliveredAt: new Date("2026-09-13T08:00:00Z") })).toBe("delivered");
+    expect(privateMessageReceiptState({ readAt: new Date("2026-09-13T08:01:00Z") })).toBe("read");
+    expect(privateMessageReceiptLabel({ sending: true })).toBe("Envoi en cours");
+  });
+
+  it("calcule le non-lu selon le participant qui consulte la conversation", () => {
+    expect(privateMessageIsUnreadForAudience({ authorRole: "admin", learnerReadAt: null }, "learner")).toBe(true);
+    expect(privateMessageIsUnreadForAudience({ authorRole: "admin", learnerReadAt: new Date() }, "learner")).toBe(false);
+    expect(privateMessageIsUnreadForAudience({ authorRole: "learner", adminReadAt: null }, "admin")).toBe(true);
+    expect(privateMessageIsUnreadForAudience({ authorRole: "learner", adminReadAt: new Date() }, "admin")).toBe(false);
+    expect(privateMessageIsUnreadForAudience({ authorRole: "learner", learnerReadAt: null }, "learner")).toBe(false);
   });
 
   it("localise les statuts et sources de la messagerie en anglais", () => {

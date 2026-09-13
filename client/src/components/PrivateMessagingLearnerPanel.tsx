@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { MessageCircle, Plus, Send } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -10,8 +10,8 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { PrivateMessageAttachmentPicker, type PendingPrivateMessageAttachment } from "@/components/PrivateMessageAttachmentPicker";
-import { PrivateMessageBubble, type PrivateMessageView } from "@/components/PrivateMessageContent";
-import { privateConversationDisplaySource, privateConversationDisplayStatus, type PrivateConversationSource } from "@shared/privateMessaging";
+import { PrivateMessageBubble, PrivateUnreadDivider, type PrivateMessageView } from "@/components/PrivateMessageContent";
+import { privateConversationDisplaySource, privateConversationDisplayStatus, privateMessageIsUnreadForAudience, type PrivateConversationSource } from "@shared/privateMessaging";
 import { usePrivateConversationViewport } from "@/hooks/usePrivateConversationViewport";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -68,6 +68,19 @@ export function PrivateMessagingLearnerPanel() {
 
   const conversations = (conversationsQuery.data || []) as ConversationSummary[];
   const selected = detailQuery.data?.conversation;
+  const unreadMessages = (detailQuery.data?.messages || []).filter((message: PrivateMessageView) => privateMessageIsUnreadForAudience(message, "learner"));
+  const firstUnreadMessageId = unreadMessages[0]?.id ?? null;
+  const pendingReplyMessage: PrivateMessageView | null = sendMutation.isPending ? {
+    id: -1,
+    authorUserId: null,
+    authorRole: "learner",
+    body: reply || t({ fr: "Pièce jointe en cours d’envoi…", en: "Attachment sending…", ar: "جارٍ إرسال المرفق…" }),
+    createdAt: new Date(),
+    learnerDeliveredAt: null,
+    adminDeliveredAt: null,
+    learnerReadAt: new Date(),
+    adminReadAt: null,
+  } : null;
   const latestMessageId = detailQuery.data?.messages.at(-1)?.id ?? null;
   const { scrollAreaRef, bottomRef, scrollToLatest } = usePrivateConversationViewport({
     conversationId: selectedId || 1,
@@ -104,7 +117,10 @@ export function PrivateMessagingLearnerPanel() {
       <section className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
         <div className="border-b border-border px-4 py-3"><h3 className="text-sm font-semibold text-foreground">{t({ fr: "Vos sujets", en: "Your topics", ar: "مواضيعك" })}</h3><p className="mt-1 text-xs text-muted-foreground">{t({ fr: "Ouvrez un fil pour consulter son historique ou répondre.", en: "Open a thread to view its history or reply.", ar: "افتح محادثة للاطلاع على سجلها أو الرد." })}</p></div>
         <ScrollArea className="h-[480px]"><div className="p-2">
-          {conversations.map((conversation) => <button key={conversation.id} type="button" aria-pressed={selectedId === conversation.id} className={`w-full rounded-lg p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selectedId === conversation.id ? "bg-primary/10" : "hover:bg-muted/60"}`} onClick={() => setSelectedId(conversation.id)}><div className="flex items-center justify-between gap-2"><strong className="truncate text-sm text-foreground">{conversation.subject}</strong>{conversation.unreadCount ? <Badge aria-label={t({ fr: `${conversation.unreadCount} message${conversation.unreadCount > 1 ? "s" : ""} non lu${conversation.unreadCount > 1 ? "s" : ""}`, en: `${conversation.unreadCount} unread message${conversation.unreadCount > 1 ? "s" : ""}`, ar: `${conversation.unreadCount} رسائل غير مقروءة` })}>{conversation.unreadCount}</Badge> : null}</div><p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{conversation.lastMessagePreview || t({ fr: "Aucun message", en: "No message", ar: "لا توجد رسالة" })}</p><p className="mt-1 text-[11px] text-muted-foreground">{formatDate(conversation.lastMessageAt, lang)} · {privateConversationDisplayStatus(conversation.status, lang)} · {privateConversationDisplaySource(conversation.source, lang)}</p></button>)}
+          {conversations.map((conversation) => {
+            const hasUnread = conversation.unreadCount > 0;
+            return <button key={conversation.id} type="button" aria-pressed={selectedId === conversation.id} data-conversation-read-state={hasUnread ? "unread" : "read"} className={`w-full rounded-lg p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${hasUnread ? "border border-amber-300 bg-amber-50 shadow-sm hover:bg-amber-100" : selectedId === conversation.id ? "bg-primary/10" : "hover:bg-muted/60"}`} onClick={() => setSelectedId(conversation.id)}><div className="flex items-center justify-between gap-2"><strong className={`truncate text-sm text-foreground ${hasUnread ? "font-bold" : "font-semibold"}`}>{conversation.subject}</strong>{hasUnread ? <Badge className="bg-amber-600 text-white hover:bg-amber-600" aria-label={t({ fr: `${conversation.unreadCount} message${conversation.unreadCount > 1 ? "s" : ""} non lu${conversation.unreadCount > 1 ? "s" : ""}`, en: `${conversation.unreadCount} unread message${conversation.unreadCount > 1 ? "s" : ""}`, ar: `${conversation.unreadCount} رسائل غير مقروءة` })}>{conversation.unreadCount}</Badge> : <span className="text-[10px] font-medium text-emerald-700">{t({ fr: "Lu", en: "Read", ar: "مقروء" })}</span>}</div><p className={`mt-1 line-clamp-2 text-xs ${hasUnread ? "font-medium text-slate-800" : "text-muted-foreground"}`}>{conversation.lastMessagePreview || t({ fr: "Aucun message", en: "No message", ar: "لا توجد رسالة" })}</p><p className="mt-1 text-[11px] text-muted-foreground">{formatDate(conversation.lastMessageAt, lang)} · {privateConversationDisplayStatus(conversation.status, lang)} · {privateConversationDisplaySource(conversation.source, lang)}</p></button>;
+          })}
           {!conversations.length && !conversationsQuery.isLoading ? <p className="p-8 text-center text-sm text-muted-foreground">{t({ fr: "Aucune conversation pour le moment.", en: "No conversations yet.", ar: "لا توجد محادثات حتى الآن." })}</p> : null}
           {conversationsQuery.isLoading ? <p className="p-8 text-center text-sm text-muted-foreground">{t({ fr: "Chargement des conversations…", en: "Loading conversations…", ar: "جارٍ تحميل المحادثات…" })}</p> : null}
           {conversationsQuery.isError ? <p className="p-5 text-center text-sm text-destructive">{t({ fr: "La messagerie ne peut pas être chargée pour le moment.", en: "Messaging cannot be loaded right now.", ar: "لا يمكن تحميل المراسلة حاليًا." })}</p> : null}
@@ -116,7 +132,8 @@ export function PrivateMessagingLearnerPanel() {
           <ScrollArea ref={scrollAreaRef} className="min-h-0 flex-1 px-4 py-4"><div className="space-y-3">
             {detailQuery.isLoading ? <p className="text-sm text-muted-foreground">{t({ fr: "Chargement des messages…", en: "Loading messages…", ar: "جارٍ تحميل الرسائل…" })}</p> : null}
             {detailQuery.isError ? <p className="text-sm text-destructive">{t({ fr: "Cette conversation est indisponible.", en: "This conversation is unavailable.", ar: "هذه المحادثة غير متاحة." })}</p> : null}
-            {detailQuery.data?.messages.map((message: PrivateMessageView) => <PrivateMessageBubble key={message.id} message={message} mine={message.authorRole === "learner"} author={message.authorRole === "learner" ? t({ fr: "Vous", en: "You", ar: "أنت" }) : t({ fr: "Équipe Neopolis", en: "Neopolis team", ar: "فريق نيوبوليس" })} dateLabel={(value) => formatDate(value, lang)} />)}
+            {detailQuery.data?.messages.map((message: PrivateMessageView) => <Fragment key={message.id}>{message.id === firstUnreadMessageId ? <PrivateUnreadDivider count={unreadMessages.length} /> : null}<PrivateMessageBubble message={message} mine={message.authorRole === "learner"} isUnread={privateMessageIsUnreadForAudience(message, "learner")} author={message.authorRole === "learner" ? t({ fr: "Vous", en: "You", ar: "أنت" }) : t({ fr: "Équipe Neopolis", en: "Neopolis team", ar: "فريق نيوبوليس" })} dateLabel={(value) => formatDate(value, lang)} /></Fragment>)}
+            {pendingReplyMessage ? <PrivateMessageBubble message={pendingReplyMessage} mine author={t({ fr: "Vous", en: "You", ar: "أنت" })} dateLabel={(value) => formatDate(value, lang)} isSending /> : null}
             <div ref={bottomRef} aria-hidden="true" />
           </div></ScrollArea>
           <footer className="border-t border-border p-3">{selected?.status === "open" ? <><Label className="sr-only" htmlFor="learner-private-message-reply">{t({ fr: "Votre réponse", en: "Your reply", ar: "ردك" })}</Label><Textarea id="learner-private-message-reply" value={reply} onChange={(event) => setReply(event.target.value)} className="min-h-20 resize-none" maxLength={5000} placeholder={t({ fr: "Écrivez votre message à l’équipe Neopolis…", en: "Write your message to the Neopolis team…", ar: "اكتب رسالتك لفريق نيوبوليس…" })} /><PrivateMessageAttachmentPicker attachments={replyAttachments} onChange={setReplyAttachments} disabled={sendMutation.isPending} /><div className="mt-2 flex justify-end"><Button size="sm" className="gap-1.5" disabled={(!reply.trim() && !replyAttachments.length) || sendMutation.isPending} onClick={sendReply}>{sendMutation.isPending ? t({ fr: "Envoi…", en: "Sending…", ar: "جارٍ الإرسال…" }) : t({ fr: "Envoyer", en: "Send", ar: "إرسال" })}<Send className="h-3.5 w-3.5" /></Button></div></> : <p className="text-sm text-muted-foreground">{t({ fr: "Cette conversation est fermée. Son historique est conservé ; vous pouvez la rouvrir si nécessaire.", en: "This conversation is closed. Its history is kept; you can reopen it if needed.", ar: "هذه المحادثة مغلقة. يُحتفظ بسجلها ويمكنك إعادة فتحها عند الحاجة." })}</p>}</footer>

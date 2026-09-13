@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { MessageCircle, Plus, Search, Send } from "lucide-react";
 import { toast } from "sonner";
@@ -12,10 +12,10 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { PRIVATE_INTEGRITY_REVIEW_TEMPLATE, privateConversationDisplaySource, privateConversationDisplayStatus, type PrivateConversationSource } from "@shared/privateMessaging";
+import { PRIVATE_INTEGRITY_REVIEW_TEMPLATE, privateConversationDisplaySource, privateConversationDisplayStatus, privateMessageIsUnreadForAudience, type PrivateConversationSource } from "@shared/privateMessaging";
 import { PrivateMessagingNotificationCenter } from "@/components/PrivateMessagingNotificationCenter";
 import { PrivateMessageAttachmentPicker, type PendingPrivateMessageAttachment } from "@/components/PrivateMessageAttachmentPicker";
-import { PrivateMessageBubble, type PrivateMessageView } from "@/components/PrivateMessageContent";
+import { AdminConversationMessages } from "@/components/AdminConversationMessages";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 type InboxConversation = {
@@ -149,7 +149,7 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
           <h2 className="flex items-center gap-2 text-xl font-semibold text-slate-950"><MessageCircle className="h-5 w-5 text-primary" />{contextTitle}</h2>
           <p className="mt-1 text-sm text-slate-500">{contextDescription}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">{!fixedLearnerId ? <IntegrityClarificationQueue /> : null}<PrivateMessagingNotificationCenter isAdmin onOpenConversation={(conversationId) => { setSelectedId(conversationId); markRead.mutate({ conversationId }); }} /><Button className="gap-2" onClick={() => setComposeOpen(true)}><Plus className="h-4 w-4" />{t({ fr: "Nouvelle conversation", en: "New conversation", ar: "محادثة جديدة" })}</Button></div>
+        <div className="flex flex-wrap items-center gap-2">{!fixedLearnerId ? <IntegrityClarificationQueue /> : null}<PrivateMessagingNotificationCenter isAdmin onOpenConversation={(conversationId) => setSelectedId(conversationId)} /><Button className="gap-2" onClick={() => setComposeOpen(true)}><Plus className="h-4 w-4" />{t({ fr: "Nouvelle conversation", en: "New conversation", ar: "محادثة جديدة" })}</Button></div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.4fr)]">
@@ -167,13 +167,14 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
           <p className="px-3 pt-2 text-xs text-slate-500">{inboxPage ? t({ fr: `${inboxPage.total} conversation${inboxPage.total > 1 ? "s" : ""} · page ${inboxPage.page}/${inboxPage.totalPages}`, en: `${inboxPage.total} conversation${inboxPage.total > 1 ? "s" : ""} · page ${inboxPage.page}/${inboxPage.totalPages}`, ar: `${inboxPage.total} محادثة · الصفحة ${inboxPage.page}/${inboxPage.totalPages}` }) : t({ fr: "Chargement de l’inbox…", en: "Loading inbox…", ar: "جارٍ تحميل البريد الوارد…" })}</p>
           <ScrollArea className="h-[480px]">
             <div className="p-2">
-              {items.map((item) => (
-                <button key={item.id} type="button" aria-pressed={selectedId === item.id} className={`w-full rounded-lg p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selectedId === item.id ? "bg-primary/10" : "hover:bg-slate-50"}`} onClick={() => { setSelectedId(item.id); markRead.mutate({ conversationId: item.id }); }}>
-                  <div className="flex items-center justify-between gap-2"><strong className="truncate text-sm text-slate-900">{item.subject}</strong>{item.unreadCount ? <Badge aria-label={`${item.unreadCount} message${item.unreadCount > 1 ? "s" : ""} non lu${item.unreadCount > 1 ? "s" : ""}`}>{item.unreadCount}</Badge> : null}</div>
-                  {!fixedLearnerId ? <p className="mt-1 truncate text-xs text-slate-600">{item.learner?.name || item.learner?.email || t({ fr: "Apprenant", en: "Learner", ar: "متعلم" })} · {item.lastMessagePreview || t({ fr: "Aucun message", en: "No message", ar: "لا توجد رسالة" })}</p> : <p className="mt-1 truncate text-xs text-slate-600">{item.lastMessagePreview || t({ fr: "Aucun message", en: "No message", ar: "لا توجد رسالة" })}</p>}
+              {items.map((item) => {
+                const hasUnread = item.unreadCount > 0;
+                return <button key={item.id} type="button" aria-pressed={selectedId === item.id} data-conversation-read-state={hasUnread ? "unread" : "read"} className={`w-full rounded-lg p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${hasUnread ? "border border-amber-300 bg-amber-50 shadow-sm hover:bg-amber-100" : selectedId === item.id ? "bg-primary/10" : "hover:bg-slate-50"}`} onClick={() => setSelectedId(item.id)}>
+                  <div className="flex items-center justify-between gap-2"><strong className={`truncate text-sm text-slate-900 ${hasUnread ? "font-bold" : "font-semibold"}`}>{item.subject}</strong>{hasUnread ? <Badge className="bg-amber-600 text-white hover:bg-amber-600" aria-label={t({ fr: `${item.unreadCount} message${item.unreadCount > 1 ? "s" : ""} non lu${item.unreadCount > 1 ? "s" : ""}`, en: `${item.unreadCount} unread message${item.unreadCount > 1 ? "s" : ""}`, ar: `${item.unreadCount} رسائل غير مقروءة` })}>{item.unreadCount}</Badge> : <span className="text-[10px] font-medium text-emerald-700">{t({ fr: "Lu", en: "Read", ar: "مقروء" })}</span>}</div>
+                  {!fixedLearnerId ? <p className={`mt-1 truncate text-xs ${hasUnread ? "font-medium text-slate-800" : "text-slate-600"}`}>{item.learner?.name || item.learner?.email || t({ fr: "Apprenant", en: "Learner", ar: "متعلم" })} · {item.lastMessagePreview || t({ fr: "Aucun message", en: "No message", ar: "لا توجد رسالة" })}</p> : <p className={`mt-1 truncate text-xs ${hasUnread ? "font-medium text-slate-800" : "text-slate-600"}`}>{item.lastMessagePreview || t({ fr: "Aucun message", en: "No message", ar: "لا توجد رسالة" })}</p>}
                   <p className="mt-1 text-[11px] text-slate-400">{formatDate(item.lastMessageAt, lang)} · {privateConversationDisplayStatus(item.status, lang)} · {privateConversationDisplaySource(item.source, lang)}</p>
-                </button>
-              ))}
+                </button>;
+              })}
               {!items.length && !inboxQuery.isLoading ? <p className="p-8 text-center text-sm text-slate-500">{t({ fr: "Aucune conversation ne correspond aux filtres.", en: "No conversations match these filters.", ar: "لا توجد محادثات تطابق هذه المرشحات." })}</p> : null}
               {inboxQuery.isLoading ? <p className="p-8 text-center text-sm text-slate-500">{t({ fr: "Chargement des conversations…", en: "Loading conversations…", ar: "جارٍ تحميل المحادثات…" })}</p> : null}
               {inboxQuery.isError ? <p className="p-5 text-center text-sm text-destructive">{t({ fr: "La messagerie ne peut pas être chargée pour le moment.", en: "Messaging cannot be loaded right now.", ar: "لا يمكن تحميل المراسلة حاليًا." })}</p> : null}
@@ -193,7 +194,7 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
                   {selected ? <Button variant="outline" size="sm" onClick={() => statusMutation.mutate({ conversationId: selectedId, status: selected.status === "open" ? "closed" : "open" })}>{selected.status === "open" ? t({ fr: "Clôturer", en: "Close", ar: "إغلاق" }) : t({ fr: "Rouvrir", en: "Reopen", ar: "إعادة الفتح" })}</Button> : null}
                 </div>
               </header>
-              <ScrollArea className="min-h-0 flex-1 px-4 py-4"><div className="space-y-3">{detailQuery.data?.messages.map((message: PrivateMessageView) => <PrivateMessageBubble key={message.id} message={message} mine={message.authorRole === "admin"} author={message.authorRole === "admin" ? t({ fr: "Équipe Neopolis", en: "Neopolis team", ar: "فريق نيوبوليس" }) : detailQuery.data?.learner?.name || t({ fr: "Apprenant", en: "Learner", ar: "متعلم" })} dateLabel={(value) => formatDate(value, lang)} />)}</div></ScrollArea>
+              <AdminConversationMessages messages={detailQuery.data?.messages || []} learnerName={detailQuery.data?.learner?.name || t({ fr: "Apprenant", en: "Learner", ar: "متعلم" })} lang={lang} t={t} onLatestMessageVisible={(conversationId: number) => markRead.mutate({ conversationId })} conversationId={selectedId} pendingBody={body} isSending={sendMutation.isPending} />
               <footer className="border-t border-slate-100 p-3">{selected?.status === "open" ? <><Label className="sr-only" htmlFor="admin-private-message-reply">{t({ fr: "Réponse", en: "Reply", ar: "الرد" })}</Label><Textarea id="admin-private-message-reply" value={body} onChange={(event) => setBody(event.target.value)} className="min-h-20 resize-none" maxLength={5000} placeholder={t({ fr: "Répondre au nom de l’équipe Neopolis…", en: "Reply as the Neopolis team…", ar: "الرد باسم فريق نيوبوليس…" })} /><PrivateMessageAttachmentPicker attachments={replyAttachments} onChange={setReplyAttachments} disabled={sendMutation.isPending} /><div className="mt-2 flex justify-end"><Button size="sm" className="gap-1.5" disabled={(!body.trim() && !replyAttachments.length) || sendMutation.isPending} onClick={() => selectedId && sendMutation.mutate({ conversationId: selectedId, body, attachments: replyAttachments.map(({ filename, mimeType, base64 }) => ({ filename, mimeType, base64 })) })}>{sendMutation.isPending ? t({ fr: "Envoi…", en: "Sending…", ar: "جارٍ الإرسال…" }) : t({ fr: "Envoyer", en: "Send", ar: "إرسال" })}<Send className="h-3.5 w-3.5" /></Button></div></> : <p className="text-sm text-slate-500">{t({ fr: "Conversation fermée. L’historique est conservé ; vous pouvez la rouvrir.", en: "Conversation closed. Its history is kept; you can reopen it.", ar: "المحادثة مغلقة. يُحتفظ بسجلها ويمكنك إعادة فتحها." })}</p>}</footer>
             </>
           )}

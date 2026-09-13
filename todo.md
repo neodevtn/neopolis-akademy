@@ -2960,3 +2960,9 @@
 - [x] Remplacer le libellé d’action « Clore » par « Clôturer » dans toutes les surfaces de messagerie — overlay, historique apprenant et inbox administrateur
 - [x] Généraliser les textes anglais des nouvelles interfaces de messagerie : titres, actions, états, placeholders, statuts, pièces jointes, préférences et infobulles — propagation sur les vues apprenant/admin, fenêtres flottantes, centre de notifications et composeurs
 - [x] Couvrir et publier la correction de terminologie et les traductions de messagerie — TypeScript, test ciblé de contrat, 206 suites et 682 tests réussis (2 ignorés), QA publication 9/9, contrôle visuel anglais des historiques et composeurs apprenant/admin
+
+## Lisibilité des messages non lus — 13 septembre 2026
+- [x] Calculer et exposer un compteur fiable de messages non lus par conversation pour chaque participant — requêtes existantes consolidées et rendues dans l’historique, l’inbox, le launcher et le centre de notifications
+- [x] Distinguer visuellement les fils non lus, le dernier message non lu et les fils déjà consultés dans toutes les surfaces de messagerie — fond ambre, badge numérique, aperçu en emphase, état Lu et séparateur « nouveaux messages » avant la première bulle non lue
+- [x] Afficher à côté de l’heure les accusés WhatsApp : horloge pendant l’envoi, une coche après enregistrement, deux coches grises après distribution et deux coches bleues après lecture
+- [x] Vérifier le marquage lu après visibilité réelle, les compteurs, les badges, les tests, la publication et le domaine public — TypeScript, 206 suites / 684 tests réussis (2 ignorés), QA publication 9/9 et diff-check avant checkpoint
