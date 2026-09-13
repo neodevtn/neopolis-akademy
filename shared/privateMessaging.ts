@@ -7,6 +7,7 @@ export type PrivateConversationSource = (typeof PRIVATE_CONVERSATION_SOURCES)[nu
 export type PrivateConversationStatus = (typeof PRIVATE_CONVERSATION_STATUSES)[number];
 export type PrivateMessageAuthorRole = (typeof PRIVATE_MESSAGE_AUTHOR_ROLES)[number];
 export type PrivateMessageAttachmentMimeType = (typeof PRIVATE_MESSAGE_ATTACHMENT_MIME_TYPES)[number];
+export type PrivateMessagingLocale = "fr" | "en" | "ar";
 
 export const PRIVATE_MESSAGE_LIMITS = {
   subjectMin: 3,
@@ -39,21 +40,45 @@ export function privateMessagePreview(value: string): string {
     : normalized;
 }
 
-export function privateMessageAttachmentLabel(count: number): string {
+export function privateMessageAttachmentLabel(count: number, locale: PrivateMessagingLocale = "fr"): string {
+  if (locale === "en") return count === 1 ? "Attachment" : `${count} attachments`;
+  if (locale === "ar") return count === 1 ? "مرفق" : `${count} مرفقات`;
   return count === 1 ? "Pièce jointe" : `${count} pièces jointes`;
 }
 
-export function privateMessageReceiptLabel(input: { deliveredAt?: Date | string | null; readAt?: Date | string | null }): "Envoyé" | "Distribué" | "Vu" {
-  if (input.readAt) return "Vu";
-  if (input.deliveredAt) return "Distribué";
-  return "Envoyé";
+export function privateMessageReceiptLabel(input: { deliveredAt?: Date | string | null; readAt?: Date | string | null }, locale: PrivateMessagingLocale = "fr"): string {
+  const receipt = input.readAt ? "read" : input.deliveredAt ? "delivered" : "sent";
+  const labels = {
+    fr: { sent: "Envoyé", delivered: "Distribué", read: "Vu" },
+    en: { sent: "Sent", delivered: "Delivered", read: "Seen" },
+    ar: { sent: "تم الإرسال", delivered: "تم التسليم", read: "تمت المشاهدة" },
+  } as const;
+  return labels[locale][receipt];
 }
 
-export function privateConversationDisplayStatus(status: PrivateConversationStatus): string {
+export function privateConversationDisplayStatus(status: PrivateConversationStatus, locale: PrivateMessagingLocale = "fr"): string {
+  if (locale === "en") return status === "open" ? "Open" : "Closed";
+  if (locale === "ar") return status === "open" ? "مفتوحة" : "مغلقة";
   return status === "open" ? "Ouverte" : "Fermée";
 }
 
-export function privateConversationDisplaySource(source: PrivateConversationSource): string {
+export function privateConversationDisplaySource(source: PrivateConversationSource, locale: PrivateMessagingLocale = "fr"): string {
+  if (locale === "en") {
+    switch (source) {
+      case "problem_report": return "Problem report";
+      case "integrity_review": return "Integrity review";
+      case "admin": return "Neopolis-initiated";
+      default: return "Learner-initiated";
+    }
+  }
+  if (locale === "ar") {
+    switch (source) {
+      case "problem_report": return "إبلاغ عن مشكلة";
+      case "integrity_review": return "مراجعة النزاهة";
+      case "admin": return "مبادرة نيوبوليس";
+      default: return "مبادرة المتعلم";
+    }
+  }
   switch (source) {
     case "problem_report": return "Signalement";
     case "integrity_review": return "Revue d’intégrité";

@@ -2955,3 +2955,8 @@
 - [x] Rendre les statuts de message explicites et compréhensibles, avec une expérience inspirée de WhatsApp : envoyé, distribué et vu, sans ambiguïté de destinataire — accusés persistés par audience, livraison WebSocket réellement connectée et lecture synchronisée
 - [x] Permettre l’envoi et la consultation sécurisée de pièces jointes privées limitées aux images et PDF de 10 Mo maximum, avec validation serveur, accès autorisé et traçabilité — JPEG/PNG/GIF/WebP/PDF, contrôle des signatures binaires, accès par conversation, cache privé et limite de trois fichiers par message
 - [x] Couvrir les statuts et pièces jointes privées par tests, QA, publication et vérification du domaine public — 206 suites, 681 tests réussis (2 ignorés), QA 9/9, validation TypeScript et contrôles apprenant/admin en prévisualisation
+
+## Localisation de la messagerie privée — 13 septembre 2026
+- [x] Remplacer le libellé d’action « Clore » par « Clôturer » dans toutes les surfaces de messagerie — overlay, historique apprenant et inbox administrateur
+- [x] Généraliser les textes anglais des nouvelles interfaces de messagerie : titres, actions, états, placeholders, statuts, pièces jointes, préférences et infobulles — propagation sur les vues apprenant/admin, fenêtres flottantes, centre de notifications et composeurs
+- [x] Couvrir et publier la correction de terminologie et les traductions de messagerie — TypeScript, test ciblé de contrat, 206 suites et 682 tests réussis (2 ignorés), QA publication 9/9, contrôle visuel anglais des historiques et composeurs apprenant/admin
