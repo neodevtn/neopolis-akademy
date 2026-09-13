@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   getTekTekTrainingSources: vi.fn(),
   getTekTekBlockContext: vi.fn(),
   searchTekTekSources: vi.fn(),
+  isTekTekExplorationQuestion: vi.fn(),
   invokeLLM: vi.fn(),
 }));
 
@@ -23,6 +24,7 @@ vi.mock("./tektekIndex", () => ({
   getTekTekTrainingSources: mocks.getTekTekTrainingSources,
   getTekTekBlockContext: mocks.getTekTekBlockContext,
   searchTekTekSources: mocks.searchTekTekSources,
+  isTekTekExplorationQuestion: mocks.isTekTekExplorationQuestion,
 }));
 vi.mock("./_core/llm", () => ({ invokeLLM: mocks.invokeLLM }));
 
@@ -65,6 +67,7 @@ describe("routeur TekTek", () => {
     mocks.appendTekTekMessage.mockResolvedValue(77);
     mocks.getTekTekBlockContext.mockReturnValue([]);
     mocks.searchTekTekSources.mockReturnValue([source]);
+    mocks.isTekTekExplorationQuestion.mockReturnValue(false);
   });
 
   it("refuse tout appel à une formation qui ne contient pas le cours demandé", async () => {
@@ -109,6 +112,59 @@ describe("routeur TekTek", () => {
     const result = await caller.ask(baseInput);
     expect(result.answer).toBe("Source-grounded answer");
     expect(result.citations).toHaveLength(1);
+    expect(result.citations[0]?.id).toBe("s1");
+    expect(mocks.invokeLLM).toHaveBeenCalledWith(expect.objectContaining({
+      maxCompletionTokens: 900,
+      reasoning: { effort: "minimal" },
+      responseFormat: expect.objectContaining({
+        json_schema: expect.objectContaining({
+          schema: expect.objectContaining({
+            properties: expect.objectContaining({
+              citationIds: expect.objectContaining({ items: expect.objectContaining({ enum: ["s1"] }) }),
+              followUp: { type: ["string", "null"] },
+            }),
+          }),
+        }),
+      }),
+    }));
+  });
+
+  it("répond directement à une demande d’approfondissement contextuelle avec des sources navigables", async () => {
+    mocks.isTekTekExplorationQuestion.mockReturnValue(true);
+    mocks.searchTekTekSources.mockReturnValue([
+      { ...source, id: "s2", title: "Further lesson", lessonIndex: 1 },
+      source,
+    ]);
+    const result = await caller.ask({ ...baseInput, question: "Where is this topic explored further?" });
+    expect(result.inScope).toBe(true);
+    expect(result.answer).toContain("explored further");
+    expect(result.citations.map((citation) => citation.id)).toEqual(["s2", "s1"]);
+    expect(mocks.invokeLLM).not.toHaveBeenCalled();
+  });
+
+  it("accepte une réponse JSON structurée entourée de balises markdown", async () => {
+    mocks.invokeLLM.mockResolvedValue({
+      choices: [{ message: { content: '```json\n{"answer":"Grounded answer","citationIds":["s1"],"followUp":null}\n```' } }],
+    });
+    const result = await caller.ask(baseInput);
+    expect(result.answer).toBe("Grounded answer");
+    expect(result.citations[0]?.id).toBe("s1");
+  });
+
+  it("retire les marqueurs de citation internes de la réponse visible", async () => {
+    mocks.invokeLLM.mockResolvedValue({
+      choices: [{ message: { content: JSON.stringify({ answer: "Helpful explanation. \uE200cite\uE202s1\uE201", citationIds: ["s1"], followUp: null }) } }],
+    });
+    const result = await caller.ask(baseInput);
+    expect(result.answer).toBe("Helpful explanation.");
+    expect(result.citations[0]?.id).toBe("s1");
+  });
+
+  it("fournit les passages les plus pertinents si la synthèse structurée est inutilisable", async () => {
+    mocks.invokeLLM.mockResolvedValue({ choices: [{ message: { content: "{" } }] });
+    const result = await caller.ask(baseInput);
+    expect(result.inScope).toBe(true);
+    expect(result.answer).toContain("relevant passages");
     expect(result.citations[0]?.id).toBe("s1");
   });
 });

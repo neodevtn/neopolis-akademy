@@ -2984,3 +2984,18 @@
 - [x] Exposer le service TekTek avec recherche hiérarchique, citations contrôlées, refus contextualisés et quotas de coût
 - [x] Intégrer TekTek dans le lecteur avec une invitation visuelle accessible, non intrusive et adaptée au mobile
 - [x] Tester les réponses, les garde-fous, les citations vidéo, la confidentialité, la qualité visuelle et publier le pilote — 208 suites, 692 tests réussis (2 ignorés), QA 9/9, contrôle desktop TekTek sans erreur console et contrat d’indexation vidéo validé
+
+## Fiabilisation de la récupération TekTek — 13 septembre 2026
+- [x] Reproduire les refus excessifs sur des questions elliptiques comme « Where is this topic explored further? » et mesurer les sources remontées — reproduction confirmée et test automatisé ajouté
+- [x] Résoudre les références contextuelles à partir de l’écran actif, de la dernière réponse TekTek et des derniers échanges apprenant — contexte actif et historique court intégrés à la recherche et à la synthèse
+- [x] Améliorer la recherche lexicale et sémantique inter-cours sans élargir TekTek au-delà de la formation autorisée — score lexical resserré, diversification contrôlée et droits de formation conservés
+- [x] Remplacer le refus générique par une réponse utile fondée sur le contexte actif lorsque des sources pertinentes existent — schéma JSON du modèle corrigé et fallback exclusivement sourcé
+- [x] Ajouter une matrice de questions représentatives, tester les citations et publier uniquement après contrôle du taux de refus — questions explicite, écran actif, vidéo, relance elliptique, inter-cours, hors-source et évaluation validées avant publication
+- [ ] Ne soumettre le correctif qu’après validation de questions explicites, elliptiques, inter-cours, vidéo, hors-source et d’évaluation sur la version réellement publiée
+
+## Blocage vérification de présence — 13 septembre 2026
+- [x] Reproduire la boucle infinie du widget Cloudflare Turnstile sans modifier la progression de l’apprenant concerné — widget bloqué avant callback serveur confirmé par la capture et l’absence de validation dans les journaux
+- [x] Tracer les états chargement, succès, expiration, erreur et délai de la vérification de présence côté client et serveur — machine d’état dédiée et délais bornés ajoutés
+- [x] Ajouter une récupération contrôlée du widget et un message d’erreur actionnable au lieu d’un chargement indéfini — retry Cloudflare silencieux désactivé, bouton de relance recréant réellement le widget
+- [x] Tester le contrôle de présence avec jeton valide, expiration, échec réseau, widget bloqué et rafraîchissement manuel — tests des transitions, délais, hôte/action Turnstile et erreurs réseau ajoutés sans modifier de progression
+- [ ] Publier et vérifier la correction sur le domaine public, puis reprendre la matrice et la publication TekTek interrompues

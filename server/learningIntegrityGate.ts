@@ -100,18 +100,36 @@ export async function requireLearningIntegrityClearance(input: { userId: number;
 export async function verifyLearningIntegrityPresence(input: { userId: number; token: string; hostname: string }) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) throw new Error("La vérification de présence n’est pas configurée.");
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ secret, response: input.token, idempotency_key: crypto.randomUUID() }),
-    signal: AbortSignal.timeout(10_000),
-  });
-  const result = await response.json() as { success?: boolean; hostname?: string; action?: string; "error-codes"?: string[] };
-  if (!response.ok || !result.success || result.hostname !== input.hostname || result.action !== "learning_integrity") {
+  let response: Response;
+  let result: { success?: boolean; hostname?: string; action?: string; "error-codes"?: string[] };
+  try {
+    response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ secret, response: input.token, idempotency_key: crypto.randomUUID() }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    result = await response.json() as typeof result;
+  } catch {
+    throw new Error("Le service de vérification ne répond pas. Relancez le contrôle ; vos progrès restent inchangés.");
+  }
+  if (!isValidTurnstilePresenceResult({ responseOk: response.ok, result, expectedHostname: input.hostname })) {
     throw new Error("La vérification de présence n’a pas pu être validée. Veuillez réessayer.");
   }
   await recordLearningEvent({ userId: input.userId, eventType: PRESENCE_EVENT, success: 1, metadata: { action: result.action } });
   return getLearningIntegrityGateDecision(input.userId);
+}
+
+export function isValidTurnstilePresenceResult(input: {
+  responseOk: boolean;
+  result: { success?: boolean; hostname?: string; action?: string };
+  expectedHostname: string;
+}) {
+  const normalizeHostname = (value: string | undefined) => String(value || "").trim().toLowerCase().replace(/\.$/, "");
+  return input.responseOk
+    && input.result.success === true
+    && input.result.action === "learning_integrity"
+    && normalizeHostname(input.result.hostname) === normalizeHostname(input.expectedHostname);
 }
 
 /**

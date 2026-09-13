@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveLearningIntegrityGate } from "./learningIntegrityGate";
+import { isValidTurnstilePresenceResult, resolveLearningIntegrityGate } from "./learningIntegrityGate";
 
 describe("Learning Integrity Gate", () => {
   const now = new Date("2026-09-07T12:00:00Z");
@@ -18,5 +18,23 @@ describe("Learning Integrity Gate", () => {
   it("suspend temporairement les validations au risque élevé ou après une décision humaine", () => {
     expect(resolveLearningIntegrityGate({ riskScore: 60, signalIds: ["rapid_success_chain", "recorded_time_mismatch"], now }).status).toBe("temporarily_suspended");
     expect(resolveLearningIntegrityGate({ riskScore: 0, signalIds: [], reviewStatus: "temporary_hold", now }).status).toBe("temporarily_suspended");
+  });
+
+  it("valide uniquement un résultat Turnstile réussi pour le bon hôte et la bonne action", () => {
+    expect(isValidTurnstilePresenceResult({
+      responseOk: true,
+      result: { success: true, hostname: "akademy.neodev.click", action: "learning_integrity" },
+      expectedHostname: "AKADEMY.NEODEV.CLICK.",
+    })).toBe(true);
+    expect(isValidTurnstilePresenceResult({
+      responseOk: true,
+      result: { success: true, hostname: "other.example", action: "learning_integrity" },
+      expectedHostname: "akademy.neodev.click",
+    })).toBe(false);
+    expect(isValidTurnstilePresenceResult({
+      responseOk: true,
+      result: { success: true, hostname: "akademy.neodev.click", action: "other_action" },
+      expectedHostname: "akademy.neodev.click",
+    })).toBe(false);
   });
 });

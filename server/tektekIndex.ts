@@ -51,6 +51,60 @@ function tokens(value: string) {
   return Array.from(new Set(normalizeForSearch(value).split(" ").filter((token) => token.length >= 3))).slice(0, 24);
 }
 
+const SEARCH_STOP_WORDS = new Set([
+  "about", "again", "also", "and", "are", "can", "concept", "could", "does", "explain", "explored", "further", "here", "how", "into", "more", "please", "that", "the", "their", "this", "topic", "what", "where", "which", "with",
+  "alors", "avec", "cela", "cette", "comment", "dans", "davantage", "encore", "est", "expliquer", "ici", "notion", "peut", "plus", "pour", "quoi", "sujet", "trouve", "quel", "quelle",
+  "أكثر", "أين", "المفهوم", "الموضوع", "شرح", "هذا", "هذه", "ذلك", "كيف", "ماذا",
+]);
+
+function meaningfulTokens(value: string) {
+  return tokens(value).filter((token) => !SEARCH_STOP_WORDS.has(token));
+}
+
+function searchableTokenSet(value: string) {
+  return new Set(normalizeForSearch(value).split(" ").filter((token) => token.length >= 3));
+}
+
+export function isTekTekContextualQuestion(question: string) {
+  const normalized = normalizeForSearch(question);
+  return meaningfulTokens(question).length < 2
+    || /\b(this|that|it|these|those|here|topic|concept)\b/.test(normalized)
+    || /\b(ce|cet|cette|cela|ca|ça|ici|sujet|notion)\b/.test(normalized)
+    || /\b(هذا|هذه|ذلك|الموضوع|المفهوم)\b/.test(normalized);
+}
+
+export function isTekTekExplorationQuestion(question: string) {
+  const normalized = normalizeForSearch(question);
+  return /\b(where|which).*(further|more|deeper|elsewhere)\b/.test(normalized)
+    || /\b(ou|où|quel|quelle).*(approfond|davantage|plus|ailleurs)\b/.test(normalized)
+    || /\b(approfond|explor).*(ailleurs|plus|davantage)\b/.test(normalized)
+    || /(أين|أي).*(أكثر|بعمق|لاحقا)/.test(normalized);
+}
+
+export function isTekTekScreenExplanationQuestion(question: string) {
+  const normalized = normalizeForSearch(question);
+  return /\b(explain|summarize|summarise).*(this|current).*(screen|page|activity|lesson|sequence)\b/.test(normalized)
+    || /\b(explique|resum|résum).*(cet|cette|ecran|écran|page|activite|activité|lecon|leçon|sequence|séquence)\b/.test(normalized)
+    || /(اشرح|لخص).*(الشاشة|الصفحة|النشاط|الدرس|التسلسل)/.test(normalized);
+}
+
+function selectContextTokens(context: string, sources: TekTekSource[], requireReuse: boolean) {
+  const candidates = meaningfulTokens(context);
+  const documentFrequency = new Map<string, number>();
+  for (const token of candidates) {
+    const count = sources.reduce((sum, source) => sum + (normalizeForSearch(`${source.title} ${source.text}`).includes(token) ? 1 : 0), 0);
+    documentFrequency.set(token, count);
+  }
+  return candidates
+    .filter((token) => (documentFrequency.get(token) || 0) >= (requireReuse ? 2 : 1))
+    .sort((left, right) => {
+      const leftFrequency = documentFrequency.get(left) || 0;
+      const rightFrequency = documentFrequency.get(right) || 0;
+      return leftFrequency - rightFrequency || right.length - left.length;
+    })
+    .slice(0, 10);
+}
+
 function safeBlockText(block: CourseRecord, language: string) {
   const values: string[] = [];
   const keys = ["title", "heading", "description", "body", "content", "contentLeft", "contentRight", "script", "transcript", "prompt", "instructions", "question", "statement", "task", "learningObjective"];
@@ -265,28 +319,71 @@ export function searchTekTekSources(input: {
   blockId?: string | null;
   videoTimeSeconds?: number | null;
   question: string;
+  contextText?: string;
   language?: string;
   limit?: number;
 }) {
   const indexed = getTekTekTrainingSources(input.certificationId, input.language);
   if (!indexed) return [];
   const allowed = new Set(input.allowedCourseIds);
-  const questionTokens = tokens(input.question);
-  const scored = indexed.sources
-    .filter((source) => allowed.has(source.courseId))
+  const allowedSources = indexed.sources.filter((source) => allowed.has(source.courseId));
+  const contextualQuestion = isTekTekContextualQuestion(input.question);
+  const explorationQuestion = isTekTekExplorationQuestion(input.question);
+  const screenExplanationQuestion = isTekTekScreenExplanationQuestion(input.question);
+  const activeContext = allowedSources.filter((source) =>
+    source.courseId === input.activeCourseId
+    && source.lessonIndex === input.lessonIndex
+    && source.chapterIndex === input.chapterIndex
+    && (!input.blockId || source.blockId === input.blockId),
+  );
+  if (screenExplanationQuestion && activeContext.length > 0) {
+    const limit = Math.min(Math.max(input.limit ?? 7, 1), 7);
+    return [...activeContext]
+      .sort((left, right) => {
+        if (left.kind !== right.kind) return left.kind === "activity" ? -1 : 1;
+        if (left.timeSeconds !== right.timeSeconds) return left.timeSeconds === null ? -1 : right.timeSeconds === null ? 1 : left.timeSeconds - right.timeSeconds;
+        return left.id.localeCompare(right.id);
+      })
+      .slice(0, limit);
+  }
+  const derivedContext = [
+    input.contextText || "",
+    ...activeContext.slice(0, 6).map((source) => `${source.title} ${truncateSourceText(source.text, 420)}`),
+  ].join(" ");
+  const questionTokens = meaningfulTokens(input.question);
+  const contextTokens = contextualQuestion ? selectContextTokens(derivedContext, allowedSources, explorationQuestion) : [];
+  const scored = allowedSources
     .map((source) => {
-      const searchable = normalizeForSearch(`${source.title} ${source.text}`);
-      let score = questionTokens.reduce((sum, token) => sum + (searchable.includes(token) ? 4 : 0), 0);
-      if (source.courseId === input.activeCourseId) score += 7;
-      if (source.courseId === input.activeCourseId && source.lessonIndex === input.lessonIndex) score += 5;
-      if (source.courseId === input.activeCourseId && source.lessonIndex === input.lessonIndex && source.chapterIndex === input.chapterIndex) score += 5;
-      if (input.blockId && source.blockId === input.blockId) score += 10;
+      const searchable = searchableTokenSet(`${source.title} ${source.text}`);
+      const questionMatches = questionTokens.reduce((sum, token) => sum + (searchable.has(token) ? 1 : 0), 0);
+      const contextMatches = contextTokens.reduce((sum, token) => sum + (searchable.has(token) ? 1 : 0), 0);
+      const minimumQuestionMatches = !contextualQuestion && questionTokens.length >= 2 ? 2 : 1;
+      const questionScore = questionMatches >= minimumQuestionMatches ? questionMatches * 6 : 0;
+      const contextScore = contextMatches * 3;
+      if (questionScore <= 0 && contextScore <= 0) return { ...source, score: -1 };
+      let score = questionScore + contextScore;
+      const activeCourse = source.courseId === input.activeCourseId;
+      const activeLesson = activeCourse && source.lessonIndex === input.lessonIndex;
+      const activeChapter = activeLesson && source.chapterIndex === input.chapterIndex;
+      if (activeCourse) score += explorationQuestion ? 1 : 5;
+      if (activeLesson) score += explorationQuestion ? 1 : 4;
+      if (activeChapter) score += explorationQuestion ? -8 : 5;
+      else if (explorationQuestion) score += 7;
+      if (input.blockId && source.blockId === input.blockId) score += explorationQuestion ? -4 : 10;
       if (input.videoTimeSeconds !== null && input.videoTimeSeconds !== undefined && source.timeSeconds !== null && Math.abs(source.timeSeconds - input.videoTimeSeconds) <= 45) score += 6;
       return { ...source, score };
     })
     .filter((source) => source.score > 0)
     .sort((a, b) => (b.score || 0) - (a.score || 0));
-  return scored.slice(0, Math.min(Math.max(input.limit ?? 7, 1), 7));
+  const limit = Math.min(Math.max(input.limit ?? 7, 1), 7);
+  if (!explorationQuestion) return scored.slice(0, limit);
+  const outsideActiveChapter = scored.filter((source) => source.courseId !== input.activeCourseId || source.lessonIndex !== input.lessonIndex || source.chapterIndex !== input.chapterIndex);
+  const insideActiveChapter = scored.filter((source) => source.courseId === input.activeCourseId && source.lessonIndex === input.lessonIndex && source.chapterIndex === input.chapterIndex);
+  return [...outsideActiveChapter.slice(0, Math.max(limit - 1, 1)), ...insideActiveChapter.slice(0, 1)].slice(0, limit);
+}
+
+function truncateSourceText(value: string, limit: number) {
+  return value.length > limit ? `${value.slice(0, limit)}…` : value;
 }
 
 export function clearTekTekIndexCache() {
