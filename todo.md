@@ -3004,18 +3004,18 @@
 - [x] Identifier pourquoi le serveur refuse un jeton Turnstile pourtant validé par le widget Cloudflare, sans journaliser le jeton ni les données de l’apprenant — le proxy transmettait `localhost` comme hôte attendu, alors que Cloudflare valide le domaine public
 - [x] Corriger la transmission ou la validation serveur du jeton, avec une erreur actionnable lorsque Cloudflare refuse effectivement le contrôle — résolution contrôlée de l’hôte public à partir des en-têtes proxy reconnus, catégories de refus sans jeton ni charge utile journalisés
 - [x] Tester le succès client/serveur, les causes de rejet, la relance et l’absence de modification de progression — six tests ciblés de validation/hôte/rejet et suite complète de 712 tests réussis ; QA de publication 9/9
-- [ ] Publier et vérifier la correction sur le domaine public avant de reprendre les vérifications des interfaces en attente
+- [x] Publier et vérifier la correction sur le domaine public avant de reprendre les vérifications des interfaces en attente — checkpoint publié, lecteur public chargé sans régression et point d’entrée d’assistance présent
 
 ## Centre d’assistance unifié — 13 septembre 2026
 - [x] Auditer les entrées actuelles de signalement, messagerie Neopolis, notifications et TekTek afin d’éliminer les doublons et chevauchements visuels — CTA TekTek et launcher de messagerie concurrents retirés visuellement au profit du centre unique
 - [x] Créer un unique appel à l’action global, visible sur les pages publiques, apprenant, cours et administration selon les droits — bouton persistant « Besoin d’aide ? » monté à la racine
 - [x] Proposer depuis ce centre les actions « Signaler un problème », « Nouvelle conversation », « Conversations ouvertes » et « Demander à TekTek » avec des descriptions cohérentes — dialogue unique à quatre parcours, localisé et accessible au clavier
 - [x] Raccorder chaque action à son service existant sans mélanger les données privées de messagerie, de monitoring ou du coach pédagogique — relais événementiel apprenant, navigation admin réactive, tRPC de signalement existant et panneau TekTek contextuel conservés
-- [ ] Tester l’accessibilité, le mobile, les routes et l’absence de régression, puis publier et vérifier le domaine public
+- [x] Tester l’accessibilité, le mobile, les routes et l’absence de régression, puis publier et vérifier le domaine public — contrôles desktop/mobile, navigation vers coach/messagerie/composeur/signalement sans soumission, tests de relais et vérification publique du dialogue à quatre parcours
 
 ## Gouvernance des usages TekTek — 13 septembre 2026
 - [x] Auditer les quotas TekTek, le journal de messages et les métriques de jetons réellement disponibles sans estimer une facturation externe — l’historique antérieur n’inclut pas de mesure de jetons ; les nouvelles réponses conservent les valeurs retournées par le modèle
 - [x] Exempter strictement les rôles admin et admin-apprenant des limites de questions TekTek tout en conservant les contrôles de droit et l’audit — plafond maintenu pour apprenant et tests d’exemption pour les deux rôles administratifs
 - [x] Ajouter un tableau de bord administrateur des requêtes et jetons TekTek par formation, cours et utilisateur, avec recherche et pagination — onglet « Gouvernance IA », tables paginées et regroupements SQL protégés par rôle administratif
 - [x] Ajouter des budgets internes configurables, des seuils d’alerte et un statut d’utilisation sans présenter ces valeurs comme une facture fournisseur — budget mensuel par portée, seuil configurable, comparaison visible et libellé non financier
-- [ ] Tester les permissions et agrégats, publier puis vérifier l’interface de gouvernance IA
+- [x] Tester les permissions et agrégats, publier puis vérifier l’interface de gouvernance IA — tests de droits, attribution cours et navigation admin réussis ; agrégats et pagination contrôlés dans l’interface administrative de prévisualisation puis publiés
