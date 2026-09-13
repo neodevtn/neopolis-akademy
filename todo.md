@@ -2991,11 +2991,11 @@
 - [x] Améliorer la recherche lexicale et sémantique inter-cours sans élargir TekTek au-delà de la formation autorisée — score lexical resserré, diversification contrôlée et droits de formation conservés
 - [x] Remplacer le refus générique par une réponse utile fondée sur le contexte actif lorsque des sources pertinentes existent — schéma JSON du modèle corrigé et fallback exclusivement sourcé
 - [x] Ajouter une matrice de questions représentatives, tester les citations et publier uniquement après contrôle du taux de refus — questions explicite, écran actif, vidéo, relance elliptique, inter-cours, hors-source et évaluation validées avant publication
-- [ ] Ne soumettre le correctif qu’après validation de questions explicites, elliptiques, inter-cours, vidéo, hors-source et d’évaluation sur la version réellement publiée
+- [x] Ne soumettre le correctif qu’après validation de questions explicites, elliptiques, inter-cours, vidéo, hors-source et d’évaluation sur la version réellement publiée — matrice automatisée complète, puis question elliptique exacte et explication de l’écran rejouées avec succès sur le domaine public
 
 ## Blocage vérification de présence — 13 septembre 2026
 - [x] Reproduire la boucle infinie du widget Cloudflare Turnstile sans modifier la progression de l’apprenant concerné — widget bloqué avant callback serveur confirmé par la capture et l’absence de validation dans les journaux
 - [x] Tracer les états chargement, succès, expiration, erreur et délai de la vérification de présence côté client et serveur — machine d’état dédiée et délais bornés ajoutés
 - [x] Ajouter une récupération contrôlée du widget et un message d’erreur actionnable au lieu d’un chargement indéfini — retry Cloudflare silencieux désactivé, bouton de relance recréant réellement le widget
 - [x] Tester le contrôle de présence avec jeton valide, expiration, échec réseau, widget bloqué et rafraîchissement manuel — tests des transitions, délais, hôte/action Turnstile et erreurs réseau ajoutés sans modifier de progression
-- [ ] Publier et vérifier la correction sur le domaine public, puis reprendre la matrice et la publication TekTek interrompues
+- [x] Publier et vérifier la correction sur le domaine public, puis reprendre la matrice et la publication TekTek interrompues — version publique renouvelée, module Turnstile avec relance bornée confirmé, TekTek testé publiquement et console sans nouvelle erreur
