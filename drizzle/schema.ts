@@ -567,6 +567,8 @@ export type TekTekConversation = typeof tektekConversations.$inferSelect;
 export const tektekMessages = mysqlTable("tektek_messages", {
   id: int("id").autoincrement().primaryKey(),
   conversationId: int("conversationId").notNull(),
+  /** Cours source au moment de la requête, conservé pour des agrégats historiques fiables. */
+  courseId: varchar("courseId", { length: 200 }),
   role: mysqlEnum("role", ["user", "assistant", "system"]).notNull(),
   content: text("content").notNull(),
   sourceReferences: json("sourceReferences"),
@@ -576,9 +578,27 @@ export const tektekMessages = mysqlTable("tektek_messages", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 }, (table) => [
   index("tektek_message_conversation_idx").on(table.conversationId, table.createdAt),
+  index("tektek_message_course_created_idx").on(table.courseId, table.createdAt),
   index("tektek_message_created_idx").on(table.createdAt),
 ]);
 export type TekTekMessage = typeof tektekMessages.$inferSelect;
+
+/** Budgets internes TekTek exprimés en jetons, distincts de toute facture fournisseur. */
+export const tektekBudgetSettings = mysqlTable("tektek_budget_settings", {
+  id: int("id").autoincrement().primaryKey(),
+  scope: mysqlEnum("scope", ["global", "training", "course", "user"]).notNull(),
+  /** `global` pour le budget global ; sinon identifiant de formation, cours ou utilisateur. */
+  scopeKey: varchar("scopeKey", { length: 200 }).notNull(),
+  monthlyTokenBudget: int("monthlyTokenBudget").notNull(),
+  alertThresholdPercent: int("alertThresholdPercent").notNull().default(80),
+  updatedBy: int("updatedBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("tektek_budget_scope_unique").on(table.scope, table.scopeKey),
+  index("tektek_budget_updated_idx").on(table.updatedAt),
+]);
+export type TekTekBudgetSetting = typeof tektekBudgetSettings.$inferSelect;
 
 /**
  * User invitations - tracks pending invitations sent by admins

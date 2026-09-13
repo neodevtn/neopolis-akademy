@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpenCheck, Bot, ChevronRight, CircleHelp, ExternalLink, Loader2, MessageCircleQuestion, Send, ShieldCheck, Sparkles, X } from "lucide-react";
+import { BookOpenCheck, Bot, CircleHelp, ExternalLink, Loader2, MessageCircleQuestion, Send, ShieldCheck, Sparkles } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 import { formatTekTekCitation, normalizeTekTekLanguage, type TekTekCitation } from "@shared/tektek";
+import { SUPPORT_HUB_EVENT, type SupportHubEventDetail } from "@/lib/supportHub";
 
 type TekTekCoachProps = {
   certificationId: string;
@@ -82,19 +83,11 @@ export function TekTekCoach({ certificationId, courseId, lessonIndex, chapterInd
   const copy = COPY[language];
   const [open, setOpen] = useState(false);
   const [question, setQuestion] = useState("");
-  const [nudgeVisible, setNudgeVisible] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const context = useMemo(() => ({ certificationId, courseId, lessonIndex, chapterIndex, blockId: blockId || null, videoTimeSeconds: videoTimeSeconds ?? null, language }), [certificationId, courseId, lessonIndex, chapterIndex, blockId, videoTimeSeconds, language]);
   const historyQuery = trpc.tektek.getHistory.useQuery({ certificationId, courseId, language }, { enabled: open });
   const contextHint = trpc.tektek.getContextHint.useQuery(context, { staleTime: 30_000 });
   const utils = trpc.useUtils();
-
-  useEffect(() => {
-    const storageKey = `tektek:nudge:${certificationId}:${courseId}`;
-    if (sessionStorage.getItem(storageKey)) return;
-    const timer = window.setTimeout(() => setNudgeVisible(true), 9000);
-    return () => window.clearTimeout(timer);
-  }, [certificationId, courseId]);
 
   useEffect(() => {
     if (!open) return;
@@ -109,16 +102,19 @@ export function TekTekCoach({ certificationId, courseId, lessonIndex, chapterInd
     },
   });
 
-  const dismissNudge = () => {
-    sessionStorage.setItem(`tektek:nudge:${certificationId}:${courseId}`, "1");
-    setNudgeVisible(false);
-  };
-
   const openCoach = (suggestedQuestion?: string) => {
     if (suggestedQuestion) setQuestion(suggestedQuestion);
     setOpen(true);
-    dismissNudge();
   };
+
+  useEffect(() => {
+    const handleSupportAction = (event: Event) => {
+      const detail = (event as CustomEvent<SupportHubEventDetail>).detail;
+      if (detail?.action === "open-tektek") openCoach();
+    };
+    window.addEventListener(SUPPORT_HUB_EVENT, handleSupportAction);
+    return () => window.removeEventListener(SUPPORT_HUB_EVENT, handleSupportAction);
+  }, [certificationId, courseId, language]);
 
   const submit = () => {
     const trimmed = question.trim();
@@ -131,31 +127,6 @@ export function TekTekCoach({ certificationId, courseId, lessonIndex, chapterInd
 
   return (
     <>
-      <div className="fixed bottom-5 left-4 z-40 flex max-w-[min(23rem,calc(100vw-2rem))] flex-col items-start gap-2 sm:bottom-6 sm:left-auto sm:right-6">
-        {nudgeVisible && !open && (
-          <div className="relative rounded-2xl border border-primary/20 bg-background p-3 pr-9 text-sm shadow-xl motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2">
-            <p className="font-medium text-foreground">{copy.nudge}</p>
-            <button type="button" onClick={dismissNudge} className="absolute right-2 top-2 rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground" aria-label={copy.dismiss}>
-              <X className="size-4" />
-            </button>
-          </div>
-        )}
-        <Button
-          type="button"
-          onClick={() => openCoach()}
-          className="group h-12 rounded-full border border-primary-foreground/20 bg-primary px-4 text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90"
-          aria-label={copy.open}
-        >
-          <span className="relative mr-2 flex size-7 items-center justify-center rounded-full bg-primary-foreground/15">
-            <Bot className="size-4" />
-            <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-amber-300 ring-2 ring-primary motion-safe:animate-pulse" />
-          </span>
-          <span className="font-semibold">{copy.title}</span>
-          <span className="ml-1 hidden text-xs text-primary-foreground/80 sm:inline">· {copy.eyebrow}</span>
-          <ChevronRight className="ml-2 size-4 transition-transform group-hover:translate-x-0.5" />
-        </Button>
-      </div>
-
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[29rem]" aria-describedby="tektek-description">
           <SheetHeader className="border-b bg-gradient-to-br from-primary/10 via-background to-amber-50 p-5 dark:to-amber-950/20">

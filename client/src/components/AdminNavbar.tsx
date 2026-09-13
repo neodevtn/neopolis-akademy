@@ -38,6 +38,7 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
       { label: "Contenus des cours", href: "/admin/content", icon: BookOpen, page: "content", description: "Éditer les leçons et interactions" },
       { label: "Catalogue & publications", href: "/admin/content?mode=catalog", icon: BookOpen, page: "content", description: "Organiser et gérer les états" },
       { label: "Bibliothèque médias", href: "/admin/media", icon: FileImage, page: "media", description: "Vidéos, PDF et images" },
+      { label: "Gouvernance IA", href: "/admin?tab=ai_usage", icon: BarChart3, page: "candidatures", description: "Suivre les usages TekTek" },
     ],
   },
   {

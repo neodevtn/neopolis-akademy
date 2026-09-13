@@ -1,5 +1,5 @@
-import { Fragment, useMemo, useState } from "react";
-import { Link } from "wouter";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearch } from "wouter";
 import { MessageCircle, Plus, Search, Send } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -82,6 +82,8 @@ function IntegrityClarificationQueue() {
 
 export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerLabel }: PrivateMessagingAdminPanelProps) {
   const { lang, t } = useLanguage();
+  const urlSearch = useSearch();
+  const handledSupportActionRef = useRef<string | null>(null);
   const [status, setStatus] = useState<"all" | "open" | "closed">("all");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -94,6 +96,24 @@ export function PrivateMessagingAdminPanel({ learnerId: fixedLearnerId, learnerL
   const [subject, setSubject] = useState("");
   const [firstMessage, setFirstMessage] = useState("");
   const [firstMessageAttachments, setFirstMessageAttachments] = useState<PendingPrivateMessageAttachment[]>([]);
+  useEffect(() => {
+    const params = new URLSearchParams(urlSearch);
+    const requestedConversation = Number(params.get("conversation"));
+    const shouldCompose = params.get("compose") === "1";
+    const actionKey = `${shouldCompose ? "compose" : ""}:${Number.isInteger(requestedConversation) && requestedConversation > 0 ? requestedConversation : ""}`;
+    if (!shouldCompose && !(Number.isInteger(requestedConversation) && requestedConversation > 0)) {
+      handledSupportActionRef.current = null;
+      return;
+    }
+    if (handledSupportActionRef.current === actionKey) return;
+    handledSupportActionRef.current = actionKey;
+    if (Number.isInteger(requestedConversation) && requestedConversation > 0) setSelectedId(requestedConversation);
+    if (shouldCompose) setComposeOpen(true);
+    params.delete("compose");
+    params.delete("conversation");
+    const next = `${window.location.pathname}${params.toString() ? `?${params}` : ""}`;
+    window.history.replaceState({}, "", next);
+  }, [urlSearch]);
   const inboxQuery = trpc.privateMessaging.getAdminInbox.useQuery(
     { status, search: search.trim() || undefined, learnerId: fixedLearnerId, page, pageSize: 25 },
     { refetchOnWindowFocus: true },

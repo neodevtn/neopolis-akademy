@@ -10,6 +10,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import DeferredCookieConsent from "./components/DeferredCookieConsent";
 import DeferredAuthenticatedOverlays from "./components/DeferredAuthenticatedOverlays";
+import { UnifiedSupportHub } from "./components/UnifiedSupportHub";
 
 // ─── Code-splitting: lazy-load all heavy pages ───
 const Home = lazy(() => import("./pages/Home"));
@@ -119,6 +120,7 @@ function App() {
             <Toaster />
             <AnalyticsRouteTracker />
             <DeferredAuthenticatedOverlays />
+            <UnifiedSupportHub />
             <Router />
             <DeferredCookieConsent />
           </TooltipProvider>

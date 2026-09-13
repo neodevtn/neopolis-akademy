@@ -3,9 +3,10 @@ import { z } from "zod";
 import { invokeLLM } from "./_core/llm";
 import { protectedProcedure, router } from "./_core/trpc";
 import { userCanAccessCourse } from "./db";
-import { appendTekTekMessage, getOrCreateTekTekConversation, getTekTekRequestsInLastHour, listTekTekMessages } from "./tektekDb";
+import { appendTekTekMessage, getOrCreateTekTekConversation, getTekTekRequestsInLastHour, getTekTekUsageOverview, listTekTekBudgetSettings, listTekTekMessages, upsertTekTekBudgetSetting } from "./tektekDb";
 import { getTekTekBlockContext, getTekTekTrainingSources, isTekTekExplorationQuestion, searchTekTekSources } from "./tektekIndex";
 import { TEKTEK_HOURLY_REQUEST_LIMIT, TEKTEK_MAX_QUESTION_LENGTH, TEKTEK_MAX_RESPONSE_LENGTH, TEKTEK_MAX_SOURCES, isLikelyAssessmentQuestion, normalizeTekTekLanguage, tektekLabel, type TekTekCitation, type TekTekSource } from "../shared/tektek";
+import { isAdministrativeRole } from "../shared/roles";
 
 const askInput = z.object({
   certificationId: z.string().trim().min(2).max(200),
@@ -19,6 +20,28 @@ const askInput = z.object({
 });
 
 const contextInput = askInput.omit({ question: true });
+
+const adminUsageInput = z.object({
+  dimension: z.enum(["training", "course", "user"]).default("training"),
+  period: z.enum(["7d", "30d", "month", "all"]).default("30d"),
+  page: z.number().int().min(1).max(10_000).default(1),
+  pageSize: z.number().int().min(5).max(100).default(20),
+  search: z.string().trim().max(160).optional(),
+});
+
+const budgetSettingInput = z.object({
+  scope: z.enum(["global", "training", "course", "user"]),
+  scopeKey: z.string().trim().min(1).max(200),
+  monthlyTokenBudget: z.number().int().min(1).max(1_000_000_000),
+  alertThresholdPercent: z.number().int().min(1).max(100).default(80),
+}).superRefine((value, ctx) => {
+  if (value.scope === "global" && value.scopeKey !== "global") {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["scopeKey"], message: "La clé d’un budget global doit être « global »." });
+  }
+  if (value.scope === "user" && !/^\d+$/.test(value.scopeKey)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["scopeKey"], message: "La clé d’un budget utilisateur doit être un identifiant numérique." });
+  }
+});
 
 type ModelReply = { answer: string; citationIds: string[]; followUp: string | null };
 
@@ -158,6 +181,20 @@ function tektekReplySchema(sources: TekTekSource[]) {
 }
 
 export const tektekRouter = router({
+  adminUsage: router({
+    getOverview: protectedProcedure.input(adminUsageInput.optional()).query(async ({ ctx, input }) => {
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
+      return getTekTekUsageOverview(input ?? { dimension: "training", period: "30d", page: 1, pageSize: 20 });
+    }),
+    listBudgets: protectedProcedure.query(async ({ ctx }) => {
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
+      return listTekTekBudgetSettings();
+    }),
+    saveBudget: protectedProcedure.input(budgetSettingInput).mutation(async ({ ctx, input }) => {
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
+      return upsertTekTekBudgetSetting({ ...input, updatedBy: ctx.user.id });
+    }),
+  }),
   getHistory: protectedProcedure.input(z.object({ certificationId: z.string().trim().min(2).max(200), courseId: z.string().trim().min(2).max(200), language: z.enum(["fr", "en", "ar"]).optional() })).query(async ({ ctx, input }) => {
     const language = normalizeTekTekLanguage(input.language);
     const { allowedCourseIds } = await resolveAccessibleTrainingCourses(ctx.user.id, input.certificationId, input.courseId, language);
@@ -168,13 +205,13 @@ export const tektekRouter = router({
   ask: protectedProcedure.input(askInput).mutation(async ({ ctx, input }) => {
     const language = normalizeTekTekLanguage(input.language);
     const requestsInLastHour = await getTekTekRequestsInLastHour(ctx.user.id);
-    if (requestsInLastHour >= TEKTEK_HOURLY_REQUEST_LIMIT) {
+    if (!isAdministrativeRole(ctx.user.role) && requestsInLastHour >= TEKTEK_HOURLY_REQUEST_LIMIT) {
       throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "TekTek a atteint la limite temporaire de questions pour cette heure. Réessayez un peu plus tard." });
     }
     const { allowedCourseIds } = await resolveAccessibleTrainingCourses(ctx.user.id, input.certificationId, input.courseId, language);
     const conversation = await getOrCreateTekTekConversation({ userId: ctx.user.id, certificationId: input.certificationId, activeCourseId: input.courseId, language });
     const priorHistory = await listTekTekMessages({ userId: ctx.user.id, certificationId: input.certificationId, limit: 6 });
-    await appendTekTekMessage({ conversationId: conversation.id, role: "user", content: input.question });
+    await appendTekTekMessage({ conversationId: conversation.id, courseId: input.courseId, role: "user", content: input.question });
 
     const activeSources = getTekTekBlockContext({ ...input, language });
     const contextText = priorHistory.slice(-4).map((message) => message.content).join(" ");
@@ -183,12 +220,12 @@ export const tektekRouter = router({
     if (isAssessment && isLikelyAssessmentQuestion(input.question)) {
       const answer = tektekLabel(language, "assessment");
       const citations = sources.slice(0, 3).map(citationFromSource);
-      const id = await appendTekTekMessage({ conversationId: conversation.id, role: "assistant", content: answer, citations, model: null });
+      const id = await appendTekTekMessage({ conversationId: conversation.id, courseId: input.courseId, role: "assistant", content: answer, citations, model: null });
       return { id, answer, citations, followUp: null, inScope: true, sourceCount: citations.length };
     }
     if (!sources.length) {
       const answer = noSourceReply(language);
-      const id = await appendTekTekMessage({ conversationId: conversation.id, role: "assistant", content: answer, citations: [], model: null });
+      const id = await appendTekTekMessage({ conversationId: conversation.id, courseId: input.courseId, role: "assistant", content: answer, citations: [], model: null });
       return { id, answer, citations: [], followUp: null, inScope: false, sourceCount: 0 };
     }
 
@@ -196,10 +233,11 @@ export const tektekRouter = router({
     if (exploration) {
       const citations = sources.slice(0, 3).map(citationFromSource);
       const answer = sourceNavigationReply(language, sources, true);
-      const messageId = await appendTekTekMessage({ conversationId: conversation.id, role: "assistant", content: answer, citations, model: null });
+      const messageId = await appendTekTekMessage({ conversationId: conversation.id, courseId: input.courseId, role: "assistant", content: answer, citations, model: null });
       return { id: messageId, answer, citations, followUp: null, inScope: true, sourceCount: citations.length };
     }
     let modelReply: ModelReply | null = null;
+    let usage: { promptTokens: number | null; completionTokens: number | null } = { promptTokens: null, completionTokens: null };
     try {
       const response = await invokeLLM({
         model: "gpt-5-mini",
@@ -208,6 +246,10 @@ export const tektekRouter = router({
         messages: buildTekTekMessages({ question: input.question, language, sources, history: priorHistory }),
         responseFormat: tektekReplySchema(sources),
       });
+      usage = {
+        promptTokens: Number.isFinite(response.usage?.prompt_tokens) ? Math.max(0, Number(response.usage?.prompt_tokens)) : null,
+        completionTokens: Number.isFinite(response.usage?.completion_tokens) ? Math.max(0, Number(response.usage?.completion_tokens)) : null,
+      };
       const raw = textFromContent(response.choices?.[0]?.message?.content);
       modelReply = parseModelReply(raw);
       if (!modelReply) {
@@ -231,12 +273,13 @@ export const tektekRouter = router({
     const followUp = citations.length && modelReply?.followUp?.trim() ? modelReply.followUp.trim().slice(0, 240) : null;
     const messageId = await appendTekTekMessage({
       conversationId: conversation.id,
+      courseId: input.courseId,
       role: "assistant",
       content: answer,
       citations: effectiveCitations,
       model: citations.length ? "gpt-5-mini" : null,
-      promptTokens: null,
-      completionTokens: null,
+      promptTokens: citations.length ? usage.promptTokens : null,
+      completionTokens: citations.length ? usage.completionTokens : null,
     });
     return { id: messageId, answer, citations: effectiveCitations, followUp, inScope: true, sourceCount: effectiveCitations.length };
   }),

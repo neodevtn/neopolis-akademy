@@ -5,6 +5,7 @@ describe("resolveAdminDashboardTab", () => {
   it("conserve les onglets administratifs autorisés", () => {
     expect(resolveAdminDashboardTab("analytics")).toBe("analytics");
     expect(resolveAdminDashboardTab("referrals")).toBe("referrals");
+    expect(resolveAdminDashboardTab("ai_usage")).toBe("ai_usage");
   });
 
   it("redirige l’ancien Kanban et les valeurs inconnues vers les candidatures", () => {

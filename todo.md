@@ -2999,3 +2999,17 @@
 - [x] Ajouter une récupération contrôlée du widget et un message d’erreur actionnable au lieu d’un chargement indéfini — retry Cloudflare silencieux désactivé, bouton de relance recréant réellement le widget
 - [x] Tester le contrôle de présence avec jeton valide, expiration, échec réseau, widget bloqué et rafraîchissement manuel — tests des transitions, délais, hôte/action Turnstile et erreurs réseau ajoutés sans modifier de progression
 - [x] Publier et vérifier la correction sur le domaine public, puis reprendre la matrice et la publication TekTek interrompues — version publique renouvelée, module Turnstile avec relance bornée confirmé, TekTek testé publiquement et console sans nouvelle erreur
+
+## Centre d’assistance unifié — 13 septembre 2026
+- [x] Auditer les entrées actuelles de signalement, messagerie Neopolis, notifications et TekTek afin d’éliminer les doublons et chevauchements visuels — CTA TekTek et launcher de messagerie concurrents retirés visuellement au profit du centre unique
+- [x] Créer un unique appel à l’action global, visible sur les pages publiques, apprenant, cours et administration selon les droits — bouton persistant « Besoin d’aide ? » monté à la racine
+- [x] Proposer depuis ce centre les actions « Signaler un problème », « Nouvelle conversation », « Conversations ouvertes » et « Demander à TekTek » avec des descriptions cohérentes — dialogue unique à quatre parcours, localisé et accessible au clavier
+- [x] Raccorder chaque action à son service existant sans mélanger les données privées de messagerie, de monitoring ou du coach pédagogique — relais événementiel apprenant, navigation admin réactive, tRPC de signalement existant et panneau TekTek contextuel conservés
+- [ ] Tester l’accessibilité, le mobile, les routes et l’absence de régression, puis publier et vérifier le domaine public
+
+## Gouvernance des usages TekTek — 13 septembre 2026
+- [x] Auditer les quotas TekTek, le journal de messages et les métriques de jetons réellement disponibles sans estimer une facturation externe — l’historique antérieur n’inclut pas de mesure de jetons ; les nouvelles réponses conservent les valeurs retournées par le modèle
+- [x] Exempter strictement les rôles admin et admin-apprenant des limites de questions TekTek tout en conservant les contrôles de droit et l’audit — plafond maintenu pour apprenant et tests d’exemption pour les deux rôles administratifs
+- [x] Ajouter un tableau de bord administrateur des requêtes et jetons TekTek par formation, cours et utilisateur, avec recherche et pagination — onglet « Gouvernance IA », tables paginées et regroupements SQL protégés par rôle administratif
+- [x] Ajouter des budgets internes configurables, des seuils d’alerte et un statut d’utilisation sans présenter ces valeurs comme une facture fournisseur — budget mensuel par portée, seuil configurable, comparaison visible et libellé non financier
+- [ ] Tester les permissions et agrégats, publier puis vérifier l’interface de gouvernance IA

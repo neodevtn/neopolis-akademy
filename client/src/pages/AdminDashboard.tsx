@@ -23,6 +23,7 @@ import { toPreviewMediaUrl } from "@/lib/mediaUrl";
 import { isAdministrativeRole } from "@shared/roles";
 import { resolveAdminDashboardTab, type AdminDashboardTab } from "@/lib/adminDashboardTabs";
 import { PrivateMessagingAdminPanel } from "@/components/PrivateMessagingAdminPanel";
+import { TekTekUsageDashboard } from "@/components/TekTekUsageDashboard";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
@@ -882,6 +883,9 @@ export default function AdminDashboard() {
 
         {/* ==================== PRIVATE MESSAGING TAB ==================== */}
         {activeTab === "messages" && <PrivateMessagingAdminPanel />}
+
+        {/* ==================== AI USAGE TAB ==================== */}
+        {activeTab === "ai_usage" && <TekTekUsageDashboard />}
 
         {/* ==================== INVITATIONS TAB ==================== */}
         {activeTab === "invitations" && (

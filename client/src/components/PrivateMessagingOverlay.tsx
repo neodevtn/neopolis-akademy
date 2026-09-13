@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { MessageCircle, Plus, Send, X } from "lucide-react";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ import { PrivateMessageBubble, PrivateUnreadDivider, type PrivateMessageView } f
 import { usePrivateConversationViewport } from "@/hooks/usePrivateConversationViewport";
 import { usePrivateMessageChime } from "@/hooks/usePrivateMessageChime";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { SUPPORT_HUB_EVENT, type SupportHubEventDetail } from "@/lib/supportHub";
 
 type ConversationSummary = {
   id: number;
@@ -177,6 +178,14 @@ export function PrivateMessagingOverlay() {
     onError: (error) => toast.error(error.message),
   });
   const refresh = () => { if (isAdmin) void adminQuery.refetch(); else void learnerQuery.refetch(); };
+  const openComposer = useCallback((mode: "message" | "report") => {
+    setComposeMode(mode);
+    setSubject(mode === "report" ? t({ fr: "Signalement de problème", en: "Problem report", ar: "الإبلاغ عن مشكلة" }) : "");
+    setBody("");
+    setComposeAttachments([]);
+    setLauncherOpen(false);
+    setComposeOpen(true);
+  }, [t]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -226,6 +235,21 @@ export function PrivateMessagingOverlay() {
     return () => window.removeEventListener("pointerdown", primeOnFirstInteraction);
   }, [primeNotificationSound]);
 
+  useEffect(() => {
+    const handleSupportAction = (event: Event) => {
+      const detail = (event as CustomEvent<SupportHubEventDetail>).detail;
+      if (!detail || isAdmin) return;
+      if (detail.action === "open-conversations") setLauncherOpen(true);
+      if (detail.action === "open-conversation" && detail.conversationId) {
+        setOpenConversationIds((current) => Array.from(new Set([detail.conversationId!, ...current])).slice(0, 3));
+      }
+      if (detail.action === "new-conversation") openComposer("message");
+      if (detail.action === "report-technical-issue") openComposer("report");
+    };
+    window.addEventListener(SUPPORT_HUB_EVENT, handleSupportAction);
+    return () => window.removeEventListener(SUPPORT_HUB_EVENT, handleSupportAction);
+  }, [isAdmin, openComposer]);
+
   const conversations = useMemo(() => (isAdmin ? adminQuery.data?.items || [] : learnerQuery.data || []) as ConversationSummary[], [adminQuery.data, isAdmin, learnerQuery.data]);
   const unreadCount = conversations.reduce((total, conversation) => total + Number(conversation.unreadCount || 0), 0);
   const openConversation = (conversationId: number) => {
@@ -234,12 +258,11 @@ export function PrivateMessagingOverlay() {
   };
 
   if (!isAuthenticated || (isAdmin && pathname.startsWith("/admin"))) return null;
-  const openComposer = (mode: "message" | "report") => { setComposeMode(mode); setSubject(mode === "report" ? t({ fr: "Signalement de problème", en: "Problem report", ar: "الإبلاغ عن مشكلة" }) : ""); setBody(""); setComposeAttachments([]); setLauncherOpen(false); setComposeOpen(true); };
   return <>
     <div className="fixed bottom-5 right-5 z-[65] flex items-center gap-2 sm:bottom-6 sm:right-6">
-      <PrivateMessagingNotificationCenter isAdmin={isAdmin} onOpenConversation={openConversation} />
+      <span className="hidden"><PrivateMessagingNotificationCenter isAdmin={isAdmin} onOpenConversation={openConversation} /></span>
       <div className="relative">
-      <Button className="h-11 gap-2 rounded-full shadow-lg" onClick={() => setLauncherOpen((value) => !value)} aria-expanded={launcherOpen} aria-controls="private-messaging-launcher"><MessageCircle className="h-4 w-4" />{isAdmin ? t({ fr: "Messages", en: "Messages", ar: "الرسائل" }) : t({ fr: "Échanger avec Neopolis", en: "Chat with Neopolis", ar: "تواصل مع نيوبوليس" })}{unreadCount > 0 ? <span className="rounded-full bg-white px-1.5 py-0.5 text-[11px] font-bold text-primary" aria-label={t({ fr: `${unreadCount} messages non lus`, en: `${unreadCount} unread messages`, ar: `${unreadCount} رسائل غير مقروءة` })}>{unreadCount > 99 ? "99+" : unreadCount}</span> : null}</Button>
+      <Button className="hidden" tabIndex={-1} aria-hidden="true" onClick={() => setLauncherOpen((value) => !value)} aria-expanded={launcherOpen} aria-controls="private-messaging-launcher"><MessageCircle className="h-4 w-4" />{isAdmin ? t({ fr: "Messages", en: "Messages", ar: "الرسائل" }) : t({ fr: "Échanger avec Neopolis", en: "Chat with Neopolis", ar: "تواصل مع نيوبوليس" })}{unreadCount > 0 ? <span className="rounded-full bg-white px-1.5 py-0.5 text-[11px] font-bold text-primary" aria-label={t({ fr: `${unreadCount} messages non lus`, en: `${unreadCount} unread messages`, ar: `${unreadCount} رسائل غير مقروءة` })}>{unreadCount > 99 ? "99+" : unreadCount}</span> : null}</Button>
       {launcherOpen ? <section id="private-messaging-launcher" className="absolute bottom-14 right-0 flex w-[min(390px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl" aria-label={t({ fr: "Conversations privées", en: "Private conversations", ar: "المحادثات الخاصة" })}><header className="flex items-center justify-between border-b border-slate-100 px-4 py-3"><div><h2 className="text-sm font-semibold text-slate-950">{isAdmin ? t({ fr: "Conversations apprenants", en: "Learner conversations", ar: "محادثات المتعلمين" }) : t({ fr: "Échanger avec Neopolis", en: "Chat with Neopolis", ar: "تواصل مع نيوبوليس" })}</h2><p className="mt-0.5 text-xs text-slate-500">{t({ fr: "Historique privé et réponses de l’équipe.", en: "Private history and team replies.", ar: "سجل خاص وردود الفريق." })}</p></div><Button variant="ghost" size="icon" aria-label={t({ fr: "Fermer la liste", en: "Close list", ar: "إغلاق القائمة" })} onClick={() => setLauncherOpen(false)}><X className="h-4 w-4" /></Button></header><ScrollArea className="max-h-80"><div className="p-2">{conversations.map((conversation) => { const hasUnread = conversation.unreadCount > 0; return <button key={conversation.id} type="button" data-conversation-read-state={hasUnread ? "unread" : "read"} onClick={() => openConversation(conversation.id)} className={`flex w-full items-start gap-3 rounded-lg p-3 text-left ${hasUnread ? "border border-amber-300 bg-amber-50 shadow-sm hover:bg-amber-100" : "hover:bg-slate-50"}`}><span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${hasUnread ? "bg-amber-600" : "bg-transparent"}`} aria-hidden="true" /><span className="min-w-0 flex-1"><span className="flex items-center gap-2"><strong className={`truncate text-sm text-slate-900 ${hasUnread ? "font-bold" : "font-semibold"}`}>{conversation.subject}</strong>{conversation.status === "closed" ? <span className="shrink-0 text-[10px] font-medium text-slate-400">{privateConversationDisplayStatus("closed", lang)}</span> : null}</span><span className={`mt-1 block truncate text-xs ${hasUnread ? "font-medium text-slate-800" : "text-slate-500"}`}>{conversationName(conversation, isAdmin, t({ fr: "Apprenant", en: "Learner", ar: "متعلم" }), t({ fr: "Équipe Neopolis", en: "Neopolis team", ar: "فريق نيوبوليس" }))} · {conversation.lastMessagePreview || t({ fr: "Aucun message", en: "No message", ar: "لا توجد رسالة" })}</span><span className="mt-1 block text-[10px] text-slate-400">{dateLabel(conversation.lastMessageAt, lang)}</span></span>{hasUnread ? <span className="rounded-full bg-amber-600 px-2 py-0.5 text-[10px] font-bold text-white" aria-label={t({ fr: `${conversation.unreadCount} messages non lus`, en: `${conversation.unreadCount} unread messages`, ar: `${conversation.unreadCount} رسائل غير مقروءة` })}>{conversation.unreadCount > 99 ? "99+" : conversation.unreadCount}</span> : <span className="text-[10px] font-medium text-emerald-700">{t({ fr: "Lu", en: "Read", ar: "مقروء" })}</span>}</button>; })}{!conversations.length && !learnerQuery.isLoading && !adminQuery.isLoading ? <p className="px-3 py-6 text-center text-sm text-slate-500">{t({ fr: "Aucune conversation pour le moment.", en: "No conversations yet.", ar: "لا توجد محادثات حتى الآن." })}</p> : null}</div></ScrollArea><footer className="space-y-2 border-t border-slate-100 p-3">{isAdmin ? <Button variant="outline" className="w-full" onClick={() => { setLauncherOpen(false); navigate("/admin?tab=messages"); }}>{t({ fr: "Gérer les conversations", en: "Manage conversations", ar: "إدارة المحادثات" })}</Button> : <><Button className="w-full gap-2" onClick={() => openComposer("message")}><Plus className="h-4 w-4" />{t({ fr: "Nouvelle conversation", en: "New conversation", ar: "محادثة جديدة" })}</Button><Button variant="ghost" className="w-full text-slate-600" onClick={() => openComposer("report")}>{t({ fr: "Signaler un problème", en: "Report a problem", ar: "الإبلاغ عن مشكلة" })}</Button></>}</footer></section> : null}
       </div>
     </div>
