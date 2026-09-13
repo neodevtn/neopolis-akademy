@@ -2979,4 +2979,8 @@
 - [x] Élargir le plan à tous les cours de la formation ouverte avec priorité au cours, à l’écran et au minutage actifs
 - [x] Ajouter un raisonnement inter-cours contrôlé, une gestion explicite des contradictions et des réponses comparatives sourcées
 - [x] Réviser les plafonds de contexte, le cache et le routage de modèles pour conserver des coûts prévisibles à l’échelle d’une formation
-- [ ] Obtenir la validation explicite du plan TekTek enrichi avant de commencer l’indexation pilote
+- [x] Obtenir la validation explicite du plan TekTek enrichi avant de commencer l’indexation pilote
+- [x] Construire l’index déterministe pilote des cours, activités, ressources et transcriptions de la formation ouverte
+- [x] Exposer le service TekTek avec recherche hiérarchique, citations contrôlées, refus contextualisés et quotas de coût
+- [x] Intégrer TekTek dans le lecteur avec une invitation visuelle accessible, non intrusive et adaptée au mobile
+- [x] Tester les réponses, les garde-fous, les citations vidéo, la confidentialité, la qualité visuelle et publier le pilote — 208 suites, 692 tests réussis (2 ignorés), QA 9/9, contrôle desktop TekTek sans erreur console et contrat d’indexation vidéo validé

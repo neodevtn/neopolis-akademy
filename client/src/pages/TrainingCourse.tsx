@@ -34,6 +34,8 @@ import { ReferralShareCard } from "@/components/ReferralShareCard";
 import { getStandaloneTpCertificationId } from "@/lib/iaAppliedMetiersCatalog";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 import { trackEvent, trackEventOnce } from "@/lib/analytics";
+import { TekTekCoach } from "@/components/TekTekCoach";
+import type { TekTekCitation } from "@shared/tektek";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -62,6 +64,7 @@ export default function TrainingCourse() {
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
   const [chapterProgressLessonIndex, setChapterProgressLessonIndex] = useState<number | null>(null);
+  const [viewingChapterIndex, setViewingChapterIndex] = useState(0);
   const lastInteractionAtRef = useRef(Date.now());
   const mediaPlayingRef = useRef(false);
   const learningPositionRef = useRef<{ lessonIndex: number | null; chapterIndex?: number }>({ lessonIndex: null });
@@ -88,6 +91,10 @@ export default function TrainingCourse() {
       });
     });
   }, [certId, courseId, lang]);
+
+  const handleViewingChapterChange = useCallback((current: number) => {
+    setViewingChapterIndex(current);
+  }, []);
 
   useEffect(() => {
     const routeClass = "training-course-page";
@@ -841,6 +848,7 @@ export default function TrainingCourse() {
                       setChapterProgressLessonIndex(displayedIndex);
                       navigateCoursePosition(displayedIndex, current);
                     }}
+                    onViewingChapterChange={handleViewingChapterChange}
                     initialChapter={Math.min(chapterProgress?.current ?? 0, (displayedLesson?.chapters?.length || 1) - 1)}
                   />
                 </div>
@@ -884,6 +892,18 @@ export default function TrainingCourse() {
           )}
         </motion.main>
       </div>
+      {certId && courseId && activeLessonIndex !== null && (
+        <TekTekCoach
+          certificationId={certId}
+          courseId={courseId}
+          lessonIndex={activeLessonIndex}
+          chapterIndex={viewingChapterIndex}
+          onNavigateToCitation={(citation: TekTekCitation) => {
+            const target = `/training/${citation.certificationId}/${citation.courseId}?lesson=${citation.lessonIndex}&chapter=${citation.chapterIndex}`;
+            navigate(target);
+          }}
+        />
+      )}
     </div>
   );
 }

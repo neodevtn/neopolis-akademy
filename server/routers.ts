@@ -42,6 +42,7 @@ import { sendPasswordResetEmail } from "./email";
 import { ENV } from "./_core/env";
 import { isValidPassword } from "../shared/accountCredentials";
 import { privateMessagingRouter } from "./privateMessagingRouter";
+import { tektekRouter } from "./tektekRouter";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -51,6 +52,7 @@ const orientationGoalsSchema = z.array(z.object({
 export const appRouter = router({
   system: systemRouter,
   privateMessaging: privateMessagingRouter,
+  tektek: tektekRouter,
   talent: talentLearnerRouter,
   talentAdmin: talentAdminRouter,
   aiNews: router({

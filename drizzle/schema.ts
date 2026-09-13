@@ -548,6 +548,38 @@ export const aiResponseEvaluations = mysqlTable("ai_response_evaluations", {
 ]);
 export type AiResponseEvaluation = typeof aiResponseEvaluations.$inferSelect;
 
+/** Conversations persistées du coach IA TekTek, isolées par apprenant et formation. */
+export const tektekConversations = mysqlTable("tektek_conversations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  certificationId: varchar("certificationId", { length: 200 }).notNull(),
+  activeCourseId: varchar("activeCourseId", { length: 200 }).notNull(),
+  language: varchar("language", { length: 8 }).notNull().default("fr"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("tektek_conversation_user_training_unique").on(table.userId, table.certificationId),
+  index("tektek_conversation_user_updated_idx").on(table.userId, table.updatedAt),
+]);
+export type TekTekConversation = typeof tektekConversations.$inferSelect;
+
+/** Questions, réponses, sources et usage agrégé du coach IA, pour audit pédagogique. */
+export const tektekMessages = mysqlTable("tektek_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  conversationId: int("conversationId").notNull(),
+  role: mysqlEnum("role", ["user", "assistant", "system"]).notNull(),
+  content: text("content").notNull(),
+  sourceReferences: json("sourceReferences"),
+  model: varchar("model", { length: 160 }),
+  promptTokens: int("promptTokens"),
+  completionTokens: int("completionTokens"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [
+  index("tektek_message_conversation_idx").on(table.conversationId, table.createdAt),
+  index("tektek_message_created_idx").on(table.createdAt),
+]);
+export type TekTekMessage = typeof tektekMessages.$inferSelect;
+
 /**
  * User invitations - tracks pending invitations sent by admins
  */

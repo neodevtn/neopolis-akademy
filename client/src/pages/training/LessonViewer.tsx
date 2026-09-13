@@ -51,6 +51,7 @@ export default function LessonViewer({
   isReviewMode = false,
   courseExercises = [],
   onChapterChange,
+  onViewingChapterChange,
   onMediaPlaybackChange,
   initialChapter,
   courseTheme,
@@ -68,6 +69,7 @@ export default function LessonViewer({
   isReviewMode?: boolean;
   courseExercises?: any[];
   onChapterChange?: (current: number, total: number) => void;
+  onViewingChapterChange?: (current: number, total: number) => void;
   onMediaPlaybackChange?: (isPlaying: boolean, mediaId?: string) => void;
   initialChapter?: number;
   courseTheme?: any;
@@ -201,7 +203,8 @@ export default function LessonViewer({
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setReadingProgress(0);
-  }, [currentChapter, totalChapters]);
+    onViewingChapterChange?.(currentChapter, totalChapters);
+  }, [currentChapter, totalChapters, onViewingChapterChange]);
 
   // YouTube video tracking is now handled by the YouTubePlayer component internally
 
