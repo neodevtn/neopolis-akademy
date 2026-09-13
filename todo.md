@@ -2970,3 +2970,9 @@
 ## Contraste des accusés vus — 13 septembre 2026
 - [x] Rendre les deux coches de lecture bleues et parfaitement visibles sur une pastille blanche dans les bulles sortantes
 - [x] Tester, publier et vérifier le contraste des accusés de lecture sur le domaine public — TypeScript, 206 suites / 684 tests réussis (2 ignorés), QA publication 9/9 et diff-check avant checkpoint
+
+## TekTek — Coach IA de cours — conception
+- [x] Définir le périmètre pédagogique, les sources autorisées et les refus contextuels de TekTek
+- [x] Concevoir l’indexation de cours, chapitres, blocs, documents et transcriptions vidéo avec citations pédagogiques
+- [x] Définir le routage de modèles, les plafonds de coûts, la confidentialité, les contrôles d’intégrité et les métriques de qualité
+- [ ] Soumettre l’architecture TekTek à validation avant toute implémentation ou appel de modèle
