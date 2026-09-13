@@ -2975,4 +2975,8 @@
 - [x] Définir le périmètre pédagogique, les sources autorisées et les refus contextuels de TekTek
 - [x] Concevoir l’indexation de cours, chapitres, blocs, documents et transcriptions vidéo avec citations pédagogiques
 - [x] Définir le routage de modèles, les plafonds de coûts, la confidentialité, les contrôles d’intégrité et les métriques de qualité
-- [ ] Soumettre l’architecture TekTek à validation avant toute implémentation ou appel de modèle
+- [x] Soumettre l’architecture TekTek à validation avant toute implémentation ou appel de modèle
+- [x] Élargir le plan à tous les cours de la formation ouverte avec priorité au cours, à l’écran et au minutage actifs
+- [x] Ajouter un raisonnement inter-cours contrôlé, une gestion explicite des contradictions et des réponses comparatives sourcées
+- [x] Réviser les plafonds de contexte, le cache et le routage de modèles pour conserver des coûts prévisibles à l’échelle d’une formation
+- [ ] Obtenir la validation explicite du plan TekTek enrichi avant de commencer l’indexation pilote
