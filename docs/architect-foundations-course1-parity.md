@@ -87,6 +87,10 @@ Le 14 septembre 2026, le test interactif de la première vidéo officielle (`JpG
 
 Le contrôle automatisé des onze vidéos a été ralenti et doté de reprises bornées. Il a néanmoins rencontré deux limites distinctes : un refus de démarrage fournisseur sur un lecteur et une limitation de débit lors de plusieurs chargements de pages protégées. Les miniatures, les références YouTube, les transcriptions et les quatorze téléchargements restent inventoriés séparément ; aucun résultat de ce test ne permet d’affirmer que l’image et le son ont été lus au début, au milieu et à la fin. Les cas non attestés resteront explicitement signalés dans le rapport de livraison pour validation dans un navigateur apprenant normal après publication.
 
+Le contrôle public lancé immédiatement après le checkpoint `daad03c5` a fini par rendre le lecteur, mais il servait toujours l’ancienne révision : **14 leçons / 17 vidéos** et le libellé « Estimated time for this module: 10-15 minutes ». Cette observation est conservée comme capture **avant propagation** ; elle ne constitue ni une validation ni une invalidation de la version `daad03c5`. Une nouvelle vérification du même URL sera faite après propagation effective et comparée aux compteurs cibles de 15 leçons et 11 vidéos officielles, complétés par 6 médias Neopolis identifiés.
+
+Une requête directe sans cache sur [`/data/courses/claude_certified_architect_foundations__01.json`](https://akademy.neodev.click/data/courses/claude_certified_architect_foundations__01.json) a confirmé le même état transitoire : le flux retournait encore les valeurs antérieures « 10-15 minutes », quatorze leçons et dix-sept vidéos. Cette réponse n’a été utilisée que comme preuve de délai de propagation ; elle ne remplace ni le JSON local validé ni le contrôle à effectuer après disponibilité de la nouvelle version.
+
 ## Contrôles à exécuter avant publication
 
 | Contrôle | Critère vérifiable |
