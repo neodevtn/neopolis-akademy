@@ -3,9 +3,32 @@ import { CheckCircle2, PlayCircle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const videoProviderFallbackCopy = {
-  en: "The video provider could not start this embedded player. You can open the official video in a new tab and, if you complete it, mark it as watched when you return.",
-  fr: "Le fournisseur vidéo n’a pas pu démarrer ce lecteur intégré. Vous pouvez ouvrir la vidéo officielle dans un nouvel onglet puis, si vous l’avez terminée, la marquer comme vue à votre retour.",
+  en: "The embedded provider could not start this video. Open the official video in a new tab, then confirm you watched it before marking this step complete.",
+  fr: "Le fournisseur intégré n’a pas pu démarrer cette vidéo. Ouvrez la vidéo officielle dans un nouvel onglet, puis confirmez l’avoir regardée avant de valider cette étape.",
 };
+
+export type VideoEmbedHost = "privacy" | "standard";
+
+export const videoEmbedHosts: Record<VideoEmbedHost, string> = {
+  privacy: "https://www.youtube-nocookie.com",
+  standard: "https://www.youtube.com",
+};
+
+export function nextVideoEmbedHostAfterProviderError(host: VideoEmbedHost): VideoEmbedHost | null {
+  return host === "privacy" ? "standard" : null;
+}
+
+export function canMarkVideoComplete({
+  playbackConfirmed,
+  providerUnavailable,
+  externalViewingConfirmed,
+}: {
+  playbackConfirmed: boolean;
+  providerUnavailable: boolean;
+  externalViewingConfirmed: boolean;
+}) {
+  return playbackConfirmed || (providerUnavailable && externalViewingConfirmed);
+}
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -33,58 +56,45 @@ export function YouTubePlayer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoCompleted, setAutoCompleted] = useState(false);
   const [embedError, setEmbedError] = useState(false);
+  const [embedHost, setEmbedHost] = useState<VideoEmbedHost>("privacy");
+  const [playbackConfirmed, setPlaybackConfirmed] = useState(false);
+  const [externalViewingConfirmed, setExternalViewingConfirmed] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const playbackSignalTimeoutRef = useRef<number | null>(null);
-  const autoCompletionTimeoutRef = useRef<number | null>(null);
-
-  const clearPlaybackSignalTimeout = useCallback(() => {
-    if (playbackSignalTimeoutRef.current !== null) {
-      window.clearTimeout(playbackSignalTimeoutRef.current);
-      playbackSignalTimeoutRef.current = null;
-    }
-  }, []);
-
-  const clearAutoCompletionTimeout = useCallback(() => {
-    if (autoCompletionTimeoutRef.current !== null) {
-      window.clearTimeout(autoCompletionTimeoutRef.current);
-      autoCompletionTimeoutRef.current = null;
-    }
-  }, []);
-
-  useEffect(() => () => {
-    clearPlaybackSignalTimeout();
-    clearAutoCompletionTimeout();
-  }, [clearAutoCompletionTimeout, clearPlaybackSignalTimeout]);
 
   const handlePlayClick = useCallback(() => {
-    clearPlaybackSignalTimeout();
-    clearAutoCompletionTimeout();
     setEmbedError(false);
+    setEmbedHost("privacy");
+    setPlaybackConfirmed(false);
+    setExternalViewingConfirmed(false);
     setIsPlaying(true);
-    // Auto-mark as complete after 30 seconds of watching (simplified tracking)
-    if (!isCompleted && !autoCompleted) {
-      autoCompletionTimeoutRef.current = window.setTimeout(() => {
-        onMarkComplete(videoKey);
-        setAutoCompleted(true);
-      }, 30000); // 30 seconds
-    }
-  }, [autoCompleted, clearAutoCompletionTimeout, clearPlaybackSignalTimeout, isCompleted, onMarkComplete, videoKey]);
+  }, []);
 
   useEffect(() => {
     const onYouTubeMessage = (event: MessageEvent) => {
       if (event.origin !== "https://www.youtube-nocookie.com" && event.origin !== "https://www.youtube.com") return;
+      if (event.source !== iframeRef.current?.contentWindow) return;
       try {
         const payload = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
         if (payload?.event === "onError") {
-          clearPlaybackSignalTimeout();
-          clearAutoCompletionTimeout();
+          const nextHost = nextVideoEmbedHostAfterProviderError(embedHost);
+          if (nextHost) {
+            setEmbedHost(nextHost);
+            return;
+          }
+          setPlaybackConfirmed(false);
           setEmbedError(true);
           onPlaybackChange?.(false);
           return;
         }
         if (payload?.event !== "onStateChange") return;
-        clearPlaybackSignalTimeout();
-        if (payload.info === 1) setEmbedError(false);
+        if (payload.info === 1) {
+          setEmbedError(false);
+          setPlaybackConfirmed(true);
+        }
+        if (payload.info === 0 && !isCompleted) {
+          onMarkComplete(videoKey);
+          setAutoCompleted(true);
+        }
         onPlaybackChange?.(payload.info === 1);
       } catch {
         // Ignore non-JSON messages from the embedded player.
@@ -93,15 +103,19 @@ export function YouTubePlayer({
     window.addEventListener("message", onYouTubeMessage);
     return () => {
       window.removeEventListener("message", onYouTubeMessage);
-      clearPlaybackSignalTimeout();
-      clearAutoCompletionTimeout();
       onPlaybackChange?.(false);
     };
-  }, [clearAutoCompletionTimeout, clearPlaybackSignalTimeout, onPlaybackChange]);
+  }, [embedHost, isCompleted, onMarkComplete, onPlaybackChange, videoKey]);
 
-  // Build the embed URL with appropriate parameters
-  const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
+  // L’hôte privacy-enhanced est essayé en premier. En cas d’erreur réelle signalée par
+  // le fournisseur, le lecteur standard est tenté une seule fois avant le repli explicite.
+  const embedUrl = `${videoEmbedHosts[embedHost]}/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&widget_referrer=${encodeURIComponent(window.location.origin)}`;
   const fallbackUrl = watchUrl || `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+  const manualCompletionAllowed = canMarkVideoComplete({
+    playbackConfirmed,
+    providerUnavailable: embedError,
+    externalViewingConfirmed,
+  });
 
   return (
     <div
@@ -164,6 +178,15 @@ export function YouTubePlayer({
                 <a href={fallbackUrl} target="_blank" rel="noopener noreferrer" className="rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
                   {t({ en: "Open official video", fr: "Ouvrir la vidéo officielle" })}
                 </a>
+                <label className="flex max-w-md items-start gap-2 text-left text-xs leading-5 text-slate-100">
+                  <input
+                    type="checkbox"
+                    checked={externalViewingConfirmed}
+                    onChange={(event) => setExternalViewingConfirmed(event.target.checked)}
+                    className="mt-1 h-4 w-4 shrink-0 rounded border-white/70 accent-white"
+                  />
+                  <span>{t({ en: "I confirm that I watched the official video.", fr: "Je confirme avoir regardé la vidéo officielle." })}</span>
+                </label>
                 <Button type="button" variant="outline" size="sm" className="border-white/70 text-white hover:bg-white/10 hover:text-white" onClick={handlePlayClick}>
                   {t({ en: "Try again", fr: "Réessayer" })}
                 </Button>
@@ -171,17 +194,13 @@ export function YouTubePlayer({
             ) : (
               <iframe
                 ref={iframeRef}
+                key={embedHost}
                 src={embedUrl}
                 onLoad={() => {
                   const target = iframeRef.current?.contentWindow;
-                  target?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "https://www.youtube-nocookie.com");
-                  target?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onError"] }), "https://www.youtube-nocookie.com");
-                  clearPlaybackSignalTimeout();
-                  playbackSignalTimeoutRef.current = window.setTimeout(() => {
-                    clearAutoCompletionTimeout();
-                    setEmbedError(true);
-                    onPlaybackChange?.(false);
-                  }, 12_000);
+                  const targetOrigin = videoEmbedHosts[embedHost];
+                  target?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), targetOrigin);
+                  target?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onError"] }), targetOrigin);
                 }}
                 title={title}
                 className="w-full h-full"
@@ -194,12 +213,12 @@ export function YouTubePlayer({
           </div>
         )}
 
-        {/* Auto-completed notification */}
+        {/* Completion is recorded only after a real end-of-playback event. */}
         {autoCompleted && (
           <div className="mt-3 flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
-              {t({ en: "Video automatically marked as watched", fr: "Vidéo automatiquement marquée comme vue" })}
+              {t({ en: "Video marked as watched after playback ended", fr: "Vidéo marquée comme vue après la fin de la lecture" })}
             </span>
           </div>
         )}
@@ -210,11 +229,11 @@ export function YouTubePlayer({
             variant={isCompleted ? "outline" : "default"}
             size="sm"
             onClick={() => {
-              if (!isCompleted) {
+              if (!isCompleted && manualCompletionAllowed) {
                 onMarkComplete(videoKey);
               }
             }}
-            disabled={isCompleted}
+            disabled={isCompleted || !manualCompletionAllowed}
             className={`gap-1.5 text-xs ${
               isCompleted
                 ? "border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 cursor-default"

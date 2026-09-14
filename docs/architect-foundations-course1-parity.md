@@ -111,6 +111,14 @@ Une vérification visuelle complémentaire dans le navigateur public confirme la
 
 Lors de l’activation manuelle de la miniature publique de `JpGtOfSgR-c` dans le navigateur disponible, le composant standard remplace bien la miniature par l’iframe YouTube, mais l’image de l’iframe reste noire au moment de l’observation et aucun signal audio n’est exposé par cet environnement. L’état est cohérent avec la limitation fournisseur déjà documentée ; il ne crée aucune complétion nouvelle et n’est pas enregistré comme preuve de lecture.
 
+Après la propagation du checkpoint `14e5e54c`, l’ouverture sans cache du cours 1 a de nouveau confirmé la hiérarchie publiée à quinze leçons, l’indicateur `1 / 17 vidéos`, la durée indicative explicitement rattachée à l’écran et la présence du transcript ainsi que du lien officiel. Le nouveau message de récupération est couvert par test de contrat bilingue ; le contrôle de lecture automatisé reste distinct et non validé en raison de la réponse YouTube dans cette session.
+
+Le 14 septembre, un apprenant a confirmé que le message de récupération apparaissait après quelques secondes de démarrage. Le diagnostic a identifié un délai local de 12 secondes qui convertissait l’absence de message IFrame API en échec fournisseur, même lorsqu’aucune erreur fournisseur n’était reçue. Le correctif supprime ce délai, n’accepte que les erreurs IFrame API réelles, tente une seule fois l’hôte YouTube standard après l’hôte privacy-enhanced, puis demande une confirmation explicite après ouverture de la vidéo officielle. La progression automatique après 30 secondes est supprimée ; seule la fin réelle signalée par le lecteur ou une confirmation explicite dans le repli peut valider l’étape.
+
+En prévisualisation, la miniature de `JpGtOfSgR-c` a été activée après le correctif : le lecteur YouTube est apparu (`movie_player`, état « Tap to unmute ») et aucun état de récupération n’était affiché immédiatement. La vérification au-delà de l’ancien délai de 12 secondes est requise avant publication ; aucune progression n’a été enregistrée durant ce contrôle.
+
+Le contrôle a ensuite été maintenu au-delà de seize secondes. L’état de récupération n’apparaissait toujours pas, aucun libellé de vidéo terminée n’était présent, et le bouton de validation restait désactivé sans fin de lecture confirmée ni attestation externe. Cette validation confirme la suppression du basculement artificiel ; elle ne vaut pas attestation de lecture audio/vidéo intégrale du fournisseur.
+
 Le défaut détecté pendant ce contrôle a été corrigé dans le flux standard `TrainingCourse` : une URL dépourvue de `lesson` ou `chapter` ne convertit plus implicitement la valeur absente en zéro. Cette correction bénéficie à tous les cours multi-leçons et est couverte par le test `server/trainingCourseChapterPersistence.test.ts`.
 
 ## Contrôles à exécuter avant publication
