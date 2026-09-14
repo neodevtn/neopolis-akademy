@@ -5,7 +5,7 @@ const coursesDirectory = resolve(process.cwd(), "client/public/data/courses");
 const args = process.argv.slice(2);
 const needle = args[0] === "--extract" ? "" : args.join(" ").trim();
 const files = (await readdir(coursesDirectory))
-  .filter((file) => /^claude_certified_(architect_(foundations|professional)|associate_foundations|developer_foundations)__\d+\.json$/.test(file))
+  .filter((file) => /^(?:claude_certified_(architect_(foundations|professional)|associate_foundations|developer_foundations)__\d+|claude_101__01|claude_code_101__01|claude_code_in_action__01)\.json$/.test(file))
   .sort();
 
 if (args[0] === "--extract") {
@@ -18,7 +18,7 @@ if (args[0] === "--extract") {
   process.exit(0);
 }
 
-const ignoredScalarFields = new Set(["id", "type", "slug", "url", "sourceUrl", "videoUrl", "mediaUrl", "assetUrl", "imageUrl", "fileUrl", "createdAt", "updatedAt"]);
+const ignoredScalarFields = new Set(["id", "type", "slug", "url", "sourceUrl", "videoUrl", "mediaUrl", "assetUrl", "imageUrl", "fileUrl", "createdAt", "updatedAt", "instructions", "description"]);
 
 function normalize(value) {
   return String(value)
@@ -40,6 +40,7 @@ function titleOf(node) {
 }
 
 function collectText(value, path = "$", contextTitle = null, found = []) {
+  if (path.endsWith(".description") || path.endsWith(".instructions")) return found;
   if (Array.isArray(value)) {
     value.forEach((entry, index) => collectText(entry, `${path}[${index}]`, contextTitle, found));
     return found;

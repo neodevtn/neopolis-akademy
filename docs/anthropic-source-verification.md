@@ -16,6 +16,8 @@ Un second contrôle de la même route, ainsi qu’une requête directe non mise 
 
 Après la confirmation de déploiement, un nouveau contrôle sur cette même route a affiché la version corrigée : modèle à quatre couches en tableau Markdown, scénario restructuré avec contexte, étapes et tableau de questions, et absence du placeholder `(Illustrative Scenario)`. Le tri « Sort Components into Capability Layers » et son verrou de passage étaient toujours présents. La propagation publique du jalon `285ab319` est donc désormais validée pour ce cas représentatif.
 
+Le contrôle direct, sans cache, de `https://akademy.neodev.click/data/courses/claude_101__01.json` après le checkpoint `4f8277a7` confirme que les titres, questions, options, explications et prompts de Claude 101 sont désormais livrés en français. Les blocs d’activité, le nombre d’activités attendu et les règles `requiredBeforeAdvance` restent présents dans la donnée publique ; les commandes et identifiants techniques restent littéraux.
+
 ## Règle de correction
 
 Les corrections reposent sur les données locales canoniques et sur les objectifs confirmés ci-dessus. Lorsqu’un détail de rendu du SCORM source n’est pas consultable, ne pas inventer de graphique : convertir uniquement les informations présentes (titres, étapes, comparaisons et tableaux) en composants standards Neopolis lisibles.
