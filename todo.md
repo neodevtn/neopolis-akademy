@@ -4,19 +4,21 @@
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »
-- [ ] Qualifier chaque média visible comme officiel ou complément Neopolis, rapprocher 11 vidéos/transcriptions et 14 téléchargements avec checksums vérifiables
+- [x] Qualifier chaque média visible comme officiel ou complément Neopolis, rapprocher 11 vidéos/transcriptions et 14 téléchargements avec checksums vérifiables — SHA-256 binaire pour 14 PDFs, SHA-256 de transcript local pour 11 vidéos officielles et empreinte de manifeste pour 17 références vidéo
 - [ ] Vérifier la lecture image et audio au début, au milieu et en fin des médias, puis consigner toute limitation externe de manière factuelle
-- [ ] Vérifier navigation, verrouillage séquentiel, reprise de progression, durée du sous-écran et rendus desktop/mobile pour le cours 1
-- [ ] Tester publiquement Précédent/Suivant avec un compte apprenant de démonstration, y compris le blocage avant une activité requise et le déverrouillage après validation
-- [ ] Tester publiquement la reprise du cours 1 après navigation et confirmer le retour au bon écran avec la hiérarchie à 15 leçons
-- [ ] Corriger la persistance générique des chapitres validés pour les cours multi-leçons afin que la reprise du cours 1 ne dépende pas d’un état local
+- [x] Corriger le message générique de repli vidéo afin qu’il n’indique jamais à tort qu’un retour au cours enregistre une progression — message actionnable et test de contrat bilingue validés
+- [x] Vérifier navigation, verrouillage séquentiel, reprise de progression, durée du sous-écran et rendus desktop/mobile pour le cours 1 — contrôle apprenant publié réussi sur le checkpoint, la navigation et le retour à l’écran 3/3 ; captures 1440 × 1000 et 390 × 844 sans débordement
+- [x] Tester publiquement Précédent/Suivant avec un compte apprenant de démonstration, y compris le blocage avant une activité requise et le déverrouillage après validation — bouton bloqué avant réponse, activé après validation et navigation suivante confirmés sur le domaine public
+- [x] Tester publiquement la reprise du cours 1 après navigation et confirmer le retour au bon écran avec la hiérarchie à 15 leçons — persistance HTTP 200 et restauration publiée de l’écran 3/3 depuis l’URL canonique, traces QA ensuite supprimées
+- [x] Corriger la persistance générique des chapitres validés pour les cours multi-leçons afin que la reprise du cours 1 ne dépende pas d’un état local — véritable index de leçon persisté et paramètres URL absents non convertis en zéro, avec test de contrat
 - [x] Valider le mock CCAR-F : 60 questions, 120 minutes, seuil 720/1000, pondérations 27/18/20/20/15, quatre scénarios parmi six et explications originales par distracteur côté serveur — couverture contrôlée sur les 318 questions susceptibles d’être tirées
 - [ ] Publier et contrôler uniquement le cours 1, livrer les captures, matrice, inventaire/checksums et preuves, puis arrêter le lot avant le cours 2
 
 ## Audit Anthropic — Lot 1/4 Architect Foundations — Cours 1
 - [x] Télécharger et lire intégralement le rapport PDF, le prompt et l’inventaire du lot 1, puis documenter les sources exploitées
 - [x] Cartographier le cours « AI Fluency: Framework & Foundations » existant contre les 15 leçons et sous-écrans source, sans commencer le cours 2
-- [ ] Réconcilier et vérifier les 11 vidéos, leurs transcriptions et les 14 téléchargements avec inventaire, checksum et contrôles de disponibilité
+- [x] Réconcilier et vérifier les 11 vidéos, leurs transcriptions et les 14 téléchargements avec inventaire, checksum et contrôles de disponibilité — 17/17 miniatures et 14/14 PDFs disponibles, 11/11 transcripts officiels empreintés ; lecture audio/vidéo conservée comme contrôle distinct
+- [x] Produire pour chaque vidéo officielle une empreinte vérifiable du manifeste de référence et du transcript local, distincte du SHA-256 binaire calculé sur les 14 PDFs — généré par `verify-architect-foundations-course1-assets.mjs` dans l’inventaire versionné
 - [x] Reconstituer uniquement le cours 1 avec blocs standards Neopolis, navigation précédent/suivant, activités obligatoires et étiquetage explicite des compléments Neopolis
 - [x] Corriger l’ambiguïté de durée « 10–15 minutes » sans modifier les noms de produits Anthropic ni le contenu officiel autorisé
 - [x] Enrichir checkpoints et examen blanc CCAR-F avec des questions originales seulement, incluant explications des distracteurs et correction côté serveur, sans reprendre de dataset tiers — scénarios ajoutés de façon additive et rationales rédigées par Claude Sonnet, uniquement affichées après correction serveur

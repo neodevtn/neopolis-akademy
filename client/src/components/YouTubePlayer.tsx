@@ -2,6 +2,11 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { CheckCircle2, PlayCircle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+export const videoProviderFallbackCopy = {
+  en: "The video provider could not start this embedded player. You can open the official video in a new tab and, if you complete it, mark it as watched when you return.",
+  fr: "Le fournisseur vidéo n’a pas pu démarrer ce lecteur intégré. Vous pouvez ouvrir la vidéo officielle dans un nouvel onglet puis, si vous l’avez terminée, la marquer comme vue à votre retour.",
+};
+
 interface YouTubePlayerProps {
   videoId: string;
   videoKey: string;
@@ -154,10 +159,7 @@ export function YouTubePlayer({
             {embedError ? (
               <div className="flex h-full min-h-48 flex-col items-center justify-center gap-3 bg-slate-950 px-5 text-center text-white">
                 <p className="max-w-md text-sm leading-6">
-                  {t({
-                    en: "The video provider could not start this embedded player. Open the official video in a new tab, then return here to record your progress.",
-                    fr: "Le fournisseur vidéo n’a pas pu démarrer ce lecteur intégré. Ouvrez la vidéo officielle dans un nouvel onglet, puis revenez ici pour enregistrer votre progression.",
-                  })}
+                  {t(videoProviderFallbackCopy)}
                 </p>
                 <a href={fallbackUrl} target="_blank" rel="noopener noreferrer" className="rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
                   {t({ en: "Open official video", fr: "Ouvrir la vidéo officielle" })}

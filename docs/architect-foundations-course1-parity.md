@@ -103,6 +103,16 @@ Lors d’une activation directe de la première miniature publiée (`JpGtOfSgR-c
 
 La revalidation du 14 septembre 2026 contre le domaine publié confirme que les **14/14 téléchargements** retournent HTTP `200`, un type MIME `application/pdf` et une taille strictement positive. Le vérificateur conserve pour chaque ressource son nom, sa taille et son checksum SHA-256 dans `docs/architect-foundations-course1-assets.json` ; les références vidéo sont inventoriées séparément, sans traiter une miniature ou un transcript comme une preuve de lecture audio.
 
+L’inventaire a été renforcé afin de séparer les preuves selon la nature de chaque asset : les **14 PDFs** portent le SHA-256 de leurs octets effectivement servis ; les **11 vidéos officielles avec transcript** portent un SHA-256 du bloc de transcription local sérialisé ; les **17 vidéos** portent une empreinte stable du manifeste de référence canonique (`videoId` et URL de visionnage). Le rapport indique par ailleurs `17/17` références de miniature disponibles, `11/11` transcripts officiels empreintés et `0` média sans provenance. Ces empreintes de manifeste et de transcript ne sont pas présentées comme une empreinte binaire des flux YouTube.
+
+Après la propagation du checkpoint `ecd92119`, le contrôle apprenant publié a également validé le scénario de progression complet sur un compte de démonstration vierge : le bouton **Suivant** reste bloqué avant la soumission du checkpoint, se déverrouille après une réponse valide, déclenche la navigation vers l’écran suivant et reçoit deux réponses HTTP `200` de persistance. Après ouverture de l’URL canonique sans paramètre, le lecteur restaure le sous-écran **3/3** de la leçon plutôt que de réinitialiser l’apprenant à l’écran 1. Les traces temporaires de ce contrôle ont été supprimées de la base de démonstration ; les trois captures de preuve sont conservées hors du projet.
+
+Une vérification visuelle complémentaire dans le navigateur public confirme la version déployée : le lecteur affiche **0/15 leçons**, **1/17 vidéos**, la hiérarchie des quinze leçons dont *Certificate of completion*, ainsi que le libellé précis **« Indicative duration for this screen: 10–15 minutes »** au niveau de l’écran. La première vidéo officielle est visible avec son transcript, son badge de ressource officielle et le lien de secours YouTube. Ce contrôle confirme le rendu et la provenance ; il ne remplace pas l’attestation de lecture audio à trois positions.
+
+Lors de l’activation manuelle de la miniature publique de `JpGtOfSgR-c` dans le navigateur disponible, le composant standard remplace bien la miniature par l’iframe YouTube, mais l’image de l’iframe reste noire au moment de l’observation et aucun signal audio n’est exposé par cet environnement. L’état est cohérent avec la limitation fournisseur déjà documentée ; il ne crée aucune complétion nouvelle et n’est pas enregistré comme preuve de lecture.
+
+Le défaut détecté pendant ce contrôle a été corrigé dans le flux standard `TrainingCourse` : une URL dépourvue de `lesson` ou `chapter` ne convertit plus implicitement la valeur absente en zéro. Cette correction bénéficie à tous les cours multi-leçons et est couverte par le test `server/trainingCourseChapterPersistence.test.ts`.
+
 ## Contrôles à exécuter avant publication
 
 | Contrôle | Critère vérifiable |

@@ -11,8 +11,22 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const localized = (value) => typeof value === "string" ? value : value?.en || value?.fr || "";
 const allChapters = (course.lessons || []).flatMap((lesson, lessonIndex) => (lesson.chapters || []).map((chapter, chapterIndex) => ({ lesson, lessonIndex, chapter, chapterIndex })));
 
+const transcriptManifest = (block) => JSON.stringify({
+  videoId: block.videoId || null,
+  title: block.title || null,
+  content: block.content || null,
+  body: block.body || null,
+  transcript: block.transcript || null,
+  timestamps: block.timestamps || null,
+});
+
 const videoRows = allChapters.flatMap(({ lesson, lessonIndex, chapter, chapterIndex }) => {
-  const transcripts = new Set((chapter.blocks || []).filter((block) => block.type === "transcript" && block.videoId).map((block) => block.videoId));
+  const transcripts = new Map((chapter.blocks || [])
+    .filter((block) => block.type === "transcript" && block.videoId)
+    .map((block) => [block.videoId, {
+      localTranscriptChecksum: sha256(transcriptManifest(block)),
+      localTranscriptChecksumScope: "serialized_local_transcript_block",
+    }]));
   return (chapter.blocks || []).filter((block) => block.type === "video").map((block) => ({
     lessonIndex: lessonIndex + 1,
     lessonTitle: localized(lesson.title),
@@ -22,6 +36,7 @@ const videoRows = allChapters.flatMap(({ lesson, lessonIndex, chapter, chapterIn
     title: localized(block.title),
     watchUrl: block.watchUrl || null,
     hasTranscript: Boolean(block.videoId && transcripts.has(block.videoId)),
+    transcriptIntegrity: block.videoId ? transcripts.get(block.videoId) || null : null,
     mediaMeta: block.mediaMeta || null,
   }));
 });
@@ -91,6 +106,8 @@ async function verifyVideo(row) {
     checksum: row.mediaMeta?.checksum || null,
     referenceChecksum: sha256(`${row.videoId}|${row.watchUrl}`),
     referenceChecksumScope: "canonical_video_reference",
+    transcriptChecksum: row.transcriptIntegrity?.localTranscriptChecksum || null,
+    transcriptChecksumScope: row.transcriptIntegrity?.localTranscriptChecksumScope || null,
     thumbnailUrl,
     thumbnailStatus,
     thumbnailBytes,
@@ -117,6 +134,7 @@ const report = {
     officialVideos: videos.filter((item) => item.official).length,
     supplementaryVideos: videos.filter((item) => !item.official).length,
     videoReferencesPassed: videos.filter((item) => item.passed).length,
+    officialVideosWithTranscriptChecksum: videos.filter((item) => item.official && item.hasTranscript && item.transcriptChecksum).length,
     mediaWithVisibleProvenance: [...downloads, ...videos].filter((item) => item.origin && typeof item.official === "boolean").length,
     mediaMissingProvenance: [...downloads, ...videos].filter((item) => !item.origin || typeof item.official !== "boolean").length,
   },
