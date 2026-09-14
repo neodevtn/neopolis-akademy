@@ -1,5 +1,33 @@
 # Project TODO — Neopolis Akademy
 
+## Audit Anthropic — Architect Foundations, cours 1 — dossier prioritaire du 14 septembre 2026
+- [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
+- [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
+- [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »
+- [ ] Qualifier chaque média visible comme officiel ou complément Neopolis, rapprocher 11 vidéos/transcriptions et 14 téléchargements avec checksums vérifiables
+- [ ] Vérifier la lecture image et audio au début, au milieu et en fin des médias, puis consigner toute limitation externe de manière factuelle
+- [ ] Vérifier navigation, verrouillage séquentiel, reprise de progression, durée du sous-écran et rendus desktop/mobile pour le cours 1
+- [x] Valider le mock CCAR-F : 60 questions, 120 minutes, seuil 720/1000, pondérations 27/18/20/20/15, quatre scénarios parmi six et explications originales par distracteur côté serveur — couverture contrôlée sur les 318 questions susceptibles d’être tirées
+- [ ] Publier et contrôler uniquement le cours 1, livrer les captures, matrice, inventaire/checksums et preuves, puis arrêter le lot avant le cours 2
+
+## Audit Anthropic — Lot 1/4 Architect Foundations — Cours 1
+- [x] Télécharger et lire intégralement le rapport PDF, le prompt et l’inventaire du lot 1, puis documenter les sources exploitées
+- [x] Cartographier le cours « AI Fluency: Framework & Foundations » existant contre les 15 leçons et sous-écrans source, sans commencer le cours 2
+- [ ] Réconcilier et vérifier les 11 vidéos, leurs transcriptions et les 14 téléchargements avec inventaire, checksum et contrôles de disponibilité
+- [x] Reconstituer uniquement le cours 1 avec blocs standards Neopolis, navigation précédent/suivant, activités obligatoires et étiquetage explicite des compléments Neopolis
+- [x] Corriger l’ambiguïté de durée « 10–15 minutes » sans modifier les noms de produits Anthropic ni le contenu officiel autorisé
+- [x] Enrichir checkpoints et examen blanc CCAR-F avec des questions originales seulement, incluant explications des distracteurs et correction côté serveur, sans reprendre de dataset tiers — scénarios ajoutés de façon additive et rationales rédigées par Claude Sonnet, uniquement affichées après correction serveur
+- [ ] Vérifier le parcours de cours 1, les médias, téléchargements, verrouillage et rendus desktop/mobile avec captures et contrôles avant/après
+- [ ] Publier uniquement le cours 1, vérifier sa version publique et livrer la matrice Skilljar–Neopolis, les contrôles d’assets et le rapport de progression
+
+## Examens blancs Anthropic — questions originales conformes
+- [ ] Cartographier les examens blancs Anthropic existants, leurs objectifs, leurs questions et leur configuration de durée/seuil
+- [ ] Définir une matrice de couverture et rédiger uniquement des questions originales fondées sur les objectifs officiels et les contenus Neopolis
+- [ ] Intégrer les questions approuvées sans utiliser ni adapter de jeux de questions d’examens réels ou potentiellement divulgués
+- [ ] Ajouter les nouvelles questions de manière additive, conserver chaque question existante et augmenter la diversité de la sélection aléatoire
+- [ ] Tester création, affichage, correction, durée, verrouillage et passage apprenant des examens Anthropic enrichis
+- [ ] Publier après QA complète et vérifier les examens Anthropic sur le domaine public
+
 ## Relance automatique des examens blancs
 - [x] Auditer les données de complétion de formation, tentatives d’examen, envois e-mail et mécanismes planifiés disponibles afin de cibler uniquement les apprenants éligibles sans doublons — `training_progress`, `chapter_progress`, `exam_attempts` et `exam_sessions` sont distingués ; les quatre examens réels proviennent de `trainingIndex.examConfig`
 - [x] Définir et documenter les règles de relance : délai après complétion, limite de fréquence, arrêt après tentative d’examen et contenu d’e-mail avec lien direct vers l’examen — délai de 24 h, une relance définitive par paire, arrêt à la première tentative et modèle officiel bilingue documentés dans `docs/exam-reminder-automation.md`

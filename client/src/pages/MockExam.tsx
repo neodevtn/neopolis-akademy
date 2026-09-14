@@ -684,6 +684,11 @@ export default function MockExam() {
                             {typeof choice.text === "object" ? t(choice.text) : choice.text}
                             {isCorrectChoice && <span className="ml-2 text-emerald-600 font-medium">✓</span>}
                             {wasSelected && !isCorrectChoice && <span className="ml-2 text-red-500 font-medium">✗</span>}
+                            {choice.rationale && (
+                              <p className="mt-1 pl-5 text-[11px] leading-relaxed text-slate-600">
+                                {typeof choice.rationale === "object" ? t(choice.rationale) : choice.rationale}
+                              </p>
+                            )}
                           </div>
                         );
                       })}

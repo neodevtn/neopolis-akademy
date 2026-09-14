@@ -8,7 +8,7 @@ const question: ExamQuestion = {
   question: "Question",
   choices: [{ id: "a", text: "A" }, { id: "b", text: "B" }],
   correctChoiceIds: ["a", "b"],
-  explanation: "Explication",
+  explanation: "**Correct: a.** La première option respecte le contrat. **b** La seconde option manque le contrôle demandé.",
 };
 
 describe("projections d’examen apprenant", () => {
@@ -20,6 +20,13 @@ describe("projections d’examen apprenant", () => {
   });
 
   it("révèle la correction seulement dans la projection de revue après validation", () => {
-    expect(toLearnerExamReview([question])[0]).toMatchObject({ correctChoiceIds: ["a", "b"], explanation: "Explication" });
+    expect(toLearnerExamReview([question])[0]).toMatchObject({
+      correctChoiceIds: ["a", "b"],
+      explanation: "**Correct: a.** La première option respecte le contrat. **b** La seconde option manque le contrôle demandé.",
+      choices: [
+        { id: "a", rationale: "La première option respecte le contrat." },
+        { id: "b", rationale: "La seconde option manque le contrôle demandé." },
+      ],
+    });
   });
 });

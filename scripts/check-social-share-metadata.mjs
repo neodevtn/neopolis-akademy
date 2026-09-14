@@ -30,9 +30,22 @@ const expected = [
   `<meta name="twitter:image" content="${xImage}"`,
 ];
 
+async function fetchWithRetry(url, attempts = 3) {
+  let lastError;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      return await fetch(url, { signal: AbortSignal.timeout(20_000) });
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts) await new Promise((resolveDelay) => setTimeout(resolveDelay, attempt * 1_000));
+    }
+  }
+  throw lastError;
+}
+
 const results = [];
 for (const route of routes) {
-  const response = await fetch(`${baseUrl}${route}`);
+  const response = await fetchWithRetry(`${baseUrl}${route}`);
   const html = await response.text();
   results.push({
     path: route,
@@ -46,7 +59,7 @@ for (const route of routes) {
 }
 
 const imageChecks = await Promise.all([openGraphImage, xImage].map(async (image) => {
-  const response = await fetch(image);
+  const response = await fetchWithRetry(image);
   return { image, status: response.status, contentType: response.headers.get("content-type") || "" };
 }));
 

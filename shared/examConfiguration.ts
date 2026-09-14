@@ -3,6 +3,13 @@ export interface ExamDomain {
   weight: number;
 }
 
+/** Configuration optionnelle de scénarios réutilisable pour une épreuve blanche. */
+export interface ExamScenarioSelection {
+  availableFamilies: number;
+  selectedFamilies: number;
+  questionsPerFamily: number;
+}
+
 /**
  * Source de vérité d’une épreuve blanche. Les seuils restent dans l’échelle
  * 100–1000 déjà utilisée par les tentatives et les certificats.
@@ -16,6 +23,7 @@ export interface ExamConfiguration {
   shuffleChoices: boolean;
   isPublished: boolean;
   domains: ExamDomain[];
+  scenarioSelection?: ExamScenarioSelection;
 }
 
 export const DEFAULT_EXAM_CONFIGURATION: ExamConfiguration = {
@@ -40,6 +48,18 @@ export function normalizeExamConfiguration(value: Partial<ExamConfiguration> & {
       .filter((domain): domain is ExamDomain => Boolean(domain) && typeof domain === "object" && Number.isFinite(Number(domain.weight)))
       .map((domain) => ({ name: domain.name, weight: Math.max(0, Math.min(100, Number(domain.weight))) }))
     : [];
+  const rawScenarioSelection = value?.scenarioSelection;
+  const scenarioSelection = rawScenarioSelection
+    && Number.isFinite(Number(rawScenarioSelection.availableFamilies))
+    && Number.isFinite(Number(rawScenarioSelection.selectedFamilies))
+    && Number.isFinite(Number(rawScenarioSelection.questionsPerFamily))
+    ? {
+      availableFamilies: Math.max(1, Math.min(100, Math.floor(Number(rawScenarioSelection.availableFamilies)))),
+      selectedFamilies: Math.max(1, Math.min(100, Math.floor(Number(rawScenarioSelection.selectedFamilies)))),
+      questionsPerFamily: Math.max(1, Math.min(totalQuestions, Math.floor(Number(rawScenarioSelection.questionsPerFamily)))),
+    }
+    : undefined;
+  if (scenarioSelection) scenarioSelection.selectedFamilies = Math.min(scenarioSelection.selectedFamilies, scenarioSelection.availableFamilies, Math.floor(totalQuestions / scenarioSelection.questionsPerFamily));
   return {
     examCode: String(value?.examCode || "").trim().slice(0, 100),
     totalQuestions,
@@ -49,5 +69,6 @@ export function normalizeExamConfiguration(value: Partial<ExamConfiguration> & {
     shuffleChoices: value?.shuffleChoices !== false,
     isPublished: value?.isPublished === true,
     domains,
+    ...(scenarioSelection?.selectedFamilies ? { scenarioSelection } : {}),
   };
 }

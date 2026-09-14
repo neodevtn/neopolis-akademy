@@ -240,9 +240,9 @@ export const tektekRouter = router({
     let usage: { promptTokens: number | null; completionTokens: number | null } = { promptTokens: null, completionTokens: null };
     try {
       const response = await invokeLLM({
-        model: "gpt-5-mini",
-        maxCompletionTokens: 900,
-        reasoning: { effort: "minimal" },
+        model: "claude-sonnet-4-6",
+        maxTokens: 1_500,
+        thinking: { type: "enabled", budget_tokens: 700 },
         messages: buildTekTekMessages({ question: input.question, language, sources, history: priorHistory }),
         responseFormat: tektekReplySchema(sources),
       });
@@ -277,7 +277,7 @@ export const tektekRouter = router({
       role: "assistant",
       content: answer,
       citations: effectiveCitations,
-      model: citations.length ? "gpt-5-mini" : null,
+      model: citations.length ? "claude-sonnet-4-6" : null,
       promptTokens: citations.length ? usage.promptTokens : null,
       completionTokens: citations.length ? usage.completionTokens : null,
     });

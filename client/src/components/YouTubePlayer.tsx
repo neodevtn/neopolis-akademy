@@ -27,25 +27,59 @@ export function YouTubePlayer({
 }: YouTubePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoCompleted, setAutoCompleted] = useState(false);
+  const [embedError, setEmbedError] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playbackSignalTimeoutRef = useRef<number | null>(null);
+  const autoCompletionTimeoutRef = useRef<number | null>(null);
+
+  const clearPlaybackSignalTimeout = useCallback(() => {
+    if (playbackSignalTimeoutRef.current !== null) {
+      window.clearTimeout(playbackSignalTimeoutRef.current);
+      playbackSignalTimeoutRef.current = null;
+    }
+  }, []);
+
+  const clearAutoCompletionTimeout = useCallback(() => {
+    if (autoCompletionTimeoutRef.current !== null) {
+      window.clearTimeout(autoCompletionTimeoutRef.current);
+      autoCompletionTimeoutRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => () => {
+    clearPlaybackSignalTimeout();
+    clearAutoCompletionTimeout();
+  }, [clearAutoCompletionTimeout, clearPlaybackSignalTimeout]);
 
   const handlePlayClick = useCallback(() => {
+    clearPlaybackSignalTimeout();
+    clearAutoCompletionTimeout();
+    setEmbedError(false);
     setIsPlaying(true);
     // Auto-mark as complete after 30 seconds of watching (simplified tracking)
     if (!isCompleted && !autoCompleted) {
-      setTimeout(() => {
+      autoCompletionTimeoutRef.current = window.setTimeout(() => {
         onMarkComplete(videoKey);
         setAutoCompleted(true);
       }, 30000); // 30 seconds
     }
-  }, [isCompleted, autoCompleted, onMarkComplete, videoKey]);
+  }, [autoCompleted, clearAutoCompletionTimeout, clearPlaybackSignalTimeout, isCompleted, onMarkComplete, videoKey]);
 
   useEffect(() => {
     const onYouTubeMessage = (event: MessageEvent) => {
       if (event.origin !== "https://www.youtube-nocookie.com" && event.origin !== "https://www.youtube.com") return;
       try {
         const payload = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+        if (payload?.event === "onError") {
+          clearPlaybackSignalTimeout();
+          clearAutoCompletionTimeout();
+          setEmbedError(true);
+          onPlaybackChange?.(false);
+          return;
+        }
         if (payload?.event !== "onStateChange") return;
+        clearPlaybackSignalTimeout();
+        if (payload.info === 1) setEmbedError(false);
         onPlaybackChange?.(payload.info === 1);
       } catch {
         // Ignore non-JSON messages from the embedded player.
@@ -54,12 +88,15 @@ export function YouTubePlayer({
     window.addEventListener("message", onYouTubeMessage);
     return () => {
       window.removeEventListener("message", onYouTubeMessage);
+      clearPlaybackSignalTimeout();
+      clearAutoCompletionTimeout();
       onPlaybackChange?.(false);
     };
-  }, [onPlaybackChange]);
+  }, [clearAutoCompletionTimeout, clearPlaybackSignalTimeout, onPlaybackChange]);
 
   // Build the embed URL with appropriate parameters
   const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
+  const fallbackUrl = watchUrl || `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
 
   return (
     <div
@@ -112,18 +149,46 @@ export function YouTubePlayer({
             </div>
           </div>
         ) : (
-          // Direct YouTube iframe embed - most reliable method
+          // Direct YouTube iframe embed with explicit recovery when the provider refuses playback.
           <div className="aspect-video rounded-lg overflow-hidden bg-black">
-            <iframe
-              ref={iframeRef}
-              src={embedUrl}
-              onLoad={() => iframeRef.current?.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "https://www.youtube-nocookie.com")}
-              title={title}
-              className="w-full h-full"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
+            {embedError ? (
+              <div className="flex h-full min-h-48 flex-col items-center justify-center gap-3 bg-slate-950 px-5 text-center text-white">
+                <p className="max-w-md text-sm leading-6">
+                  {t({
+                    en: "The video provider could not start this embedded player. Open the official video in a new tab, then return here to record your progress.",
+                    fr: "Le fournisseur vidéo n’a pas pu démarrer ce lecteur intégré. Ouvrez la vidéo officielle dans un nouvel onglet, puis revenez ici pour enregistrer votre progression.",
+                  })}
+                </p>
+                <a href={fallbackUrl} target="_blank" rel="noopener noreferrer" className="rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                  {t({ en: "Open official video", fr: "Ouvrir la vidéo officielle" })}
+                </a>
+                <Button type="button" variant="outline" size="sm" className="border-white/70 text-white hover:bg-white/10 hover:text-white" onClick={handlePlayClick}>
+                  {t({ en: "Try again", fr: "Réessayer" })}
+                </Button>
+              </div>
+            ) : (
+              <iframe
+                ref={iframeRef}
+                src={embedUrl}
+                onLoad={() => {
+                  const target = iframeRef.current?.contentWindow;
+                  target?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "https://www.youtube-nocookie.com");
+                  target?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onError"] }), "https://www.youtube-nocookie.com");
+                  clearPlaybackSignalTimeout();
+                  playbackSignalTimeoutRef.current = window.setTimeout(() => {
+                    clearAutoCompletionTimeout();
+                    setEmbedError(true);
+                    onPlaybackChange?.(false);
+                  }, 12_000);
+                }}
+                title={title}
+                className="w-full h-full"
+                frameBorder="0"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            )}
           </div>
         )}
 

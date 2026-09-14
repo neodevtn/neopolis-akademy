@@ -15,6 +15,7 @@ import { FlipCardsGrid } from "@/components/FlipCard";
 import { TabbedContent } from "@/components/TabbedContent";
 import { ComparisonBox } from "@/components/ComparisonBox";
 import { CourseIllustration } from "@/components/CourseIllustration";
+import { MediaProvenanceBadge } from "@/components/MediaProvenanceBadge";
 import PageContent from "./PageContent";
 import { CloudExerciseBlock } from "@/components/CloudExerciseBlock";
 import { ProjectorPlayer } from "@/components/ProjectorPlayer";
@@ -683,18 +684,22 @@ export default function LessonViewer({
         const videoWatchUrl = typeof block.watchUrl === 'object' ? (block.watchUrl[lang] || block.watchUrl.en || block.watchUrl.fr || "") : (block.watchUrl || "");
         const isVideoComplete = completedVideos.has(videoKey);
         return (
-          <YouTubePlayer
-            key={blockIdx}
-            videoId={videoId}
-            videoKey={videoKey}
-            title={videoTitle}
-            isCompleted={isVideoComplete}
-            onMarkComplete={toggleVideoComplete}
-            onPlaybackChange={onMediaPlaybackChange}
-            watchUrl={videoWatchUrl}
-            lang={lang}
-            t={t}
-          />
+          <div key={blockIdx} className="my-5">
+            <div className="mb-2 flex min-w-0 justify-end">
+              <MediaProvenanceBadge metadata={block.mediaMeta} lang={lang} />
+            </div>
+            <YouTubePlayer
+              videoId={videoId}
+              videoKey={videoKey}
+              title={videoTitle}
+              isCompleted={isVideoComplete}
+              onMarkComplete={toggleVideoComplete}
+              onPlaybackChange={onMediaPlaybackChange}
+              watchUrl={videoWatchUrl}
+              lang={lang}
+              t={t}
+            />
+          </div>
         );
       }
       case "transcript": {
@@ -858,7 +863,10 @@ export default function LessonViewer({
                 </div>
                 {/* Content section */}
                 <div className="flex-1 p-6 flex flex-col justify-center">
-                  <p className="font-semibold text-foreground text-lg mb-2">{dlTitle}</p>
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <p className="font-semibold text-foreground text-lg">{dlTitle}</p>
+                    <MediaProvenanceBadge metadata={block.assetMeta} lang={lang} />
+                  </div>
                   {dlDesc && <p className="text-foreground/80 text-base leading-relaxed mb-4">{dlDesc}</p>}
                   <div>
                     <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-foreground/10 text-foreground text-sm font-medium group-hover:bg-foreground/20 transition-colors w-full md:w-auto justify-center">

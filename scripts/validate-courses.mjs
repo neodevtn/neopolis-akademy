@@ -303,11 +303,12 @@ for (const fname of files) {
       }
 
       // ── 3. Recommandations vidéo de fin de module ──────────────────────────
-      if (lesson.recommendedVideosManaged !== false && (!Array.isArray(lesson.recommendedVideos) || lesson.recommendedVideos.length === 0)) {
+      const recommendedVideos = Array.isArray(lesson.recommendedVideos) ? lesson.recommendedVideos : [];
+      if (lesson.recommendedVideosManaged !== false && recommendedVideos.length === 0) {
         fileIssues.push({ level: 'error', type: 'missing_video_recommendations', msg: `Lesson "${lid}" has no managed end-of-module video recommendations` });
         totalErrors++;
       } else {
-        for (const [vi, video] of lesson.recommendedVideos.entries()) {
+        for (const [vi, video] of recommendedVideos.entries()) {
           const context = `Lesson "${lid}", recommendation ${vi + 1}`;
           if (!/^[A-Za-z0-9_-]{6,}$/.test(video?.videoId || '')) {
             fileIssues.push({ level: 'error', type: 'invalid_recommended_video_id', msg: `${context}: invalid YouTube videoId` });

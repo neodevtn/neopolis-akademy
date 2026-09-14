@@ -155,8 +155,9 @@ describe("routeur TekTek", () => {
     expect(result.citations).toHaveLength(1);
     expect(result.citations[0]?.id).toBe("s1");
     expect(mocks.invokeLLM).toHaveBeenCalledWith(expect.objectContaining({
-      maxCompletionTokens: 900,
-      reasoning: { effort: "minimal" },
+      model: "claude-sonnet-4-6",
+      maxTokens: 1_500,
+      thinking: { type: "enabled", budget_tokens: 700 },
       responseFormat: expect.objectContaining({
         json_schema: expect.objectContaining({
           schema: expect.objectContaining({

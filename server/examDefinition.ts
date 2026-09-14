@@ -10,8 +10,16 @@ export type ExamQuestion = {
   id: string;
   certificationId: string;
   domain?: string | { fr?: string; en?: string };
+  scenarioFamily?: string;
+  scenarioTitle?: string | { fr?: string; en?: string };
+  subdomain?: string;
+  objective?: string;
+  difficulty?: "foundational" | "intermediate" | "advanced";
+  competency?: string[];
+  sourcePedagogique?: string;
+  version?: string;
   question: string | { fr?: string; en?: string };
-  choices: Array<{ id: string; text: string | { fr?: string; en?: string } }>;
+  choices: Array<{ id: string; text: string | { fr?: string; en?: string }; rationale?: string | { fr?: string; en?: string } }>;
   correctChoiceIds: string[];
   explanation?: string | { fr?: string; en?: string };
 };
@@ -159,15 +167,76 @@ export async function deleteExamQuestion(questionId: string): Promise<boolean> {
   return true;
 }
 
+function localizedName(value: string | { fr?: string; en?: string } | undefined): string {
+  if (typeof value === "string") return value;
+  return value?.en || value?.fr || "";
+}
+
+function shuffled<T>(items: T[], enabled = true): T[] {
+  const result = [...items];
+  if (!enabled) return result;
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+  }
+  return result;
+}
+
+function domainTargets(configuration: ExamConfiguration): Map<string, number> {
+  const domains = configuration.domains.filter((domain) => Number(domain.weight) > 0);
+  if (!domains.length) return new Map();
+  const targets = domains.map((domain) => ({
+    key: localizedName(domain.name),
+    raw: configuration.totalQuestions * Number(domain.weight) / 100,
+  }));
+  const result = new Map(targets.map((target) => [target.key, Math.floor(target.raw)]));
+  let remainder = configuration.totalQuestions - Array.from(result.values()).reduce((sum, value) => sum + value, 0);
+  for (const target of [...targets].sort((a, b) => (b.raw % 1) - (a.raw % 1))) {
+    if (remainder <= 0) break;
+    result.set(target.key, (result.get(target.key) || 0) + 1);
+    remainder -= 1;
+  }
+  return result;
+}
+
 export function selectExamQuestions(questions: ExamQuestion[], configuration: ExamConfiguration): ExamQuestion[] {
-  const pool = [...questions];
-  if (configuration.shuffleQuestions) {
-    for (let index = pool.length - 1; index > 0; index -= 1) {
-      const swapIndex = Math.floor(Math.random() * (index + 1));
-      [pool[index], pool[swapIndex]] = [pool[swapIndex], pool[index]];
+  const scenarioPolicy = configuration.scenarioSelection;
+  const scenarios = new Map<string, ExamQuestion[]>();
+  for (const question of questions) {
+    if (!question.scenarioFamily) continue;
+    scenarios.set(question.scenarioFamily, [...(scenarios.get(question.scenarioFamily) || []), question]);
+  }
+
+  const scenarioFamilies = scenarioPolicy
+    ? shuffled(Array.from(scenarios.entries()).filter(([, entries]) => entries.length >= scenarioPolicy.questionsPerFamily), configuration.shuffleQuestions)
+      .slice(0, scenarioPolicy.selectedFamilies)
+    : [];
+  const selectedScenarioQuestions = scenarioFamilies.flatMap(([, entries]) => shuffled(entries, configuration.shuffleQuestions).slice(0, scenarioPolicy?.questionsPerFamily || 0));
+  const selectedIds = new Set(selectedScenarioQuestions.map((question) => question.id));
+  const unselectedScenarioFamilies = new Set(Array.from(scenarios.keys()).filter((family) => !scenarioFamilies.some(([selectedFamily]) => selectedFamily === family)));
+  const regularPool = questions.filter((question) => !selectedIds.has(question.id) && !question.scenarioFamily && !unselectedScenarioFamilies.has(question.scenarioFamily || ""));
+  const selected = [...selectedScenarioQuestions];
+  const targets = domainTargets(configuration);
+
+  if (targets.size) {
+    for (const [targetDomain, targetCount] of Array.from(targets.entries())) {
+      const alreadySelected = selected.filter((question) => localizedName(question.domain) === targetDomain).length;
+      const needed = Math.max(0, targetCount - alreadySelected);
+      const candidates = shuffled(regularPool.filter((question) => localizedName(question.domain) === targetDomain && !selectedIds.has(question.id)), configuration.shuffleQuestions).slice(0, needed);
+      for (const question of candidates) {
+        selected.push(question);
+        selectedIds.add(question.id);
+      }
     }
   }
-  return pool.slice(0, configuration.totalQuestions).map((question) => ({
+
+  for (const question of shuffled(regularPool.filter((candidate) => !selectedIds.has(candidate.id)), configuration.shuffleQuestions)) {
+    if (selected.length >= configuration.totalQuestions) break;
+    selected.push(question);
+    selectedIds.add(question.id);
+  }
+
+  return shuffled(selected, configuration.shuffleQuestions).slice(0, configuration.totalQuestions).map((question) => ({
     ...question,
     choices: configuration.shuffleChoices ? [...question.choices].sort(() => Math.random() - 0.5) : question.choices,
   }));
@@ -186,13 +255,44 @@ export function toLearnerExamQuestions(questions: ExamQuestion[]) {
   }));
 }
 
+function rationaleForChoice(explanation: ExamQuestion["explanation"], choiceId: string): string | { fr?: string; en?: string } | undefined {
+  const extract = (value: string | undefined) => {
+    if (!value) return undefined;
+    const escapedId = choiceId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const pattern = new RegExp(`\\*\\*[^*]*\\b${escapedId}\\b[^*]*\\*\\*\\s*([\\s\\S]*?)(?=\\s*\\*\\*(?:[a-z0-9]+|Correct|Bonne réponse)[^*]*\\*\\*|$)`, "i");
+    return value.match(pattern)?.[1]?.trim() || undefined;
+  };
+  if (typeof explanation === "string") return extract(explanation);
+  const en = extract(explanation?.en);
+  const fr = extract(explanation?.fr);
+  return en || fr ? { ...(en ? { en } : {}), ...(fr ? { fr } : {}) } : undefined;
+}
+
+function fallbackRationaleForChoice(text: ExamQuestion["choices"][number]["text"], isCorrect: boolean): string | { fr?: string; en?: string } {
+  const statement = isCorrect
+    ? {
+      en: "This is the keyed answer because it meets the decision rule evaluated by the question.",
+      fr: "C’est la réponse attendue, car elle respecte la règle de décision évaluée par la question.",
+    }
+    : {
+      en: "This option is not the best answer because it does not meet all conditions of the decision rule evaluated by the question.",
+      fr: "Cette option n’est pas la meilleure réponse, car elle ne respecte pas toutes les conditions de la règle de décision évaluée par la question.",
+    };
+  if (typeof text === "string") return statement.en;
+  return statement;
+}
+
 /** Revue détaillée rendue uniquement après une soumission d’examen validée côté serveur. */
 export function toLearnerExamReview(questions: ExamQuestion[]) {
   return questions.map(({ id, domain, question, choices, correctChoiceIds, explanation }) => ({
     id,
     domain,
     question,
-    choices: choices.map(({ id: choiceId, text }) => ({ id: choiceId, text })),
+    choices: choices.map(({ id: choiceId, text, rationale }) => ({
+      id: choiceId,
+      text,
+      rationale: rationale || rationaleForChoice(explanation, choiceId) || fallbackRationaleForChoice(text, correctChoiceIds.includes(choiceId)),
+    })),
     correctChoiceIds: [...correctChoiceIds],
     explanation,
   }));
