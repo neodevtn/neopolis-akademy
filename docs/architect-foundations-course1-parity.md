@@ -119,6 +119,12 @@ En prévisualisation, la miniature de `JpGtOfSgR-c` a été activée après le c
 
 Le contrôle a ensuite été maintenu au-delà de seize secondes. L’état de récupération n’apparaissait toujours pas, aucun libellé de vidéo terminée n’était présent, et le bouton de validation restait désactivé sans fin de lecture confirmée ni attestation externe. Cette validation confirme la suppression du basculement artificiel ; elle ne vaut pas attestation de lecture audio/vidéo intégrale du fournisseur.
 
+Après publication du checkpoint `c8add5c0`, le domaine public a de nouveau servi le cours 1 avec ses quinze leçons, la durée de l’écran, les transcriptions et la vidéo officielle. La relance publique de la miniature reste à exécuter au-delà de l’ancien seuil de douze secondes ; aucun changement de structure, de progression ou de cours suivant n’a été effectué par ce contrôle.
+
+Lors de cette relance publique au-delà de seize secondes, le lecteur affichait encore le texte antérieur de récupération et non la nouvelle formulation avec essai d’hôte standard et attestation explicite. Cette observation démontre que le navigateur a reçu un bundle antérieur au checkpoint `c8add5c0`; elle ne peut pas être utilisée pour juger le correctif final. La prévisualisation, qui exécute la révision courante, a validé l’absence du délai artificiel et le verrou explicite de validation.
+
+La révision suivante remplace l’écoute `postMessage` ad hoc par l’API IFrame officielle : les états et erreurs sont désormais fournis par `YT.Player`, seuls les codes 2, 5, 100, 101 et 150 déclenchent le repli, et aucun message transitif de publicité, consentement ou branding ne peut être interprété comme une erreur de lecture. Le repli, le lien officiel et la confirmation explicite restent inchangés ; les règles de complétion ne sont jamais assouplies.
+
 Le défaut détecté pendant ce contrôle a été corrigé dans le flux standard `TrainingCourse` : une URL dépourvue de `lesson` ou `chapter` ne convertit plus implicitement la valeur absente en zéro. Cette correction bénéficie à tous les cours multi-leçons et est couverte par le test `server/trainingCourseChapterPersistence.test.ts`.
 
 ## Contrôles à exécuter avant publication

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useId } from "react";
 import { CheckCircle2, PlayCircle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -13,6 +13,74 @@ export const videoEmbedHosts: Record<VideoEmbedHost, string> = {
   privacy: "https://www.youtube-nocookie.com",
   standard: "https://www.youtube.com",
 };
+
+// 153 is returned when YouTube refuses an embedded playback request because
+// it cannot establish a valid client/referrer identity. It is a provider
+// refusal, not a successful media event, so it must follow the same explicit
+// recovery path as the documented embed-denial codes.
+const youtubeProviderErrorCodes = new Set([2, 5, 100, 101, 150, 153]);
+
+type YouTubePlayerEvent = { data: number; target: { destroy: () => void } };
+type YouTubePlayerInstance = {
+  destroy: () => void;
+};
+
+type YouTubeNamespace = {
+  Player: new (
+    element: HTMLElement,
+    options: {
+      videoId: string;
+      host: string;
+      playerVars: Record<string, number>;
+      events: {
+        onReady?: () => void;
+        onStateChange?: (event: YouTubePlayerEvent) => void;
+        onError?: (event: YouTubePlayerEvent) => void;
+      };
+    },
+  ) => YouTubePlayerInstance;
+  PlayerState: { PLAYING: number; ENDED: number };
+};
+
+declare global {
+  interface Window {
+    YT?: YouTubeNamespace;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+let youtubeIframeApiPromise: Promise<YouTubeNamespace> | null = null;
+
+export function loadYouTubeIframeApi(): Promise<YouTubeNamespace> {
+  if (window.YT?.Player) return Promise.resolve(window.YT);
+  if (youtubeIframeApiPromise) return youtubeIframeApiPromise;
+
+  youtubeIframeApiPromise = new Promise((resolve, reject) => {
+    const existingScript = document.querySelector<HTMLScriptElement>('script[data-neopolis-youtube-api="true"]');
+    const previousReady = window.onYouTubeIframeAPIReady;
+    const resolveWhenReady = () => {
+      previousReady?.();
+      if (window.YT?.Player) resolve(window.YT);
+      else reject(new Error("YouTube IFrame API is unavailable after initialization."));
+    };
+
+    window.onYouTubeIframeAPIReady = resolveWhenReady;
+    if (existingScript) return;
+
+    const script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
+    script.async = true;
+    script.dataset.neopolisYoutubeApi = "true";
+    script.onerror = () => reject(new Error("Unable to load the YouTube IFrame API."));
+    document.head.appendChild(script);
+  });
+
+  return youtubeIframeApiPromise;
+}
+
+export function isYouTubeProviderError(code: number) {
+  return youtubeProviderErrorCodes.has(code);
+}
 
 export function nextVideoEmbedHostAfterProviderError(host: VideoEmbedHost): VideoEmbedHost | null {
   return host === "privacy" ? "standard" : null;
@@ -59,7 +127,9 @@ export function YouTubePlayer({
   const [embedHost, setEmbedHost] = useState<VideoEmbedHost>("privacy");
   const [playbackConfirmed, setPlaybackConfirmed] = useState(false);
   const [externalViewingConfirmed, setExternalViewingConfirmed] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playerMountRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<YouTubePlayerInstance | null>(null);
+  const playerId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
 
   const handlePlayClick = useCallback(() => {
     setEmbedError(false);
@@ -70,46 +140,74 @@ export function YouTubePlayer({
   }, []);
 
   useEffect(() => {
-    const onYouTubeMessage = (event: MessageEvent) => {
-      if (event.origin !== "https://www.youtube-nocookie.com" && event.origin !== "https://www.youtube.com") return;
-      if (event.source !== iframeRef.current?.contentWindow) return;
-      try {
-        const payload = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-        if (payload?.event === "onError") {
-          const nextHost = nextVideoEmbedHostAfterProviderError(embedHost);
-          if (nextHost) {
-            setEmbedHost(nextHost);
-            return;
-          }
+    if (!isPlaying || embedError || !playerMountRef.current) return;
+
+    let disposed = false;
+    const mount = playerMountRef.current;
+    mount.replaceChildren();
+
+    loadYouTubeIframeApi()
+      .then((YT) => {
+        if (disposed) return;
+        playerRef.current?.destroy();
+        playerRef.current = new YT.Player(mount, {
+          videoId,
+          host: videoEmbedHosts[embedHost],
+          playerVars: {
+            autoplay: 1,
+            enablejsapi: 1,
+            modestbranding: 1,
+            playsinline: 1,
+            rel: 0,
+          },
+          events: {
+            onReady: () => {
+              if (!disposed) setEmbedError(false);
+            },
+            onStateChange: (event) => {
+              if (disposed) return;
+              if (event.data === YT.PlayerState.PLAYING) {
+                setEmbedError(false);
+                setPlaybackConfirmed(true);
+                onPlaybackChange?.(true);
+              } else {
+                onPlaybackChange?.(false);
+              }
+              if (event.data === YT.PlayerState.ENDED && !isCompleted) {
+                onMarkComplete(videoKey);
+                setAutoCompleted(true);
+              }
+            },
+            onError: (event) => {
+              if (disposed || !isYouTubeProviderError(event.data)) return;
+              const nextHost = nextVideoEmbedHostAfterProviderError(embedHost);
+              if (nextHost) {
+                setEmbedHost(nextHost);
+                return;
+              }
+              setPlaybackConfirmed(false);
+              setEmbedError(true);
+              onPlaybackChange?.(false);
+            },
+          },
+        });
+      })
+      .catch(() => {
+        if (!disposed) {
           setPlaybackConfirmed(false);
           setEmbedError(true);
           onPlaybackChange?.(false);
-          return;
         }
-        if (payload?.event !== "onStateChange") return;
-        if (payload.info === 1) {
-          setEmbedError(false);
-          setPlaybackConfirmed(true);
-        }
-        if (payload.info === 0 && !isCompleted) {
-          onMarkComplete(videoKey);
-          setAutoCompleted(true);
-        }
-        onPlaybackChange?.(payload.info === 1);
-      } catch {
-        // Ignore non-JSON messages from the embedded player.
-      }
-    };
-    window.addEventListener("message", onYouTubeMessage);
+      });
+
     return () => {
-      window.removeEventListener("message", onYouTubeMessage);
+      disposed = true;
+      playerRef.current?.destroy();
+      playerRef.current = null;
       onPlaybackChange?.(false);
     };
-  }, [embedHost, isCompleted, onMarkComplete, onPlaybackChange, videoKey]);
+  }, [embedError, embedHost, isCompleted, isPlaying, onMarkComplete, onPlaybackChange, videoId, videoKey]);
 
-  // L’hôte privacy-enhanced est essayé en premier. En cas d’erreur réelle signalée par
-  // le fournisseur, le lecteur standard est tenté une seule fois avant le repli explicite.
-  const embedUrl = `${videoEmbedHosts[embedHost]}/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&widget_referrer=${encodeURIComponent(window.location.origin)}`;
   const fallbackUrl = watchUrl || `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
   const manualCompletionAllowed = canMarkVideoComplete({
     playbackConfirmed,
@@ -192,22 +290,11 @@ export function YouTubePlayer({
                 </Button>
               </div>
             ) : (
-              <iframe
-                ref={iframeRef}
-                key={embedHost}
-                src={embedUrl}
-                onLoad={() => {
-                  const target = iframeRef.current?.contentWindow;
-                  const targetOrigin = videoEmbedHosts[embedHost];
-                  target?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), targetOrigin);
-                  target?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onError"] }), targetOrigin);
-                }}
-                title={title}
-                className="w-full h-full"
-                frameBorder="0"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
+              <div
+                id={`youtube-player-${playerId}`}
+                ref={playerMountRef}
+                aria-label={title}
+                className="h-full w-full [&_iframe]:h-full [&_iframe]:w-full"
               />
             )}
           </div>

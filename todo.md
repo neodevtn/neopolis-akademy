@@ -9,6 +9,7 @@
 - [x] Corriger le message générique de repli vidéo afin qu’il n’indique jamais à tort qu’un retour au cours enregistre une progression — message actionnable et test de contrat bilingue validés
 - [ ] Corriger le défaut confirmé « Le fournisseur de la vidéo n’a pas pu démarrer ce lecteur intégré » dans le lecteur YouTube standard, avec un repli média vérifiable qui ne valide jamais automatiquement une étape
 - [ ] Vérifier dans un navigateur réel le démarrage d’une vidéo officielle du cours 1 après correctif, puis compléter le contrôle image et audio début/milieu/fin
+- [ ] Prendre en charge explicitement le code YouTube 153 dans la récupération standard, sans masquer le refus fournisseur ni débloquer la progression
 - [x] Vérifier navigation, verrouillage séquentiel, reprise de progression, durée du sous-écran et rendus desktop/mobile pour le cours 1 — contrôle apprenant publié réussi sur le checkpoint, la navigation et le retour à l’écran 3/3 ; captures 1440 × 1000 et 390 × 844 sans débordement
 - [x] Tester publiquement Précédent/Suivant avec un compte apprenant de démonstration, y compris le blocage avant une activité requise et le déverrouillage après validation — bouton bloqué avant réponse, activé après validation et navigation suivante confirmés sur le domaine public
 - [x] Tester publiquement la reprise du cours 1 après navigation et confirmer le retour au bon écran avec la hiérarchie à 15 leçons — persistance HTTP 200 et restauration publiée de l’écran 3/3 depuis l’URL canonique, traces QA ensuite supprimées

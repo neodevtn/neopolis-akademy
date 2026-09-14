@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   canMarkVideoComplete,
+  isYouTubeProviderError,
   nextVideoEmbedHostAfterProviderError,
   videoProviderFallbackCopy,
 } from "./YouTubePlayer";
@@ -25,5 +26,16 @@ describe("videoProviderFallbackCopy", () => {
     expect(nextVideoEmbedHostAfterProviderError("standard")).toBeNull();
     expect(canMarkVideoComplete({ playbackConfirmed: false, providerUnavailable: true, externalViewingConfirmed: false })).toBe(false);
     expect(canMarkVideoComplete({ playbackConfirmed: false, providerUnavailable: true, externalViewingConfirmed: true })).toBe(true);
+  });
+
+  it("ne considère comme erreur fournisseur que les codes officiellement prévus", () => {
+    expect(isYouTubeProviderError(2)).toBe(true);
+    expect(isYouTubeProviderError(5)).toBe(true);
+    expect(isYouTubeProviderError(100)).toBe(true);
+    expect(isYouTubeProviderError(101)).toBe(true);
+    expect(isYouTubeProviderError(150)).toBe(true);
+    expect(isYouTubeProviderError(153)).toBe(true);
+    expect(isYouTubeProviderError(1)).toBe(false);
+    expect(isYouTubeProviderError(0)).toBe(false);
   });
 });
