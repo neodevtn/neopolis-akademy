@@ -112,10 +112,12 @@ export default function TrainingCourse() {
 
   useEffect(() => {
     const params = new URLSearchParams(urlSearch);
-    const lesson = Number(params.get("lesson"));
-    const chapter = Number(params.get("chapter"));
-    if (Number.isInteger(lesson) && lesson >= 0) setActiveLessonIndex(lesson);
-    if (Number.isInteger(chapter) && chapter >= 0) setChapterProgress((current) => ({ current: chapter, total: current?.total || 1 }));
+    const lessonParam = params.get("lesson");
+    const chapterParam = params.get("chapter");
+    const lesson = Number(lessonParam);
+    const chapter = Number(chapterParam);
+    if (lessonParam !== null && Number.isInteger(lesson) && lesson >= 0) setActiveLessonIndex(lesson);
+    if (chapterParam !== null && Number.isInteger(chapter) && chapter >= 0) setChapterProgress((current) => ({ current: chapter, total: current?.total || 1 }));
   }, [urlSearch]);
 
   // Initialize persisted chapter progress. For multi-lesson courses it remains isolated

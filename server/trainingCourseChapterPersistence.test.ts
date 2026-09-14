@@ -14,4 +14,9 @@ describe("persistance de chapitre pour les cours multi-leçons", () => {
     expect(multiLessonCallback).toContain("persistChapterProgress(courseId, displayedIndex, current, total)");
     expect(multiLessonCallback).toContain("setChapterProgressLessonIndex(displayedIndex)");
   });
+
+  it("ne transforme pas une URL sans paramètre de chapitre en écran zéro, afin de préserver la reprise persistée", () => {
+    expect(source).toContain('if (chapterParam !== null && Number.isInteger(chapter) && chapter >= 0)');
+    expect(source).toContain('if (lessonParam !== null && Number.isInteger(lesson) && lesson >= 0)');
+  });
 });
