@@ -7,6 +7,9 @@
 - [ ] Qualifier chaque média visible comme officiel ou complément Neopolis, rapprocher 11 vidéos/transcriptions et 14 téléchargements avec checksums vérifiables
 - [ ] Vérifier la lecture image et audio au début, au milieu et en fin des médias, puis consigner toute limitation externe de manière factuelle
 - [ ] Vérifier navigation, verrouillage séquentiel, reprise de progression, durée du sous-écran et rendus desktop/mobile pour le cours 1
+- [ ] Tester publiquement Précédent/Suivant avec un compte apprenant de démonstration, y compris le blocage avant une activité requise et le déverrouillage après validation
+- [ ] Tester publiquement la reprise du cours 1 après navigation et confirmer le retour au bon écran avec la hiérarchie à 15 leçons
+- [ ] Corriger la persistance générique des chapitres validés pour les cours multi-leçons afin que la reprise du cours 1 ne dépende pas d’un état local
 - [x] Valider le mock CCAR-F : 60 questions, 120 minutes, seuil 720/1000, pondérations 27/18/20/20/15, quatre scénarios parmi six et explications originales par distracteur côté serveur — couverture contrôlée sur les 318 questions susceptibles d’être tirées
 - [ ] Publier et contrôler uniquement le cours 1, livrer les captures, matrice, inventaire/checksums et preuves, puis arrêter le lot avant le cours 2
 

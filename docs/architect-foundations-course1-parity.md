@@ -91,6 +91,18 @@ Le contrôle public lancé immédiatement après le checkpoint `daad03c5` a fini
 
 Une requête directe sans cache sur [`/data/courses/claude_certified_architect_foundations__01.json`](https://akademy.neodev.click/data/courses/claude_certified_architect_foundations__01.json) a confirmé le même état transitoire : le flux retournait encore les valeurs antérieures « 10-15 minutes », quatorze leçons et dix-sept vidéos. Cette réponse n’a été utilisée que comme preuve de délai de propagation ; elle ne remplace ni le JSON local validé ni le contrôle à effectuer après disponibilité de la nouvelle version.
 
+## Contrôle public après propagation
+
+Après le checkpoint de propagation `c827f2f9`, l’empreinte et la taille de la réponse publique ont changé : le JSON servi pèse désormais **588 910 octets**, ce qui correspond à la révision reconstruite. La sonde `scripts/capture-architect-foundations-course1-published.mjs` ouvre une session apprenant de démonstration et a validé le cours publié aux deux viewports : **desktop 1440 × 1000** et **mobile 390 × 844**. Pour chacun, le titre, le compteur **15 leçons**, le jalon **Certificate of completion / Attestation de fin de cours**, la durée d’écran explicite, la provenance officielle et l’absence de débordement horizontal sont contrôlés ; `scrollWidth` est égal à `clientWidth` aux deux tailles. Les captures sont générées sous `.work/anthropic-architect-lot1/published-captures/` et le rapport structuré est `docs/architect-foundations-course1-published-ui.json`.
+
+L’examen visuel des deux captures confirme que le layout mobile tient sur **390 px** avec menu compact, en-tête lisible et carte de parcours dans la largeur disponible ; la carte affiche `0 / 15 leçons` et `1 / 17 vidéos`. La capture desktop confirme une hiérarchie latérale séquentielle et le libellé `Durée indicative de cet écran : 10–15 minutes` au niveau du sous-écran. La bannière de confidentialité observée dans les captures est une couche transversale indépendante du cours ; elle n’altère ni le flux de navigation, ni la largeur de la page.
+
+Le contrôle de lecture fournisseur reste explicitement distinct : les miniatures, transcriptions et liens de secours sont inspectables dans le lecteur, mais YouTube refuse les mesures de décodage image/audio au début, au milieu et à la fin dans Chromium automatisé. Cette limite ne masque pas un état de complétion : le lecteur standard ne marque pas la vidéo comme vue lorsque la lecture ne démarre pas. Une attestation manuelle dans un navigateur apprenant normal reste nécessaire pour qualifier l’audio/vidéo des onze ressources officielles.
+
+Lors d’une activation directe de la première miniature publiée (`JpGtOfSgR-c`), le fournisseur a affiché explicitement **« Sign in to confirm you’re not a bot »**. L’écran est joint au journal de contrôle navigateur et le lecteur conserve le lien « Watch on YouTube » ainsi que la transcription. Ce refus émane du fournisseur dans le navigateur automatisé ; il ne déclenche pas une complétion vidéo côté Neopolis. Le libellé « Watched » visible dans cette observation correspond à la progression préexistante de la session navigateur et ne constitue pas une preuve de lecture pour un nouveau compte.
+
+La revalidation du 14 septembre 2026 contre le domaine publié confirme que les **14/14 téléchargements** retournent HTTP `200`, un type MIME `application/pdf` et une taille strictement positive. Le vérificateur conserve pour chaque ressource son nom, sa taille et son checksum SHA-256 dans `docs/architect-foundations-course1-assets.json` ; les références vidéo sont inventoriées séparément, sans traiter une miniature ou un transcript comme une preuve de lecture audio.
+
 ## Contrôles à exécuter avant publication
 
 | Contrôle | Critère vérifiable |

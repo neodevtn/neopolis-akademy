@@ -847,6 +847,9 @@ export default function TrainingCourse() {
                       trackProgressMilestones(current, total, "chapter");
                       setChapterProgressLessonIndex(displayedIndex);
                       navigateCoursePosition(displayedIndex, current);
+                      if (courseId) {
+                        persistChapterProgress(courseId, displayedIndex, current, total);
+                      }
                     }}
                     onViewingChapterChange={handleViewingChapterChange}
                     initialChapter={Math.min(chapterProgress?.current ?? 0, (displayedLesson?.chapters?.length || 1) - 1)}
