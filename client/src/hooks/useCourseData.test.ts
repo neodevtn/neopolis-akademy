@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildCourseAssetUrl, getCourseFileCandidates } from "./useCourseData";
+import { afterEach, vi } from "vitest";
+import { buildCourseAssetUrl, getCourseDataCacheStats, getCourseFileCandidates, prefetchCourse } from "./useCourseData";
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("course data asset URLs", () => {
   it("uses the current deployment version to bypass stale CDN entries", () => {
@@ -19,5 +24,23 @@ describe("course data asset URLs", () => {
       "prompt_engineering_with_the_openai_api__01",
       "prompt_engineering_with_openai_api__01",
     ]);
+  });
+
+  it("keeps a successfully loaded course in memory across subsequent prefetches", async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ version: "cache-proof" }) })
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: new Headers({ "content-type": "application/json; charset=utf-8" }),
+        json: async () => ({ lessons: [], exercises: [], sections: [] }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+
+    prefetchCourse("course_cache_proof");
+    await vi.waitFor(() => expect(getCourseDataCacheStats().cachedIds).toContain("course_cache_proof"));
+    prefetchCourse("course_cache_proof");
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(getCourseDataCacheStats().cachedIds).toContain("course_cache_proof");
   });
 });

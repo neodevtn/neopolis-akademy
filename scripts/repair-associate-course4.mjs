@@ -18,7 +18,8 @@ intro.fr = intro.fr.replace('**Durée estimée :** 15-25 minutes', '**Durée off
 const requirements = lesson.chapters.find((chapter) => chapter.id === 'chapter_05');
 requirements.blocks[0].body.fr = requirements.blocks[0].body.fr
   .replace('« we need better reporting »', '« nous avons besoin de meilleurs rapports »')
-  .replace('Cela révèle les exigences cachées, celles enterrées dans une clause subordonnée ou implicites par un critère d’évaluation, qui coûtent des offres lorsque elles ne sont pas respectées.', 'Cela révèle les exigences cachées, celles enterrées dans une clause subordonnée ou implicites dans un critère d’évaluation, qui coûtent des offres lorsqu’elles sont négligées.');
+  .replace('Cela révèle les exigences cachées, celles enterrées dans une clause subordonnée ou implicites par un critère d’évaluation, qui coûtent des offres lorsque elles ne sont pas respectées.', 'Cela révèle les exigences cachées, celles enterrées dans une clause subordonnée ou implicites dans un critère d’évaluation, qui coûtent des offres lorsqu’elles sont négligées.')
+  .replace('« From the attached RFP and the email thread, extract every distinct requirement the client is asking us to address. For each, give a short label, the exact RFP section it comes from, whether our thread already has an answer, and any requirement that is ambiguous and needs clarification. Return it as a table. »', '« À partir du RFP joint et du fil d’e-mails, extrayez chaque exigence distincte à laquelle le client demande de répondre. Pour chacune, indiquez un libellé court, la section exacte du RFP dont elle provient, si notre fil contient déjà une réponse et toute exigence ambiguë nécessitant une clarification. Présentez le résultat sous forme de tableau. »');
 
 const researchPlanning = lesson.chapters.find((chapter) => chapter.id === 'chapter_06');
 for (const block of researchPlanning.blocks) {
