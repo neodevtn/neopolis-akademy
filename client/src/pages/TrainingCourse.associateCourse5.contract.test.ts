@@ -51,8 +51,9 @@ describe('Associate Foundations course 5 contract', () => {
     expect(card(projects, 'Knowledge base').front.fr).toBe('knowledge base');
     expect(card(projects, 'Skills').front.fr).toBe('Skills');
     expect(card(projects, 'Scoped Memory').front.fr).toBe('Scoped Memory');
-    expect(projects.blocks[0].body.fr).toContain('\nSkills\n\nProcédures répétables');
-    expect(projects.blocks[0].body.fr).toContain('la Scoped Memory assure la continuité');
+    expect(projects.blocks[0].body.fr).toContain('**Skills** : des procédures répétables');
+    expect(projects.blocks[0].body.fr).toContain('La Scoped Memory empêche ce contexte d’apparaître dans le Project du Client B.');
+    expect(projects.blocks[0].body.fr).not.toContain('Un Project par client\n\n');
     expect(card(projects, 'Configuring Claude Projects').back.fr).toContain('la Scoped Memory assure la continuité.');
     expect(card(projects, 'Choosing the right mechanism').back.en).toContain('rather than configured inside a single Project.');
     expect(card(projects, 'Choosing the right mechanism').back.fr).toContain('plutôt que d’être configurée dans un seul Project.');
@@ -62,6 +63,9 @@ describe('Associate Foundations course 5 contract', () => {
     expect(card(instructions, 'Anticipate the use cases').back.fr).toContain('nécessiter les mêmes corrections à chaque fois.');
     expect(card(instructions, 'Write the guardrails once').back.fr).toContain('« Citez le document source pour chaque affirmation factuelle');
     expect(card(instructions, 'Write the guardrails once').back.fr).not.toMatch(/par exemple\s*:\s*$/);
+    expect(instructions.blocks[0].body.fr).toContain('**Version vague.**');
+    expect(instructions.blocks[0].body.fr).toContain('**Version précise.**');
+    expect(instructions.blocks[0].body.fr).not.toContain('Avant · vague\nAprès · précise');
     expect(card(maintenance, 'Review cadence').back.en).toContain('output quality slipping for no visible reason.');
     expect(card(maintenance, 'Review cadence').back.fr).toContain('dégradation de la qualité des résultats sans raison visible.');
     expect(maintenance.blocks[0].body.fr).toContain('Un projet de rapport récurrent commence à produire des résultats légèrement incorrects.');
@@ -86,7 +90,7 @@ describe('Associate Foundations course 5 contract', () => {
     expect(connectors.blocks[0].body.fr).not.toContain("Connectors extend Claude's reach");
     expect(connectors.blocks[0].body.fr).not.toContain('####');
     expect(connectors.blocks[0].body.fr).toContain('Lorsqu’un connecteur atteint une limite de capacité');
-    expect(projects.blocks[0].body.fr).toContain('Lorsqu’un besoin s’étend sur deux mécanismes');
+    expect(projects.blocks[0].body.fr).toContain('Certains besoins relient deux emplacements');
     expect(frenchStrings.join('\n')).toContain('Scoped Memory pour la continuité.');
     expect(lesson.recommendedVideosManaged).toBe(false);
     expect(lesson.recommendedVideos || []).toEqual([]);

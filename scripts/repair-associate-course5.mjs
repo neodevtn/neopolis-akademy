@@ -22,11 +22,28 @@ intro.en = intro.en.replace('**Estimated time:** 15-25 minutes', '**Official dur
 intro.fr = intro.fr.replace('**Durée estimée :** 15-25 minutes', '**Durée officielle :** 47 minutes');
 
 const projects = findChapter('chapter_01');
-projects.blocks[0].body.fr = projects.blocks[0].body.fr
-  .replace('Lorsque un besoin s’étend sur deux mécanismes', 'Lorsqu’un besoin s’étend sur deux mécanismes')
-  .replace('\nCompétences\n\nProcédures répétables', '\nSkills\n\nProcédures répétables')
-  .replace('la Memory contextualisée assure la continuité', 'la Scoped Memory assure la continuité')
-  .replace('La question récurrente est : instruction, connaissance, ou Skill ? Une règle sur le comportement (« Citer systématiquement le document source pour toute affirmation factuelle ») est une instruction. Un fait dont Claude a besoin (« notre palette de marque est ces codes hexadécimaux ») est une connaissance. Une procédure en plusieurs étapes (« formater les résultats dans notre modèle de rapport standard ») est une Skill, construite une fois au niveau du compte sous Customize et réutilisée dans tout Project qui en a besoin, plutôt que configurée dans un seul Project.', 'La question récurrente est la suivante : instruction, knowledge base ou Skill ? Une règle de comportement (« toujours citer les sources ») relève d’une instruction. Un fait dont Claude a besoin (« notre palette de marque correspond à ces codes hexadécimaux ») relève de la knowledge base. Une procédure en plusieurs étapes (« mettre les résultats en forme dans notre modèle de rapport standard ») relève d’une Skill, créée une fois au niveau du compte sous Customize et réutilisée dans tout Project qui en a besoin, plutôt que d’être configurée dans un seul Project.');
+projects.blocks[0].body.fr = `Configuration des Projects Claude
+
+Un Project comporte plusieurs emplacements de configuration. Choisir le bon emplacement pour chaque besoin récurrent permet de garder un Project cohérent, maintenable et sûr.
+
+Les quatre mécanismes de configuration
+
+- **Instructions permanentes** : le comportement de Claude dans chaque conversation du Project — ton, format et habitudes de vérification.
+- **knowledge base** : les documents, politiques et fichiers de référence ; elle contient les faits, pas les règles de comportement.
+- **Skills** : des procédures répétables disponibles au niveau du compte sous Customize et réutilisables dans les Projects qui en ont besoin.
+- **Scoped Memory** : la continuité propre à un Project, isolée des autres Projects.
+
+Choisir le bon mécanisme
+
+Une règle de comportement (« toujours citer les sources ») relève des Instructions. Un fait dont Claude a besoin (« notre palette de marque correspond à ces codes hexadécimaux ») relève de la knowledge base. Une procédure en plusieurs étapes (« mettre les résultats en forme dans notre modèle de rapport standard ») relève d’une Skill. Mettre une procédure dans les Instructions, ou une règle de comportement dans la knowledge base, rend le Project plus difficile à maintenir.
+
+Exemple pratique : espace de travail d’un compte client
+
+Pour le Client A, un consultant peut associer des Instructions permanentes, une knowledge base contenant le guide de marque et les rapports récents, une Skill de rapport d’état réutilisable et une Scoped Memory réservée aux parties prenantes ainsi qu’aux décisions de ce client. La Scoped Memory empêche ce contexte d’apparaître dans le Project du Client B.
+
+Scoped Memory et besoins liés
+
+Scoped Memory est un emplacement de configuration à part entière : elle conserve les décisions et préférences évolutives du Project, tandis qu’un fait de référence stable demeure dans la knowledge base. Certains besoins relient deux emplacements : une Instruction peut imposer de citer les documents qui résident dans la knowledge base, et une Skill peut appliquer une procédure en s’appuyant sur un guide de marque. Lors de la configuration d’un Project, vérifiez donc à la fois l’emplacement principal du besoin et les emplacements complémentaires nécessaires.`;
 findCard(projects, 'Standing instructions').front.fr = 'Instructions permanentes';
 findCard(projects, 'Knowledge base').front.fr = 'knowledge base';
 findCard(projects, 'Skills').front.fr = 'Skills';
@@ -70,12 +87,27 @@ findCard(connectors, 'Capability boundaries').back.en = 'Each connector has a de
 findCard(connectors, 'Capability boundaries').back.fr = 'Chaque connecteur a un périmètre défini, et le connaître évite de perdre du temps. Un connecteur de messagerie peut permettre à Claude de rechercher et de lire des messages, mais pas de les envoyer. Attendre une action qu’un connecteur ne peut pas effectuer entraîne un échec déroutant, et non une erreur claire ; apprenez donc les limites de chaque connecteur avant de construire un flux de travail qui en dépend.';
 
 const instructions = findChapter('chapter_03');
-instructions.blocks[0].body.fr = instructions.blocks[0].body.fr
-  .replace('"Cite the source document for every factual claim, and say \'I don\'t know\' rather than guessing when the documents do not cover something."', '« Citez le document source pour chaque affirmation factuelle et dites “Je ne sais pas” plutôt que de deviner lorsque les documents ne couvrent pas un sujet. »')
-  .replace('"Be professional"', '« Soyez professionnel »')
-  .replace('"Use a formal register, define any acronym on first use, and keep paragraphs under four sentences"', '« Utilisez un registre formel, définissez tout acronyme lors de sa première occurrence et limitez les paragraphes à quatre phrases. »')
-  .replace('"Make the reports good and accurate."', '« Produisez des rapports utiles et exacts. »')
-  .replace('"For every figure in a report, state its source. If a figure is not in the provided data, mark it \'unverified\' rather than including it. Lead each report with a one-sentence headline."', '« Pour chaque chiffre d’un rapport, indiquez sa source. Si un chiffre n’apparaît pas dans les données fournies, marquez-le comme “non vérifié” au lieu de l’inclure. Commencez chaque rapport par un titre d’une phrase. »');
+instructions.blocks[0].body.fr = `Instructions au niveau système qui restent en place
+
+Les instructions persistantes permettent aux équipes d’intégrer une fois les comportements de vérification, les valeurs par défaut de format et le ton, puis de les appliquer à chaque conversation dans le Project.
+
+Écrivez les garde-fous une fois
+
+Les instructions les plus précieuses sont celles que vous réécririez sans cesse. Définissez-les comme instructions permanentes : « Citez le document source pour chaque affirmation factuelle et dites “Je ne sais pas” plutôt que de deviner lorsque les documents ne couvrent pas un sujet. »
+
+Anticipez les cas d’utilisation
+
+Des instructions bien conçues précisent en amont le format, le ton et les garde-fous. Si le Project produit des livrables clients, le premier brouillon se rapproche ainsi d’un résultat exploitable sans répétition des mêmes corrections.
+
+Précision et cohérence
+
+Une instruction vague comme « Soyez professionnel » laisse trop d’interprétation. Une instruction précise — « Utilisez un registre formel, définissez tout acronyme lors de sa première occurrence et limitez les paragraphes à quatre phrases » — donne un critère clair et reproductible.
+
+Exemple pratique : avant et après
+
+**Version vague.** « Produisez des rapports utiles et exacts. » La qualité varie d’une conversation à l’autre car aucun comportement concret n’est demandé.
+
+**Version précise.** « Pour chaque chiffre d’un rapport, indiquez sa source. Si un chiffre n’apparaît pas dans les données fournies, marquez-le comme “non vérifié” au lieu de l’inclure. Commencez chaque rapport par un titre d’une phrase. » Le comportement de vérification et le format deviennent cohérents.`;
 findCard(instructions, 'Anticipate the use cases').back.en = 'Good standing instructions embed format, tone, and guardrail guidance ahead of need. If the Project produces client deliverables, the instructions can specify the preferred format and register up front, so the first draft lands closer to a final deliverable rather than needing the same corrections each time.';
 findCard(instructions, 'Anticipate the use cases').back.fr = 'De bonnes instructions permanentes intègrent à l’avance des indications sur le format, le ton et les garde-fous. Si le Project produit des livrables client, les instructions peuvent préciser dès le départ le format et le registre préférés, afin que le premier brouillon soit plus proche d’un livrable final au lieu de nécessiter les mêmes corrections à chaque fois.';
 findCard(instructions, 'Write the guardrails once').back.fr = 'Les instructions les plus précieuses sont celles que vous seriez autrement amené à retaper sans cesse. Définissez les comportements de vérification comme instructions permanentes, par exemple : « Citez le document source pour chaque affirmation factuelle et dites “Je ne sais pas” plutôt que de deviner lorsque les documents ne couvrent pas un sujet. »';
