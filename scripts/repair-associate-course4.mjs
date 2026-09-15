@@ -20,6 +20,16 @@ requirements.blocks[0].body.fr = requirements.blocks[0].body.fr
   .replace('« we need better reporting »', '« nous avons besoin de meilleurs rapports »')
   .replace('Cela révèle les exigences cachées, celles enterrées dans une clause subordonnée ou implicites par un critère d’évaluation, qui coûtent des offres lorsque elles ne sont pas respectées.', 'Cela révèle les exigences cachées, celles enterrées dans une clause subordonnée ou implicites dans un critère d’évaluation, qui coûtent des offres lorsqu’elles sont négligées.');
 
+const researchPlanning = lesson.chapters.find((chapter) => chapter.id === 'chapter_06');
+for (const block of researchPlanning.blocks) {
+  if (block.type !== 'flip_cards') continue;
+  for (const card of block.cards) {
+    if (card.front.en === 'Research and synthesis') {
+      card.back.fr = 'Claude peut synthétiser des informations provenant de plusieurs sources pour élaborer un plan : rassembler les points à considérer, structurer les options et exposer les compromis. Pour les informations récentes postérieures à l’entraînement, la recherche web dans le chat couvre les recherches rapides et Research fournit des apports plus approfondis et à jour. La synthèse est utile, mais elle doit toujours être soumise à la vérification appropriée.';
+    }
+  }
+}
+
 const solutionDesign = lesson.chapters.find((chapter) => chapter.id === 'chapter_07');
 for (const block of solutionDesign.blocks) {
   if (block.type !== 'flip_cards') continue;

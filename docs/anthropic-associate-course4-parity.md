@@ -36,4 +36,15 @@ La cartographie de délégation ne présente plus de cartes tronquées ni de niv
 | Triage de délégation | **6/6 · Parfait !**, correction détaillée visible |
 | Redesign de workflow | **5/5 · Parfait !**, correction détaillée visible et bouton Suivant actif |
 
-Le checkpoint et le contrôle du domaine public restent requis avant la clôture du cours 4.
+## Contrôle public après publication
+
+Le checkpoint correctif `34f32ef8` a été publié puis contrôlé sur `https://akademy.neodev.click/training/claude_certified_associate_foundations/claude_certified_associate_foundations__04?lesson=0&chapter=6`. La donnée de cours publique contient la correction française attendue. Après rechargement complet du lecteur, la soumission enregistrée à **5/5 · Parfait !** affiche également cette correction sous le scénario, et le bouton suivant reste actif. La console navigateur ne signale aucune erreur.
+
+La revue publique des dix écrans demeure à réaliser avant la clôture définitive du cours 4.
+
+### Revue écran par écran
+
+| Écrans contrôlés | Résultat public |
+|---|---|
+| 1 — Introduction du module | Rendu structuré, titres français, durée officielle **63 min** et estimation Neopolis distincte visibles ; navigation disponible en mode révision. |
+| 2 — Analyse des exigences | Contenu structuré visible sans erreur de rendu, exemple RFP, consignes de configuration et rattachement au module présentés dans la séquence prévue. |

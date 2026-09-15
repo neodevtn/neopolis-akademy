@@ -25,6 +25,7 @@
 - [x] Synchroniser la recherche et le test de nettoyage Associate 4 avec le titre français et la terminologie localisée corrigés — index régénéré, contrat et suite complète validés
 - [x] Corriger les reliquats anglais visibles du chapitre Cartographie des délégations Associate 4, notamment « ÉTAPE DU WORKFLOW — DÉLÉGATION pourquoi ? » et « reviewer », puis revalider le rendu complet — deux titres de carte normalisés et `reviewer` remplacé par « relecteur »
 - [x] Rejouer le contrôle navigateur de toutes les cartes et du texte du chapitre Cartographie des délégations Associate 4 après le nettoyage final — texte, huit cartes, score 6/6 et correction détaillée contrôlés en prévisualisation
+- [ ] Corriger le reliquat anglais « web search in chat » visible dans la carte française Recherche et synthèse du cours Associate 4, sans traduire ni altérer les noms de produits Anthropic
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »

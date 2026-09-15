@@ -41,6 +41,11 @@ describe('Associate Foundations course 4 contract', () => {
     expect(redesignSort.cards).toHaveLength(5);
     expect(redesignSort.correction.fr).toContain('déterministe et réversible');
     expect(redesignSort.correction.fr).toContain('une personne confirme la décision');
+    const researchCards = lesson.chapters.find((chapter: { id: string }) => chapter.id === 'chapter_06').blocks
+      .find((block: { type: string }) => block.type === 'flip_cards').cards;
+    const researchSynthesis = researchCards.find((card: { front: { en: string } }) => card.front.en === 'Research and synthesis');
+    expect(researchSynthesis.back.fr).toContain('recherche web dans le chat');
+    expect(researchSynthesis.back.fr).not.toContain('web search in chat');
     expect(redesign.completionRule.requires).toContain('requiredExercisesPassed');
     expect(delegation.blocks[0].body.fr).not.toContain('Human-retained');
     expect(delegation.blocks[0].body.fr).not.toContain('AI, un humain');
