@@ -240,6 +240,8 @@ export default function TrainingCourse() {
 
   const course = trainingIndex.courses.find((c: any) => c.id === courseId);
   const cert = trainingIndex.certifications.find((c: any) => c.id === certId);
+  const officialDurationMinutes = Math.max(0, Number((course as any)?.officialDurationMinutes) || 0);
+  const estimatedDurationLabel = resolveI18n((course as any)?.neopolisEstimatedDuration, lang);
   const courseAnalyticsParams = useMemo(() => ({
     course_slug: courseId,
     category_slug: certId,
@@ -628,14 +630,26 @@ export default function TrainingCourse() {
             </div>
             <h1 className="mb-2 break-words text-2xl font-bold text-foreground">{t(course.title)}</h1>
             {/* Global progress summary */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-primary" />
-                <span className="font-medium text-foreground">{visibleUnitCurrent}</span>
-                <span>/ {isNovasavoCourse ? novasavoUnitsTotal : totalLessons} {isNovasavoCourse ? t({ en: "units", fr: "unités" }) : isSingleLessonCourse ? t({ en: "chapters", fr: "chapitres" }) : t({ en: "lessons", fr: "leçons" })}</span>
-                {isNovasavoCourse && activeMultiLessonIndex >= novasavoUnitsTotal && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{t({ en: "Final exam", fr: "Examen final" })}</span>}
-              </div>
-              {videos.length > 0 && (
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <BookOpen className="w-4 h-4 text-primary" />
+                  <span className="font-medium text-foreground">{visibleUnitCurrent}</span>
+                  <span>/ {isNovasavoCourse ? novasavoUnitsTotal : totalLessons} {isNovasavoCourse ? t({ en: "units", fr: "unités" }) : isSingleLessonCourse ? t({ en: "chapters", fr: "chapitres" }) : t({ en: "lessons", fr: "leçons" })}</span>
+                  {isNovasavoCourse && activeMultiLessonIndex >= novasavoUnitsTotal && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{t({ en: "Final exam", fr: "Examen final" })}</span>}
+                </div>
+                {officialDurationMinutes > 0 && (
+                  <div className="flex items-center gap-1.5" title={t({ en: "Official source duration", fr: "Durée issue de la source officielle" })}>
+                    <Timer className="w-4 h-4 text-primary" />
+                    <span>{t({ en: "Official duration", fr: "Durée officielle" })} <span className="font-medium text-foreground">{officialDurationMinutes} min</span></span>
+                  </div>
+                )}
+                {estimatedDurationLabel && (
+                  <div className="flex items-center gap-1.5">
+                    <Timer className="w-4 h-4 text-muted-foreground" />
+                    <span>{t({ en: "Neopolis estimate", fr: "Estimation Neopolis" })} <span className="font-medium text-foreground">{estimatedDurationLabel}</span></span>
+                  </div>
+                )}
+                {videos.length > 0 && (
                 <div className="flex items-center gap-1.5">
                   <Video className="w-4 h-4 text-red-400" />
                   <span className="font-medium text-foreground">{completedVideos.size}</span>

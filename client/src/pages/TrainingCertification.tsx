@@ -513,6 +513,7 @@ export default function TrainingCertification() {
             const idx = courses.findIndex((item: any) => item.id === course.id);
             const progress = courseProgressMap[course.id] || { completed: 0, total: 0, pct: 0 };
             const courseMetrics = getCourseCatalogMetrics(course);
+            const officialDurationMinutes = Math.max(0, Number(course.officialDurationMinutes) || 0);
             const completed = progress.pct >= 100;
             const started = progress.completed > 0;
             // Sequential locking: course is locked if previous course is not completed (except first course)
@@ -536,12 +537,13 @@ export default function TrainingCertification() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-muted-foreground">{t(course.title)}</h3>
-                        <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
+                        <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <BookOpen className="w-3 h-3" />
                             {courseMetrics.chapterCount} {t({ en: "chapters", fr: "chapitres" })}
                           </span>
                           <span className="flex items-center gap-1">{courseMetrics.totalActivities} {t({ en: "activities", fr: "activités" })}</span>
+                          {officialDurationMinutes > 0 && <span className="flex items-center gap-1" title={t({ en: "Official source duration", fr: "Durée issue de la source officielle" })}><Clock className="w-3 h-3" />{officialDurationMinutes} min</span>}
                           {courseMetrics.exerciseCount > 0 && <span className="flex items-center gap-1">{courseMetrics.exerciseCount} {t({ en: "interactive exercises", fr: "exercices interactifs" })}</span>}
                           {courseMetrics.videoCount > 0 && (
                             <span className="flex items-center gap-1">
@@ -583,12 +585,13 @@ export default function TrainingCertification() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">{t(course.title)}</h3>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <BookOpen className="w-3 h-3" />
                           {courseMetrics.chapterCount} {t({ en: "chapters", fr: "chapitres" })}
                         </span>
                         <span className="flex items-center gap-1">{courseMetrics.totalActivities} {t({ en: "activities", fr: "activités" })}</span>
+                        {officialDurationMinutes > 0 && <span className="flex items-center gap-1" title={t({ en: "Official source duration", fr: "Durée issue de la source officielle" })}><Clock className="w-3 h-3" />{officialDurationMinutes} min</span>}
                         {courseMetrics.exerciseCount > 0 && <span className="flex items-center gap-1">{courseMetrics.exerciseCount} {t({ en: "interactive exercises", fr: "exercices interactifs" })}</span>}
                         {courseMetrics.videoCount > 0 && (
                           <span className="flex items-center gap-1">

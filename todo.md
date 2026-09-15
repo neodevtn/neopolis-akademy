@@ -1,6 +1,11 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit Anthropic — Architect Foundations, cours 1 — dossier prioritaire du 14 septembre 2026
+- [ ] Inventorier tous les prompts de correction Anthropic encore non exécutés, identifier leur formation, leur source et leurs critères de clôture
+- [ ] Appliquer les corrections Anthropic restantes formation par formation en conservant les blocs Neopolis, les interactions, la progression et les verrous séquentiels
+- [ ] Ajouter ou mettre à jour les tests de non-régression adaptés à chaque correction Anthropic exécutée
+- [ ] Contrôler les rendus corrigés dans un navigateur, puis publier et vérifier le domaine public avant de clôturer chaque lot de formations
+- [ ] Corriger Associate Foundations cours 1 : afficher la durée officielle Skilljar de 59 minutes dans la métadonnée standard, préserver les 10 écrans et vérifier le tri ainsi que les onglets Skills / Code Execution / Memory
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »

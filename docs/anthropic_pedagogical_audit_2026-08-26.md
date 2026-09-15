@@ -1,10 +1,10 @@
 # Audit pédagogique Anthropic
 
-> Inventaire statique généré le 2026-08-26T01:45:13.049Z. Les références directionnelles sont des signaux à examiner dans le contexte ; elles ne déclenchent aucune réécriture automatique.
+> Inventaire statique généré le 2026-09-15T07:56:15.209Z. Les références directionnelles sont des signaux à examiner dans le contexte ; elles ne déclenchent aucune réécriture automatique.
 
 | Cours | Écrans | Familles de blocs | Types historiques | Références gauche/droite | Libellés structurels |
 |---|---:|---:|---:|---:|---:|
-| `claude_certified_architect_foundations__01` | 33 | 8 | — | 1 | 3 |
+| `claude_certified_architect_foundations__01` | 34 | 8 | — | 1 | 3 |
 | `claude_certified_architect_foundations__02` | 95 | 7 | — | 1 | 2 |
 | `claude_certified_architect_foundations__03` | 99 | 7 | — | 2 | 3 |
 | `claude_certified_architect_foundations__04` | 23 | 6 | — | 1 | 3 |
@@ -33,6 +33,6 @@
 ## Synthèse
 
 - Cours audités : **25**.
-- Écrans audités : **556**.
+- Écrans audités : **557**.
 - Cours contenant un signal directionnel : **24**.
 - Types de blocs historiques détectés : **0**.
