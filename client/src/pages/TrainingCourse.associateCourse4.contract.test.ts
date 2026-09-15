@@ -51,6 +51,9 @@ describe('Associate Foundations course 4 contract', () => {
     expect(solutionDesign.blocks[0].body.fr).not.toContain('partenaire de design');
     expect(solutionDesign.blocks[0].body.fr).not.toContain("le build n'est plus");
     expect(solutionDesign.blocks[0].body.fr).not.toContain('prompt-and-iterate');
+    const moduleQuiz = lesson.chapters.find((chapter: { id: string }) => chapter.id === 'chapter_11');
+    expect(moduleQuiz.title.fr).toBe('Quiz du module 4 : intégration de flux de travail et conception de solutions');
+    expect(moduleQuiz.title.fr).not.toContain('workflow');
     expect(redesign.completionRule.requires).toContain('requiredExercisesPassed');
     expect(delegation.blocks[0].body.fr).not.toContain('Human-retained');
     expect(delegation.blocks[0].body.fr).not.toContain('AI, un humain');

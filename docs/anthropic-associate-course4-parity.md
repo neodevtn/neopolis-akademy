@@ -56,3 +56,15 @@ Après rechargement documentaire, le rendu de l’écran 3 affiche bien la carte
 Le contrôle de l’écran 6 effectué après le checkpoint `60a58048` a montré que le lecteur pouvait encore servir les anciennes valeurs tronquées des cartes de communication malgré le délai de propagation. Cette observation est traitée comme un décalage de cache/livraison à recontrôler, et non comme une validation : les cartes ne seront considérées corrigées qu’après vérification du contenu complet effectivement rendu depuis la donnée publique actualisée.
 
 La prévisualisation du correctif de chargeur versionné confirme ensuite deux invariants : la requête vers le JSON du cours comporte le paramètre `course-version`, et les trois cartes réparées affichent leurs phrases de clôture complètes. Ce contrôle ne remplace pas la vérification post-publication, qui reste nécessaire pour confirmer le comportement à travers le CDN.
+
+Après le checkpoint `f9b68d2f`, l’écran public **Communiquer la valeur** charge et affiche les cinq cartes complètes. Les cartes « Adaptez-vous au public », « Surestimé vs. Précis » et « Phrases qui exagèrent subtilement » ne sont plus tronquées, leurs phrases ne sont plus fusionnées et les guillemets sont cohérents. La navigation reste disponible en mode révision et aucune erreur de rendu n’est apparue lors de ce contrôle.
+
+Après la propagation du même checkpoint, la console publique confirme que les requêtes de données de cours comportent bien `course-version`. Un rechargement a brièvement présenté l’état de chargement pendant que les nouvelles requêtes étaient émises ; la résolution de cet état est contrôlée séparément avant de clôturer le correctif de cache.
+
+Le rechargement public final quitte correctement cet état transitoire. La console confirme simultanément que le lecteur est prêt, que le JSON Associate 4 est demandé avec `course-version` et que les trois fragments de cartes réparées sont visibles. La récupération versionnée est donc validée sur le domaine public.
+
+L’écran public **Conception et itération de la solution** a ensuite été rejoué après la publication du chargeur versionné. Les termes non nominaux précédemment signalés sont traduits : « partenaire de conception », « construction » et « rédiger et itérer sur des prompts ». Les rôles de parcours **Associate**, **Developer** et **Architect** demeurent inchangés, conformément à la terminologie Anthropic.
+
+Le scénario public **Reconcevoir un workflow** a été contrôlé avec ses cinq associations déjà validées. Le résultat affiche `5/5 · Parfait !`, suivi de la correction pédagogique complète couvrant les décisions Automatiser, Humain et Collaboratif. Les boutons de navigation restent disponibles après l’activité, conformément au mode révision.
+
+L’écran public **Module 4** a été vérifié : cinq questions de scénario, quatre choix par question et un contrôle de réponse sont rendus. La copie française est complète à l’exception du terme non nominal « workflow » relevé dans le titre du quiz, qui doit être harmonisé avec « flux de travail » avant la clôture du cours.

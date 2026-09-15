@@ -116,6 +116,9 @@ for (const block of value.blocks) {
   }
 }
 
+const moduleQuiz = lesson.chapters.find((chapter) => chapter.id === 'chapter_11');
+moduleQuiz.title.fr = 'Quiz du module 4 : intégration de flux de travail et conception de solutions';
+
 // These imported free-text payloads are unrelated, optional, and bypass the course’s
 // self-contained Neopolis activities. The two bucket sorts and five quiz questions live
 // directly in their chapters and remain the seven activities counted by the catalogue.
