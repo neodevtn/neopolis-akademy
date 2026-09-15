@@ -117,7 +117,25 @@ for (const block of value.blocks) {
 }
 
 const moduleQuiz = lesson.chapters.find((chapter) => chapter.id === 'chapter_11');
-moduleQuiz.title.fr = 'Quiz du module 4 : intégration de flux de travail et conception de solutions';
+moduleQuiz.title.fr = 'Module 4';
+moduleQuiz.blocks[0].body.fr = 'Quiz du module 4 : Intégration des flux de travail et conception de solutions\n\nCinq questions de type scénario. Chaque question présente une situation : choisissez la réponse qui s’applique le mieux au cadre d’intégration du module. Durée approximative : cinq minutes.';
+
+function localizeFrenchWorkflow(value) {
+  if (Array.isArray(value)) {
+    value.forEach(localizeFrenchWorkflow);
+    return;
+  }
+  if (!value || typeof value !== 'object') return;
+  for (const [key, nestedValue] of Object.entries(value)) {
+    if (key === 'fr' && typeof nestedValue === 'string') {
+      value[key] = nestedValue.replaceAll('workflow', 'flux de travail');
+    } else {
+      localizeFrenchWorkflow(nestedValue);
+    }
+  }
+}
+
+localizeFrenchWorkflow(course);
 
 // These imported free-text payloads are unrelated, optional, and bypass the course’s
 // self-contained Neopolis activities. The two bucket sorts and five quiz questions live

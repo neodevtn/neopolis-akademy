@@ -19,7 +19,7 @@ describe("nettoyage pédagogique Anthropic — Associate Foundations 04", () => 
     expect(body).toContain("## Exemple 1 — Revue de contrat");
     expect(body).toContain("## Exemple 2 — Documents d’intégration");
     expect(body).not.toContain("Deux schémas fonctionnels, mêmes critères");
-    expect(body.match(/\| Étape du workflow \| Délégation \| Pourquoi \|/g)).toHaveLength(2);
+    expect(body.match(/\| Étape du flux de travail \| Délégation \| Pourquoi \|/g)).toHaveLength(2);
     expect(body).toContain("| Signer et envoyer | réservée à l’humain | Irréversible, externe, juridiquement contraignant |");
     expect(body).toContain("Envoyer l’offre signée | réservée à l’humain");
     expect(englishBody).toContain("## Example 1 — Contract review");

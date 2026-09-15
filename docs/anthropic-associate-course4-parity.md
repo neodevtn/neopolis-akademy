@@ -68,3 +68,7 @@ L’écran public **Conception et itération de la solution** a ensuite été re
 Le scénario public **Reconcevoir un workflow** a été contrôlé avec ses cinq associations déjà validées. Le résultat affiche `5/5 · Parfait !`, suivi de la correction pédagogique complète couvrant les décisions Automatiser, Humain et Collaboratif. Les boutons de navigation restent disponibles après l’activité, conformément au mode révision.
 
 L’écran public **Module 4** a été vérifié : cinq questions de scénario, quatre choix par question et un contrôle de réponse sont rendus. La copie française est complète à l’exception du terme non nominal « workflow » relevé dans le titre du quiz, qui doit être harmonisé avec « flux de travail » avant la clôture du cours.
+
+Après le checkpoint `bcda8680`, l’écran public du quiz conserve encore l’ancien titre malgré le contrôle local réussi. Ce décalage indique que le cache-buster s’appuie encore sur une version de manifeste périmée dans certains parcours de navigation. Le titre et les scénarios ne sont donc pas clôturés à ce stade ; le mécanisme de version doit être renforcé avant une nouvelle vérification publique.
+
+Le contrôle direct du JSON public a ensuite montré que le chapitre `chapter_11` porte seulement le libellé « Module 4 ». Le titre visible du quiz est porté par son bloc interne ; la normalisation précédente a donc ciblé le mauvais champ de données. Le cache-buster charge bien le JSON frais : la correction doit désormais être appliquée à la propriété de bloc réellement rendue.

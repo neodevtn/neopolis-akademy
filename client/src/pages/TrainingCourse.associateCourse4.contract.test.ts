@@ -52,8 +52,22 @@ describe('Associate Foundations course 4 contract', () => {
     expect(solutionDesign.blocks[0].body.fr).not.toContain("le build n'est plus");
     expect(solutionDesign.blocks[0].body.fr).not.toContain('prompt-and-iterate');
     const moduleQuiz = lesson.chapters.find((chapter: { id: string }) => chapter.id === 'chapter_11');
-    expect(moduleQuiz.title.fr).toBe('Quiz du module 4 : intégration de flux de travail et conception de solutions');
+    expect(moduleQuiz.title.fr).toBe('Module 4');
+    expect(moduleQuiz.blocks[0].body.fr).toContain('Quiz du module 4 : Intégration des flux de travail et conception de solutions');
     expect(moduleQuiz.title.fr).not.toContain('workflow');
+    const frenchStrings: string[] = [];
+    const collectFrenchStrings = (value: unknown) => {
+      if (Array.isArray(value)) {
+        value.forEach(collectFrenchStrings);
+      } else if (value && typeof value === 'object') {
+        for (const [key, nestedValue] of Object.entries(value)) {
+          if (key === 'fr' && typeof nestedValue === 'string') frenchStrings.push(nestedValue);
+          else collectFrenchStrings(nestedValue);
+        }
+      }
+    };
+    collectFrenchStrings(course);
+    expect(frenchStrings.join('\n')).not.toMatch(/\bworkflow\b/i);
     expect(redesign.completionRule.requires).toContain('requiredExercisesPassed');
     expect(delegation.blocks[0].body.fr).not.toContain('Human-retained');
     expect(delegation.blocks[0].body.fr).not.toContain('AI, un humain');
