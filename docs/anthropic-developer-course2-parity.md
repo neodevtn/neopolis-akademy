@@ -26,3 +26,13 @@ L’audit Claude Sonnet a confirmé douze écrans mais un décalage de durée, d
 ## Contrôles à archiver avant clôture
 
 La clôture exige : contrat ciblé, validation complète unique, matrice QA, canal tRPC public `no-store`, revue ciblée de l’introduction, d’un checkpoint, du streaming, de l’agent loop, des ressources pratiques et de la fin de module, ainsi qu’une console sans erreur applicative.
+
+## Constat de prévisualisation post-correctif — non clôturant
+
+Le canal tRPC public répond correctement (HTTP 200, JSON et `Cache-Control: no-store, max-age=0`) et expose bien la durée officielle de 209 minutes, les 12 écrans, les 8 checkpoints à choix unique et l’écran **Ressources pratiques**. Toutefois, l’écran **L’art du prompting** reste partiellement lisible de façon dégradée : les pseudo-tableaux demeurent des paragraphes concaténés et quelques termes génériques anglais subsistent (`output constraint`, `system prompt`, `Few-shot examples`). Ces éléments restent ouverts et doivent être normalisés avec les blocs Markdown standards avant le contrôle de clôture.
+
+Après restructuration locale, les deux premiers pseudo-tableaux sont devenus des sections Markdown lisibles. Il reste un tableau compact de techniques dont les en-têtes sont concaténés (`System Prompts / XML Tags / Few-shot Examples / Output Constraints`) ainsi que des occurrences génériques dans les paragraphes suivants. Ils sont regroupés dans le dernier lot de Prompting Craft ; aucune publication supplémentaire ne sera déclenchée avant ce lot complet.
+
+Le dernier contrôle de prévisualisation confirme que les trois sections restructurées sont rendues, mais il révèle un doublon de message utilisateur dans l’exemple de classification et des libellés génériques restants dans ce même exemple. Ces anomalies sont ajoutées au même lot de contenu avant toute republication.
+
+Le diagnostic source confirme que les deux répétitions du message utilisateur appartiennent aux démonstrations distinctes avant/après, puis aux deux scénarios de l’étude « À surveiller » : elles ne constituent pas une duplication de données. Les libellés techniques génériques de la narration restent intégrés au correctif réexécutable et protégé par contrat.

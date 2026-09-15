@@ -36,6 +36,18 @@ describe('Developer Foundations course 2 content contract', () => {
     expect(lesson.title.fr).toBe('Prompting prêt pour la production, agents et utilisation d’outils');
     expect(body('chapter_01').fr).toContain('Prompts système, XML, few-shot et contraintes de sortie');
     expect(body('chapter_01').fr).not.toContain('du prose');
+    expect(body('chapter_01').fr).toContain('## Symptômes et technique manquante');
+    expect(body('chapter_01').fr).toContain('## Principes d’utilisation');
+    expect(body('chapter_01').fr).toContain('## Prompt système');
+    expect(body('chapter_01').fr).toContain('## Contraintes de sortie');
+    expect(body('chapter_01').fr).not.toContain('Ce que vous avez observé — Ce que le prompt manque');
+    expect(body('chapter_01').fr).not.toContain('Stack all four techniques');
+    expect(body('chapter_01').fr).not.toContain('System Prompts\n\nXML Tags');
+    expect(body('chapter_01').fr).not.toContain('une output constraint');
+    expect(body('chapter_01').fr).not.toContain('un system prompt');
+    expect(body('chapter_01').fr).not.toContain('few‑shot examples');
+    expect(body('chapter_01').fr).not.toContain('structured outputs');
+    expect(body('chapter_01').fr).toContain('sorties structurées');
     expect(body('chapter_11').fr).toContain('l’humain dans la boucle');
     expect(chapterFrenchText('chapter_15')).toContain('Claude Agent SDK');
     expect(chapterFrenchText('chapter_13')).toContain('Skills');

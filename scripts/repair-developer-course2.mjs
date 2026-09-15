@@ -7,12 +7,14 @@ const indexPath = path.join(root, 'client/src/data/trainingIndex.json');
 const activitiesPath = path.join(root, 'docs/anthropic-developer-course2-claude-activities.json');
 const patchesPath = path.join(root, 'docs/anthropic-developer-course2-claude-patches.json');
 const cardsPath = path.join(root, 'docs/anthropic-developer-course2-claude-cards.json');
+const promptingStructurePath = path.join(root, 'docs/anthropic-developer-course2-claude-prompting-structure.json');
 
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
 const catalog = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 const generatedActivities = JSON.parse(fs.readFileSync(activitiesPath, 'utf8'));
 const generatedPatches = JSON.parse(fs.readFileSync(patchesPath, 'utf8'));
 const generatedCards = JSON.parse(fs.readFileSync(cardsPath, 'utf8'));
+const promptingStructure = JSON.parse(fs.readFileSync(promptingStructurePath, 'utf8'));
 const lesson = course.lessons[0];
 
 const chapter = (id) => {
@@ -101,12 +103,57 @@ for (const patch of generatedPatches.replacements) {
   if (body?.fr?.includes(patch.from)) body.fr = body.fr.replaceAll(patch.from, patch.to);
 }
 
+const replacePromptingSection = (source, startMarker, endMarker, replacement) => {
+  if (source.includes(replacement)) return source;
+  const start = source.indexOf(startMarker);
+  const end = source.indexOf(endMarker);
+  if (start < 0 || end < 0 || end <= start) throw new Error(`Prompting Craft section is missing: ${startMarker}`);
+  return `${source.slice(0, start)}${replacement}\n\n${source.slice(end)}`;
+};
+
+const promptingCraft = content('chapter_01');
+promptingCraft.fr = replacePromptingSection(
+  promptingCraft.fr,
+  'Ce que vous avez observé — Ce que le prompt manque — Pourquoi cette technique corrige',
+  'Diagnostiquer un prompt de classification',
+  promptingStructure.first_section_fr,
+);
+promptingCraft.fr = replacePromptingSection(
+  promptingCraft.fr,
+  'Stack all four techniques',
+  'Quand utiliser chaque technique',
+  promptingStructure.second_section_fr,
+);
+promptingCraft.fr = replacePromptingSection(
+  promptingCraft.fr,
+  'System Prompts',
+  'La boucle d’itération',
+  promptingStructure.third_section_fr,
+);
+
 const manualFrenchNormalization = [
   ['chapter_01', 'une output constraint', 'une contrainte de sortie'],
   ['chapter_01', 'Un system prompt', 'Un prompt système'],
+  ['chapter_01', 'un system prompt', 'un prompt système'],
+  ['chapter_01', 'le system prompt', 'le prompt système'],
+  ['chapter_01', 'Le system prompt', 'Le prompt système'],
+  ['chapter_01', 'Le router', 'Le routeur'],
+  ['chapter_01', 'Les few‑shot pairs', 'Les paires few-shot'],
+  ['chapter_01', 'des few‑shot examples', 'des exemples few-shot'],
+  ['chapter_01', 'deux few‑shot examples', 'deux exemples few-shot'],
+  ['chapter_01', 'des structured outputs', 'des sorties structurées'],
+  ['chapter_01', 'les structured outputs', 'les sorties structurées'],
+  ['chapter_01', 'Les structured outputs', 'Les sorties structurées'],
+  ['chapter_01', 'structured outputs', 'sorties structurées'],
+  ['chapter_01', 'Déplacer le contrôle de sortie du prompt vers l’API avec des structured outputs', 'Déplacer le contrôle de sortie du prompt vers l’API avec des sorties structurées'],
+  ['chapter_01', 'un JSON schema', 'un schéma JSON'],
+  ['chapter_01', 'du constrained decoding', 'du décodage contraint'],
+  ['chapter_01', 'le system prompt corrigé', 'le prompt système corrigé'],
   ['chapter_01', 'Les few-shot examples', 'Les exemples few-shot'],
   ['chapter_01', 'les few-shot pairs', 'les paires few-shot'],
   ['chapter_01', 'la output constraint', 'la contrainte de sortie'],
+  ['chapter_01', 'les few‑shot examples', 'les exemples few-shot'],
+  ['chapter_01', 'un few‑shot example', 'un exemple few-shot'],
   ['chapter_03', 'carry-back', 'renvoi intégral'],
   ['chapter_05', "S'amarche bien", 'Cela fonctionne bien'],
   ['chapter_05', "L'mcp_toolset", 'Le jeu d’outils MCP'],
