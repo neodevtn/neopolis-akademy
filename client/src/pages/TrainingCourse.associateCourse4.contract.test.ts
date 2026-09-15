@@ -39,6 +39,8 @@ describe('Associate Foundations course 4 contract', () => {
       'Réservée à l’humain',
     ]);
     expect(redesignSort.cards).toHaveLength(5);
+    expect(redesignSort.correction.fr).toContain('déterministe et réversible');
+    expect(redesignSort.correction.fr).toContain('une personne confirme la décision');
     expect(redesign.completionRule.requires).toContain('requiredExercisesPassed');
     expect(delegation.blocks[0].body.fr).not.toContain('Human-retained');
     expect(delegation.blocks[0].body.fr).not.toContain('AI, un humain');
