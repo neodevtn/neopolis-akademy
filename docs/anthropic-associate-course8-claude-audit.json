@@ -1,0 +1,87 @@
+{
+  "course_id": "claude_certified_associate_foundations__08",
+  "findings": [
+    {
+      "action": "localize",
+      "evidence": "Dans le contenu français de chapter_01, les intitulés récapitulatifs « Product & Model Selection », « Prompting », « Output Evaluation », « Workflow Integration », « Configuration », « Governance » et « Troubleshooting » restent en anglais au sein d’un texte français. Les termes de produit Anthropic, notamment Claude et Projects, doivent être préservés.",
+      "issue": "Reliquats de langue anglaise dans la synthèse française des domaines.",
+      "location": "lesson_01 > chapter_01 > blocks[0].body.fr > liste Module 1 à Module 7",
+      "severity": "medium",
+      "source_confirmation_needed": false
+    },
+    {
+      "action": "standardize_heading",
+      "evidence": "Le titre « Course Summary & Next Steps » apparaît immédiatement après le titre principal, puis le paragraphe « You started this course using Claude... increased discipline » est repris presque à l’identique dans les deux ouvertures successives. Le même doublon est présent en français avec « Résumé du cours et prochaines étapes ».",
+      "issue": "Titre et introduction répétés dans le chapitre principal, ce qui gonfle une synthèse censée être courte.",
+      "location": "lesson_01 > chapter_01 > blocks[0].body.en et body.fr > début du contenu",
+      "severity": "medium",
+      "source_confirmation_needed": false
+    },
+    {
+      "action": "restore_complete_text",
+      "evidence": "La carte « Preparing for the exam » se termine par « matching p » en anglais et « par rapport au p » en français, au milieu de la référence au blueprint.",
+      "issue": "Texte tronqué dans une activité intégrée.",
+      "location": "lesson_01 > chapter_01 > blocks[1].cards[6].back.en et back.fr",
+      "severity": "critical",
+      "source_confirmation_needed": false
+    },
+    {
+      "action": "restore_complete_text",
+      "evidence": "La carte « Knowing your boundary » en anglais se termine par « Claude Architect. R », alors que la version française est complète.",
+      "issue": "Texte tronqué dans une activité intégrée.",
+      "location": "lesson_01 > chapter_01 > blocks[1].cards[7].back.en",
+      "severity": "critical",
+      "source_confirmation_needed": false
+    },
+    {
+      "action": "restore_complete_text",
+      "evidence": "Le contenu du chapitre d’exercice s’arrête à « study it » / « à l’étudier », alors que le même passage complet, incluant les cadres de décision et la suite, est présent dans la définition de l’exercice ex_claude_certified_associate_foundations__08_001.",
+      "issue": "Énoncé d’exercice tronqué.",
+      "location": "lesson_01 > chapter_02 > blocks[0].body.en et body.fr",
+      "severity": "high",
+      "source_confirmation_needed": false
+    },
+    {
+      "action": "localize",
+      "evidence": "Le chapitre « Module Complete » contient un corps anglais vide (body.en = \"\") alors que le corps français contient le bloc complet de fin de module.",
+      "issue": "Version anglaise manquante dans un bloc standard bilingue.",
+      "location": "lesson_01 > chapter_05 > blocks[0].body.en",
+      "severity": "high",
+      "source_confirmation_needed": false
+    },
+    {
+      "action": "standardize_heading",
+      "evidence": "La fin du contenu français de chapter_01 inclut déjà « Module terminé · Parcours Associate · 2 min » et « Félicitations ! Vous avez terminé avec succès ce module. », puis chapter_05 fournit à nouveau le bloc standard « Module terminé ».",
+      "issue": "Section de fin de module dupliquée et fragmentée entre le contenu principal et le bloc standard dédié.",
+      "location": "lesson_01 > chapter_01 > blocks[0].body.fr > fin du contenu ; lesson_01 > chapter_05",
+      "severity": "medium",
+      "source_confirmation_needed": false
+    },
+    {
+      "action": "localize",
+      "evidence": "La durée affichée dans l’introduction est « 15-25 minutes », tandis que le contenu français du chapitre principal affiche « 2 min ». Ces indications contredisent la référence officielle fournie de 8 minutes et ne permettent pas d’identifier une durée de cours unique.",
+      "issue": "Durée ambiguë et incohérente avec la durée officielle de 8 minutes.",
+      "location": "lesson_01 > chapter_01_1 > blocks[0].body.en et body.fr ; lesson_01 > chapter_01 > blocks[0].body.fr",
+      "severity": "high",
+      "source_confirmation_needed": false
+    },
+    {
+      "action": "remove_generic_media_fallback",
+      "evidence": "Les vidéos recommandées portent sur l’introduction à l’API Claude, l’Agent SDK et le prompt engineering général. Elles ajoutent des contenus de développement et de tutoriel externes à un module de synthèse, prochaines étapes et readiness ; deux proviennent de chaînes non officielles (« Coding Crashcourses », « AI Mastery »).",
+      "issue": "Médias génériques et hors périmètre de la source, susceptibles de gonfler artificiellement le cours.",
+      "location": "lesson_01 > recommendedVideos",
+      "severity": "high",
+      "source_confirmation_needed": true
+    }
+  ],
+  "preserve": [
+    "Le bloc standard « Module Introduction », sous réserve d’aligner sa durée sur la référence officielle sans ajouter de contenu.",
+    "La synthèse structurée des sept domaines dans chapter_01, après suppression du doublon d’ouverture et des reliquats de langue.",
+    "Le tableau des quatre compétences AI Fluency et les mentions de Claude, Projects, Claude Developer et Claude Architect.",
+    "L’activité intégrée flip_cards de chapter_01 : restaurer uniquement les cartes tronquées, sans la remplacer par un nouveau composant.",
+    "Le checkpoint intégré dans chapter_02 et l’exercice associé ex_claude_certified_associate_foundations__08_001, après restauration de son énoncé affiché.",
+    "Les blocs standards « Key Takeaways » et « Module Complete » ; conserver un seul emplacement de clôture, celui du bloc standard dédié.",
+    "Aucun exercice racine hors chapitre n’est démontré par les données : les deux exercices déclarent lessonId et chapterId."
+  ],
+  "summary": "Le cours contient une base de synthèse par domaine et une activité intégrée à préserver, mais il dépasse le format de clôture court par des doublons, comporte des textes tronqués, une version anglaise manquante, des reliquats anglais en français, des durées contradictoires avec la référence officielle de 8 minutes et des vidéos génériques hors périmètre."
+}
