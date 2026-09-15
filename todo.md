@@ -89,6 +89,7 @@
 - [ ] Ajouter la durée officielle Skilljar de 142 minutes au cours Developer 3, en distinguant cette valeur de toute estimation Neopolis
 - [ ] Corriger Developer Foundations cours 4 « Model Context Protocol & Architecture » par lot 80/20 : traiter les troncatures, traductions hybrides, activités racine et médias non sourcés démontrés par audit Claude Sonnet
 - [ ] Corriger Developer Foundations cours 5 « Deployment, Accelerators & IP Contribution » par lot 80/20 : traiter les défauts visibles et fonctionnels démontrés par audit Claude Sonnet avant la clôture Developer
+- [ ] Ajouter les durées officielles Skilljar vérifiées : 211 minutes pour Developer 4 et 155 minutes pour Developer 5, dans les données de cours et le catalogue
 - [ ] Réparer le checkpoint Packaging Developer 5 qui vise le mauvais exercice et retirer le checkpoint Developer 5 non résoluble de l’écran Frontières de confiance, sans créer d’activité spéculative
 - [ ] Corriger le lot critique Developer 4 : activité de gestion des erreurs mal rattachée, deux checkpoints qui référencent un exercice absent, cartes tronquées des écrans Évaluations et coûts, tableaux concaténés, contenu français hybride et durée d’introduction contradictoire
 - [ ] Reporter les corrections cours par cours Architect Foundations et Architect Professional à une session ultérieure ; ne traiter pendant la présente fenêtre que Developer Foundations
