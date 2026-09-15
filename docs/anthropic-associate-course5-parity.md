@@ -35,3 +35,7 @@ Le JSON ne contient aucun bloc média officiel ou téléchargement avec les cham
 ### Confirmation finale après checkpoint `1e41867f`
 
 Le canal public tRPC a finalement confirmé le verso complet de la carte de garde-fous, zéro exercice historique racine, `recommendedVideosManaged: false` et zéro recommandation vidéo. Le lecteur public confirme ensuite le verso complet de la carte sur l’écran 4/8 et l’écran 8/8 sans section de recommandations externe. La console n’a rapporté aucune erreur applicative pendant la revue. La clôture demeure **ouverte** : l’écran Projects contient encore des sections mal structurées et l’exemple « Avant / Après » de l’écran Instructions doit être remis en forme avant le rejeu public final. La revue administrateur ne constitue pas une preuve de verrou en compte apprenant.
+
+### Contrôle public après checkpoint `027bfdc2`
+
+Les deux écrans affectés par le dernier lot ont été rejoués après propagation tRPC. L’écran **Configuration des Projects** présente désormais une hiérarchie lisible, une liste explicite Instructions / knowledge base / Skills / Scoped Memory et une explication continue des mécanismes liés ; les intertitres isolés ont disparu. L’écran **Instructions au niveau système** présente une comparaison cohérente « Version vague » / « Version précise », sans libellé « Après » détaché. Les cartes standards, la durée officielle, le quiz à cinq questions, la synthèse et l’écran de fin avaient déjà été contrôlés au cours de la revue des huit écrans ; aucune modification fonctionnelle ne les a affectés dans ce dernier lot.

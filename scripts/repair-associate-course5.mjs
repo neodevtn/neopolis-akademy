@@ -116,8 +116,25 @@ findCard(instructions, 'Vague instruction').back.fr = '« Produisez des rapports
 findCard(instructions, 'Precise instruction').back.fr = '« Pour chaque chiffre d’un rapport, indiquez sa source. Si un chiffre n’apparaît pas dans les données fournies, marquez-le comme “non vérifié” au lieu de l’inclure. Commencez chaque rapport par un titre d’une phrase. » Le comportement de vérification est alors cohérent et le titre apparaît à chaque fois.';
 
 const maintenance = findChapter('chapter_04');
-maintenance.blocks[0].body.fr = maintenance.blocks[0].body.fr
-  .replace(/Un (?:Project|projet) de rapport récurrent commence à produire (?:une sortie|des résultats) légèrement (?:incorrecte|incorrects)\./, 'Un projet de rapport récurrent commence à produire des résultats légèrement incorrects.');
+maintenance.blocks[0].body.fr = `Maintien des configurations
+
+Les configurations sont des actifs vivants. Les Instructions, la knowledge base, les Skills et la Memory peuvent devenir obsolètes ; une configuration dépassée dégrade alors silencieusement les résultats. Planifier la maintenance permet de détecter cette dérive avant qu’elle n’atteigne un livrable.
+
+Cadence de révision
+
+Planifiez une revue récurrente pour chaque Project actif : les Instructions correspondent-elles toujours au processus actuel, la knowledge base est-elle exempte de documents dépassés, les bons Skills sont-ils activés ? Une revue mensuelle des Projects actifs détecte la plupart des dérives.
+
+Versionnage des Skills
+
+Les Skills créés par Anthropic et ceux fournis par l’organisation se mettent à jour automatiquement ; vos propres Skills personnalisés importés ne changent que lorsque vous les importez à nouveau. Un Skill mal configuré ou obsolète peut dégrader les résultats sans signal explicite.
+
+Cycle de vie de la Memory
+
+Traitez la Memory comme un fichier de travail : examinez-la périodiquement, modifiez ou supprimez les entrées obsolètes et exportez-la comme sauvegarde avant un changement majeur. L’exactitude de ce qui est stocké compte davantage que le volume.
+
+Exemple pratique : audit d’une configuration dégradée
+
+Un projet de rapport récurrent commence à produire des résultats légèrement incorrects. La liste de contrôle révèle une Instruction permanente qui référence une métrique renommée, une knowledge base contenant deux versions d’un modèle et une entrée Memory obsolète. La solution relève de la maintenance : mettez à jour l’Instruction, retirez l’ancien document et supprimez l’entrée Memory dépassée.`;
 findCard(maintenance, 'Review cadence').back.en = 'Set a recurring review for each active Project: do the standing instructions still match the current process, is the knowledge base free of superseded documents, are the right Skills enabled? A monthly pass for active Projects catches most drift. The signal that you waited too long is output quality slipping for no visible reason.';
 findCard(maintenance, 'Review cadence').back.fr = 'Planifiez une revue récurrente pour chaque Project actif : les instructions permanentes correspondent-elles toujours au processus actuel, la knowledge base est-elle exempte de documents remplacés, les bons Skills sont-ils activés ? Une revue mensuelle des Projects actifs détecte la plupart des dérives. Le signe que vous avez trop attendu est une dégradation de la qualité des résultats sans raison visible.';
 findCard(maintenance, 'Skills versioning').front.fr = 'Versionnage des Skills';

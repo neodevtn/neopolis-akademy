@@ -68,6 +68,8 @@ describe('Associate Foundations course 5 contract', () => {
     expect(instructions.blocks[0].body.fr).not.toContain('Avant · vague\nAprès · précise');
     expect(card(maintenance, 'Review cadence').back.en).toContain('output quality slipping for no visible reason.');
     expect(card(maintenance, 'Review cadence').back.fr).toContain('dégradation de la qualité des résultats sans raison visible.');
+    expect(maintenance.blocks[0].body.fr).toContain('les bons Skills sont-ils activés ?');
+    expect(maintenance.blocks[0].body.fr).not.toContain('les bonnes compétences sont-elles activées');
     expect(maintenance.blocks[0].body.fr).toContain('Un projet de rapport récurrent commence à produire des résultats légèrement incorrects.');
     expect(card(maintenance, 'Skills versioning').back.en).toContain('a maintenance problem, not a prompting problem.');
     expect(card(maintenance, 'Skills versioning').back.fr).toContain('problème de maintenance, pas d’un problème de prompting.');
