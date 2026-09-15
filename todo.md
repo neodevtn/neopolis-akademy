@@ -5,6 +5,7 @@
 - [ ] Appliquer les corrections Anthropic restantes formation par formation en conservant les blocs Neopolis, les interactions, la progression et les verrous séquentiels
 - [ ] Ajouter ou mettre à jour les tests de non-régression adaptés à chaque correction Anthropic exécutée
 - [ ] Contrôler les rendus corrigés dans un navigateur, puis publier et vérifier le domaine public avant de clôturer chaque lot de formations
+- [ ] Accélérer le traitement Anthropic : regrouper les anomalies compatibles par cours, conserver les tests ciblés durant la correction et réserver la validation complète ainsi que le contrôle public à la clôture du cours
 - [x] Corriger Associate Foundations cours 1 : afficher la durée officielle Skilljar de 59 minutes dans la métadonnée standard, préserver les 10 écrans et vérifier le tri ainsi que les onglets Skills / Code Execution / Memory — checkpoint `43dc3352` publié ; carte et lecteur publics contrôlés, tri 5/5 et navigation déverrouillée en prévisualisation
 - [x] Corriger Associate Foundations cours 2 : ajouter la durée officielle Skilljar de 53 minutes, vérifier la parité des neuf écrans, les exemples de prompts, les boucles d’itération et le checkpoint appliqué final — 9/9 écrans revus publiquement, checkpoint `cd8c4014`, 772 tests et QA 9/9 ; contrôle apprenant hors révision validé
 - [x] Corriger la couverture de recherche du titre public Associate 2 afin que son nouveau titre canonique soit retrouvable dans le catalogue — index régénéré et test de couverture complet validé
@@ -45,6 +46,7 @@
 - [ ] Corriger Associate Foundations cours 5 « Configuration & Knowledge Management » : durée officielle 47 min, huit écrans, Projects, instructions, knowledge base, Skills et Memory, sans exercices libres historiques ni reliquats de localisation ; publier seulement après tests, QA, propagation et contrôle public
 - [ ] Corriger les reliquats anglais et les formulations françaises dégradées constatés dans les écrans Projects et Connecteurs Associate 5, puis republier et rejouer la revue publique
 - [ ] Corriger les niveaux de titres doublés dans l’écran Connectors Associate 5, puis vérifier le rendu public sans régression de cartes
+- [ ] Corriger la carte standard « Rédigez les garde-fous une seule fois » Associate 5, dont le verso s’arrête après « par exemple : », puis republier et contrôler le rendu
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »

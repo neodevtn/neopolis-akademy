@@ -60,6 +60,8 @@ describe('Associate Foundations course 5 contract', () => {
     expect(card(connectors, 'Capability boundaries').back.fr).toContain('construire un flux de travail qui en dépend.');
     expect(card(instructions, 'Anticipate the use cases').back.en).toContain('needing the same corrections each time.');
     expect(card(instructions, 'Anticipate the use cases').back.fr).toContain('nécessiter les mêmes corrections à chaque fois.');
+    expect(card(instructions, 'Write the guardrails once').back.fr).toContain('« Citez le document source pour chaque affirmation factuelle');
+    expect(card(instructions, 'Write the guardrails once').back.fr).not.toMatch(/par exemple\s*:\s*$/);
     expect(card(maintenance, 'Review cadence').back.en).toContain('output quality slipping for no visible reason.');
     expect(card(maintenance, 'Review cadence').back.fr).toContain('dégradation de la qualité des résultats sans raison visible.');
     expect(maintenance.blocks[0].body.fr).toContain('Un projet de rapport récurrent commence à produire des résultats légèrement incorrects.');
