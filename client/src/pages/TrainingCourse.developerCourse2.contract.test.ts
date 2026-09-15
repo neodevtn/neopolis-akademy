@@ -11,6 +11,12 @@ const expectedChapters = ['chapter_01', 'chapter_03', 'chapter_05', 'chapter_07'
 const chapter = (id: string) => lesson.chapters.find((item: { id: string }) => item.id === id);
 const body = (id: string) => chapter(id)?.blocks.find((block: { type: string }) => block.type === 'content')?.body;
 const chapterFrenchText = (id: string) => JSON.stringify(chapter(id));
+const collectFrenchStrings = (value: unknown): string[] => {
+  if (Array.isArray(value)) return value.flatMap(collectFrenchStrings);
+  if (!value || typeof value !== 'object') return [];
+  const record = value as Record<string, unknown>;
+  return [typeof record.fr === 'string' ? record.fr : '', ...Object.values(record).flatMap(collectFrenchStrings)].filter(Boolean);
+};
 
 describe('Developer Foundations course 2 content contract', () => {
   it('publishes the official duration and twelve standard screens', () => {
@@ -51,6 +57,7 @@ describe('Developer Foundations course 2 content contract', () => {
     const promptingCheckpoint = course.exercises.find((exercise: { chapterId: string }) => exercise.chapterId === 'chapter_01');
     expect(promptingCheckpoint?.options.map((option) => option.text.fr).join('\n')).not.toContain('system prompt');
     expect(promptingCheckpoint?.correction.fr).not.toContain('system prompt');
+    expect(collectFrenchStrings(course).join('\n')).not.toContain('system prompt');
     expect(body('chapter_11').fr).toContain('l’humain dans la boucle');
     expect(chapterFrenchText('chapter_15')).toContain('Claude Agent SDK');
     expect(chapterFrenchText('chapter_13')).toContain('Skills');
