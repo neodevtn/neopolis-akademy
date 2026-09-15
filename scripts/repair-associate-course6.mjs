@@ -6,11 +6,13 @@ const coursePath = path.join(root, 'client/public/data/courses/claude_certified_
 const indexPath = path.join(root, 'client/src/data/trainingIndex.json');
 const patchesPath = path.join(root, 'docs/anthropic-associate-course6-claude-patches.json');
 const polishPath = path.join(root, 'docs/anthropic-associate-course6-claude-polish.json');
+const criteriaPath = path.join(root, 'docs/anthropic-associate-course6-claude-criteria.json');
 
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
 const catalog = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 const patches = JSON.parse(fs.readFileSync(patchesPath, 'utf8'));
 const polish = JSON.parse(fs.readFileSync(polishPath, 'utf8'));
+const criteria = JSON.parse(fs.readFileSync(criteriaPath, 'utf8'));
 const lesson = course.lessons[0];
 
 const findChapter = (id) => {
@@ -63,6 +65,22 @@ for (const patch of contentPatches) {
   const content = chapter.blocks.find((block) => block.type === 'content');
   if (!content?.body?.fr) throw new Error(`French content missing for ${patch.chapterId}.`);
   content.body.fr = replaceOnce(content.body.fr, patch.from, patch.to, `${patch.chapterId} content`);
+}
+
+const useCaseContent = findChapter('chapter_01').blocks.find((block) => block.type === 'content');
+const criteriaHeading = '### Critères de délégation pour le dépistage';
+if (!useCaseContent.body.fr.includes(criteriaHeading)) {
+  const criteriaStart = 'Critères de délégation pour le dépistage';
+  const criteriaEnd = 'Les critères interagissent : nommez celui qui porte le poids';
+  const startIndex = useCaseContent.body.fr.indexOf(criteriaStart);
+  const endIndex = useCaseContent.body.fr.indexOf(criteriaEnd);
+  if (startIndex < 0 || endIndex < 0 || endIndex <= startIndex) {
+    throw new Error('Associate 6 delegation criteria source section is missing.');
+  }
+  const conciseCriteria = criteria.markdown
+    .split('\n\nLes critères interagissent')[0]
+    .replace(/^# Critères de délégation pour le dépistage/, criteriaHeading);
+  useCaseContent.body.fr = `${useCaseContent.body.fr.slice(0, startIndex)}${conciseCriteria}\n\n${useCaseContent.body.fr.slice(endIndex)}`;
 }
 
 const dataControls = findChapter('chapter_03').blocks.find((block) => block.type === 'content');

@@ -37,6 +37,9 @@ describe('Associate Foundations course 6 contract', () => {
     expect(content('chapter_03')).toContain('Caviardez ou anonymisez les identifiants avant le téléversement.');
     expect(content('chapter_03')).toContain('Caviarder les noms, les numéros de compte ou les identifiants avant le téléversement');
     expect(content('chapter_03')).not.toContain('Rédiger les noms, les numéros de compte');
+    expect(content('chapter_01')).toContain('### Critères de délégation pour le dépistage');
+    expect(content('chapter_01')).toContain('**Réversibilité** — Demandez si une sortie erronée peut être détectée');
+    expect(content('chapter_01')).not.toContain('#### Critère\n\nLa question à poser');
     expect(content('chapter_05')).not.toContain('AI-assisted');
     expect(content('chapter_04')).not.toContain('drift');
     expect(cards('chapter_02').find((item: { front: { en: string } }) => item.front.en === 'Internal does not mean vetted').back.fr).toContain('politique actuelle');

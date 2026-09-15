@@ -6,6 +6,7 @@
 - [ ] Ajouter ou mettre à jour les tests de non-régression adaptés à chaque correction Anthropic exécutée
 - [ ] Contrôler les rendus corrigés dans un navigateur, puis publier et vérifier le domaine public avant de clôturer chaque lot de formations
 - [ ] Accélérer le traitement Anthropic : regrouper les anomalies compatibles par cours, conserver les tests ciblés durant la correction et réserver la validation complète ainsi que le contrôle public à la clôture du cours
+- [ ] Éviter les revalidations répétitives : ne déclencher une nouvelle QA complète ou publication qu’après un lot regroupé de défauts, sauf correction de verrouillage, sécurité ou infrastructure transversale
 - [x] Corriger Associate Foundations cours 1 : afficher la durée officielle Skilljar de 59 minutes dans la métadonnée standard, préserver les 10 écrans et vérifier le tri ainsi que les onglets Skills / Code Execution / Memory — checkpoint `43dc3352` publié ; carte et lecteur publics contrôlés, tri 5/5 et navigation déverrouillée en prévisualisation
 - [x] Corriger Associate Foundations cours 2 : ajouter la durée officielle Skilljar de 53 minutes, vérifier la parité des neuf écrans, les exemples de prompts, les boucles d’itération et le checkpoint appliqué final — 9/9 écrans revus publiquement, checkpoint `cd8c4014`, 772 tests et QA 9/9 ; contrôle apprenant hors révision validé
 - [x] Corriger la couverture de recherche du titre public Associate 2 afin que son nouveau titre canonique soit retrouvable dans le catalogue — index régénéré et test de couverture complet validé
@@ -55,6 +56,7 @@
 - [ ] Corriger Associate Foundations cours 6 « Governance, Risk & Responsible Use » : durée officielle 55 min, neuf écrans, décisions contextualisées sur données sensibles, validation, responsabilité et gouvernance ; regrouper les défauts puis publier après une validation complète et un contrôle public final
 - [ ] Résoudre l’échec de planification du déploiement Associate 6 et vérifier la version publique avant de clôturer le cours
 - [ ] Corriger le reliquat générique « compétences » de l’introduction Associate 6 en « Skills » et rejouer l’écran public avant la clôture
+- [ ] Corriger la structure fragmentée des critères de délégation de l’écran Cas d’utilisation Associate 6, puis vérifier le rendu public du triage sans modifier ses associations
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »

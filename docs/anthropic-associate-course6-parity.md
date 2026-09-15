@@ -22,6 +22,8 @@ Les quatorze activités racine importées ne suivaient pas les chapitres qu’el
 
 Les formulations de contenu et les huit restaurations de cartes sont produites par Claude Sonnet à partir de la variante anglaise présente dans le JSON. Trois formulations françaises dégradées du chapitre Données ont fait l’objet d’un second contrôle Claude Sonnet avant leur application idempotente.
 
+Le tableau de critères de délégation, rendu comme une succession de titres fragmentés dans le lecteur, est remplacé par un seul intertitre et quatre puces Markdown compactes, produites par Claude Sonnet à partir des critères existants. Le triage standard et ses six associations restent inchangés.
+
 ## Preuves attendues à la clôture
 
 La publication devra confirmer : réponse tRPC `no-store` fraîche, neuf écrans dans le lecteur public, triage à six associations, cinq QCM intégrés, verrouillage par activités requises, cartes complètes, termes produits préservés, console sans erreur et absence de recommandation externe non sourcée.
