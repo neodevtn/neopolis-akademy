@@ -38,6 +38,10 @@ Après le checkpoint `49cce81a`, le tRPC public confirme `recommendedVideosManag
 
 Les écrans 3/9 et 5/9 ont été rejoués publiquement. Politiques est cohérent, avec quatre cartes complètes et les règles de diligence attendues. L’écran Skills conserve six cartes et ses contrôles, mais deux faces avant traduisent encore le nom de produit de manière générique (« compétences ») ; ce reliquat est regroupé avec la prochaine correction de contenu.
 
+Après `d38773e4`, l’écran Skills confirme les deux faces avant corrigées (« Confiance dans les Skills… » et « Deux Skills, deux décisions »), avec les six cartes et le verrou standard. L’écran Implications éthiques confirme cinq cartes complètes sur biais, équité, transparence et escalade, sans reliquat ou erreur visible.
+
+L’écran Points clés est lisible et conforme à la séquence de neuf écrans. Il conserve toutefois un libellé générique « compétences » dans le rappel de la section Skills ; cette occurrence est regroupée avec le prochain lot de terminologie.
+
 ## Preuves attendues à la clôture
 
 La publication devra confirmer : réponse tRPC `no-store` fraîche, neuf écrans dans le lecteur public, triage à six associations, cinq QCM intégrés, verrouillage par activités requises, cartes complètes, termes produits préservés, console sans erreur et absence de recommandation externe non sourcée.

@@ -16,7 +16,7 @@ describe('Associate Foundations course 6 contract', () => {
     expect(lesson.title).toEqual({ en: 'Governance, Risk & Responsible Use', fr: 'Gouvernance, risques et utilisation responsable' });
     expect(lesson.recommendedVideosManaged).toBe(false);
     expect(content('chapter_01_1')).toContain('**Durée officielle :** 55 minutes');
-    expect(content('chapter_01_1')).toContain('Confiance dans les Skills et risques liés aux fonctionnalités');
+    expect(content('chapter_08')).toContain('Confiance dans les Skills et risque des fonctionnalités');
     expect(catalog.courses.find((item: { id: string }) => item.id === course.courseId)).toMatchObject({ officialDurationMinutes: 55, chapterCount: 9, exerciseCount: 6 });
   });
 

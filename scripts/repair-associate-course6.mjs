@@ -68,6 +68,14 @@ for (const patch of contentPatches) {
   content.body.fr = replaceOnce(content.body.fr, patch.from, patch.to, `${patch.chapterId} content`);
 }
 
+for (const chapter of lesson.chapters) {
+  for (const block of chapter.blocks ?? []) {
+    if (typeof block.body?.fr === 'string') {
+      block.body.fr = block.body.fr.replaceAll('Confiance dans les compétences et risque des fonctionnalités', 'Confiance dans les Skills et risque des fonctionnalités');
+    }
+  }
+}
+
 const useCaseContent = findChapter('chapter_01').blocks.find((block) => block.type === 'content');
 const criteriaHeading = '### Critères de délégation pour le dépistage';
 if (!useCaseContent.body.fr.includes(criteriaHeading)) {

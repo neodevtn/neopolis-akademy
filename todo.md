@@ -60,6 +60,7 @@
 - [ ] Vérifier la provenance et le statut de complément des trois vidéos recommandées visibles à la fin Associate 6, puis les étiqueter clairement ou les retirer selon la source autorisée — la donnée tRPC est corrigée ; confirmer sans ambiguïté le DOM/rendu public
 - [ ] Rejouer et documenter publiquement les neuf écrans Associate 6 après `49cce81a`, en couvrant Politiques organisationnelles, Implications éthiques, Points clés et la console dès que le navigateur est disponible
 - [ ] Corriger les deux faces avant de cartes Associate 6 qui traduisent encore le nom produit Skills par « compétences », puis les contrôler dans le même lot de contenu
+- [ ] Corriger le reliquat « compétences » de la synthèse Points clés Associate 6 en conservant le nom produit Skills, puis le publier avec les derniers libellés du cours
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »
