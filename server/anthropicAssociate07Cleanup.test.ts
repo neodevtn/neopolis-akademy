@@ -8,14 +8,14 @@ const coursePath = resolve(
 );
 
 describe("nettoyage pédagogique Anthropic — Associate Foundations 07", () => {
-  it("complète le titre tronqué et localise le reliquat français sans retirer l’exercice", async () => {
+  it("conserve les notions dans les chapitres standards sans conserver les fragments racine hors flux", async () => {
     const course = JSON.parse(await readFile(coursePath, "utf8"));
-    const vagueFeedback = course.exercises.find((exercise: any) => exercise.title.en.includes("does not improve the result"));
-    const promotedFix = course.exercises.find((exercise: any) => exercise.prompt.fr.includes("La Mémoire de Claude"));
+    const chapter = course.lessons[0].chapters.find((item: any) => item.id === "chapter_02");
+    const content = chapter.blocks.find((block: any) => block.type === "content").body.fr;
 
-    expect(vagueFeedback.title.en).not.toContain("...");
-    expect(vagueFeedback.title.fr).toContain("n’améliore pas le résultat");
-    expect(promotedFix.prompt.fr).not.toContain("Claude's Memory");
-    expect(promotedFix.prompt.fr).toContain("Comparez la correction conservée");
+    expect(course.exercises).toEqual([]);
+    expect(content).toContain("ce n’est pas tout à fait ça");
+    expect(content).toContain("Memory peut repérer les motifs");
+    expect(content).not.toContain("édition lucky");
   });
 });
