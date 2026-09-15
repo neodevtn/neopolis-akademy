@@ -54,6 +54,7 @@
 - [x] Corriger les noms produits encore génériques dans le verso de la carte « Maintenance des configurations » Associate 5, notamment « connaissances » et « compétences », puis rejouer cet écran public — verso public contrôlé après `73bac294`
 - [ ] Corriger Associate Foundations cours 6 « Governance, Risk & Responsible Use » : durée officielle 55 min, neuf écrans, décisions contextualisées sur données sensibles, validation, responsabilité et gouvernance ; regrouper les défauts puis publier après une validation complète et un contrôle public final
 - [ ] Résoudre l’échec de planification du déploiement Associate 6 et vérifier la version publique avant de clôturer le cours
+- [ ] Corriger le reliquat générique « compétences » de l’introduction Associate 6 en « Skills » et rejouer l’écran public avant la clôture
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »

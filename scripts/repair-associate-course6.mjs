@@ -56,6 +56,7 @@ lesson.title.fr = 'Gouvernance, risques et utilisation responsable';
 const intro = findChapter('chapter_01_1').blocks[0].body;
 intro.en = intro.en.replace('**Estimated time:** 15-25 minutes', '**Official duration:** 55 minutes');
 intro.fr = intro.fr.replace(/\*\*Durée estimée\s*:\*\*\s*15[-–]25 minutes/, '**Durée officielle :** 55 minutes');
+intro.fr = intro.fr.replaceAll('Confiance dans les compétences et risque des fonctionnalités', 'Confiance dans les Skills et risques liés aux fonctionnalités');
 
 for (const patch of contentPatches) {
   const chapter = findChapter(patch.chapterId);
