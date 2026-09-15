@@ -18,6 +18,6 @@ describe("nettoyage pédagogique Anthropic — Associate Foundations 05", () => 
     expect(chapter.blocks[1].type).toBe("flip_cards");
     expect(card.back.en).toContain("what makes a Project effective.");
     expect(card.back.en).not.toMatch(/what makes a Proj$/);
-    expect(card.back.fr).toContain("rend un Projet efficace.");
+    expect(card.back.fr).toContain("rend un Project efficace.");
   });
 });
