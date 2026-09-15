@@ -48,3 +48,7 @@ La revue publique des dix écrans demeure à réaliser avant la clôture défini
 |---|---|
 | 1 — Introduction du module | Rendu structuré, titres français, durée officielle **63 min** et estimation Neopolis distincte visibles ; navigation disponible en mode révision. |
 | 2 — Analyse des exigences | Contenu structuré visible sans erreur de rendu, exemple RFP, consignes de configuration et rattachement au module présentés dans la séquence prévue. |
+
+La donnée JSON publique associée à l’écran 3 a également été vérifiée après le checkpoint `eb5049ca` : la carte **Recherche et synthèse** contient « recherche web dans le chat » et ne contient plus le reliquat anglais relevé. Le lecteur qui était déjà ouvert avant la propagation conserve sa copie mémoire jusqu’à un rechargement documentaire ; ce comportement de session ne modifie pas la donnée actuellement servie.
+
+Après rechargement documentaire, le rendu de l’écran 3 affiche bien la carte française corrigée avec le texte localisé, sans modifier les noms de fonctionnalités Anthropic ni le verrou de cartes. Le contrôle a été effectué sur le domaine public.

@@ -31,6 +31,11 @@ for (const block of researchPlanning.blocks) {
 }
 
 const solutionDesign = lesson.chapters.find((chapter) => chapter.id === 'chapter_07');
+solutionDesign.blocks[0].body.fr = solutionDesign.blocks[0].body.fr
+  .replace('Claude est un partenaire de design, pas une machine distributrice.', 'Claude est un partenaire de conception, pas une machine distributrice.')
+  .replace('Le prendre pour une boucle, et maintenir le contexte de design stable au cours des itérations, est ce qui produit une solution plutôt qu\'un amas de brouillons isolés.', 'Le traiter comme une boucle et maintenir un contexte de conception stable au cours des itérations, c’est ce qui produit une solution plutôt qu’un amas de brouillons isolés.')
+  .replace('un artefact Web', 'un artefact web')
+  .replace('le build n\'est plus un exercice de prompt-and-iterate.', 'la construction n’est plus un exercice consistant à rédiger et itérer sur des prompts.');
 for (const block of solutionDesign.blocks) {
   if (block.type !== 'flip_cards') continue;
   for (const card of block.cards) {
@@ -95,6 +100,18 @@ for (const block of value.blocks) {
     }
     if (card.front.en === 'Document the human oversight') {
       card.back.fr = 'Nommez les contrôles de revue qui restent en place. « Toute sortie destinée à un client passe par une revue humaine » rend le flux défendable. Les parties prenantes font davantage confiance à un flux d’IA lorsque les points de contrôle humains sont explicites.';
+    }
+    if (card.front.en === 'Calibrate to the audience') {
+      card.back.en = "Match the message to the audience's AI literacy. A technical stakeholder wants feature detail and failure modes; an executive wants the outcome, oversight in place, and risk posture. The expectation you set should match the capability boundary, so no one is surprised later. This is the Description competency from Module 2 applied outward: the same precise specification of what the tool can and cannot do, now directed at stakeholders rather than at Claude.";
+      card.back.fr = "Adaptez le message au niveau de maîtrise de l’IA du public. Une partie prenante technique attend les détails des fonctionnalités et les modes de défaillance ; un dirigeant attend le résultat, la supervision en place et la posture de risque. Les attentes que vous fixez doivent correspondre au périmètre des capacités, afin que personne ne soit surpris plus tard. Il s’agit de la compétence Description du module 2 appliquée vers l’extérieur : la même spécification précise de ce que l’outil peut et ne peut pas faire, désormais destinée aux parties prenantes plutôt qu’à Claude.";
+    }
+    if (card.front.en === 'Overstated vs. Accurate') {
+      card.back.en = '"Our new AI system reviews contracts automatically." This sets an expectation the workflow does not meet and hides the human gate. "Claude drafts the redline and flags playbook departures; our legal lead reviews and approves every change before anything is sent. The team’s review time is down about half, with the same approval standard." This states value and limits in one breath.';
+      card.back.fr = '« Notre nouveau système d’IA examine automatiquement les contrats. » Cette formulation crée une attente que le flux de travail ne respecte pas et masque le contrôle humain. « Claude rédige la redline et signale les écarts par rapport au playbook ; notre responsable juridique examine et approuve chaque modification avant tout envoi. Le temps de révision de l’équipe est réduit d’environ la moitié, avec le même niveau d’approbation. » Cette formulation exprime la valeur et les limites en une seule phrase.';
+    }
+    if (card.front.en === 'Phrases that quietly overstate') {
+      card.back.en = '"Fully automated" is almost never true, and the first visible error exposes it. "Claude handles X" removes the human gate from the sentence. "It’s basically as good as a person at Y" sets a standard that the tool will eventually miss publicly. Each replaces a defensible, bounded claim with an inflated one. The fix is the same every time: state what the tool does, then identify the human checkpoint.';
+      card.back.fr = '« Entièrement automatisé » n’est presque jamais vrai, et la première erreur visible le révèle. « Claude gère X » fait disparaître le contrôle humain de la phrase. « C’est pratiquement aussi performant qu’une personne pour Y » fixe une norme que l’outil finira par ne pas atteindre publiquement. Chacune de ces formules remplace une affirmation défendable et circonscrite par une affirmation exagérée. La solution reste la même : indiquez ce que l’outil fait, puis identifiez le point de contrôle humain.';
     }
   }
 }

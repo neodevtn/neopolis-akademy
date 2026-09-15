@@ -46,6 +46,11 @@ describe('Associate Foundations course 4 contract', () => {
     const researchSynthesis = researchCards.find((card: { front: { en: string } }) => card.front.en === 'Research and synthesis');
     expect(researchSynthesis.back.fr).toContain('recherche web dans le chat');
     expect(researchSynthesis.back.fr).not.toContain('web search in chat');
+    const solutionDesign = lesson.chapters.find((chapter: { id: string }) => chapter.id === 'chapter_07');
+    expect(solutionDesign.blocks[0].body.fr).toContain('partenaire de conception');
+    expect(solutionDesign.blocks[0].body.fr).not.toContain('partenaire de design');
+    expect(solutionDesign.blocks[0].body.fr).not.toContain("le build n'est plus");
+    expect(solutionDesign.blocks[0].body.fr).not.toContain('prompt-and-iterate');
     expect(redesign.completionRule.requires).toContain('requiredExercisesPassed');
     expect(delegation.blocks[0].body.fr).not.toContain('Human-retained');
     expect(delegation.blocks[0].body.fr).not.toContain('AI, un humain');
@@ -53,5 +58,22 @@ describe('Associate Foundations course 4 contract', () => {
     expect(delegation.blocks[0].body.fr).not.toContain('Délégation : pourquoi ?');
     expect(lesson.chapters.find((chapter: { id: string }) => chapter.id === 'chapter_09').blocks[0].body.fr).not.toContain('It\'s basically');
     expect(delegationSort.correction.fr).toContain('réversibles');
+  });
+
+  it('keeps the stakeholder communication cards complete and pedagogically coherent in French and English', () => {
+    const value = lesson.chapters.find((chapter: { id: string }) => chapter.id === 'chapter_09');
+    const cards = value.blocks.find((block: { type: string }) => block.type === 'flip_cards').cards;
+    const calibrated = cards.find((card: { front: { en: string } }) => card.front.en === 'Calibrate to the audience');
+    const comparison = cards.find((card: { front: { en: string } }) => card.front.en === 'Overstated vs. Accurate');
+    const overstatement = cards.find((card: { front: { en: string } }) => card.front.en === 'Phrases that quietly overstate');
+
+    expect(calibrated.back.en).toContain('directed at stakeholders rather than at Claude.');
+    expect(calibrated.back.fr).toContain('destinée aux parties prenantes plutôt qu’à Claude.');
+    expect(calibrated.back.fr).not.toMatch(/Ceci est t$/);
+    expect(comparison.back.en).toContain('This states value and limits in one breath.');
+    expect(comparison.back.fr).toContain('la valeur et les limites en une seule phrase.');
+    expect(overstatement.back.en).toContain('then identify the human checkpoint.');
+    expect(overstatement.back.fr).toContain('puis identifiez le point de contrôle humain.');
+    expect(overstatement.back.fr).not.toContain('"«');
   });
 });
