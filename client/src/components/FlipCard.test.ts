@@ -17,4 +17,14 @@ describe('FlipCard localisation and accessibility contract', () => {
     expect(source).toContain('tabIndex={0}');
     expect(source).toContain('aria-pressed={isFlipped}');
   });
+
+  it('sizes both faces from their content and keeps a one-column narrow layout without truncation utilities', () => {
+    expect(source).toContain('const maxH = Math.max(frontH, backH, 140);');
+    expect(source).toContain('setCardHeight(maxH + 40);');
+    expect(source).toContain("height: `${cardHeight}px`");
+    expect(source).toContain('overflow-y-auto');
+    expect(source).toContain('grid-cols-1 sm:grid-cols-2');
+    expect(source).not.toContain('truncate');
+    expect(source).not.toContain('line-clamp');
+  });
 });

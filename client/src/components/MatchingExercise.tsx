@@ -35,6 +35,10 @@ export function isPlacementCorrect(cards: BucketSortExercise['cards'], placement
   return cards.every((card) => placements[card.id] === card.correctBucket);
 }
 
+export function shouldShowDetailedCorrection(submitted: boolean, correction?: LocalizedText) {
+  return submitted && Boolean(correction && (correction.en?.trim() || correction.fr?.trim()));
+}
+
 // Bucket colors (Skilljar style - colored dashed borders)
 const BUCKET_COLORS = [
   { border: '#c75b3a', bg: '#fef3f0', text: '#c75b3a' }, // coral/orange
@@ -424,10 +428,13 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                   ? (lang === 'fr' ? '· Parfait !' : '· Perfect!')
                   : (lang === 'fr' ? '· Réessayez' : '· TRY AGAIN')}
               </p>
-              {!isAllCorrect && getText(exercise.correction) && (
-                <p className="text-xs text-muted-foreground mt-1">
+              {shouldShowDetailedCorrection(submitted, exercise.correction) && (
+                <div className="mt-1.5 text-xs text-muted-foreground">
+                  <span className="font-medium text-foreground">
+                    {lang === 'fr' ? 'Correction : ' : 'Correction: '}
+                  </span>
                   {getText(exercise.correction)}
-                </p>
+                </div>
               )}
             </div>
           </div>
