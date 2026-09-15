@@ -49,3 +49,27 @@ Les contrôles distincts **375 × 667** et **1280 × 720** complètent la preuve
 | Navigation après activités | Passage confirmé du chapitre 8 au chapitre 9 |
 
 Le contrôle du domaine public reste requis après le checkpoint de ce jalon. Aucun autre cours Associate n’est modifié par cette publication.
+
+## Contrôle public — état initial
+
+Le domaine public a été ouvert après le checkpoint `3b8a6356` avec une session apprenant dont le cours Associate 2 reste incomplet. L’accès direct au cours 3 renvoie le verrou attendu : **« You must complete Prompting & Task Execution first. »** Ce résultat confirme que la publication n’a pas contourné la séquence de parcours. Le contrôle de contenu publié doit donc être réalisé séparément dans une session administrateur de revue, sans modifier la progression de cet apprenant.
+
+Après le rafraîchissement de version proposé par la plateforme, la session administrateur publique affiche la durée officielle de **74 min**, les quatre associations corrigées du premier triage et la catégorie **Human review required**. Les deux triages ont été rejoués sur le bundle public : **4/4 · Perfect!** puis **6/6 · Perfect!**. Chaque score est suivi de sa correction détaillée correspondante, y compris après réussite complète. La console ne signale aucune erreur d’exécution pendant ce contrôle ; l’accès apprenant reste séquentiellement verrouillé tant que le cours 2 n’est pas terminé.
+
+### Revue publique écran par écran
+
+| Écran | Contrôle public | Résultat |
+|---:|---|---|
+| 1/11 — Module Introduction | Titre, durée et liste de capacités | Titre publié, durée officielle 74 min, six thèmes et fonctionnement du module visibles |
+| 2/11 — Discernment | Contenu, tableau de tri et quatre cartes | Protocole de discernement, trois verdicts, scénarios et quatre FlipCards rendus sans erreur |
+| 3/11 — Failure Patterns | Contenu, sept cartes et lien de produit | Patterns d’hallucination, incohérence, biais, capacités et scénarios publiés ; sept cartes visibles |
+| 4/11 — Fact-Checking & Grounding | Onglets, prompts verbatim et cinq cartes | Techniques d’ancrage, checklist, cinq prompts vérifiables et cinq cartes rendus sans erreur |
+| 5/11 — Diligence | Tableau de seuils, scénarios et cinq cartes | Quatre seuils de risque, escalade humaine et verrou de cartes visibles |
+| 6/11 — Editing for Audience | Comparaison de livrables et six cartes | Passes d’édition, adaptation d’audience, versions exécutive/équipe et verrou de cartes visibles |
+| 7/11 — Output Formats | Contenu structuré et comparaison prose/code | Formats inline, artifact, structuré et exécution de code, avec critères de fiabilité visibles |
+| 8/11 — Triage the Output Set | Deux triages standards obligatoires | Associations publiées ; scores 4/4 et 6/6, corrections détaillées et navigation après activités confirmés |
+| 9/11 — Module 3 | Sept cartes et quiz de scénarios | Sept rappels, cinq scénarios à options visibles et verrou de révision/quiz rendu |
+| 10/11 — Key Takeaways | Synthèse standard | Les six thèmes, les prochaines étapes et la navigation sont publiés |
+| 11/11 — Module Complete | Écran final et vidéos recommandées | Confirmation de complétion, trois recommandations vidéo et action standard de fin visibles |
+
+La revue publique couvre ainsi explicitement les **onze écrans sur onze** du cours. Les routes canoniques `chapter=0` à `chapter=10` ont chacune rendu le contenu annoncé sans erreur de console ; les blocages observés sont ceux attendus du parcours (cartes, activités et séquence inter-cours), non des erreurs d’affichage.
