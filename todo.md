@@ -41,6 +41,7 @@
 - [x] Rejouer une navigation Associate 4 réelle au sein d’une même session, entre deux chapitres puis retour, afin de vérifier que le lecteur reste prêt et réutilise sa donnée en mémoire avec la route tRPC `no-store` — contrôle public effectué, retour instantané et une seule requête de données observée
 - [ ] Rejouer les 10 écrans Associate 4 sur le domaine public après `d7fd6ba5` en vérifiant le rendu des copies françaises, les cartes, les deux activités et la console, puis documenter chaque écran
 - [ ] Localiser le prompt d’exemple RFP de l’écran Analyse des exigences Associate 4 dans la variante française, en conservant les termes produits Anthropic et la structure de sortie demandée
+- [ ] Corriger la phrase tronquée de la carte « Exécution de code pour une analyse vérifiée » de l’écran Recherche et planification Associate 4, puis la couvrir par contrat et contrôle public
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »

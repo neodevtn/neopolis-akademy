@@ -44,8 +44,11 @@ describe('Associate Foundations course 4 contract', () => {
     const researchCards = lesson.chapters.find((chapter: { id: string }) => chapter.id === 'chapter_06').blocks
       .find((block: { type: string }) => block.type === 'flip_cards').cards;
     const researchSynthesis = researchCards.find((card: { front: { en: string } }) => card.front.en === 'Research and synthesis');
+    const researchCodeExecution = researchCards.find((card: { front: { en: string } }) => card.front.en === 'Code execution for verified analysis');
     expect(researchSynthesis.back.fr).toContain('recherche web dans le chat');
     expect(researchSynthesis.back.fr).not.toContain('web search in chat');
+    expect(researchCodeExecution.back.en).toContain('actual timesheet data is a real plan.');
+    expect(researchCodeExecution.back.fr).toContain('feuilles de temps est un véritable plan.');
     const solutionDesign = lesson.chapters.find((chapter: { id: string }) => chapter.id === 'chapter_07');
     expect(solutionDesign.blocks[0].body.fr).toContain('partenaire de conception');
     expect(solutionDesign.blocks[0].body.fr).not.toContain('partenaire de design');

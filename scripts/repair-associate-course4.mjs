@@ -28,6 +28,10 @@ for (const block of researchPlanning.blocks) {
     if (card.front.en === 'Research and synthesis') {
       card.back.fr = 'Claude peut synthétiser des informations provenant de plusieurs sources pour élaborer un plan : rassembler les points à considérer, structurer les options et exposer les compromis. Pour les informations récentes postérieures à l’entraînement, la recherche web dans le chat couvre les recherches rapides et Research fournit des apports plus approfondis et à jour. La synthèse est utile, mais elle doit toujours être soumise à la vérification appropriée.';
     }
+    if (card.front.en === 'Code execution for verified analysis') {
+      card.back.en = 'When a plan depends on numbers, have Claude compute them. Upload the dataset and use code execution to run the calculations, produce trend charts, and process the files. A staffing plan built on a guessed utilization rate is a guess; one built on a code-executed analysis of the actual timesheet data is a real plan.';
+      card.back.fr = 'Quand un plan dépend de chiffres, demandez à Claude de les calculer. Téléversez le jeu de données et utilisez l’exécution de code pour effectuer les calculs, produire des graphiques de tendance et traiter les fichiers. Un plan de dotation fondé sur un taux d’utilisation estimé n’est qu’une supposition ; un plan fondé sur une analyse exécutée par code des données réelles des feuilles de temps est un véritable plan.';
+    }
   }
 }
 
