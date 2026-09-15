@@ -12,4 +12,8 @@
 | 5 | Ressources | Contenu | vidéos sans provenance retirées |
 | 6 | Fin de module | Fin de module | conservée |
 
-Les exercices racine restent hors de cette correction, car une conversion massive changerait leurs exigences pédagogiques sans source de rattachement suffisamment établie. La correction n’introduit aucun composant sur mesure.
+Claude Sonnet a confirmé qu’un seul exercice racine — la décision de placer une porte humaine selon le pire scénario, la réversibilité et les chemins sensibles — est rattachable sans ambiguïté. Il est désormais visible après l’écran Modes d’autorisation, obligatoire et rendu par le checkpoint standard. Les exercices racine restants demeurent hors de cette correction, car une conversion massive changerait leurs exigences pédagogiques sans source de rattachement suffisamment établie. La correction n’introduit aucun composant sur mesure.
+
+## Vérification publique du correctif critique
+
+Après propagation du checkpoint `50818249`, le canal tRPC public sert bien le cours en JSON. Le chapitre de ressources ne contient plus de bloc vidéo et le revers de carte relatif aux chemins de plugin est complet en français. Les activités racine et la durée officielle restent explicitement ouvertes, faute de source permettant une transformation générique fidèle.

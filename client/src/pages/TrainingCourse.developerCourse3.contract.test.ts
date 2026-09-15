@@ -32,4 +32,12 @@ describe('Developer Foundations course 3 critical content contract', () => {
     expect(content('chapter_06').fr).toContain('Ressources de référence');
     expect(course.videoRecommendationStatus).toBe('none');
   });
+
+  it('exposes the sole Claude-validated written checkpoint as a required standard gate', () => {
+    const exercise = course.exercises.find((item: any) => item.id === 'ex_claude_certified_developer_foundations__03_001');
+    expect(exercise).toMatchObject({ chapterId: 'chapter_01', required: true, completionRequiresCorrectAnswer: false });
+    expect(exercise.inputSchema.minWords).toBeGreaterThanOrEqual(15);
+    expect(chapter('chapter_01').blocks).toContainEqual({ type: 'checkpoint', exerciseId: exercise.id });
+    expect(chapter('chapter_01').completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
+  });
 });

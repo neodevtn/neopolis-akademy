@@ -4,8 +4,10 @@ import path from 'node:path';
 const root = process.cwd();
 const coursePath = path.join(root, 'client/public/data/courses/claude_certified_developer_foundations__03.json');
 const patchesPath = path.join(root, 'docs/anthropic-developer-course3-critical-patches.json');
+const selectionPath = path.join(root, 'docs/anthropic-developer-course3-checkpoint-selection.json');
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
 const patches = JSON.parse(fs.readFileSync(patchesPath, 'utf8'));
+const selection = JSON.parse(fs.readFileSync(selectionPath, 'utf8'));
 const lesson = course.lessons[0];
 const chapter = (id) => {
   const target = lesson.chapters.find((item) => item.id === id);
@@ -59,6 +61,18 @@ tutorials.blocks = [{
   },
 }];
 course.videoRecommendationStatus = 'none';
+
+for (const chosen of selection.selected) {
+  const exercise = course.exercises.find((item) => item.id === chosen.exerciseId);
+  if (!exercise || exercise.chapterId !== chosen.chapterId) throw new Error(`Missing selected checkpoint ${chosen.exerciseId}.`);
+  exercise.required = true;
+  exercise.completionRequiresCorrectAnswer = false;
+  exercise.inputSchema = { ...(exercise.inputSchema || {}), minWords: Math.max(15, exercise.inputSchema?.minWords || 0), maxWords: exercise.inputSchema?.maxWords || 500, language: 'en' };
+  const target = chapter(chosen.chapterId);
+  target.blocks = target.blocks.filter((block) => !(block.type === 'checkpoint' && block.exerciseId === chosen.exerciseId));
+  target.blocks.push({ type: 'checkpoint', exerciseId: chosen.exerciseId });
+  target.completionRule = { requires: ['contentViewed', 'requiredExercisesPassed'] };
+}
 
 fs.writeFileSync(coursePath, `${JSON.stringify(course, null, 2)}\n`);
 console.log('Developer course 3 critical corrections applied.');

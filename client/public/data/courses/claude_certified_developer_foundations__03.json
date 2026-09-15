@@ -161,11 +161,16 @@
                   "correctBucket": "auto_approve"
                 }
               ]
+            },
+            {
+              "type": "checkpoint",
+              "exerciseId": "ex_claude_certified_developer_foundations__03_001"
             }
           ],
           "completionRule": {
             "requires": [
-              "contentViewed"
+              "contentViewed",
+              "requiredExercisesPassed"
             ]
           }
         },
@@ -624,7 +629,7 @@
         "fr": "Bonne réponse cible — actions concrètes et règles à appliquer :\n\nRègle unique : demandez-vous “quel est le pire résultat si cette action s’exécute sans vérification humaine ?”. Placez la barrière en fonction du coût de ce pire scénario.\n\nExemples concrets\n- Autoriser sans revue (acceptEdits) : corrections de formatage, edits confinés au working_directory, modifications de fichiers temporaires réversibles. Risque faible, facile à revert.\n- Bloquer ou exiger approbation humaine : écriture hors du working_directory, commandes shell destructrices (rm -rf, drop table), modifications de fichiers de sécurité/config prod, déploiements CI/CD, accès ou exfiltration de secrets, modifications de comptes/permissions. Risque élevé (données perdues, outages, fuite, compliance).\n\nDeny rules recommandées (phrases exploitables)\n- deny if write_target ∉ working_directory\n- deny if command matches destructive_shell_patterns\n- deny if touched_file ∈ {secrets, infra, deploy scripts, /etc, config/*.pem}\n\nMode opérationnel\n- use acceptEdits for low-risk automations\n- use default/plan mode to surface actions for human decision\n- enforce deny rules to deterministically block high-risk actions\n\nChecklist pour décider (utiliser avant chaque autorisation)\n1. Pire scénario concret ?\n2. Reversibilité (git revert, backups) ?\n3. Blast radius (utilisateurs/systèmes affectés) ?\n4. Données sensibles impliquées ?\n5. Nécessité de privilèges élevés ?\n6. Temps/coût pour corriger si erreur ?\n\nRépondez en appliquant ces règles et exemples aux actions de votre agent."
       },
       "rubric": "",
-      "required": false,
+      "required": true,
       "difficulty": "foundation",
       "skillTags": [
         "API Integration",
@@ -634,6 +639,12 @@
       "title": {
         "en": "Where a human still has to look: placing the re...",
         "fr": "Là où un humain doit encore regarder : placer le re..."
+      },
+      "completionRequiresCorrectAnswer": false,
+      "inputSchema": {
+        "minWords": 15,
+        "maxWords": 500,
+        "language": "en"
       }
     },
     {
