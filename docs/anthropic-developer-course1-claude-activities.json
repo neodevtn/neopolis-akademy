@@ -1,0 +1,259 @@
+{
+  "exercises": [
+    {
+      "chapterId": "chapter_01",
+      "correction": {
+        "en": "Correct answer: b. Tokens are the units Claude processes, and both the input and the generated output consume the available context window. If the combined content is too large, some content must be removed, shortened, or otherwise managed before the request can fit. Option a is incorrect because a context window is measured in tokens, not characters. Option c is incorrect because decoding settings can influence variability, but they do not make an otherwise oversized request fit. Option d is incorrect because repeated requests can still differ due to sampling and system-level variability; identical wording does not guarantee identical output.",
+        "fr": "Bonne réponse : b. Les tokens sont les unités traitées par Claude, et l’entrée comme la sortie générée consomment la fenêtre de contexte disponible. Si leur volume combiné est trop important, il faut retirer, raccourcir ou gérer une partie du contenu avant que la requête puisse tenir. L’option a est incorrecte, car une fenêtre de contexte se mesure en tokens et non en caractères. L’option c est incorrecte, car les paramètres de décodage peuvent influencer la variabilité, mais ne permettent pas à une requête trop volumineuse de tenir. L’option d est incorrecte, car des requêtes répétées peuvent encore produire des résultats différents à cause de l’échantillonnage et de la variabilité du système ; une formulation identique ne garantit pas une sortie identique."
+      },
+      "instructions": {
+        "en": "Choose the single best answer.",
+        "fr": "Choisissez la meilleure réponse unique."
+      },
+      "options": [
+        {
+          "correct": false,
+          "en": "The context window is a fixed number of characters, so tokenization does not affect request size.",
+          "fr": "La fenêtre de contexte est un nombre fixe de caractères ; la tokenisation n’influence donc pas la taille de la requête.",
+          "id": "a"
+        },
+        {
+          "correct": true,
+          "en": "Input tokens and output tokens both use context-window capacity, so a long prompt can leave less room for Claude’s response.",
+          "fr": "Les tokens d’entrée et de sortie utilisent tous deux la capacité de la fenêtre de contexte ; un prompt long peut donc laisser moins de place à la réponse de Claude.",
+          "id": "b"
+        },
+        {
+          "correct": false,
+          "en": "Lowering temperature makes a request fit in a context window because it reduces the number of input tokens.",
+          "fr": "Réduire la température fait tenir une requête dans la fenêtre de contexte, car cela réduit le nombre de tokens d’entrée.",
+          "id": "c"
+        },
+        {
+          "correct": false,
+          "en": "If the same prompt is sent twice, non-determinism cannot occur unless the prompt text changes.",
+          "fr": "Si le même prompt est envoyé deux fois, le non-déterminisme ne peut pas se produire à moins que le texte du prompt change.",
+          "id": "d"
+        }
+      ],
+      "prompt": {
+        "en": "A developer sends a large document and asks Claude for a detailed summary. What is the most accurate statement about tokens and the context window?",
+        "fr": "Un développeur envoie un document volumineux et demande à Claude un résumé détaillé. Quelle affirmation décrit le plus précisément les tokens et la fenêtre de contexte ?"
+      },
+      "skillTags": [
+        "tokens",
+        "context-window",
+        "sampling",
+        "non-determinism"
+      ],
+      "title": {
+        "en": "Managing context capacity",
+        "fr": "Gérer la capacité de contexte"
+      }
+    },
+    {
+      "chapterId": "chapter_02",
+      "correction": {
+        "en": "Correct answer: c. Adaptive reasoning and model selection should match the task’s stakes and constraints: use a capable model and sufficient reasoning for a high-impact, ambiguous analysis, while avoiding unnecessary cost and latency for simpler work. Option a is incorrect because the fastest or least expensive model is not automatically suitable for consequential reasoning. Option b is incorrect because using the most capable model for every task can waste budget and add latency. Option d is incorrect because model choice should be deliberate and task-dependent rather than random.",
+        "fr": "Bonne réponse : c. Le raisonnement adaptatif et la sélection du modèle doivent correspondre aux enjeux et aux contraintes de la tâche : utilisez un modèle capable et un niveau de raisonnement suffisant pour une analyse ambiguë à fort impact, tout en évitant un coût et une latence inutiles pour les tâches simples. L’option a est incorrecte, car le modèle le plus rapide ou le moins cher n’est pas automatiquement adapté à un raisonnement conséquent. L’option b est incorrecte, car utiliser le modèle le plus capable pour chaque tâche peut gaspiller le budget et augmenter la latence. L’option d est incorrecte, car le choix du modèle doit être intentionnel et dépendre de la tâche, non aléatoire."
+      },
+      "instructions": {
+        "en": "Choose the single best answer.",
+        "fr": "Choisissez la meilleure réponse unique."
+      },
+      "options": [
+        {
+          "correct": false,
+          "en": "Always choose the lowest-cost, fastest model, because model quality does not affect production outcomes.",
+          "fr": "Choisissez toujours le modèle le moins coûteux et le plus rapide, car la qualité du modèle n’influence pas les résultats en production.",
+          "id": "a"
+        },
+        {
+          "correct": false,
+          "en": "Always choose the most capable model with maximum reasoning, even for short, routine classifications.",
+          "fr": "Choisissez toujours le modèle le plus capable avec le raisonnement maximal, même pour des classifications courtes et routinières.",
+          "id": "b"
+        },
+        {
+          "correct": true,
+          "en": "Match model capability and reasoning effort to task complexity and impact, balancing quality against cost and latency.",
+          "fr": "Adaptez la capacité du modèle et l’effort de raisonnement à la complexité et à l’impact de la tâche, en équilibrant qualité, coût et latence.",
+          "id": "c"
+        },
+        {
+          "correct": false,
+          "en": "Select a model at random for each request to distribute load fairly across available models.",
+          "fr": "Sélectionnez un modèle au hasard pour chaque requête afin de répartir équitablement la charge entre les modèles disponibles.",
+          "id": "d"
+        }
+      ],
+      "prompt": {
+        "en": "Your application has two workflows: extracting an invoice number from a standard form, and evaluating a complex contract risk that will be reviewed by legal staff. Which model-selection principle is best?",
+        "fr": "Votre application comporte deux flux : extraire un numéro de facture d’un formulaire standard et évaluer un risque contractuel complexe qui sera examiné par des juristes. Quel principe de sélection de modèle est le plus approprié ?"
+      },
+      "skillTags": [
+        "model-selection",
+        "adaptive-reasoning",
+        "cost",
+        "latency"
+      ],
+      "title": {
+        "en": "Balancing capability and constraints",
+        "fr": "Équilibrer capacité et contraintes"
+      }
+    },
+    {
+      "chapterId": "chapter_03",
+      "correction": {
+        "en": "Correct answer: a. Start zero-shot when the task can be stated clearly: give Claude an explicit instruction, the input, and the desired output format. Add one-shot or multi-shot examples only when they materially improve reliability, demonstrate a nuanced transformation, or clarify a pattern that instructions alone do not convey. Option b is incorrect because examples consume tokens and can add unnecessary complexity. Option c is incorrect because vague instructions make it harder to evaluate whether examples helped. Option d is incorrect because examples are not a substitute for stating the task and output requirements clearly.",
+        "fr": "Bonne réponse : a. Commencez en zero-shot lorsque la tâche peut être formulée clairement : donnez à Claude une instruction explicite, l’entrée et le format de sortie attendu. Ajoutez des exemples one-shot ou multi-shot seulement s’ils améliorent réellement la fiabilité, démontrent une transformation nuancée ou clarifient un motif que les seules instructions ne transmettent pas. L’option b est incorrecte, car les exemples consomment des tokens et peuvent ajouter une complexité inutile. L’option c est incorrecte, car des instructions vagues rendent plus difficile l’évaluation de l’apport des exemples. L’option d est incorrecte, car les exemples ne remplacent pas l’énoncé clair de la tâche et des exigences de sortie."
+      },
+      "instructions": {
+        "en": "Choose the single best answer.",
+        "fr": "Choisissez la meilleure réponse unique."
+      },
+      "options": [
+        {
+          "correct": true,
+          "en": "Begin with a clear zero-shot instruction; add one-shot or multi-shot examples when they clarify the pattern or improve consistency.",
+          "fr": "Commencez par une instruction zero-shot claire ; ajoutez des exemples one-shot ou multi-shot lorsqu’ils clarifient le motif ou améliorent la cohérence.",
+          "id": "a"
+        },
+        {
+          "correct": false,
+          "en": "Use multi-shot prompting first for every task because more examples always produce better outputs.",
+          "fr": "Utilisez d’abord le prompting multi-shot pour chaque tâche, car davantage d’exemples produisent toujours de meilleures sorties.",
+          "id": "b"
+        },
+        {
+          "correct": false,
+          "en": "Avoid specifying an output format so Claude can infer the task freely from the examples.",
+          "fr": "Évitez de préciser un format de sortie afin que Claude puisse déduire librement la tâche à partir des exemples.",
+          "id": "c"
+        },
+        {
+          "correct": false,
+          "en": "Replace the task instruction entirely with examples, since examples make instructions unnecessary.",
+          "fr": "Remplacez entièrement l’instruction de tâche par des exemples, puisque les exemples rendent les instructions inutiles.",
+          "id": "d"
+        }
+      ],
+      "prompt": {
+        "en": "You need Claude to convert short customer messages into a JSON object with fields for intent and urgency. The expected behavior is straightforward, but consistency matters. What is the best prompting approach?",
+        "fr": "Vous devez demander à Claude de convertir de courts messages clients en un objet JSON contenant les champs intent et urgency. Le comportement attendu est simple, mais la cohérence est importante. Quelle approche de prompting est la meilleure ?"
+      },
+      "skillTags": [
+        "zero-shot",
+        "one-shot",
+        "multi-shot",
+        "prompt-design"
+      ],
+      "title": {
+        "en": "Choosing a prompting pattern",
+        "fr": "Choisir un mode de prompting"
+      }
+    },
+    {
+      "chapterId": "chapter_04",
+      "correction": {
+        "en": "Correct answer: d. Use streaming when the user benefits from seeing a response as it is generated, such as in an interactive chat interface. Use Message Batches for large collections of independent requests that do not need immediate, per-request interaction. SDKs can simplify integration, while REST remains a direct HTTP interface; AsyncAnthropic is appropriate when an asynchronous Python workflow must handle concurrent I/O efficiently. Option a is incorrect because streaming is specifically useful for progressive delivery. Option b is incorrect because Message Batches are designed for batch-style asynchronous processing, not immediate interactive replies. Option c is incorrect because an SDK does not prevent use of asynchronous patterns.",
+        "fr": "Bonne réponse : d. Utilisez le streaming lorsque l’utilisateur gagne à voir la réponse au fil de sa génération, par exemple dans une interface de chat interactive. Utilisez Message Batches pour de grands ensembles de requêtes indépendantes qui n’exigent pas une interaction immédiate requête par requête. Les SDK peuvent simplifier l’intégration, tandis que REST reste une interface HTTP directe ; AsyncAnthropic convient lorsqu’un flux Python asynchrone doit gérer efficacement des E/S concurrentes. L’option a est incorrecte, car le streaming est précisément utile pour une diffusion progressive. L’option b est incorrecte, car Message Batches est conçu pour un traitement asynchrone par lots, et non pour des réponses interactives immédiates. L’option c est incorrecte, car un SDK n’empêche pas l’emploi de modèles asynchrones."
+      },
+      "instructions": {
+        "en": "Choose the single best answer.",
+        "fr": "Choisissez la meilleure réponse unique."
+      },
+      "options": [
+        {
+          "correct": false,
+          "en": "Use non-streaming responses for an interactive assistant because streaming cannot improve perceived responsiveness.",
+          "fr": "Utilisez des réponses sans streaming pour un assistant interactif, car le streaming ne peut pas améliorer la réactivité perçue.",
+          "id": "a"
+        },
+        {
+          "correct": false,
+          "en": "Use Message Batches when every end user needs an immediate response in a live chat session.",
+          "fr": "Utilisez Message Batches lorsque chaque utilisateur final a besoin d’une réponse immédiate dans une session de chat en direct.",
+          "id": "b"
+        },
+        {
+          "correct": false,
+          "en": "Avoid AsyncAnthropic whenever you use an SDK, because SDKs only support synchronous requests.",
+          "fr": "Évitez AsyncAnthropic dès que vous utilisez un SDK, car les SDK ne prennent en charge que les requêtes synchrones.",
+          "id": "c"
+        },
+        {
+          "correct": true,
+          "en": "Stream interactive responses, use Message Batches for many independent non-urgent requests, and choose REST or an SDK based on integration needs.",
+          "fr": "Diffusez en streaming les réponses interactives, utilisez Message Batches pour de nombreuses requêtes indépendantes et non urgentes, puis choisissez REST ou un SDK selon les besoins d’intégration.",
+          "id": "d"
+        }
+      ],
+      "prompt": {
+        "en": "A team is building a live support chat and also runs overnight enrichment for 100,000 independent records. Which integration strategy best fits these two workloads?",
+        "fr": "Une équipe construit un chat de support en direct et exécute aussi, la nuit, un enrichissement de 100 000 enregistrements indépendants. Quelle stratégie d’intégration convient le mieux à ces deux charges de travail ?"
+      },
+      "skillTags": [
+        "streaming",
+        "AsyncAnthropic",
+        "Message-Batches",
+        "REST"
+      ],
+      "title": {
+        "en": "Selecting an integration pattern",
+        "fr": "Sélectionner un mode d’intégration"
+      }
+    },
+    {
+      "chapterId": "chapter_06",
+      "correction": {
+        "en": "Correct answer: b. The most likely behavior is that Claude follows the clear classification instruction and few-shot pattern, returns results progressively because streaming is enabled, and may vary slightly in wording or borderline judgments across runs because generation is not fully deterministic. The long policy excerpt also consumes tokens and reduces the space available in the context window for the response. Option a is incorrect because streaming affects delivery timing, not whether the response is generated. Option c is incorrect because few-shot examples guide behavior but do not eliminate all variability. Option d is incorrect because input content, including the policy excerpt, still consumes tokens even when the requested output is short.",
+        "fr": "Bonne réponse : b. Le comportement le plus probable est que Claude suive l’instruction claire de classification et le motif few-shot, renvoie les résultats progressivement car le streaming est activé, et puisse varier légèrement dans sa formulation ou dans les cas limites entre plusieurs exécutions, car la génération n’est pas totalement déterministe. Le long extrait de politique consomme aussi des tokens et réduit l’espace disponible dans la fenêtre de contexte pour la réponse. L’option a est incorrecte, car le streaming affecte le moment de livraison, et non le fait que la réponse soit générée. L’option c est incorrecte, car les exemples few-shot orientent le comportement mais n’éliminent pas toute variabilité. L’option d est incorrecte, car le contenu d’entrée, y compris l’extrait de politique, consomme des tokens même si la sortie demandée est courte."
+      },
+      "instructions": {
+        "en": "Choose the single best prediction.",
+        "fr": "Choisissez la prédiction la plus probable."
+      },
+      "options": [
+        {
+          "correct": false,
+          "en": "Claude will wait until the entire response is complete before sending anything, because streaming changes only model quality.",
+          "fr": "Claude attendra que toute la réponse soit terminée avant d’envoyer quoi que ce soit, car le streaming ne modifie que la qualité du modèle.",
+          "id": "a"
+        },
+        {
+          "correct": true,
+          "en": "Claude will likely stream a classification shaped by the instruction and examples; repeated runs can differ slightly, and the long excerpt uses context-window capacity.",
+          "fr": "Claude diffusera probablement en streaming une classification guidée par l’instruction et les exemples ; des exécutions répétées peuvent légèrement différer, et le long extrait utilise de la capacité de fenêtre de contexte.",
+          "id": "b"
+        },
+        {
+          "correct": false,
+          "en": "The few-shot examples guarantee identical classifications and identical wording on every repeated request.",
+          "fr": "Les exemples few-shot garantissent des classifications et une formulation identiques à chaque répétition de la requête.",
+          "id": "c"
+        },
+        {
+          "correct": false,
+          "en": "Because the output is requested as one label, the long policy excerpt does not consume tokens or affect available context.",
+          "fr": "Comme la sortie demandée est une seule étiquette, le long extrait de politique ne consomme pas de tokens et n’affecte pas le contexte disponible.",
+          "id": "d"
+        }
+      ],
+      "prompt": {
+        "en": "Scenario: A support tool sends Claude a long policy excerpt, a clear instruction to label each ticket as “refund”, “technical”, or “other”, and three labeled examples. It uses streaming for the agent-facing reply. The team repeats the same request twice. What behavior should the team predict?",
+        "fr": "Scénario : un outil de support envoie à Claude un long extrait de politique, une instruction claire demandant d’étiqueter chaque ticket par « refund », « technical » ou « other », ainsi que trois exemples étiquetés. Il utilise le streaming pour la réponse destinée à l’agent. L’équipe répète deux fois la même requête. Quel comportement doit-elle prévoir ?"
+      },
+      "skillTags": [
+        "behavior-prediction",
+        "context-window",
+        "few-shot-prompting",
+        "streaming"
+      ],
+      "title": {
+        "en": "Predicting system behavior",
+        "fr": "Prédire le comportement du système"
+      }
+    }
+  ]
+}
