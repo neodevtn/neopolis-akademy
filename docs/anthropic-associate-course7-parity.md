@@ -21,3 +21,9 @@ L’audit Claude Sonnet a identifié six revers de cartes tronqués, les objecti
 ## Contrôles à archiver avant clôture
 
 La clôture requiert un test de contrat, la validation complète unique du cours, le canal public tRPC avec `no-store`, et une revue publique ciblée de l’introduction, des trois écrans de diagnostic, du quiz et de la fin de module. Toute ressource vidéo générique hors provenance doit rester désactivée, sans supprimer de média source.
+
+## Contrôle de clôture — checkpoint `8dcdd753`
+
+La validation unique du lot a réussi : TypeScript, **245 fichiers de test**, **800 tests réussis** et **2 ignorés**, puis matrice de publication **9/9**. Après propagation, le canal tRPC public a répondu HTTP 200 avec `Content-Type: application/json; charset=utf-8` et `Cache-Control: no-store, max-age=0`. Il retourne bien sept écrans, aucun exercice racine et la liste normalisée des trois signaux.
+
+La revue publique ciblée confirme sur l’écran **Optimiser les flux de travail** la liste de signaux sans dièses littéraux, des FlipCards complètes et les noms produits `Projects` et `Skills` préservés. Le quiz public présente cinq questions de scénario ; avant sélection, ses cinq boutons « Vérifier la réponse » et le bouton de navigation restent désactivés. La console de cette session ne contient pas d’erreur applicative.
