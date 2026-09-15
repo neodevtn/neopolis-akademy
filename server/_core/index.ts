@@ -87,6 +87,9 @@ async function startServer() {
   app.post("/api/scheduled/send-communication", scheduledCommunicationSendHandler);
   app.post("/api/scheduled/exam-reminder", scheduledExamReminderHandler);
 
+  // Ce sous-chemin reste sous le préfixe tRPC, déjà routé vers Express par la
+  // passerelle publique, mais retourne l’asset JSON brut avec no-store.
+  registerCourseDataRoute(app);
   // tRPC API with batch limit (F-011)
   app.use("/api/trpc", tRPCBatchLimit);
   app.use(
@@ -96,9 +99,6 @@ async function startServer() {
       createContext,
     })
   );
-  // Les cours sont servis par l’application avec no-store : certains CDN ont
-  // conservé des JSON statiques malgré des paramètres de cache-busting.
-  registerCourseDataRoute(app);
   registerExamAssetRevocations(app);
   // This endpoint must be registered before the SEO/SPA fallbacks. It is used
   // by open learner sessions to detect a new Vite document after deployment.

@@ -26,7 +26,7 @@ export async function readCourseDataAsset(courseId: string, directory = getCours
 }
 
 export function registerCourseDataRoute(app: Express): void {
-  app.get("/api/course-data/:courseId", async (req: Request, res: Response) => {
+  app.get("/api/trpc/course-data/:courseId", async (req: Request, res: Response) => {
     const courseId = String(req.params.courseId || "");
     const content = await readCourseDataAsset(courseId);
     if (!content) {
