@@ -3,12 +3,17 @@ import path from 'node:path';
 
 const root = process.cwd();
 const coursePath = path.join(root, 'client/public/data/courses/claude_certified_developer_foundations__03.json');
+const indexPath = path.join(root, 'client/src/data/trainingIndex.json');
 const patchesPath = path.join(root, 'docs/anthropic-developer-course3-critical-patches.json');
 const selectionPath = path.join(root, 'docs/anthropic-developer-course3-checkpoint-selection.json');
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
+const trainingIndex = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 const patches = JSON.parse(fs.readFileSync(patchesPath, 'utf8'));
 const selection = JSON.parse(fs.readFileSync(selectionPath, 'utf8'));
 const lesson = course.lessons[0];
+
+course.officialDurationMinutes = 142;
+course.durationMinutes = 142;
 const chapter = (id) => {
   const target = lesson.chapters.find((item) => item.id === id);
   if (!target) throw new Error(`Missing chapter ${id}.`);
@@ -62,6 +67,19 @@ tutorials.blocks = [{
 }];
 course.videoRecommendationStatus = 'none';
 
+const updateCatalogEntry = (node) => {
+  if (Array.isArray(node)) return node.some(updateCatalogEntry);
+  if (!node || typeof node !== 'object') return false;
+  if (node.id === course.id) {
+    node.officialDurationMinutes = 142;
+    node.videos = [];
+    node.videoCount = 0;
+    return true;
+  }
+  return Object.values(node).some(updateCatalogEntry);
+};
+if (!updateCatalogEntry(trainingIndex)) throw new Error(`Missing catalog entry ${course.id}.`);
+
 for (const chosen of selection.selected) {
   const exercise = course.exercises.find((item) => item.id === chosen.exerciseId);
   if (!exercise || exercise.chapterId !== chosen.chapterId) throw new Error(`Missing selected checkpoint ${chosen.exerciseId}.`);
@@ -75,4 +93,5 @@ for (const chosen of selection.selected) {
 }
 
 fs.writeFileSync(coursePath, `${JSON.stringify(course, null, 2)}\n`);
+fs.writeFileSync(indexPath, `${JSON.stringify(trainingIndex, null, 2)}\n`);
 console.log('Developer course 3 critical corrections applied.');

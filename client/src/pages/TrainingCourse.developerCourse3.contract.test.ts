@@ -3,12 +3,28 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const course = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'client/public/data/courses/claude_certified_developer_foundations__03.json'), 'utf8'));
+const trainingIndex = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'client/src/data/trainingIndex.json'), 'utf8'));
 const lesson = course.lessons[0];
+const findCatalogEntry = (node: unknown): any => {
+  if (Array.isArray(node)) return node.map(findCatalogEntry).find(Boolean);
+  if (!node || typeof node !== 'object') return undefined;
+  if ((node as { id?: string }).id === course.id) return node;
+  return Object.values(node).map(findCatalogEntry).find(Boolean);
+};
 const chapter = (id: string) => lesson.chapters.find((item: any) => item.id === id);
 const content = (id: string) => chapter(id).blocks.find((item: any) => item.type === 'content').body;
 const card = (chapterId: string, title: string) => chapter(chapterId).blocks.filter((item: any) => item.type === 'flip_cards').flatMap((item: any) => item.cards || []).find((item: any) => item.front.en === title);
 
 describe('Developer Foundations course 3 critical content contract', () => {
+  it('uses the official 142-minute duration and exposes no unsourced catalog videos', () => {
+    const entry = findCatalogEntry(trainingIndex);
+    expect(course.officialDurationMinutes).toBe(142);
+    expect(course.durationMinutes).toBe(142);
+    expect(entry).toBeDefined();
+    expect(entry.officialDurationMinutes).toBe(142);
+    expect(entry.videoCount).toBe(0);
+    expect(entry.videos).toEqual([]);
+  });
   it('restores the four critical card backs without truncated endings', () => {
     for (const [chapterId, title] of [['chapter_01', 'What to Watch Out for'], ['chapter_03', 'What to Watch Out for'], ['chapter_05', 'Setup'], ['chapter_05', 'What to Watch Out for']]) {
       const target = card(chapterId, title);

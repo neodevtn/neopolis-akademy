@@ -86,6 +86,7 @@
 - [ ] Demander à Claude Sonnet de sélectionner au plus un exercice racine existant par cours Anthropic non clôturé lorsque son rattachement est explicite, puis l’afficher comme checkpoint standard obligatoire sans transformer les exercices ambigus
 - [ ] Rendre obligatoire le checkpoint Rewind du cours Architect Foundations 4, seul exercice racine supplémentaire dont le rattachement est validé par Claude Sonnet
 - [ ] Corriger Developer Foundations cours 3 « Claude Code, MCP et Intégration » par lot 80/20 : vérifier durée, écrans, activités racine, médias sans provenance et défauts de contenu visibles avant une publication unique
+- [ ] Ajouter la durée officielle Skilljar de 142 minutes au cours Developer 3, en distinguant cette valeur de toute estimation Neopolis
 - [ ] Corriger Developer Foundations cours 4 « Model Context Protocol & Architecture » par lot 80/20 : traiter les troncatures, traductions hybrides, activités racine et médias non sourcés démontrés par audit Claude Sonnet
 - [ ] Corriger Developer Foundations cours 5 « Deployment, Accelerators & IP Contribution » par lot 80/20 : traiter les défauts visibles et fonctionnels démontrés par audit Claude Sonnet avant la clôture Developer
 - [ ] Réparer le checkpoint Packaging Developer 5 qui vise le mauvais exercice et retirer le checkpoint Developer 5 non résoluble de l’écran Frontières de confiance, sans créer d’activité spéculative
