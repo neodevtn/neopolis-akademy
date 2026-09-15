@@ -70,6 +70,10 @@ Le rejeu explicite 1/9 à 9/9 a été mené après `3d4a043a`; le dernier change
 
 Claude Sonnet a restructuré les contenus des écrans **Skills** et **Sensibilité des données** sans changer les notions ni les noms produits. En prévisualisation, Source, Portée et Pertinence sont rendus comme sous-sections sans dièses littéraux ; les quatre contrôles Code Execution, Memory, Incognito et Memory organisationnelle ont chacun un titre unique, sans répétition de « Contrôle ».
 
+### Contrôle public final — checkpoint `07055ee7`
+
+Le canal public tRPC a répondu HTTP 200 avec `Content-Type: application/json; charset=utf-8` et `Cache-Control: no-store, max-age=0`. Les marqueurs des deux chapitres restructurés sont présents dans la donnée fraîche. Le lecteur public confirme que les sous-sections **Source**, **Portée** et **Pertinence** s’affichent sans dièses littéraux, que les contrôles **Code Execution**, **Memory**, **Incognito** et **Memory organisationnelle** ont des intitulés uniques, et que le libellé final est **« Deux modes d’échec du caviardage »**. Les neuf écrans, le triage, le quiz, les ressources de fin et l’absence de recommandations vidéo hors source avaient déjà été rejoués et documentés pendant le même lot. La console de clôture ne contient pas d’erreur applicative.
+
 ## Preuves attendues à la clôture
 
 La publication devra confirmer : réponse tRPC `no-store` fraîche, neuf écrans dans le lecteur public, triage à six associations, cinq QCM intégrés, verrouillage par activités requises, cartes complètes, termes produits préservés, console sans erreur et absence de recommandation externe non sourcée.
