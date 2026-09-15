@@ -10,17 +10,41 @@ const pendingFetches = new Map<string, Promise<any>>();
 const legacyCourseFileAliases: Record<string, string> = {
   prompt_engineering_with_the_openai_api__01: "prompt_engineering_with_openai_api__01",
 };
+let courseAssetVersionPromise: Promise<string | null> | null = null;
 
 export function getCourseFileCandidates(courseId: string): string[] {
   const legacyFile = legacyCourseFileAliases[courseId];
   return legacyFile ? [courseId, legacyFile] : [courseId];
 }
 
+export function buildCourseAssetUrl(fileId: string, version: string | null, requestTimestamp = Date.now()): string {
+  const token = version?.trim() || `request-${requestTimestamp}`;
+  return `/data/courses/${encodeURIComponent(fileId)}.json?course-version=${encodeURIComponent(token)}`;
+}
+
+async function getCourseAssetVersion(): Promise<string | null> {
+  if (!courseAssetVersionPromise) {
+    courseAssetVersionPromise = fetch(`/__manus__/version.json?course-data-version=${Date.now()}`, {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" },
+    })
+      .then(async (response) => {
+        if (!response.ok) return null;
+        const payload: unknown = await response.json();
+        const version = payload && typeof payload === "object" ? (payload as { version?: unknown }).version : null;
+        return typeof version === "string" && version.trim() ? version : null;
+      })
+      .catch(() => null);
+  }
+  return courseAssetVersionPromise;
+}
+
 async function fetchCourseJson(courseId: string): Promise<any> {
   let lastError: Error | undefined;
+  const assetVersion = await getCourseAssetVersion();
   for (const fileId of getCourseFileCandidates(courseId)) {
     try {
-      const response = await fetch(`/data/courses/${fileId}.json`, {
+      const response = await fetch(buildCourseAssetUrl(fileId, assetVersion), {
         // Les JSON de cours sont mis à jour indépendamment du bundle JavaScript.
         // La revalidation explicite évite qu’un apprenant voie un ancien cours après
         // une publication tout en conservant le cache mémoire de la session.

@@ -52,3 +52,7 @@ La revue publique des dix écrans demeure à réaliser avant la clôture défini
 La donnée JSON publique associée à l’écran 3 a également été vérifiée après le checkpoint `eb5049ca` : la carte **Recherche et synthèse** contient « recherche web dans le chat » et ne contient plus le reliquat anglais relevé. Le lecteur qui était déjà ouvert avant la propagation conserve sa copie mémoire jusqu’à un rechargement documentaire ; ce comportement de session ne modifie pas la donnée actuellement servie.
 
 Après rechargement documentaire, le rendu de l’écran 3 affiche bien la carte française corrigée avec le texte localisé, sans modifier les noms de fonctionnalités Anthropic ni le verrou de cartes. Le contrôle a été effectué sur le domaine public.
+
+Le contrôle de l’écran 6 effectué après le checkpoint `60a58048` a montré que le lecteur pouvait encore servir les anciennes valeurs tronquées des cartes de communication malgré le délai de propagation. Cette observation est traitée comme un décalage de cache/livraison à recontrôler, et non comme une validation : les cartes ne seront considérées corrigées qu’après vérification du contenu complet effectivement rendu depuis la donnée publique actualisée.
+
+La prévisualisation du correctif de chargeur versionné confirme ensuite deux invariants : la requête vers le JSON du cours comporte le paramètre `course-version`, et les trois cartes réparées affichent leurs phrases de clôture complètes. Ce contrôle ne remplace pas la vérification post-publication, qui reste nécessaire pour confirmer le comportement à travers le CDN.

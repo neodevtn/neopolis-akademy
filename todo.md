@@ -28,6 +28,7 @@
 - [x] Corriger le reliquat anglais « web search in chat » visible dans la carte française Recherche et synthèse du cours Associate 4, sans traduire ni altérer les noms de produits Anthropic — carte publique rechargée et vérifiée avec « recherche web dans le chat » ; fonctionnalité Research conservée
 - [ ] Corriger les reliquats anglais non nominaux de l’écran Conception et itération Associate 4, notamment « design », « build » et « prompt-and-iterate », sans altérer les rôles de certification Anthropic
 - [ ] Corriger les cartes françaises incomplètes ou malformées des écrans Communiquer la valeur et synthèse Associate 4, notamment les contenus tronqués, les phrases fusionnées et les guillemets déséquilibrés, sans modifier les interactions standards
+- [ ] Empêcher qu’un cache HTTP/CDN périmé masque un JSON de cours corrigé après publication, en versionnant la récupération standard des données sans invalider la cache mémoire de la session
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »
