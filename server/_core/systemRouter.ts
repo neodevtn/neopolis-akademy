@@ -163,7 +163,6 @@ export const systemRouter = router({
   submitTechnicalFeedback: publicProcedure
     .input(
       z.object({
-        eventId: z.string().regex(/^[a-f0-9]{32}$/i, "eventId Sentry invalide"),
         message: z.string().trim().min(6).max(450),
         url: z.string().url().max(500),
         name: z.string().trim().min(1).max(120).optional(),
@@ -175,8 +174,8 @@ export const systemRouter = router({
       if (!checkReportRateLimit(ip)) return { accepted: false, reason: "rate_limited" } as const;
 
       const delivery = await submitSentryTechnicalFeedback({
-        eventId: input.eventId,
         message: input.message,
+        url: input.url,
         name: input.name || "Apprenant Neopolis",
         email: input.email || "support@neopolis.invalid",
       });

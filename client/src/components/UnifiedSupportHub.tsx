@@ -11,7 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { isAdministrativeRole } from "@shared/roles";
 import { dispatchSupportHubAction } from "@/lib/supportHub";
 import { PrivateMessagingNotificationCenter } from "@/components/PrivateMessagingNotificationCenter";
-import { captureTechnicalFeedbackEvent } from "@/lib/sentryFeedback";
+import { validateTechnicalFeedbackInput } from "@/lib/sentryFeedback";
 
 type ActionItemProps = {
   icon: typeof MessageCircle;
@@ -48,8 +48,9 @@ export function UnifiedSupportHub() {
     if (message.length < 6) return;
     try {
       const [feedbackResult, internalResult] = await Promise.allSettled([
-        captureTechnicalFeedbackEvent({ message, url: window.location.href, name: user?.name, email: user?.email })
-          .then((eventId) => sentryFeedbackMutation.mutateAsync({ eventId, message, url: window.location.href, name: user?.name || undefined, email: user?.email || undefined })),
+        Promise.resolve()
+          .then(() => validateTechnicalFeedbackInput({ message, url: window.location.href, name: user?.name, email: user?.email }))
+          .then(() => sentryFeedbackMutation.mutateAsync({ message, url: window.location.href, name: user?.name || undefined, email: user?.email || undefined })),
         reportMutation.mutateAsync({ message: `Support hub: ${message}`.slice(0, 500), source: "manual", url: window.location.href, timestamp: Date.now(), stack: "", componentStack: "" }),
       ]);
       if (internalResult.status === "rejected") throw internalResult.reason;

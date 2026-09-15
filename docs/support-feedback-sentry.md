@@ -28,9 +28,9 @@ Le jeton qui sera affiché par Sentry restera exclusivement côté serveur : il 
 
 ## Test du transport serveur
 
-Un signalement de contrôle explicitement étiqueté a été soumis depuis la prévisualisation via le nouveau transport serveur. Le formulaire s’est fermé sans erreur console, et le journal interne Neopolis a été conservé. La liste **User Feedback** Sentry n’affichait pas encore cette entrée au premier rafraîchissement : la réception externe reste donc à confirmer avant de déclarer le canal opérationnel.
+Les premières tentatives associaient le User Feedback à un identifiant produit par le SDK navigateur. L’instance Sentry on-premise refusant l’ingestion DSN correspondante, l’API pouvait retourner `201` pour le feedback tout en laissant l’inbox sans événement réellement ingéré. Ce statut HTTP seul n’est donc pas retenu comme preuve de disponibilité.
 
-Le transport serveur a ensuite renvoyé une confirmation d’acceptation `201` de l’API User Feedback Sentry. La liste de l’interface peut être différée par l’indexation ou ses filtres ; le succès fonctionnel est fondé sur cette réponse API authentifiée, sans conserver dans ce document l’identifiant de feedback, le texte de test ou le jeton.
+Le transport corrigé génère désormais l’événement technique côté serveur via l’endpoint Store du projet, puis envoie le User Feedback authentifié avec le même identifiant. Si l’ingestion échoue, aucun feedback n’est envoyé et l’interface Neopolis indique que le journal interne reste disponible mais que la copie Sentry n’est pas confirmée. Le secret d’intégration demeure exclusivement serveur ; aucune valeur, identifiant d’événement ou contenu de test n’est conservé dans ce document.
 
 La prévisualisation confirme par ailleurs que TekTek répond de nouveau à une question contextuelle sur la délégation avec une explication sourcée provenant de la formation autorisée. Le rendu du panneau est corrigé pour afficher les listes et emphases Claude sans interpréter de HTML ni exposer de marqueur de citation interne.
 
@@ -53,3 +53,9 @@ Le panneau est désormais bien accessible depuis cette URL canonique. Le contrô
 La cause identifiée est la normalisation de recherche : elle écartait les identifiants courts alphanumériques tels que `4D`. La recherche conserve maintenant ces termes structurants et leur test de contrat vérifie que la question française sur le Framework 4D récupère les passages décrivant delegation, description, discernment et diligence.
 
 Le contrôle de prévisualisation confirme ensuite le comportement : depuis l’URL canonique sans paramètre `lesson`, le centre d’assistance ouvre TekTek, et la demande « Explique le framework 4D présenté dans ce cours » produit une réponse Claude Sonnet citée sur delegation, description, discernment, diligence ainsi que les usages automation, augmentation et agency. Les anciens marqueurs de citation du fournisseur ne sont plus affichés.
+
+### Vérification bout en bout du 15 septembre 2026
+
+Un unique signalement de contrôle, explicitement marqué comme test à ignorer, a été soumis depuis la prévisualisation authentifiée du cours 1. Le centre d’assistance a confirmé sa transmission, tout en conservant le journal interne Neopolis indépendamment du transport externe. La consultation authentifiée de l’API User Feedback on-premise confirme la présence du feedback et d’une référence d’événement ; cette référence résout ensuite vers un événement du projet avec HTTP `200`. Cette double vérification confirme que l’événement est ingéré avant le feedback et que l’association est lisible par Sentry, même si l’interface Inbox peut afficher un état de chargement propre à l’instance.
+
+La publication et le contrôle du domaine public des deux rôles restent requis. Après stabilisation publiée, le jeton d’intégration utilisé pour les contrôles doit être tourné, car sa valeur a été exposée antérieurement dans l’historique de conversation.
