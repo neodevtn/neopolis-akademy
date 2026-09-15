@@ -27,6 +27,7 @@ import {
   type AccordionBlock,
 } from "./contentDetectors";
 import { normalizeCourseContent } from "./contentNormalization";
+import { parseMarkdownHeading } from "./markdownHeading";
 import { ChevronDown, ChevronRight, Check } from "lucide-react";
 
 // Interactive Stepper component for clickable numbered steps
@@ -601,13 +602,14 @@ export default function PageContent({ content, lang }: { content: string; lang: 
       );
       continue;
     }
-    // Markdown headings
-    if (line.startsWith("### ")) {
-      elements.push(<h4 key={i} className="text-base font-semibold mt-6 mb-2.5 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{line.replace("### ", "")}</h4>);
-    } else if (line.startsWith("## ")) {
-      elements.push(<h3 key={i} className="text-lg font-semibold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{line.replace("## ", "")}</h3>);
-    } else if (line.startsWith("# ")) {
-      elements.push(<h2 key={i} className="text-xl font-bold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{line.replace("# ", "")}</h2>);
+    // Markdown headings: accept all six standard levels; the visual hierarchy is capped at h4 inside a course screen.
+    const markdownHeading = parseMarkdownHeading(line);
+    if (markdownHeading && markdownHeading.level >= 3) {
+      elements.push(<h4 key={i} className="text-base font-semibold mt-6 mb-2.5 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{markdownHeading.text}</h4>);
+    } else if (markdownHeading && markdownHeading.level === 2) {
+      elements.push(<h3 key={i} className="text-lg font-semibold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{markdownHeading.text}</h3>);
+    } else if (markdownHeading && markdownHeading.level === 1) {
+      elements.push(<h2 key={i} className="text-xl font-bold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{markdownHeading.text}</h2>);
     } else if (line.match(/^\*\*.*\*\*$/)) {
       // Bold-only line as sub-section title
       elements.push(

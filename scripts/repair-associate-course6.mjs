@@ -7,12 +7,14 @@ const indexPath = path.join(root, 'client/src/data/trainingIndex.json');
 const patchesPath = path.join(root, 'docs/anthropic-associate-course6-claude-patches.json');
 const polishPath = path.join(root, 'docs/anthropic-associate-course6-claude-polish.json');
 const criteriaPath = path.join(root, 'docs/anthropic-associate-course6-claude-criteria.json');
+const structuredSectionsPath = path.join(root, 'docs/anthropic-associate-course6-claude-structured-sections.json');
 
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
 const catalog = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 const patches = JSON.parse(fs.readFileSync(patchesPath, 'utf8'));
 const polish = JSON.parse(fs.readFileSync(polishPath, 'utf8'));
 const criteria = JSON.parse(fs.readFileSync(criteriaPath, 'utf8'));
+const structuredSections = JSON.parse(fs.readFileSync(structuredSectionsPath, 'utf8'));
 const lesson = course.lessons[0];
 
 const findChapter = (id) => {
@@ -61,7 +63,7 @@ intro.en = intro.en.replace('**Estimated time:** 15-25 minutes', '**Official dur
 intro.fr = intro.fr.replace(/\*\*Durée estimée\s*:\*\*\s*15[-–]25 minutes/, '**Durée officielle :** 55 minutes');
 intro.fr = intro.fr.replaceAll('Confiance dans les compétences et risque des fonctionnalités', 'Confiance dans les Skills et risques liés aux fonctionnalités');
 
-for (const patch of contentPatches) {
+for (const patch of contentPatches.filter((patch) => patch.chapterId !== 'chapter_02' && patch.chapterId !== 'chapter_03')) {
   const chapter = findChapter(patch.chapterId);
   const content = chapter.blocks.find((block) => block.type === 'content');
   if (!content?.body?.fr) throw new Error(`French content missing for ${patch.chapterId}.`);
@@ -109,6 +111,17 @@ dataControls.body.fr = dataControls.body.fr
   .replaceAll('Rédaction qui casse la tâche.', 'Caviardage qui empêche la tâche.')
   .replaceAll("la rédaction n'est pas la solution", "le caviardage n'est pas la solution")
   .replaceAll('La rédaction est un outil', 'Le caviardage est un outil');
+
+if (typeof structuredSections.skills_body_fr !== 'string' || typeof structuredSections.data_body_fr !== 'string') {
+  throw new Error('Associate 6 Claude section restructuring is incomplete.');
+}
+const skillsContent = findChapter('chapter_02').blocks.find((block) => block.type === 'content');
+skillsContent.body.fr = structuredSections.skills_body_fr;
+dataControls.body.fr = structuredSections.data_body_fr
+  .replace('## Rédaction et anonymisation', '## Caviardage et anonymisation')
+  .replace('### Deux modes d’échec de la rédaction', '### Deux modes d’échec du caviardage')
+  .replace('avant le téléversement., ou laissez-la', 'avant le téléversement, ou laissez-la')
+  .replace('différents points d’entrée, en termes simples.', 'différents points d’entrée, en termes simples');
 
 const governancePolicies = findChapter('chapter_04').blocks.find((block) => block.type === 'content');
 governancePolicies.body.fr = governancePolicies.body.fr.replaceAll('drift', 'dérive');

@@ -60,6 +60,16 @@ Après `3d4a043a`, la synthèse publique confirme le libellé « Confiance dans 
 
 **Écran 7/9 — Quiz du module 6.** Cinq scénarios avec quatre options chacun sont présents. Les cartes de révision et les actions « Vérifier la réponse » sont rendues par le bloc standard ; aucune activité racine supplémentaire ne s’affiche.
 
+**Écran 8/9 — Points clés.** La synthèse confirme le nom produit Skills et reprend les cinq axes du module sans reliquat générique.
+
+**Écran 9/9 — Module terminé.** La fin est accessible et la navigation précédente/complétion sont rendues. Après le checkpoint `ca8a5687`, l’inspection du DOM confirme l’absence de titre « Vidéos recommandées », de liens YouTube et de cartes complémentaires : le composant standard respecte désormais `recommendedVideosManaged: false`. La console de cette même session est vide.
+
+Le rejeu explicite 1/9 à 9/9 a été mené après `3d4a043a`; le dernier changement `ca8a5687` étant limité au composant de recommandations, l’écran final a été rejoué une seconde fois après sa propagation.
+
+### Lot final de structure avant republication
+
+Claude Sonnet a restructuré les contenus des écrans **Skills** et **Sensibilité des données** sans changer les notions ni les noms produits. En prévisualisation, Source, Portée et Pertinence sont rendus comme sous-sections sans dièses littéraux ; les quatre contrôles Code Execution, Memory, Incognito et Memory organisationnelle ont chacun un titre unique, sans répétition de « Contrôle ».
+
 ## Preuves attendues à la clôture
 
 La publication devra confirmer : réponse tRPC `no-store` fraîche, neuf écrans dans le lecteur public, triage à six associations, cinq QCM intégrés, verrouillage par activités requises, cartes complètes, termes produits préservés, console sans erreur et absence de recommandation externe non sourcée.
