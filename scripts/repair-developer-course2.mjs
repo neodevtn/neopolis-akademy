@@ -256,7 +256,17 @@ const certificationCourses = catalog.courses.filter((item) => item.certId === ce
 certification.totalExercises = certificationCourses.reduce((sum, item) => sum + (item.exerciseCount || 0), 0);
 certification.totalVideos = certificationCourses.reduce((sum, item) => sum + (item.videoCount || 0), 0);
 certification.totalDownloads = certificationCourses.reduce((sum, item) => sum + (item.downloadCount || 0), 0);
-
+const normalizeFrenchTerminology = (value) => {
+  if (Array.isArray(value)) return value.forEach(normalizeFrenchTerminology);
+  if (!value || typeof value !== 'object') return;
+  if (typeof value.fr === 'string') {
+    value.fr = value.fr
+      .replaceAll('system prompt', 'prompt système')
+      .replaceAll('System prompt', 'Prompt système');
+  }
+  Object.values(value).forEach(normalizeFrenchTerminology);
+};
+normalizeFrenchTerminology(course);
 fs.writeFileSync(coursePath, `${JSON.stringify(course, null, 2)}\n`);
 fs.writeFileSync(indexPath, `${JSON.stringify(catalog, null, 2)}\n`);
 console.log('Developer course 2 normalized.');

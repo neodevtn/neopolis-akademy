@@ -48,6 +48,9 @@ describe('Developer Foundations course 2 content contract', () => {
     expect(body('chapter_01').fr).not.toContain('few‑shot examples');
     expect(body('chapter_01').fr).not.toContain('structured outputs');
     expect(body('chapter_01').fr).toContain('sorties structurées');
+    const promptingCheckpoint = course.exercises.find((exercise: { chapterId: string }) => exercise.chapterId === 'chapter_01');
+    expect(promptingCheckpoint?.options.map((option) => option.text.fr).join('\n')).not.toContain('system prompt');
+    expect(promptingCheckpoint?.correction.fr).not.toContain('system prompt');
     expect(body('chapter_11').fr).toContain('l’humain dans la boucle');
     expect(chapterFrenchText('chapter_15')).toContain('Claude Agent SDK');
     expect(chapterFrenchText('chapter_13')).toContain('Skills');

@@ -36,3 +36,7 @@ Après restructuration locale, les deux premiers pseudo-tableaux sont devenus de
 Le dernier contrôle de prévisualisation confirme que les trois sections restructurées sont rendues, mais il révèle un doublon de message utilisateur dans l’exemple de classification et des libellés génériques restants dans ce même exemple. Ces anomalies sont ajoutées au même lot de contenu avant toute republication.
 
 Le diagnostic source confirme que les deux répétitions du message utilisateur appartiennent aux démonstrations distinctes avant/après, puis aux deux scénarios de l’étude « À surveiller » : elles ne constituent pas une duplication de données. Les libellés techniques génériques de la narration restent intégrés au correctif réexécutable et protégé par contrat.
+
+## Disponibilité publique après `298df2a5`
+
+Le premier chargement navigateur a reçu une page 404 Railway transitoire immédiatement après la publication. Le contrôle HTTP suivant, mené sur `https://akademy.neodev.click/` et `https://neopacademy-6qa7lvjq.manus.space/`, a confirmé HTTP 200 pour la racine, le lecteur Developer 2 et le canal tRPC. La réponse tRPC conserve `application/json` et `Cache-Control: no-store, max-age=0`. Le contrôle visuel public a donc été repris après cette récupération ; l’anomalie n’est pas attribuée au contenu Developer 2.
