@@ -23,6 +23,7 @@ intro.fr = intro.fr.replace('**Durée estimée :** 15-25 minutes', '**Durée off
 
 const projects = findChapter('chapter_01');
 projects.blocks[0].body.fr = projects.blocks[0].body.fr
+  .replace('Lorsque un besoin s’étend sur deux mécanismes', 'Lorsqu’un besoin s’étend sur deux mécanismes')
   .replace('\nCompétences\n\nProcédures répétables', '\nSkills\n\nProcédures répétables')
   .replace('la Memory contextualisée assure la continuité', 'la Scoped Memory assure la continuité')
   .replace('La question récurrente est : instruction, connaissance, ou Skill ? Une règle sur le comportement (« Citer systématiquement le document source pour toute affirmation factuelle ») est une instruction. Un fait dont Claude a besoin (« notre palette de marque est ces codes hexadécimaux ») est une connaissance. Une procédure en plusieurs étapes (« formater les résultats dans notre modèle de rapport standard ») est une Skill, construite une fois au niveau du compte sous Customize et réutilisée dans tout Project qui en a besoin, plutôt que configurée dans un seul Project.', 'La question récurrente est la suivante : instruction, knowledge base ou Skill ? Une règle de comportement (« toujours citer les sources ») relève d’une instruction. Un fait dont Claude a besoin (« notre palette de marque correspond à ces codes hexadécimaux ») relève de la knowledge base. Une procédure en plusieurs étapes (« mettre les résultats en forme dans notre modèle de rapport standard ») relève d’une Skill, créée une fois au niveau du compte sous Customize et réutilisée dans tout Project qui en a besoin, plutôt que d’être configurée dans un seul Project.');
@@ -35,6 +36,36 @@ findCard(projects, 'Choosing the right mechanism').back.en = 'The recurring ques
 findCard(projects, 'Choosing the right mechanism').back.fr = 'La question récurrente est la suivante : instruction, knowledge base ou Skill ? Une règle de comportement (« toujours citer les sources ») relève d’une instruction. Un fait dont Claude a besoin (« notre palette de marque correspond à ces codes hexadécimaux ») relève de la knowledge base. Une procédure en plusieurs étapes (« mettre les résultats en forme dans notre modèle de rapport standard ») relève d’une Skill, créée une fois au niveau du compte sous Customize et réutilisée dans tout Project qui en a besoin, plutôt que d’être configurée dans un seul Project.';
 
 const connectors = findChapter('chapter_02');
+connectors.title.fr = 'Connectors et connaissances téléversées';
+connectors.blocks[0].body.fr = `## Connectors et connaissances téléversées
+
+Les Connectors étendent l’accès de Claude aux données avec lesquelles vous travaillez déjà, notamment dans Google Drive et Gmail. Ils sont puissants, mais chacun possède des limites précises.
+
+Les traiter comme des sources sélectionnées, et savoir exactement ce que chacune peut ou ne peut pas faire, permet de les utiliser efficacement plutôt que de rencontrer des échecs difficiles à interpréter.
+
+#### Connexion à des sources externes
+
+Un connecteur autorisé permet à Claude d’accéder à un système externe, par exemple pour rechercher un document dans Drive ou retrouver un e-mail pertinent. Vous contrôlez ce qui est accessible et définissez délibérément cet ensemble au lieu de tout connecter par défaut.
+
+#### Limites de capacité
+
+Chaque connecteur a un périmètre défini. Un connecteur de messagerie peut permettre à Claude de rechercher et de lire des messages, sans pour autant lui permettre de les envoyer. Attendre une action qu’un connecteur ne peut pas effectuer provoque un échec déroutant, et non une erreur explicite ; apprenez donc les limites de chaque connecteur avant de construire un flux de travail qui en dépend.
+
+#### Deux pièges observés sur le terrain
+
+Cliquez sur chacun pour développer.
+
+#### Mauvais chemin pour ajouter un connecteur
+
+Un chemin apparent peut rediriger vers un répertoire public plutôt que vers les Connectors approuvés par votre organisation. Confirmez le parcours avec votre administrateur, notamment dans les environnements Team ou Enterprise, afin de connecter la source approuvée plutôt qu’une option qui lui ressemble.
+
+#### Confusion entre les limites de capacité
+
+Lorsqu’un connecteur atteint une limite de capacité, l’échec peut ressembler à un bug alors qu’il relève du comportement documenté du produit. Les signalements sont alors adressés à la mauvaise équipe et la résolution s’enlise. Connaître la frontière de chaque connecteur évite que le problème soit mal classé.
+
+#### Maintenir les connaissances téléversées à jour
+
+Les connaissances téléversées demandent la même attention qu’une source connectée : elles doivent rester à jour, pertinentes et sans doublons. Une knowledge base qui contient trois versions d’une même politique risque d’amener Claude à citer la mauvaise version. Organisez-la comme un dossier partagé, en retirant les versions obsolètes à mesure que vous en ajoutez de nouvelles.`;
 findCard(connectors, 'Capability boundaries').back.en = 'Each connector has a defined boundary and knowing it prevents wasted time. A mail connector may let Claude search and read messages but not send them. Expecting an action a connector cannot perform produces a confusing failure, not a clear error, so learn each connector’s boundaries before you build a workflow on it.';
 findCard(connectors, 'Capability boundaries').back.fr = 'Chaque connecteur a un périmètre défini, et le connaître évite de perdre du temps. Un connecteur de messagerie peut permettre à Claude de rechercher et de lire des messages, mais pas de les envoyer. Attendre une action qu’un connecteur ne peut pas effectuer entraîne un échec déroutant, et non une erreur claire ; apprenez donc les limites de chaque connecteur avant de construire un flux de travail qui en dépend.';
 
