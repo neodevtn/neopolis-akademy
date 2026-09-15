@@ -47,3 +47,13 @@ Les écrans 1/8 et 2/8 ont été rejoués après la dernière propagation : dur�
 Les écrans 3/8 et 4/8 ont ensuite été confirmés : Connectors est entièrement localisé, les cinq cartes restent lisibles et les titres ne sont plus doublés ; l’exemple Instructions affiche les deux versions cohérentes et la carte de garde-fous contient son exemple complet.
 
 Les écrans 5/8 et 6/8 ont été rejoués : le corps Maintenance préserve désormais Instructions, knowledge base, Skills et Memory ; le quiz affiche cinq scénarios et le verrou standard avant passage. Une exception restante est consignée : le verso de la première carte Maintenance emploie encore les termes génériques « connaissances » et « compétences » ; il doit être aligné sur les noms produits avant la clôture.
+
+Après le checkpoint `73bac294`, l’écran 5/8 confirme aussi le verso Maintenance aligné sur Instructions, knowledge base, Skills et Memory. Les écrans 7/8 et 8/8 confirment la synthèse française, la navigation et la fin de module sans recommandations vidéo externe. La revue publique des huit écrans est désormais complète ; la console fait l’objet du dernier contrôle transversal.
+
+La lecture tRPC publique finale confirme les huit titres français et leur structure : 0, 6, 5, 6, 4, 5, 0 et 0 cartes, avec les cinq QCM intégrés dans le chapitre Module 5. La console publique est sans sortie. Cette preuve couvre l’état final `73bac294` ; les activités sont attestées par les contrats standards et le test manuel antérieur du premier QCM, la session de revue administrateur ne servant pas à revendiquer un verrou apprenant.
+
+Pour lever l’ambiguïté de propagation finale, les écrans 1/8 et 2/8 ont été rejoués explicitement après `73bac294` : l’introduction affiche la durée officielle de 47 minutes et la liste de huit chapitres ; l’écran Projects affiche ses six cartes, sa hiérarchie standard et les termes Instructions, knowledge base, Skills et Scoped Memory.
+
+Les écrans 3/8 et 4/8 ont également été rejoués après `73bac294` : Connectors conserve ses cinq cartes françaises, ses limites et son verrou de révision ; Instructions conserve six cartes, le verso de garde-fous complet et l’exemple « Version vague / Version précise » structuré.
+
+L’écran 6/8 a enfin été rejoué après `73bac294` : les cinq QCM intégrés, les cinq cartes et l’instruction de verrouillage sont visibles avec les termes produits attendus. Avec les écrans 5/8, 7/8 et 8/8 déjà rejoués après ce même checkpoint, les huit écrans publics ont bien été contrôlés sur la même version publiée. La console finale ne contient aucune sortie.
