@@ -1,0 +1,35 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { describe, expect, it } from 'vitest';
+
+const course = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'client/public/data/courses/claude_certified_developer_foundations__03.json'), 'utf8'));
+const lesson = course.lessons[0];
+const chapter = (id: string) => lesson.chapters.find((item: any) => item.id === id);
+const content = (id: string) => chapter(id).blocks.find((item: any) => item.type === 'content').body;
+const card = (chapterId: string, title: string) => chapter(chapterId).blocks.filter((item: any) => item.type === 'flip_cards').flatMap((item: any) => item.cards || []).find((item: any) => item.front.en === title);
+
+describe('Developer Foundations course 3 critical content contract', () => {
+  it('restores the four critical card backs without truncated endings', () => {
+    for (const [chapterId, title] of [['chapter_01', 'What to Watch Out for'], ['chapter_03', 'What to Watch Out for'], ['chapter_05', 'Setup'], ['chapter_05', 'What to Watch Out for']]) {
+      const target = card(chapterId, title);
+      expect(target.back.en.length).toBeGreaterThan(180);
+      expect(target.back.fr.length).toBeGreaterThan(180);
+      expect(target.back.en).toMatch(/[.!?]$/);
+      expect(target.back.fr).toMatch(/[.!?]$/);
+    }
+  });
+
+  it('uses structured source sections and localized generic French terms', () => {
+    expect(content('chapter_01').fr).toContain('## Modes d’autorisation et portes humaines');
+    expect(content('chapter_03').fr).toContain('| Mécanisme |');
+    expect(content('chapter_05').fr).toContain('| Couche |');
+    expect(content('chapter_01').fr).not.toContain('working directory');
+    expect(content('chapter_03').fr).not.toContain('managed settings');
+  });
+
+  it('removes unsourced video recommendations without removing reference guidance', () => {
+    expect(chapter('chapter_06').blocks.some((item: any) => item.type === 'video')).toBe(false);
+    expect(content('chapter_06').fr).toContain('Ressources de référence');
+    expect(course.videoRecommendationStatus).toBe('none');
+  });
+});
