@@ -34,6 +34,10 @@ L’écran Quiz confirme cinq scénarios intégrés avec quatre options chacun, 
 
 L’écran final affiche la complétion et trois recommandations externes identifiées par leur provenance (Google, Microsoft Research et AI Mastery). Leur statut de compléments Neopolis doit être explicité ou ces recommandations doivent être retirées si elles ne figurent pas dans la source autorisée, avant de clôturer la parité média du cours.
 
+Après le checkpoint `49cce81a`, le tRPC public confirme `recommendedVideosManaged: false` et la capture rendue de l’écran final ne présente plus de section de recommandations vidéo. Le texte d’extraction navigateur a conservé une réponse antérieure, mais l’interface effectivement rendue et la donnée tRPC correspondent au retrait. La console finale n’a pas pu être relue après la fermeture du bac à sable navigateur ; aucun changement JavaScript n’a été introduit dans ce dernier lot de données.
+
+Les écrans 3/9 et 5/9 ont été rejoués publiquement. Politiques est cohérent, avec quatre cartes complètes et les règles de diligence attendues. L’écran Skills conserve six cartes et ses contrôles, mais deux faces avant traduisent encore le nom de produit de manière générique (« compétences ») ; ce reliquat est regroupé avec la prochaine correction de contenu.
+
 ## Preuves attendues à la clôture
 
 La publication devra confirmer : réponse tRPC `no-store` fraîche, neuf écrans dans le lecteur public, triage à six associations, cinq QCM intégrés, verrouillage par activités requises, cartes complètes, termes produits préservés, console sans erreur et absence de recommandation externe non sourcée.

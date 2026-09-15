@@ -41,6 +41,9 @@ describe('Associate Foundations course 6 contract', () => {
     expect(content('chapter_01')).toContain('### Critères de délégation pour le dépistage');
     expect(content('chapter_01')).toContain('**Réversibilité** — Demandez si une sortie erronée peut être détectée');
     expect(content('chapter_01')).not.toContain('#### Critère\n\nLa question à poser');
+    const skillsCards = course.lessons[0].chapters.find((chapter) => chapter.id === 'chapter_02')?.blocks.find((block) => block.type === 'flip_cards')?.cards ?? [];
+    expect(skillsCards.map((card) => card.front.fr)).toContain('Confiance dans les Skills et risque au niveau des fonctionnalités');
+    expect(skillsCards.map((card) => card.front.fr)).toContain('Deux Skills, deux décisions');
     expect(content('chapter_05')).not.toContain('AI-assisted');
     expect(content('chapter_04')).not.toContain('drift');
     expect(cards('chapter_02').find((item: { front: { en: string } }) => item.front.en === 'Internal does not mean vetted').back.fr).toContain('politique actuelle');

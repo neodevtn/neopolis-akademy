@@ -84,6 +84,13 @@ if (!useCaseContent.body.fr.includes(criteriaHeading)) {
   useCaseContent.body.fr = `${useCaseContent.body.fr.slice(0, startIndex)}${conciseCriteria}\n\n${useCaseContent.body.fr.slice(endIndex)}`;
 }
 
+const skillsCards = findCards(findChapter('chapter_02'));
+for (const card of skillsCards) {
+  card.front.fr = card.front.fr
+    .replaceAll('Confiance dans les compétences et risque au niveau des fonctionnalités', 'Confiance dans les Skills et risque au niveau des fonctionnalités')
+    .replaceAll('Deux compétences, deux appels', 'Deux Skills, deux décisions');
+}
+
 const dataControls = findChapter('chapter_03').blocks.find((block) => block.type === 'content');
 dataControls.body.fr = applyPolish(dataControls.body.fr);
 dataControls.body.fr = dataControls.body.fr
