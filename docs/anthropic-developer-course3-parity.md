@@ -17,3 +17,5 @@ Claude Sonnet a confirmé qu’un seul exercice racine — la décision de place
 ## Vérification publique du correctif critique
 
 Après propagation du checkpoint `50818249`, le canal tRPC public sert bien le cours en JSON. Le chapitre de ressources ne contient plus de bloc vidéo et le revers de carte relatif aux chemins de plugin est complet en français. Les activités racine et la durée officielle restent explicitement ouvertes, faute de source permettant une transformation générique fidèle.
+
+Après le checkpoint `0cb0848a`, la donnée publique confirme également le bloc `checkpoint` sur l’écran Modes d’autorisation, l’identifiant de l’exercice sélectionné, le statut `required: true` et le minimum de 15 mots. Ce checkpoint est rendu par le composant standard ; aucun exercice ambigu n’a été promu de manière spéculative.
