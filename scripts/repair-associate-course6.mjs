@@ -54,6 +54,7 @@ const contentPatches = patches.contentReplacements.map((patch) => ({
 course.sourceCourseTitle = 'Claude Certified Associate - Foundations / Governance, Risk & Responsible Use';
 lesson.title.en = 'Governance, Risk & Responsible Use';
 lesson.title.fr = 'Gouvernance, risques et utilisation responsable';
+lesson.recommendedVideosManaged = false;
 
 const intro = findChapter('chapter_01_1').blocks[0].body;
 intro.en = intro.en.replace('**Estimated time:** 15-25 minutes', '**Official duration:** 55 minutes');

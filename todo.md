@@ -54,9 +54,10 @@
 - [x] Corriger les noms produits Anthropic encore traduits dans l’écran « Gestion des configurations » Associate 5, notamment « Skills » rendu en « compétences » dans le corps, puis rejouer son contrôle public — corps Maintenance public contrôlé après `73bac294`
 - [x] Corriger les noms produits encore génériques dans le verso de la carte « Maintenance des configurations » Associate 5, notamment « connaissances » et « compétences », puis rejouer cet écran public — verso public contrôlé après `73bac294`
 - [ ] Corriger Associate Foundations cours 6 « Governance, Risk & Responsible Use » : durée officielle 55 min, neuf écrans, décisions contextualisées sur données sensibles, validation, responsabilité et gouvernance ; regrouper les défauts puis publier après une validation complète et un contrôle public final
-- [ ] Résoudre l’échec de planification du déploiement Associate 6 et vérifier la version publique avant de clôturer le cours
-- [ ] Corriger le reliquat générique « compétences » de l’introduction Associate 6 en « Skills » et rejouer l’écran public avant la clôture
-- [ ] Corriger la structure fragmentée des critères de délégation de l’écran Cas d’utilisation Associate 6, puis vérifier le rendu public du triage sans modifier ses associations
+- [x] Résoudre l’échec de planification du déploiement Associate 6 et vérifier la version publique avant de clôturer le cours — publication reprise ; tRPC public confirmé après `6d186b26`
+- [x] Corriger le reliquat générique « compétences » de l’introduction Associate 6 en « Skills » et rejouer l’écran public avant la clôture — intro publique confirmée après `9aba6b7a`
+- [x] Corriger la structure fragmentée des critères de délégation de l’écran Cas d’utilisation Associate 6, puis vérifier le rendu public du triage sans modifier ses associations — quatre puces et six associations publiques confirmées après `6d186b26`
+- [ ] Vérifier la provenance et le statut de complément des trois vidéos recommandées visibles à la fin Associate 6, puis les étiqueter clairement ou les retirer selon la source autorisée
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »

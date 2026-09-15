@@ -24,6 +24,16 @@ Les formulations de contenu et les huit restaurations de cartes sont produites p
 
 Le tableau de critères de délégation, rendu comme une succession de titres fragmentés dans le lecteur, est remplacé par un seul intertitre et quatre puces Markdown compactes, produites par Claude Sonnet à partir des critères existants. Le triage standard et ses six associations restent inchangés.
 
+## Contrôle public après les checkpoints `9aba6b7a` et `6d186b26`
+
+La route publique tRPC retourne HTTP 200 avec `application/json` et `no-store`. Elle confirme la durée officielle de 55 minutes, neuf écrans, `rootExercises: 0`, `recommendedVideosManaged: false`, le titre « Quiz du module 6 » et le nom produit **Skills** dans l’introduction. Sur le lecteur public, l’écran Introduction affiche bien la durée et Skills ; l’écran Cas d’utilisation affiche les quatre critères dans une liste compacte et conserve le triage standard de six associations, sans activité racine hors flux.
+
+La revue ciblée finale confirme aussi l’écran Données : caviardage correctement formulé, huit cartes de révision disponibles, contrôles Incognito/Memory/Code Execution nommés, et verrou standard visible tant que les cartes ne sont pas retournées. Aucun changement de bloc, de triage ou de règle de progression n’est introduit par ce lot.
+
+L’écran Quiz confirme cinq scénarios intégrés avec quatre options chacun, des cartes de révision et le double verrou standard : cartes à retourner puis activité de validation à soumettre. Aucune activité racine historique n’est rendue.
+
+L’écran final affiche la complétion et trois recommandations externes identifiées par leur provenance (Google, Microsoft Research et AI Mastery). Leur statut de compléments Neopolis doit être explicité ou ces recommandations doivent être retirées si elles ne figurent pas dans la source autorisée, avant de clôturer la parité média du cours.
+
 ## Preuves attendues à la clôture
 
 La publication devra confirmer : réponse tRPC `no-store` fraîche, neuf écrans dans le lecteur public, triage à six associations, cinq QCM intégrés, verrouillage par activités requises, cartes complètes, termes produits préservés, console sans erreur et absence de recommandation externe non sourcée.
