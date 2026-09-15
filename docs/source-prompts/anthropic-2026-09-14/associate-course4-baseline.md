@@ -1,0 +1,13 @@
+# Associate Foundations — cours 4 : point de départ
+
+Le cours `claude_certified_associate_foundations__04` comporte dix écrans. L’audit local a identifié neuf exercices libres optionnels importés, non rattachés aux activités pédagogiques réelles et porteurs de contenus hors contexte ; ils ont été supprimés. Les activités conservées sont les deux triages standard directement déclarés dans les écrans de délégation et de redesign, ainsi que les cinq choix uniques du quiz.
+
+Le contrôle de prévisualisation au chapitre d’introduction confirme le titre français **Intégration des flux de travail et conception de solutions**, la **durée officielle de 63 minutes**, l’estimation Neopolis distincte et les dix entrées de navigation. Le rendu est en mode revue administrateur ; il ne constitue pas encore la preuve des verrous apprenants.
+
+Les écarts éditoriaux relevés portent notamment sur la durée générique de 15–25 minutes, des libellés anglais résiduels et des cartes de révision tronquées. Le correctif réexécutable `scripts/repair-associate-course4.mjs` normalise les métadonnées et les formulations qui peuvent être rectifiées sans interprétation du contenu source. Les triages de délégation et de redesign restent les validations interactives à contrôler avant publication.
+
+Le premier triage a été rejoué en prévisualisation française avec les six associations attendues : notes et résumé en délégation adaptée à l’IA, campagne en collaboration IA–humain, contrat en revue humaine et décisions d’embauche/transactions élevées réservées à l’humain. Il retourne **6/6 · Parfait !**, affiche sa correction détaillée et libère la navigation en mode revue. Les cartes de délégation complétées et les derniers reliquats de langue observés ont été corrigés dans le même correctif réexécutable.
+
+Le scénario **Reconcevoir un workflow** a été contrôlé ensuite : extraction des reçus et règles de conformité en automatisation, traitement d’exception par un humain, seuil de paiement et amélioration des critères en collaboration. Il retourne **5/5 · Parfait !**, affiche son feedback détaillé et active le bouton Suivant. Les deux triages standards conservent donc les niveaux de décision attendus sans dépendre des anciens exercices libres importés.
+
+Après nettoyage final, la revue navigateur du chapitre **Cartographie des délégations** couvre le texte et les huit cartes. Les deux cartes de tableau portent désormais le même titre français complet « Étape du workflow — Niveau de délégation — Justification ». Le terme `reviewer` a été remplacé par « relecteur » et les niveaux de décision ne contiennent plus de reliquat `Human-retained`. Le triage conservé affiche toujours **6/6 · Parfait !** et sa correction détaillée.
