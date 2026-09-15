@@ -20,6 +20,10 @@ Le cours disposait déjà de dix écrans, de l’activité de tri et des onglets
 
 La règle de durée est couverte par `TrainingCourse.officialDuration.contract.test.ts`. Le test confirme la présence de la donnée officielle, la conservation des dix écrans, des trois onglets et de l’activité de tri. La vérification TypeScript et le test ciblé passent avant la validation complète.
 
+## Contrôle public après publication
+
+Le checkpoint `43dc3352` a été publié, puis rechargé depuis le domaine public après le signal de mise à jour. La carte de parcours publique affiche bien le titre canonique et **59 min**. Le lecteur public affiche simultanément **Official duration 59 min** et **Neopolis estimate 15–25 min** sur l’écran 4/10, avec les trois onglets de capacité et l’activité de tri toujours présente. Aucun cours Associate ultérieur n’a été modifié par ce jalon.
+
 ## Décision de périmètre
 
 La différence entre **59 minutes officielles** et **15–25 minutes d’estimation Neopolis** reste explicitement visible ; elle n’est pas masquée ni substituée. Les interactions, la progression et le verrouillage existants sont préservés. Le cours Associate suivant n’est pas modifié dans ce jalon.
