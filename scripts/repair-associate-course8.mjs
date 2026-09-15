@@ -82,6 +82,7 @@ readinessExercise.required = true;
 readinessExercise.title = { en: 'Readiness checkpoint', fr: 'Point de contrôle de préparation' };
 readinessExercise.prompt = { en: readiness.question_en, fr: readiness.question_fr };
 readinessExercise.instructions = { en: 'Select the best next step.', fr: 'Sélectionnez la meilleure prochaine étape.' };
+readinessExercise.prompt.fr = readinessExercise.prompt.fr.replaceAll('Governance', 'Gouvernance');
 readinessExercise.options = readiness.options.map((option) => ({
   id: option.id,
   text: { en: option.en, fr: option.fr },

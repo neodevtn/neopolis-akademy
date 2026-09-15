@@ -68,6 +68,7 @@
 - [ ] Corriger Associate Foundations cours 8 « Exam Preparation & Next Steps » : durée officielle, écrans de synthèse, préparation d’examen, activités standard et contenu de fin de parcours ; regrouper les anomalies démontrées puis réaliser une validation et un contrôle public uniques
 - [ ] Corriger les libellés français redondants « et les/des prochaines étapes » des chapitres Associate 8 en « et prochaines étapes », sans modifier la hiérarchie ou le verrou
 - [ ] Normaliser le titre visible de synthèse Associate 8 et les reliquats de terminologie des FlipCards (`workflows`, `workflow`, `Delegation`, `projets`) sans modifier les cartes ni les notions Anthropic
+- [ ] Localiser « Governance » en « Gouvernance » dans le checkpoint de readiness français Associate 8, sans modifier la logique de réponse correcte
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »

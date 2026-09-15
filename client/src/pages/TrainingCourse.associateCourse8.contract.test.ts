@@ -51,6 +51,8 @@ describe('Associate Foundations course 8 contract', () => {
     expect(exercise).toMatchObject({ chapterId: 'chapter_02', interactionType: 'single_choice', completionRequiresCorrectAnswer: true, required: true });
     expect(exercise.options).toHaveLength(4);
     expect(exercise.options.filter((item: { correct: boolean }) => item.correct)).toHaveLength(1);
+    expect(exercise.prompt.fr).toContain('Gouvernance est votre module le plus faible');
+    expect(exercise.prompt.fr).not.toContain('Governance est votre module');
     expect(chapter('chapter_02').completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
   });
 });
