@@ -10,6 +10,7 @@ import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { trpc } from "@/lib/trpc";
 import { resolveI18n } from "./contentDetectors";
 import { getPersistedCompletionProgress, hasOptionalSupplementaryVideos, isSequentialActivityNavigationLocked } from "./chapterProgress";
+import { getCheckpointGateState } from "./checkpointGate";
 import { ExerciseRenderer } from "@/components/ExerciseRenderer";
 import { FlipCardsGrid } from "@/components/FlipCard";
 import { TabbedContent } from "@/components/TabbedContent";
@@ -1351,13 +1352,24 @@ export default function LessonViewer({
               }
               // Not last chapter - show Next button with possible gate
               const isQuizOrCheckpointChapter = chapter?.type === 'quiz' || chapter?.type === 'checkpoint';
-              const chapterExerciseIds = isQuizOrCheckpointChapter
-                ? (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'checkpoint').map((b: any, i: number) => b.type === 'checkpoint' ? (b.exerciseId || `checkpoint_${i}`) : (b.id || `quiz_${i}`))
-                : [];
               const validationRequired = chapter?.requiredBeforeAdvance !== false;
+              const checkpointGateState = getCheckpointGateState({
+                blocks: chapter?.blocks || [],
+                completedExercises,
+                configuredThreshold: chapter?.passThreshold,
+                required: validationRequired,
+                reviewMode: isReviewMode,
+              });
+              const chapterExerciseIds = isQuizOrCheckpointChapter
+                ? chapter?.type === 'checkpoint'
+                  ? checkpointGateState.checkpointIds
+                  : (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`)
+                : [];
               const completedChapterExercises = chapterExerciseIds.filter((id: string) => completedExercises.has(id)).length;
               const requiredChapterSuccesses = requiredCorrectAnswers(chapterExerciseIds.length, chapter?.passThreshold);
-              const isGatedByExercises = isQuizOrCheckpointChapter && isEvaluationGateLocked({ totalQuestions: chapterExerciseIds.length, completedCorrectAnswers: completedChapterExercises, configuredThreshold: chapter?.passThreshold, required: validationRequired, reviewMode: isReviewMode });
+              const isGatedByExercises = isQuizOrCheckpointChapter && (chapter?.type === 'checkpoint'
+                ? checkpointGateState.locked
+                : isEvaluationGateLocked({ totalQuestions: chapterExerciseIds.length, completedCorrectAnswers: completedChapterExercises, configuredThreshold: chapter?.passThreshold, required: validationRequired, reviewMode: isReviewMode }));
               // Video gate: block Next if current chapter has video blocks that haven't been watched
               const chapterVideoKeys = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'video')

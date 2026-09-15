@@ -1,18 +1,33 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type KeyboardEvent } from 'react';
 
 interface FlipCardProps {
   front: string;
   back: string;
+  lang: string;
   index: number;
   isFlipped: boolean;
   onFlip: () => void;
   isLastFlipped: boolean;
 }
 
-export function FlipCard({ front, back, index, isFlipped, onFlip, isLastFlipped }: FlipCardProps) {
+const localizedLabels = {
+  ar: { card: 'بطاقة', flip: 'اقلب' },
+  fr: { card: 'Carte', flip: 'Retourner' },
+  en: { card: 'Card', flip: 'Flip' },
+} as const;
+
+export function FlipCard({ front, back, lang, index, isFlipped, onFlip, isLastFlipped }: FlipCardProps) {
   const frontRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLDivElement>(null);
   const [cardHeight, setCardHeight] = useState(180);
+  const labels = localizedLabels[lang as keyof typeof localizedLabels] ?? localizedLabels.en;
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onFlip();
+    }
+  };
 
   useEffect(() => {
     const frontH = frontRef.current?.scrollHeight || 0;
@@ -23,9 +38,14 @@ export function FlipCard({ front, back, index, isFlipped, onFlip, isLastFlipped 
 
   return (
     <div
-      className="group cursor-pointer"
+      className="group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4a90d9] focus-visible:ring-offset-2 rounded-lg"
       style={{ perspective: '1000px' }}
       onClick={onFlip}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isFlipped}
+      aria-label={`${labels.flip} ${labels.card.toLowerCase()} ${index + 1}`}
     >
       <div
         className="relative w-full transition-transform duration-500 ease-out"
@@ -54,7 +74,7 @@ export function FlipCard({ front, back, index, isFlipped, onFlip, isLastFlipped 
                   return front.substring(0, colonIdx).trim();
                 }
                 // Fallback: just show card number
-                return `Card ${index + 1}`;
+                return `${labels.card} ${index + 1}`;
               })()}
             </div>
             <p className="text-sm text-gray-900 leading-relaxed whitespace-pre-wrap" style={{ fontFamily: 'Lora, Georgia, serif' }}>
@@ -69,7 +89,7 @@ export function FlipCard({ front, back, index, isFlipped, onFlip, isLastFlipped 
             </p>
           </div>
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#4a90d9] mt-3">
-            <span>FLIP</span>
+            <span>{labels.flip}</span>
             <span className="text-base">↻</span>
           </div>
         </div>
@@ -84,7 +104,7 @@ export function FlipCard({ front, back, index, isFlipped, onFlip, isLastFlipped 
             {back}
           </p>
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#4a90d9] mt-3">
-            <span>FLIP</span>
+            <span>{labels.flip}</span>
             <span className="text-base">↻</span>
           </div>
         </div>
@@ -150,6 +170,7 @@ export function FlipCardsGrid({ cards, lang, onAllFlipped }: FlipCardsGridProps)
         <FlipCard
           key={idx}
           index={idx}
+          lang={lang}
           front={resolveLang(card.front)}
           back={resolveLang(card.back)}
           isFlipped={flippedCards.has(idx)}

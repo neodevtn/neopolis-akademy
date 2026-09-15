@@ -100,6 +100,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { hasExactCorrectChoiceSet } from './exerciseCompletion';
 import {
   CheckCircle2,
   XCircle,
@@ -138,6 +139,7 @@ interface ExerciseRubric {
 interface Exercise {
   id: string;
   interactionType?: 'free_text' | 'single_choice' | 'multi_choice' | 'code' | 'checklist' | 'scenario';
+  completionRequiresCorrectAnswer?: boolean;
   title?: LocalizedText;
   prompt?: LocalizedText;
   instructions?: LocalizedText;
@@ -571,9 +573,13 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     const answer = interactionType === 'single_choice' || interactionType === 'multi_choice' || interactionType === 'checklist'
       ? Array.from(selectedOptions).join(',')
       : userAnswer;
+    const selectedAnswersAreCorrect = interactionType === 'single_choice' || interactionType === 'multi_choice'
+      ? hasExactCorrectChoiceSet(shuffledOptions, selectedOptions)
+      : true;
+    const shouldComplete = !exercise.completionRequiresCorrectAnswer || selectedAnswersAreCorrect;
     saveAttempt(exercise.id, userAnswer, Array.from(selectedOptions));
     setAutoSaveStatus('idle');
-    onComplete?.(exercise.id, answer);
+    if (shouldComplete) onComplete?.(exercise.id, answer);
   };
 
   const handleReset = () => {
@@ -685,7 +691,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
   const typeBadgeColor = TYPE_BADGE_COLORS[interactionType] || TYPE_BADGE_COLORS.free_text;
   const typeBadgeLabel = lang === 'fr'
     ? (TYPE_BADGE_LABELS_FR[interactionType] || 'Réponse libre')
-    : (TYPE_LABELS[interactionType]?.[lang] || 'Written Response');
+    : (TYPE_LABELS[interactionType]?.en || 'Written Response');
 
   return (
     <div className="my-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">

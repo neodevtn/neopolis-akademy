@@ -20,4 +20,18 @@ describe("verrouillage séquentiel de la navigation compacte", () => {
     expect(isSequentialActivityNavigationLocked({ blocks: [{ type: "resource_review", id: "resource" }], completedExercises: new Set(["resource"]), completedCloudExercises: empty(), completedMatching: empty(), completedInlineInteractions: empty() })).toBe(false);
     expect(isSequentialActivityNavigationLocked({ blocks: [{ type: "cloud_exercise", id: "proof" }], completedExercises: empty(), completedCloudExercises: empty(), completedMatching: empty(), completedInlineInteractions: empty(), reviewMode: true })).toBe(false);
   });
+
+  it("garde le checkpoint Associate 2 verrouillé tant que sa réponse correcte n’a pas été enregistrée", () => {
+    const checkpoint = { type: "checkpoint", exerciseId: "ex_claude_certified_associate_foundations__02_002" };
+    const locked = (completedExercises: Set<string>) => isSequentialActivityNavigationLocked({
+      blocks: [checkpoint],
+      completedExercises,
+      completedCloudExercises: empty(),
+      completedMatching: empty(),
+      completedInlineInteractions: empty(),
+    });
+
+    expect(locked(empty())).toBe(true);
+    expect(locked(new Set([checkpoint.exerciseId]))).toBe(false);
+  });
 });
