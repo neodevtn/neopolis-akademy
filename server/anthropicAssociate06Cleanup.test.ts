@@ -8,17 +8,19 @@ const coursePath = resolve(
 );
 
 describe("nettoyage pédagogique Anthropic — Associate Foundations 06", () => {
-  it("structure les critères et corrige les reliquats sans retirer les exercices", async () => {
+  it("conserve les activités standards intégrées et retire les artefacts racine mal rattachés", async () => {
     const course = JSON.parse(await readFile(coursePath, "utf8"));
-    const screening = course.exercises.find((exercise: any) => exercise.prompt.en.includes("## Delegation criteria for screening"));
-    const trust = course.exercises.find((exercise: any) => exercise.prompt.en.includes("Review each trust check below"));
-    const ethics = course.exercises.find((exercise: any) => exercise.prompt.fr.includes("productions assistées par l’IA"));
+    const lesson = course.lessons[0];
+    const screening = lesson.chapters.find((chapter: any) => chapter.id === "chapter_01");
+    const trust = lesson.chapters.find((chapter: any) => chapter.id === "chapter_02");
+    const ethics = lesson.chapters.find((chapter: any) => chapter.id === "chapter_05");
+    const quiz = lesson.chapters.find((chapter: any) => chapter.id === "chapter_06");
 
-    expect(course.exercises.length).toBeGreaterThanOrEqual(9);
-    expect(screening.prompt.en).toContain("| Criterion | The question to ask |");
-    expect(screening.prompt.fr).toContain("| Critère | Question à poser |");
-    expect(trust.prompt.en).not.toContain("Flip each check");
-    expect(trust.prompt.fr).not.toContain("Basculez chaque vérification");
-    expect(ethics.prompt.fr).not.toContain("AI-assisted work products");
+    expect(course.exercises).toEqual([]);
+    expect(screening.blocks.some((block: any) => block.type === "bucket_sort")).toBe(true);
+    expect(screening.completionRule).toEqual({ requires: ["contentViewed", "requiredExercisesPassed"] });
+    expect(trust.title.fr).toBe("Confiance dans les Skills et risques liés aux fonctionnalités");
+    expect(ethics.blocks[0].body.fr).not.toContain("AI-assisted work products");
+    expect(quiz.blocks.filter((block: any) => block.type === "single_choice_exercise")).toHaveLength(5);
   });
 });
