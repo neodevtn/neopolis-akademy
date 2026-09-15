@@ -119,7 +119,7 @@ const skillsContent = findChapter('chapter_02').blocks.find((block) => block.typ
 skillsContent.body.fr = structuredSections.skills_body_fr;
 dataControls.body.fr = structuredSections.data_body_fr
   .replace('## Rédaction et anonymisation', '## Caviardage et anonymisation')
-  .replace('### Deux modes d’échec de la rédaction', '### Deux modes d’échec du caviardage')
+  .replace(/### Deux modes d[’']échec de la rédaction/g, '### Deux modes d’échec du caviardage')
   .replace('avant le téléversement., ou laissez-la', 'avant le téléversement, ou laissez-la')
   .replace('différents points d’entrée, en termes simples.', 'différents points d’entrée, en termes simples');
 

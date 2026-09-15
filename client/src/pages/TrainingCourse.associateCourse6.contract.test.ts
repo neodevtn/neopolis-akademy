@@ -37,6 +37,8 @@ describe('Associate Foundations course 6 contract', () => {
     expect(content('chapter_03')).toContain('Connaissance des différents points d’entrée, en termes simples');
     expect(content('chapter_03')).toContain('Caviardez ou anonymisez les identifiants avant le téléversement');
     expect(content('chapter_03')).toContain('Caviarder les noms, les numéros de compte ou les identifiants avant le téléversement');
+    expect(content('chapter_03')).toContain('Deux modes d’échec du caviardage');
+    expect(content('chapter_03')).not.toContain('Deux modes d’échec de la rédaction');
     expect(content('chapter_03')).not.toContain('Rédiger les noms, les numéros de compte');
     expect(content('chapter_03')).toContain('### Environnement isolé de Code Execution');
     expect(content('chapter_03')).not.toContain('### Contrôle\n\nEnvironnement isolé de Code Execution');
