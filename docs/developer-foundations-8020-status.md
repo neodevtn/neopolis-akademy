@@ -7,10 +7,12 @@ La présente fenêtre est limitée à Developer Foundations. Elle privilégie le
 | 1 — MSO Foundations | Durée 57 min, contenus restaurés, checkpoints standards, ressources sans vidéo générique | Réconciliation détaillée écran par écran Skilljar |
 | 2 — Production-Grade Prompting, Agents & Tool Use | Durée 209 min, 8 checkpoints standards, contenus structurés, reliquats localisés et vidéos non sourcées retirées | TP locaux exécutables sourcés |
 | 3 — Claude Code, MCP & Integration | Durée 142 min, cartes critiques restaurées, checkpoint Modes d’autorisation requis, catalogue vidéo cohérent | TP Claude Code/MCP supplémentaires et exercices racine ambigus |
-| 4 — Production Engineering, Evals & Security | Trois checkpoints réparés et requis, durée 211 min | Revue des cartes, tableaux et contenus hybrides restants |
-| 5 — Accelerators & IP Contribution | Checkpoint Packaging réparé, checkpoint orphelin retiré, durée 155 min | Étude de cas complète, troncatures et contenu hybride restants |
+| 4 — Production Engineering, Evals & Security | Trois checkpoints réparés et requis, durée 211 min, six cartes critiques restaurées | Tableaux concaténés, contenu hybride et activités racine à réconcilier |
+| 5 — Accelerators & IP Contribution | Checkpoint Packaging réparé, checkpoint orphelin retiré, durée 155 min, cartes critiques et cycle de vie FR restaurés | Étude de cas complète, tableaux concaténés et activités racine à sourcer |
 
 Les données publiques confirment maintenant les durées officielles de 142, 211 et 155 minutes pour les cours 3, 4 et 5, ainsi que les références de checkpoint corrigées des cours 4 et 5.
+
+Le cycle de vie localisé du cours 5 est désormais confirmé par le canal tRPC public, avec les sept étapes **Exigences**, **Conception**, **Construction**, **Test**, **Déploiement**, **Exploitation** et **Itération**.
 
 ## Parcours explicitement reportés
 
