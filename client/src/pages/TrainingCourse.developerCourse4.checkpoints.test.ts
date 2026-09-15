@@ -17,4 +17,14 @@ describe('Developer Foundations course 4 checkpoint integrity', () => {
       expect(exercise(exerciseId).inputSchema.minWords).toBeGreaterThanOrEqual(15);
     }
   });
+
+  it('restores the critical card explanations without clipped endings', () => {
+    const cards = ['chapter_01', 'chapter_05', 'chapter_09'].flatMap((chapterId) =>
+      chapter(chapterId).blocks.filter((block: any) => block.type === 'flip_cards').flatMap((block: any) => block.cards),
+    );
+    const text = cards.map((card: any) => `${card.back.en}\n${card.back.fr}`).join('\n');
+    expect(text).toContain('Twenty cases that include irregular and edge inputs can catch a break');
+    expect(text).toContain('Vingt cas comprenant des entrées irrégulières');
+    expect(text).not.toMatch(/(?:une bre|un tran|which c|retu)$/m);
+  });
 });

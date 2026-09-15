@@ -61,8 +61,8 @@
                     "fr": "La couverture compte plus que la perfection."
                   },
                   "back": {
-                    "en": "A larger evaluation set with slightly noisier automated grading usually reveals more than a small set of hand-graded cases. The point of an eval is to provide enough coverage to catch a regression, not to create the perfect rubric. Twenty cases that include irregular and edge inputs will catch a bre",
-                    "fr": "Un jeu d'évaluation plus vaste, même si la notation automatisée est un peu plus bruyante, révèle généralement plus qu'un petit nombre de cas notés manuellement. Le but d'une évaluation est d'assurer une couverture suffisante pour détecter une régression, pas de créer la grille d'évaluation parfaite. Vingt cas incluant des entrées irrégulières et des cas limites permettront de détecter une bre"
+                    "en": "A larger evaluation set with slightly noisier automated grading usually reveals more than a small set of hand-graded cases. The goal of an eval is enough coverage to catch regressions, not a perfect rubric. Twenty cases that include irregular and edge inputs can catch a break that three carefully chosen cases never exercise.",
+                    "fr": "Un jeu d’évaluation plus vaste, même avec une notation automatisée légèrement plus bruitée, révèle généralement davantage qu’un petit ensemble de cas notés manuellement. Le but d’une eval est d’assurer une couverture suffisante pour détecter les régressions, et non de créer une grille parfaite. Vingt cas comprenant des entrées irrégulières et des cas limites peuvent détecter une rupture que trois cas soigneusement choisis n’exerceraient jamais."
                   }
                 },
                 {
@@ -81,8 +81,8 @@
                     "fr": "Pourquoi cela n'a pas fonctionné"
                   },
                   "back": {
-                    "en": "Success was judged by impression instead of a graded set. The eval is what surfaces failures and guards against regression. The prompt is what changes the output. Write the expected behavior down as graded cases before you ship, and use the model to help you find the edge inputs you did not think to",
-                    "fr": "Le succès était jugé d'après l'impression plutôt que sur un ensemble noté. L'évaluation est ce qui met en évidence les échecs et prévient les régressions. Le prompt est ce qui modifie la sortie. Consignez le comportement attendu sous forme de cas notés avant la mise en production, et utilisez le modèle pour vous aider à trouver les cas limites auxquels vous n'aviez pas pensé."
+                    "en": "Success was judged by impression instead of a graded set. The eval surfaces failures and guards against regressions; the prompt changes the output. Write the expected behavior as graded cases before you ship, and use the model to help find edge inputs you did not think to test.",
+                    "fr": "Le succès a été jugé à l’impression plutôt qu’à partir d’un ensemble de cas notés. L’eval fait apparaître les échecs et protège contre les régressions ; le prompt modifie la sortie. Consignez le comportement attendu sous forme de cas notés avant la mise en production, et utilisez le modèle pour vous aider à trouver les entrées limites auxquelles vous n’aviez pas pensé."
                   }
                 }
               ]
@@ -359,8 +359,8 @@
                     "fr": "Configuration"
                   },
                   "back": {
-                    "en": "In development, you called the endpoint a few dozen times and it returned cleanly every time, so there was no obvious reason to write an error path. That is the trap. Development traffic is low volume, runs on a stable connection, and rarely hits the conditions that cause a call to fail: rate limits",
-                    "fr": "En développement, vous avez appelé l'endpoint quelques dizaines de fois et il a répondu correctement à chaque fois, donc il n'y avait aucune raison évidente d'implémenter la gestion des erreurs. C'est le piège. Le trafic en développement est de faible volume, fonctionne sur une connexion stable et rencontre rarement les conditions qui font échouer un appel : les limites de débit"
+                    "en": "In development, you called the endpoint a few dozen times and it returned cleanly every time, so there was no obvious reason to write an error path. That is the trap: development traffic is low-volume, runs on a stable connection, and rarely hits rate limits, timeouts, transient network drops, or malformed responses under load. The first failure then appears in production as an unhandled exception rather than a recoverable error.",
+                    "fr": "En développement, vous avez appelé l’endpoint quelques dizaines de fois et il a répondu correctement à chaque fois ; il n’y avait donc aucune raison évidente d’écrire un chemin de gestion des erreurs. C’est le piège : le trafic de développement est faible, s’exécute sur une connexion stable et rencontre rarement des limites de débit, des timeouts, des interruptions réseau transitoires ou des réponses mal formées sous charge. Le premier échec apparaît alors en production comme une exception non gérée plutôt que comme une erreur récupérable."
                   }
                 },
                 {
@@ -454,8 +454,8 @@
                     "fr": "import time"
                   },
                   "back": {
-                    "en": "def instrumented_call(make_call, step_name):\nstart = time.perf_counter()\nresp = make_call() # raises on any API error\nlatency_ms = (time.perf_counter() - start) * 1000\nlog_metric(step=step_name,\ninput_tokens=resp.usage.input_tokens,\noutput_tokens=resp.usage.output_tokens,\nlatency_ms=latency_ms)\nretu",
-                    "fr": "def instrumented_call(make_call, step_name):\n    start = time.perf_counter()\n    resp = make_call()  # lève une exception pour toute erreur d'API\n    latency_ms = (time.perf_counter() - start) * 1000\n    log_metric(step=step_name,\n               input_tokens=resp.usage.input_tokens,\n               output_tokens=resp.usage.output_tokens,\n               latency_ms=latency_ms)\n    retu"
+                    "en": "def instrumented_call(make_call, step_name):\n    start = time.perf_counter()\n    resp = make_call()  # raises on any API error\n    latency_ms = (time.perf_counter() - start) * 1000\n    log_metric(\n        step=step_name,\n        input_tokens=resp.usage.input_tokens,\n        output_tokens=resp.usage.output_tokens,\n        latency_ms=latency_ms,\n    )\n    return resp",
+                    "fr": "def instrumented_call(make_call, step_name):\n    start = time.perf_counter()\n    resp = make_call()  # lève une exception pour toute erreur d’API\n    latency_ms = (time.perf_counter() - start) * 1000\n    log_metric(\n        step=step_name,\n        input_tokens=resp.usage.input_tokens,\n        output_tokens=resp.usage.output_tokens,\n        latency_ms=latency_ms,\n    )\n    return resp"
                   }
                 },
                 {
@@ -464,8 +464,8 @@
                     "fr": "return \"\".join(text_chunks), tool_calls"
                   },
                   "back": {
-                    "en": "A tool_use block is not safe to act on until the stream closes and the full input_json has been accumulated. Acting on a partial block produces malformed tool inputs. The same retriable-versus-terminal failure handling from the failure screen applies here: a stream that breaks mid-response is a tran",
-                    "fr": "Un tool_use block n'est pas sûr d'être manipulé tant que le stream ne se ferme pas et que l'intégralité de input_json n'a pas été accumulée. Agir sur un bloc partiel produit des tool inputs malformés. La même gestion des échecs réessayables versus terminaux décrite sur l'écran d'échec s'applique ici : un stream qui se coupe en cours de réponse est un tran"
+                    "en": "A tool_use block is not safe to act on until the stream closes and the complete input_json has been accumulated. Acting on a partial block produces malformed tool inputs. The same retriable-versus-terminal failure handling applies here: if a stream breaks mid-response, treat it as a transient failure and retry the whole request rather than passing partial output downstream.",
+                    "fr": "Il n’est pas sûr d’agir sur un bloc tool_use tant que le stream n’est pas fermé et que l’intégralité de input_json n’a pas été accumulée. Agir sur un bloc partiel produit des inputs d’outil mal formés. La même gestion des échecs réessayables et terminaux s’applique ici : si un stream se coupe au milieu d’une réponse, traitez-le comme une défaillance transitoire et réessayez la requête entière plutôt que de transmettre une sortie partielle en aval."
                   }
                 },
                 {
@@ -494,8 +494,8 @@
                     "fr": "Développeur senior"
                   },
                   "back": {
-                    "en": "\"Every subagent consumes its own tokens against its own context window. Anthropic has reported that its own multi-agent research system uses roughly fifteen times the tokens of a normal chat for exactly that reason. That multiplier is worthwhile when the task decomposes into independent parts that c",
-                    "fr": "Chaque sous-agent consomme ses propres tokens dans sa propre fenêtre de contexte. Anthropic a rapporté que son système de recherche multi-agent utilise environ quinze fois plus de tokens qu'un chat normal, exactement pour cette raison. Ce multiplicateur vaut la peine lorsque la tâche se décompose en parties indépendantes qui c"
+                    "en": "Every subagent consumes its own tokens against its own context window. Anthropic has reported that its multi-agent research system uses roughly fifteen times the tokens of a normal chat for that reason. That multiplier is worthwhile when a task decomposes into independent parts that can be explored in parallel, such as research across separate sources. Your task does not split that way: each step depends on the last, so the subagents are mostly waiting on one another. You are paying the fan-out cost without gaining the parallel benefit. Switch to a single agent with good context so the cost matches the work the task actually needs.",
+                    "fr": "Chaque subagent consomme ses propres tokens dans sa propre fenêtre de contexte. Anthropic a indiqué que son système de recherche multi-agent utilise environ quinze fois les tokens d’un chat normal pour cette raison. Ce multiplicateur vaut la peine lorsque la tâche se décompose en parties indépendantes pouvant être explorées en parallèle, par exemple une recherche sur des sources distinctes. Votre tâche ne se découpe pas ainsi : chaque étape dépend de la précédente, donc les subagents s’attendent surtout les uns les autres. Vous payez le coût du fan-out sans obtenir le bénéfice du parallélisme. Passez à un agent unique avec un bon contexte afin que le coût corresponde au travail réellement nécessaire."
                   }
                 },
                 {

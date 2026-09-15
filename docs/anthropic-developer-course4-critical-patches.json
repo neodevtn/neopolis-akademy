@@ -1,0 +1,82 @@
+{
+  "cards": [
+    {
+      "back": {
+        "en": "A larger evaluation set with slightly noisier automated grading usually reveals more than a small set of hand-graded cases. The goal of an eval is enough coverage to catch regressions, not a perfect rubric. Twenty cases that include irregular and edge inputs can catch a break that three carefully chosen cases never exercise.",
+        "fr": "Un jeu d’évaluation plus vaste, même avec une notation automatisée légèrement plus bruitée, révèle généralement davantage qu’un petit ensemble de cas notés manuellement. Le but d’une eval est d’assurer une couverture suffisante pour détecter les régressions, et non de créer une grille parfaite. Vingt cas comprenant des entrées irrégulières et des cas limites peuvent détecter une rupture que trois cas soigneusement choisis n’exerceraient jamais."
+      },
+      "chapterId": "chapter_01",
+      "front": "Coverage matters more than perfection"
+    },
+    {
+      "back": {
+        "en": "Success was judged by impression instead of a graded set. The eval surfaces failures and guards against regressions; the prompt changes the output. Write the expected behavior as graded cases before you ship, and use the model to help find edge inputs you did not think to test.",
+        "fr": "Le succès a été jugé à l’impression plutôt qu’à partir d’un ensemble de cas notés. L’eval fait apparaître les échecs et protège contre les régressions ; le prompt modifie la sortie. Consignez le comportement attendu sous forme de cas notés avant la mise en production, et utilisez le modèle pour vous aider à trouver les entrées limites auxquelles vous n’aviez pas pensé."
+      },
+      "chapterId": "chapter_01",
+      "front": "Why this broke"
+    },
+    {
+      "back": {
+        "en": "In development, you called the endpoint a few dozen times and it returned cleanly every time, so there was no obvious reason to write an error path. That is the trap: development traffic is low-volume, runs on a stable connection, and rarely hits rate limits, timeouts, transient network drops, or malformed responses under load. The first failure then appears in production as an unhandled exception rather than a recoverable error.",
+        "fr": "En développement, vous avez appelé l’endpoint quelques dizaines de fois et il a répondu correctement à chaque fois ; il n’y avait donc aucune raison évidente d’écrire un chemin de gestion des erreurs. C’est le piège : le trafic de développement est faible, s’exécute sur une connexion stable et rencontre rarement des limites de débit, des timeouts, des interruptions réseau transitoires ou des réponses mal formées sous charge. Le premier échec apparaît alors en production comme une exception non gérée plutôt que comme une erreur récupérable."
+      },
+      "chapterId": "chapter_05",
+      "front": "Setup"
+    },
+    {
+      "back": {
+        "en": "def instrumented_call(make_call, step_name):\n    start = time.perf_counter()\n    resp = make_call()  # raises on any API error\n    latency_ms = (time.perf_counter() - start) * 1000\n    log_metric(\n        step=step_name,\n        input_tokens=resp.usage.input_tokens,\n        output_tokens=resp.usage.output_tokens,\n        latency_ms=latency_ms,\n    )\n    return resp",
+        "fr": "def instrumented_call(make_call, step_name):\n    start = time.perf_counter()\n    resp = make_call()  # lève une exception pour toute erreur d’API\n    latency_ms = (time.perf_counter() - start) * 1000\n    log_metric(\n        step=step_name,\n        input_tokens=resp.usage.input_tokens,\n        output_tokens=resp.usage.output_tokens,\n        latency_ms=latency_ms,\n    )\n    return resp"
+      },
+      "chapterId": "chapter_09",
+      "front": "import time"
+    },
+    {
+      "back": {
+        "en": "A tool_use block is not safe to act on until the stream closes and the complete input_json has been accumulated. Acting on a partial block produces malformed tool inputs. The same retriable-versus-terminal failure handling applies here: if a stream breaks mid-response, treat it as a transient failure and retry the whole request rather than passing partial output downstream.",
+        "fr": "Il n’est pas sûr d’agir sur un bloc tool_use tant que le stream n’est pas fermé et que l’intégralité de input_json n’a pas été accumulée. Agir sur un bloc partiel produit des inputs d’outil mal formés. La même gestion des échecs réessayables et terminaux s’applique ici : si un stream se coupe au milieu d’une réponse, traitez-le comme une défaillance transitoire et réessayez la requête entière plutôt que de transmettre une sortie partielle en aval."
+      },
+      "chapterId": "chapter_09",
+      "front": "return \"\".join(text_chunks), tool_calls"
+    },
+    {
+      "back": {
+        "en": "Every subagent consumes its own tokens against its own context window. Anthropic has reported that its multi-agent research system uses roughly fifteen times the tokens of a normal chat for that reason. That multiplier is worthwhile when a task decomposes into independent parts that can be explored in parallel, such as research across separate sources. Your task does not split that way: each step depends on the last, so the subagents are mostly waiting on one another. You are paying the fan-out cost without gaining the parallel benefit. Switch to a single agent with good context so the cost matches the work the task actually needs.",
+        "fr": "Chaque subagent consomme ses propres tokens dans sa propre fenêtre de contexte. Anthropic a indiqué que son système de recherche multi-agent utilise environ quinze fois les tokens d’un chat normal pour cette raison. Ce multiplicateur vaut la peine lorsque la tâche se décompose en parties indépendantes pouvant être explorées en parallèle, par exemple une recherche sur des sources distinctes. Votre tâche ne se découpe pas ainsi : chaque étape dépend de la précédente, donc les subagents s’attendent surtout les uns les autres. Vous payez le coût du fan-out sans obtenir le bénéfice du parallélisme. Passez à un agent unique avec un bon contexte afin que le coût corresponde au travail réellement nécessaire."
+      },
+      "chapterId": "chapter_09",
+      "front": "Senior developer"
+    }
+  ],
+  "sections": [
+    {
+      "body": {
+        "en": "## The grader-selection reference\n\n| Task type | Grading method | What it catches | Where it is unreliable |\n|---|---|---|---|\n| Single correct label or value | Exact or string match | A wrong answer when exactly one correct answer exists. | Valid paraphrases or reordered output. |\n| Structured or code output | Code-graded check | Invalid JSON, unparseable code, out-of-range numbers, and missing required fields. | Whether the content is good; it checks only form. |\n| Open-ended quality | LLM-as-judge | Faithfulness, instruction following, completeness, and tone. | It is noisy and costly until calibrated. |",
+        "fr": "## Référence pour choisir un grader\n\n| Type de tâche | Méthode de notation | Ce qu’elle détecte | Limites |\n|---|---|---|---|\n| Une seule étiquette ou valeur correcte | Correspondance exacte ou de chaîne | Une mauvaise réponse lorsqu’il n’existe qu’une seule réponse correcte. | Les paraphrases valides ou les sorties réordonnées. |\n| Sortie structurée ou code | Vérification par code | JSON invalide, code non analysable, nombres hors plage et champs obligatoires manquants. | La qualité du contenu ; elle vérifie uniquement la forme. |\n| Qualité ouverte | LLM-as-judge | Fidélité, respect des instructions, exhaustivité et ton. | Cette méthode est bruitée et coûteuse tant qu’elle n’est pas calibrée. |"
+      },
+      "chapterId": "chapter_01"
+    },
+    {
+      "body": {
+        "en": "## Test and retrieval reference\n\n| Level or choice | What it isolates | What it cannot catch |\n|---|---|---|\n| Unit | One function, such as a parser or tool wrapper. | How components fit together. |\n| Functional | One Claude call returning the expected shape for an input. | Failures in the system around that call. |\n| Integration | The handoff between two components, such as retrieval into the model. | Whole-flow behavior that emerges only end to end. |\n| End-to-end | The full user flow, from input to output. | The exact location of a break, because it sees only the final result. |\n| Fetch-once retrieval | A fixed set of content for single-fact lookups in a stable corpus. | Multi-step questions and changing corpora that need search across rounds. |",
+        "fr": "## Référence sur les tests et la récupération\n\n| Niveau ou choix | Ce qu’il isole | Ce qu’il ne peut pas détecter |\n|---|---|---|\n| Unitaire | Une fonction, comme un parser ou un wrapper d’outil. | La façon dont les composants s’assemblent. |\n| Fonctionnel | Un appel Claude qui renvoie la forme attendue pour une entrée. | Les échecs dans le système qui entoure cet appel. |\n| Intégration | Le transfert entre deux composants, par exemple de la récupération vers le modèle. | Le comportement global qui n’émerge que de bout en bout. |\n| De bout en bout | Le parcours utilisateur complet, de l’entrée à la sortie. | L’emplacement précis de la rupture, car seul le résultat final est visible. |\n| Récupération fetch-once | Un ensemble de contenu fixe pour des recherches à fait unique dans un corpus stable. | Les questions à plusieurs étapes et les corpus changeants nécessitant une recherche sur plusieurs tours. |"
+      },
+      "chapterId": "chapter_03"
+    },
+    {
+      "body": {
+        "en": "## Error-handling decision reference\n\n| Error type | Retriable or fail-fast | Backoff strategy | Fallback behavior |\n|---|---|---|---|\n| Rate limit (HTTP 429) | Retriable | Exponential backoff with jitter; honor `retry-after`; cap attempts. | After the cap, raise a clear error or use a cached or simpler result. |\n| Overloaded (HTTP 529) | Retriable | Back off; this reflects Anthropic-side load rather than a rate limit. | Use a fallback path or return a graceful error if it persists. |\n| Bad request (HTTP 400) | Fail fast | Do not retry; the identical request will fail again. | Fix or reject the input and surface the error. |\n| Tool result error | Depends on the tool | Retry only when the underlying cause is transient. | Return the error to Claude with `is_error: true`; never silence it. |\n| Refusal (`200`, `stop_reason: \"refusal\"`) | Fail fast | Do not retry; this is a content decision, not a transient error. | Raise and log the refusal; do not treat it as valid output. |",
+        "fr": "## Référence de décision pour la gestion des erreurs\n\n| Type d’erreur | Réessayable ou échec immédiat | Stratégie de backoff | Comportement de repli |\n|---|---|---|---|\n| Limite de débit (HTTP 429) | Réessayable | Backoff exponentiel avec jitter ; respectez `retry-after` ; plafonnez les tentatives. | Après le plafond, renvoyez une erreur claire ou utilisez un résultat mis en cache ou plus simple. |\n| Surcharge (HTTP 529) | Réessayable | Appliquez un backoff ; cela reflète une charge côté Anthropic, et non une limite de débit. | Utilisez un chemin de repli ou renvoyez une erreur gérée si cela persiste. |\n| Requête incorrecte (HTTP 400) | Échec immédiat | Ne réessayez pas : la même requête échouera à nouveau. | Corrigez ou rejetez l’entrée, puis exposez l’erreur. |\n| Erreur de résultat d’outil | Dépend de l’outil | Réessayez seulement si la cause sous-jacente est transitoire. | Renvoyez l’erreur à Claude avec `is_error: true` ; ne la masquez jamais. |\n| Refus (`200`, `stop_reason: \"refusal\"`) | Échec immédiat | Ne réessayez pas : il s’agit d’une décision de contenu, pas d’une erreur transitoire. | Signalez et journalisez le refus ; ne le traitez pas comme une sortie valide. |"
+      },
+      "chapterId": "chapter_05"
+    },
+    {
+      "body": {
+        "en": "## Observability and orchestration reference\n\n| Metric | Where to instrument it | Single-agent versus orchestrator-worker |\n|---|---|---|\n| Token cost | Per call, aggregated per request and per flow. | A single agent incurs token cost once per step. An orchestrator-worker multiplies input and output token use across subagents; Anthropic reported roughly a 15x token multiplier in its case. |\n| Latency | Per call, with traces identifying the slowest workflow step. | Parallel subagents can reduce wall-clock time for independent work, but add planning and synthesis latency. |\n| Error rate | Per call and per dependency. | More agents create more possible failure points; each subagent needs the same retry and fallback handling. |",
+        "fr": "## Référence sur l’observabilité et l’orchestration\n\n| Métrique | Où l’instrumenter | Agent unique ou orchestrator-worker |\n|---|---|---|\n| Coût en tokens | Par appel, puis agrégé par requête et par flux. | Un agent unique engage un coût en tokens une fois par étape. Un orchestrator-worker multiplie les tokens d’entrée et de sortie entre les subagents ; Anthropic a rapporté un multiplicateur d’environ 15x dans son cas. |\n| Latence | Par appel, avec des traces qui identifient l’étape la plus lente du flux. | Des subagents parallèles peuvent réduire le temps total pour un travail indépendant, mais ajoutent la latence de planification et de synthèse. |\n| Taux d’erreur | Par appel et par dépendance. | Davantage d’agents créent davantage de points de défaillance possibles ; chaque subagent requiert la même gestion des retry et des fallbacks. |"
+      },
+      "chapterId": "chapter_09"
+    }
+  ]
+}
