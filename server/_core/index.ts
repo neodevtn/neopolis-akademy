@@ -22,6 +22,7 @@ import { registerPublicTrainingPages } from "../publicTrainingPages";
 import { registerExamAssetRevocations } from "../examAssetRevocation";
 import { getRuntimeVersionManifest } from "../versionManifest";
 import { registerPrivateMessagingWebSocket } from "../privateMessagingRealtime";
+import { registerCourseDataRoute } from "../courseDataRoute";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -95,6 +96,9 @@ async function startServer() {
       createContext,
     })
   );
+  // Les cours sont servis par l’application avec no-store : certains CDN ont
+  // conservé des JSON statiques malgré des paramètres de cache-busting.
+  registerCourseDataRoute(app);
   registerExamAssetRevocations(app);
   // This endpoint must be registered before the SEO/SPA fallbacks. It is used
   // by open learner sessions to detect a new Vite document after deployment.

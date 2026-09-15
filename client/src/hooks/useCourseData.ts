@@ -19,7 +19,7 @@ export function getCourseFileCandidates(courseId: string): string[] {
 
 export function buildCourseAssetUrl(fileId: string, version: string | null, requestTimestamp = Date.now()): string {
   const token = version?.trim() || `request-${requestTimestamp}`;
-  return `/data/courses/${encodeURIComponent(fileId)}.json?course-version=${encodeURIComponent(token)}`;
+  return `/api/course-data/${encodeURIComponent(fileId)}?course-version=${encodeURIComponent(token)}`;
 }
 
 async function getCourseAssetVersion(): Promise<string | null> {
