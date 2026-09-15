@@ -72,3 +72,9 @@ L’écran public **Module 4** a été vérifié : cinq questions de scénario, 
 Après le checkpoint `bcda8680`, l’écran public du quiz conserve encore l’ancien titre malgré le contrôle local réussi. Ce décalage indique que le cache-buster s’appuie encore sur une version de manifeste périmée dans certains parcours de navigation. Le titre et les scénarios ne sont donc pas clôturés à ce stade ; le mécanisme de version doit être renforcé avant une nouvelle vérification publique.
 
 Le contrôle direct du JSON public a ensuite montré que le chapitre `chapter_11` porte seulement le libellé « Module 4 ». Le titre visible du quiz est porté par son bloc interne ; la normalisation précédente a donc ciblé le mauvais champ de données. Le cache-buster charge bien le JSON frais : la correction doit désormais être appliquée à la propriété de bloc réellement rendue.
+
+### Livraison de données — correctif en cours
+
+Les contrôles ultérieurs ont infirmé l’hypothèse selon laquelle le seul paramètre `course-version` suffisait : le CDN a continué à délivrer une copie statique antérieure du JSON dans certaines requêtes. Une première route REST dédiée est tombée dans le fallback SPA public. La route est désormais placée sous le préfixe tRPC déjà relayé, avec lecture JSON validée et `Cache-Control: no-store`.
+
+Le premier contrôle de cette route publique a confirmé son acheminement (réponse JSON et non document SPA), mais a retourné `404` car le bundle serveur ne résolvait pas son répertoire de build de façon suffisamment robuste. Le correctif local essaie maintenant explicitement le répertoire de build `dist/public/data/courses` et les chemins compatibles de repli. TypeScript, les tests ciblés et le contrôle HTTP local sont réussis ; la validation publique finale est requise avant de considérer le problème de cache comme clos.

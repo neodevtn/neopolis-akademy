@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset } from "./courseDataRoute";
+import { getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset } from "./courseDataRoute";
 
 const temporaryDirectories: string[] = [];
 
@@ -30,6 +30,15 @@ describe("course data route", () => {
 
   it("resolves the development and production roots used by the build", () => {
     expect(getCourseDataDirectory("development")).toContain(path.join("client", "public", "data", "courses"));
-    expect(getCourseDataDirectory("production")).toContain(path.join("public", "data", "courses"));
+    expect(getCourseDataDirectories("production", "/application")).toContain(path.join("/application", "dist", "public", "data", "courses"));
+  });
+
+  it("uses a subsequent build directory when the first candidate is unavailable", async () => {
+    const emptyDirectory = await mkdtemp(path.join(os.tmpdir(), "course-data-empty-"));
+    const validDirectory = await mkdtemp(path.join(os.tmpdir(), "course-data-valid-"));
+    temporaryDirectories.push(emptyDirectory, validDirectory);
+    await writeFile(path.join(validDirectory, "course_02.json"), '{"lessons":[{"id":"chapter"}]}');
+
+    await expect(readCourseDataAsset("course_02", [emptyDirectory, validDirectory])).resolves.toBe('{"lessons":[{"id":"chapter"}]}');
   });
 });

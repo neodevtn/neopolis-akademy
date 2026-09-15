@@ -9,20 +9,34 @@ export function isValidCourseDataId(courseId: string): boolean {
 }
 
 export function getCourseDataDirectory(nodeEnv = process.env.NODE_ENV): string {
-  return nodeEnv === "production"
-    ? path.resolve(import.meta.dirname, "public", "data", "courses")
-    : path.resolve(import.meta.dirname, "..", "client", "public", "data", "courses");
+  return getCourseDataDirectories(nodeEnv)[0];
 }
 
-export async function readCourseDataAsset(courseId: string, directory = getCourseDataDirectory()): Promise<string | null> {
-  if (!isValidCourseDataId(courseId)) return null;
-  try {
-    const content = await fs.readFile(path.join(directory, `${courseId}.json`), "utf8");
-    JSON.parse(content);
-    return content;
-  } catch {
-    return null;
+export function getCourseDataDirectories(nodeEnv = process.env.NODE_ENV, workingDirectory = process.cwd()): string[] {
+  if (nodeEnv !== "production") {
+    return [path.resolve(import.meta.dirname, "..", "client", "public", "data", "courses")];
   }
+
+  return Array.from(new Set([
+    process.env.COURSE_DATA_DIRECTORY,
+    path.resolve(workingDirectory, "dist", "public", "data", "courses"),
+    path.resolve(import.meta.dirname, "public", "data", "courses"),
+    path.resolve(import.meta.dirname, "..", "public", "data", "courses"),
+  ].filter((directory): directory is string => Boolean(directory))));
+}
+
+export async function readCourseDataAsset(courseId: string, directories = getCourseDataDirectories()): Promise<string | null> {
+  if (!isValidCourseDataId(courseId)) return null;
+  for (const directory of Array.isArray(directories) ? directories : [directories]) {
+    try {
+      const content = await fs.readFile(path.join(directory, `${courseId}.json`), "utf8");
+      JSON.parse(content);
+      return content;
+    } catch {
+      // Essayer le répertoire de build suivant, sans divulguer les chemins internes.
+    }
+  }
+  return null;
 }
 
 export function registerCourseDataRoute(app: Express): void {
