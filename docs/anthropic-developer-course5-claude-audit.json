@@ -1,0 +1,81 @@
+{
+  "findings": [
+    {
+      "chapter_id": "chapter_01",
+      "evidence": "Les deux tableaux du contenu EN sont concaténés en texte brut : «Asset typeWhat it bundlesWhat correct packaging requires» puis «Agent TemplateThe system prompt...», et «Asset typeWhat to parameterizeWhat to documentWhat to bundle for audit» puis les lignes correspondantes.",
+      "issue_type": "structure",
+      "recommended_fix": "Restaurer ces deux tableaux en tableau Markdown valide, avec séparateurs de colonnes et une ligne par actif ; vérifier le rendu sur l’écran cible.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_01",
+      "evidence": "Les cartes «What happened», «Why it broke» et «What to Watch Out for» sont coupées en EN et FR : elles finissent respectivement par «The templa» / «Le modèle», «the reb» / «le reb», et «in a diff» / «après un diff.»",
+      "issue_type": "truncation",
+      "recommended_fix": "Remplacer les dos de cartes par les textes complets correspondants ou raccourcir explicitement les contenus sans les terminer au milieu d’un mot ou d’une phrase.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_02",
+      "evidence": "Le bloc checkpoint référence «ex_claude_certified_developer_foundations__05_001», mais cet exercice racine est rattaché à «chapter_01» et demande de concevoir une architecture multi-déploiements. Le checkpoint visible demande au contraire de corriger «repo_path=\"/home/acme/checkout-service\"». L’exercice racine «..._002», rattaché à chapter_02, correspond à ce checkpoint mais n’est pas référencé.",
+      "issue_type": "activity",
+      "recommended_fix": "Faire pointer le checkpoint vers «ex_claude_certified_developer_foundations__05_002» ou réaligner l’exercice référencé sur la consigne visible. Supprimer ensuite le doublon/mauvais rattachement.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_03",
+      "evidence": "Le tableau EN est concaténé : «ChannelWhat a maintainer checksLicensing and attributionThe example and test bar to clear», suivi d’une unique ligne fusionnée. Les cartes «Why it broke» et «What to Watch Out for» sont aussi tronquées («person », «fast re») dans les deux langues.",
+      "issue_type": "structure",
+      "recommended_fix": "Reconstituer le tableau en colonnes Markdown et remplacer les contenus tronqués des cartes par leur version complète.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_05",
+      "evidence": "La durée déclarée est de 8 minutes alors que le chapitre contient deux blocs pédagogiques substantiels, quatre séries de flip cards et deux activités de tri, dont les checkpoints 3 et 4. Cette charge dépasse manifestement 8 minutes.",
+      "issue_type": "duration",
+      "recommended_fix": "Recalculer la durée à partir du temps de lecture et de réalisation des deux bucket sorts ; scinder le chapitre si nécessaire.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_05",
+      "evidence": "Mélange FR/EN visible dans le contenu FR du cycle de vie : «1Requirements», «2Design», «3Build», «4Test», «5Deploy», «6Operate», «7Iterate», puis «requirements», «Gating», «gate», «design», «build», «deploy», «baseline». La carte «Gating between phases» est en outre coupée dans les deux langues.",
+      "issue_type": "localization",
+      "recommended_fix": "Traduire ou conserver de façon cohérente les termes affichés en français, puis restaurer la fin complète de la carte «Gating between phases».",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_09",
+      "evidence": "Le tableau EN est concaténé : «PlatformIdentity and data modelWhen to choose itHow versioning is pinned», puis toutes les lignes sans séparateurs. Le contenu FR conserve aussi de nombreux segments EN visibles dans le tableau et les extraits : «Pre-4.6 example», «First-party Claude API», «Platform», «Identity», «Note», «output shape changed», etc.",
+      "issue_type": "structure",
+      "recommended_fix": "Restaurer le tableau Markdown EN en quatre colonnes et corriger la version FR pour éliminer les segments anglais non intentionnels visibles à l’apprenant.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_10",
+      "evidence": "Le checkpoint visible porte sur l’association plateforme/version épinglée, mais les exercices racines rattachés à chapter_10 («..._010» et «..._024») contiennent des fragments d’un exercice de contribution ou une consigne de révision différente. Aucun bloc checkpoint ne référence ces exercices ; le chapitre dépend seulement du bucket_sort intégré.",
+      "issue_type": "activity",
+      "recommended_fix": "Supprimer ou rattacher explicitement les exercices racines hors-sujet à leur checkpoint d’origine ; ne conserver dans chapter_10 que l’évaluation correspondant à plateforme/versioning.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_13",
+      "evidence": "Le bloc checkpoint référence «ex_claude_certified_developer_foundations__05_007», mais aucun exercice ayant cet identifiant n’existe dans la racine «exercises». De plus, les cartes «Why it broke» et «What to Watch Out for» finissent au milieu d’une phrase dans les deux langues.",
+      "issue_type": "activity",
+      "recommended_fix": "Créer/restaurer l’exercice ..._007 attendu ou modifier la référence vers l’exercice de frontières de confiance réellement disponible ; compléter les deux cartes tronquées.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "lesson_01",
+      "evidence": "Les recommandations média sont génériques et sans provenance exploitable : elles n’indiquent ni plateforme, ni URL, ni date, ni description/source vérifiable ; «Enterprise AI Strategy» / «AI Strategy» est particulièrement non identifiable. Elles sont en outre présentes malgré «videoRecommendationStatus»: «none».",
+      "issue_type": "media",
+      "recommended_fix": "Soit retirer les recommandations lorsque le statut est «none», soit fournir pour chaque média une provenance complète et vérifiable (plateforme, URL/source, auteur/canal confirmé, date et pertinence pédagogique).",
+      "severity": "medium"
+    },
+    {
+      "chapter_id": "exercises",
+      "evidence": "Plusieurs exercices racines sont invisibles depuis un checkpoint correspondant et/ou rattachés au mauvais écran : «..._003» (chapter_03) répète le checkpoint 1 de packaging ; «..._005» (chapter_05) demande un port/API URL sans rapport avec Requirements & Lifecycle ; «..._009», «..._011», «..._019», «..._023», «..._025» et «..._027» sont des fragments de corrections/revisits, sans bloc checkpoint les référençant. Certains titres sont eux-mêmes tronqués, par exemple «Identify the hardcoded value, then write the co...» et «A test that proves the wrapper behavesReduction...».",
+      "issue_type": "activity",
+      "recommended_fix": "Auditer la correspondance biunivoque entre chaque exercice racine, son chapterId, sa consigne et un bloc checkpoint visible. Supprimer les exercices orphelins ou les rattacher au bon écran ; restaurer les titres et prompts tronqués.",
+      "severity": "high"
+    }
+  ]
+}

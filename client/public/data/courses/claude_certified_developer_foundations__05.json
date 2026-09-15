@@ -142,7 +142,7 @@
             },
             {
               "type": "checkpoint",
-              "exerciseId": "ex_claude_certified_developer_foundations__05_001"
+              "exerciseId": "ex_claude_certified_developer_foundations__05_002"
             }
           ],
           "completionRule": {
@@ -1216,10 +1216,6 @@
                   }
                 }
               ]
-            },
-            {
-              "type": "checkpoint",
-              "exerciseId": "ex_claude_certified_developer_foundations__05_007"
             }
           ],
           "completionRule": {
@@ -1392,7 +1388,7 @@
         "fr": "Problème observé : une valeur spécifique au client était codée en dur dans le gabarit (ex. \"AcmeCorp\"), rendant l’accélérateur non réutilisable. Correction : extraire cette valeur en paramètre, valider, et l’injecter dans le prompt via un template.\n\nExemple corrigé (agent_template.py)\n\ndef build_review_agent(client_name, prompt_template=None, language=\"fr\"):\n    \"\"\"\n    Construit un agent de revue réutilisable.\n    - client_name (str) : valeur requise (ne pas hard-coder).\n    - prompt_template (str) : template avec '{client}' pour substitution.\n    \"\"\"\n    if not client_name or not isinstance(client_name, str):\n        raise ValueError(\"client_name must be a non-empty string\")\n\n    if prompt_template is None:\n        prompt_template = (\n            \"Vous êtes un relecteur de code pour le client '{client}'. \"\n            \"Fournissez un résumé, issues et suggestions.\"\n        )\n\n    class ReviewAgent:\n        def __init__(self, client, prompt, lang):\n            self.client = client\n            self.prompt = prompt\n            self.lang = lang\n\n        def build_prompt(self, code_snippet):\n            return self.prompt.format(client=self.client) + \"\\n\\nCode:\\n\" + code_snippet\n\n        def review(self, code_snippet):\n            # Ici appeler le modèle réel; simulé pour le gabarit\n            prompt = self.build_prompt(code_snippet)\n            return {\n                \"prompt_used\": prompt,\n                \"summary\": f\"Résumé simulé pour {self.client}\",\n                \"issues\": [],\n                \"suggestions\": []\n            }\n\n    return ReviewAgent(client_name, prompt_template, language)\n\nUsage exemple :\nagent = build_review_agent(\"AcmeCorp\")\nres = agent.review(\"def foo(): pass\")\nprint(res[\"prompt_used\"])\n\nPoints clés à respecter :\n- Ne pas hard-coder de données spécifiques au client.\n- Exposer paramètres clairs et documentés.\n- Valider les entrées.\n- Utiliser des templates sûrs (format plutôt que concaténation fragile).\n- Fournir usage/pytest minimal pour vérifier réutilisabilité."
       },
       "rubric": "",
-      "required": false,
+      "required": true,
       "difficulty": "foundation",
       "skillTags": [
         "API Integration",
@@ -1402,6 +1398,10 @@
       "title": {
         "en": "Packaging a reusable accelerator",
         "fr": "Packaging : un accélérateur réutilisable · 4 min"
+      },
+      "completionRequiresCorrectAnswer": false,
+      "inputSchema": {
+        "minWords": 15
       }
     },
     {
