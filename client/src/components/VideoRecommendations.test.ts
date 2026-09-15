@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { selectRecommendedVideos } from "./VideoRecommendations";
+import { selectRecommendedVideos, shouldRenderVideoRecommendations } from "./VideoRecommendations";
 
 describe("selectRecommendedVideos", () => {
   const catalog = [
@@ -14,5 +14,10 @@ describe("selectRecommendedVideos", () => {
 
   it("returns an empty selection when no video reaches the relevance threshold", () => {
     expect(selectRecommendedVideos("Unrelated topic", catalog, { rag: ["rag"] })).toEqual([]);
+  });
+
+  it("honors an explicit instruction to hide generic recommendations", () => {
+    expect(shouldRenderVideoRecommendations({ recommendedVideosManaged: false })).toBe(false);
+    expect(shouldRenderVideoRecommendations({})).toBe(true);
   });
 });

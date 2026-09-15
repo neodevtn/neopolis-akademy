@@ -13,12 +13,17 @@ export interface RecommendedVideo {
   topics: string[];
 }
 
+export function shouldRenderVideoRecommendations(lesson: { recommendedVideosManaged?: boolean }): boolean {
+  return lesson.recommendedVideosManaged !== false;
+}
+
 interface I18nText { en?: string; fr?: string; }
 interface VideoRecommendationsProps {
   lesson: {
     title?: I18nText | string;
     chapters?: Array<{ title?: I18nText | string; blocks?: Array<{ type?: string; title?: I18nText | string; body?: I18nText | string }> }>;
     recommendedVideos?: RecommendedVideo[];
+    recommendedVideosManaged?: boolean;
   };
   lang: string;
   t: (i18n: { en: string; fr: string }) => string;
@@ -101,6 +106,7 @@ function FeedbackPopover({ videoId, videoTitle, lessonId, certId, t, onDismissed
 
 export function VideoRecommendations({ lesson, lang, t, lessonId, certId }: VideoRecommendationsProps) {
   const [dismissedVideos, setDismissedVideos] = useState<Set<string>>(new Set());
+  const recommendationsDisabled = !shouldRenderVideoRecommendations(lesson);
   const catalogQuery = trpc.videoRecommendations.getCatalog.useQuery();
   const feedbackQuery = trpc.videoFeedback.getMyFeedback.useQuery({ certId: certId || '' }, { enabled: !!certId });
   const selectedVideos = useMemo(() => {
@@ -111,6 +117,7 @@ export function VideoRecommendations({ lesson, lang, t, lessonId, certId }: Vide
   }, [catalogQuery.data, lang, lesson]);
   const reportedIds = new Set((feedbackQuery.data || []).map((item) => item.videoId).concat(Array.from(dismissedVideos)));
   const visibleVideos = selectedVideos.filter((video) => !reportedIds.has(video.videoId));
+  if (recommendationsDisabled) return null;
   if (catalogQuery.isLoading && !lesson.recommendedVideos?.length) return null;
   if (visibleVideos.length === 0) return null;
 

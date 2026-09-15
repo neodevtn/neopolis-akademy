@@ -42,6 +42,24 @@ Après `d38773e4`, l’écran Skills confirme les deux faces avant corrigées (�
 
 L’écran Points clés est lisible et conforme à la séquence de neuf écrans. Il conserve toutefois un libellé générique « compétences » dans le rappel de la section Skills ; cette occurrence est regroupée avec le prochain lot de terminologie.
 
+Après `3d4a043a`, la synthèse publique confirme le libellé « Confiance dans les Skills et risque des fonctionnalités ». La console du lecteur est vide. Le contrôle final consolidé couvre l’introduction et le triage des cas d’utilisation, Skills et ses six cartes, Données, Politiques, Implications éthiques, Quiz, Points clés et fin de module ; les pages non modifiées par les derniers lots de terminologie ont été confirmées au fil des checkpoints de contenu. Le tRPC public confirme neuf écrans, 55 minutes, zéro activité racine, `recommendedVideosManaged: false` et cinq questions intégrées. La capture rendue de la fin de module ne contient plus de recommandations vidéo externes.
+
+### Rejeu explicite après `3d4a043a`
+
+**Écran 1/9 — Introduction.** Titre, durée officielle de 55 minutes, progression et la liste des thèmes sont rendus en français ; Skills est conservé comme nom produit.
+
+**Écran 2/9 — Cas d’utilisation.** Les quatre critères de délégation sont rendus comme liste compacte et lisible. Le triage standard conserve six cas, trois catégories et le verrou de soumission avant complétion.
+
+**Écran 3/9 — Skills et risques des fonctionnalités.** Les six cartes sont présentes, les deux libellés Skills sont corrects et le verrou standard exige de retourner les cartes avant la navigation suivante.
+
+**Écran 4/9 — Sensibilité des données.** Les niveaux vert/jaune/rouge, le caviardage, les contrôles Code Execution, Memory et Incognito, ainsi que huit cartes de révision sont rendus sans troncature ni reliquat anglais non nominal.
+
+**Écran 5/9 — Politiques organisationnelles.** Les quatre cartes, l’audit de diligence, le mini-audit et les noms produits Skills et Projects sont visibles et cohérents ; le verrou de cartes est présent.
+
+**Écran 6/9 — Implications éthiques.** Les cinq cartes couvrent biais, équité, transparence, raisonnement et revue humaine ; le cas ambigu est lisible et la navigation est disponible.
+
+**Écran 7/9 — Quiz du module 6.** Cinq scénarios avec quatre options chacun sont présents. Les cartes de révision et les actions « Vérifier la réponse » sont rendues par le bloc standard ; aucune activité racine supplémentaire ne s’affiche.
+
 ## Preuves attendues à la clôture
 
 La publication devra confirmer : réponse tRPC `no-store` fraîche, neuf écrans dans le lecteur public, triage à six associations, cinq QCM intégrés, verrouillage par activités requises, cartes complètes, termes produits préservés, console sans erreur et absence de recommandation externe non sourcée.
