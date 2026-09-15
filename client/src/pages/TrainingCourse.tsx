@@ -437,6 +437,7 @@ export default function TrainingCourse() {
       })()
     : getNextUnlockedLesson(course.id, totalLessons);
   const activeMultiLessonIndex = activeLessonIndex ?? nextUnlocked;
+  const coachLessonIndex = isSingleLessonCourse ? 0 : activeMultiLessonIndex;
   const visibleUnitCurrent = isNovasavoCourse
     ? Math.min(activeMultiLessonIndex + 1, novasavoUnitsTotal)
     : Math.min(nextUnlocked, totalLessons);
@@ -897,11 +898,11 @@ export default function TrainingCourse() {
           )}
         </motion.main>
       </div>
-      {certId && courseId && activeLessonIndex !== null && (
+      {certId && courseId && courseLessons.length > 0 && (
         <TekTekCoach
           certificationId={certId}
           courseId={courseId}
-          lessonIndex={activeLessonIndex}
+          lessonIndex={coachLessonIndex}
           chapterIndex={viewingChapterIndex}
           onNavigateToCitation={(citation: TekTekCitation) => {
             const target = `/training/${citation.certificationId}/${citation.courseId}?lesson=${citation.lessonIndex}&chapter=${citation.chapterIndex}`;

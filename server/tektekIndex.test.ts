@@ -89,4 +89,19 @@ describe("index TekTek", () => {
     expect(results.length).toBeGreaterThan(0);
     expect(results.some((source) => /delegation|description|discernment|diligence/i.test(source.text))).toBe(true);
   });
+
+  it("préserve l’identifiant court 4D et retrouve son cadre dans le cours actif", () => {
+    const results = searchTekTekSources({
+      certificationId: "claude_certified_architect_foundations",
+      allowedCourseIds: ["claude_certified_architect_foundations__01"],
+      activeCourseId: "claude_certified_architect_foundations__01",
+      lessonIndex: 0,
+      chapterIndex: 0,
+      question: "Explique le framework 4D présenté dans ce cours.",
+      language: "fr",
+    });
+
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.some((source) => /4d|delegation|description|discernment|diligence/i.test(`${source.title} ${source.text}`))).toBe(true);
+  });
 });

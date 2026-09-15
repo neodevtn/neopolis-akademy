@@ -39,3 +39,17 @@ Lors du contrôle visuel, certains messages historiques affichaient encore des c
 ## Contrôle des rôles et disponibilité
 
 Le 15 septembre 2026, le centre d’assistance a été contrôlé partiellement dans deux contextes. Une session disposant des actions administratives a validé l’ouverture de TekTek et du formulaire de signalement. Une session apprenant de démonstration a confirmé que le même centre rend les quatre canaux attendus — signalement technique, nouvelle conversation Neopolis, conversations ouvertes et TekTek — sans action d’administration ni accès à l’éditeur de contenu. Le dépôt de signalement n’est pas restreint par rôle : la procédure tRPC est publique mais conserve une limite de débit par IP, tandis que le transport final Sentry reste exclusivement serveur. Un contrôle complet, après publication, de chacun des deux rôles reste requis avant de conclure.
+
+### Contrôle publié en cours
+
+Après propagation du checkpoint `8a2e7522`, une session apprenant de démonstration authentifiée a chargé le cours Architect Foundations 1 sur `https://akademy.neodev.click`. Le lecteur affiche les contrôles apprenant — sans option d’édition administrative — et le launcher d’assistance est présent. Les actions TekTek et signalement technique sont contrôlées séparément dans les étapes suivantes.
+
+Le signalement technique a été ouvert et soumis depuis cette session apprenant avec un texte de contrôle explicitement marqué « À IGNORER ». Le formulaire s’est refermé sans retour d’erreur bloquant, et le journal de production a reçu la capture technique associée. La page Sentry User Feedback a ensuite affiché son écran de chargement persistant propre à l’instance on-premise (« Awaiting solution to the halting problem »), empêchant une vérification visuelle additionnelle dans cette session ; cette limitation d’interface ne modifie pas le résultat de transport côté serveur déjà contrôlé en HTTP 201.
+
+Le contrôle a également révélé que le centre d’assistance envoyait correctement l’action globale `open-tektek`, mais que le panneau n’était pas monté lorsque l’URL du cours ne comportait pas de paramètre `lesson`. Le lecteur utilise désormais la leçon effectivement affichée comme contexte par défaut, ce qui maintient TekTek disponible dès l’ouverture canonique d’un cours.
+
+Le panneau est désormais bien accessible depuis cette URL canonique. Le contrôle a toutefois identifié un problème distinct de récupération : une demande explicite sur le Framework 4D peut encore recevoir un refus prudent alors que des sources de ce même cours décrivent les quatre dimensions. Ce point reste ouvert et doit être corrigé au niveau de la sélection de contexte, sans assouplir les citations ni les garde-fous d’évaluation.
+
+La cause identifiée est la normalisation de recherche : elle écartait les identifiants courts alphanumériques tels que `4D`. La recherche conserve maintenant ces termes structurants et leur test de contrat vérifie que la question française sur le Framework 4D récupère les passages décrivant delegation, description, discernment et diligence.
+
+Le contrôle de prévisualisation confirme ensuite le comportement : depuis l’URL canonique sans paramètre `lesson`, le centre d’assistance ouvre TekTek, et la demande « Explique le framework 4D présenté dans ce cours » produit une réponse Claude Sonnet citée sur delegation, description, discernment, diligence ainsi que les usages automation, augmentation et agency. Les anciens marqueurs de citation du fournisseur ne sont plus affichés.

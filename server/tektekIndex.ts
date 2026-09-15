@@ -48,7 +48,9 @@ function normalizeForSearch(value: string) {
 }
 
 function tokens(value: string) {
-  return Array.from(new Set(normalizeForSearch(value).split(" ").filter((token) => token.length >= 3))).slice(0, 24);
+  return Array.from(new Set(normalizeForSearch(value).split(" ").filter((token) =>
+    token.length >= 3 || /^\d[a-z\d]$/i.test(token) || /^[a-z]\d$/i.test(token),
+  ))).slice(0, 24);
 }
 
 const SEARCH_STOP_WORDS = new Set([
