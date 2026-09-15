@@ -56,10 +56,11 @@ describe("cohérence des parcours Anthropic", () => {
     const lesson = course.lessons.find((item: any) => item.id === "lesson_01");
     const memoryChapter = lesson.chapters.find((item: any) => item.id === "chapter_13");
     const memoryCheckpoint = memoryChapter.blocks.find((block: any) => block.id === "checkpoint_7_memory_patterns");
-    const extendedThinking = course.exercises.find((item: any) => item.id === "ex_claude_certified_developer_foundations__02_005");
+    const extendedThinking = course.exercises.find((item: any) => item.chapterId === "chapter_03");
 
     expect(memoryCheckpoint.instructions.en).not.toMatch(/on the left|on the right/i);
     expect(memoryCheckpoint.instructions.fr).not.toMatch(/à gauche|à droite/i);
+    expect(extendedThinking).toBeDefined();
     expect(extendedThinking.prompt.en).not.toMatch(/CheckpointExtended|this\.Leave/i);
     expect(extendedThinking.prompt.fr).not.toMatch(/à gauche|à droite/i);
   });

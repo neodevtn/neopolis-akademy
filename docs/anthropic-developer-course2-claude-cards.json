@@ -1,0 +1,148 @@
+{
+  "cards": [
+    {
+      "back_en": "Every pass made the prompt longer and none of them added the missing output constraint. The developer was describing the problem more precisely with each iteration, but Claude does not need a detailed description of what a billing ticket looks like, instead it needs to know that the only acceptable output is the required output format.",
+      "back_fr": "Chaque passage a rendu le prompt plus long et aucun d'eux n'a ajouté la contrainte de sortie manquante. Le développeur décrivait le problème de manière de plus en plus précise à chaque itération, mais Claude n'a pas besoin d'une description détaillée de l'apparence d'un ticket de facturation ; il a plutôt besoin de savoir que la seule sortie acceptable est le format de sortie requis.",
+      "chapterId": "chapter_01",
+      "front_en": "What to Watch Out for"
+    },
+    {
+      "back_en": "When you turn on extended thinking, the model \"thinks out loud\" before it responds. You’ll see this reasoning come back as its own thinking block in the API response, positioned just ahead of the block that holds the actual answer. On the newest models, the thinking block's content is omitted by default.",
+      "back_fr": "Lorsque vous activez « extended thinking », le modèle « pense à voix haute » avant de répondre. Vous verrez ce raisonnement réapparaître sous la forme d'un bloc de raisonnement distinct dans la réponse de l'API, placé juste avant le bloc contenant la réponse proprement dite. Sur les modèles les plus récents, le contenu du bloc de raisonnement est omis par défaut.",
+      "chapterId": "chapter_03",
+      "front_en": "What extended thinking does"
+    },
+    {
+      "back_en": "Multi-step reasoning where the model has to hold several constraints at once: a math derivation, a multi-hop logic problem, planning a sequence of dependent actions. Enable it, with the effort level matched to the depth of the problem. The reasoning pass is where the model works through dependencies in the problem.",
+      "back_fr": "Raisonnement en plusieurs étapes où le modèle doit maintenir plusieurs contraintes simultanément : une dérivation mathématique, un problème logique multi-hop, la planification d'une séquence d'actions dépendantes. Activez-le, en ajustant le niveau d'effort à la profondeur du problème. Le passage de raisonnement est l'étape où le modèle traite les dépendances dans le problème.",
+      "chapterId": "chapter_03",
+      "front_en": "Task shapeExtended thinking callReason"
+    },
+    {
+      "back_en": "The most common misconception about tool-use is that Claude runs the tools. Instead, Claude reads your tool definitions, decides which one fits the situation, and tells your application what to call it along with the required inputs. Your application executes the tool, gets the result, and sends it back to Claude.",
+      "back_fr": "La méprise la plus répandue concernant l'utilisation d'outils est de croire que Claude exécute les outils. En réalité, Claude lit vos définitions d'outils, décide lequel convient à la situation, et indique à votre application lequel appeler ainsi que les entrées requises. Votre application exécute l'outil, obtient le résultat, et l'envoie à Claude.",
+      "chapterId": "chapter_05",
+      "front_en": "How the tool-use loop works"
+    },
+    {
+      "back_en": "text blockAssistant/ClaudeClaude’s prose outputClaude may return a text block alongside a tool_use block in the same turn. When it does, your code must preserve the full content array, including the text block, when appending that turn to conversation history. Dropping the text block corrupts the conversation history.",
+      "back_fr": "bloc de texte Assistant/Claude Sortie en prose de Claude\n\nClaude peut renvoyer un bloc de texte en parallèle d'un tool_use block dans le même tour. Lorsqu'il le fait, votre code doit préserver l'intégralité du content array, y compris le bloc de texte, lors de l'ajout de ce tour à l'historique de la conversation. Supprimer le bloc de texte corrompt l'historique de la conversation.",
+      "chapterId": "chapter_05",
+      "front_en": "Block typeRoleContainsCritical rule"
+    },
+    {
+      "back_en": "A well-maintained MCP server already exists for the service you need (check that it covers the specific operations you require and is actively maintained against the service’s current API. Writing and owning those schemas yourself adds implementation overhead for no additional capability. Note that the server must still meet your requirements.",
+      "back_fr": "Un serveur MCP bien maintenu existe déjà pour le service dont vous avez besoin (vérifiez qu'il couvre les opérations spécifiques dont vous avez besoin et qu'il est activement maintenu pour suivre l'API actuelle du service. Développer et gérer vous‑même ces schémas ajoute une surcharge d'implémentation sans capacité supplémentaire. Notez que le serveur doit tout de même répondre à vos exigences.",
+      "chapterId": "chapter_05",
+      "front_en": "Use MCP when"
+    },
+    {
+      "back_en": "No MCP server covers your use case, or when you need precise control over tool scope and description quality that a general-purpose server does not provide. Before defaulting to manual schemas for scope control, note that the API MCP Connector supports allowlisting and denylisting specific tools per server.",
+      "back_fr": "Cela s'applique lorsqu'aucun serveur MCP ne couvre votre cas d'utilisation, ou lorsque vous avez besoin d'un contrôle précis sur la portée des outils et la qualité des descriptions qu'un serveur généraliste ne fournit pas. Avant de recourir par défaut à des schémas manuels pour le contrôle de la portée, notez que le MCP Connector de l'API prend en charge l'allowlisting et le denylisting d'outils spécifiques par serveur.",
+      "chapterId": "chapter_05",
+      "front_en": "Write schemas manually when"
+    },
+    {
+      "back_en": "Connect to an MCP server for breadth then apply the description-tuning discipline from earlier in this module to the specific tools you are actively routing to. MCP and manual schema authoring are not mutually exclusive as the server gives you coverage, and your descriptions give you precision where it matters.",
+      "back_fr": "Connectez-vous à un serveur MCP pour assurer la couverture, puis appliquez la discipline d'affinage des descriptions présentée plus tôt dans ce module aux outils spécifiques vers lesquels vous orientez activement. MCP et la rédaction manuelle de schémas ne sont pas mutuellement exclusifs : le serveur vous assure la couverture, et vos descriptions vous apportent de la précision là où elle compte.",
+      "chapterId": "chapter_05",
+      "front_en": "Use both when"
+    },
+    {
+      "back_en": "A schema can look correct and still fail. Typed parameters and passing happy-path tests tell you the structure is valid, but they do not tell you whether Claude can reliably choose between your tools when an input sits near the boundary of two overlapping descriptions. That is the failure mode that matters.",
+      "back_fr": "Un schéma peut sembler correct et pourtant échouer. Des paramètres typés et des tests happy-path réussis vous indiquent que la structure est valide, mais ils ne vous disent pas si Claude peut choisir de manière fiable entre vos outils lorsqu'une entrée se situe près de la frontière entre deux descriptions qui se chevauchent. C'est le mode de défaillance qui compte.",
+      "chapterId": "chapter_05",
+      "front_en": "Setup"
+    },
+    {
+      "back_en": "When a task is too large for a single context window, increasing the window is not a solution. The solution is to decompose the task and pass only the relevant context to each subagent. A subagent receives a scoped task and the minimum context it needs, the results of prior steps that are directly relevant.",
+      "back_fr": "Quand une tâche est trop grande pour une seule fenêtre de contexte, augmenter la fenêtre n'est pas une solution. La solution est de décomposer la tâche et de ne transmettre à chaque sous-agent que le contexte pertinent. Un sous-agent reçoit une tâche cadrée et le contexte minimal dont il a besoin, ainsi que les résultats des étapes précédentes qui sont directement pertinents.",
+      "chapterId": "chapter_09",
+      "front_en": "Subagent handoffs: Managing long-horizon tasks"
+    },
+    {
+      "back_en": "The strategies covered so far assume you know your context budget is under pressure and you are choosing a tool to manage it. The critical point here is not to know the pressure exists until the session breaks. A workload can pass every test in development and then fail in production for one reason: context grows over time.",
+      "back_fr": "Les stratégies présentées jusqu'ici partent du principe que vous savez que votre budget de contexte est sous pression et que vous choisissez un outil pour le gérer. Le point crucial ici est de ne pas découvrir l'existence de cette pression uniquement lorsque la session échoue. Une charge de travail peut réussir tous les tests en développement, puis échouer en production pour une seule raison : le contexte augmente au fil du temps.",
+      "chapterId": "chapter_09",
+      "front_en": "Forward pointer"
+    },
+    {
+      "back_en": "Tool outputs consume context the same way prompts and file reads do. The context window is a fixed budget that holds everything Claude needs to see on a given turn: the system prompt, the conversation history, and every tool call and tool result accumulated so far. When tool outputs are short, each one consumes only a small part of that budget.",
+      "back_fr": "Les sorties d'outils consomment le contexte de la même façon que les prompts et les lectures de fichiers. La fenêtre de contexte est un budget fixe qui contient tout ce que Claude doit voir lors d'un tour donné : le system prompt, l'historique de la conversation, et chaque appel d'outil et chaque résultat d'outil accumulés jusqu'à présent. Lorsque les sorties d'outils sont courtes, chacune ne consomme qu'une petite partie de ce budget.",
+      "chapterId": "chapter_09",
+      "front_en": "Setup"
+    },
+    {
+      "back_en": "Context window available200k standard, 1M on current Opus and Sonnet200k standard, 1M on current Opus and Sonnet.",
+      "back_fr": "Fenêtre de contexte disponible : 200k standard, 1M sur Opus et Sonnet.\nFenêtre de contexte disponible : 200k standard, 1M sur Opus et Sonnet.",
+      "chapterId": "chapter_09",
+      "front_en": "Development vs. Production"
+    },
+    {
+      "back_en": "Skill (SKILL.md)On demand when request matches skill's descriptionLow. Only the name and description load at startup; full content loads only on matchTask-specific expertise that should not inflate sessions where it is not needed. Examples include domain-specific output formats, specialized review criteria.",
+      "back_fr": "Skill (SKILL.md)\nÀ la demande lorsque la requête correspond à la description de la skill\nFaible. Seuls le nom et la description sont chargés au démarrage ; le contenu complet n'est chargé qu'en cas de correspondance\nExpertise spécifique à une tâche qui ne doit pas alourdir les sessions où elle n'est pas nécessaire. Les exemples incluent des formats de sortie spécifiques au domaine et des critères de revue spécialisés.",
+      "chapterId": "chapter_13",
+      "front_en": "PatternWhen it loadsContext costBest for"
+    },
+    {
+      "back_en": "Development used a single long session. Production used many short sessions with accumulated state. Those are different shapes, and in-context memory handles them differently. Measure the expected state size per session (history plus system prompt plus tool schemas) against the context limit before deploying.",
+      "back_fr": "En développement, on utilisait une seule longue session. En production, on utilisait de nombreuses courtes sessions avec un état accumulé. Ce sont des configurations différentes, et in-context memory les gère différemment. Mesurez la taille d'état attendue par session (historique plus system prompt plus tool schemas) par rapport à la limite de contexte avant le déploiement.",
+      "chapterId": "chapter_13",
+      "front_en": "What to Watch Out for"
+    },
+    {
+      "back_en": "# --- TOOL DEFINITIONS ---\ntools = [\n{\n\"name\": \"get_customer_data\",\n\"description\": \"Gets data.\",\n\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }\n}\n]",
+      "back_fr": "# --- DÉFINITIONS D'OUTILS ---\ntools = [\n{\n\"name\": \"get_customer_data\",\n\"description\": \"Gets data.\",\n\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }\n}\n]",
+      "chapterId": "chapter_13",
+      "front_en": "Buggy implementation"
+    },
+    {
+      "back_en": "# --- TOOL DEFINITIONS ---\ntools = [\n{\n\"name\": \"get_customer_data\",\n\"description\": \"Gets data.\",\n\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }\n}\n]",
+      "back_fr": "# --- DÉFINITIONS D'OUTILS ---\ntools = [\n{\n\"name\": \"get_customer_data\",\n\"description\": \"Gets data.\",\n\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }\n}\n]",
+      "chapterId": "chapter_13",
+      "front_en": "Buggy implementation (for reference)"
+    },
+    {
+      "back_en": "For PDFs, the block type is document rather than image. The source structure follows the same pattern as images, which means it can be base64, a URL, or a Files API file_id. There is no required name field on a document block. The block accepts an optional title field for a readable document name, and an optional context field for additional information.",
+      "back_fr": "Pour les PDF, le type de bloc est document plutôt qu'image. La structure source suit le même modèle que pour les images, ce qui signifie qu'elle peut être base64, une URL ou un file_id du Files API. Il n'y a pas de champ « name » requis pour un bloc document. Le bloc accepte un champ optionnel « title » pour un nom de document lisible, ainsi qu'un champ optionnel « context » pour des informations supplémentaires.",
+      "chapterId": "chapter_15",
+      "front_en": "Sending PDFs: The document block"
+    },
+    {
+      "back_en": "Splitting a job into chunks and processing them one after another is not batching; it is serialization with extra steps. The Message Batches API exists for high-volume workloads precisely because looping over inputs against the synchronous API runs into rate limits the moment the volume gets real, not because the inputs are too large.",
+      "back_fr": "Diviser un travail en morceaux et les traiter les uns après les autres n'est pas du traitement par lots ; c'est de la sérialisation avec des étapes supplémentaires. L'API Message Batches existe pour les charges de travail à haut volume précisément parce que boucler sur les entrées avec l'API synchrone se heurte aux limites de débit dès que le volume devient réel, et non parce que les entrées sont trop volumineuses.",
+      "chapterId": "chapter_15",
+      "front_en": "Setup"
+    },
+    {
+      "back_en": "Senior Developer: \"Latency is non-deterministic. Batch processing can take hours. If this were a real-time user interaction, it would be the wrong tool. However, this is perfect for a nightly classification run.\"",
+      "back_fr": "Développeur senior : « La latence est non déterministe. Le traitement par lots peut prendre des heures. Si c'était une interaction utilisateur en temps réel, ce serait le mauvais outil. Cependant, c'est parfait pour une exécution nocturne de classification. »",
+      "chapterId": "chapter_15",
+      "front_en": "Developer: \"And the tradeoff?\""
+    },
+    {
+      "back_en": "Chunking a list and looping over the synchronous API is not batching, even though it feels like it should be. It produces the same number of API calls as the un-chunked version and runs into the same rate limits. The Message Batches API is a different submission model, not a smaller batch size. Use it for high-volume, non-real-time work.",
+      "back_fr": "Le chunking d'une liste et le fait de boucler sur l'API synchrone ne constituent pas du batching, même si on pourrait le croire. Cela produit le même nombre d'appels API que la version non chunkée et se heurte aux mêmes rate limits. L'API Message Batches est un modèle de soumission différent, pas une simple réduction de la taille de batch. Utilisez-la pour les charges de travail à haut volume qui ne sont pas en temps réel.",
+      "chapterId": "chapter_15",
+      "front_en": "What to Watch Out for"
+    },
+    {
+      "back_en": "This module established the Developer primitive library, including five interaction types that all subsequent Developer modules draw from. The patterns introduced here, which include prompting craft, tool schemas, context engineering, agent construction, memory scoping, and multimodal ingestion, form the foundation for more advanced development work.",
+      "back_fr": "Ce module a établi la bibliothèque de primitives Developer, comprenant cinq types d'interaction dont se servent tous les modules Developer ultérieurs. Les modèles introduits ici, qui incluent la maîtrise du prompting, les schémas d'outils, l'ingénierie du contexte, la construction d'agents, la définition du périmètre mémoire et l'ingestion multimodale, constituent la base d'un travail de développement plus avancé.",
+      "chapterId": "chapter_15",
+      "front_en": "What comes next"
+    },
+    {
+      "back_en": "A managed agent runtime distributed as @anthropic-ai/claude-agent-sdk (Typescript) / claude-agent-sdk (Python). It gives a partner programmatic access to the same agent loop that powers Claude Code: iteration, tool execution, observation, termination, so the partner can embed an agent inside their own applications.",
+      "back_fr": "Un runtime d'agent géré distribué sous la forme @anthropic-ai/claude-agent-sdk (Typescript) / claude-agent-sdk (Python). Il offre à un partenaire un accès programmatique à la même boucle d'agent qui alimente Claude Code : itération, exécution d'outils, observation, terminaison, afin que le partenaire puisse intégrer un agent dans ses propres applications.",
+      "chapterId": "chapter_15",
+      "front_en": "Claude Agent SDK"
+    },
+    {
+      "back_en": "Service Organization Control 2 is an audit framework developed by the American Institute of Certified Public Accountants (AICPA) for evaluating how a service organization handles customer data. It is the standard most commonly cited when a SaaS vendor or cloud service provider is asked to demonstrate appropriate controls over customer data.",
+      "back_fr": "Service Organization Control 2 est un cadre d'audit développé par l'American Institute of Certified Public Accountants (AICPA) pour évaluer la manière dont une organisation de services traite les données de ses clients. C'est la norme la plus souvent citée lorsqu'un fournisseur SaaS ou un fournisseur de services cloud est invité à démontrer des contrôles appropriés sur les données de ses clients.",
+      "chapterId": "chapter_15",
+      "front_en": "SOC 2"
+    }
+  ]
+}
