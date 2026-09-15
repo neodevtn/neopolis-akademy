@@ -5,6 +5,7 @@ import { getDb } from "../db";
 import { clientErrors, learningEvents } from "../../drizzle/schema";
 import { desc, eq, like, and, gte, inArray, notLike, sql } from "drizzle-orm";
 import { normalizeOperationalLogPage } from "../../shared/operationalLogPagination";
+import { submitSentryTechnicalFeedback } from "../sentryFeedback";
 
 // Rate limit: max 10 reports per IP per minute
 const ipReportCounts = new Map<string, { count: number; resetAt: number }>();
@@ -157,6 +158,30 @@ export const systemRouter = router({
       }
 
       return { accepted: true } as const;
+    }),
+
+  submitTechnicalFeedback: publicProcedure
+    .input(
+      z.object({
+        eventId: z.string().regex(/^[a-f0-9]{32}$/i, "eventId Sentry invalide"),
+        message: z.string().trim().min(6).max(450),
+        url: z.string().url().max(500),
+        name: z.string().trim().min(1).max(120).optional(),
+        email: z.string().trim().email().max(254).optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const ip = ctx.req.ip || ctx.req.headers["x-forwarded-for"]?.toString() || "unknown";
+      if (!checkReportRateLimit(ip)) return { accepted: false, reason: "rate_limited" } as const;
+
+      const delivery = await submitSentryTechnicalFeedback({
+        eventId: input.eventId,
+        message: input.message,
+        name: input.name || "Apprenant Neopolis",
+        email: input.email || "support@neopolis.invalid",
+      });
+
+      return delivery;
     }),
 
   // Admin endpoint to view recent client errors (excludes build errors)

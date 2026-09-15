@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
+import { parseTekTekAnswerLines } from "@/lib/tektekPresentation";
 import { formatTekTekCitation, normalizeTekTekLanguage, type TekTekCitation } from "@shared/tektek";
 import { SUPPORT_HUB_EVENT, type SupportHubEventDetail } from "@/lib/supportHub";
 
@@ -76,6 +77,21 @@ const COPY = {
     safety: "أستشهد دائماً بالمصادر ولا أقدم إجابات جاهزة للتسليم في الأنشطة التقييمية.",
   },
 } as const;
+
+function TekTekAnswer({ content }: { content: string }) {
+  return (
+    <div className="space-y-1.5 leading-relaxed">
+      {parseTekTekAnswerLines(content).map((line, lineIndex) => (
+        <p key={`${lineIndex}-${line.segments.map((segment) => segment.text).join("")}`} className={cn(line.bullet && "pl-4") }>
+          {line.bullet && <span aria-hidden="true" className="-ml-4 mr-2">•</span>}
+          {line.segments.map((segment, segmentIndex) => segment.emphasis
+            ? <strong key={`${segmentIndex}-${segment.text}`} className="font-semibold">{segment.text}</strong>
+            : <span key={`${segmentIndex}-${segment.text}`}>{segment.text}</span>)}
+        </p>
+      ))}
+    </div>
+  );
+}
 
 export function TekTekCoach({ certificationId, courseId, lessonIndex, chapterIndex, blockId, videoTimeSeconds, onNavigateToCitation }: TekTekCoachProps) {
   const { lang } = useLanguage();
@@ -165,7 +181,7 @@ export function TekTekCoach({ certificationId, courseId, lessonIndex, chapterInd
                   <div key={message.id} className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}>
                     <div className={cn("max-w-[92%] rounded-2xl px-3.5 py-3 text-sm shadow-sm", message.role === "user" ? "rounded-br-md bg-primary text-primary-foreground" : "rounded-bl-md border bg-background text-foreground")}>
                       {message.role === "assistant" && <div className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-primary"><Bot className="size-3.5" />{copy.title}</div>}
-                      <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                      <TekTekAnswer content={message.content} />
                       {message.citations.length > 0 && (
                         <div className="mt-3 space-y-1.5 border-t border-border/70 pt-2.5">
                           {message.citations.map((citation) => (

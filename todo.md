@@ -5,17 +5,32 @@
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »
 - [x] Qualifier chaque média visible comme officiel ou complément Neopolis, rapprocher 11 vidéos/transcriptions et 14 téléchargements avec checksums vérifiables — SHA-256 binaire pour 14 PDFs, SHA-256 de transcript local pour 11 vidéos officielles et empreinte de manifeste pour 17 références vidéo
-- [ ] Vérifier la lecture image et audio au début, au milieu et en fin des médias, puis consigner toute limitation externe de manière factuelle
+- [x] Vérifier la lecture image et audio au début, au milieu et en fin des médias, puis consigner toute limitation externe de manière factuelle — confirmation manuelle reçue : début OK, milieu OK, fin OK sur une vidéo officielle du cours 1
 - [x] Corriger le message générique de repli vidéo afin qu’il n’indique jamais à tort qu’un retour au cours enregistre une progression — message actionnable et test de contrat bilingue validés
-- [ ] Corriger le défaut confirmé « Le fournisseur de la vidéo n’a pas pu démarrer ce lecteur intégré » dans le lecteur YouTube standard, avec un repli média vérifiable qui ne valide jamais automatiquement une étape
-- [ ] Vérifier dans un navigateur réel le démarrage d’une vidéo officielle du cours 1 après correctif, puis compléter le contrôle image et audio début/milieu/fin
-- [ ] Prendre en charge explicitement le code YouTube 153 dans la récupération standard, sans masquer le refus fournisseur ni débloquer la progression
+- [x] Corriger le défaut confirmé « Le fournisseur de la vidéo n’a pas pu démarrer ce lecteur intégré » dans le lecteur YouTube standard, avec un repli média vérifiable qui ne valide jamais automatiquement une étape — API IFrame officielle, code 153 pris en charge et absence du repli prématuré constatée publiquement au-delà de 12 secondes
+- [x] Vérifier dans un navigateur réel le démarrage d’une vidéo officielle du cours 1 après correctif, puis compléter le contrôle image et audio début/milieu/fin — confirmation manuelle reçue
+- [x] Archiver une preuve textuelle ou une capture horodatée du contrôle manuel image+audio au début, au milieu et près de la fin d’une vidéo officielle du cours 1 — confirmation explicite utilisateur conservée dans le journal de parité
+- [x] Reproduire et corriger l’indisponibilité de TekTek dans les parcours apprenant, avec contrôle de ses droits, citations et appel Claude Sonnet — réponse contextuelle Claude Sonnet citée validée en prévisualisation
+- [x] Remplacer le contrat JSON fragile de TekTek par une réponse Claude Sonnet textuelle citée, avec extrait local de secours en cas d’indisponibilité du modèle — contrat texte et secours local testés
+- [x] Rendre les réponses TekTek Claude lisibles dans le panneau standard en convertissant de manière sûre le Markdown de base, sans afficher les marqueurs `**` ou exposer les citations internes — emphases et listes rendues sans HTML interprété
+- [x] Masquer les marqueurs de citation internes déjà enregistrés dans l’historique TekTek, en conservant les boutons de sources navigables séparés — nettoyage défensif couvert par test
+- [x] Reproduire et corriger l’indisponibilité du signalement technique vers les User Feedback Sentry, sans mélanger ce flux avec la messagerie Neopolis — dépôt serveur accepté par Sentry on-premise (HTTP 201)
+- [x] Vérifier la configuration Sentry on-premise sur `http://sentry.neopolis-dev.com` et le protocole DSN pour User Feedback — redirection HTTPS confirmée ; l’instance refuse le dépôt navigateur DSN (403) et n’expose pas de réglage d’origine modifiable dans l’interface, donc le canal serveur authentifié est retenu
+- [x] Ajouter un canal de compatibilité User Feedback pour Sentry on-premise si `sendFeedback` moderne reçoit un refus 403, sans masquer l’échec ni dupliquer le signalement — compatibilité client diagnostiquée et dépôt fiable déplacé côté serveur
+- [x] Évaluer le repli REST DSN-authentifié après l’échec 403 du canal moderne — non retenu comme solution finale : l’instance on-premise refuse le DSN navigateur ; un transport API serveur associé à un événement technique, authentifié par intégration à portée minimale, est contrôlé par tests et accepté en HTTP 201
+- [x] Afficher un diagnostic utilisateur actionnable et sans donnée sensible lorsque les deux canaux Sentry refusent un signalement technique — retour explicite conservé jusqu’à confirmation du dépôt serveur
+- [x] Créer un jeton d’intégration Sentry on-premise limité au projet Neopolis Akademy et à `project:write`, puis l’enregistrer exclusivement côté serveur — jeton validé par appel léger et non journalisé
+- [ ] Tester les deux parcours d’assistance avec rôles apprenant et administrateur, puis publier et vérifier le domaine public — prévisualisation partielle validée, contrôle bout en bout publié encore requis
+- [ ] Tester complètement le centre d’assistance avec un compte apprenant sur la version publiée : ouvrir TekTek, poser une question, ouvrir le signalement technique et vérifier le retour sans erreur
+- [ ] Tester complètement le centre d’assistance avec un compte administrateur sur la version publiée : ouvrir TekTek, contrôler les sources, ouvrir le signalement et vérifier l’absence d’erreur bloquante
+- [ ] Archiver dans `docs/support-feedback-sentry.md` les preuves distinctes apprenant/admin après publication : URL, résultat TekTek, état du signalement et contrôle de console
+- [x] Prendre en charge explicitement le code YouTube 153 dans la récupération standard, sans masquer le refus fournisseur ni débloquer la progression — code contrôlé, repli explicite et contrat dédié validés
 - [x] Vérifier navigation, verrouillage séquentiel, reprise de progression, durée du sous-écran et rendus desktop/mobile pour le cours 1 — contrôle apprenant publié réussi sur le checkpoint, la navigation et le retour à l’écran 3/3 ; captures 1440 × 1000 et 390 × 844 sans débordement
 - [x] Tester publiquement Précédent/Suivant avec un compte apprenant de démonstration, y compris le blocage avant une activité requise et le déverrouillage après validation — bouton bloqué avant réponse, activé après validation et navigation suivante confirmés sur le domaine public
 - [x] Tester publiquement la reprise du cours 1 après navigation et confirmer le retour au bon écran avec la hiérarchie à 15 leçons — persistance HTTP 200 et restauration publiée de l’écran 3/3 depuis l’URL canonique, traces QA ensuite supprimées
 - [x] Corriger la persistance générique des chapitres validés pour les cours multi-leçons afin que la reprise du cours 1 ne dépende pas d’un état local — véritable index de leçon persisté et paramètres URL absents non convertis en zéro, avec test de contrat
 - [x] Valider le mock CCAR-F : 60 questions, 120 minutes, seuil 720/1000, pondérations 27/18/20/20/15, quatre scénarios parmi six et explications originales par distracteur côté serveur — couverture contrôlée sur les 318 questions susceptibles d’être tirées
-- [ ] Publier et contrôler uniquement le cours 1, livrer les captures, matrice, inventaire/checksums et preuves, puis arrêter le lot avant le cours 2
+- [x] Publier et contrôler uniquement le cours 1, livrer les captures, matrice, inventaire/checksums et preuves, puis arrêter le lot avant le cours 2 — checkpoints publiés, contrôle public, validation apprenant et restitution préparée sans modification du cours 2
 
 ## Audit Anthropic — Lot 1/4 Architect Foundations — Cours 1
 - [x] Télécharger et lire intégralement le rapport PDF, le prompt et l’inventaire du lot 1, puis documenter les sources exploitées
@@ -25,16 +40,12 @@
 - [x] Reconstituer uniquement le cours 1 avec blocs standards Neopolis, navigation précédent/suivant, activités obligatoires et étiquetage explicite des compléments Neopolis
 - [x] Corriger l’ambiguïté de durée « 10–15 minutes » sans modifier les noms de produits Anthropic ni le contenu officiel autorisé
 - [x] Enrichir checkpoints et examen blanc CCAR-F avec des questions originales seulement, incluant explications des distracteurs et correction côté serveur, sans reprendre de dataset tiers — scénarios ajoutés de façon additive et rationales rédigées par Claude Sonnet, uniquement affichées après correction serveur
-- [ ] Vérifier le parcours de cours 1, les médias, téléchargements, verrouillage et rendus desktop/mobile avec captures et contrôles avant/après
-- [ ] Publier uniquement le cours 1, vérifier sa version publique et livrer la matrice Skilljar–Neopolis, les contrôles d’assets et le rapport de progression
+- [x] Vérifier le parcours de cours 1, les médias, téléchargements, verrouillage et rendus desktop/mobile avec captures et contrôles avant/après — hiérarchie, médias, 14 téléchargements, checkpoint, verrou, reprise et captures desktop/mobile contrôlés ; lecture audio confirmée par l’utilisateur
+- [x] Publier uniquement le cours 1, vérifier sa version publique et livrer la matrice Skilljar–Neopolis, les contrôles d’assets et le rapport de progression — version publique `9c43b3c1` confirmée, rapport et preuves consignés, cours 2 non commencé
 
 ## Examens blancs Anthropic — questions originales conformes
-- [ ] Cartographier les examens blancs Anthropic existants, leurs objectifs, leurs questions et leur configuration de durée/seuil
-- [ ] Définir une matrice de couverture et rédiger uniquement des questions originales fondées sur les objectifs officiels et les contenus Neopolis
-- [ ] Intégrer les questions approuvées sans utiliser ni adapter de jeux de questions d’examens réels ou potentiellement divulgués
-- [ ] Ajouter les nouvelles questions de manière additive, conserver chaque question existante et augmenter la diversité de la sélection aléatoire
-- [ ] Tester création, affichage, correction, durée, verrouillage et passage apprenant des examens Anthropic enrichis
-- [ ] Publier après QA complète et vérifier les examens Anthropic sur le domaine public
+- [x] Chantier global interrompu sur instruction explicite de l’utilisateur (« Non, arrête ») ; aucune banque tierce ni question d’examen réel n’a été importée
+- [x] Toute exigence CCAR-F ultérieure a été traitée séparément et exclusivement dans le lot Architect Foundations, avec questions/rationales originales et correction côté serveur
 
 ## Relance automatique des examens blancs
 - [x] Auditer les données de complétion de formation, tentatives d’examen, envois e-mail et mécanismes planifiés disponibles afin de cibler uniquement les apprenants éligibles sans doublons — `training_progress`, `chapter_progress`, `exam_attempts` et `exam_sessions` sont distingués ; les quatre examens réels proviennent de `trainingIndex.examConfig`

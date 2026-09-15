@@ -9,12 +9,8 @@ import App from "./App";
 import { getLoginUrl } from "./const";
 import { clearStaleClientBundleRecovery, retryStaleClientBundle } from "./lib/chunkRecovery";
 import { initializeAnalytics, trackPageView } from "./lib/analytics";
+import { ensureSentryClient } from "./lib/sentryClient";
 import "./index.css";
-
-// Initialize Sentry for error monitoring, performance & user feedback after
-// the first rendering opportunity. Internal error monitoring remains active
-// immediately, while the SDK and replay code leave the mobile critical path.
-const isProduction = import.meta.env.MODE === "production";
 
 // Recover before Sentry and the app-level reporters observe a stale Vite chunk.
 // This handles the Safari `unhandledrejection: Load failed` path that does not
@@ -24,23 +20,7 @@ const recoverStaleBundleRejection = (event: PromiseRejectionEvent) => {
 };
 window.addEventListener("unhandledrejection", recoverStaleBundleRejection);
 
-const initializeSentry = () => {
-  void import("@sentry/react")
-    .then((Sentry) => {
-      Sentry.init({
-        dsn: "https://f1beaf088d01628e72b6cc5b96511906@sentry.neopolis-dev.com//102",
-        integrations: [
-          Sentry.browserTracingIntegration(),
-          Sentry.replayIntegration({ maskAllText: false, blockAllMedia: false, maskAllInputs: false }),
-        ],
-        tracesSampleRate: isProduction ? 0.2 : 1.0,
-        replaysSessionSampleRate: isProduction ? 0.1 : 0.0,
-        replaysOnErrorSampleRate: 1.0,
-        environment: import.meta.env.MODE,
-      });
-    })
-    .catch(() => undefined);
-};
+const initializeSentry = () => { void ensureSentryClient().catch(() => undefined); };
 
 // Keep the first mobile screen free of replay/feedback work. Internal error
 // reporting is already active; Sentry begins on the learner's first real

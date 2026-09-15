@@ -147,9 +147,7 @@ describe("routeur TekTek", () => {
   });
 
   it("accepte uniquement les citations présentes dans les sources fournies au modèle", async () => {
-    mocks.invokeLLM.mockResolvedValue({
-      choices: [{ message: { content: JSON.stringify({ answer: "Source-grounded answer", citationIds: ["s1", "external"], followUp: null }) } }],
-    });
+    mocks.invokeLLM.mockResolvedValue({ choices: [{ message: { content: "Source-grounded answer" } }] });
     const result = await caller.ask(baseInput);
     expect(result.answer).toBe("Source-grounded answer");
     expect(result.citations).toHaveLength(1);
@@ -158,16 +156,6 @@ describe("routeur TekTek", () => {
       model: "claude-sonnet-4-6",
       maxTokens: 1_500,
       thinking: { type: "enabled", budget_tokens: 700 },
-      responseFormat: expect.objectContaining({
-        json_schema: expect.objectContaining({
-          schema: expect.objectContaining({
-            properties: expect.objectContaining({
-              citationIds: expect.objectContaining({ items: expect.objectContaining({ enum: ["s1"] }) }),
-              followUp: { type: ["string", "null"] },
-            }),
-          }),
-        }),
-      }),
     }));
     expect(mocks.appendTekTekMessage).toHaveBeenCalledWith(expect.objectContaining({ courseId: "course-1", role: "user" }));
     expect(mocks.appendTekTekMessage).toHaveBeenCalledWith(expect.objectContaining({ courseId: "course-1", role: "assistant" }));
@@ -204,11 +192,11 @@ describe("routeur TekTek", () => {
     expect(result.citations[0]?.id).toBe("s1");
   });
 
-  it("fournit les passages les plus pertinents si la synthèse structurée est inutilisable", async () => {
+  it("fournit un extrait local utile si le modèle ne répond pas", async () => {
     mocks.invokeLLM.mockResolvedValue({ choices: [{ message: { content: "{" } }] });
     const result = await caller.ask(baseInput);
     expect(result.inScope).toBe(true);
-    expect(result.answer).toContain("relevant passages");
+    expect(result.answer).toContain("A source-backed concept.");
     expect(result.citations[0]?.id).toBe("s1");
   });
 });

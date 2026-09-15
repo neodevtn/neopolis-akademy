@@ -11,6 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { isAdministrativeRole } from "@shared/roles";
 import { dispatchSupportHubAction } from "@/lib/supportHub";
 import { PrivateMessagingNotificationCenter } from "@/components/PrivateMessagingNotificationCenter";
+import { captureTechnicalFeedbackEvent } from "@/lib/sentryFeedback";
 
 type ActionItemProps = {
   icon: typeof MessageCircle;
@@ -39,14 +40,30 @@ export function UnifiedSupportHub() {
   const [report, setReport] = useState("");
   const isAdmin = isAdministrativeRole(user?.role);
   const isLesson = /^\/training\/[^/]+\/[^/]+/.test(pathname);
-  const reportMutation = trpc.system.reportError.useMutation({
-    onSuccess: () => {
+  const reportMutation = trpc.system.reportError.useMutation();
+  const sentryFeedbackMutation = trpc.system.submitTechnicalFeedback.useMutation();
+
+  const submitTechnicalReport = async () => {
+    const message = report.trim();
+    if (message.length < 6) return;
+    try {
+      const [feedbackResult, internalResult] = await Promise.allSettled([
+        captureTechnicalFeedbackEvent({ message, url: window.location.href, name: user?.name, email: user?.email })
+          .then((eventId) => sentryFeedbackMutation.mutateAsync({ eventId, message, url: window.location.href, name: user?.name || undefined, email: user?.email || undefined })),
+        reportMutation.mutateAsync({ message: `Support hub: ${message}`.slice(0, 500), source: "manual", url: window.location.href, timestamp: Date.now(), stack: "", componentStack: "" }),
+      ]);
+      if (internalResult.status === "rejected") throw internalResult.reason;
       setReport("");
       setReportOpen(false);
-      toast.success(t({ fr: "Votre signalement a été transmis à l’équipe technique.", en: "Your report was sent to the technical team.", ar: "تم إرسال بلاغك إلى الفريق التقني." }));
-    },
-    onError: () => toast.error(t({ fr: "Le signalement ne peut pas être envoyé pour le moment.", en: "The report cannot be sent right now.", ar: "لا يمكن إرسال البلاغ حاليًا." })),
-  });
+      if (feedbackResult.status === "rejected" || !feedbackResult.value.accepted) {
+        toast.warning(t({ fr: "Votre signalement a été conservé par Neopolis, mais sa copie dans Sentry n’a pas pu être confirmée. L’équipe technique peut tout de même le traiter.", en: "Your report was saved by Neopolis, but its Sentry copy could not be confirmed. The technical team can still handle it.", ar: "تم حفظ البلاغ لدى نيوبوليس، لكن لم يتأكد نسخه في Sentry. لا يزال بإمكان الفريق التقني معالجته." }));
+        return;
+      }
+      toast.success(t({ fr: "Votre signalement a été transmis à l’équipe technique.", en: "Your report was sent to the technical team.", ar: "تم إرسال البلاغ إلى الفريق التقني." }));
+    } catch {
+      toast.error(t({ fr: "Le signalement ne peut pas être envoyé pour le moment. Réessayez dans quelques instants.", en: "The report cannot be sent right now. Please try again shortly.", ar: "لا يمكن إرسال البلاغ حاليًا. يُرجى المحاولة لاحقًا." }));
+    }
+  };
 
   const closeThen = (callback: () => void) => {
     setOpen(false);
@@ -97,7 +114,7 @@ export function UnifiedSupportHub() {
       <DialogContent>
         <DialogHeader><DialogTitle>{t({ fr: "Signaler un problème technique", en: "Report a technical problem", ar: "الإبلاغ عن مشكلة تقنية" })}</DialogTitle><DialogDescription>{t({ fr: "Expliquez ce qui s’est passé. N’ajoutez ni mot de passe ni information sensible.", en: "Explain what happened. Do not include a password or sensitive information.", ar: "اشرح ما حدث. لا تُدرج كلمة مرور أو معلومات حساسة." })}</DialogDescription></DialogHeader>
         <Textarea value={report} onChange={(event) => setReport(event.target.value)} maxLength={450} rows={6} placeholder={t({ fr: "Ex. Le bouton de validation reste bloqué après…", en: "E.g. The validation button remains blocked after…", ar: "مثال: يبقى زر التحقق عالقًا بعد…" })} aria-label={t({ fr: "Description du problème technique", en: "Technical problem description", ar: "وصف المشكلة التقنية" })} />
-        <DialogFooter><Button variant="outline" onClick={() => setReportOpen(false)}>{t({ fr: "Annuler", en: "Cancel", ar: "إلغاء" })}</Button><Button disabled={report.trim().length < 6 || reportMutation.isPending} onClick={() => reportMutation.mutate({ message: `Support hub: ${report.trim()}`.slice(0, 500), source: "manual", url: window.location.href, timestamp: Date.now(), stack: "", componentStack: "" })}>{reportMutation.isPending ? t({ fr: "Envoi…", en: "Sending…", ar: "جارٍ الإرسال…" }) : <><Send className="mr-2 size-4" />{t({ fr: "Envoyer le signalement", en: "Send report", ar: "إرسال البلاغ" })}</>}</Button></DialogFooter>
+        <DialogFooter><Button variant="outline" onClick={() => setReportOpen(false)}>{t({ fr: "Annuler", en: "Cancel", ar: "إلغاء" })}</Button><Button disabled={report.trim().length < 6 || reportMutation.isPending || sentryFeedbackMutation.isPending} onClick={submitTechnicalReport}>{reportMutation.isPending || sentryFeedbackMutation.isPending ? t({ fr: "Envoi…", en: "Sending…", ar: "جارٍ الإرسال…" }) : <><Send className="mr-2 size-4" />{t({ fr: "Envoyer le signalement", en: "Send report", ar: "إرسال البلاغ" })}</>}</Button></DialogFooter>
       </DialogContent>
     </Dialog>
   </>;
