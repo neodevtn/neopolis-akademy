@@ -82,6 +82,7 @@ describe('Associate Foundations course 5 contract', () => {
     expect(frenchStrings.join('\n')).not.toContain('Une équipe Project configure');
     expect(connectors.blocks[0].body.fr).toContain('Les Connectors étendent l’accès de Claude');
     expect(connectors.blocks[0].body.fr).not.toContain("Connectors extend Claude's reach");
+    expect(connectors.blocks[0].body.fr).not.toContain('####');
     expect(connectors.blocks[0].body.fr).toContain('Lorsqu’un connecteur atteint une limite de capacité');
     expect(projects.blocks[0].body.fr).toContain('Lorsqu’un besoin s’étend sur deux mécanismes');
     expect(frenchStrings.join('\n')).toContain('Scoped Memory pour la continuité.');

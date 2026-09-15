@@ -44,6 +44,7 @@
 - [x] Corriger la phrase tronquée de la carte « Exécution de code pour une analyse vérifiée » de l’écran Recherche et planification Associate 4, puis la couvrir par contrat et contrôle public — phrase complète publiée dans les deux variantes ; contrat et canal public validés
 - [ ] Corriger Associate Foundations cours 5 « Configuration & Knowledge Management » : durée officielle 47 min, huit écrans, Projects, instructions, knowledge base, Skills et Memory, sans exercices libres historiques ni reliquats de localisation ; publier seulement après tests, QA, propagation et contrôle public
 - [ ] Corriger les reliquats anglais et les formulations françaises dégradées constatés dans les écrans Projects et Connecteurs Associate 5, puis republier et rejouer la revue publique
+- [ ] Corriger les niveaux de titres doublés dans l’écran Connectors Associate 5, puis vérifier le rendu public sans régression de cartes
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »
