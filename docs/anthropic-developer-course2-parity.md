@@ -40,3 +40,7 @@ Le diagnostic source confirme que les deux répétitions du message utilisateur 
 ## Disponibilité publique après `298df2a5`
 
 Le premier chargement navigateur a reçu une page 404 Railway transitoire immédiatement après la publication. Le contrôle HTTP suivant, mené sur `https://akademy.neodev.click/` et `https://neopacademy-6qa7lvjq.manus.space/`, a confirmé HTTP 200 pour la racine, le lecteur Developer 2 et le canal tRPC. La réponse tRPC conserve `application/json` et `Cache-Control: no-store, max-age=0`. Le contrôle visuel public a donc été repris après cette récupération ; l’anomalie n’est pas attribuée au contenu Developer 2.
+
+## Contrôle public final — checkpoint `3a9e67e`
+
+Le checkpoint final sert bien la donnée publique : HTTP 200, `Content-Type: application/json; charset=utf-8` et `Cache-Control: no-store, max-age=0`. La vérification récursive des variantes françaises ne détecte plus `system prompt`, y compris dans les options et corrections de checkpoint. Les sections Prompting Craft sont structurées en titres et listes Markdown au lieu des tableaux concaténés, les huit checkpoints à choix unique sont rattachés aux écrans pertinents et les vidéos génériques non sourcées demeurent désactivées. La validation complète précédente du même lot a réussi avec **811 tests** et une matrice de publication **9/9** ; le correctif final ne touche que la terminologie française, couverte par contrat ciblé.
