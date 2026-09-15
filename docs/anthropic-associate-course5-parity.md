@@ -39,3 +39,11 @@ Le canal public tRPC a finalement confirmé le verso complet de la carte de gard
 ### Contrôle public après checkpoint `027bfdc2`
 
 Les deux écrans affectés par le dernier lot ont été rejoués après propagation tRPC. L’écran **Configuration des Projects** présente désormais une hiérarchie lisible, une liste explicite Instructions / knowledge base / Skills / Scoped Memory et une explication continue des mécanismes liés ; les intertitres isolés ont disparu. L’écran **Instructions au niveau système** présente une comparaison cohérente « Version vague » / « Version précise », sans libellé « Après » détaché. Les cartes standards, la durée officielle, le quiz à cinq questions, la synthèse et l’écran de fin avaient déjà été contrôlés au cours de la revue des huit écrans ; aucune modification fonctionnelle ne les a affectés dans ce dernier lot.
+
+### Revue complète après checkpoint `02f2a118`
+
+Les écrans 1/8 et 2/8 ont été rejoués après la dernière propagation : durée officielle de 47 minutes, introduction française, huit chapitres, listes et cartes Projects sont cohérents ; Instructions, knowledge base, Skills et Scoped Memory restent des termes explicites dans le lecteur public.
+
+Les écrans 3/8 et 4/8 ont ensuite été confirmés : Connectors est entièrement localisé, les cinq cartes restent lisibles et les titres ne sont plus doublés ; l’exemple Instructions affiche les deux versions cohérentes et la carte de garde-fous contient son exemple complet.
+
+Les écrans 5/8 et 6/8 ont été rejoués : le corps Maintenance préserve désormais Instructions, knowledge base, Skills et Memory ; le quiz affiche cinq scénarios et le verrou standard avant passage. Une exception restante est consignée : le verso de la première carte Maintenance emploie encore les termes génériques « connaissances » et « compétences » ; il doit être aligné sur les noms produits avant la clôture.

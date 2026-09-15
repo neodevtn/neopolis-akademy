@@ -51,6 +51,7 @@
 - [x] Corriger la comparaison « Avant / Après » incohérente de l’écran Instructions Associate 5, puis vérifier publiquement le rendu — deux versions explicites visibles sans libellé isolé
 - [ ] Rejouer la revue publique finale complète des 8 écrans Associate 5 après le dernier lot de mise en forme et ne clôturer que les tâches explicitement prouvées — le dernier checkpoint n’a été contrôlé publiquement que sur les deux écrans modifiés
 - [ ] Corriger les noms produits Anthropic encore traduits dans l’écran « Gestion des configurations » Associate 5, notamment « Skills » rendu en « compétences » dans le corps, puis rejouer son contrôle public
+- [ ] Corriger les noms produits encore génériques dans le verso de la carte « Maintenance des configurations » Associate 5, notamment « connaissances » et « compétences », puis rejouer cet écran public
 - [x] Utiliser exclusivement un modèle Claude pour toute génération, analyse ou évaluation du présent lot et de TekTek — 1 272 rationales CCAR-F portent une provenance Claude Sonnet vérifiée par test, et TekTek appelle Claude Sonnet avec un contrat de non-régression
 - [x] Lire intégralement le prompt et le rapport du dossier Drive `1RiIVPJY7gV_fbGjJf3itnxZJ1CcRhxto`, qui remplacent les références antérieures pour le lot 1
 - [x] Réviser la matrice Skilljar–Neopolis et finaliser la hiérarchie de 15 leçons et sous-écrans du seul cours « AI Fluency: Framework & Foundations »
