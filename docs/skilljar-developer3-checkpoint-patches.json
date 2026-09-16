@@ -1,0 +1,178 @@
+{
+  "proposals": [
+    {
+      "feedback": {
+        "en": "PreToolUse runs before the tool call and can block it. PostToolUse cannot prevent a call that has already happened.",
+        "fr": "PreToolUse s’exécute avant l’appel d’outil et peut le bloquer. PostToolUse ne peut pas empêcher un appel qui a déjà eu lieu."
+      },
+      "id": "checkpoint_s07_durable_project_context",
+      "instructions": {
+        "en": "Match each blank to its correct value.",
+        "fr": "Associez chaque champ vide à la valeur correcte."
+      },
+      "options": [],
+      "pairs": [
+        {
+          "left": {
+            "en": "Lifecycle event",
+            "fr": "Événement de cycle de vie"
+          },
+          "right": {
+            "en": "PreToolUse",
+            "fr": "PreToolUse"
+          }
+        },
+        {
+          "left": {
+            "en": "Blocking command",
+            "fr": "Commande de blocage"
+          },
+          "right": {
+            "en": "A command script that reads the tool call from stdin, checks the file path, and exits with code 2 when the path is .env.production, writing the reason to stderr.",
+            "fr": "Un script de commande qui lit l’appel d’outil depuis stdin, vérifie le chemin du fichier et se termine avec le code 2 lorsque le chemin est .env.production, en écrivant la raison sur stderr."
+          }
+        }
+      ],
+      "question": {
+        "en": "You are setting up a hook that enforces a path restriction. Match the lifecycle event that runs before a tool call executes and the command that blocks reads of .env.production.",
+        "fr": "Vous configurez un hook qui applique une restriction de chemin. Associez l’événement de cycle de vie qui s’exécute avant un appel d’outil et la commande qui bloque les lectures de .env.production."
+      },
+      "referenceCode": {
+        "en": "{\n  \"hooks\": {\n    \"________\": [\n      {\n        \"matcher\": \"Read\",\n        \"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]\n      }\n    ]\n  }\n}",
+        "fr": "{\n  \"hooks\": {\n    \"________\": [\n      {\n        \"matcher\": \"Read\",\n        \"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]\n      }\n    ]\n  }\n}"
+      },
+      "serverValidated": false,
+      "sourceEvidence": "S07 correction: PreToolUse runs before the tool call, so it can block. The blocking command reads the tool call from stdin, checks the file path, and exits with code 2 for .env.production while writing the reason to stderr.",
+      "sourceScreenId": "S07",
+      "targetChapterId": "chapter_03",
+      "title": {
+        "en": "Checkpoint 2: Durable Project Context",
+        "fr": "Point de contrôle 2 : Contexte du projet durable"
+      },
+      "type": "matching"
+    },
+    {
+      "feedback": {
+        "en": "stdio is for a server on the learner machine; HTTP is for a remote service or one reached by multiple machines. Local scope is personal, project scope is shared through .mcp.json, and enterprise scope is deployed by administrators.",
+        "fr": "stdio est destiné à un serveur sur la machine de l’apprenant ; HTTP est destiné à un service distant ou accessible depuis plusieurs machines. La portée locale est personnelle, la portée projet est partagée via .mcp.json, et la portée entreprise est déployée par les administrateurs."
+      },
+      "id": "checkpoint_s14_mcp_servers",
+      "instructions": {
+        "en": "Match each deployment scenario to the correct transport and scope.",
+        "fr": "Associez chaque scénario de déploiement au transport et à la portée appropriés."
+      },
+      "options": [],
+      "pairs": [
+        {
+          "left": {
+            "en": "A local SQLite query tool you use only on your development machine.",
+            "fr": "Un outil local de requêtes SQLite que vous utilisez uniquement sur votre machine de développement."
+          },
+          "right": {
+            "en": "stdio + Local",
+            "fr": "stdio + Local"
+          }
+        },
+        {
+          "left": {
+            "en": "A company-hosted code search service shared by the engineering team.",
+            "fr": "Un service de recherche de code hébergé par l’entreprise et partagé par l’équipe d’ingénierie."
+          },
+          "right": {
+            "en": "HTTP + Project (.mcp.json)",
+            "fr": "HTTP + Projet (.mcp.json)"
+          }
+        },
+        {
+          "left": {
+            "en": "An experimental repository-specific web scraper not ready to share.",
+            "fr": "Un serveur expérimental de web scraping propre à un dépôt, qui n’est pas prêt à être partagé."
+          },
+          "right": {
+            "en": "stdio or HTTP + Local",
+            "fr": "stdio ou HTTP + Local"
+          }
+        },
+        {
+          "left": {
+            "en": "A security scanner IT deploys to every developer’s Claude Code installation.",
+            "fr": "Un scanner de sécurité que l’équipe informatique déploie dans l’installation Claude Code de chaque développeur."
+          },
+          "right": {
+            "en": "HTTP + Enterprise (managed settings)",
+            "fr": "HTTP + Entreprise (paramètres gérés)"
+          }
+        }
+      ],
+      "question": {
+        "en": "Match the transport and scope to each MCP deployment scenario.",
+        "fr": "Associez le transport et la portée à chaque scénario de déploiement MCP."
+      },
+      "referenceCode": {
+        "en": "",
+        "fr": ""
+      },
+      "serverValidated": false,
+      "sourceEvidence": "S14 correction pairs: local SQLite tool—stdio + Local; company-hosted code search—HTTP + Project (.mcp.json); experimental repository-specific web scraper—stdio or HTTP + Local; organization-wide security scanner—HTTP + Enterprise (managed settings).",
+      "sourceScreenId": "S14",
+      "targetChapterId": "chapter_05",
+      "title": {
+        "en": "Checkpoint 5: MCP Servers",
+        "fr": "Point de contrôle 5 : Serveurs MCP"
+      },
+      "type": "matching"
+    },
+    {
+      "feedback": {
+        "en": "A 401 indicates that the credential is being rejected and must be rotated. Keeping a plaintext key in a known file is also a secret-handling failure; use a CI-injected environment variable and update the MCP configuration to reference it.",
+        "fr": "Un code 401 indique que l’identifiant est rejeté et doit être renouvelé. Conserver une clé en texte brut dans un fichier connu constitue aussi un échec de gestion des secrets ; utilisez une variable d’environnement injectée par la CI et mettez à jour la configuration MCP pour y faire référence."
+      },
+      "id": "checkpoint_s17_enterprise_integration",
+      "instructions": {
+        "en": "Read the connection trace, diagnose the authentication failure, and select the targeted fix.",
+        "fr": "Lisez la trace de connexion, diagnostiquez l’échec d’authentification et sélectionnez la correction ciblée."
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "en": "Fix A: Rotate the API key and update /home/jenkins/.config/mcp-credentials.json with the new value.",
+            "fr": "Correction A : Renouvelez la clé API et mettez à jour /home/jenkins/.config/mcp-credentials.json avec la nouvelle valeur."
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "en": "Fix B: Rotate the rejected key, then move the credential out of the file and inject it as an environment variable in the CI pipeline runner configuration. Update the MCP configuration to reference the variable.",
+            "fr": "Correction B : Renouvelez la clé rejetée, puis retirez l’identifiant du fichier et injectez-le comme variable d’environnement dans la configuration de l’exécuteur du pipeline CI. Mettez à jour la configuration MCP pour faire référence à la variable."
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "en": "Fix C: Switch from API key authentication to OAuth for this service.",
+            "fr": "Correction C : Remplacez l’authentification par clé API par OAuth pour ce service."
+          }
+        }
+      ],
+      "pairs": [],
+      "question": {
+        "en": "Which targeted fix addresses the authentication failure shown in the trace?",
+        "fr": "Quelle correction ciblée traite l’échec d’authentification indiqué dans la trace ?"
+      },
+      "referenceCode": {
+        "en": "[MCP Client] Connecting to https://data-api.internal/mcp ...\n[MCP Client] GET /auth/token, 401 Unauthorized\n[MCP Client] Reading credential from: /home/jenkins/.config/mcp-credentials.json\n[MCP Client] Credential value: WAREHOUSE_TOKEN= sk-****[redacted]\n[MCP Client] Retrying with credential, 401 Unauthorized\n[MCP Client] Connection failed after 3 attempts",
+        "fr": "[MCP Client] Connecting to https://data-api.internal/mcp ...\n[MCP Client] GET /auth/token, 401 Unauthorized\n[MCP Client] Reading credential from: /home/jenkins/.config/mcp-credentials.json\n[MCP Client] Credential value: WAREHOUSE_TOKEN= sk-****[redacted]\n[MCP Client] Retrying with credential, 401 Unauthorized\n[MCP Client] Connection failed after 3 attempts"
+      },
+      "serverValidated": true,
+      "sourceEvidence": "S17 correction: The 401 means the key is rejected and must be rotated. The plaintext key in a known file is also a secret-handling failure. The targeted fix rotates the key, moves the value into a CI-injected environment variable, and updates MCP configuration to reference that variable.",
+      "sourceScreenId": "S17",
+      "targetChapterId": "chapter_05",
+      "title": {
+        "en": "Checkpoint 6: Enterprise Integration",
+        "fr": "Point de contrôle 6 : Intégration d’entreprise"
+      },
+      "type": "single_choice_exercise"
+    }
+  ]
+}

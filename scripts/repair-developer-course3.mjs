@@ -7,11 +7,15 @@ const indexPath = path.join(root, 'client/src/data/trainingIndex.json');
 const patchesPath = path.join(root, 'docs/anthropic-developer-course3-critical-patches.json');
 const selectionPath = path.join(root, 'docs/anthropic-developer-course3-checkpoint-selection.json');
 const checkpoint4PatchPath = path.join(root, 'docs/anthropic-developer-course3-checkpoint4-patch.json');
+const skilljarCheckpointPatchesPath = path.join(root, 'docs/skilljar-developer3-checkpoint-patches.json');
+const skilljarChapterPatchesPath = path.join(root, 'docs/skilljar-developer3-chapter-patches.json');
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
 const trainingIndex = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 const patches = JSON.parse(fs.readFileSync(patchesPath, 'utf8'));
 const selection = JSON.parse(fs.readFileSync(selectionPath, 'utf8'));
 const checkpoint4Patch = JSON.parse(fs.readFileSync(checkpoint4PatchPath, 'utf8'));
+const skilljarCheckpointPatches = JSON.parse(fs.readFileSync(skilljarCheckpointPatchesPath, 'utf8'));
+const skilljarChapterPatches = JSON.parse(fs.readFileSync(skilljarChapterPatchesPath, 'utf8'));
 const lesson = course.lessons[0];
 
 course.officialDurationMinutes = 142;
@@ -131,6 +135,82 @@ if (existingCheckpoint4Index >= 0) {
   checkpoint4Chapter.blocks.splice(checkpoint4ContentIndex + 1, 0, checkpoint4Exercise);
 }
 checkpoint4Chapter.completionRule = { requires: ['contentViewed', 'requiredExercisesPassed'] };
+
+const chapterPatchById = new Map(skilljarChapterPatches.chapters.map((item) => [item.id, item]));
+const checkpointPatchByScreen = new Map(skilljarCheckpointPatches.proposals.map((item) => [item.sourceScreenId, item]));
+const upsertBlock = (target, block) => {
+  const existingIndex = target.blocks.findIndex((item) => item.id === block.id);
+  if (existingIndex >= 0) target.blocks[existingIndex] = block;
+  else target.blocks.push(block);
+};
+const asTeachingBlocks = (patch) => {
+  const blocks = [{ type: 'content', id: `${patch.id}_content`, body: patch.body }];
+  if (patch.flipCards.length > 0) blocks.push({ type: 'flip_cards', id: `${patch.id}_cards`, cards: patch.flipCards });
+  return blocks;
+};
+const upsertTeachingChapter = (patch, fallbackIndex) => {
+  const updated = {
+    id: patch.id,
+    title: patch.title,
+    type: 'teaching',
+    durationMinutes: patch.durationMinutes,
+    blocks: asTeachingBlocks(patch),
+  };
+  const index = lesson.chapters.findIndex((item) => item.id === patch.id);
+  if (index >= 0) lesson.chapters[index] = updated;
+  else lesson.chapters.splice(fallbackIndex, 0, updated);
+  return updated;
+};
+
+const mcpChapterPatch = chapterPatchById.get('chapter_skilljar_mcp_servers');
+const enterpriseChapterPatch = chapterPatchById.get('chapter_skilljar_enterprise_integration');
+const takeawaysPatch = chapterPatchById.get('chapter_06');
+if (!mcpChapterPatch || !enterpriseChapterPatch || !takeawaysPatch) throw new Error('Missing Skilljar Developer 3 chapter proposal.');
+const takeawaysIndex = lesson.chapters.findIndex((item) => item.id === 'chapter_06');
+if (takeawaysIndex < 0) throw new Error('Missing Developer 3 Key Takeaways chapter.');
+upsertTeachingChapter(mcpChapterPatch, takeawaysIndex);
+upsertTeachingChapter(enterpriseChapterPatch, lesson.chapters.findIndex((item) => item.id === 'chapter_06'));
+upsertTeachingChapter(takeawaysPatch, lesson.chapters.findIndex((item) => item.id === 'chapter_06'));
+
+const checkpointContent = (proposal) => ({
+  type: 'content',
+  id: `${proposal.id}_context`,
+  body: {
+    en: `## ${proposal.title.en}\n\n${proposal.instructions.en}${proposal.referenceCode.en ? `\n\n\`\`\`\n${proposal.referenceCode.en}\n\`\`\`` : ''}`,
+    fr: `## ${proposal.title.fr}\n\n${proposal.instructions.fr}${proposal.referenceCode.fr ? `\n\n\`\`\`\n${proposal.referenceCode.fr}\n\`\`\`` : ''}`,
+  },
+});
+const installMatchingCheckpoint = (proposal, target) => {
+  upsertBlock(target, checkpointContent(proposal));
+  upsertBlock(target, {
+    type: 'matching',
+    id: proposal.id,
+    title: proposal.title,
+    instructions: proposal.question,
+    pairs: proposal.pairs,
+    feedback: proposal.feedback,
+  });
+  target.completionRule = { requires: ['contentViewed', 'requiredExercisesPassed'] };
+};
+const installSensitiveSingleChoiceCheckpoint = (proposal, target) => {
+  upsertBlock(target, checkpointContent(proposal));
+  upsertBlock(target, {
+    type: 'single_choice_exercise',
+    id: proposal.id,
+    question: proposal.question,
+    options: proposal.options,
+    serverValidated: true,
+  });
+  target.completionRule = { requires: ['contentViewed', 'requiredExercisesPassed'] };
+};
+
+const durableCheckpoint = checkpointPatchByScreen.get('S07');
+const mcpCheckpoint = checkpointPatchByScreen.get('S14');
+const enterpriseCheckpoint = checkpointPatchByScreen.get('S17');
+if (!durableCheckpoint || !mcpCheckpoint || !enterpriseCheckpoint) throw new Error('Missing Skilljar Developer 3 checkpoint proposal.');
+installMatchingCheckpoint(durableCheckpoint, chapter('chapter_03'));
+installMatchingCheckpoint(mcpCheckpoint, chapter('chapter_skilljar_mcp_servers'));
+installSensitiveSingleChoiceCheckpoint(enterpriseCheckpoint, chapter('chapter_skilljar_enterprise_integration'));
 
 fs.writeFileSync(coursePath, `${JSON.stringify(course, null, 2)}\n`);
 fs.writeFileSync(indexPath, `${JSON.stringify(trainingIndex, null, 2)}\n`);

@@ -72,4 +72,11 @@ describe("course data route", () => {
     });
     expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__03", "unknown_choice")).toBeNull();
   });
+
+  it("keeps the Enterprise Integration answer key in the server-only registry", () => {
+    expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__03", "checkpoint_s17_enterprise_integration")).toMatchObject({
+      correctAnswer: "b",
+      explanation: { fr: expect.stringContaining("variable d’environnement") },
+    });
+  });
 });

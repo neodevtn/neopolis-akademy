@@ -54,9 +54,11 @@ describe('Developer Foundations course 3 critical content contract', () => {
     expect(card('chapter_05', 'Watch Out · Packaging Workflows · 3 min').front.fr).toBe('À surveiller · Flux de travail d’empaquetage · 3 min');
   });
 
-  it('removes unsourced video recommendations without removing reference guidance', () => {
+  it('removes unsourced video recommendations and keeps the source Key Takeaways recap', () => {
     expect(chapter('chapter_06').blocks.some((item: any) => item.type === 'video')).toBe(false);
-    expect(content('chapter_06').fr).toContain('Ressources de référence');
+    expect(chapter('chapter_06').title.fr).toBe('Points clés à retenir');
+    expect(content('chapter_06').fr).toContain('## Sept points clés à retenir');
+    expect(content('chapter_06').fr).toContain('Le transport et la portée sont des décisions indépendantes');
     expect(course.videoRecommendationStatus).toBe('none');
   });
 
@@ -79,5 +81,46 @@ describe('Developer Foundations course 3 critical content contract', () => {
     expect(exercise).not.toHaveProperty('explanation');
     expect(exercise.options).toHaveLength(4);
     expect(checkpoint.completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
+  });
+
+  it('restores the Skilljar Durable Context and MCP transport checkpoints with standard matching gates', () => {
+    const durable = chapter('chapter_03');
+    const mcp = chapter('chapter_skilljar_mcp_servers');
+    const durableCheckpoint = durable.blocks.find((item: any) => item.id === 'checkpoint_s07_durable_project_context');
+    const mcpCheckpoint = mcp.blocks.find((item: any) => item.id === 'checkpoint_s14_mcp_servers');
+
+    expect(durableCheckpoint).toMatchObject({ type: 'matching', pairs: expect.any(Array) });
+    expect(durableCheckpoint.pairs).toHaveLength(2);
+    expect(JSON.stringify(durableCheckpoint)).toContain('PreToolUse');
+    expect(JSON.stringify(durableCheckpoint)).toContain('.env.production');
+    expect(mcpCheckpoint).toMatchObject({ type: 'matching', pairs: expect.any(Array) });
+    expect(mcpCheckpoint.pairs).toHaveLength(4);
+    expect(JSON.stringify(mcpCheckpoint)).toContain('HTTP + Enterprise');
+    expect(durable.completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
+    expect(mcp.completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
+  });
+
+  it('restores MCP and Enterprise teaching from the Skilljar source with standard content and cards', () => {
+    const mcp = chapter('chapter_skilljar_mcp_servers');
+    const enterprise = chapter('chapter_skilljar_enterprise_integration');
+    expect(mcp.title.fr).toBe('Serveurs MCP');
+    expect(content('chapter_skilljar_mcp_servers').fr).toContain('## Modèle de serveur');
+    expect(content('chapter_skilljar_mcp_servers').fr).toContain('`stdio`');
+    expect(content('chapter_skilljar_mcp_servers').fr).toContain('`cache_control`');
+    expect(enterprise.title.fr).toBe('Intégration enterprise');
+    expect(content('chapter_skilljar_enterprise_integration').fr).toContain('redirect URIs OAuth');
+    expect(enterprise.blocks.find((item: any) => item.type === 'flip_cards').cards).toHaveLength(3);
+  });
+
+  it('uses a server-validated standard choice for the Enterprise authentication checkpoint without a public answer key', () => {
+    const enterprise = chapter('chapter_skilljar_enterprise_integration');
+    const checkpoint = enterprise.blocks.find((item: any) => item.id === 'checkpoint_s17_enterprise_integration');
+    const context = enterprise.blocks.find((item: any) => item.id === 'checkpoint_s17_enterprise_integration_context');
+    expect(checkpoint).toMatchObject({ type: 'single_choice_exercise', serverValidated: true });
+    expect(checkpoint.options).toHaveLength(3);
+    expect(context.body.en).toContain('401 Unauthorized');
+    expect(checkpoint).not.toHaveProperty('correctAnswer');
+    expect(checkpoint).not.toHaveProperty('explanation');
+    expect(enterprise.completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
   });
 });
