@@ -2,7 +2,8 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { findServerValidatedSingleChoice, getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset, sanitizeCourseDataForLearner } from "./courseDataRoute";
+import { getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset, sanitizeCourseDataForLearner } from "./courseDataRoute";
+import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
 
 const temporaryDirectories: string[] = [];
 
@@ -42,7 +43,7 @@ describe("course data route", () => {
     await expect(readCourseDataAsset("course_02", [emptyDirectory, validDirectory])).resolves.toBe('{"lessons":[{"id":"chapter"}]}');
   });
 
-  it("masks sensitive single-choice answers from learner data while retaining them for server validation", () => {
+  it("masks any accidental sensitive single-choice answer from learner data", () => {
     const raw = JSON.stringify({
       lessons: [{ chapters: [{ blocks: [{
         id: "server_checked_choice",
@@ -57,13 +58,18 @@ describe("course data route", () => {
       }] }] }],
     });
 
-    expect(findServerValidatedSingleChoice(raw, "server_checked_choice")).toMatchObject({ id: "server_checked_choice", correctAnswer: "b" });
-    expect(findServerValidatedSingleChoice(raw, "standard_choice")).toBeNull();
-
     const learnerData = JSON.parse(sanitizeCourseDataForLearner(raw));
     expect(learnerData.lessons[0].chapters[0].blocks[0]).toMatchObject({ id: "server_checked_choice", serverValidated: true });
     expect(learnerData.lessons[0].chapters[0].blocks[0]).not.toHaveProperty("correctAnswer");
     expect(learnerData.lessons[0].chapters[0].blocks[0]).not.toHaveProperty("explanation");
     expect(learnerData.lessons[0].chapters[0].blocks[1].correctAnswer).toBe("a");
+  });
+
+  it("keeps the Developer 3 sensitive answer key in the server-only registry", () => {
+    expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__03", "checkpoint4_fix_plugin_definition")).toMatchObject({
+      correctAnswer: "b",
+      explanation: { fr: expect.stringContaining("${CLAUDE_PLUGIN_ROOT}") },
+    });
+    expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__03", "unknown_choice")).toBeNull();
   });
 });

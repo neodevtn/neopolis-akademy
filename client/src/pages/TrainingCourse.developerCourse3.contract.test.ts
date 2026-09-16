@@ -72,10 +72,10 @@ describe('Developer Foundations course 3 critical content contract', () => {
     const exercise = checkpoint.blocks.find((item: any) => item.id === 'checkpoint4_fix_plugin_definition');
     expect(prompt.body.en).toContain('/Users/author/work/deploy-plugin/scripts/validate.sh');
     expect(prompt.body.fr).toContain('/Users/author/work/deploy-plugin/scripts/validate.sh');
-    expect(exercise).toMatchObject({ type: 'single_choice_exercise', serverValidated: true, correctAnswer: 'b' });
+    expect(exercise).toMatchObject({ type: 'single_choice_exercise', serverValidated: true });
+    expect(exercise).not.toHaveProperty('correctAnswer');
+    expect(exercise).not.toHaveProperty('explanation');
     expect(exercise.options).toHaveLength(4);
-    expect(exercise.explanation.en).toContain('${CLAUDE_PLUGIN_ROOT}');
-    expect(exercise.explanation.fr).toContain('${CLAUDE_PLUGIN_ROOT}');
     expect(checkpoint.completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
   });
 });

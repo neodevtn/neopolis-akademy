@@ -122,7 +122,8 @@ const checkpoint4Chapter = chapter('chapter_05');
 const checkpoint4ContentIndex = checkpoint4Chapter.blocks.findIndex((block) => block.type === 'content' && typeof block.body?.en === 'string' && block.body.en.includes('name: deploy-validate'));
 if (checkpoint4ContentIndex < 0) throw new Error('Missing Developer 3 checkpoint 4 content block.');
 checkpoint4Chapter.blocks[checkpoint4ContentIndex].body = checkpoint4Patch.body;
-const checkpoint4Exercise = { ...checkpoint4Patch.exercise, serverValidated: true };
+const { correctAnswer: _correctAnswer, explanation: _explanation, ...checkpoint4PublicExercise } = checkpoint4Patch.exercise;
+const checkpoint4Exercise = { ...checkpoint4PublicExercise, serverValidated: true };
 const existingCheckpoint4Index = checkpoint4Chapter.blocks.findIndex((block) => block.id === checkpoint4Exercise.id);
 if (existingCheckpoint4Index >= 0) {
   checkpoint4Chapter.blocks[existingCheckpoint4Index] = checkpoint4Exercise;
