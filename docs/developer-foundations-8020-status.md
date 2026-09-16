@@ -16,6 +16,8 @@ Le cycle de vie localisé du cours 5 est désormais confirmé par le canal tRPC 
 
 La restauration des tableaux Developer 4 est limitée aux segments dégradés et délimités des quatre chapitres concernés. Elle est rejouable via `scripts/repair-developer-course4-critical.mjs`, dont l’idempotence est contrôlée par empreinte. Le contrat ciblé vérifie les en-têtes Markdown en français et l’absence des anciens en-têtes concaténés ; un rendu du tableau Évaluations et juges a été contrôlé dans le lecteur standard local.
 
+Le 16 septembre 2026, la source officielle Skilljar du parcours Developer a répondu `403` depuis l’environnement de contrôle. En conséquence, les activités racine ambiguës, le checkpoint 4 tronqué du cours 3 et l’étude de cas de livraison du cours 5 demeurent explicitement ouverts : aucun TP, média ou contenu pédagogique nouveau n’est inféré en leur absence.
+
 ## Parcours explicitement reportés
 
 Les six cours restants d’Architect Foundations et les cinq cours d’Architect Professional ne font l’objet d’aucune correction cours par cours pendant la présente fenêtre. Les normalisations 80/20 déjà publiées — traduction des libellés génériques et retrait des tutoriels vidéo sans provenance — restent actives. Les audits approfondis, les médias officiels, les exercices et les validations publiques de ces deux parcours sont reportés à une session dédiée.
