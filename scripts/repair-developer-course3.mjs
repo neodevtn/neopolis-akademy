@@ -6,10 +6,12 @@ const coursePath = path.join(root, 'client/public/data/courses/claude_certified_
 const indexPath = path.join(root, 'client/src/data/trainingIndex.json');
 const patchesPath = path.join(root, 'docs/anthropic-developer-course3-critical-patches.json');
 const selectionPath = path.join(root, 'docs/anthropic-developer-course3-checkpoint-selection.json');
+const checkpoint4PatchPath = path.join(root, 'docs/anthropic-developer-course3-checkpoint4-patch.json');
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
 const trainingIndex = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 const patches = JSON.parse(fs.readFileSync(patchesPath, 'utf8'));
 const selection = JSON.parse(fs.readFileSync(selectionPath, 'utf8'));
+const checkpoint4Patch = JSON.parse(fs.readFileSync(checkpoint4PatchPath, 'utf8'));
 const lesson = course.lessons[0];
 
 course.officialDurationMinutes = 142;
@@ -115,6 +117,19 @@ for (const chosen of selection.selected) {
   target.blocks.push({ type: 'checkpoint', exerciseId: chosen.exerciseId });
   target.completionRule = { requires: ['contentViewed', 'requiredExercisesPassed'] };
 }
+
+const checkpoint4Chapter = chapter('chapter_05');
+const checkpoint4ContentIndex = checkpoint4Chapter.blocks.findIndex((block) => block.type === 'content' && typeof block.body?.en === 'string' && block.body.en.includes('name: deploy-validate'));
+if (checkpoint4ContentIndex < 0) throw new Error('Missing Developer 3 checkpoint 4 content block.');
+checkpoint4Chapter.blocks[checkpoint4ContentIndex].body = checkpoint4Patch.body;
+const checkpoint4Exercise = { ...checkpoint4Patch.exercise, serverValidated: true };
+const existingCheckpoint4Index = checkpoint4Chapter.blocks.findIndex((block) => block.id === checkpoint4Exercise.id);
+if (existingCheckpoint4Index >= 0) {
+  checkpoint4Chapter.blocks[existingCheckpoint4Index] = checkpoint4Exercise;
+} else {
+  checkpoint4Chapter.blocks.splice(checkpoint4ContentIndex + 1, 0, checkpoint4Exercise);
+}
+checkpoint4Chapter.completionRule = { requires: ['contentViewed', 'requiredExercisesPassed'] };
 
 fs.writeFileSync(coursePath, `${JSON.stringify(course, null, 2)}\n`);
 fs.writeFileSync(indexPath, `${JSON.stringify(trainingIndex, null, 2)}\n`);

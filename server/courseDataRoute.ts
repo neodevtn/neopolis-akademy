@@ -4,6 +4,52 @@ import type { Express, Request, Response } from "express";
 
 const COURSE_ID_PATTERN = /^[a-z0-9_]+$/i;
 
+type LocalizedText = { en?: string; fr?: string };
+type ServerValidatedChoice = {
+  id: string;
+  correctAnswer: string;
+  explanation?: string | LocalizedText;
+};
+
+function parseCourseData(content: string): any | null {
+  try {
+    return JSON.parse(content);
+  } catch {
+    return null;
+  }
+}
+
+export function findServerValidatedSingleChoice(content: string, exerciseId: string): ServerValidatedChoice | null {
+  const course = parseCourseData(content);
+  if (!course || !Array.isArray(course.lessons)) return null;
+  for (const lesson of course.lessons) {
+    for (const chapter of lesson?.chapters || []) {
+      for (const block of chapter?.blocks || []) {
+        if (block?.type === "single_choice_exercise" && block?.serverValidated === true && block?.id === exerciseId && typeof block.correctAnswer === "string") {
+          return { id: block.id, correctAnswer: block.correctAnswer, explanation: block.explanation };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+export function sanitizeCourseDataForLearner(content: string): string {
+  const course = parseCourseData(content);
+  if (!course || !Array.isArray(course.lessons)) return content;
+  for (const lesson of course.lessons) {
+    for (const chapter of lesson?.chapters || []) {
+      for (const block of chapter?.blocks || []) {
+        if (block?.type === "single_choice_exercise" && block?.serverValidated === true) {
+          delete block.correctAnswer;
+          delete block.explanation;
+        }
+      }
+    }
+  }
+  return JSON.stringify(course);
+}
+
 export function isValidCourseDataId(courseId: string): boolean {
   return COURSE_ID_PATTERN.test(courseId);
 }
@@ -56,6 +102,6 @@ export function registerCourseDataRoute(app: Express): void {
       "Cache-Control": "no-store, max-age=0",
       "Content-Type": "application/json; charset=utf-8",
       "X-Content-Type-Options": "nosniff",
-    }).send(content);
+    }).send(sanitizeCourseDataForLearner(content));
   });
 }

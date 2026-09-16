@@ -43,6 +43,7 @@ import { ENV } from "./_core/env";
 import { isValidPassword } from "../shared/accountCredentials";
 import { privateMessagingRouter } from "./privateMessagingRouter";
 import { tektekRouter } from "./tektekRouter";
+import { findServerValidatedSingleChoice, readCourseDataAsset } from "./courseDataRoute";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -785,6 +786,25 @@ export const appRouter = router({
       .input(z.object({ courseId: z.string().optional() }).optional())
       .query(async ({ ctx, input }) => {
         return await getChapterProgress(ctx.user.id, input?.courseId);
+      }),
+
+    validateServerChoice: protectedProcedure
+      .input(z.object({
+        courseId: z.string().regex(/^[a-z0-9_]+$/i).max(200),
+        exerciseId: z.string().min(2).max(255),
+        selectedId: z.string().min(1).max(80),
+        lang: z.enum(["fr", "en"]).default("fr"),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        const content = await readCourseDataAsset(input.courseId);
+        if (!content) throw new TRPCError({ code: "NOT_FOUND", message: "Cours introuvable." });
+        const exercise = findServerValidatedSingleChoice(content, input.exerciseId);
+        if (!exercise) throw new TRPCError({ code: "NOT_FOUND", message: "Activité sécurisée introuvable." });
+        const explanation = typeof exercise.explanation === "string"
+          ? exercise.explanation
+          : exercise.explanation?.[input.lang] || exercise.explanation?.en || "";
+        return { correct: input.selectedId === exercise.correctAnswer, explanation };
       }),
 
     saveChapterProgress: protectedProcedure

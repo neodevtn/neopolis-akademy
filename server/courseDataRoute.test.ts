@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset } from "./courseDataRoute";
+import { findServerValidatedSingleChoice, getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset, sanitizeCourseDataForLearner } from "./courseDataRoute";
 
 const temporaryDirectories: string[] = [];
 
@@ -40,5 +40,30 @@ describe("course data route", () => {
     await writeFile(path.join(validDirectory, "course_02.json"), '{"lessons":[{"id":"chapter"}]}');
 
     await expect(readCourseDataAsset("course_02", [emptyDirectory, validDirectory])).resolves.toBe('{"lessons":[{"id":"chapter"}]}');
+  });
+
+  it("masks sensitive single-choice answers from learner data while retaining them for server validation", () => {
+    const raw = JSON.stringify({
+      lessons: [{ chapters: [{ blocks: [{
+        id: "server_checked_choice",
+        type: "single_choice_exercise",
+        serverValidated: true,
+        correctAnswer: "b",
+        explanation: { en: "Server explanation", fr: "Explication serveur" },
+      }, {
+        id: "standard_choice",
+        type: "single_choice_exercise",
+        correctAnswer: "a",
+      }] }] }],
+    });
+
+    expect(findServerValidatedSingleChoice(raw, "server_checked_choice")).toMatchObject({ id: "server_checked_choice", correctAnswer: "b" });
+    expect(findServerValidatedSingleChoice(raw, "standard_choice")).toBeNull();
+
+    const learnerData = JSON.parse(sanitizeCourseDataForLearner(raw));
+    expect(learnerData.lessons[0].chapters[0].blocks[0]).toMatchObject({ id: "server_checked_choice", serverValidated: true });
+    expect(learnerData.lessons[0].chapters[0].blocks[0]).not.toHaveProperty("correctAnswer");
+    expect(learnerData.lessons[0].chapters[0].blocks[0]).not.toHaveProperty("explanation");
+    expect(learnerData.lessons[0].chapters[0].blocks[1].correctAnswer).toBe("a");
   });
 });

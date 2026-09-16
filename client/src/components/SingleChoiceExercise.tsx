@@ -10,11 +10,12 @@ interface SingleChoiceExerciseProps {
   id: string;
   question: string;
   options: Option[];
-  correctAnswer: string;
-  explanation: string;
+  correctAnswer?: string;
+  explanation?: string;
   hint?: string;
   lang?: 'en' | 'fr';
   onCorrect?: (id: string) => void;
+  onEvaluate?: (selectedId: string) => Promise<{ correct: boolean; explanation?: string }>;
   questionNumber?: number;
 }
 
@@ -23,17 +24,22 @@ export function SingleChoiceExercise({
   question,
   options,
   correctAnswer,
-  explanation,
+  explanation = "",
   hint = "",
   lang = 'fr',
   onCorrect,
+  onEvaluate,
   questionNumber,
 }: SingleChoiceExerciseProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [evaluationResult, setEvaluationResult] = useState<{ correct: boolean; explanation?: string } | null>(null);
+  const [evaluationError, setEvaluationError] = useState("");
   const [shuffledOptions, setShuffledOptions] = useState<Option[]>(options);
 
-  const isCorrect = selectedAnswer === correctAnswer;
+  const isCorrect = evaluationResult ? evaluationResult.correct : selectedAnswer === correctAnswer;
+  const displayedExplanation = evaluationResult?.explanation || explanation;
 
   const t = (en: string, fr: string) => lang === 'fr' ? fr : en;
 
@@ -42,17 +48,32 @@ export function SingleChoiceExercise({
     setSelectedAnswer(optionId);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedAnswer) return;
-    setIsSubmitted(true);
-    if (selectedAnswer === correctAnswer && onCorrect) {
-      onCorrect(id);
+    setEvaluationError("");
+    if (onEvaluate) {
+      setIsEvaluating(true);
+      try {
+        const result = await onEvaluate(selectedAnswer);
+        setEvaluationResult(result);
+        setIsSubmitted(true);
+        if (result.correct && onCorrect) onCorrect(id);
+      } catch {
+        setEvaluationError(t("The answer could not be evaluated. Please try again.", "La réponse n’a pas pu être évaluée. Veuillez réessayer."));
+      } finally {
+        setIsEvaluating(false);
+      }
+      return;
     }
+    setIsSubmitted(true);
+    if (selectedAnswer === correctAnswer && onCorrect) onCorrect(id);
   };
 
   const handleReset = () => {
     setSelectedAnswer(null);
     setIsSubmitted(false);
+    setEvaluationResult(null);
+    setEvaluationError("");
     // Shuffle the options order on retry to prevent memorization
     setShuffledOptions(prev => {
       const shuffled = [...prev];
@@ -90,7 +111,7 @@ export function SingleChoiceExercise({
         {shuffledOptions.map((option, idx) => {
           const letter = getLetterLabel(idx);
           const isSelected = selectedAnswer === option.id;
-          const isThisCorrect = option.id === correctAnswer;
+          const isThisCorrect = !onEvaluate && option.id === correctAnswer;
 
           let containerClass = "border border-[#e8e5e0] dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-[#c75b3a]/40 hover:shadow-sm cursor-pointer";
           let letterClass = "bg-[#c75b3a]/10 text-[#c75b3a] border-[#c75b3a]/20";
@@ -101,7 +122,7 @@ export function SingleChoiceExercise({
           }
 
           if (isSubmitted) {
-            if (isThisCorrect) {
+            if ((onEvaluate && isSelected && isCorrect) || isThisCorrect) {
               containerClass = "border-2 border-emerald-400 bg-emerald-50/80 dark:bg-emerald-900/20 shadow-sm";
               letterClass = "bg-emerald-500 text-white border-emerald-500";
             } else if (isSelected && !isCorrect) {
@@ -126,7 +147,7 @@ export function SingleChoiceExercise({
               <span className="text-sm text-foreground/90 leading-relaxed flex-1">
                 {option.text}
               </span>
-              {isSubmitted && isThisCorrect && (
+              {isSubmitted && ((onEvaluate && isSelected && isCorrect) || isThisCorrect) && (
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
               )}
               {isSubmitted && isSelected && !isCorrect && !isThisCorrect && (
@@ -149,10 +170,10 @@ export function SingleChoiceExercise({
         {!isSubmitted ? (
           <button
             onClick={handleSubmit}
-            disabled={!selectedAnswer}
+            disabled={!selectedAnswer || isEvaluating}
             className="px-8 py-3 rounded-xl bg-[#c75b3a] hover:bg-[#a84a2e] text-white text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.97]"
           >
-            {t("Check Answer", "Vérifier la réponse")}
+            {isEvaluating ? t("Checking…", "Vérification…") : t("Check Answer", "Vérifier la réponse")}
           </button>
         ) : (
           <div className="space-y-4">
@@ -173,19 +194,19 @@ export function SingleChoiceExercise({
                 <>
                   <XCircle className="w-5 h-5 text-red-400 shrink-0" />
                   <span className="text-sm font-semibold text-red-700 dark:text-red-400">
-                    {t("Incorrect — the correct answer is highlighted above", "Incorrect — la bonne réponse est indiquée ci-dessus")}
+                    {onEvaluate ? t("Incorrect — review the explanation and try again", "Incorrect — consultez l’explication puis réessayez") : t("Incorrect — the correct answer is highlighted above", "Incorrect — la bonne réponse est indiquée ci-dessus")}
                   </span>
                 </>
               )}
             </div>
             {/* Explanation */}
-            {explanation && (
+            {displayedExplanation && (
               <div className="bg-white dark:bg-slate-800 border border-[#e8e5e0] dark:border-slate-600 rounded-xl p-4">
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
                   {t("Explanation", "Explication")}
                 </p>
                 <p className="text-sm text-foreground/80 leading-relaxed">
-                  {explanation}
+                  {displayedExplanation}
                 </p>
               </div>
             )}
@@ -199,6 +220,7 @@ export function SingleChoiceExercise({
             </button>
           </div>
         )}
+        {evaluationError && <p role="alert" className="mt-3 text-sm font-medium text-red-700 dark:text-red-300">{evaluationError}</p>}
       </div>
     </div>
   );

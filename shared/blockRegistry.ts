@@ -152,6 +152,7 @@ const singleChoiceExerciseBlock: BlockTypeDefinition = {
       { key: "id", label: { en: "ID", fr: "ID" }, type: "text", required: true },
       { key: "text", label: { en: "Option text", fr: "Texte de l'option" }, type: "i18n_text", required: true },
     ]},
+    { key: "serverValidated", label: { en: "Validate answer on server", fr: "Valider la réponse côté serveur" }, type: "boolean", defaultValue: false },
     { key: "correctAnswer", label: { en: "Correct answer ID", fr: "ID de la bonne réponse" }, type: "text", required: true },
     { key: "explanation", label: { en: "Explanation", fr: "Explication" }, type: "i18n_textarea" },
   ],

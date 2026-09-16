@@ -79,6 +79,7 @@ export default function LessonViewer({
   const { user } = useAuth();
   const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
   const evaluateFreeResponse = trpc.training.evaluateFreeResponse.useMutation();
+  const validateServerChoice = trpc.training.validateServerChoice.useMutation();
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
   // This is what gets persisted as progress - NOT the navigation position
@@ -815,6 +816,7 @@ export default function LessonViewer({
             explanation={explanation}
             hint={typeof block.hint === 'string' ? block.hint : (block.hint?.[lang] || block.hint?.en || '')}
             lang={lang as 'en' | 'fr'}
+            onEvaluate={block.serverValidated ? async (selectedId) => validateServerChoice.mutateAsync({ courseId, exerciseId, selectedId, lang: lang === 'fr' ? 'fr' : 'en' }) : undefined}
             questionNumber={quizBlocksBefore + 1}
             onCorrect={(id) => { trackEventOnce("quiz_complete", `quiz-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, score_band: "75_100", passed: true }); setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; }); }}
           />

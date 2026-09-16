@@ -484,14 +484,63 @@
             {
               "type": "content",
               "body": {
-                "en": "Checkpoint 4: fix the broken plugin definition\n\nTry it now. The following SKILL.md works on the author’s machine but will fail when a teammate clones the project and installs the plugin.\n\nSelect the single defect, then select the correct fix.\n\n---\nname: deploy-validate\ndescription: Validates a deployment configuration before release.\n---",
-                "fr": "Checkpoint 4 : corriger la définition du plugin cassée\n\nEssayez-le maintenant. Le SKILL.md suivant fonctionne sur la machine de l'auteur mais échouera lorsqu'un collègue clone le projet et installe le plugin.\n\nSélectionnez le seul défaut, puis sélectionnez la bonne correction.\n\n---\nname: deploy-validate\ndescription: Valide une configuration de déploiement avant la mise en production.\n---"
+                "en": "The frontmatter is valid, but the skill includes this command:\n\n---\nname: deploy-validate\ndescription: Validates a deployment configuration before release.\n---\n\nRun `/Users/author/work/deploy-plugin/scripts/validate.sh` before release.\n\nIdentify the portability defect and choose the correct plugin-safe correction.",
+                "fr": "Le frontmatter est valide, mais la compétence contient cette commande :\n\n---\nname: deploy-validate\ndescription: Valide une configuration de déploiement avant la mise en production.\n---\n\nExécutez `/Users/author/work/deploy-plugin/scripts/validate.sh` avant la mise en production.\n\nIdentifiez le défaut de portabilité et choisissez la correction adaptée à un plugin."
               }
+            },
+            {
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "The defect is the author-specific absolute path. It exists only on the author’s machine, so a teammate who installs the plugin will not have that location. Because `validate.sh` is bundled inside the plugin, reference it relative to `${CLAUDE_PLUGIN_ROOT}`, which points to the plugin’s bundled files.",
+                "fr": "Le défaut est le chemin absolu propre à l’auteur. Il n’existe que sur sa machine ; un collègue qui installe le plugin n’aura donc pas cet emplacement. Comme `validate.sh` est fourni avec le plugin, il faut le référencer à partir de `${CLAUDE_PLUGIN_ROOT}`, qui pointe vers les fichiers inclus dans le plugin."
+              },
+              "hint": {
+                "en": "Ask whether the command can still locate a script after the plugin is installed in a different directory on another machine.",
+                "fr": "Demandez-vous si la commande peut encore trouver le script lorsque le plugin est installé dans un autre répertoire sur une autre machine."
+              },
+              "id": "checkpoint4_fix_plugin_definition",
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The defect is the `name` field. Remove it and keep the absolute command unchanged.",
+                    "fr": "Le défaut est le champ `name`. Supprimez-le et conservez la commande absolue telle quelle."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The defect is the author-specific absolute path. Replace it with `Run ${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh before release.`",
+                    "fr": "Le défaut est le chemin absolu propre à l’auteur. Remplacez-le par `Exécutez ${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh avant la mise en production.`"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The defect is that the script is not in the project root. Replace the command with `Run ${CLAUDE_PROJECT_DIR}/scripts/validate.sh before release.`",
+                    "fr": "Le défaut est que le script n’est pas à la racine du projet. Remplacez la commande par `Exécutez ${CLAUDE_PROJECT_DIR}/scripts/validate.sh avant la mise en production.`"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "The defect is the description text. Keep the absolute path, but make the description shorter.",
+                    "fr": "Le défaut est le texte de la description. Conservez le chemin absolu, mais raccourcissez la description."
+                  }
+                }
+              ],
+              "question": {
+                "en": "Which option correctly identifies and fixes the defect?",
+                "fr": "Quelle option identifie et corrige correctement le défaut ?"
+              },
+              "type": "single_choice_exercise",
+              "serverValidated": true
             }
           ],
           "completionRule": {
             "requires": [
-              "contentViewed"
+              "contentViewed",
+              "requiredExercisesPassed"
             ]
           }
         },

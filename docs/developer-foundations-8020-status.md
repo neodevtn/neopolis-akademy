@@ -6,7 +6,7 @@ La présente fenêtre est limitée à Developer Foundations. Elle privilégie le
 |---|---|---|
 | 1 — MSO Foundations | Durée 57 min, contenus restaurés, checkpoints standards, ressources sans vidéo générique | Réconciliation détaillée écran par écran Skilljar |
 | 2 — Production-Grade Prompting, Agents & Tool Use | Durée 209 min, 8 checkpoints standards, contenus structurés, reliquats localisés et vidéos non sourcées retirées | TP locaux exécutables sourcés |
-| 3 — Claude Code, MCP & Integration | Durée 142 min affichée également dans l’introduction, cartes critiques restaurées, métadonnées de cartes structurées, checkpoint Modes d’autorisation requis, catalogue vidéo cohérent | TP Claude Code/MCP supplémentaires, contenu tronqué du checkpoint 4 et exercices racine ambigus |
+| 3 — Claude Code, MCP & Integration | Durée 142 min affichée également dans l’introduction, cartes critiques restaurées, métadonnées de cartes structurées, checkpoint Modes d’autorisation requis, checkpoint 4 de portabilité restauré avec validation serveur, catalogue vidéo cohérent | TP Claude Code/MCP supplémentaires et exercices racine ambigus |
 | 4 — Production Engineering, Evals & Security | Trois checkpoints réparés et requis, durée 211 min, six cartes critiques restaurées, quatre tableaux concaténés restaurés en Markdown (évaluations, tests/récupération, erreurs, observabilité) et onze localisations françaises ciblées | Activités racine et médias non sourcés à réconcilier ; les termes techniques ambigus sont conservés |
 | 5 — Accelerators & IP Contribution | Checkpoint Packaging réparé, checkpoint orphelin retiré, durée 155 min, cartes critiques, quatre tableaux concaténés et localisations françaises ciblées restaurés | Étude de cas complète, activités racine ambiguës et contenus nécessitant une source complémentaire |
 
@@ -18,7 +18,7 @@ La restauration des tableaux Developer 4 est limitée aux segments dégradés et
 
 Le 16 septembre 2026, la source officielle Skilljar du parcours Developer a répondu `403` depuis l’environnement de contrôle. En conséquence, les activités racine ambiguës et l’étude de cas de livraison du cours 5 demeurent explicitement ouvertes : aucun TP, média ou contenu pédagogique nouveau n’est inféré en leur absence.
 
-Les guides publics Anthropic permettent désormais d’établir la correction factuelle du contenu tronqué du checkpoint 4 Developer 3 (chemin absolu d’auteur et usage de `${CLAUDE_PLUGIN_ROOT}`). Toutefois, le bloc standard `single_choice_exercise` garde actuellement `correctAnswer` dans le JSON pédagogique servi au navigateur. Comme le prompt source exige une correction côté serveur et l’absence de réponse correcte dans le JSON public, ce checkpoint reste ouvert tant qu’un mécanisme générique de validation serveur n’est pas disponible ; la proposition Claude Sonnet est archivée mais non appliquée.
+Les guides publics Anthropic ont permis d’établir la correction factuelle du checkpoint 4 Developer 3 (chemin absolu d’auteur et usage de `${CLAUDE_PLUGIN_ROOT}`). Un mode générique `serverValidated` a été ajouté au bloc standard `single_choice_exercise` : l’API de cours retire `correctAnswer` et l’explication du JSON servi au navigateur, puis une procédure tRPC protégée valide le choix et ne retourne l’explication qu’après soumission. La réponse erronée, la réponse correcte et l’activation de « Suivant » après validation ont été contrôlées dans le lecteur standard ; le correctif est réexécutable dans `scripts/repair-developer-course3.mjs`.
 
 ## Parcours explicitement reportés
 
