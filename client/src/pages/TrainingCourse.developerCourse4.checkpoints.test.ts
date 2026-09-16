@@ -1,6 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import course from '../../public/data/courses/claude_certified_developer_foundations__04.json';
 
+const collectFrenchText = (value: unknown, text: string[] = []): string[] => {
+  if (Array.isArray(value)) value.forEach((item) => collectFrenchText(item, text));
+  else if (value && typeof value === 'object') {
+    for (const [key, item] of Object.entries(value)) {
+      if (key === 'fr' && typeof item === 'string') text.push(item);
+      else if (key !== 'en') collectFrenchText(item, text);
+    }
+  }
+  return text;
+};
+
 describe('Developer Foundations course 4 checkpoint integrity', () => {
   const lesson = course.lessons[0] as any;
   const chapter = (id: string) => lesson.chapters.find((item: any) => item.id === id);
@@ -48,11 +59,14 @@ describe('Developer Foundations course 4 checkpoint integrity', () => {
   it('keeps the selected French learner-facing labels localized without changing technical identifiers', () => {
     const content = chapter('chapter_09').blocks.find((block: any) => block.type === 'content').body.fr;
     const errorHandlingContent = chapter('chapter_05').blocks.find((block: any) => block.type === 'content').body.fr;
+    const frenchCourseText = collectFrenchText(course).join('\n');
     expect(content).toContain('Sélection du modèle pour la tâche :');
     expect(content).toContain('Taille du prompt et du contexte :');
     expect(content).toContain('Nombre d’appels d’outils :');
     expect(content).toContain('schéma orchestrator-worker');
     expect(errorHandlingContent).toContain('stop_reason');
+    expect(frenchCourseText).toContain('Point de contrôle Tests et traçage · 10 min');
+    expect(frenchCourseText).not.toContain('CheckpointTesting & Tracing·10 min');
     expect(content).not.toContain('Model selection for the task :');
     expect(content).not.toContain('Prompt and context size :');
     expect(content).not.toContain('un score baseline épinglé');

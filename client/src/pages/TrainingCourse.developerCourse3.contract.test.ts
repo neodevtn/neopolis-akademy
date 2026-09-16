@@ -39,6 +39,8 @@ describe('Developer Foundations course 3 critical content contract', () => {
     expect(content('chapter_01').fr).toContain('## Modes d’autorisation et portes humaines');
     expect(content('chapter_03').fr).toContain('| Mécanisme |');
     expect(content('chapter_05').fr).toContain('| Couche |');
+    expect(JSON.stringify(course)).toContain('Point de contrôle 1 : assembler le fichier settings et placer le contrôle humain');
+    expect(JSON.stringify(course)).toContain('Point de contrôle 3 : placez la skill dans le runtime approprié — Essayez maintenant…');
     expect(content('chapter_01').fr).not.toContain('working directory');
     expect(content('chapter_03').fr).not.toContain('managed settings');
   });
