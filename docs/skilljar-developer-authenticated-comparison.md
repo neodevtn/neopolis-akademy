@@ -83,3 +83,5 @@ Le contrôle du lecteur local via le navigateur partagé confirme que cette URL 
 Le compte apprenant de démonstration a ensuite ouvert une session locale séparée. Le tableau de bord affiche bien la session apprenant (progression initiale de 0 %) ; il peut donc servir au contrôle fonctionnel des tâches cumulatives sans utiliser ni modifier la progression Skilljar.
 
 Le lien direct vers S18, la première tâche cumulative restaurée, affiche correctement l’état « Cours verrouillé » pour ce compte à progression initiale. La plateforme exige d’abord la fin du cours précédent ; ce comportement confirme que l’ajout des tâches n’a pas ouvert de contournement de la progression séquentielle. Aucun état de progression n’a été forcé pour contourner cette règle lors du contrôle.
+
+Après propagation publique, la route tRPC du domaine principal confirme la présence des deux écrans sources `S18_context` et `S19_context`, de deux blocs `cloud_exercise`, de la tâche d’intégration cumulative et de la correction d’assemblage. Le script `scripts/verify-developer3-cumulative-public.mjs` vérifie ces marqueurs source et reste compatible avec les libellés français.
