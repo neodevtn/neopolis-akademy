@@ -150,13 +150,40 @@ describe("Anthropic certification audit corrections", () => {
     }
   });
 
-  it("replaces the AI Fluency exercise with the official reflection and preserves its completion rule", () => {
+  it("keeps verified source metadata on official videos that have a local transcript", () => {
+    const sourceByCourse: Record<string, string> = {
+      claude_certified_architect_foundations__04: "https://anthropic-partners.skilljar.com/claude-code-in-action",
+      claude_certified_architect_foundations__05: "https://anthropic-partners.skilljar.com/claude-101",
+    };
+    for (const [courseId, sourceUrl] of Object.entries(sourceByCourse)) {
+      const course = readCourse(courseId);
+      const chapters = course.lessons.flatMap((lesson: any) => lesson.chapters || []);
+      const transcripts = new Set(chapters.flatMap((chapter: any) => chapter.blocks || []).filter((block: any) => block.type === "transcript").map((block: any) => block.videoId));
+      const videos = chapters.flatMap((chapter: any) => chapter.blocks || []).filter((block: any) => block.type === "video");
+      expect(videos.length).toBeGreaterThan(0);
+      for (const video of videos) {
+        expect(video.mediaMeta).toMatchObject({ origin: "anthropic", official: true, sourceUrl, localAssetId: video.videoId, transcriptId: `transcript_${video.videoId}` });
+        expect(video.mediaMeta.checksum).toMatch(/^sha256:[a-f0-9]{64}$/);
+        expect(transcripts.has(video.videoId)).toBe(true);
+      }
+    }
+  });
+
+  it("keeps the active AI Fluency reflection while removing its unreferenced duplicate definition", () => {
+    const course = readCourse("claude_certified_architect_foundations__01");
+    const chapter = course.lessons.find((lesson: any) => lesson.id === "lesson_10").chapters.find((item: any) => item.id === "chapter_02");
+    expect(chapter.blocks.find((block: any) => block.type === "checkpoint")?.exerciseId).toBe("ex_ai_fluency_intro_reflection");
+    expect(course.exercises.some((exercise: any) => exercise.id === "ex_ai_fluency_intro_reflection")).toBe(true);
+    expect(course.exercises.some((exercise: any) => exercise.id === "ex_claude_certified_architect_foundations__01_010")).toBe(false);
+  });
+
+  it("keeps the referenced AI Fluency reflection and its completion rule", () => {
     const course = readCourse("claude_certified_architect_foundations__01");
     const lesson = course.lessons.find((item: any) => item.id === "lesson_10");
     const chapter = lesson.chapters.find((item: any) => item.id === "chapter_02");
     const content = chapter.blocks.find((block: any) => block.type === "content");
     const download = chapter.blocks.find((block: any) => block.type === "download");
-    const exercise = course.exercises.find((item: any) => item.id === "ex_claude_certified_architect_foundations__01_010");
+    const exercise = course.exercises.find((item: any) => item.id === "ex_ai_fluency_intro_reflection");
 
     expect(chapter.completionRule.requires).toEqual(["requiredExercisesPassed"]);
     expect(chapter.blocks[0]).toMatchObject({ type: "callout", variant: "info", title: { fr: "Contenu officiel Anthropic" } });
@@ -164,8 +191,9 @@ describe("Anthropic certification audit corrections", () => {
     expect(content.body.en).not.toContain("Option 3");
     expect(download.download_url).toBe("/api/assets/01_AI_Fluency_vocabulary_cheat_sheet_d44ea415.pdf");
     expect(download).not.toHaveProperty("image");
-    expect(exercise).toMatchObject({ chapterId: "chapter_02", required: true, title: { en: "Exercise: Putting Things into Practice" } });
-    expect(exercise.prompt.en).not.toContain("Option 3");
+    expect(chapter.blocks.find((block: any) => block.type === "checkpoint")?.exerciseId).toBe("ex_ai_fluency_intro_reflection");
+    expect(exercise).toMatchObject({ chapterId: "chapter_02", required: true, title: { en: "Reflection: Introduction to AI Fluency" } });
+    expect(exercise.prompt.en).toContain("Before moving on, reflect on your own experiences");
   });
 
   it("labels the practical tutorials as a Neopolis supplement", () => {

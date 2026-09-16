@@ -3203,3 +3203,5 @@
 - [x] Normaliser le libellé technique « Implementing the RAG Flow » dans Architect Foundations cours 6 afin de l’aligner sur la section déclarée et les conventions du parcours
 - [x] Normaliser les formulations françaises hybrides AI/IA confirmées par Claude Sonnet dans les cours Architect Foundations, sans traduire les noms de produits Anthropic ni réécrire les contenus
 - [x] Normaliser les métadonnées des téléchargements Architect Foundations déjà vérifiés : conserver les URL et contenus, puis renseigner la provenance Anthropic, le type MIME, la taille et le checksum réellement observés sans attribuer de média non confirmé
+- [x] Normaliser les métadonnées des vidéos Architect Foundations déjà associées à une transcription locale et une source de cours officielle, sans ajouter les vidéos encore non réconciliées
+- [x] Retirer du cours AI Fluency l’exercice requis d’introduction non référencé qui duplique la réflexion déjà affichée et reliée au checkpoint actif, sans supprimer les activités incertaines

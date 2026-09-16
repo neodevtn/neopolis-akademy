@@ -43,7 +43,10 @@ function recursivelyCollectStrings(value, locale, output = []) {
 }
 
 function missingMediaFields(meta, fields) {
-  return fields.filter((field) => meta?.[field] === undefined || meta?.[field] === null || meta?.[field] === "");
+  return fields.filter((field) => {
+    if (field === "duration") return !meta || !(field in meta);
+    return meta?.[field] === undefined || meta?.[field] === null || meta?.[field] === "";
+  });
 }
 
 async function inspectCourse(courseId) {
@@ -63,14 +66,18 @@ async function inspectCourse(courseId) {
   const supplementaryVideos = videos.filter((block) => block.mediaMeta?.official === false);
   const stringsFr = recursivelyCollectStrings(course, "fr");
   const localeSignals = Object.fromEntries(signals.map(({ key, pattern }) => [key, stringsFr.filter((value) => pattern.test(value)).length]));
-  const requiredVideoFields = ["origin", "official", "sourceUrl", "localAssetId", "language", "captions", "transcriptId", "duration", "checksum"];
+  const requiredVideoFields = ["origin", "official", "sourceUrl", "localAssetId", "language", "captions", "duration", "checksum"];
   const requiredDownloadFields = ["origin", "official", "mimeType", "bytes", "checksum"];
-  const videoIssues = videos.map((video) => ({
-    id: video.videoId || null,
-    title: localized(video.title),
-    missingMediaMeta: missingMediaFields(video.mediaMeta, requiredVideoFields),
-    hasTranscript: transcripts.some((transcript) => transcript.videoId === video.videoId),
-  })).filter((video) => video.missingMediaMeta.length > 0);
+  const videoIssues = videos.map((video) => {
+    const hasTranscript = transcripts.some((transcript) => transcript.videoId === video.videoId);
+    const requiredFields = video.mediaMeta?.official === true ? [...requiredVideoFields, "transcriptId"] : requiredVideoFields;
+    return {
+      id: video.videoId || null,
+      title: localized(video.title),
+      missingMediaMeta: missingMediaFields(video.mediaMeta, requiredFields),
+      hasTranscript,
+    };
+  }).filter((video) => video.missingMediaMeta.length > 0);
   const downloadIssues = downloads.map((download) => ({
     title: localized(download.title),
     url: download.download_url || download.url || null,
