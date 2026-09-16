@@ -1,7 +1,7 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { customAlphabet } from "nanoid";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions, aiResponseEvaluations, examReminders, scheduledJobRegistry, adminActivityLog } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions, aiResponseEvaluations, examReminders, scheduledJobRegistry, adminActivityLog, learnerProfiles } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
@@ -747,6 +747,7 @@ export async function getLearnerProgress(userId: number) {
 
   // Get user info for viaCandidature
   const [userRow] = await db.select({ email: users.email, name: users.name, createdAt: users.createdAt, lastSignedIn: users.lastSignedIn, role: users.role }).from(users).where(eq(users.id, userId)).limit(1);
+  const [learnerProfile] = await db.select().from(learnerProfiles).where(eq(learnerProfiles.userId, userId)).limit(1);
   let viaCandidature = false;
   if (userRow?.email) {
     const [app] = await db.select({ id: applications.id }).from(applications).where(eq(applications.email, userRow.email)).limit(1);
@@ -756,6 +757,8 @@ export async function getLearnerProgress(userId: number) {
   const [application] = userRow?.email
     ? await db.select({
       id: applications.id,
+      firstName: applications.firstName,
+      lastName: applications.lastName,
       phone: applications.phone,
       country: applications.country,
       city: applications.city,
@@ -806,7 +809,7 @@ export async function getLearnerProgress(userId: number) {
     ...achievements.map((achievement) => ({ id: `achievement_${achievement.id}`, at: achievement.issuedAt, label: "Badge ou certificat obtenu", type: "achievement" })),
   ].filter((milestone): milestone is { id: string; at: Date; label: string; type: string } => Boolean(milestone)).sort((left, right) => right.at.getTime() - left.at.getTime());
 
-  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, courseFeedback: feedback, activityLog, achievements, competencies, metrics, certificationProgress, application: application || null, groups, milestones, viaCandidature, userInfo: userRow || null };
+  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, courseFeedback: feedback, activityLog, achievements, competencies, metrics, certificationProgress, application: application || null, learnerProfile: learnerProfile || null, groups, milestones, viaCandidature, userInfo: userRow || null };
 }
 
 export async function getLearnerActivityLogPage(userId: number, page = 1, pageSize = 20, search?: string) {
@@ -1488,6 +1491,67 @@ export async function updateUserEmail(input: { userId: number; email: string; ac
     const [updated] = await tx.select().from(users).where(eq(users.id, input.userId)).limit(1);
     if (!updated) throw new Error("Utilisateur introuvable");
     return { user: updated, changed: true };
+  });
+}
+
+/**
+ * Corrige les coordonnées d’un compte depuis l’administration. Les valeurs ne sont
+ * jamais envoyées par e-mail : seuls les champs modifiés sont conservés dans les journaux.
+ */
+export async function updateLearnerProfileByAdmin(input: {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  phone: string | null;
+  changedBy: number;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return db.transaction(async (tx) => {
+    const [user] = await tx.select().from(users).where(eq(users.id, input.userId)).limit(1);
+    if (!user) throw new Error("Utilisateur introuvable");
+
+    const [existingProfile] = await tx.select().from(learnerProfiles).where(eq(learnerProfiles.userId, input.userId)).limit(1);
+    const firstName = input.firstName;
+    const lastName = input.lastName;
+    const phone = input.phone;
+    const nextName = `${firstName} ${lastName}`.trim();
+    const changedFields = [
+      firstName !== existingProfile?.firstName ? "firstName" : null,
+      lastName !== existingProfile?.lastName ? "lastName" : null,
+      phone !== existingProfile?.phone ? "phone" : null,
+      nextName !== user.name ? "displayName" : null,
+    ].filter((field): field is string => Boolean(field));
+
+    if (changedFields.length === 0) return { changed: false, user, profile: existingProfile || null, changedFields };
+
+    if (nextName !== user.name) {
+      await tx.update(users).set({ name: nextName }).where(eq(users.id, input.userId));
+    }
+    if (existingProfile) {
+      await tx.update(learnerProfiles).set({ firstName, lastName, phone, updatedBy: input.changedBy }).where(eq(learnerProfiles.userId, input.userId));
+    } else {
+      await tx.insert(learnerProfiles).values({ userId: input.userId, firstName, lastName, phone, updatedBy: input.changedBy });
+    }
+    if (user.email) {
+      await tx.update(applications).set({ firstName, lastName, phone: phone || "" }).where(eq(applications.email, user.email));
+    }
+    await tx.insert(learnerActivityLog).values({
+      userId: input.userId,
+      actionType: "profile_updated_by_admin",
+      metadata: { fields: changedFields, notificationSent: false },
+    });
+    await tx.insert(adminActivityLog).values({
+      adminId: input.changedBy,
+      action: "update_learner_profile",
+      targetType: "user",
+      targetId: input.userId,
+      details: { fields: changedFields, notificationSent: false },
+    });
+    const [updatedUser] = await tx.select().from(users).where(eq(users.id, input.userId)).limit(1);
+    const [updatedProfile] = await tx.select().from(learnerProfiles).where(eq(learnerProfiles.userId, input.userId)).limit(1);
+    return { changed: true, user: updatedUser || user, profile: updatedProfile || null, changedFields };
   });
 }
 

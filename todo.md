@@ -3205,3 +3205,5 @@
 - [x] Normaliser les métadonnées des téléchargements Architect Foundations déjà vérifiés : conserver les URL et contenus, puis renseigner la provenance Anthropic, le type MIME, la taille et le checksum réellement observés sans attribuer de média non confirmé
 - [x] Normaliser les métadonnées des vidéos Architect Foundations déjà associées à une transcription locale et une source de cours officielle, sans ajouter les vidéos encore non réconciliées
 - [x] Retirer du cours AI Fluency l’exercice requis d’introduction non référencé qui duplique la réflexion déjà affichée et reliée au checkpoint actif, sans supprimer les activités incertaines
+- [x] Permettre aux administrateurs de corriger silencieusement les données de profil d’un apprenant (nom, prénom, téléphone et coordonnées autorisées), avec validation, contrôle de rôle et trace interne sans notification ni accord apprenant
+- [x] Réorganiser le menu et l’espace d’administration pédagogique en sections distinctes et explicites pour les banques de questions, les examens de certification et les quiz/checkpoints, sans dupliquer les procédures ni les écrans existants

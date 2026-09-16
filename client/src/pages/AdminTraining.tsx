@@ -101,6 +101,8 @@ export default function AdminTraining() {
   const [editEmailValue, setEditEmailValue] = useState("");
   const [credentialDialogOpen, setCredentialDialogOpen] = useState(false);
   const [learnerEmailDraft, setLearnerEmailDraft] = useState("");
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [learnerProfileDraft, setLearnerProfileDraft] = useState({ firstName: "", lastName: "", phone: "" });
   const [passwordResetDialogOpen, setPasswordResetDialogOpen] = useState(false);
   const [orientationProposalOpen, setOrientationProposalOpen] = useState(false);
   const [orientationProposalJustification, setOrientationProposalJustification] = useState("");
@@ -396,6 +398,15 @@ export default function AdminTraining() {
     },
     onError: (error) => toast.error(error.message || "Impossible d’envoyer le lien de réinitialisation."),
   });
+  const updateLearnerProfileMutation = trpc.admin.updateLearnerProfile.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.changed ? "Profil apprenant corrigé sans notification." : "Aucune modification de profil à enregistrer.");
+      setProfileDialogOpen(false);
+      learnersQuery.refetch();
+      detailQuery.refetch();
+    },
+    onError: (error) => toast.error(error.message || "Impossible de corriger le profil apprenant."),
+  });
 
   const cancelInvitationMutation = trpc.admin.cancelInvitation.useMutation({
     onSuccess: () => {
@@ -509,6 +520,7 @@ export default function AdminTraining() {
       return byCertification;
     }, {} as Record<string, any>));
     const candidateProfile = (detail as any).application ?? null;
+    const storedProfile = (detail as any).learnerProfile ?? null;
     const learnerGroups = (detail as any).groups ?? [];
     const milestones = (detail as any).milestones ?? [];
     const integrity = learnerIntegrityQuery.data;
@@ -692,6 +704,35 @@ export default function AdminTraining() {
                       </div>
                     </div>
                   )}
+                  <div className="mb-5 flex flex-col gap-4 rounded-xl border border-sky-200 bg-sky-50/60 p-4 dark:border-sky-900/50 dark:bg-sky-950/20 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <h4 className="flex items-center gap-2 text-sm font-semibold text-foreground"><UserCog className="h-4 w-4 text-sky-700 dark:text-sky-400" /> Coordonnées du compte</h4>
+                      <p className="mt-1 text-xs text-muted-foreground">Les corrections sont journalisées pour l’administration uniquement. Aucun e-mail, message ou accord de l’apprenant n’est demandé.</p>
+                      <p className="mt-2 text-xs text-muted-foreground">{[storedProfile?.firstName, storedProfile?.lastName].filter(Boolean).join(" ") || selectedLearner?.name || (detail as any).userInfo?.name || "Nom non renseigné"}{storedProfile?.phone || candidateProfile?.phone ? ` · ${storedProfile?.phone || candidateProfile?.phone}` : " · Téléphone non renseigné"}</p>
+                    </div>
+                    <Dialog open={profileDialogOpen} onOpenChange={(open) => {
+                      setProfileDialogOpen(open);
+                      if (open) {
+                        const displayName = String(selectedLearner?.name || (detail as any).userInfo?.name || "").trim().split(/\s+/);
+                        setLearnerProfileDraft({
+                          firstName: storedProfile?.firstName || candidateProfile?.firstName || displayName.shift() || "",
+                          lastName: storedProfile?.lastName || candidateProfile?.lastName || displayName.join(" "),
+                          phone: storedProfile?.phone || candidateProfile?.phone || "",
+                        });
+                      }
+                    }}>
+                      <DialogTrigger asChild><Button variant="outline" size="sm" className="shrink-0 gap-2"><Edit2 className="h-4 w-4" /> Corriger le profil</Button></DialogTrigger>
+                      <DialogContent className="max-w-md">
+                        <DialogHeader><DialogTitle>Corriger le profil apprenant</DialogTitle><DialogDescription>Cette action administrative actualise les coordonnées connues et reste silencieuse côté apprenant.</DialogDescription></DialogHeader>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div className="space-y-2"><label className="text-sm font-medium" htmlFor="learner-first-name">Prénom</label><Input id="learner-first-name" autoComplete="off" value={learnerProfileDraft.firstName} onChange={(event) => setLearnerProfileDraft((current) => ({ ...current, firstName: event.target.value }))} /></div>
+                          <div className="space-y-2"><label className="text-sm font-medium" htmlFor="learner-last-name">Nom</label><Input id="learner-last-name" autoComplete="off" value={learnerProfileDraft.lastName} onChange={(event) => setLearnerProfileDraft((current) => ({ ...current, lastName: event.target.value }))} /></div>
+                          <div className="space-y-2 sm:col-span-2"><label className="text-sm font-medium" htmlFor="learner-phone">Téléphone</label><Input id="learner-phone" inputMode="tel" placeholder="+21612345678" value={learnerProfileDraft.phone} onChange={(event) => setLearnerProfileDraft((current) => ({ ...current, phone: event.target.value }))} /><p className="text-xs text-muted-foreground">Format international E.164. Laissez vide si le numéro n’est pas connu.</p></div>
+                        </div>
+                        <DialogFooter><Button type="button" variant="ghost" onClick={() => setProfileDialogOpen(false)}>Annuler</Button><Button type="button" disabled={!learnerProfileDraft.firstName.trim() || !learnerProfileDraft.lastName.trim() || (!!learnerProfileDraft.phone.trim() && !/^\+[1-9]\d{6,14}$/.test(learnerProfileDraft.phone.trim())) || updateLearnerProfileMutation.isPending} onClick={() => updateLearnerProfileMutation.mutate({ userId: selectedUserId, firstName: learnerProfileDraft.firstName.trim(), lastName: learnerProfileDraft.lastName.trim(), phone: learnerProfileDraft.phone.trim() || null })}>{updateLearnerProfileMutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />} Enregistrer sans notifier</Button></DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between"><div><h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><FileText className="h-5 w-5 text-primary" /> Profil candidat et accès</h3><p className="mt-1 text-sm text-muted-foreground">Informations issues de la candidature, visibles uniquement à l’administration.</p></div>{candidateProfile ? <span className="self-start rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">Candidature {candidateProfile.status}</span> : <span className="self-start rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">Aucune candidature liée</span>}</div>
                   {candidateProfile ? <div className="mt-5 grid gap-5 lg:grid-cols-2"><div className="grid gap-3 sm:grid-cols-2"><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Situation</p><p className="mt-1 text-sm font-semibold text-foreground">{candidateProfile.currentRole || "—"}</p><p className="mt-1 text-xs text-muted-foreground">{candidateProfile.sector || "Secteur non renseigné"} · {candidateProfile.yearsExperience ?? 0} an(s) d’expérience</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Localisation</p><p className="mt-1 text-sm font-semibold text-foreground">{[candidateProfile.city, candidateProfile.country].filter(Boolean).join(", ") || "—"}</p><p className="mt-1 text-xs text-muted-foreground">Téléphone renseigné : {candidateProfile.phone ? "oui" : "non"}</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Niveaux déclarés</p><p className="mt-1 text-sm text-foreground">IA : {candidateProfile.aiKnowledge || "—"} · Code : {candidateProfile.programmingLevel || "—"}</p><p className="mt-1 text-xs text-muted-foreground">Cloud : {candidateProfile.cloudExperience || "—"}</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Dossier</p><div className="mt-2 flex flex-wrap gap-2">{candidateProfile.cvFileUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.cvFileUrl} target="_blank" rel="noreferrer">Voir le CV</a> : null}{candidateProfile.videoFileUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.videoFileUrl} target="_blank" rel="noreferrer">Voir la vidéo</a> : null}{candidateProfile.linkedinUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a> : null}</div></div></div><div className="rounded-xl border border-border bg-muted/20 p-4"><h4 className="text-sm font-semibold text-foreground">Évaluation de candidature</h4><div className="mt-4 grid grid-cols-2 gap-3"><AuditStat label="Technique" value={Math.round(Number(candidateProfile.scoreTechnique || 0))} detail="Score candidature" /><AuditStat label="Métier" value={Math.round(Number(candidateProfile.scoreMetier || 0))} detail="Score candidature" /><AuditStat label="Communication" value={Math.round(Number(candidateProfile.scoreCommunication || 0))} detail="Score candidature" /><AuditStat label="Total" value={Math.round(Number(candidateProfile.scoreTotal || 0))} detail="Score candidature" /></div><p className="mt-4 text-xs text-muted-foreground">Candidature déposée le {candidateProfile.createdAt ? new Date(candidateProfile.createdAt).toLocaleDateString("fr-FR") : "—"}.</p></div></div> : <p className="mt-5 rounded-xl bg-muted/30 p-4 text-sm text-muted-foreground">Ce compte provient d’une invitation ou ne possède pas de candidature liée.</p>}
                   <div className="mt-5 border-t border-border pt-4"><h4 className="text-sm font-semibold text-foreground">Groupes d’accès</h4>{learnerGroups.length === 0 ? <p className="mt-2 text-sm text-muted-foreground">Aucun groupe n’est actuellement rattaché à ce compte.</p> : <div className="mt-3 flex flex-wrap gap-2">{learnerGroups.map((group: any) => <span key={group.id} className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">{group.name}{group.isSystem ? " · accès total" : ""}</span>)}</div>}</div>

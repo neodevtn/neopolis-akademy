@@ -6,7 +6,7 @@ import { z } from "zod";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation,
-getAdminAnalytics, getExamMonitoring, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation, updateUserEmail, setUserPasswordHash, recordAccountSecurityEvent, getUserById, createPasswordResetToken } from "./db";
+getAdminAnalytics, getExamMonitoring, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation, updateUserEmail, updateLearnerProfileByAdmin, setUserPasswordHash, recordAccountSecurityEvent, getUserById, createPasswordResetToken } from "./db";
 import { getLearnerActivityLogPage } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
@@ -998,6 +998,19 @@ export const appRouter = router({
         const result = await updateUserEmail({ userId: input.userId, email: input.email, actor: "admin" });
         await logAdminActivity({ adminId: ctx.user.id, action: "update_user_email", targetType: "user", targetId: input.userId, details: { changed: result.changed } });
         return { success: true, changed: result.changed, email: result.user.email };
+      }),
+
+    updateLearnerProfile: protectedProcedure
+      .input(z.object({
+        userId: z.number().int().positive(),
+        firstName: z.string().trim().min(1).max(100),
+        lastName: z.string().trim().min(1).max(100),
+        phone: z.string().trim().regex(/^\+[1-9]\d{6,14}$/, "Le téléphone doit respecter le format international E.164.").nullable(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Accès réservé aux administrateurs." });
+        const result = await updateLearnerProfileByAdmin({ ...input, changedBy: ctx.user.id });
+        return { success: true, changed: result.changed, changedFields: result.changedFields, profile: result.profile, name: result.user.name };
       }),
 
     requestLearnerPasswordReset: protectedProcedure

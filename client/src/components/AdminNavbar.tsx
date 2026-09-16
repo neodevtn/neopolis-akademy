@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { HeaderBrandLogo } from "@/components/BrandLogo";
-import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, BriefcaseBusiness, ChevronDown, ClipboardCheck, FileImage, Gift, Layers, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
+import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, BriefcaseBusiness, CheckCircle2, ChevronDown, ClipboardCheck, FileImage, Gift, Layers, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
 
 type AdminPage = "candidatures" | "training" | "talent" | "content" | "media" | "errors";
 type NavItem = { label: string; href: string; icon: typeof LayoutDashboard; page: AdminPage; description: string };
@@ -37,6 +37,9 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     items: [
       { label: "Contenus des cours", href: "/admin/content", icon: BookOpen, page: "content", description: "Éditer les leçons et interactions" },
       { label: "Catalogue & publications", href: "/admin/content?mode=catalog", icon: BookOpen, page: "content", description: "Organiser et gérer les états" },
+      { label: "Banques de questions", href: "/admin/content?mode=question-banks", icon: Layers, page: "content", description: "Questions des examens par certification" },
+      { label: "Examens de certification", href: "/admin/content?mode=exam-configurations", icon: ClipboardCheck, page: "content", description: "Durée, seuils et publication" },
+      { label: "Quiz & checkpoints", href: "/admin/content?mode=quiz-banks", icon: CheckCircle2, page: "content", description: "Banques de quiz par cours" },
       { label: "Bibliothèque médias", href: "/admin/media", icon: FileImage, page: "media", description: "Vidéos, PDF et images" },
       { label: "Gouvernance IA", href: "/admin?tab=ai_usage", icon: BarChart3, page: "candidatures", description: "Suivre les usages TekTek" },
     ],

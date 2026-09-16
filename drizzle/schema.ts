@@ -29,6 +29,22 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
+/** Coordonnées de contact du compte, distinctes du dossier de candidature historique. */
+export const learnerProfiles = mysqlTable("learner_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  firstName: varchar("firstName", { length: 100 }),
+  lastName: varchar("lastName", { length: 100 }),
+  /** Format E.164 : signe + suivi de 7 à 15 chiffres. */
+  phone: varchar("phone", { length: 16 }),
+  updatedBy: int("updatedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("learner_profiles_user_unique").on(table.userId),
+]);
+export type LearnerProfile = typeof learnerProfiles.$inferSelect;
+
 /** Groupes d’apprenants administrables. Le groupe système Full access préserve les accès historiques. */
 export const learnerGroups = mysqlTable("learner_groups", {
   id: int("id").autoincrement().primaryKey(),

@@ -49,7 +49,7 @@ import { buildNavigationUrl } from "@shared/navigationUrls";
 import { isAdministrativeRole } from "@shared/roles";
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
-type ViewMode = "browse" | "catalog" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
+type ViewMode = "browse" | "catalog" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam" | "question-banks" | "exam-configurations" | "quiz-banks";
 
 export default function AdminContentManager() {
   const { user, isAuthenticated } = useAuth();
@@ -66,7 +66,7 @@ export default function AdminContentManager() {
   };
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     const requested = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("mode") : null;
-    return requested === "edit" ? "edit-course" : requested === "view" ? "course" : requested === "catalog" ? "catalog" : requested === "quiz" ? "edit-quiz" : requested === "quiz-simulate" ? "quiz-simulate" : "browse";
+    return requested === "edit" ? "edit-course" : requested === "view" ? "course" : requested === "catalog" ? "catalog" : requested === "quiz" ? "edit-quiz" : requested === "quiz-simulate" ? "quiz-simulate" : requested === "question-banks" ? "question-banks" : requested === "exam-configurations" ? "exam-configurations" : requested === "quiz-banks" ? "quiz-banks" : "browse";
   });
   const [selectedCourseId, setSelectedCourseId] = useState<string>(() =>
     typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("courseId") || "" : "",
@@ -126,7 +126,7 @@ export default function AdminContentManager() {
     if (mode === "edit") return "edit-course";
     if (mode === "view") return "course";
     if (mode === "quiz") return "edit-quiz";
-    if (["browse", "catalog", "course", "quiz-simulate", "exam-simulate", "edit-course", "edit-quiz", "edit-exam"].includes(mode || "")) return mode as ViewMode;
+    if (["browse", "catalog", "course", "quiz-simulate", "exam-simulate", "edit-course", "edit-quiz", "edit-exam", "question-banks", "exam-configurations", "quiz-banks"].includes(mode || "")) return mode as ViewMode;
     return "browse";
   };
   const navigateContent = (nextMode: ViewMode, options: { courseId?: string; certificationId?: string; lesson?: number; chapter?: number } = {}) => {
@@ -173,8 +173,14 @@ export default function AdminContentManager() {
   const examQuestionsQuery = trpc.adminContent.getMockExamQuestions.useQuery(undefined, {
     enabled: isAuthenticated && isAdmin && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
   });
+  const examQuestionSummaryQuery = trpc.adminContent.getMockExamQuestionSummary.useQuery(undefined, {
+    enabled: isAuthenticated && isAdmin && (viewMode === "question-banks" || viewMode === "exam-configurations"),
+  });
+  const quizBankSummaryQuery = trpc.adminContent.getQuizBankSummary.useQuery(undefined, {
+    enabled: isAuthenticated && isAdmin && viewMode === "quiz-banks",
+  });
   const examConfigurationsQuery = trpc.adminContent.getExamConfigurations.useQuery(undefined, {
-    enabled: isAuthenticated && isAdmin && (viewMode === "catalog" || viewMode === "exam-simulate" || viewMode === "edit-exam"),
+    enabled: isAuthenticated && isAdmin && (viewMode === "catalog" || viewMode === "exam-simulate" || viewMode === "edit-exam" || viewMode === "question-banks" || viewMode === "exam-configurations"),
   });
   const catalogQuery = trpc.adminContent.getTrainingIndex.useQuery(undefined, {
     enabled: isAuthenticated && isAdmin && viewMode === "catalog",
@@ -979,6 +985,35 @@ export default function AdminContentManager() {
     );
   };
 
+  const certificationTitle = (certification: any) => t(certification?.title) || certification?.id || "Certification";
+
+  const renderQuestionBanks = () => {
+    const summaries = examQuestionSummaryQuery.data || [];
+    const configurations = (examConfigurationsQuery.data as Record<string, any> | undefined) || {};
+    if (examQuestionSummaryQuery.isLoading || examConfigurationsQuery.isLoading) return <div className="py-10 text-center text-sm text-muted-foreground">Chargement des banques de questions…</div>;
+    const byCertification = new Map(summaries.map((summary) => [summary.certificationId, summary]));
+    return <section className="space-y-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div><h3 className="flex items-center gap-2 text-lg font-semibold"><Layers className="h-5 w-5 text-amber-700" /> Banques de questions d’examen</h3><p className="mt-1 text-sm text-muted-foreground">Gérez les questions, leurs domaines et les distracteurs. Les règles de durée et de score sont gérées séparément dans les examens.</p></div><Button variant="outline" onClick={() => navigateContent("exam-configurations")}><GraduationCap className="mr-2 h-4 w-4" /> Voir les examens</Button></div>
+      <div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="min-w-[760px] w-full text-sm"><thead className="border-b bg-muted/40 text-left"><tr><th className="px-4 py-3 font-semibold">Certification</th><th className="px-4 py-3 font-semibold">Questions</th><th className="px-4 py-3 font-semibold">Domaines</th><th className="px-4 py-3 font-semibold">État de l’examen</th><th className="px-4 py-3 text-right font-semibold">Actions</th></tr></thead><tbody>{trainingIndex.certifications.map((certification: any) => { const summary = byCertification.get(certification.id); const questionCount = summary?.questionCount || 0; const config = configurations[certification.id]; return <tr key={certification.id} className="border-b last:border-0 hover:bg-muted/20"><td className="px-4 py-3"><p className="font-medium text-foreground">{certificationTitle(certification)}</p><p className="mt-0.5 text-xs text-muted-foreground">{certification.id}</p></td><td className="px-4 py-3"><Badge variant={questionCount ? "secondary" : "outline"}>{questionCount} question{questionCount > 1 ? "s" : ""}</Badge></td><td className="px-4 py-3 text-muted-foreground">{summary?.domainCount || "—"}</td><td className="px-4 py-3"><Badge className={config?.isPublished === false ? "bg-slate-200 text-slate-700 hover:bg-slate-200" : "bg-emerald-100 text-emerald-800 hover:bg-emerald-100"}>{config?.isPublished === false ? "Non publié" : config ? "Publié" : "À configurer"}</Badge></td><td className="px-4 py-3 text-right"><Button size="sm" onClick={() => navigateContent("edit-exam", { certificationId: certification.id })}><Edit3 className="mr-1.5 h-3.5 w-3.5" /> Gérer la banque</Button></td></tr>; })}</tbody></table></div>
+    </section>;
+  };
+
+  const renderExamConfigurations = () => {
+    const summaries = examQuestionSummaryQuery.data || [];
+    const configurations = (examConfigurationsQuery.data as Record<string, any> | undefined) || {};
+    if (examQuestionSummaryQuery.isLoading || examConfigurationsQuery.isLoading) return <div className="py-10 text-center text-sm text-muted-foreground">Chargement des examens…</div>;
+    const byCertification = new Map(summaries.map((summary) => [summary.certificationId, summary]));
+    return <section className="space-y-5"><div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div><h3 className="flex items-center gap-2 text-lg font-semibold"><GraduationCap className="h-5 w-5 text-emerald-700" /> Examens de certification</h3><p className="mt-1 text-sm text-muted-foreground">Configurez le volume, la durée, le seuil, la publication et la sélection par domaine sans modifier les questions.</p></div><Button variant="outline" onClick={() => navigateContent("question-banks")}><Layers className="mr-2 h-4 w-4" /> Voir les banques</Button></div><div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="min-w-[760px] w-full text-sm"><thead className="border-b bg-muted/40 text-left"><tr><th className="px-4 py-3 font-semibold">Certification</th><th className="px-4 py-3 font-semibold">Questions tirées</th><th className="px-4 py-3 font-semibold">Durée</th><th className="px-4 py-3 font-semibold">Seuil</th><th className="px-4 py-3 font-semibold">Publication</th><th className="px-4 py-3 text-right font-semibold">Actions</th></tr></thead><tbody>{trainingIndex.certifications.map((certification: any) => { const questionCount = byCertification.get(certification.id)?.questionCount || 0; const config = normalizeExamConfiguration(configurations[certification.id], questionCount); return <tr key={certification.id} className="border-b last:border-0 hover:bg-muted/20"><td className="px-4 py-3"><p className="font-medium text-foreground">{certificationTitle(certification)}</p></td><td className="px-4 py-3">{config.totalQuestions}/{questionCount || "—"}</td><td className="px-4 py-3">{config.timeLimit} min</td><td className="px-4 py-3">{config.passingScore}/1000</td><td className="px-4 py-3"><Badge className={config.isPublished ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100" : "bg-slate-200 text-slate-700 hover:bg-slate-200"}>{config.isPublished ? "Publié" : "Brouillon"}</Badge></td><td className="px-4 py-3 text-right"><Button size="sm" onClick={() => navigateContent("edit-exam", { certificationId: certification.id })}><Edit3 className="mr-1.5 h-3.5 w-3.5" /> Configurer</Button></td></tr>; })}</tbody></table></div></section>;
+  };
+
+  const renderQuizBanks = () => {
+    const summaries = quizBankSummaryQuery.data || [];
+    if (quizBankSummaryQuery.isLoading) return <div className="py-10 text-center text-sm text-muted-foreground">Chargement des quiz et checkpoints…</div>;
+    const byCourse = new Map(summaries.map((summary) => [summary.courseId, summary]));
+    const coursesWithQuizzes = (trainingIndex.courses as any[]).filter((course) => (byCourse.get(course.id)?.bankCount || 0) > 0);
+    return <section className="space-y-5"><div><h3 className="flex items-center gap-2 text-lg font-semibold"><CheckCircle2 className="h-5 w-5 text-blue-700" /> Quiz et checkpoints</h3><p className="mt-1 text-sm text-muted-foreground">Gérez les banques de quiz par cours et leurs règles de sélection. Les checkpoints rattachés aux écrans restent accessibles depuis l’édition du cours.</p></div><div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="min-w-[760px] w-full text-sm"><thead className="border-b bg-muted/40 text-left"><tr><th className="px-4 py-3 font-semibold">Cours</th><th className="px-4 py-3 font-semibold">Banques de quiz</th><th className="px-4 py-3 font-semibold">Questions</th><th className="px-4 py-3 font-semibold">Checkpoints</th><th className="px-4 py-3 text-right font-semibold">Actions</th></tr></thead><tbody>{coursesWithQuizzes.map((course) => { const summary = byCourse.get(course.id); return <tr key={course.id} className="border-b last:border-0 hover:bg-muted/20"><td className="px-4 py-3"><p className="font-medium text-foreground">{t(course.title)}</p><p className="mt-0.5 text-xs text-muted-foreground">{course.id}</p></td><td className="px-4 py-3">{summary?.bankCount || 0}</td><td className="px-4 py-3">{summary?.questionCount || 0}</td><td className="px-4 py-3 text-muted-foreground">Dans l’éditeur de cours</td><td className="px-4 py-3 text-right"><Button size="sm" onClick={() => navigateContent("edit-quiz", { courseId: course.id })}><Edit3 className="mr-1.5 h-3.5 w-3.5" /> Gérer les quiz</Button></td></tr>; })}</tbody></table></div></section>;
+  };
+
   // ─── EDIT DIALOG ───
   const renderEditDialog = () => {
     if (editingLegacyExercise) {
@@ -1318,6 +1353,9 @@ export default function AdminContentManager() {
       case "edit-quiz": return `Édition Quiz : ${selectedCourseId}`;
       case "exam-simulate": return `Simulation Examen : ${selectedCertId}`;
       case "edit-exam": return `Édition Examen : ${selectedCertId}`;
+      case "question-banks": return "Banques de questions";
+      case "exam-configurations": return "Examens de certification";
+      case "quiz-banks": return "Quiz et checkpoints";
     }
   };
 
@@ -1357,6 +1395,11 @@ export default function AdminContentManager() {
               <Play className="w-3 h-3 mr-1" /> Simuler
             </Button>
           )}
+          {viewMode === "edit-exam" && (
+            <Button size="sm" variant="outline" onClick={() => navigateContent("exam-configurations")}>
+              <GraduationCap className="w-3 h-3 mr-1" /> Voir les examens
+            </Button>
+          )}
         </div>
       </div>
 
@@ -1372,6 +1415,9 @@ export default function AdminContentManager() {
           {viewMode === "edit-quiz" && renderEditQuiz()}
           {viewMode === "exam-simulate" && renderExamSimulate()}
           {viewMode === "edit-exam" && renderEditExam()}
+          {viewMode === "question-banks" && renderQuestionBanks()}
+          {viewMode === "exam-configurations" && renderExamConfigurations()}
+          {viewMode === "quiz-banks" && renderQuizBanks()}
         </motion.div>
       </main>
 

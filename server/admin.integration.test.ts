@@ -129,6 +129,11 @@ describe("Admin API - Authorization", () => {
     await expect(caller.admin.updateLearnerEmail({ userId: 1, email: "new@example.com" })).rejects.toThrow("administrateur principal");
   });
 
+  it("admin.updateLearnerProfile rejects regular learners", async () => {
+    const caller = appRouter.createCaller(createUserContext());
+    await expect(caller.admin.updateLearnerProfile({ userId: 1, firstName: "Ada", lastName: "Lovelace", phone: "+21612345678" })).rejects.toThrow("administrateurs");
+  });
+
   it("admin.requestLearnerPasswordReset rejects admin-learners", async () => {
     const caller = appRouter.createCaller(createAdminLearnerContext());
     await expect(caller.admin.requestLearnerPasswordReset({ userId: 1 })).rejects.toThrow("administrateur principal");
@@ -198,6 +203,11 @@ describe("Admin API - Input Validation", () => {
   it("admin.updateLearnerEmail validates the e-mail format before any update", async () => {
     const caller = appRouter.createCaller(createAdminContext());
     await expect(caller.admin.updateLearnerEmail({ userId: 1, email: "not-an-email" })).rejects.toThrow();
+  });
+
+  it("admin.updateLearnerProfile validates the phone as E.164 before any update", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    await expect(caller.admin.updateLearnerProfile({ userId: 1, firstName: "Ada", lastName: "Lovelace", phone: "22 123 456" })).rejects.toThrow("E.164");
   });
 
   it("admin.updateUserRole validates role enum", async () => {

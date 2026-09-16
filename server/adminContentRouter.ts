@@ -276,6 +276,35 @@ export const adminContentRouter = router({
     return getMockExamQuestions();
   }),
 
+  // Tableau de bord léger : aucune clé de réponse, explication ou énoncé n’est transféré.
+  getMockExamQuestionSummary: adminProcedure.query(async () => {
+    const questions = await getMockExamQuestions();
+    const summary = new Map<string, { questionCount: number; domains: Set<string> }>();
+    for (const question of questions) {
+      const certificationId = question.certificationId;
+      const domain = typeof question.domain === "object" ? question.domain.fr || question.domain.en || "" : question.domain || "";
+      const current = summary.get(certificationId) || { questionCount: 0, domains: new Set<string>() };
+      current.questionCount += 1;
+      if (domain) current.domains.add(domain);
+      summary.set(certificationId, current);
+    }
+    return Array.from(summary.entries(), ([certificationId, item]) => ({ certificationId, questionCount: item.questionCount, domainCount: item.domains.size }));
+  }),
+
+  getQuizBankSummary: adminProcedure.query(async () => {
+    const dataDir = getDataDir();
+    try {
+      const quizzes = await readJsonFile(path.join(dataDir, "lessonQuizzes.json"));
+      return Object.entries(quizzes as Record<string, Record<string, unknown>>).map(([courseId, banks]) => ({
+        courseId,
+        bankCount: Object.keys(banks || {}).length,
+        questionCount: Object.values(banks || {}).reduce<number>((count, bank: any) => count + (Array.isArray(bank) ? bank.length : Array.isArray(bank?.questions) ? bank.questions.length : 0), 0),
+      }));
+    } catch {
+      return [];
+    }
+  }),
+
   getExamConfigurations: adminProcedure.query(async () => {
     return getExamDefinitions();
   }),
