@@ -89,6 +89,7 @@
 - [x] Finaliser le mode générique de validation serveur pour les blocs `single_choice_exercise` sensibles : clé et explication déplacées dans un registre serveur, fichier statique et route tRPC publics confirmés sans champs de correction pour le checkpoint 4 Developer 3 sourcé
 - [x] Appliquer et vérifier les localisations françaises Developer 3 à 5 dont Claude Sonnet confirme l’occurrence unique, sans traduire les identifiants ni les termes techniques ambigus — 8/8 libellés confirmés via tRPC local et public après propagation
 - [ ] Comparer les derniers TP, activités racine et l’étude de cas Developer 3 à 5 avec les écrans Skilljar accessibles dans la session authentifiée, puis ne corriger que les écarts explicitement vérifiés
+- [ ] Restaurer le checkpoint Skilljar Developer 5 S07B (deux choix uniques requis) et aligner S07D sur le bloc standard d’association, sans conserver de tri Neopolis non sourcé
 - [x] Restaurer les checkpoints Developer 3 source S07, S14 et S17 avec les blocs standards Neopolis et la validation serveur lorsque la correction doit rester privée — S07/S14 en matching verrouillé, S17 en choix unique validé serveur ; contrat, TypeScript et contrôle lecteur local validés
 - [x] Faire respecter le verrouillage séquentiel par le bloc standard `matching` au même titre que `bucket_sort`, sans régression des activités existantes
 - [x] Ajouter au bloc standard `CloudExerciseBlock` un seuil de réponse configurable pour préserver les conditions de déverrouillage source sans UI spécifique

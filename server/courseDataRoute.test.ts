@@ -79,4 +79,16 @@ describe("course data route", () => {
       explanation: { fr: expect.stringContaining("variable d’environnement") },
     });
   });
+
+  it("keeps the two Skilljar requirements answer keys in the server-only registry", () => {
+    expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__05", "skilljar_s07b_q1")).toMatchObject({
+      correctAnswer: "b",
+      explanation: { fr: expect.stringContaining("exigence fonctionnelle") },
+    });
+    expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__05", "skilljar_s07b_q2")).toMatchObject({
+      correctAnswer: "c",
+      explanation: { fr: expect.stringContaining("résidence des données") },
+    });
+    expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__05", "unknown_choice")).toBeNull();
+  });
 });

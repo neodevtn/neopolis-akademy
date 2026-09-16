@@ -63,7 +63,8 @@ describe('Developer Foundations course 5 checkpoint integrity', () => {
     expect(courseText).toContain('Phase de déploiement — Choix de plateforme guidé par les exigences de conformité');
     expect(courseText).toContain('Point de contrôle 5 : Associer la plateforme de déploiement et la version épinglée');
     expect(courseText).toContain("Point de contrôle 1 : Corriger le modèle d'accélérateur défectueux");
-    expect(courseText).toContain('Point de contrôle Exigences et cycle de vie · 2 min');
+    expect(courseText).toContain('Point de contrôle 3 : extraire les exigences');
+    expect(courseText).toContain('Point de contrôle 4 : placer le travail dans la bonne phase');
     expect(packaging).not.toContain('Pull les valeurs spécifiques au domaine');
     expect(packaging).not.toContain('MCP Server Package');
     expect(deployment).toContain('| Plateforme | Identité et modèle de données |');
@@ -72,6 +73,26 @@ describe('Developer Foundations course 5 checkpoint integrity', () => {
     expect(deployment).toContain('First-party Claude API');
     expect(deployment).not.toContain('la boundary AWS du client');
     expect(deployment).not.toContain('processus de release');
+  });
+
+  it('replaces the unsourced lifecycle sorts with the mandatory Skilljar S07B and S07D checkpoints', () => {
+    const lifecycle = chapter('chapter_05');
+    const questionOne = lifecycle.blocks.find((block: any) => block.id === 'skilljar_s07b_q1');
+    const questionTwo = lifecycle.blocks.find((block: any) => block.id === 'skilljar_s07b_q2');
+    const matching = lifecycle.blocks.find((block: any) => block.id === 'skilljar_s07d');
+
+    expect(lifecycle.completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
+    for (const question of [questionOne, questionTwo]) {
+      expect(question).toMatchObject({ type: 'single_choice_exercise', sourceScreenId: 'S07B', serverValidated: true });
+      expect(question.options).toHaveLength(4);
+      expect(JSON.stringify(question)).not.toContain('correctAnswer');
+    }
+    expect(matching).toMatchObject({ type: 'matching', sourceScreenId: 'S07D' });
+    expect(matching.pairs).toHaveLength(5);
+    expect(matching.feedback.fr).toContain('résidence des données');
+    expect(lifecycle.blocks).not.toContainEqual(expect.objectContaining({ type: 'bucket_sort', title: { en: 'Checkpoint 3: extract requirements — Try now' } }));
+    expect(lifecycle.blocks).not.toContainEqual(expect.objectContaining({ type: 'bucket_sort', title: { en: 'Checkpoint 4: place work in the correct phase — Try now' } }));
+    expect(exercise('ex_claude_certified_developer_foundations__05_012')).toBeUndefined();
   });
 
   it('restores the two Skilljar cumulative deployment tasks before the recap', () => {

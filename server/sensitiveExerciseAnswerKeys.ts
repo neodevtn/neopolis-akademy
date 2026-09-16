@@ -22,6 +22,22 @@ const sensitiveExerciseAnswerKeys: Record<string, Record<string, SensitiveExerci
       },
     },
   },
+  claude_certified_developer_foundations__05: {
+    skilljar_s07b_q1: {
+      correctAnswer: "b",
+      explanation: {
+        en: "The agent producing a summary that a human approves before it is stored is a functional requirement. “The agent should be fast and accurate” is not checkable. An approved cloud provider and EU-only transcript handling are infrastructure requirements, not functional ones.",
+        fr: "Le résumé produit par l’agent puis approuvé par un humain avant son stockage est une exigence fonctionnelle. « L’agent doit être rapide et précis » n’est pas vérifiable. Le fournisseur cloud approuvé et le traitement des transcriptions dans l’UE sont des exigences d’infrastructure, non fonctionnelles.",
+      },
+    },
+    skilljar_s07b_q2: {
+      correctAnswer: "c",
+      explanation: {
+        en: "Processing transcript data in the EU is an infrastructure requirement tied to data residency. Producing summaries quickly is not checkable as written, the prompt template is a design choice, and human review before storage is a functional requirement.",
+        fr: "Le traitement des données de transcription dans l’UE est une exigence d’infrastructure liée à la résidence des données. Produire des résumés rapidement n’est pas vérifiable tel quel, le modèle de prompt est un choix de conception et la relecture humaine avant stockage est une exigence fonctionnelle.",
+      },
+    },
+  },
 };
 
 export function getSensitiveExerciseAnswerKey(courseId: string, exerciseId: string): SensitiveExerciseAnswerKey | null {
