@@ -1,0 +1,13 @@
+# Matrice de sources publiques — Architect Foundations
+
+Cette matrice consigne les descriptions publiques utilisées pour orienter l’audit. Elles servent à valider la cohérence des objectifs et des grands thèmes, **jamais** à combler un écran, un média ou une interaction protégés.
+
+| Cours Neopolis | Source publique | Éléments publiquement vérifiables | Limite d’utilisation |
+| --- | --- | --- | --- |
+| `__03` Claude on Google Cloud | [Anthropic Courses](https://anthropic.skilljar.com/claude-with-google-vertex) | Vertex AI, SDK, streaming, outils, évaluations, RAG, MCP, workflows et agents. Le relevé local compte 99 écrans. | Les 99 écrans sont conservés tant que l’inventaire source ne justifie pas une correction ciblée. |
+| `__04` Claude Code in Action | [Anthropic Courses](https://anthropic.skilljar.com/claude-code-in-action) | Neuf leçons, cohérentes avec les neuf leçons locales : pilotage, configuration, automatisation, vérification et partage. Rewind relève du pilotage ; plugins du partage. | Permet le retrait justifié du doublon Rewind hors contexte, pas la reconstruction d’un exercice Plugins. |
+| `__05` Claude 101 | [Anthropic Courses](https://anthropic.skilljar.com/claude-101) | Relevé public de 19 jalons, de *Meet Claude* à *Certificate of completion*. La hiérarchie locale comporte 13 leçons et 24 écrans, dont Projects, Artifacts, Skills, connecteurs et recherche. | Ouvrir une matrice de parité : les jalons publics *Meet Claude*, conclusion/certificat et la granularité d’*Other ways to work with Claude* doivent être qualifiés avant toute restructuration. |
+| `__06` Claude with Amazon Bedrock | [Anthropic Courses](https://anthropic.skilljar.com/claude-in-amazon-bedrock) | Bedrock/boto3, conversations, streaming, extraction structurée, outils, RAG, MCP, Claude Code, Computer Use et optimisation. Le relevé local compte 80 écrans. | Les trois ressources manquantes signalées dans le dossier de travail requièrent une source ou une exclusion justifiée. |
+| `__07` Introduction to Model Context Protocol | [Anthropic Courses](https://anthropic.skilljar.com/introduction-to-model-context-protocol) | Architecture MCP, serveurs, clients, outils, ressources, prompts, Inspector, nettoyage asynchrone et projet de gestion documentaire. Le relevé local compte 26 écrans. | Les deux ressources locales sont à conserver ; aucun laboratoire cloud n’est ajouté par inférence. |
+
+> Les pages publiques confirment les thèmes et objectifs. Les différences de nombre de leçons observables entre pages publiques, cours historiques et granularité Neopolis doivent être documentées, non automatiquement normalisées.

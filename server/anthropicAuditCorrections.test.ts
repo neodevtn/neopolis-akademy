@@ -111,6 +111,45 @@ describe("Anthropic certification audit corrections", () => {
     }
   });
 
+  it("keeps the Rewind checkpoint only in its source screen and leaves Plugins as an informational review", () => {
+    const course = readCourse("claude_certified_architect_foundations__04");
+    const rewindExerciseId = "ex_claude_certified_architect_foundations__04_005";
+    const rewindBlocks = course.lessons.flatMap((lesson: any) => lesson.chapters || [])
+      .flatMap((chapter: any) => chapter.blocks || [])
+      .filter((block: any) => block.type === "checkpoint" && block.exerciseId === rewindExerciseId);
+    expect(rewindBlocks).toHaveLength(1);
+    const pluginsLesson = course.lessons.find((lesson: any) => lesson.title?.en === "Plugins");
+    const review = pluginsLesson.chapters.find((chapter: any) => chapter.title?.en === "Review: Plugins");
+    expect(review).toMatchObject({ type: "teaching", completionRule: { requires: ["contentViewed"] } });
+    expect(review.blocks.some((block: any) => block.type === "checkpoint")).toBe(false);
+    expect(JSON.stringify(review)).not.toContain("Rewind");
+  });
+
+  it("uses the canonical RAG acronym in the Amazon Bedrock lesson and its screen title", () => {
+    const course = readCourse("claude_certified_architect_foundations__06");
+    const lesson = course.lessons.find((item: any) => item.title?.en === "Implementing the RAG Flow");
+    expect(lesson).toBeTruthy();
+    expect(lesson.chapters.some((chapter: any) => chapter.title?.en === "Implementing the RAG Flow")).toBe(true);
+    expect(JSON.stringify(course)).not.toContain("Implementing the Rag Flow");
+  });
+
+  it("keeps verified download provenance on the Architect Foundations courses with legacy assets", () => {
+    const courseIds = ["02", "03", "06", "07"].map((suffix) => `claude_certified_architect_foundations__${suffix}`);
+    for (const courseId of courseIds) {
+      const course = readCourse(courseId);
+      const downloads = course.lessons.flatMap((lesson: any) => lesson.chapters || []).flatMap((chapter: any) => chapter.blocks || []).filter((block: any) => block.type === "download");
+      expect(downloads.length).toBeGreaterThan(0);
+      for (const download of downloads) {
+        expect(download.assetMeta).toMatchObject({ origin: "anthropic", official: true });
+        expect(download.assetMeta.sourceUrl).toMatch(/^https:\/\/anthropic-partners\.skilljar\.com\//);
+        expect(download.assetMeta.mimeType).toBeTruthy();
+        expect(download.assetMeta.bytes).toBeGreaterThan(0);
+        expect(download.assetMeta.checksum).toMatch(/^sha256:[a-f0-9]{64}$/);
+        expect(Number.isNaN(Date.parse(download.assetMeta.testedAt))).toBe(false);
+      }
+    }
+  });
+
   it("replaces the AI Fluency exercise with the official reflection and preserves its completion rule", () => {
     const course = readCourse("claude_certified_architect_foundations__01");
     const lesson = course.lessons.find((item: any) => item.id === "lesson_10");

@@ -4,6 +4,10 @@
 
 ## Sources de contrôle
 
+### Relevé public réactualisé — 16 septembre 2026
+
+La page publique actuellement accessible pour **AI Fluency: Framework & Foundations** affiche le titre canonique, l’objectif « Learn to collaborate with AI systems effectively, efficiently, ethically, and safely », puis les indicateurs synthétiques **14 lectures**, **1.1 hours of video**, **1 quiz** et **Certificate of completion**. La page publique ne liste pas les leçons dans l’extraction accessible et ne permet donc pas, à elle seule, de conclure à une hiérarchie de 14 ou 15 leçons Neopolis. Cet écart avec l’inventaire de navigation relevé précédemment est désormais un point à réconcilier explicitement au moyen des données de cours, des rapports sources déjà archivés et, seulement si nécessaire, d’une consultation authentifiée sans extraction de contenu protégé.
+
 Le **14 septembre 2026**, un nouveau dossier de livraison prioritaire a remplacé les références de travail précédentes pour ce lot. La page du parcours Architect Foundations confirme que le cours fait partie du parcours officiel et le décrit comme une formation à la collaboration avec les systèmes d’IA de manière efficace, efficiente, éthique et sûre. La page de cours accessible publiquement énumère quinze leçons effectives, ainsi que des intitulés de section qui ne sont pas eux-mêmes des leçons. Les détails SCORM protégés ne sont pas utilisés pour combler un contenu absent.
 
 | Source | Usage autorisé dans ce lot | Limite |
