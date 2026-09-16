@@ -5,16 +5,21 @@ import allQuestions from "./data/mockExamQuestions.json";
 
 const root = resolve(import.meta.dirname, "..");
 const certificationId = "claude_certified_architect_foundations";
+const allowedMethods = new Set([
+  "claude_authored_choice_rationale",
+  "claude_sonnet_exam_bank_generation",
+  "claude_sonnet_sample_translation_and_rationale",
+]);
 
 describe("provenance Claude du lot Architect Foundations", () => {
   it("associe chaque rationale CCAR-F à Claude Sonnet", () => {
     const questions = (allQuestions as Array<{ certificationId: string; id: string; choices: Array<{ id: string; rationaleProvenance?: { model?: string; method?: string } }> }>)
       .filter((question) => question.certificationId === certificationId);
     const invalid = questions.flatMap((question) => question.choices
-      .filter((choice) => choice.rationaleProvenance?.model !== "claude-sonnet-4-6" || choice.rationaleProvenance?.method !== "claude_authored_choice_rationale")
+      .filter((choice) => choice.rationaleProvenance?.model !== "claude-sonnet-4-6" || !allowedMethods.has(choice.rationaleProvenance?.method || ""))
       .map((choice) => `${question.id}:${choice.id}`));
 
-    expect(questions).toHaveLength(318);
+    expect(questions).toHaveLength(330);
     expect(invalid).toEqual([]);
   });
 

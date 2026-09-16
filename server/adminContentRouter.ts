@@ -11,7 +11,7 @@ import { applyCatalogMetrics } from "../shared/catalogMetrics";
 import { eq } from "drizzle-orm";
 import { courseLifecycleStates } from "../drizzle/schema";
 import { getCourseCatalogKpis, getDb } from "./db";
-import { addExamQuestion, deleteExamConfiguration, deleteExamQuestion, disableExamConfiguration, getExamDefinitions, getMockExamQuestions, getQuestionsForCertification, saveExamConfiguration, updateExamQuestion } from "./examDefinition";
+import { addExamQuestion, deleteExamConfiguration, deleteExamQuestion, disableExamConfiguration, getExamDefinition, getExamDefinitions, getMockExamQuestions, getQuestionsForCertification, saveExamConfiguration, updateExamQuestion } from "./examDefinition";
 import { normalizeExamConfiguration } from "../shared/examConfiguration";
 
 /**
@@ -295,12 +295,22 @@ export const adminContentRouter = router({
           name: z.union([z.string(), z.record(z.string(), z.string())]),
           weight: z.number().min(0).max(100),
         })),
+        scenarioSelection: z.object({
+          availableFamilies: z.number().int().min(1).max(100),
+          selectedFamilies: z.number().int().min(1).max(100),
+          questionsPerFamily: z.number().int().min(1).max(100),
+        }).optional(),
       }),
     }))
     .mutation(async ({ input }) => {
       const availableQuestions = (await getQuestionsForCertification(input.certificationId)).length;
       if (input.configuration.isPublished && availableQuestions === 0) throw new Error("Ajoutez au moins une question avant de publier cet examen.");
-      const configuration = normalizeExamConfiguration(input.configuration, availableQuestions);
+      const current = await getExamDefinition(input.certificationId);
+      const configuration = normalizeExamConfiguration({
+        ...current,
+        ...input.configuration,
+        scenarioSelection: input.configuration.scenarioSelection ?? current?.scenarioSelection,
+      }, availableQuestions);
       await saveExamConfiguration(input.certificationId, { ...configuration, isPublished: input.configuration.isPublished });
       return { success: true };
     }),

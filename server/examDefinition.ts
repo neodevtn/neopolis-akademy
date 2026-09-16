@@ -6,6 +6,13 @@ import { certificationExams } from "../drizzle/schema";
 import { normalizeExamConfiguration, type ExamConfiguration } from "../shared/examConfiguration";
 import { getDb } from "./db";
 
+export type ExamChoice = {
+  id: string;
+  text: string | { fr?: string; en?: string };
+  rationale?: string | { fr?: string; en?: string };
+  rationaleProvenance?: { model?: string; method?: string; generatedAt?: string };
+};
+
 export type ExamQuestion = {
   id: string;
   certificationId: string;
@@ -19,7 +26,7 @@ export type ExamQuestion = {
   sourcePedagogique?: string;
   version?: string;
   question: string | { fr?: string; en?: string };
-  choices: Array<{ id: string; text: string | { fr?: string; en?: string }; rationale?: string | { fr?: string; en?: string } }>;
+  choices: ExamChoice[];
   correctChoiceIds: string[];
   explanation?: string | { fr?: string; en?: string };
 };
@@ -140,7 +147,15 @@ export async function updateExamQuestion(questionId: string, data: Omit<ExamQues
   const questions = await getMockExamQuestions();
   const existing = questions.find((question) => question.id === questionId);
   if (!existing) return false;
-  const certificationQuestions = questions.filter((question) => question.certificationId === existing.certificationId).map((question) => question.id === questionId ? { ...question, ...data } : question);
+  const updatedQuestion: ExamQuestion = {
+    ...existing,
+    ...data,
+    choices: data.choices.map((choice) => ({
+      ...existing.choices.find((existingChoice) => existingChoice.id === choice.id),
+      ...choice,
+    })),
+  };
+  const certificationQuestions = questions.filter((question) => question.certificationId === existing.certificationId).map((question) => question.id === questionId ? updatedQuestion : question);
   const configuration = await getExamDefinition(existing.certificationId);
   if (!configuration) throw new Error("Configuration d’examen introuvable");
   await persistExam(existing.certificationId, configuration, certificationQuestions);
