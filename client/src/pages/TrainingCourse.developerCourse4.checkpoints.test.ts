@@ -44,4 +44,17 @@ describe('Developer Foundations course 4 checkpoint integrity', () => {
       expect(content.body.fr).not.toContain(legacyHeader);
     }
   });
+
+  it('keeps the selected French learner-facing labels localized without changing technical identifiers', () => {
+    const content = chapter('chapter_09').blocks.find((block: any) => block.type === 'content').body.fr;
+    const errorHandlingContent = chapter('chapter_05').blocks.find((block: any) => block.type === 'content').body.fr;
+    expect(content).toContain('Sélection du modèle pour la tâche :');
+    expect(content).toContain('Taille du prompt et du contexte :');
+    expect(content).toContain('Nombre d’appels d’outils :');
+    expect(content).toContain('schéma orchestrator-worker');
+    expect(errorHandlingContent).toContain('stop_reason');
+    expect(content).not.toContain('Model selection for the task :');
+    expect(content).not.toContain('Prompt and context size :');
+    expect(content).not.toContain('un score baseline épinglé');
+  });
 });

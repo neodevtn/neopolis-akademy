@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 const coursePath = path.join(root, 'client/public/data/courses/claude_certified_developer_foundations__04.json');
 const contentPatchPath = path.join(root, 'docs/anthropic-developer-course4-critical-patches.json');
+const localizationPatchPath = path.join(root, 'docs/anthropic-developer-course4-localization-patches.json');
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
 const lesson = course.lessons?.[0];
 const findChapter = (id) => lesson.chapters.find((chapter) => chapter.id === id);
@@ -41,6 +42,12 @@ const replaceDelimitedSegment = (value, replacement, start, end, label) => {
     throw new Error(`Missing delimited table target ${label}`);
   }
   return `${value.slice(0, startIndex)}${replacement}\n\n${value.slice(endIndex)}`;
+};
+const applyExactLocalizedText = (value, patch) => {
+  if (value.includes(patch.newText) && !value.includes(patch.oldText)) return value;
+  const occurrences = value.split(patch.oldText).length - 1;
+  if (occurrences !== 1) throw new Error(`Expected one localization target ${patch.chapterId}:${patch.oldText}; found ${occurrences}`);
+  return value.replace(patch.oldText, patch.newText);
 };
 const attachExistingCheckpoint = (chapterId, exerciseId) => {
   const exercise = course.exercises.find((item) => item.id === exerciseId);
@@ -80,6 +87,16 @@ if (fs.existsSync(contentPatchPath)) {
     if (!target?.body || !boundaries) throw new Error(`Missing generated section target ${section.chapterId}`);
     target.body.en = replaceDelimitedSegment(target.body.en || '', section.body.en, boundaries.start, boundaries.end, `${section.chapterId}:en`);
     target.body.fr = replaceDelimitedSegment(target.body.fr || '', section.body.fr, boundaries.frStart, boundaries.frEnd, `${section.chapterId}:fr`);
+  }
+}
+
+if (fs.existsSync(localizationPatchPath)) {
+  const localizationPatches = JSON.parse(fs.readFileSync(localizationPatchPath, 'utf8'));
+  for (const patch of localizationPatches.patches || []) {
+    const chapter = findChapter(patch.chapterId);
+    const target = chapter?.blocks?.find((block) => block.type === 'content');
+    if (!target?.body?.fr) throw new Error(`Missing localization target ${patch.chapterId}`);
+    target.body.fr = applyExactLocalizedText(target.body.fr, patch);
   }
 }
 

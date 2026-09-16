@@ -12,3 +12,7 @@ Le correctif idempotent `scripts/repair-developer-course4-critical.mjs` remplace
 | `chapter_09` — Coût et orchestration | Référence sur l’observabilité et l’orchestration | Contrat de structure ajouté ; contrôle navigateur à effectuer avec le lot. |
 
 La commande de correctif a été exécutée deux fois avec une empreinte identique au second passage. Le test ciblé `TrainingCourse.developerCourse4.checkpoints.test.ts` confirme les trois rattachements de checkpoints, les cartes restaurées et les quatre en-têtes Markdown ; `pnpm check` est vert.
+
+## Localisation complémentaire limitée
+
+Une seconde analyse structurée, exécutée exclusivement avec **Claude Sonnet**, a retenu onze remplacements exacts dans `chapter_09`. Ils localisent uniquement des libellés pédagogiques génériques, tels que la sélection du modèle, la taille du prompt et du contexte, les appels d’outils, les notions de référence et le contrôle avant déploiement. Les identifiants et termes techniques nécessaires — notamment `orchestrator-worker`, `single-agent`, `stop_reason`, les statuts HTTP et les extraits de code — sont conservés. Dix-sept termes techniques ou ambigus ont été volontairement laissés sans modification.
