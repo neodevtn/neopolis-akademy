@@ -7,12 +7,14 @@ La présente fenêtre est limitée à Developer Foundations. Elle privilégie le
 | 1 — MSO Foundations | Durée 57 min, contenus restaurés, checkpoints standards, ressources sans vidéo générique | Réconciliation détaillée écran par écran Skilljar |
 | 2 — Production-Grade Prompting, Agents & Tool Use | Durée 209 min, 8 checkpoints standards, contenus structurés, reliquats localisés et vidéos non sourcées retirées | TP locaux exécutables sourcés |
 | 3 — Claude Code, MCP & Integration | Durée 142 min, cartes critiques restaurées, checkpoint Modes d’autorisation requis, catalogue vidéo cohérent | TP Claude Code/MCP supplémentaires et exercices racine ambigus |
-| 4 — Production Engineering, Evals & Security | Trois checkpoints réparés et requis, durée 211 min, six cartes critiques restaurées | Tableaux concaténés, contenu hybride et activités racine à réconcilier |
+| 4 — Production Engineering, Evals & Security | Trois checkpoints réparés et requis, durée 211 min, six cartes critiques restaurées, quatre tableaux concaténés restaurés en Markdown (évaluations, tests/récupération, erreurs, observabilité) | Contenus hybrides résiduels, activités racine et médias non sourcés à réconcilier |
 | 5 — Accelerators & IP Contribution | Checkpoint Packaging réparé, checkpoint orphelin retiré, durée 155 min, cartes critiques et cycle de vie FR restaurés | Étude de cas complète, tableaux concaténés et activités racine à sourcer |
 
 Les données publiques confirment maintenant les durées officielles de 142, 211 et 155 minutes pour les cours 3, 4 et 5, ainsi que les références de checkpoint corrigées des cours 4 et 5.
 
 Le cycle de vie localisé du cours 5 est désormais confirmé par le canal tRPC public, avec les sept étapes **Exigences**, **Conception**, **Construction**, **Test**, **Déploiement**, **Exploitation** et **Itération**.
+
+La restauration des tableaux Developer 4 est limitée aux segments dégradés et délimités des quatre chapitres concernés. Elle est rejouable via `scripts/repair-developer-course4-critical.mjs`, dont l’idempotence est contrôlée par empreinte. Le contrat ciblé vérifie les en-têtes Markdown en français et l’absence des anciens en-têtes concaténés ; un rendu du tableau Évaluations et juges a été contrôlé dans le lecteur standard local.
 
 ## Parcours explicitement reportés
 

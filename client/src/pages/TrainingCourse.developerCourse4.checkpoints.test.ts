@@ -27,4 +27,21 @@ describe('Developer Foundations course 4 checkpoint integrity', () => {
     expect(text).toContain('Vingt cas comprenant des entrées irrégulières');
     expect(text).not.toMatch(/(?:une bre|un tran|which c|retu)$/m);
   });
+
+  it('renders each repaired reference table as bounded Markdown instead of concatenated text', () => {
+    const sections = [
+      ['chapter_01', '| Type de tâche | Méthode de notation | Ce qu’elle détecte | Limites |', 'Task typeGrading methodWhat it catchesWhere it is unreliable'],
+      ['chapter_03', '| Niveau ou choix | Ce qu’il isole | Ce qu’il ne peut pas détecter |', 'LevelWhat it isolatesWhat it cannot catch'],
+      ['chapter_05', '| Type d’erreur | Réessayable ou échec immédiat | Stratégie de backoff | Comportement de repli |', 'Error typeRetriable or fail-fastBackoff strategyFallback behavior'],
+      ['chapter_09', '| Métrique | Où l’instrumenter | Agent unique ou orchestrator-worker |', 'MetricWhere to instrument itSingle-agent versus orchestrator-worker'],
+    ] as const;
+
+    for (const [chapterId, markdownHeader, legacyHeader] of sections) {
+      const content = chapter(chapterId).blocks.find((block: any) => block.type === 'content');
+      expect(content.body.fr).toContain(markdownHeader);
+      expect(content.body.en).toContain('|');
+      expect(content.body.en).not.toContain(legacyHeader);
+      expect(content.body.fr).not.toContain(legacyHeader);
+    }
+  });
 });
