@@ -16,7 +16,9 @@ Le cycle de vie localisé du cours 5 est désormais confirmé par le canal tRPC 
 
 La restauration des tableaux Developer 4 est limitée aux segments dégradés et délimités des quatre chapitres concernés. Elle est rejouable via `scripts/repair-developer-course4-critical.mjs`, dont l’idempotence est contrôlée par empreinte. Le contrat ciblé vérifie les en-têtes Markdown en français et l’absence des anciens en-têtes concaténés ; un rendu du tableau Évaluations et juges a été contrôlé dans le lecteur standard local.
 
-Le 16 septembre 2026, la source officielle Skilljar du parcours Developer a répondu `403` depuis l’environnement de contrôle. En conséquence, les activités racine ambiguës, le checkpoint 4 tronqué du cours 3 et l’étude de cas de livraison du cours 5 demeurent explicitement ouverts : aucun TP, média ou contenu pédagogique nouveau n’est inféré en leur absence.
+Le 16 septembre 2026, la source officielle Skilljar du parcours Developer a répondu `403` depuis l’environnement de contrôle. En conséquence, les activités racine ambiguës et l’étude de cas de livraison du cours 5 demeurent explicitement ouvertes : aucun TP, média ou contenu pédagogique nouveau n’est inféré en leur absence.
+
+Les guides publics Anthropic permettent désormais d’établir la correction factuelle du contenu tronqué du checkpoint 4 Developer 3 (chemin absolu d’auteur et usage de `${CLAUDE_PLUGIN_ROOT}`). Toutefois, le bloc standard `single_choice_exercise` garde actuellement `correctAnswer` dans le JSON pédagogique servi au navigateur. Comme le prompt source exige une correction côté serveur et l’absence de réponse correcte dans le JSON public, ce checkpoint reste ouvert tant qu’un mécanisme générique de validation serveur n’est pas disponible ; la proposition Claude Sonnet est archivée mais non appliquée.
 
 ## Parcours explicitement reportés
 
