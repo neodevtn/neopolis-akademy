@@ -12,6 +12,12 @@ Le fichier de cours contient une déclaration locale de huit sections et 67 inti
 
 La comparaison déterministe identifie cinq écarts de libellé ou de couverture entre la déclaration et la liste : `Overview of Claude Models`, `PDF Support`, `Citations`, `Claude Code Setup` et la variante de casse `Implementing the Rag Flow` / `Implementing the RAG Flow`. Ces constats rendent justifiée une correction orthographique isolée, mais **pas** le déplacement automatique des composants de module : l’ordre pédagogique des exercices et des complétions doit être confirmé par l’inventaire source avant toute réorganisation.
 
+## Source publique complémentaire — ordre du cursus
+
+Le 16 septembre 2026, la page publique du cours [Claude with Amazon Bedrock](https://anthropic-partners.skilljar.com/claude-in-amazon-bedrock) a été consultée sans inscription ni progression. Elle expose un curriculum qui commence par **Course introduction**, puis annonce notamment les conversations multi-tours, prompts système, évaluation, tools JSON Schema, RAG, fonctionnalités avancées, Claude Code et MCP. Cette séquence publique confirme qu’un écran local dont le contenu est explicitement une introduction de cours ne doit pas être placé après les dizaines d’écrans techniques. Elle ne documente pas, en revanche, la position précise des exercices ni les deux écrans `Module Complete` : ceux-ci restent soumis à une réconciliation source avant tout déplacement.
+
+La revue structurée du 16 septembre 2026, menée exclusivement avec `claude-sonnet-4-6`, confirme que l’écran local `Module Introduction` est une introduction du **module 06**, non une introduction du cours : il précède immédiatement les cinq premiers exercices de ce module et sa position après les leçons sur les agents est donc défendable. Aucun déplacement des deux écrans `Module Complete` ni des sept exercices qui les suivent n’est justifié par la source publique, laquelle ne nomme pas leur rattachement. L’ordre existant est conservé, et l’ambiguïté est documentée plutôt que corrigée par une réorganisation spéculative.
+
 ## Référence
 
 [1] [Claude with Amazon Bedrock — Anthropic Courses](https://anthropic.skilljar.com/claude-in-amazon-bedrock)
