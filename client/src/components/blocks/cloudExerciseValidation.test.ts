@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hasRequiredAnswerLength, resolveLocalizedBlockText, resolveMinimumAnswerLength } from "./cloudExerciseValidation";
+import { hasRequiredAnswerLength, resolveLocalizedBlockText, resolveMinimumAnswerLength, resolvePostRevealReflectionOptions } from "./cloudExerciseValidation";
 
 describe("cloud exercise answer threshold", () => {
   it("conserve un seuil par défaut d’un caractère pour les TP existants", () => {
@@ -19,5 +19,18 @@ describe("cloud exercise answer threshold", () => {
     expect(resolveLocalizedBlockText(bilingual, "fr")).toBe("Rédigez votre réponse");
     expect(resolveLocalizedBlockText(bilingual, "en")).toBe("Write your answer");
     expect(resolveLocalizedBlockText({ en: "Fallback" }, "fr")).toBe("Fallback");
+  });
+
+  it("résout les choix d’auto-évaluation bilingues et écarte les entrées inexploitables", () => {
+    const choices = resolvePostRevealReflectionOptions([
+      { id: "all", label: { en: "All correct", fr: "Les trois sont corrects" }, feedback: { en: "Great", fr: "Très bien" }, passes: true },
+      { label: { en: "Fallback only" } },
+      { id: "ignored", label: {} },
+    ], "fr");
+
+    expect(choices).toEqual([
+      { id: "all", label: "Les trois sont corrects", feedback: "Très bien", passes: true },
+      { id: "reflection_2", label: "Fallback only", feedback: "", passes: false },
+    ]);
   });
 });

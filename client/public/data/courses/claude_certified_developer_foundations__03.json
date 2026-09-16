@@ -852,6 +852,218 @@
           }
         },
         {
+          "id": "chapter_skilljar_cumulative_s18",
+          "sourceScreenId": "S18",
+          "title": {
+            "en": "Cumulative integration task: checkpoint",
+            "fr": "Tâche d’intégration cumulative : point de contrôle"
+          },
+          "type": "exercise",
+          "durationMinutes": 6,
+          "completionRule": {
+            "requires": [
+              "contentViewed",
+              "requiredExercisesPassed"
+            ]
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "id": "S18_context",
+              "body": {
+                "en": "## Cumulative integration task: checkpoint\n\nThe integration below has three bugs planted across the layers this module covers: one in the Claude Code configuration layer, one in the plugin or packaging layer, and one in the MCP or authentication layer.",
+                "fr": "## Tâche d’intégration cumulative : point de contrôle\n\nL’intégration ci-dessous comporte trois bogues introduits dans les couches couvertes par ce module : un dans la couche de configuration de Claude Code, un dans la couche de plugin ou de packaging, et un dans la couche MCP ou d’authentification."
+              }
+            },
+            {
+              "type": "cloud_exercise",
+              "id": "S18",
+              "title": {
+                "en": "Cumulative integration task: checkpoint",
+                "fr": "Tâche d’intégration cumulative : point de contrôle"
+              },
+              "assignment": {
+                "en": "For each file, identify the bug and write one sentence describing what it does or fails to do at runtime.\n\nFile 1: `.claude/settings.json`\n```json\n{ \"permissions\": { \"defaultMode\": \"bypassPermissions\", \"deny\": [\"Read(.env.production)\"] } }\n```\n\nFile 2: `.claude/skills/migration-validate/SKILL.md`\n```md\n---\nname: migration-validate\ndescription: Validates migration scripts before they run against production.\n---\n## Steps\n1. Run: /Users/priya/scripts/validate-migration.sh\n2. Report validation results.\n```\n\nFile 3: `.mcp.json`\n```json\n{\n  \"mcpServers\": {\n    \"data-warehouse\": {\n      \"type\": \"http\",\n      \"url\": \"https://warehouse.internal/mcp\",\n      \"headers\": {\n        \"Authorization\": \"Bearer [COMPROMISED_TOKEN]\"\n      }\n    }\n  }\n}\n```",
+                "fr": "Pour chaque fichier, identifiez le bogue et rédigez une phrase décrivant ce qu’il fait ou ce qu’il ne parvient pas à faire à l’exécution.\n\nFichier 1 : `.claude/settings.json`\n```json\n{ \"permissions\": { \"defaultMode\": \"bypassPermissions\", \"deny\": [\"Read(.env.production)\"] } }\n```\n\nFichier 2 : `.claude/skills/migration-validate/SKILL.md`\n```md\n---\nname: migration-validate\ndescription: Validates migration scripts before they run against production.\n---\n## Steps\n1. Run: /Users/priya/scripts/validate-migration.sh\n2. Report validation results.\n```\n\nFichier 3 : `.mcp.json`\n```json\n{\n  \"mcpServers\": {\n    \"data-warehouse\": {\n      \"type\": \"http\",\n      \"url\": \"https://warehouse.internal/mcp\",\n      \"headers\": {\n        \"Authorization\": \"Bearer [JETON_COMPROMIS]\"\n      }\n    }\n  }\n}\n```"
+              },
+              "instructions": {
+                "en": "Write your answer first. Reveal the model answer afterward, then self-assess your work.",
+                "fr": "Rédigez d’abord votre réponse. Révélez ensuite la réponse du modèle, puis autoévaluez votre travail."
+              },
+              "minimumAnswerLength": 10,
+              "solution": {
+                "en": "File 1 (`settings.json`): `defaultMode` is `bypassPermissions`; it removes every confirmation prompt on a production workstation, including for destructive operations. The deny rule for `.env.production` is correct; only the mode is wrong.\n\nFile 2 (`SKILL.md`): Step 1 uses an absolute path `/Users/priya/scripts/validate-migration.sh`; this path exists only on the author’s machine and will not resolve on any teammate’s machine after they clone the project.\n\nFile 3 (`.mcp.json`): The API key `[COMPROMISED_TOKEN]` is committed inline in the `Authorization` header; it enters repository history where it cannot be removed by overwriting the file in a later commit, and must be treated as compromised.",
+                "fr": "Fichier 1 (`settings.json`) : `defaultMode` est défini sur `bypassPermissions` ; cela supprime toutes les invites de confirmation sur un poste de travail de production, y compris pour les opérations destructrices. La règle de refus pour `.env.production` est correcte ; seul le mode est incorrect.\n\nFichier 2 (`SKILL.md`) : l’étape 1 utilise un chemin absolu, `/Users/priya/scripts/validate-migration.sh` ; ce chemin n’existe que sur la machine de l’auteur et ne se résoudra sur la machine d’aucun collègue après le clonage du projet.\n\nFichier 3 (`.mcp.json`) : la clé d’API `[JETON_COMPROMIS]` est validée en ligne dans l’en-tête `Authorization` ; elle entre dans l’historique du dépôt, d’où elle ne peut pas être retirée en écrasant le fichier dans un commit ultérieur, et doit être considérée comme compromise."
+              },
+              "successMessage": {
+                "en": "You identified all three integration bugs.",
+                "fr": "Vous avez identifié les trois bogues d’intégration."
+              },
+              "postRevealReflectionTitle": {
+                "en": "How many did you catch?",
+                "fr": "Combien en avez-vous trouvés ?"
+              },
+              "postRevealReflectionOptions": [
+                {
+                  "feedback": {
+                    "en": "Bug 1 is `bypassPermissions` on a production workstation; the mode removes the safety prompts the migration requires. Bug 2 is an absolute path in the skill; it resolves on the author’s machine and nowhere else. Bug 3 is an inline API key in `.mcp.json`; once committed, it lives in repository history regardless of later edits.",
+                    "fr": "Le bogue 1 est `bypassPermissions` sur un poste de travail de production ; ce mode supprime les invites de sécurité requises par la migration. Le bogue 2 est un chemin absolu dans la compétence ; il se résout sur la machine de l’auteur et nulle part ailleurs. Le bogue 3 est une clé d’API en ligne dans `.mcp.json` ; une fois validée, elle reste dans l’historique du dépôt, quelles que soient les modifications ultérieures."
+                  },
+                  "id": "all",
+                  "label": {
+                    "en": "All three correct",
+                    "fr": "Les trois sont corrects"
+                  },
+                  "passes": true
+                },
+                {
+                  "feedback": {
+                    "en": "You caught the permission mode and the path, but the inline API key in `.mcp.json` is still there. A key committed to a configuration file enters repository history, where it stays even after later edits. Revise your diagnosis and resubmit.",
+                    "fr": "Vous avez identifié le mode d’autorisation et le chemin, mais la clé d’API en ligne dans `.mcp.json` est toujours présente. Une clé validée dans un fichier de configuration entre dans l’historique du dépôt, où elle demeure même après des modifications ultérieures. Révisez votre diagnostic et soumettez-le de nouveau."
+                  },
+                  "id": "missed-key",
+                  "label": {
+                    "en": "Missed the API key (Bug 3)",
+                    "fr": "Clé d’API manquée (bogue 3)"
+                  },
+                  "passes": false
+                },
+                {
+                  "feedback": {
+                    "en": "Review the missed file through the lens of its layer: settings for permission-mode safety, skills for path portability, MCP configuration for secret handling. Revise your diagnosis and resubmit.",
+                    "fr": "Examinez le fichier manqué sous l’angle de sa couche : les paramètres pour la sécurité du mode d’autorisation, les compétences pour la portabilité des chemins, et la configuration MCP pour la gestion des secrets. Révisez votre diagnostic et soumettez-le de nouveau."
+                  },
+                  "id": "two",
+                  "label": {
+                    "en": "Two of three correct",
+                    "fr": "Deux sur trois sont corrects"
+                  },
+                  "passes": false
+                },
+                {
+                  "feedback": {
+                    "en": "Look at each file through the lens of its layer: settings for permission-mode safety, skills for path portability, and MCP configuration for secret handling. Revise your diagnosis and resubmit.",
+                    "fr": "Examinez chaque fichier sous l’angle de sa couche : les paramètres pour la sécurité du mode d’autorisation, les compétences pour la portabilité des chemins et la configuration MCP pour la gestion des secrets. Révisez votre diagnostic et soumettez-le de nouveau."
+                  },
+                  "id": "one",
+                  "label": {
+                    "en": "One of three correct",
+                    "fr": "Un sur trois est correct"
+                  },
+                  "passes": false
+                }
+              ],
+              "requirePostRevealReflection": true
+            }
+          ]
+        },
+        {
+          "id": "chapter_skilljar_cumulative_s19",
+          "sourceScreenId": "S19",
+          "title": {
+            "en": "Cumulative integration task: assembly",
+            "fr": "Tâche d’intégration cumulative : assemblage"
+          },
+          "type": "exercise",
+          "durationMinutes": 6,
+          "completionRule": {
+            "requires": [
+              "contentViewed",
+              "requiredExercisesPassed"
+            ]
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "id": "S19_context",
+              "body": {
+                "en": "## Cumulative integration task: assembly\n\nNow write the corrected version of all three files.",
+                "fr": "## Tâche d’intégration cumulative : assemblage\n\nRédigez maintenant la version corrigée des trois fichiers."
+              }
+            },
+            {
+              "type": "cloud_exercise",
+              "id": "S19",
+              "title": {
+                "en": "Cumulative integration task: assembly",
+                "fr": "Tâche d’intégration cumulative : assemblage"
+              },
+              "assignment": {
+                "en": "Produce the complete corrected content for `settings.json`, `SKILL.md`, and `.mcp.json`.",
+                "fr": "Produisez le contenu complet corrigé de `settings.json`, `SKILL.md` et `.mcp.json`."
+              },
+              "instructions": {
+                "en": "Write your answer first. Reveal the model answer afterward, then self-assess your work.",
+                "fr": "Rédigez d’abord votre réponse. Révélez ensuite la réponse du modèle, puis autoévaluez votre travail."
+              },
+              "minimumAnswerLength": 10,
+              "solution": {
+                "en": "File 1: `settings.json` (corrected)\n```json\n{ \"permissions\": { \"defaultMode\": \"acceptEdits\", \"deny\": [\"Read(.env.production)\"] } }\n```\n\nFile 2: `SKILL.md` (corrected)\n```md\n---\nname: migration-validate\ndescription: Validates migration scripts before they run against production.\n---\n## Steps\n1. Run: $CLAUDE_PROJECT_DIR/scripts/validate-migration.sh\n2. Report validation results.\n```\n\nFile 3: `.mcp.json` (corrected)\n```json\n{\n  \"mcpServers\": {\n    \"data-warehouse\": {\n      \"type\": \"http\",\n      \"url\": \"https://warehouse.internal/mcp\",\n      \"headers\": {\n        \"Authorization\": \"Bearer ${WAREHOUSE_MCP_TOKEN}\"\n      }\n    }\n  }\n}\n```\n\n`settings.json` sets `defaultMode` to `acceptEdits` inside `permissions`; it auto-approves file edits and common filesystem commands but gates destructive shell commands, the right tradeoff for a production migration workstation. The skill uses `$CLAUDE_PROJECT_DIR` so the path resolves from the project root on any machine after cloning. The MCP configuration references the credential as an environment variable so it is never committed to repository history.",
+                "fr": "Fichier 1 : `settings.json` (corrigé)\n```json\n{ \"permissions\": { \"defaultMode\": \"acceptEdits\", \"deny\": [\"Read(.env.production)\"] } }\n```\n\nFichier 2 : `SKILL.md` (corrigé)\n```md\n---\nname: migration-validate\ndescription: Validates migration scripts before they run against production.\n---\n## Steps\n1. Run: $CLAUDE_PROJECT_DIR/scripts/validate-migration.sh\n2. Report validation results.\n```\n\nFichier 3 : `.mcp.json` (corrigé)\n```json\n{\n  \"mcpServers\": {\n    \"data-warehouse\": {\n      \"type\": \"http\",\n      \"url\": \"https://warehouse.internal/mcp\",\n      \"headers\": {\n        \"Authorization\": \"Bearer ${WAREHOUSE_MCP_TOKEN}\"\n      }\n    }\n  }\n}\n```\n\n`settings.json` définit `defaultMode` sur `acceptEdits` dans `permissions` ; cela approuve automatiquement les modifications de fichiers et les commandes courantes du système de fichiers, mais impose une validation pour les commandes shell destructrices, ce qui constitue le bon compromis pour un poste de travail de migration en production. La compétence utilise `$CLAUDE_PROJECT_DIR` afin que le chemin se résolve depuis la racine du projet sur n’importe quelle machine après le clonage. La configuration MCP référence l’identifiant comme variable d’environnement afin qu’il ne soit jamais validé dans l’historique du dépôt."
+              },
+              "successMessage": {
+                "en": "Your assembly includes all three corrections.",
+                "fr": "Votre assemblage inclut les trois corrections."
+              },
+              "postRevealReflectionTitle": {
+                "en": "How did your assembly compare?",
+                "fr": "Comment votre assemblage se compare-t-il ?"
+              },
+              "postRevealReflectionOptions": [
+                {
+                  "feedback": {
+                    "en": "The settings file keeps `defaultMode` inside `permissions` and sets it to `acceptEdits`, the skill uses a project-relative path variable, and the MCP configuration references the credential as an environment variable.",
+                    "fr": "Le fichier de paramètres conserve `defaultMode` dans `permissions` et le définit sur `acceptEdits`, la compétence utilise une variable de chemin relative au projet et la configuration MCP référence l’identifiant comme variable d’environnement."
+                  },
+                  "id": "correct",
+                  "label": {
+                    "en": "Correct assembly",
+                    "fr": "Assemblage correct"
+                  },
+                  "passes": true
+                },
+                {
+                  "feedback": {
+                    "en": "The skill path and API key are correct, but the permission mode still uses `bypassPermissions`. For a production workstation running a migration, that mode removes the confirmation prompts that would catch an unintended destructive command. Revise your assembly and resubmit.",
+                    "fr": "Le chemin de la compétence et la clé d’API sont corrects, mais le mode d’autorisation utilise toujours `bypassPermissions`. Pour un poste de travail de production exécutant une migration, ce mode supprime les invites de confirmation qui détecteraient une commande destructive non intentionnelle. Révisez votre assemblage et soumettez-le de nouveau."
+                  },
+                  "id": "permission",
+                  "label": {
+                    "en": "Missing permission fix",
+                    "fr": "Correction d’autorisation manquante"
+                  },
+                  "passes": false
+                },
+                {
+                  "feedback": {
+                    "en": "The mode and API key handling are correct, but the skill still uses an absolute path. Use `$CLAUDE_PROJECT_DIR` to reference the script from the project root so it resolves on any machine. Revise your assembly and resubmit.",
+                    "fr": "Le mode et la gestion de la clé d’API sont corrects, mais la compétence utilise toujours un chemin absolu. Utilisez `$CLAUDE_PROJECT_DIR` pour référencer le script depuis la racine du projet afin qu’il se résolve sur n’importe quelle machine. Révisez votre assemblage et soumettez-le de nouveau."
+                  },
+                  "id": "path",
+                  "label": {
+                    "en": "Missing path fix",
+                    "fr": "Correction de chemin manquante"
+                  },
+                  "passes": false
+                },
+                {
+                  "feedback": {
+                    "en": "The mode and path are correct, but the inline key is still committed to `.mcp.json`. Reference an environment variable so the credential never enters repository history. Revise your assembly and resubmit.",
+                    "fr": "Le mode et le chemin sont corrects, mais la clé en ligne est toujours validée dans `.mcp.json`. Référencez une variable d’environnement afin que l’identifiant n’entre jamais dans l’historique du dépôt. Révisez votre assemblage et soumettez-le de nouveau."
+                  },
+                  "id": "secret",
+                  "label": {
+                    "en": "Missing secret fix",
+                    "fr": "Correction du secret manquante"
+                  },
+                  "passes": false
+                }
+              ],
+              "requirePostRevealReflection": true
+            }
+          ]
+        },
+        {
           "id": "chapter_06",
           "title": {
             "en": "Key Takeaways",

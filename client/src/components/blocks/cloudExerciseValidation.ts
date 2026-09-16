@@ -16,3 +16,27 @@ export function resolveLocalizedBlockText(value: unknown, lang: string): string 
   const fallback = lang === "en" ? bilingual.fr : bilingual.en;
   return typeof preferred === "string" ? preferred : typeof fallback === "string" ? fallback : "";
 }
+
+export type PostRevealReflectionOption = {
+  id: string;
+  label: string;
+  feedback: string;
+  passes: boolean;
+};
+
+export function resolvePostRevealReflectionOptions(rawValue: unknown, lang: string): PostRevealReflectionOption[] {
+  if (!Array.isArray(rawValue)) return [];
+
+  return rawValue.flatMap((rawOption, index) => {
+    if (!rawOption || typeof rawOption !== "object") return [];
+    const option = rawOption as { id?: unknown; label?: unknown; feedback?: unknown; passes?: unknown };
+    const label = resolveLocalizedBlockText(option.label, lang);
+    if (!label) return [];
+    return [{
+      id: typeof option.id === "string" && option.id.trim() ? option.id : `reflection_${index + 1}`,
+      label,
+      feedback: resolveLocalizedBlockText(option.feedback, lang),
+      passes: option.passes === true,
+    }];
+  });
+}

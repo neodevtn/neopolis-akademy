@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Timer, CheckCircle2, ChevronDown, Download } from "lucide-react";
 import PageContent, { renderInlineFormatting } from "@/pages/training/PageContent";
 import { Streamdown } from "streamdown";
-import { hasRequiredAnswerLength, resolveLocalizedBlockText, resolveMinimumAnswerLength } from "./blocks/cloudExerciseValidation";
+import { hasRequiredAnswerLength, resolveLocalizedBlockText, resolveMinimumAnswerLength, resolvePostRevealReflectionOptions } from "./blocks/cloudExerciseValidation";
 
 /**
  * Extract learner-friendly objectives from the raw grading prompt.
@@ -73,9 +73,11 @@ interface CloudExerciseBlockProps {
 
 export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evaluationContext, onEvaluate }: CloudExerciseBlockProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [solutionRevealed, setSolutionRevealed] = useState(false);
   const [answer, setAnswer] = useState("");
   const [evaluation, setEvaluation] = useState<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number } | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [reflectionChoiceId, setReflectionChoiceId] = useState<string | null>(null);
 
   const tpTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || '') : (block.title || '');
   const tpAssignment = resolveLocalizedBlockText(block.assignment, lang);
@@ -90,6 +92,10 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
   const rubricCriteria = Array.isArray(block.rubricCriteria) ? block.rubricCriteria : [];
   const minimumAnswerLength = resolveMinimumAnswerLength(block.minimumAnswerLength);
   const hasMinimumAnswer = hasRequiredAnswerLength(answer, minimumAnswerLength);
+  const reflectionOptions = resolvePostRevealReflectionOptions(block.postRevealReflectionOptions, lang);
+  const reflectionIsRequired = Boolean(block.requirePostRevealReflection) && reflectionOptions.length > 0;
+  const reflectionTitle = resolveLocalizedBlockText(block.postRevealReflectionTitle, lang);
+  const selectedReflection = reflectionOptions.find((option) => option.id === reflectionChoiceId) ?? null;
   const usesTrackedRubric = rubricCriteria.length > 0 && Boolean(evaluationContext);
   const maxScore = Number(block.maxScore) || rubricCriteria.length || 1;
   const passingScore = Number(block.passingScore) || maxScore;
@@ -109,7 +115,10 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
       setIsEvaluating(false);
       if (data.passed) {
         setSubmitted(true);
-        onComplete?.(block.id || `cloud_exercise_${blockIdx}`, { score: toCompetencyPercentage(data.score, maxScore), rubricEvaluated: true });
+        setSolutionRevealed(true);
+        if (!reflectionIsRequired) {
+          onComplete?.(block.id || `cloud_exercise_${blockIdx}`, { score: toCompetencyPercentage(data.score, maxScore), rubricEvaluated: true });
+        }
       }
     };
   const failEvaluation = () => {
@@ -121,7 +130,10 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
     if (!hasMinimumAnswer) return;
     if (!usesTrackedRubric || !evaluationContext || !onEvaluate) {
       setSubmitted(true);
-      onComplete?.(block.id || `cloud_exercise_${blockIdx}`);
+      setSolutionRevealed(true);
+      if (!reflectionIsRequired) {
+        onComplete?.(block.id || `cloud_exercise_${blockIdx}`);
+      }
       return;
     }
     setIsEvaluating(true);
@@ -135,6 +147,17 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
       passingScore,
       lang: lang === "en" ? "en" : "fr",
     }).then(completeEvaluation).catch(failEvaluation);
+  };
+
+  const selectReflection = (choiceId: string) => {
+    const selected = reflectionOptions.find((option) => option.id === choiceId);
+    if (!selected || selectedReflection?.passes) return;
+    setReflectionChoiceId(choiceId);
+    if (selected.passes) {
+      onComplete?.(block.id || `cloud_exercise_${blockIdx}`);
+      return;
+    }
+    setSubmitted(false);
   };
 
   return (
@@ -315,7 +338,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
 
         {/* Solution (only visible after submission) */}
         {learnerSolution && (
-          (submitted || evaluation) ? (
+          (solutionRevealed || evaluation) ? (
             <details className="border border-green-200 rounded-lg bg-green-50/50" open>
               <summary className="px-4 py-2 cursor-pointer text-sm font-medium text-green-700 hover:text-green-800 flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4" />
@@ -334,8 +357,39 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
           )
         )}
 
+        {reflectionOptions.length > 0 && (solutionRevealed || evaluation) && (
+          <div className="border border-indigo-200 rounded-lg bg-indigo-50/50 p-4 space-y-3">
+            <p className="font-semibold text-sm text-indigo-900">
+              {reflectionTitle || t({ en: "How did your answer compare?", fr: "Comment votre réponse se compare-t-elle à la correction ?" })}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {reflectionOptions.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  disabled={Boolean(selectedReflection?.passes)}
+                  onClick={() => selectReflection(option.id)}
+                  className={`rounded-lg border px-3 py-2 text-sm font-medium text-left ${reflectionChoiceId === option.id ? "border-indigo-600 bg-indigo-100 text-indigo-900" : "border-indigo-200 bg-background text-indigo-800 hover:bg-indigo-100"} disabled:cursor-default disabled:opacity-100`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+            {selectedReflection?.feedback && (
+              <div className="rounded-lg border border-indigo-200 bg-background/80 p-3 text-sm text-indigo-900">
+                <Streamdown>{selectedReflection.feedback}</Streamdown>
+              </div>
+            )}
+            {reflectionIsRequired && !selectedReflection?.passes && (
+              <p className="text-xs text-indigo-800">
+                {t({ en: "Choose a reflection result to complete this activity.", fr: "Choisissez un résultat d’auto-évaluation pour terminer cette activité." })}
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Success message */}
-        {tpSuccess && submitted && (
+        {tpSuccess && submitted && (!reflectionIsRequired || selectedReflection?.passes) && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-3">
             <p className="text-sm text-green-700">{tpSuccess}</p>
           </div>

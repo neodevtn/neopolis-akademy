@@ -123,4 +123,20 @@ describe('Developer Foundations course 3 critical content contract', () => {
     expect(checkpoint).not.toHaveProperty('explanation');
     expect(enterprise.completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
   });
+
+  it('restores the two Skilljar cumulative tasks with a standard answer-first, reflection-gated sequence', () => {
+    for (const sourceScreenId of ['S18', 'S19']) {
+      const cumulative = chapter(`chapter_skilljar_cumulative_${sourceScreenId.toLowerCase()}`);
+      const exercise = cumulative.blocks.find((item: any) => item.type === 'cloud_exercise');
+      expect(cumulative).toMatchObject({ sourceScreenId, type: 'exercise', durationMinutes: 6 });
+      expect(cumulative.completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
+      expect(exercise).toMatchObject({ minimumAnswerLength: 10, requirePostRevealReflection: true });
+      expect(exercise.postRevealReflectionOptions).toHaveLength(4);
+      expect(exercise.postRevealReflectionOptions.filter((item: any) => item.passes)).toHaveLength(1);
+      if (sourceScreenId === 'S18') expect(exercise.solution.fr).toContain('`bypassPermissions`');
+      else expect(exercise.solution.fr).toContain('```');
+      expect(exercise.postRevealReflectionTitle.fr.length).toBeGreaterThan(8);
+    }
+    expect(JSON.stringify(course)).not.toContain('sk-prod-warehouse-abc123');
+  });
 });

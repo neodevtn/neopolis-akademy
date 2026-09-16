@@ -9,6 +9,7 @@ const selectionPath = path.join(root, 'docs/anthropic-developer-course3-checkpoi
 const checkpoint4PatchPath = path.join(root, 'docs/anthropic-developer-course3-checkpoint4-patch.json');
 const skilljarCheckpointPatchesPath = path.join(root, 'docs/skilljar-developer3-checkpoint-patches.json');
 const skilljarChapterPatchesPath = path.join(root, 'docs/skilljar-developer3-chapter-patches.json');
+const skilljarCumulativePatchesPath = path.join(root, 'docs/skilljar-developer3-cumulative-patches.json');
 const course = JSON.parse(fs.readFileSync(coursePath, 'utf8'));
 const trainingIndex = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 const patches = JSON.parse(fs.readFileSync(patchesPath, 'utf8'));
@@ -16,6 +17,7 @@ const selection = JSON.parse(fs.readFileSync(selectionPath, 'utf8'));
 const checkpoint4Patch = JSON.parse(fs.readFileSync(checkpoint4PatchPath, 'utf8'));
 const skilljarCheckpointPatches = JSON.parse(fs.readFileSync(skilljarCheckpointPatchesPath, 'utf8'));
 const skilljarChapterPatches = JSON.parse(fs.readFileSync(skilljarChapterPatchesPath, 'utf8'));
+const skilljarCumulativePatches = JSON.parse(fs.readFileSync(skilljarCumulativePatchesPath, 'utf8'));
 const lesson = course.lessons[0];
 
 course.officialDurationMinutes = 142;
@@ -211,6 +213,53 @@ if (!durableCheckpoint || !mcpCheckpoint || !enterpriseCheckpoint) throw new Err
 installMatchingCheckpoint(durableCheckpoint, chapter('chapter_03'));
 installMatchingCheckpoint(mcpCheckpoint, chapter('chapter_skilljar_mcp_servers'));
 installSensitiveSingleChoiceCheckpoint(enterpriseCheckpoint, chapter('chapter_skilljar_enterprise_integration'));
+
+const cumulativePatchByScreen = new Map(skilljarCumulativePatches.proposals.map((item) => [item.sourceScreenId, item]));
+const installCumulativeChapter = (proposal, fallbackIndex) => {
+  const chapterId = `chapter_skilljar_cumulative_${proposal.sourceScreenId.toLowerCase()}`;
+  const cumulativeChapter = {
+    id: chapterId,
+    sourceScreenId: proposal.sourceScreenId,
+    title: proposal.title,
+    type: 'exercise',
+    durationMinutes: proposal.durationMinutes,
+    completionRule: { requires: ['contentViewed', 'requiredExercisesPassed'] },
+    blocks: [
+      {
+        type: 'content',
+        id: `${proposal.id}_context`,
+        body: {
+          en: `## ${proposal.title.en}\n\n${proposal.intro.en}`,
+          fr: `## ${proposal.title.fr}\n\n${proposal.intro.fr}`,
+        },
+      },
+      {
+        type: 'cloud_exercise',
+        id: proposal.id,
+        title: proposal.title,
+        assignment: proposal.assignment,
+        instructions: proposal.instructions,
+        minimumAnswerLength: proposal.minimumAnswerLength,
+        solution: proposal.solution,
+        successMessage: proposal.successMessage,
+        postRevealReflectionTitle: proposal.reflectionTitle,
+        postRevealReflectionOptions: proposal.reflectionOptions,
+        requirePostRevealReflection: true,
+      },
+    ],
+  };
+  const existingIndex = lesson.chapters.findIndex((item) => item.id === chapterId);
+  if (existingIndex >= 0) lesson.chapters[existingIndex] = cumulativeChapter;
+  else lesson.chapters.splice(fallbackIndex, 0, cumulativeChapter);
+};
+
+const cumulativeS18 = cumulativePatchByScreen.get('S18');
+const cumulativeS19 = cumulativePatchByScreen.get('S19');
+if (!cumulativeS18 || !cumulativeS19) throw new Error('Missing Skilljar Developer 3 cumulative proposals.');
+const keyTakeawaysIndex = lesson.chapters.findIndex((item) => item.id === 'chapter_06');
+if (keyTakeawaysIndex < 0) throw new Error('Missing Developer 3 Key Takeaways chapter before cumulative insertion.');
+installCumulativeChapter(cumulativeS18, keyTakeawaysIndex);
+installCumulativeChapter(cumulativeS19, lesson.chapters.findIndex((item) => item.id === 'chapter_06'));
 
 fs.writeFileSync(coursePath, `${JSON.stringify(course, null, 2)}\n`);
 fs.writeFileSync(indexPath, `${JSON.stringify(trainingIndex, null, 2)}\n`);
