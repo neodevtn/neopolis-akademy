@@ -23,3 +23,5 @@ La soumission de cette réponse affiche « Correct ! », met en évidence unique
 Après validation positive, le bouton « Suivant » du lecteur est actif. La suite de tests complète compte 831 tests réussis ; son unique échec concerne un checkpoint dupliqué préexistant dans `claude_certified_architect_foundations__04`, parcours expressément hors périmètre de ce lot Developer et non modifié.
 
 Après propagation du checkpoint `0961376d`, les deux domaines publics servent le bloc `checkpoint4_fix_plugin_definition` avec `serverValidated: true`, sans clé `correctAnswer` ni `explanation` dans la réponse tRPC `course-data` non mise en cache. Le manifeste public sert la version `7812a3e8d4302922` au moment du contrôle.
+
+Le lecteur public du domaine principal charge également le scénario, les quatre options et l’indice du checkpoint dans le composant standard. Le contrôle visuel confirme qu’aucun marquage de bonne réponse n’est présent avant soumission.
