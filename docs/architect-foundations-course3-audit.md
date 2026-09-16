@@ -10,7 +10,7 @@ Le 16 septembre 2026, le vérificateur local a demandé les 44 ressources telles
 | --- | --- | --- |
 | 44 blocs de téléchargement pour une référence de travail à 40 ressources | Quatre occurrences peuvent être des compléments, des duplications pédagogiques ou un écart d’inventaire. | Créer une matrice de provenance avant toute suppression. |
 | Sept occurrences d’URL déjà présentes ailleurs | Une répétition d’URL ne prouve pas qu’un écran est incorrect : elle peut réapparaître dans une étape guidée et une correction. | Contrôler le contexte de chaque occurrence répétée. |
-| Aucun bloc ne possède `assetMeta` | La disponibilité est prouvée, mais pas la provenance structurée de chaque ressource. | Préparer une normalisation de métadonnées générique après le rapprochement source. |
+| Métadonnées de téléchargement | La disponibilité a été complétée par la provenance Anthropic, le type MIME reçu, la taille et le SHA-256 observé pour chaque bloc vérifié. | Conserver les répétitions tant qu’une matrice source nominative ne justifie pas leur retrait. |
 
 > La source publique permet de vérifier les objectifs, mais ne justifie pas de supprimer ou de réécrire des écrans détaillés sans preuve d’inventaire complémentaire.
 

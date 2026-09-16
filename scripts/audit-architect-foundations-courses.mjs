@@ -7,12 +7,19 @@ const prefix = "claude_certified_architect_foundations__";
 const courseIds = ["01", "02", "03", "04", "05", "06", "07"].map((suffix) => `${prefix}${suffix}`);
 const courseTargets = {
   [`${prefix}01`]: { expectedChapters: 34, expectedOfficialVideos: 11, expectedDownloads: 14 },
-  [`${prefix}02`]: { expectedChapters: 95, expectedExercises: 16, expectedDownloads: 35, expectedOfficialVideos: 1 },
-  [`${prefix}03`]: { expectedChapters: 99, expectedExercises: 26, expectedDownloads: 40 },
-  [`${prefix}04`]: { expectedChapters: 23, expectedExercises: 9, expectedOfficialVideos: 9, expectedVideos: 15 },
-  [`${prefix}05`]: { expectedChapters: 24, expectedExercises: 7, expectedOfficialVideos: 6, expectedVideos: 10 },
-  [`${prefix}06`]: { expectedChapters: 80, expectedExercises: 12, expectedDownloads: 48 },
+  [`${prefix}02`]: { expectedChapters: 95, expectedExercises: 16 },
+  [`${prefix}03`]: { expectedChapters: 99, expectedExercises: 26 },
+  [`${prefix}04`]: { expectedChapters: 23, expectedExercises: 9, expectedOfficialVideos: 9 },
+  [`${prefix}05`]: { expectedChapters: 24, expectedExercises: 7 },
+  [`${prefix}06`]: { expectedChapters: 80, expectedExercises: 12 },
   [`${prefix}07`]: { expectedChapters: 26, expectedExercises: 4, expectedDownloads: 2 },
+};
+const reportedSourceCounts = {
+  [`${prefix}02`]: [{ metric: "downloads", reported: 35 }, { metric: "officialVideos", reported: 1 }],
+  [`${prefix}03`]: [{ metric: "downloads", reported: 40 }],
+  [`${prefix}04`]: [{ metric: "videos", reported: 15 }],
+  [`${prefix}05`]: [{ metric: "officialVideos", reported: 6 }, { metric: "videos", reported: 10 }],
+  [`${prefix}06`]: [{ metric: "downloads", reported: 48 }],
 };
 const signals = [
   { key: "best_practices", pattern: /\bbest practices\b/i },
@@ -102,12 +109,20 @@ async function inspectCourse(courseId) {
     const observedKey = key.replace(/^expected/, "").replace(/^./, (character) => character.toLowerCase());
     return [key, { expected, observed: observed[observedKey] ?? null, delta: observed[observedKey] === undefined ? null : observed[observedKey] - expected }];
   }));
+  const sourceInventorySignals = (reportedSourceCounts[courseId] || []).map(({ metric, reported }) => ({
+    metric,
+    reported,
+    observed: observed[metric] ?? null,
+    delta: observed[metric] === undefined ? null : observed[metric] - reported,
+    status: "reported_count_without_nominative_manifest",
+  }));
   return {
     courseId,
     title: localized(course.sourceCourseTitle),
     checksum: hash(course),
     observed,
     targetGaps,
+    sourceInventorySignals,
     integrity: {
       duplicateCheckpointIds: [...new Set(duplicateCheckpointIds)],
       checkpointBlocksMissingExerciseId: checkpoints.filter((block) => !block.exerciseId).map((block) => block.id || null),

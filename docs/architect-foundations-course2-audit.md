@@ -15,7 +15,7 @@ Les deux pages publiques Anthropic confirment le titre canonique **Building with
 
 Le 16 septembre 2026, le vérificateur réexécutable a demandé les 38 téléchargements rendus par le cours au serveur local. Les **38 réponses ont retourné HTTP 200 avec un contenu non vide**, soit 32 URL d’assets distinctes et six occurrences de répétition. L’audit ne constate donc aucun lien de téléchargement cassé à ce stade.
 
-La même vérification confirme toutefois que les 38 blocs datent d’un format antérieur sans objet `assetMeta`. Cette absence de métadonnées ne rend pas le lien inutilisable, mais elle empêche de démontrer, bloc par bloc, l’origine, le type MIME déclaré, la taille et le checksum demandés par le protocole. La normalisation devra être faite par une migration de métadonnées réutilisable, après rapprochement de la matrice source, et non en supprimant des ressources valides par simple similarité d’URL.
+La même vérification a ensuite alimenté une migration de métadonnées réutilisable : les blocs de téléchargement vérifiés portent désormais la provenance Anthropic, le type MIME reçu, la taille et le SHA-256 observé. Les six occurrences répétées restent conservées tant qu’une matrice source nominative ne permet pas de décider si elles correspondent à des points d’usage pédagogiques distincts ; aucune ressource valide n’est supprimée sur la seule similarité d’URL.
 
 > Les descriptions publiques servent à cadrer les objectifs et la structure générale. Elles ne sont pas employées pour reconstituer un écran, un média ou un exercice absent.
 

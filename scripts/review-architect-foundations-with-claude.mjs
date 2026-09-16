@@ -9,11 +9,11 @@ if (!baseUrl || !apiKey) throw new Error("Forge credentials are unavailable.");
 
 const audit = JSON.parse(await readFile(resolve(root, "docs/architect-foundations-current-audit.json"), "utf8"));
 const publicObjectives = {
-  "02": "Claude API requests, multi-turn conversations, streaming, structured output, prompt evaluation, tool use, RAG, MCP, Claude Code, computer use, and agent architectures.",
-  "03": "Google Cloud/Vertex AI, SDK, streaming, tool use, prompt evaluation, RAG, MCP, workflows and agents.",
+  "02": "Seven public sections cover Claude API requests, multi-turn conversations, streaming, structured output, prompt evaluation, tool use, RAG, MCP, Claude Code, computer use, and agent architectures.",
+  "03": "Seven public sections cover Google Cloud/Vertex AI, SDK, streaming, tool use, prompt evaluation, RAG, MCP, workflows and agents.",
   "04": "Nine lessons: steer the work, configure Claude, automate repeat work, verify and share. Rewind is in steering; plugins are in verify/share.",
-  "05": "Publicly listed milestones span Meet Claude, conversations, Projects, Artifacts, Skills, Connectors, Enterprise Search, Research, role use cases, conclusion and certificate.",
-  "06": "AWS Bedrock/boto3, conversations, streaming, structured extraction, tools, RAG, MCP, Claude Code, Computer Use and optimization.",
+  "05": "Publicly listed milestones span Meet Claude, conversations, Projects, Artifacts, Skills, Connectors, Enterprise Search, Research, role use cases, conclusion and certificate. Four direct local videos have verified transcripts; public listings do not name the reportedly missing videos.",
+  "06": "Six public sections cover AWS Bedrock (16 lessons), prompt engineering & evaluation (16), tool use (14), RAG (10), MCP (12), and Claude Code & Computer Use (8). The local Module Introduction explicitly belongs to Module 06 and directly precedes its first exercises.",
   "07": "MCP architecture, servers, clients, tools, resources, prompts, Inspector, async cleanup and a document-management project.",
 };
 
@@ -29,6 +29,7 @@ async function compactCourse(record) {
     localLessonTitles: (course.lessons || []).map((lesson) => resolveText(lesson.title)),
     observed: record.observed,
     targetGaps: record.targetGaps,
+    sourceInventorySignals: record.sourceInventorySignals,
     integrity: {
       duplicateCheckpointIds: record.integrity.duplicateCheckpointIds,
       unrenderedExerciseCount: record.integrity.unrenderedExercises.length,
@@ -64,7 +65,7 @@ const responseSchema = {
   additionalProperties: false,
 };
 
-const prompt = `You are reviewing a private e-learning migration audit for Anthropic certification preparation. Use only the supplied data. Do not claim to have seen private source lessons and do not invent missing content, media, labs, questions, or exercises. Identify only findings supported by explicit local or public-summary evidence. Treat a discrepancy in published lesson counts as a source-reconciliation item, not automatic proof of an error. Prioritize course flow defects, duplicate required interactions, wrong-topic content, broken media evidence, and incomplete provenance. Preserve existing standard components and sequential gating. Return French JSON that conforms exactly to the provided schema.\n\nAudit inputs:\n${JSON.stringify(inputs)}`;
+const prompt = `You are reviewing a private e-learning migration audit for Anthropic certification preparation. Use only the supplied data. Do not claim to have seen private source lessons and do not invent missing content, media, labs, questions, or exercises. Identify only findings supported by explicit local or public-summary evidence. Treat every sourceInventorySignal as an unverified historical count, not proof of a missing or extra item: it lacks a nominative manifest. Do not label as a defect a Module Introduction that the input explicitly identifies as the opening of its module. Prioritize only actual flow defects, duplicate required interactions, wrong-topic content, broken media evidence, and incomplete provenance. Preserve existing standard components and sequential gating. Return French JSON that conforms exactly to the provided schema.\n\nAudit inputs:\n${JSON.stringify(inputs)}`;
 
 const response = await fetch(`${baseUrl}/v1/chat/completions`, {
   method: "POST",
