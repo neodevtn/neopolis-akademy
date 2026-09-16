@@ -43,6 +43,15 @@ describe('Developer Foundations course 3 critical content contract', () => {
     expect(content('chapter_03').fr).not.toContain('managed settings');
   });
 
+  it('uses the official duration in the introduction and separates the watch-out card metadata', () => {
+    expect(content('chapter_01_1').en).toContain('**Official course duration:** 142 minutes');
+    expect(content('chapter_01_1').fr).toContain('**Durée officielle du cours :** 142 minutes');
+    expect(content('chapter_01_1').en).not.toContain('**Estimated time:** 15-25 minutes');
+    expect(content('chapter_01_1').fr).not.toContain('**Durée estimée :** 15-25 minutes');
+    expect(card('chapter_03', 'Watch Out · Durable Project Context · 4 min').front.fr).toBe('À surveiller · Contexte de projet durable · 4 min');
+    expect(card('chapter_05', 'Watch Out · Packaging Workflows · 3 min').front.fr).toBe('À surveiller · Flux de travail d’empaquetage · 3 min');
+  });
+
   it('removes unsourced video recommendations without removing reference guidance', () => {
     expect(chapter('chapter_06').blocks.some((item: any) => item.type === 'video')).toBe(false);
     expect(content('chapter_06').fr).toContain('Ressources de référence');

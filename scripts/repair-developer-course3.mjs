@@ -24,6 +24,16 @@ const content = (id) => {
   if (!target?.body) throw new Error(`Missing content for ${id}.`);
   return target.body;
 };
+const replaceExact = (value, oldText, newText, label) => {
+  if (value.includes(newText) && !value.includes(oldText)) return value;
+  const occurrences = value.split(oldText).length - 1;
+  if (occurrences !== 1) throw new Error(`Expected one Developer 3 replacement target ${label}; found ${occurrences}`);
+  return value.replace(oldText, newText);
+};
+
+const introduction = content('chapter_01_1');
+introduction.en = replaceExact(introduction.en, '**Estimated time:** 15-25 minutes', '**Official course duration:** 142 minutes', 'introduction:en');
+introduction.fr = replaceExact(introduction.fr, '**Durée estimée :** 15-25 minutes', '**Durée officielle du cours :** 142 minutes', 'introduction:fr');
 
 for (const section of patches.sections) {
   const body = content(section.chapterId);
@@ -53,6 +63,20 @@ const frenchTerms = [
 for (const id of ['chapter_01', 'chapter_03', 'chapter_05']) {
   const body = content(id);
   for (const [from, to] of frenchTerms) body.fr = body.fr.replaceAll(from, to);
+}
+
+const cardFrontPatches = [
+  { chapterId: 'chapter_03', en: ['Watch OutDurable Project Context·4 min', 'Watch Out · Durable Project Context · 4 min'], fr: ['Attention — Contexte du projet Durable·4 min', 'À surveiller · Contexte de projet durable · 4 min'] },
+  { chapterId: 'chapter_05', en: ['Watch OutPackaging Workflows·3 min', 'Watch Out · Packaging Workflows · 3 min'], fr: ['Attention — Packaging flux de travail · 3 min', 'À surveiller · Flux de travail d’empaquetage · 3 min'] },
+];
+for (const patch of cardFrontPatches) {
+  const card = chapter(patch.chapterId).blocks
+    .filter((block) => block.type === 'flip_cards')
+    .flatMap((block) => block.cards || [])
+    .find((item) => item.front?.en === patch.en[0] || item.front?.en === patch.en[1]);
+  if (!card?.front) throw new Error(`Missing Developer 3 card front ${patch.chapterId}.`);
+  card.front.en = replaceExact(card.front.en, patch.en[0], patch.en[1], `${patch.chapterId}:front:en`);
+  card.front.fr = replaceExact(card.front.fr, patch.fr[0], patch.fr[1], `${patch.chapterId}:front:fr`);
 }
 
 const tutorials = chapter('chapter_06');
