@@ -62,6 +62,8 @@ async function inspectCourse(courseId) {
   const renderedExerciseIds = new Set(checkpointIds);
   const exercises = Array.isArray(course.exercises) ? course.exercises : [];
   const unrenderedExercises = exercises.filter((exercise) => !renderedExerciseIds.has(exercise.id));
+  const unrenderedRequiredExercises = unrenderedExercises.filter((exercise) => exercise.required === true);
+  const unrenderedOptionalExercises = unrenderedExercises.filter((exercise) => exercise.required !== true);
   const officialVideos = videos.filter((block) => block.mediaMeta?.official === true);
   const supplementaryVideos = videos.filter((block) => block.mediaMeta?.official === false);
   const stringsFr = recursivelyCollectStrings(course, "fr");
@@ -109,7 +111,8 @@ async function inspectCourse(courseId) {
     integrity: {
       duplicateCheckpointIds: [...new Set(duplicateCheckpointIds)],
       checkpointBlocksMissingExerciseId: checkpoints.filter((block) => !block.exerciseId).map((block) => block.id || null),
-      unrenderedExercises: unrenderedExercises.map((exercise) => ({ id: exercise.id || null, interactionType: exercise.interactionType || null, required: exercise.required === true })),
+      unrenderedExercises: unrenderedRequiredExercises.map((exercise) => ({ id: exercise.id || null, interactionType: exercise.interactionType || null, required: true })),
+      unrenderedOptionalExercises: unrenderedOptionalExercises.map((exercise) => ({ id: exercise.id || null, interactionType: exercise.interactionType || null, required: false })),
       videosMissingRequiredMetadata: videoIssues,
       downloadsMissingRequiredMetadata: downloadIssues,
       frenchTerminologySignals: localeSignals,

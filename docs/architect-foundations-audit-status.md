@@ -13,7 +13,7 @@
 | Provenance des téléchargements historiques | 02, 03, 06, 07 | Corrigé | 129 ressources atteignables en HTTP 200 disposent de leur source, MIME, taille et SHA-256 observés. |
 | Provenance des vidéos avec transcript local | 04, 05 | Corrigé | Treize vidéos portent une provenance Anthropic, un identifiant de transcript et une empreinte de référence. |
 
-Les contrats ciblés ont validé ces règles, ainsi que le typecheck. L’inventaire actif ne détecte plus ni ID de checkpoint dupliqué, ni métadonnée média obligatoire absente.
+Les contrats ciblés ont validé ces règles, ainsi que le typecheck. L’inventaire actif ne détecte plus ni ID de checkpoint dupliqué, ni métadonnée média obligatoire absente, ni exercice obligatoire non rendu. Les 19 exercices restant hors écran dans AI Fluency sont explicitement optionnels et demeurent documentés comme contenu dont le placement source n’est pas établi.
 
 La sonde applicative sans cache du 16 septembre 2026 confirme également que les cours modifiés sont servis en HTTP `200`, `Content-Type: application/json; charset=utf-8` et `Cache-Control: no-store, max-age=0`. Elle expose 15 leçons et 11 vidéos officielles pour AI Fluency, 9 vidéos officielles pour Claude Code in Action, le titre `Implementing the RAG Flow` pour Amazon Bedrock et aucune occurrence du doublon de réflexion supprimé. Ces vérifications attestent la donnée servie par le lecteur ; elles ne remplacent pas la validation visuelle apprenant, qui est bloquée dans l’environnement de contrôle par une communication globale non acquittée.
 
