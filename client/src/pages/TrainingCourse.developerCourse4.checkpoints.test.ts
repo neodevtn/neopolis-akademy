@@ -71,4 +71,25 @@ describe('Developer Foundations course 4 checkpoint integrity', () => {
     expect(content).not.toContain('Prompt and context size :');
     expect(content).not.toContain('un score baseline épinglé');
   });
+
+  it('restores the two Skilljar cumulative production-hardening tasks before the recap', () => {
+    const ids = ['chapter_skilljar_04_s17', 'chapter_skilljar_04_s18'];
+    const chapters = ids.map(chapter);
+    const recapIndex = lesson.chapters.findIndex((item: any) => item.id === 'chapter_08');
+    expect(chapters.every(Boolean)).toBe(true);
+    expect(lesson.chapters.findIndex((item: any) => item.id === ids[0])).toBeLessThan(recapIndex);
+
+    for (const cumulative of chapters) {
+      const exerciseBlock = cumulative.blocks.find((block: any) => block.type === 'cloud_exercise');
+      expect(cumulative.completionRule).toEqual({ requires: ['cloudExerciseCompleted'] });
+      expect(exerciseBlock.minimumAnswerLength).toBe(40);
+      expect(exerciseBlock.solution.en).not.toHaveLength(0);
+      expect(exerciseBlock.solution.fr).not.toHaveLength(0);
+      expect(exerciseBlock.instructions.fr).toContain('soumettez');
+      expect(exerciseBlock.instructions.fr).toContain('réponse du modèle');
+    }
+
+    expect(chapter('chapter_skilljar_04_s17').blocks[1].solution.fr).toContain('aucune évaluation n’existe');
+    expect(chapter('chapter_skilljar_04_s18').blocks[1].solution.en).toContain('call_with_retry');
+  });
 });

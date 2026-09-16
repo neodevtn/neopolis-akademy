@@ -1225,6 +1225,158 @@
           }
         },
         {
+          "id": "chapter_skilljar_05_s17",
+          "sourceScreenId": "S17",
+          "sourceProvenance": "Skilljar authenticated Developer Foundations, 2026-09-16",
+          "title": {
+            "en": "Cumulative task: Find all three, explain each, write the correction",
+            "fr": "Tâche cumulative : trouvez les trois défauts, expliquez chacun et écrivez la correction"
+          },
+          "type": "exercise",
+          "durationMinutes": 6,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Cumulative task: Find all three, explain each, write the correction\n\nBelow is a runnable packaged accelerator deployed across platforms. There are three planted defects: one in the packaging layer, one in the deployment-and-versioning layer, and one in the multi-component boundary layer.\n\n### Source application\n\n```python\n# Packaged code-review accelerator, deployed for a regulated AWS customer\ndef build_agent():\n    return Agent(\n        model=\"opus\",\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=\"/home/acme/checkout\",\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn)\n\n# multi-component step: Claude Code task fetches a customer page\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=fetched)\n```",
+                "fr": "## Tâche cumulative : trouvez les trois défauts, expliquez chacun et écrivez la correction\n\nVous trouverez ci-dessous un accélérateur packagé exécutable déployé sur plusieurs plateformes. Il comporte trois défauts intentionnels : un dans la couche d’emballage, un dans la couche de déploiement et de versionnage, et un dans la couche de frontière entre composants.\n\n### Application source\n\n```python\n# Packaged code-review accelerator, deployed for a regulated AWS customer\ndef build_agent():\n    return Agent(\n        model=\"opus\",\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=\"/home/acme/checkout\",\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn)\n\n# multi-component step: Claude Code task fetches a customer page\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=fetched)\n```"
+              }
+            },
+            {
+              "type": "cloud_exercise",
+              "id": "chapter_cumulative_s17",
+              "title": {
+                "en": "Cumulative task: Find all three, explain each, write the correction",
+                "fr": "Tâche cumulative : trouvez les trois défauts, expliquez chacun et écrivez la correction"
+              },
+              "assignment": {
+                "en": "In your own words, identify all three defects.",
+                "fr": "Identifiez les trois défauts avec vos propres mots."
+              },
+              "instructions": {
+                "en": "Find all three defects. Write your answer first, then submit to reveal the model answer.",
+                "fr": "Trouvez les trois défauts. Rédigez d’abord votre réponse, puis soumettez-la pour révéler la réponse du modèle."
+              },
+              "steps": [
+                {
+                  "instruction_text": {
+                    "en": "Identify the packaging defect.",
+                    "fr": "Identifiez le défaut d’emballage."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "en": "Identify the deployment-and-versioning defect.",
+                    "fr": "Identifiez le défaut de déploiement et de versionnage."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "en": "Identify the multi-component boundary defect.",
+                    "fr": "Identifiez le défaut de frontière entre composants."
+                  }
+                }
+              ],
+              "hint": {
+                "en": "Look for one defect in packaging, one in deployment and versioning, and one at the multi-component boundary.",
+                "fr": "Recherchez un défaut dans l’emballage, un dans le déploiement et le versionnage, et un à la frontière entre composants."
+              },
+              "solution": {
+                "en": "Defect 1 (packaging): the repo_path is hardcoded instead of parameterized; a new engagement cannot configure it without editing the loop.\n\nDefect 2 (deployment/versioning): model=\"opus\" is a moving alias, not a pinned full model ID, and there is no retained prior version to roll back to.\n\nDefect 3 (multi-component boundary): fetched content from the Claude Code task is passed straight into next_call as if it were trusted instructions, instead of being wrapped so the next component treats it as data.",
+                "fr": "Défaut 1 (emballage) : repo_path est codé en dur au lieu d’être paramétré ; un nouvel engagement ne peut pas le configurer sans modifier la boucle.\n\nDéfaut 2 (déploiement/versionnage) : model=\"opus\" est un alias mobile, et non un ID de modèle complet épinglé ; aucune version antérieure n’est conservée pour permettre un retour en arrière.\n\nDéfaut 3 (frontière entre composants) : le contenu récupéré par la tâche Claude Code est transmis directement à next_call comme s’il s’agissait d’instructions fiables, au lieu d’être encapsulé afin que le composant suivant le traite comme des données."
+              },
+              "successMessage": {
+                "en": "Your response has been submitted. Reveal the model answer.",
+                "fr": "Votre réponse a été soumise. Révélez la réponse du modèle."
+              },
+              "minimumAnswerLength": 10,
+              "sourceScreenId": "S17",
+              "sourceEvidence": "CumulativeAll topics · 6 min"
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "cloudExerciseCompleted"
+            ]
+          }
+        },
+        {
+          "id": "chapter_skilljar_05_s18",
+          "sourceScreenId": "S18",
+          "sourceProvenance": "Skilljar authenticated Developer Foundations, 2026-09-16",
+          "title": {
+            "en": "Cumulative task: assemble and verify the corrected deployment",
+            "fr": "Tâche cumulative : assemblez et vérifiez le déploiement corrigé"
+          },
+          "type": "exercise",
+          "durationMinutes": 6,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Cumulative task: assemble and verify the corrected deployment\n\nYou have identified three defects across this module. Now assemble the fix and verify the corrected deployment.\n\n### Source application\n\n```python\ndef build_agent(repo_path):                   # parameterized for reuse\n    return Agent(\n        model=\"us.anthropic.claude-opus-4-8\",              # pinned full Bedrock model ID\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=repo_path,                  # set per engagement\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\n       retain_previous_pinned_version=True)   # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched))       # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score\n```",
+                "fr": "## Tâche cumulative : assemblez et vérifiez le déploiement corrigé\n\nVous avez identifié trois défauts dans ce module. Assemblez maintenant la correction et vérifiez le déploiement corrigé.\n\n### Application source\n\n```python\ndef build_agent(repo_path):                   # parameterized for reuse\n    return Agent(\n        model=\"us.anthropic.claude-opus-4-8\",              # pinned full Bedrock model ID\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=repo_path,                  # set per engagement\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\n       retain_previous_pinned_version=True)   # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched))       # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score\n```"
+              }
+            },
+            {
+              "type": "cloud_exercise",
+              "id": "chapter_cumulative_s18",
+              "title": {
+                "en": "Cumulative task: assemble and verify the corrected deployment",
+                "fr": "Tâche cumulative : assemblez et vérifiez le déploiement corrigé"
+              },
+              "assignment": {
+                "en": "In your own words, describe what each defect was, what you changed, and why the corrected version is deployable.",
+                "fr": "Avec vos propres mots, décrivez chaque défaut, ce que vous avez modifié et pourquoi la version corrigée peut être déployée."
+              },
+              "instructions": {
+                "en": "Describe your reasoning first, then submit to reveal the corrected deployment and model answer.",
+                "fr": "Décrivez d’abord votre raisonnement, puis soumettez-le pour révéler le déploiement corrigé et la réponse du modèle."
+              },
+              "steps": [
+                {
+                  "instruction_text": {
+                    "en": "Describe each defect and its correction.",
+                    "fr": "Décrivez chaque défaut et sa correction."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "en": "Explain why the corrected deployment is deployable.",
+                    "fr": "Expliquez pourquoi le déploiement corrigé peut être déployé."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "en": "Review the corrected deployment.",
+                    "fr": "Examinez le déploiement corrigé."
+                  }
+                }
+              ],
+              "hint": {
+                "en": "Verify the repository path, the pinned model version and rollback target, the trust boundary, and the eval gate.",
+                "fr": "Vérifiez le chemin du dépôt, la version de modèle épinglée et la cible de retour en arrière, la frontière de confiance et la porte d’évaluation."
+              },
+              "solution": {
+                "en": "def build_agent(repo_path):                   # parameterized for reuse\n    return Agent(\n        model=\"us.anthropic.claude-opus-4-8\",              # pinned full Bedrock model ID\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=repo_path,                  # set per engagement\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\n       retain_previous_pinned_version=True)   # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched))       # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score\n\nModel answer: The first defect was a hardcoded repository path. Parameterizing it restores reuse: a new engagement sets the value rather than editing the loop. The second defect was a moving model alias. Pinning the full Bedrock model ID (with the anthropic. prefix) with a retained previous version restores controlled rollout and gives a rollback target if the new version regresses. The third defect was fetched content passed directly as instructions. Wrapping it in treat_as_data() closes the trust boundary: content from an untrusted source is treated as data, not as something the agent should act on. The eval assertion gates promotion on a proven baseline score before the version ships.",
+                "fr": "def build_agent(repo_path):                   # parameterized for reuse\n    return Agent(\n        model=\"us.anthropic.claude-opus-4-8\",              # pinned full Bedrock model ID\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=repo_path,                  # set per engagement\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\n       retain_previous_pinned_version=True)   # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched))       # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score\n\nRéponse du modèle : le premier défaut était un chemin de dépôt codé en dur. Le paramétrer rétablit la réutilisation : un nouvel engagement définit la valeur au lieu de modifier la boucle. Le deuxième défaut était un alias de modèle mobile. Épingler l’ID complet du modèle Bedrock (avec le préfixe anthropic.) tout en conservant une version antérieure rétablit un déploiement contrôlé et fournit une cible de retour en arrière si la nouvelle version régresse. Le troisième défaut était du contenu récupéré transmis directement comme des instructions. L’encapsuler dans treat_as_data() ferme la frontière de confiance : le contenu provenant d’une source non fiable est traité comme des données, et non comme quelque chose sur lequel l’agent doit agir. L’assertion d’évaluation conditionne la promotion à un score de référence prouvé avant l’expédition de la version."
+              },
+              "successMessage": {
+                "en": "Your response has been submitted. Reveal the model answer.",
+                "fr": "Votre réponse a été soumise. Révélez la réponse du modèle."
+              },
+              "minimumAnswerLength": 10,
+              "sourceScreenId": "S18",
+              "sourceEvidence": "CumulativeAll topics · 6 min"
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "cloudExerciseCompleted"
+            ]
+          }
+        },
+        {
           "title": {
             "en": "Key Takeaways",
             "fr": "Points clés à retenir"

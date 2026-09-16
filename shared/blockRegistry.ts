@@ -260,6 +260,11 @@ const cloudExerciseBlock: BlockTypeDefinition = {
   schema: [
     { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
     { key: "instructions", label: { en: "Instructions", fr: "Instructions" }, type: "i18n_richtext", required: true },
+    { key: "assignment", label: { en: "Learner assignment", fr: "Consigne apprenant" }, type: "i18n_richtext", helpText: { en: "Question or task the learner must answer before viewing the solution", fr: "Question ou tâche à réaliser avant d’afficher la solution" } },
+    { key: "steps", label: { en: "Steps", fr: "Étapes" }, type: "array", arrayItemSchema: [
+      { key: "instruction_text", label: { en: "Step", fr: "Étape" }, type: "i18n_textarea", required: true },
+    ]},
+    { key: "minimumAnswerLength", label: { en: "Minimum answer length", fr: "Longueur minimale de réponse" }, type: "number", defaultValue: 1, helpText: { en: "The learner must enter at least this many non-space characters before submitting.", fr: "L’apprenant doit saisir au moins ce nombre de caractères non vides avant de valider." } },
     { key: "environmentGuide", label: { en: "Environment preparation", fr: "Préparation de l’environnement" }, type: "i18n_richtext", helpText: { en: "Learner prerequisites and setup alternatives", fr: "Prérequis apprenant et alternatives de préparation" } },
     { key: "resources", label: { en: "Downloadable resources", fr: "Ressources téléchargeables" }, type: "array", arrayItemSchema: [
       { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
@@ -271,7 +276,7 @@ const cloudExerciseBlock: BlockTypeDefinition = {
     { key: "solution", label: { en: "Solution", fr: "Solution" }, type: "i18n_richtext" },
     { key: "successMessage", label: { en: "Success message", fr: "Message de succès" }, type: "i18n_text" },
   ],
-  defaultData: { type: "cloud_exercise", title: { en: "", fr: "" }, instructions: { en: "", fr: "" }, environmentGuide: { en: "", fr: "" }, resources: [], nonDownloadableFiles: [] },
+  defaultData: { type: "cloud_exercise", title: { en: "", fr: "" }, instructions: { en: "", fr: "" }, assignment: { en: "", fr: "" }, steps: [], minimumAnswerLength: 1, environmentGuide: { en: "", fr: "" }, resources: [], nonDownloadableFiles: [] },
 };
 
 const exerciseBlock: BlockTypeDefinition = {

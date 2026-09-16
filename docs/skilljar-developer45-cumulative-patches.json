@@ -1,0 +1,212 @@
+{
+  "proposals": [
+    {
+      "assignment": {
+        "en": "Identify the three defects. For each, name its layer and describe in one sentence what it causes at runtime.",
+        "fr": "Identifiez les trois défauts. Pour chacun, nommez sa couche et décrivez en une phrase ce qu’il provoque à l’exécution."
+      },
+      "courseId": "claude_certified_developer_foundations__04",
+      "durationMinutes": 7,
+      "hint": {
+        "en": "First localize each defect to its layer, then describe its runtime effect.",
+        "fr": "Commencez par situer chaque défaut dans sa couche, puis décrivez son effet à l’exécution."
+      },
+      "id": "chapter_cumulative_s17",
+      "instructions": {
+        "en": "The application runs, but it contains three planted defects, one per layer. Write your answer first, then submit to compare with the model answer.",
+        "fr": "L’application s’exécute, mais elle contient trois défauts intentionnels, un par couche. Rédigez d’abord votre réponse, puis soumettez-la pour la comparer à la réponse du modèle."
+      },
+      "intro": {
+        "en": "Everything so far has hardened one layer at a time. Real production failures rarely arrive one layer at a time.",
+        "fr": "Jusqu’ici, chaque étape a renforcé une couche à la fois. Les défaillances réelles en production surviennent rarement une couche à la fois."
+      },
+      "minimumAnswerLength": 40,
+      "referenceCode": {
+        "en": "def answer(question, page_url):\n  page = fetch(page_url)                       # untrusted content\n\n  notes = read_file(\"/workspace/input/notes\")\n  write_file(page.suggested_path, summarize(page))\n\n  resp = None\n  for i in range(5):\n      try:\n          resp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\n          break\n      except Exception:\n          time.sleep(0)\n\n  return resp.content[0].text",
+        "fr": "def answer(question, page_url):\n  page = fetch(page_url)                       # untrusted content\n\n  notes = read_file(\"/workspace/input/notes\")\n  write_file(page.suggested_path, summarize(page))\n\n  resp = None\n  for i in range(5):\n      try:\n          resp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\n          break\n      except Exception:\n          time.sleep(0)\n\n  return resp.content[0].text"
+      },
+      "solution": {
+        "en": "Eval/test layer: No eval exists. Success was judged by three manual demo runs with no holdout set and no graded cases, there is nothing to fail a regression against when the prompt or model changes.\n\nError-handling/cost layer: The retry loop retries every status immediately with time.sleep(0) and does not distinguish terminal errors (400s) from retriable ones. Against a rate limit, each instant retry deepens the limit rather than waiting for it to clear.\n\nSecurity/guardrail layer: write_file uses page.suggested_path as the destination, a path taken from untrusted fetched content, with no PreToolUse hook enforcing a write boundary and no scope limiting what the agent can write.",
+        "fr": "Couche d’évaluation/test : aucune évaluation n’existe. La réussite a été jugée à partir de trois exécutions de démonstration manuelles, sans jeu de réserve ni cas notés ; rien ne permet de détecter une régression lorsque le prompt ou le modèle change.\n\nCouche de gestion des erreurs/coût : la boucle de nouvelle tentative réessaie immédiatement chaque statut avec time.sleep(0) et ne distingue pas les erreurs terminales (400s) de celles pouvant faire l’objet d’une nouvelle tentative. Face à une limite de débit, chaque nouvelle tentative instantanée aggrave la limite au lieu d’attendre qu’elle se lève.\n\nCouche de sécurité/garde-fou : write_file utilise page.suggested_path comme destination, un chemin issu de contenu récupéré non fiable, sans hook PreToolUse appliquant une limite d’écriture et sans périmètre limitant ce que l’agent peut écrire."
+      },
+      "sourceEvidence": "CumulativeModule-Wide · 7 min",
+      "sourceScreenId": "S17",
+      "steps": [
+        {
+          "en": "Name the layer for each defect.",
+          "fr": "Nommez la couche de chaque défaut."
+        },
+        {
+          "en": "Describe what each defect causes at runtime.",
+          "fr": "Décrivez ce que chaque défaut provoque à l’exécution."
+        }
+      ],
+      "successMessage": {
+        "en": "Your response has been submitted. Review the model answer.",
+        "fr": "Votre réponse a été soumise. Consultez la réponse du modèle."
+      },
+      "title": {
+        "en": "Cumulative production-hardening task: find the three defects and explain each",
+        "fr": "Tâche cumulative de renforcement pour la production : trouvez les trois défauts et expliquez chacun"
+      }
+    },
+    {
+      "assignment": {
+        "en": "Write the corrected version of the application. For each defect, show the fixed code and name what it changes.",
+        "fr": "Écrivez la version corrigée de l’application. Pour chaque défaut, montrez le code corrigé et nommez ce qu’il modifie."
+      },
+      "courseId": "claude_certified_developer_foundations__04",
+      "durationMinutes": 8,
+      "hint": {
+        "en": "Address the security boundary, error handling, and eval coverage.",
+        "fr": "Traitez la frontière de sécurité, la gestion des erreurs et la couverture d’évaluation."
+      },
+      "id": "chapter_cumulative_s18",
+      "instructions": {
+        "en": "Write your corrected version first, then submit to compare with the model answer.",
+        "fr": "Rédigez d’abord votre version corrigée, puis soumettez-la pour la comparer à la réponse du modèle."
+      },
+      "intro": {
+        "en": "For each defect you identified, show the fixed code and name what it changes.",
+        "fr": "Pour chaque défaut identifié, montrez le code corrigé et nommez ce qu’il modifie."
+      },
+      "minimumAnswerLength": 40,
+      "referenceCode": {
+        "en": "def answer(question, page_url):\n  page = fetch(page_url)                       # untrusted content\n\n  notes = read_file(\"/workspace/input/notes\")\n  write_file(page.suggested_path, summarize(page))\n\n  resp = None\n  for i in range(5):\n      try:\n          resp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\n          break\n      except Exception:\n          time.sleep(0)\n\n  return resp.content[0].text",
+        "fr": "def answer(question, page_url):\n  page = fetch(page_url)                       # untrusted content\n\n  notes = read_file(\"/workspace/input/notes\")\n  write_file(page.suggested_path, summarize(page))\n\n  resp = None\n  for i in range(5):\n      try:\n          resp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\n          break\n      except Exception:\n          time.sleep(0)\n\n  return resp.content[0].text"
+      },
+      "solution": {
+        "en": "def answer(question, page_url):\n    page = fetch(page_url)                   # still untrusted\n\n    # security: fixed write path + PreToolUse hook enforces it\n    notes = read_file(\"/workspace/input/notes\")  # scoped read, unchanged\n    write_file(\"/workspace/output/summary.txt\", summarize(page))\n    # (hook denies any write outside /workspace/output and audits it)\n\n    # error handling: backoff, honor retry-after, fail fast on terminal\n    resp = call_with_retry(\n        lambda: client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question)))\n\n    # eval: answer() is covered by a graded holdout set run on every change\n    return resp.content[0].text\n\nEach fix sits at the layer it defends: the fixed write path and hook close the security boundary before the tool runs; call_with_retry adds exponential backoff with terminal-status detection; the graded holdout set gives the eval a baseline score to fail against on every future change.",
+        "fr": "def answer(question, page_url):\n    page = fetch(page_url)                   # still untrusted\n\n    # security: fixed write path + PreToolUse hook enforces it\n    notes = read_file(\"/workspace/input/notes\")  # scoped read, unchanged\n    write_file(\"/workspace/output/summary.txt\", summarize(page))\n    # (hook denies any write outside /workspace/output and audits it)\n\n    # error handling: backoff, honor retry-after, fail fast on terminal\n    resp = call_with_retry(\n        lambda: client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question)))\n\n    # eval: answer() is covered by a graded holdout set run on every change\n    return resp.content[0].text\n\nChaque correction se situe dans la couche qu’elle défend : le chemin d’écriture corrigé et le hook ferment la frontière de sécurité avant l’exécution de l’outil ; call_with_retry ajoute un backoff exponentiel avec détection des statuts terminaux ; le jeu de réserve noté donne à l’évaluation un score de référence permettant de détecter un échec à chaque modification future."
+      },
+      "sourceEvidence": "CumulativeModule-Wide · 8 min",
+      "sourceScreenId": "S18",
+      "steps": [
+        {
+          "en": "Show the fixed code for each defect.",
+          "fr": "Montrez le code corrigé pour chaque défaut."
+        },
+        {
+          "en": "Name what each correction changes.",
+          "fr": "Nommez ce que chaque correction modifie."
+        }
+      ],
+      "successMessage": {
+        "en": "Your response has been submitted. Review the model answer.",
+        "fr": "Votre réponse a été soumise. Consultez la réponse du modèle."
+      },
+      "title": {
+        "en": "Cumulative production-hardening task: write the corrected version",
+        "fr": "Tâche cumulative de renforcement pour la production : écrivez la version corrigée"
+      }
+    },
+    {
+      "assignment": {
+        "en": "In your own words, identify all three defects.",
+        "fr": "Identifiez les trois défauts avec vos propres mots."
+      },
+      "courseId": "claude_certified_developer_foundations__05",
+      "durationMinutes": 6,
+      "hint": {
+        "en": "Look for one defect in packaging, one in deployment and versioning, and one at the multi-component boundary.",
+        "fr": "Recherchez un défaut dans l’emballage, un dans le déploiement et le versionnage, et un à la frontière entre composants."
+      },
+      "id": "chapter_cumulative_s17",
+      "instructions": {
+        "en": "Find all three defects. Write your answer first, then submit to reveal the model answer.",
+        "fr": "Trouvez les trois défauts. Rédigez d’abord votre réponse, puis soumettez-la pour révéler la réponse du modèle."
+      },
+      "intro": {
+        "en": "Below is a runnable packaged accelerator deployed across platforms. There are three planted defects: one in the packaging layer, one in the deployment-and-versioning layer, and one in the multi-component boundary layer.",
+        "fr": "Vous trouverez ci-dessous un accélérateur packagé exécutable déployé sur plusieurs plateformes. Il comporte trois défauts intentionnels : un dans la couche d’emballage, un dans la couche de déploiement et de versionnage, et un dans la couche de frontière entre composants."
+      },
+      "minimumAnswerLength": 10,
+      "referenceCode": {
+        "en": "# Packaged code-review accelerator, deployed for a regulated AWS customer\ndef build_agent():\n    return Agent(\n        model=\"opus\",\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=\"/home/acme/checkout\",\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn)\n\n# multi-component step: Claude Code task fetches a customer page\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=fetched)",
+        "fr": "# Packaged code-review accelerator, deployed for a regulated AWS customer\ndef build_agent():\n    return Agent(\n        model=\"opus\",\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=\"/home/acme/checkout\",\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn)\n\n# multi-component step: Claude Code task fetches a customer page\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=fetched)"
+      },
+      "solution": {
+        "en": "Defect 1 (packaging): the repo_path is hardcoded instead of parameterized; a new engagement cannot configure it without editing the loop.\n\nDefect 2 (deployment/versioning): model=\"opus\" is a moving alias, not a pinned full model ID, and there is no retained prior version to roll back to.\n\nDefect 3 (multi-component boundary): fetched content from the Claude Code task is passed straight into next_call as if it were trusted instructions, instead of being wrapped so the next component treats it as data.",
+        "fr": "Défaut 1 (emballage) : repo_path est codé en dur au lieu d’être paramétré ; un nouvel engagement ne peut pas le configurer sans modifier la boucle.\n\nDéfaut 2 (déploiement/versionnage) : model=\"opus\" est un alias mobile, et non un ID de modèle complet épinglé ; aucune version antérieure n’est conservée pour permettre un retour en arrière.\n\nDéfaut 3 (frontière entre composants) : le contenu récupéré par la tâche Claude Code est transmis directement à next_call comme s’il s’agissait d’instructions fiables, au lieu d’être encapsulé afin que le composant suivant le traite comme des données."
+      },
+      "sourceEvidence": "CumulativeAll topics · 6 min",
+      "sourceScreenId": "S17",
+      "steps": [
+        {
+          "en": "Identify the packaging defect.",
+          "fr": "Identifiez le défaut d’emballage."
+        },
+        {
+          "en": "Identify the deployment-and-versioning defect.",
+          "fr": "Identifiez le défaut de déploiement et de versionnage."
+        },
+        {
+          "en": "Identify the multi-component boundary defect.",
+          "fr": "Identifiez le défaut de frontière entre composants."
+        }
+      ],
+      "successMessage": {
+        "en": "Your response has been submitted. Reveal the model answer.",
+        "fr": "Votre réponse a été soumise. Révélez la réponse du modèle."
+      },
+      "title": {
+        "en": "Cumulative task: Find all three, explain each, write the correction",
+        "fr": "Tâche cumulative : trouvez les trois défauts, expliquez chacun et écrivez la correction"
+      }
+    },
+    {
+      "assignment": {
+        "en": "In your own words, describe what each defect was, what you changed, and why the corrected version is deployable.",
+        "fr": "Avec vos propres mots, décrivez chaque défaut, ce que vous avez modifié et pourquoi la version corrigée peut être déployée."
+      },
+      "courseId": "claude_certified_developer_foundations__05",
+      "durationMinutes": 6,
+      "hint": {
+        "en": "Verify the repository path, the pinned model version and rollback target, the trust boundary, and the eval gate.",
+        "fr": "Vérifiez le chemin du dépôt, la version de modèle épinglée et la cible de retour en arrière, la frontière de confiance et la porte d’évaluation."
+      },
+      "id": "chapter_cumulative_s18",
+      "instructions": {
+        "en": "Describe your reasoning first, then submit to reveal the corrected deployment and model answer.",
+        "fr": "Décrivez d’abord votre raisonnement, puis soumettez-le pour révéler le déploiement corrigé et la réponse du modèle."
+      },
+      "intro": {
+        "en": "You have identified three defects across this module. Now assemble the fix and verify the corrected deployment.",
+        "fr": "Vous avez identifié trois défauts dans ce module. Assemblez maintenant la correction et vérifiez le déploiement corrigé."
+      },
+      "minimumAnswerLength": 10,
+      "referenceCode": {
+        "en": "def build_agent(repo_path):                   # parameterized for reuse\n    return Agent(\n        model=\"us.anthropic.claude-opus-4-8\",              # pinned full Bedrock model ID\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=repo_path,                  # set per engagement\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\n       retain_previous_pinned_version=True)   # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched))       # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score",
+        "fr": "def build_agent(repo_path):                   # parameterized for reuse\n    return Agent(\n        model=\"us.anthropic.claude-opus-4-8\",              # pinned full Bedrock model ID\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=repo_path,                  # set per engagement\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\n       retain_previous_pinned_version=True)   # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched))       # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score"
+      },
+      "solution": {
+        "en": "def build_agent(repo_path):                   # parameterized for reuse\n    return Agent(\n        model=\"us.anthropic.claude-opus-4-8\",              # pinned full Bedrock model ID\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=repo_path,                  # set per engagement\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\n       retain_previous_pinned_version=True)   # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched))       # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score\n\nModel answer: The first defect was a hardcoded repository path. Parameterizing it restores reuse: a new engagement sets the value rather than editing the loop. The second defect was a moving model alias. Pinning the full Bedrock model ID (with the anthropic. prefix) with a retained previous version restores controlled rollout and gives a rollback target if the new version regresses. The third defect was fetched content passed directly as instructions. Wrapping it in treat_as_data() closes the trust boundary: content from an untrusted source is treated as data, not as something the agent should act on. The eval assertion gates promotion on a proven baseline score before the version ships.",
+        "fr": "def build_agent(repo_path):                   # parameterized for reuse\n    return Agent(\n        model=\"us.anthropic.claude-opus-4-8\",              # pinned full Bedrock model ID\n        system_prompt=SYSTEM_PROMPT,\n        repo_path=repo_path,                  # set per engagement\n        tools=[read_file, run_linter],\n    )\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\n       retain_previous_pinned_version=True)   # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched))       # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score\n\nRéponse du modèle : le premier défaut était un chemin de dépôt codé en dur. Le paramétrer rétablit la réutilisation : un nouvel engagement définit la valeur au lieu de modifier la boucle. Le deuxième défaut était un alias de modèle mobile. Épingler l’ID complet du modèle Bedrock (avec le préfixe anthropic.) tout en conservant une version antérieure rétablit un déploiement contrôlé et fournit une cible de retour en arrière si la nouvelle version régresse. Le troisième défaut était du contenu récupéré transmis directement comme des instructions. L’encapsuler dans treat_as_data() ferme la frontière de confiance : le contenu provenant d’une source non fiable est traité comme des données, et non comme quelque chose sur lequel l’agent doit agir. L’assertion d’évaluation conditionne la promotion à un score de référence prouvé avant l’expédition de la version."
+      },
+      "sourceEvidence": "CumulativeAll topics · 6 min",
+      "sourceScreenId": "S18",
+      "steps": [
+        {
+          "en": "Describe each defect and its correction.",
+          "fr": "Décrivez chaque défaut et sa correction."
+        },
+        {
+          "en": "Explain why the corrected deployment is deployable.",
+          "fr": "Expliquez pourquoi le déploiement corrigé peut être déployé."
+        },
+        {
+          "en": "Review the corrected deployment.",
+          "fr": "Examinez le déploiement corrigé."
+        }
+      ],
+      "successMessage": {
+        "en": "Your response has been submitted. Reveal the model answer.",
+        "fr": "Votre réponse a été soumise. Révélez la réponse du modèle."
+      },
+      "title": {
+        "en": "Cumulative task: assemble and verify the corrected deployment",
+        "fr": "Tâche cumulative : assemblez et vérifiez le déploiement corrigé"
+      }
+    }
+  ]
+}

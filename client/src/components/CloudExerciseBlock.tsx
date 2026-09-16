@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Timer, CheckCircle2, ChevronDown, Download } from "lucide-react";
 import PageContent, { renderInlineFormatting } from "@/pages/training/PageContent";
 import { Streamdown } from "streamdown";
+import { hasRequiredAnswerLength, resolveLocalizedBlockText, resolveMinimumAnswerLength } from "./blocks/cloudExerciseValidation";
 
 /**
  * Extract learner-friendly objectives from the raw grading prompt.
@@ -77,18 +78,18 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
   const [isEvaluating, setIsEvaluating] = useState(false);
 
   const tpTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || '') : (block.title || '');
-  const tpAssignment = block.assignment || '';
-  const tpInstructions = block.instructions || '';
-  const tpEnvironmentGuide = typeof block.environmentGuide === 'object'
-    ? (block.environmentGuide?.[lang] || block.environmentGuide?.fr || block.environmentGuide?.en || '')
-    : (block.environmentGuide || '');
+  const tpAssignment = resolveLocalizedBlockText(block.assignment, lang);
+  const tpInstructions = resolveLocalizedBlockText(block.instructions, lang);
+  const tpEnvironmentGuide = resolveLocalizedBlockText(block.environmentGuide, lang);
   const tpResources = Array.isArray(block.resources) ? block.resources : [];
   const tpSteps = block.steps || [];
-  const tpHint = block.hint || '';
-  const tpSolution = block.solution || '';
-  const tpSuccess = block.successMessage || '';
-  const tpPrompt = block.prompt || '';
+  const tpHint = resolveLocalizedBlockText(block.hint, lang);
+  const tpSolution = resolveLocalizedBlockText(block.solution, lang);
+  const tpSuccess = resolveLocalizedBlockText(block.successMessage, lang);
+  const tpPrompt = resolveLocalizedBlockText(block.prompt, lang);
   const rubricCriteria = Array.isArray(block.rubricCriteria) ? block.rubricCriteria : [];
+  const minimumAnswerLength = resolveMinimumAnswerLength(block.minimumAnswerLength);
+  const hasMinimumAnswer = hasRequiredAnswerLength(answer, minimumAnswerLength);
   const usesTrackedRubric = rubricCriteria.length > 0 && Boolean(evaluationContext);
   const maxScore = Number(block.maxScore) || rubricCriteria.length || 1;
   const passingScore = Number(block.passingScore) || maxScore;
@@ -102,7 +103,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
   const learnerAssignment = adaptDataCampVmText(tpAssignment, hasUnavailableVmFiles);
   const learnerHint = adaptDataCampVmText(tpHint, hasUnavailableVmFiles);
   const learnerSolution = adaptDataCampVmText(tpSolution, hasUnavailableVmFiles);
-  const evaluationPrompt = block.evaluationPrompt || learnerAssignment;
+  const evaluationPrompt = resolveLocalizedBlockText(block.evaluationPrompt, lang) || learnerAssignment;
   const completeEvaluation = (data: { score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number }) => {
       setEvaluation(data);
       setIsEvaluating(false);
@@ -117,7 +118,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
     };
 
   const submit = () => {
-    if (!answer.trim()) return;
+    if (!hasMinimumAnswer) return;
     if (!usesTrackedRubric || !evaluationContext || !onEvaluate) {
       setSubmitted(true);
       onComplete?.(block.id || `cloud_exercise_${blockIdx}`);
@@ -204,7 +205,8 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
           <div className="space-y-2">
             <p className="font-semibold text-sm text-foreground">{t({ en: 'Steps', fr: 'Étapes' })}</p>
             {tpSteps.map((step: any, i: number) => {
-              const stepContent = typeof step === 'string' ? step : (step.instructions_text || step.instruction_text || step.text || step.instruction || '');
+              const rawStepContent = typeof step === 'string' ? step : (step.instructions_text || step.instruction_text || step.text || step.instruction || '');
+              const stepContent = resolveLocalizedBlockText(rawStepContent, lang);
               const learnerStepContent = adaptDataCampVmText(stepContent, hasUnavailableVmFiles);
               if (!learnerStepContent) return null;
               return (
@@ -276,10 +278,18 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
             onChange={(e) => setAnswer(e.target.value)}
             disabled={submitted || isEvaluating}
           />
+          {!submitted && minimumAnswerLength > 1 && !hasMinimumAnswer && (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {t({
+                en: `Write at least ${minimumAnswerLength} characters to submit.`,
+                fr: `Rédigez au moins ${minimumAnswerLength} caractères pour valider.`,
+              })}
+            </p>
+          )}
         {!submitted && (
             <button
               onClick={submit}
-              disabled={answer.trim().length === 0 || isEvaluating}
+              disabled={!hasMinimumAnswer || isEvaluating}
               className="mt-3 px-5 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
