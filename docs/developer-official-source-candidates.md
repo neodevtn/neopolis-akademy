@@ -23,3 +23,7 @@ La documentation des plugins décrit un plugin comme un répertoire autonome qui
 L’article de conception d’agents distingue les flux de travail aux chemins prédéfinis des agents qui dirigent dynamiquement leurs actions, et recommande de conserver la solution la plus simple possible. Il apporte un fondement général aux contenus d’architecture, sans justifier la création de l’étude de cas de livraison Developer 5.
 
 En conséquence, les sources publiques recueillies permettent de vérifier des notions déjà présentes, non de créer les activités ou l’étude de cas restantes. Celles-ci restent reportées jusqu’à rapprochement avec une source de cours explicite.
+
+## Page de parcours Skilljar accessible en texte
+
+La page [Claude Certified Developer - Foundations Prep Course](https://anthropic-partners.skilljar.com/path/claude-certified-developer-foundations) est accessible en extraction textuelle. Elle confirme les objectifs généraux du parcours : Claude Code sous modèle d’autorisations, contexte durable, Skills, plugins, MCP, évaluations, tests, traçage, sécurité, accélérateurs et contribution à l’infrastructure partagée. Elle ne fournit toutefois pas la liste des leçons ni les écrans, activités, corrections ou études de cas nécessaires à un rattachement écran par écran. Elle ne suffit donc pas à débloquer les TP Developer 3 ni l’étude de cas Developer 5.
