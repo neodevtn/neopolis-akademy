@@ -25,3 +25,5 @@ Après validation positive, le bouton « Suivant » du lecteur est actif. La sui
 Après propagation du checkpoint `0961376d`, les deux domaines publics servent le bloc `checkpoint4_fix_plugin_definition` avec `serverValidated: true`, sans clé `correctAnswer` ni `explanation` dans la réponse tRPC `course-data` non mise en cache. Le manifeste public sert la version `7812a3e8d4302922` au moment du contrôle.
 
 Le lecteur public du domaine principal charge également le scénario, les quatre options et l’indice du checkpoint dans le composant standard. Le contrôle visuel confirme qu’aucun marquage de bonne réponse n’est présent avant soumission.
+
+Une vérification complémentaire a révélé que le fichier statique du cours restait initialement accessible et contenait encore les deux champs sensibles. La clé et l’explication ont donc été déplacées dans `server/sensitiveExerciseAnswerKeys.ts`, tandis que le correctif réexécutable retire ces champs de la donnée publique. Après diffusion du checkpoint `8c8f6250`, les deux domaines publics renvoient `serverValidated: true` sans `correctAnswer` ni `explanation`, à la fois sur le fichier statique et sur la route tRPC.
