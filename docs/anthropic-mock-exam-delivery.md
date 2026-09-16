@@ -31,6 +31,7 @@ Les procédures administratives conservent désormais les rationales et leur pro
 | Contrats ciblés | Réussi : 7 fichiers de tests, 20 tests. |
 | Vérification TypeScript | Réussie. |
 | Prévisualisation apprenant CCAR-F | Réussie sans lancement de session ; les corrections ne sont pas affichées avant soumission. |
+| Définition tRPC publique CCAR-F après publication | Réussie : `CCAR-F`, 60 questions, 120 min, 720/1000, pondérations 27/18/20/20/15, 6 familles disponibles et 4 familles × 3 questions sélectionnées. |
 | Suite globale et QA de publication | 257 fichiers / 852 tests réussis ; un seul test antérieur échoue sur un `exerciseId` de checkpoint Architect du cours, hors données de mock exam et non modifié dans ce lot. |
 
 La structure de génération, les paramètres par certification, l’audit réexécutable et l’applicateur atomique restent versionnés dans `scripts/`. Ils verrouillent `claude-sonnet-4-6`, une sortie JSON Schema stricte, la reprise par lots, la déduplication et les contrôles de couverture.

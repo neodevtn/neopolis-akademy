@@ -13,3 +13,5 @@ Ces pages servent uniquement à recouper les paramètres et domaines publiés. E
 ## Contrôle de prévisualisation — 16 septembre 2026
 
 La page interne de prévisualisation du mock CCAR-F s’est chargée sans lancer de session d’examen. Elle affiche le code `CCAR-F`, 60 questions, 120 minutes, un seuil de 720/1000, les cinq domaines avec leurs pondérations 27/18/20/20/15 et l’avertissement apprenant indiquant clairement qu’il s’agit d’un examen blanc Neopolis, non issu d’une banque officielle Anthropic. Aucun énoncé, choix, clé ou explication n’a été affiché avant le lancement.
+
+Sur le domaine public après publication, le compte apprenant courant reçoit le verrouillage normal de l’examen tant que tous les cours de la certification ne sont pas terminés. Ce contrôle confirme que le garde-fou de progression reste actif ; la page de prévisualisation, qui ne lance aucune tentative, confirme séparément la configuration CCAR-F exposée à l’apprenant éligible.
