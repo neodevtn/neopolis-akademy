@@ -118,6 +118,7 @@ describe("Anthropic certification audit corrections", () => {
       .flatMap((chapter: any) => chapter.blocks || [])
       .filter((block: any) => block.type === "checkpoint" && block.exerciseId === rewindExerciseId);
     expect(rewindBlocks).toHaveLength(1);
+    expect(course.exercises.find((exercise: any) => exercise.id === rewindExerciseId)).toMatchObject({ required: true, chapterId: "chapter_01" });
     const pluginsLesson = course.lessons.find((lesson: any) => lesson.title?.en === "Plugins");
     const review = pluginsLesson.chapters.find((chapter: any) => chapter.title?.en === "Review: Plugins");
     expect(review).toMatchObject({ type: "teaching", completionRule: { requires: ["contentViewed"] } });
@@ -201,5 +202,14 @@ describe("Anthropic certification audit corrections", () => {
     const lesson = course.lessons.find((item: any) => item.id === "lesson_10");
     const chapter = lesson.chapters.find((item: any) => item.id === "chapter_03");
     expect(chapter.blocks[0]).toMatchObject({ type: "callout", variant: "info", title: { fr: "Complément Neopolis" } });
+  });
+
+  it("normalizes only the generic French localization defects approved by Claude Sonnet", () => {
+    const architectFoundations = readCourse("claude_certified_architect_foundations__01");
+    const architectProfessional = readCourse("claude_certified_architect_professional__05");
+    expect(architectFoundations.exercises[28].correction.fr).toContain("fiche de modèle");
+    expect(architectFoundations.exercises[28].correction.fr).not.toContain("model card");
+    expect(architectProfessional.exercises[0].correction.fr).toContain("bonnes pratiques");
+    expect(architectProfessional.exercises[0].correction.fr).not.toContain("best practices");
   });
 });
