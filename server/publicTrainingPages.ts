@@ -443,7 +443,6 @@ export function registerPublicTrainingPages(app: Express) {
       "Content-Type": "application/xml; charset=utf-8",
       "Content-Length": String(payload.byteLength),
       "X-Content-Type-Options": "nosniff",
-      "X-Robots-Tag": "noindex",
       "X-Neopolis-Sitemap-Version": "2026-09-08-small-batches-v1",
     }).end(payload);
   };

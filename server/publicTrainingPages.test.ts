@@ -252,6 +252,7 @@ describe("pages publiques de formations IA", () => {
         expect(indexResponse.headers.get("location")).toBeNull();
         expect(indexResponse.headers.get("set-cookie")).toBeNull();
         expect(indexResponse.headers.get("content-encoding")).toBeNull();
+        expect(indexResponse.headers.get("x-robots-tag")).toBeNull();
         const sitemapPaths = [...indexBody.matchAll(/<loc>https:\/\/akademy\.neodev\.click([^<]+)<\/loc>/g)].map((match) => match[1]);
         expect(sitemapPaths).toEqual(getPublicTrainingSitemapFiles().map((file) => file.path));
         for (const sitemapPath of sitemapPaths) {
@@ -262,6 +263,7 @@ describe("pages publiques de formations IA", () => {
           expect(response.headers.get("location")).toBeNull();
           expect(response.headers.get("set-cookie")).toBeNull();
           expect(response.headers.get("content-encoding")).toBeNull();
+          expect(response.headers.get("x-robots-tag")).toBeNull();
           expect(Number(response.headers.get("content-length"))).toBe(Buffer.byteLength(body, "utf8"));
           expect(response.headers.get("x-neopolis-sitemap-version")).toBe("2026-09-08-small-batches-v1");
           expect(body).toMatch(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset/);
@@ -281,6 +283,7 @@ describe("pages publiques de formations IA", () => {
         expect(legacyResponse.headers.get("content-type")).toBe("application/xml; charset=utf-8");
         expect(legacyResponse.headers.get("location")).toBeNull();
         expect(legacyResponse.headers.get("set-cookie")).toBeNull();
+        expect(legacyResponse.headers.get("x-robots-tag")).toBeNull();
         expect(legacyBody).toBe(sitemapFile.xml);
       }
     } finally {
