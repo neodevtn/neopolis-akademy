@@ -76,7 +76,7 @@ try {
     const response = await fetch(`${baseUrl}${root}/finance-comptabilite-controle-gestion`, { redirect: "manual" });
     return { locale, status: response.status, location: response.headers.get("location") };
   }));
-  const sitemapIndex = await (await fetch(`${baseUrl}/sitemap.xml`)).text();
+  const sitemapIndex = await (await fetch(`${baseUrl}/sitemap-index.xml`)).text();
   const sitemapPaths = [...sitemapIndex.matchAll(/<loc>https:\/\/akademy\.neodev\.click([^<]+)<\/loc>/g)].map((match) => match[1]);
   const sitemap = (await Promise.all(sitemapPaths.map(async (sitemapPath) => (await fetch(`${baseUrl}${sitemapPath}`)).text()))).join("\n");
   const report = {

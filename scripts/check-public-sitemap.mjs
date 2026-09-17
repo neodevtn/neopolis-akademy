@@ -95,7 +95,7 @@ const inBatches = async (items, size, worker) => {
 };
 
 try {
-  const sitemapUrl = `${baseUrl}/sitemap.xml`;
+  const sitemapUrl = `${baseUrl}/sitemap-index.xml`;
   const { response: sitemapResponse, body: sitemapIndex } = await text(sitemapUrl);
   assertXmlResponse(sitemapResponse, sitemapIndex, "Index sitemap", "sitemapindex");
   const sitemapFiles = locations(sitemapIndex);

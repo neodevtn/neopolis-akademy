@@ -480,6 +480,10 @@ export function registerPublicTrainingPages(app: Express) {
   app.get("/formations-ia/:themeSlug", theme("fr"));
   app.get("/en/ai-training/:themeSlug", theme("en"));
   app.get("/ar/ai-training/:themeSlug", theme("ar"));
+  // Le CDN a pu conserver des en-têtes historiques sur /sitemap.xml. La nouvelle
+  // URL canonique donne à Google une ressource XML propre immédiatement soumissible,
+  // tout en gardant l’ancienne URL disponible pour les soumissions passées.
+  app.get("/sitemap-index.xml", (_req: Request, res: Response) => sendXml(res, sitemapIndexXml));
   app.get("/sitemap.xml", (_req: Request, res: Response) => sendXml(res, sitemapIndexXml));
   app.get("/sitemaps/:sitemapFile", (req: Request, res: Response) => {
     const sitemap = sitemapByPath.get(`/sitemaps/${req.params.sitemapFile}`);
@@ -492,5 +496,5 @@ export function registerPublicTrainingPages(app: Express) {
     const sitemap = sitemapName ? sitemapByPath.get(`/sitemaps/${sitemapName}.xml`) : null;
     return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");
   });
-  app.get("/robots.txt", (_req: Request, res: Response) => res.status(200).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send(`User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml\n`));
+  app.get("/robots.txt", (_req: Request, res: Response) => res.status(200).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send(`User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap-index.xml\n`));
 }

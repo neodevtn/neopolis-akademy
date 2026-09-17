@@ -245,7 +245,7 @@ describe("pages publiques de formations IA", () => {
         "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
       ];
       for (const userAgent of userAgents) {
-        const indexResponse = await fetch(`${baseUrl}/sitemap.xml`, { redirect: "manual", headers: { "user-agent": userAgent } });
+        const indexResponse = await fetch(`${baseUrl}/sitemap-index.xml`, { redirect: "manual", headers: { "user-agent": userAgent } });
         const indexBody = await indexResponse.text();
         expect(indexResponse.status).toBe(200);
         expect(indexResponse.headers.get("content-type")).toBe("application/xml; charset=utf-8");
@@ -271,7 +271,12 @@ describe("pages publiques de formations IA", () => {
       }
       const robotsResponse = await fetch(`${baseUrl}/robots.txt`, { redirect: "manual" });
       expect(robotsResponse.status).toBe(200);
-      expect(await robotsResponse.text()).toContain("Sitemap: https://akademy.neodev.click/sitemap.xml");
+      expect(await robotsResponse.text()).toContain("Sitemap: https://akademy.neodev.click/sitemap-index.xml");
+
+      const historicalIndexResponse = await fetch(`${baseUrl}/sitemap.xml`, { redirect: "manual", headers: { "user-agent": userAgents[0] } });
+      expect(historicalIndexResponse.status).toBe(200);
+      expect(historicalIndexResponse.headers.get("content-type")).toBe("application/xml; charset=utf-8");
+      expect(historicalIndexResponse.headers.get("x-robots-tag")).toBeNull();
 
       // Search Console peut conserver des sous-sitemaps envoyés avant la migration
       // vers /sitemaps/. Ils doivent rester lisibles sans redirection.
