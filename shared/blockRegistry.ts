@@ -73,11 +73,6 @@ const videoBlock: BlockTypeDefinition = {
     { key: "url", label: { en: "YouTube URL", fr: "URL YouTube" }, type: "text", placeholder: "https://www.youtube.com/watch?v=..." },
     { key: "videoId", label: { en: "YouTube video ID", fr: "Identifiant vidéo YouTube" }, type: "text" },
     { key: "watchUrl", label: { en: "Watch URL", fr: "URL de consultation" }, type: "text" },
-    { key: "language", label: { en: "Spoken language", fr: "Langue parlée" }, type: "text" },
-    { key: "durationSeconds", label: { en: "Duration (seconds)", fr: "Durée (secondes)" }, type: "number" },
-    { key: "objectiveBefore", label: { en: "Observation objective", fr: "Objectif d’observation" }, type: "i18n_textarea" },
-    { key: "questionsAfter", label: { en: "Questions after viewing", fr: "Questions après lecture" }, type: "json" },
-    { key: "alternativeTextFr", label: { en: "Original French text alternative", fr: "Alternative textuelle française originale" }, type: "textarea" },
     { key: "embedUrl", label: { en: "Embed URL", fr: "URL intégrée" }, type: "text" },
     { key: "mp4Url", label: { en: "MP4 URL (alternative)", fr: "URL MP4 (alternative)" }, type: "text" },
     { key: "hlsUrl", label: { en: "HLS stream URL", fr: "URL du flux HLS" }, type: "text" },
@@ -626,26 +621,6 @@ const genericLearningBlocks: BlockTypeDefinition[] = [
   {
     type: "learning_progress", label: { en: "Learning progress", fr: "Progression d’apprentissage" }, description: { en: "Competency points and progression guidance", fr: "Points de compétences et consignes de progression" }, category: "layout", icon: "ChartNoAxesCombined", color: "bg-emerald-100 text-emerald-700", since: "4.0",
     schema: [{ key: "label", label: { en: "Label", fr: "Libellé" }, type: "i18n_text" }, { key: "copy", label: { en: "Guidance", fr: "Consigne" }, type: "i18n_textarea" }, { key: "points", label: { en: "Competency points", fr: "Points de compétences" }, type: "number", defaultValue: 1 }], defaultData: { type: "learning_progress", label: { en: "", fr: "" }, points: 1 },
-  },
-  {
-    type: "annotated_screenshot", label: { en: "Attributed screenshot", fr: "Capture attribuée" }, description: { en: "Reusable attributed documentation screenshot with caption, alternative text and source links", fr: "Capture documentaire réutilisable, attribuée, avec légende, texte alternatif et liens sources" }, category: "media", icon: "Image", color: "bg-sky-100 text-sky-700", since: "4.1",
-    schema: [
-      { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
-      { key: "imageUrl", label: { en: "Managed media URL", fr: "URL de médiathèque" }, type: "text", required: true, placeholder: "/api/assets/example.png" },
-      { key: "alt", label: { en: "Alternative text", fr: "Texte alternatif" }, type: "i18n_text", required: true },
-      { key: "caption", label: { en: "Attribution caption", fr: "Légende d’attribution" }, type: "i18n_textarea", required: true },
-      { key: "sourceRefs", label: { en: "Source links", fr: "Liens sources" }, type: "json", helpText: { en: "Array of {id, title, url}; display the origin of every documentation capture.", fr: "Tableau de {id, title, url} ; affichez l’origine de chaque capture documentaire." } },
-    ], defaultData: { type: "annotated_screenshot", title: { en: "", fr: "" }, imageUrl: "", alt: { en: "", fr: "" }, caption: { en: "", fr: "" }, sourceRefs: [] },
-  },
-  {
-    type: "module_quiz", label: { en: "Secure module quiz", fr: "Quiz de module sécurisé" }, description: { en: "Server-delivered and server-graded module assessment, gated behind configured prerequisites", fr: "Évaluation de module livrée et corrigée côté serveur, verrouillée par les prérequis configurés" }, category: "assessment", icon: "CircleHelp", color: "bg-indigo-100 text-indigo-700", since: "4.1",
-    schema: [
-      { key: "moduleId", label: { en: "Module ID", fr: "ID du module" }, type: "text", required: true },
-      { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
-      { key: "passingScore", label: { en: "Passing score (%)", fr: "Seuil de réussite (%)" }, type: "number", defaultValue: 75 },
-      { key: "questionCount", label: { en: "Question count", fr: "Nombre de questions" }, type: "number", defaultValue: 8 },
-      { key: "competencyPoints", label: { en: "Competency points", fr: "Points de compétences" }, type: "number", defaultValue: 10 },
-    ], defaultData: { type: "module_quiz", moduleId: "", title: { en: "", fr: "" }, passingScore: 75, questionCount: 8, competencyPoints: 10 },
   },
 ];
 

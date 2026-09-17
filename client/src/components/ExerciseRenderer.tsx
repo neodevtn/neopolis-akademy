@@ -159,7 +159,6 @@ interface ExerciseRendererProps {
   index: number;
   lang: 'en' | 'fr';
   onComplete?: (exerciseId: string, answer: string) => void;
-  onEvaluate?: (selectedId: string) => Promise<{ correct: boolean; explanation?: string }>;
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -272,7 +271,7 @@ function clearDraft(exerciseId: string) {
 // --- Auto-save status type ---
 type AutoSaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
-export function ExerciseRenderer({ exercise, index, lang, onComplete, onEvaluate }: ExerciseRendererProps) {
+export function ExerciseRenderer({ exercise, index, lang, onComplete }: ExerciseRendererProps) {
   // Restore from localStorage on mount: prioritize submitted attempt, then draft
   const savedAttempt = useMemo(() => loadAttempt(exercise.id), [exercise.id]);
   const savedDraft = useMemo(() => loadDraft(exercise.id), [exercise.id]);
@@ -282,8 +281,6 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, onEvaluate
     new Set(savedAttempt?.options || savedDraft?.options || [])
   );
   const [submitted, setSubmitted] = useState(!!savedAttempt);
-  const [serverEvaluation, setServerEvaluation] = useState<{ correct: boolean; explanation?: string } | null>(null);
-  const [isEvaluating, setIsEvaluating] = useState(false);
   const [showCorrection, setShowCorrection] = useState(false);
   const [showRubric, setShowRubric] = useState(false);
 
@@ -571,28 +568,14 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, onEvaluate
     }
   }, [submitted, exercise, wordCount, userAnswer, selectedOptions, interactionType]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
+    setSubmitted(true);
     const answer = interactionType === 'single_choice' || interactionType === 'multi_choice' || interactionType === 'checklist'
       ? Array.from(selectedOptions).join(',')
       : userAnswer;
-    let selectedAnswersAreCorrect = interactionType === 'single_choice' || interactionType === 'multi_choice'
+    const selectedAnswersAreCorrect = interactionType === 'single_choice' || interactionType === 'multi_choice'
       ? hasExactCorrectChoiceSet(shuffledOptions, selectedOptions)
       : true;
-    if (onEvaluate) {
-      const selectedId = Array.from(selectedOptions)[0];
-      if (!selectedId) return;
-      setIsEvaluating(true);
-      try {
-        const result = await onEvaluate(selectedId);
-        setServerEvaluation(result);
-        selectedAnswersAreCorrect = result.correct;
-      } catch {
-        setIsEvaluating(false);
-        return;
-      }
-      setIsEvaluating(false);
-    }
-    setSubmitted(true);
     const shouldComplete = !exercise.completionRequiresCorrectAnswer || selectedAnswersAreCorrect;
     saveAttempt(exercise.id, userAnswer, Array.from(selectedOptions));
     setAutoSaveStatus('idle');
@@ -604,8 +587,6 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, onEvaluate
     setSelectedOptions(new Set());
     setSubmitted(false);
     setShowCorrection(false);
-    setServerEvaluation(null);
-    setIsEvaluating(false);
     setShowRubric(false);
     clearAttempt(exercise.id);
     clearDraft(exercise.id);
@@ -641,10 +622,6 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, onEvaluate
   const getOptionResult = (option: ExerciseOption) => {
     if (!submitted) return null;
     const isSelected = selectedOptions.has(option.id);
-    if (serverEvaluation) {
-      if (!isSelected) return null;
-      return serverEvaluation.correct ? 'correct' : 'incorrect';
-    }
     if (isSelected && option.correct) return 'correct';
     if (isSelected && !option.correct) return 'incorrect';
     if (!isSelected && option.correct) return 'missed';
@@ -1043,12 +1020,12 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, onEvaluate
           {!submitted ? (
             <Button
               onClick={handleSubmit}
-              disabled={!canSubmit || isEvaluating}
+              disabled={!canSubmit}
               size="sm"
               className="gap-1.5"
             >
               <Send className="h-3.5 w-3.5" />
-              {isEvaluating ? (lang === 'fr' ? 'Vérification…' : 'Checking…') : (lang === 'fr' ? 'Soumettre' : 'Submit')}
+              {lang === 'fr' ? 'Soumettre' : 'Submit'}
             </Button>
           ) : (
             <>
@@ -1088,14 +1065,6 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, onEvaluate
         {/* Correction Panel */}
         {showCorrection && (
           <div className="space-y-3 pt-3 border-t border-border/50 animate-in fade-in slide-in-from-top-2 duration-200">
-            {serverEvaluation?.explanation && (
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-md p-3 border border-green-200 dark:border-green-800">
-                <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-1">
-                  {lang === 'fr' ? 'Correction' : 'Correction'}
-                </p>
-                <p className="text-sm leading-relaxed text-gray-800 dark:text-gray-200">{serverEvaluation.explanation}</p>
-              </div>
-            )}
             {/* Correction text */}
             {getText(exercise.correction) && (
               <div className="bg-green-50 dark:bg-green-900/20 rounded-md p-3 border border-green-200 dark:border-green-800">

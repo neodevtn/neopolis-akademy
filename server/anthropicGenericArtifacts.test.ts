@@ -15,10 +15,9 @@ const bannedArtifacts = [
 ];
 
 describe("nettoyage générique des artefacts Anthropic", () => {
-  it("retire de chaque contenu Claude les marqueurs UI et techniques non sémantiques ciblés", async () => {
+  it("retire des 28 contenus les marqueurs UI et techniques non sémantiques ciblés", async () => {
     const files = (await readdir(coursesDir)).filter((file) => file.startsWith("claude_") && file.endsWith(".json"));
-    // New Claude learning content must join the hygiene scan automatically.
-    expect(files.length).toBeGreaterThanOrEqual(28);
+    expect(files.length).toBe(28);
 
     const sources = await Promise.all(files.map((file) => readFile(resolve(coursesDir, file), "utf8")));
     for (const source of sources) {

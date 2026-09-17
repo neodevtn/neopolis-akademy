@@ -44,7 +44,6 @@ import { isValidPassword } from "../shared/accountCredentials";
 import { privateMessagingRouter } from "./privateMessagingRouter";
 import { tektekRouter } from "./tektekRouter";
 import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
-import { getClaudeScienceModuleQuizForLearner, recordClaudeScienceLabCompletion, submitClaudeScienceModuleQuiz } from "./claudeScienceModuleQuizService";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -803,44 +802,7 @@ export const appRouter = router({
         const explanation = typeof answerKey.explanation === "string"
           ? answerKey.explanation
           : answerKey.explanation?.[input.lang] || answerKey.explanation?.en || "";
-        const correct = input.selectedId === answerKey.correctAnswer;
-        if (correct) {
-          await recordLearningEvent({ userId: ctx.user.id, eventType: "checkpoint_passed", courseId: input.courseId, exerciseId: input.exerciseId, success: 1, score: 100 });
-          const competencyTags = getContentCompetencyTags({ courseId: input.courseId });
-          await applyCompetencyEvent({ userId: ctx.user.id, sourceType: "checkpoint_passed", sourceKey: input.courseId, eventKey: `checkpoint:${input.courseId}:${input.exerciseId}`, score: 100, competencyTags, evidence: { exerciseId: input.exerciseId, competencyTags } });
-        }
-        return { correct, explanation };
-      }),
-
-    getModuleQuiz: protectedProcedure
-      .input(z.object({ courseId: z.string().regex(/^[a-z0-9_]+$/i).max(200), moduleId: z.string().regex(/^[a-z0-9_]+$/i).max(200) }))
-      .query(async ({ ctx, input }) => {
-        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
-        return getClaudeScienceModuleQuizForLearner({ userId: ctx.user.id, ...input });
-      }),
-
-    submitModuleQuiz: protectedProcedure
-      .input(z.object({
-        courseId: z.string().regex(/^[a-z0-9_]+$/i).max(200),
-        moduleId: z.string().regex(/^[a-z0-9_]+$/i).max(200),
-        answers: z.array(z.object({ questionId: z.string().min(1).max(120), selectedId: z.string().min(1).max(40) })).length(8),
-      }))
-      .mutation(async ({ ctx, input }) => {
-        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
-        return submitClaudeScienceModuleQuiz({ userId: ctx.user.id, ...input });
-      }),
-
-    completeModuleLab: protectedProcedure
-      .input(z.object({
-        courseId: z.string().regex(/^[a-z0-9_]+$/i).max(200),
-        moduleId: z.string().regex(/^[a-z0-9_]+$/i).max(200),
-        activityId: z.string().regex(/^[a-z0-9_]+$/i).max(255),
-        lessonIndex: z.number().int().min(0).max(500),
-        chapterIndex: z.number().int().min(0).max(500),
-      }))
-      .mutation(async ({ ctx, input }) => {
-        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
-        return recordClaudeScienceLabCompletion({ userId: ctx.user.id, ...input });
+        return { correct: input.selectedId === answerKey.correctAnswer, explanation };
       }),
 
     saveChapterProgress: protectedProcedure

@@ -27,7 +27,6 @@ export function getPersistedCompletionProgress(total: number): ChapterProgress {
 type ChapterBlockLike = {
   type?: string;
   title?: string | { en?: string; fr?: string };
-  optional?: boolean;
 };
 
 /**
@@ -37,9 +36,7 @@ type ChapterBlockLike = {
  */
 export function hasOptionalSupplementaryVideos(chapter?: { blocks?: ChapterBlockLike[] } | null): boolean {
   const blocks = chapter?.blocks ?? [];
-  const videos = blocks.filter((block) => block.type === "video");
-  const hasVideo = videos.length > 0;
-  if (hasVideo && videos.every((block) => block.optional === true)) return true;
+  const hasVideo = blocks.some((block) => block.type === "video");
   const hasSupplementLabel = blocks.some((block) => {
     // Content normalization can put the callout title either directly on the
     // block or in a nested field. Inspect only callouts, but tolerate both

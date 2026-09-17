@@ -1,5 +1,3 @@
-import { CLAUDE_SCIENCE_CHECKPOINT_KEYS } from "./claudeScienceCourseAssessments";
-
 type LocalizedText = { en?: string; fr?: string };
 
 export type SensitiveExerciseAnswerKey = {
@@ -43,8 +41,5 @@ const sensitiveExerciseAnswerKeys: Record<string, Record<string, SensitiveExerci
 };
 
 export function getSensitiveExerciseAnswerKey(courseId: string, exerciseId: string): SensitiveExerciseAnswerKey | null {
-  if (courseId === "claude_science_recherche_medicale__01") {
-    return CLAUDE_SCIENCE_CHECKPOINT_KEYS[exerciseId as keyof typeof CLAUDE_SCIENCE_CHECKPOINT_KEYS] ?? null;
-  }
   return sensitiveExerciseAnswerKeys[courseId]?.[exerciseId] ?? null;
 }

@@ -105,11 +105,6 @@ interface YouTubePlayerProps {
   isCompleted: boolean;
   onMarkComplete: (videoKey: string) => void;
   watchUrl?: string;
-  language?: string;
-  durationSeconds?: number;
-  objectiveBefore?: string;
-  questionsAfter?: string[];
-  alternativeTextFr?: string;
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
   onPlaybackChange?: (isPlaying: boolean) => void;
@@ -122,11 +117,6 @@ export function YouTubePlayer({
   isCompleted,
   onMarkComplete,
   watchUrl,
-  language,
-  durationSeconds,
-  objectiveBefore,
-  questionsAfter,
-  alternativeTextFr,
   lang,
   t,
   onPlaybackChange,
@@ -219,9 +209,6 @@ export function YouTubePlayer({
   }, [embedError, embedHost, isCompleted, isPlaying, onMarkComplete, onPlaybackChange, videoId, videoKey]);
 
   const fallbackUrl = watchUrl || `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
-  const durationLabel = Number.isFinite(durationSeconds) && Number(durationSeconds) > 0
-    ? `${Math.floor(Number(durationSeconds) / 60)}:${String(Number(durationSeconds) % 60).padStart(2, "0")}`
-    : null;
   const manualCompletionAllowed = canMarkVideoComplete({
     playbackConfirmed,
     providerUnavailable: embedError,
@@ -258,12 +245,6 @@ export function YouTubePlayer({
 
       {/* Video player area */}
       <div className="px-3 pt-3 pb-3">
-        {(language || durationLabel || objectiveBefore) && (
-          <div className="mb-3 rounded-lg border border-border bg-muted/30 p-3 text-sm">
-            {(language || durationLabel) && <p className="font-medium text-foreground">{language && <span>{lang === "fr" ? "Langue" : "Language"}: {language.toUpperCase()}</span>}{language && durationLabel && <span className="mx-2 text-muted-foreground">·</span>}{durationLabel && <span>{lang === "fr" ? "Durée" : "Duration"}: {durationLabel}</span>}</p>}
-            {objectiveBefore && <p className="mt-1.5 leading-relaxed text-muted-foreground"><span className="font-medium text-foreground">{lang === "fr" ? "Avant la lecture : " : "Before playback: "}</span>{objectiveBefore}</p>}
-          </div>
-        )}
         {!isPlaying ? (
           // Thumbnail with play button
           <div
@@ -358,7 +339,7 @@ export function YouTubePlayer({
               </>
             )}
           </Button>
-        {watchUrl && (
+          {watchUrl && (
             <a
               href={watchUrl}
               target="_blank"
@@ -368,14 +349,8 @@ export function YouTubePlayer({
               <PlayCircle className="w-3.5 h-3.5" />
               {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
             </a>
-        )}
-        {(questionsAfter?.length || alternativeTextFr) && (
-          <div className="mt-4 space-y-3 border-t border-border pt-4 text-sm">
-            {questionsAfter?.length ? <div><p className="font-semibold text-foreground">{lang === "fr" ? "Questions après lecture" : "Questions after viewing"}</p><ol className="mt-2 list-decimal space-y-1 pl-5 text-muted-foreground">{questionsAfter.map((question, index) => <li key={index}>{question}</li>)}</ol></div> : null}
-            {alternativeTextFr ? <details className="rounded-lg border border-border bg-muted/20"><summary className="cursor-pointer px-3 py-2 font-medium text-foreground">{lang === "fr" ? "Alternative textuelle française" : "French text alternative"}</summary><p className="border-t border-border px-3 py-3 leading-relaxed text-muted-foreground">{alternativeTextFr}</p></details> : null}
-          </div>
-        )}
-      </div>
+          )}
+        </div>
       </div>
     </div>
   );
