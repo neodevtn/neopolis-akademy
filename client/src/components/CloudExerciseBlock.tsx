@@ -90,13 +90,15 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
   const tpSuccess = resolveLocalizedBlockText(block.successMessage, lang);
   const tpPrompt = resolveLocalizedBlockText(block.prompt, lang);
   const rubricCriteria = Array.isArray(block.rubricCriteria) ? block.rubricCriteria : [];
+  const learnerCriteria = Array.isArray(block.learnerCriteria) ? block.learnerCriteria : [];
+  const usesServerGradedAssessment = typeof block.serverGradedAssessment === "string" && block.serverGradedAssessment.length > 0;
   const minimumAnswerLength = resolveMinimumAnswerLength(block.minimumAnswerLength);
   const hasMinimumAnswer = hasRequiredAnswerLength(answer, minimumAnswerLength);
   const reflectionOptions = resolvePostRevealReflectionOptions(block.postRevealReflectionOptions, lang);
   const reflectionIsRequired = Boolean(block.requirePostRevealReflection) && reflectionOptions.length > 0;
   const reflectionTitle = resolveLocalizedBlockText(block.postRevealReflectionTitle, lang);
   const selectedReflection = reflectionOptions.find((option) => option.id === reflectionChoiceId) ?? null;
-  const usesTrackedRubric = rubricCriteria.length > 0 && Boolean(evaluationContext);
+  const usesTrackedRubric = (rubricCriteria.length > 0 || usesServerGradedAssessment) && Boolean(evaluationContext);
   const maxScore = Number(block.maxScore) || rubricCriteria.length || 1;
   const passingScore = Number(block.passingScore) || maxScore;
   const tpNonDl = Array.from(new Set([
@@ -246,9 +248,11 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
         )}
 
         {/* Evaluation criteria - transformed into learner-friendly rubric */}
-        {(tpPrompt || rubricCriteria.length > 0) && (() => {
+        {(tpPrompt || rubricCriteria.length > 0 || learnerCriteria.length > 0) && (() => {
           // Parse the raw grading prompt into learner-friendly bullets
-          const bullets = rubricCriteria.length > 0
+          const bullets = learnerCriteria.length > 0
+            ? learnerCriteria
+            : rubricCriteria.length > 0
             ? rubricCriteria.map((criterion: any) => criterion.label || criterion.description).filter(Boolean)
             : extractLearnerObjectives(tpPrompt);
           if (bullets.length === 0) return null;

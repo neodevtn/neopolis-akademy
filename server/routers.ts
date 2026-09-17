@@ -45,6 +45,8 @@ import { privateMessagingRouter } from "./privateMessagingRouter";
 import { tektekRouter } from "./tektekRouter";
 import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
 import { getClaudeScienceV2ActivityStatus, getClaudeScienceV2FinalQuiz, submitClaudeScienceV2FinalQuiz, submitClaudeScienceV2Lab, submitClaudeScienceV2Reflection } from "./claudeScienceV2AssessmentService";
+import { getIntermediateN8nActivityStatus, submitIntermediateN8nPractical } from "./intermediateN8nAssessmentService";
+import { getAiMarketingActivityStatus, submitAiMarketingPractical } from "./aiMarketingAssessmentService";
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
   targetLevel: z.enum(["bronze", "silver", "gold"]),
@@ -858,6 +860,36 @@ export const appRouter = router({
         await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         return submitClaudeScienceV2Reflection({ userId: ctx.user.id, ...input });
       }),
+    submitIntermediateN8nPractical: protectedProcedure
+      .input(z.object({
+        courseId: z.literal("intermediate_workflow_automation_with_n8n__01"),
+        blockId: z.string().regex(/^dc_[1-4]_act_(?:02|03|04|05|06|07|09|10)_tp$/),
+        lessonIndex: z.number().int().min(0),
+        chapterIndex: z.number().int().min(0),
+        answer: z.string().trim().min(120).max(12000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return submitIntermediateN8nPractical({ userId: ctx.user.id, ...input });
+      }),
+    submitAiMarketingPractical: protectedProcedure
+      .input(z.object({
+        courseId: z.literal("ai_for_marketing__01"),
+        blockId: z.string().regex(/^dc_[1-3]_act_(?:02|03|05|06|08|09|11|12)_tp$/),
+        lessonIndex: z.number().int().min(0),
+        chapterIndex: z.number().int().min(0),
+        answer: z.string().trim().min(180).max(12000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return submitAiMarketingPractical({ userId: ctx.user.id, ...input });
+      }),
+    getAiMarketingActivityStatus: protectedProcedure
+      .input(z.object({ courseId: z.literal("ai_for_marketing__01") }))
+      .query(async ({ ctx, input }) => getAiMarketingActivityStatus({ userId: ctx.user.id, ...input })),
+    getIntermediateN8nActivityStatus: protectedProcedure
+      .input(z.object({ courseId: z.literal("intermediate_workflow_automation_with_n8n__01") }))
+      .query(async ({ ctx, input }) => getIntermediateN8nActivityStatus({ userId: ctx.user.id, ...input })),
 
     saveChapterProgress: protectedProcedure
       .input(z.object({

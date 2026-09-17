@@ -64,6 +64,7 @@ import { TalentJourneyTab } from "@/components/TalentJourneyTab";
 import { resolveTrainingVisualAsset } from "@shared/trainingVisualAssets";
 import { AccountSecurityDialog } from "@/components/AccountSecurityDialog";
 import { PrivateMessagingLearnerPanel } from "@/components/PrivateMessagingLearnerPanel";
+import { compareCataloguePriority } from "@shared/cataloguePriority";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -916,7 +917,7 @@ function CatalogTab({
       && (durationFilter === "all" || metadata?.duration === durationFilter)
       && (trainingFormatFilter === "all" || metadata?.trainingFormat === trainingFormatFilter)
       && (examFilter === "all" || (examFilter === "with_exam" ? Boolean(metadata?.hasExam) : !metadata?.hasExam));
-  });
+  }).sort(compareCataloguePriority);
   const clearAdvancedFilters = () => { setLevelFilter("all"); setSkillFilter("all"); setRoleFilter("all"); setTechnologyFilter("all"); setDurationFilter("all"); setTrainingFormatFilter("all"); setExamFilter("all"); };
   const hasAdvancedFilters = [levelFilter, skillFilter, roleFilter, technologyFilter, durationFilter, trainingFormatFilter, examFilter].some((filter) => filter !== "all");
   const certificationTitles = Object.fromEntries(certCompletionData.map((cert) => [cert.id, t(cert.title)]));
@@ -940,6 +941,7 @@ function CatalogTab({
         </div>
         <p className="mt-3 text-xs text-muted-foreground">{t({ en: "Duration is estimated from the published number of learning activities.", fr: "La durée est estimée à partir du nombre d’activités pédagogiques publiées." })}</p>
       </div>
+      <p className="text-sm text-muted-foreground">{t({ en: "Suggested order: beginner pathways first, then finance and Excel, short courses, and finally longer advanced pathways.", fr: "Ordre conseillé : parcours débutants, puis finance et Excel, formations courtes, enfin parcours avancés et plus longs." })}</p>
       {/* Filter pills */}
       <div className="flex flex-wrap gap-2">
         <button

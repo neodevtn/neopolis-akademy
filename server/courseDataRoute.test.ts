@@ -65,6 +65,26 @@ describe("course data route", () => {
     expect(learnerData.lessons[0].chapters[0].blocks[1].correctAnswer).toBe("a");
   });
 
+  it("masks server-graded practical correction material while retaining learner-facing criteria", () => {
+    const raw = JSON.stringify({
+      lessons: [{ chapters: [{ blocks: [{
+        id: "secured_practical",
+        type: "cloud_exercise",
+        serverGradedAssessment: "source_verified",
+        learnerCriteria: ["Describe the test result"],
+        solution: "Server-only correction",
+        evaluationPrompt: "Server-only grading prompt",
+        rubricCriteria: [{ label: "Server-only rubric" }],
+      }] }] }],
+    });
+
+    const learnerBlock = JSON.parse(sanitizeCourseDataForLearner(raw)).lessons[0].chapters[0].blocks[0];
+    expect(learnerBlock).toMatchObject({ id: "secured_practical", serverGradedAssessment: "source_verified", learnerCriteria: ["Describe the test result"] });
+    expect(learnerBlock).not.toHaveProperty("solution");
+    expect(learnerBlock).not.toHaveProperty("evaluationPrompt");
+    expect(learnerBlock).not.toHaveProperty("rubricCriteria");
+  });
+
   it("keeps the Developer 3 sensitive answer key in the server-only registry", () => {
     expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__03", "checkpoint4_fix_plugin_definition")).toMatchObject({
       correctAnswer: "b",

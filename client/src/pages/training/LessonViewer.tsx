@@ -86,10 +86,20 @@ export default function LessonViewer({
   const evaluateFreeResponse = trpc.training.evaluateFreeResponse.useMutation();
   const submitClaudeScienceV2Lab = trpc.training.submitClaudeScienceV2Lab.useMutation();
   const submitClaudeScienceV2Reflection = trpc.training.submitClaudeScienceV2Reflection.useMutation();
+  const submitIntermediateN8nPractical = trpc.training.submitIntermediateN8nPractical.useMutation();
+  const submitAiMarketingPractical = trpc.training.submitAiMarketingPractical.useMutation();
   const validateServerChoice = trpc.training.validateServerChoice.useMutation();
   const claudeScienceActivityStatus = trpc.training.getClaudeScienceV2ActivityStatus.useQuery(
     { courseId },
     { enabled: courseId.startsWith("claude_science_"), retry: false, refetchOnWindowFocus: false },
+  );
+  const intermediateN8nActivityStatus = trpc.training.getIntermediateN8nActivityStatus.useQuery(
+    { courseId: "intermediate_workflow_automation_with_n8n__01" },
+    { enabled: courseId === "intermediate_workflow_automation_with_n8n__01", retry: false, refetchOnWindowFocus: false },
+  );
+  const aiMarketingActivityStatus = trpc.training.getAiMarketingActivityStatus.useQuery(
+    { courseId: "ai_for_marketing__01" },
+    { enabled: courseId === "ai_for_marketing__01", retry: false, refetchOnWindowFocus: false },
   );
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
@@ -128,6 +138,18 @@ export default function LessonViewer({
     setCompletedCourseFinalQuizzes((previous) => new Set(Array.from(previous).concat(completedFinalQuizzes)));
     setCompletedReflections((previous) => new Set(Array.from(previous).concat(completedReflections)));
   }, [claudeScienceActivityStatus.data]);
+
+  useEffect(() => {
+    const completed = intermediateN8nActivityStatus.data?.completedPracticalIds;
+    if (!completed) return;
+    setCompletedCloudExercises((previous) => new Set(Array.from(previous).concat(completed)));
+  }, [intermediateN8nActivityStatus.data]);
+
+  useEffect(() => {
+    const completed = aiMarketingActivityStatus.data?.completedPracticalIds;
+    if (!completed) return;
+    setCompletedCloudExercises((previous) => new Set(Array.from(previous).concat(completed)));
+  }, [aiMarketingActivityStatus.data]);
 
   // Reading progress state
   const [readingProgress, setReadingProgress] = useState(0);
@@ -1016,6 +1038,10 @@ export default function LessonViewer({
       case "cloud_exercise": {
         return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} evaluationContext={{ certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter }} onEvaluate={(input) => block.serverGradedAssessment === "claude_science_v2_lab"
           ? submitClaudeScienceV2Lab.mutateAsync({ courseId, labId: String(input.blockId), lessonIndex, chapterIndex: currentChapter, answer: String(input.answer) })
+          : block.serverGradedAssessment === "intermediate_n8n_source_verified"
+            ? submitIntermediateN8nPractical.mutateAsync({ courseId: "intermediate_workflow_automation_with_n8n__01", blockId: String(input.blockId), lessonIndex, chapterIndex: currentChapter, answer: String(input.answer) })
+          : block.serverGradedAssessment === "ai_marketing_source_adapted"
+            ? submitAiMarketingPractical.mutateAsync({ courseId: "ai_for_marketing__01", blockId: String(input.blockId), lessonIndex, chapterIndex: currentChapter, answer: String(input.answer) })
           : evaluateFreeResponse.mutateAsync(input as any)} onComplete={(id, outcome) => {
           setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
           if (outcome?.rubricEvaluated) recordCompetencyOutcome.mutate({

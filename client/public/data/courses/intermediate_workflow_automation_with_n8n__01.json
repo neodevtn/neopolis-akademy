@@ -53,6 +53,29 @@
               "mp4Url": "/api/assets/01_Event-Driven_n8n_Workflows_with_Webhooks_b03e9ccd.mp4",
               "transcript": "",
               "transcriptSegments": []
+            },
+            {
+              "type": "callout",
+              "id": "n8n_personal_environment_preflight",
+              "variant": "info",
+              "title": {
+                "fr": "Avant le premier TP : préparer votre environnement n8n",
+                "en": "Before the first practical: prepare your n8n environment"
+              },
+              "body": {
+                "fr": "Utilisez une instance de test **n8n Cloud** ou une instance **Docker locale** qui vous appartient. Créez un workflow de test vide et vérifiez que vous pouvez ajouter puis exécuter un nœud. Dans ce module, utilisez uniquement les charges utiles synthétiques fournies dans les consignes : ne connectez pas de données, URL de production, identifiants ou secrets réels.\n\nUn Webhook Trigger propose une URL de test et une URL de production : commencez par l’URL de test et les données épinglées ; n’activez un workflow que lorsque vous comprenez son effet.",
+                "en": "Use your own **n8n Cloud** test workspace or a **local Docker** instance. Create an empty test workflow and confirm that you can add and execute a node. In this module, use only the synthetic payloads provided in the instructions: do not connect production data, URLs, credentials, or secrets.\n\nA Webhook Trigger has a test URL and a production URL: start with the test URL and pinned data; activate a workflow only when you understand its effect."
+              },
+              "source_refs": [
+                {
+                  "label": "DataCamp — Intermediate Workflow Automation with n8n (consulté le 17 septembre 2026)",
+                  "url": "https://app.datacamp.com/learn/courses/intermediate-workflow-automation-with-n8n"
+                },
+                {
+                  "label": "DataCamp — Building Event-Driven and Scheduled Automations, exercices 1 à 3 (consultés le 17 septembre 2026)",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=2&skip_variants_modal=true"
+                }
+              ]
             }
           ]
         },
@@ -76,17 +99,68 @@
                 "en": "Receive a webhook and respond",
                 "fr": "Receive a webhook and respond"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Construisez un workflow de test qui reçoit une requête HTTP POST et renvoie une confirmation JSON. Décrivez à la fin les réglages utilisés et le résultat de l’exécution.",
+                "en": "Build a test workflow that receives an HTTP POST request and returns a JSON confirmation. At the end, describe the settings you used and the execution result."
               },
-              "steps": [],
+              "instructions": {
+                "fr": "Ce TP adapte une activité pratique DataCamp à votre instance n8n personnelle. Les réglages et les données de test ci-dessous ont été vérifiés sur l’écran source ; aucune VM ni aucun fichier DataCamp n’est nécessaire.",
+                "en": "This practical adapts a DataCamp hands-on activity to your personal n8n instance. The settings and test data below were verified on the source screen; no DataCamp VM or file is required."
+              },
+              "environmentGuide": {
+                "fr": "**Espace requis :** une instance n8n Cloud personnelle ou une instance Docker locale de test.\n\n1. Créez un workflow vide dans votre espace.\n2. Travaillez exclusivement avec les données synthétiques indiquées ici.\n3. Commencez par l’URL de test du Webhook Trigger et n’utilisez aucune URL de production.\n4. Ne collez jamais de clé, mot de passe ou donnée client dans la preuve de réalisation.\n\nSi votre instance ne démarre pas ou si vous ne pouvez pas créer de workflow, vérifiez votre accès n8n avant de continuer.",
+                "en": "**Required workspace:** your own n8n Cloud workspace or a local Docker test instance.\n\n1. Create an empty workflow in your workspace.\n2. Use only the synthetic data provided here.\n3. Start with the Webhook Trigger test URL and do not use a production URL.\n4. Never paste a key, password, or customer data into your completion proof.\n\nIf your instance does not start or you cannot create a workflow, verify your n8n access before continuing."
+              },
+              "steps": [
+                {
+                  "instruction_text": {
+                    "fr": "Créez un workflow et ajoutez un nœud **Webhook Trigger**. Choisissez la méthode HTTP `POST`, puis configurez la réponse pour utiliser un nœud **Respond to Webhook**.",
+                    "en": "Create a workflow and add a **Webhook Trigger** node. Choose HTTP method `POST`, then configure its response to use a **Respond to Webhook** node."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "fr": "Ajoutez **Respond to Webhook** après le déclencheur. Choisissez une réponse JSON, avec par exemple `status: received` et `message: Payload accepted`, puis définissez le code de réponse sur `200`.",
+                    "en": "Add **Respond to Webhook** after the trigger. Choose a JSON response, for example `status: received` and `message: Payload accepted`, then set response code `200`."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "fr": "Épinglez une charge de test synthétique sur le Webhook Trigger, par exemple `[{ \"email\": \"test@acme.com\" }]`. Exécutez le workflow, vérifiez que les deux nœuds réussissent, puis enregistrez-le.",
+                    "en": "Pin a synthetic test payload on the Webhook Trigger, for example `[{ \"email\": \"test@acme.com\" }]`. Run the workflow, confirm both nodes succeed, then save it."
+                  }
+                }
+              ],
               "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "hint": {
+                "fr": "Si le nœud de réponse ne se déclenche pas, vérifiez que le Webhook Trigger attend bien **Respond to Webhook** au lieu d’envoyer sa réponse immédiatement.",
+                "en": "If the response node does not run, verify that the Webhook Trigger waits for **Respond to Webhook** instead of responding immediately."
+              },
+              "successMessage": {
+                "fr": "Vous avez construit et vérifié une première réponse webhook dans votre environnement n8n.",
+                "en": "You built and verified a first webhook response in your n8n environment."
+              },
+              "nonDownloadableFiles": [],
+              "maxScore": 3,
+              "passingScore": 3,
+              "minimumAnswerLength": 120,
+              "source_refs": [
+                {
+                  "label": "DataCamp — Intermediate Workflow Automation with n8n (consulté le 17 septembre 2026)",
+                  "url": "https://app.datacamp.com/learn/courses/intermediate-workflow-automation-with-n8n"
+                },
+                {
+                  "label": "DataCamp — Building Event-Driven and Scheduled Automations, exercices 1 à 3 (consultés le 17 septembre 2026)",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=2&skip_variants_modal=true"
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "learnerCriteria": [
+                "Décrire un Webhook Trigger configuré en POST et sa réponse.",
+                "Indiquer le format de réponse et le résultat HTTP attendu.",
+                "Rapporter une exécution de test avec des données synthétiques."
+              ],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -110,17 +184,76 @@
                 "en": "Add validation to a webhook workflow",
                 "fr": "Add validation to a webhook workflow"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Ajoutez un contrôle d’e-mail à votre workflow webhook. Les requêtes contenant un e-mail doivent obtenir une réponse de succès ; celles qui n’en contiennent pas doivent obtenir une réponse d’erreur. Décrivez les deux essais réalisés.",
+                "en": "Add an email check to your webhook workflow. Requests containing an email should receive a success response; requests without one should receive an error response. Describe both tests you ran."
               },
-              "steps": [],
+              "instructions": {
+                "fr": "Reprenez le workflow du TP précédent. Le fichier VM indiqué dans la source n’est pas distribué dans Neopolis : ne cherchez pas à le télécharger. Si votre workflow précédent n’est plus disponible, reconstruisez le TP précédent à partir de ses étapes avant d’ajouter la validation.",
+                "en": "Reuse the workflow from the preceding practical. The VM file mentioned in the source is not distributed by Neopolis: do not look for a download. If your previous workflow is not available, rebuild the preceding practical from its steps before adding validation."
+              },
+              "environmentGuide": {
+                "fr": "**Espace requis :** une instance n8n Cloud personnelle ou une instance Docker locale de test.\n\n1. Créez un workflow vide dans votre espace.\n2. Travaillez exclusivement avec les données synthétiques indiquées ici.\n3. Commencez par l’URL de test du Webhook Trigger et n’utilisez aucune URL de production.\n4. Ne collez jamais de clé, mot de passe ou donnée client dans la preuve de réalisation.\n\nSi votre instance ne démarre pas ou si vous ne pouvez pas créer de workflow, vérifiez votre accès n8n avant de continuer.",
+                "en": "**Required workspace:** your own n8n Cloud workspace or a local Docker test instance.\n\n1. Create an empty workflow in your workspace.\n2. Use only the synthetic data provided here.\n3. Start with the Webhook Trigger test URL and do not use a production URL.\n4. Never paste a key, password, or customer data into your completion proof.\n\nIf your instance does not start or you cannot create a workflow, verify your n8n access before continuing."
+              },
+              "steps": [
+                {
+                  "instruction_text": {
+                    "fr": "Partez du workflow précédent. Si vous le recréez, commencez par le Webhook Trigger et le nœud Respond to Webhook du TP précédent — aucun fichier de départ n’est requis.",
+                    "en": "Start from the previous workflow. If you rebuild it, begin with the Webhook Trigger and Respond to Webhook node from the preceding practical — no starter file is required."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "fr": "Déconnectez provisoirement Respond to Webhook, puis placez un nœud **If** après le Webhook Trigger. Testez l’existence du champ `email`.",
+                    "en": "Temporarily disconnect Respond to Webhook, then place an **If** node after the Webhook Trigger. Test whether the `email` field exists."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "fr": "Sur la branche vraie, ajoutez un nœud **Edit Fields** avec `status=success`, un message de confirmation et `responseCode=200`. Sur la branche fausse, ajoutez un autre nœud avec `status=error`, un message indiquant l’absence d’e-mail et `responseCode=400`.",
+                    "en": "On the true branch, add an **Edit Fields** node with `status=success`, a confirmation message, and `responseCode=200`. On the false branch, add another node with `status=error`, a message indicating a missing email, and `responseCode=400`."
+                  }
+                },
+                {
+                  "instruction_text": {
+                    "fr": "Reliez les deux branches à Respond to Webhook, en utilisant le premier élément entrant et le champ `responseCode`. Testez successivement une charge avec e-mail puis une charge sans e-mail, et vérifiez que les branches vraie et fausse s’exécutent respectivement.",
+                    "en": "Connect both branches to Respond to Webhook, using the first incoming item and the `responseCode` field. Test first with an email payload, then without one, and confirm that the true and false branches respectively run."
+                  }
+                }
+              ],
               "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "hint": {
+                "fr": "Le but est de vérifier la logique de branchement avec deux charges **synthétiques**. Ne connectez pas de formulaire ou de service de production.",
+                "en": "The goal is to verify branching logic with two **synthetic** payloads. Do not connect a production form or service."
+              },
+              "successMessage": {
+                "fr": "Vous avez vérifié une règle de validation et deux réponses webhook distinctes.",
+                "en": "You verified a validation rule and two distinct webhook responses."
+              },
+              "nonDownloadableFiles": [
+                "1.1.2_starter_webhook-validation.json"
+              ],
+              "maxScore": 3,
+              "passingScore": 3,
+              "minimumAnswerLength": 150,
+              "source_refs": [
+                {
+                  "label": "DataCamp — Intermediate Workflow Automation with n8n (consulté le 17 septembre 2026)",
+                  "url": "https://app.datacamp.com/learn/courses/intermediate-workflow-automation-with-n8n"
+                },
+                {
+                  "label": "DataCamp — Building Event-Driven and Scheduled Automations, exercices 1 à 3 (consultés le 17 septembre 2026)",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=2&skip_variants_modal=true"
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "learnerCriteria": [
+                "Décrire la condition qui sépare les requêtes valides et invalides.",
+                "Indiquer les réponses distinctes prévues pour chaque branche.",
+                "Rapporter un test synthétique valide et un test sans e-mail."
+              ],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -144,17 +277,82 @@
                 "en": "Extract and transform nested webhook data",
                 "fr": "Extract and transform nested webhook data"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Aplatissez un payload de webhook imbriqué et renvoyez une réponse lisible.",
+                "en": "Transformation d’un message webhook complexe en données simples à retourner."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack de données synthétiques Neopolis « webhook imbriqué ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez le pack Neopolis dans un workflow contenant le webhook.",
+                    "en": "Chargez le pack Neopolis dans un workflow contenant le webhook."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Edit Fields après le webhook et récupérez les valeurs imbriquées avec la notation par points.",
+                    "en": "Ajoutez Edit Fields après le webhook et récupérez les valeurs imbriquées avec la notation par points."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Conservez des noms de champs explicites dans la sortie aplatie.",
+                    "en": "Conservez des noms de champs explicites dans la sortie aplatie."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Reliez Edit Fields à Respond to Webhook, puis exécutez et contrôlez la réponse.",
+                    "en": "Reliez Edit Fields à Respond to Webhook, puis exécutez et contrôlez la réponse."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — payload webhook imbriqué",
+                    "en": "Données synthétiques — payload webhook imbriqué"
+                  },
+                  "description": {
+                    "fr": "Jeu de données synthétiques Neopolis pour exercer l’aplatissement d’un payload webhook. Données synthétiques uniquement.",
+                    "en": "Jeu de données synthétiques Neopolis pour exercer l’aplatissement d’un payload webhook. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/webhook_nested_orders_342173e9.json"
+                }
+              ],
+              "hint": {
+                "fr": "Utilisez la notation par points pour lire une propriété située dans un objet imbriqué.",
+                "en": "Utilisez la notation par points pour lire une propriété située dans un objet imbriqué."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Le payload final contient des champs de premier niveau compréhensibles.",
+                "Respond to Webhook renvoie le payload nettoyé."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=4",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Transformation d’un message webhook complexe en données simples à retourner.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -204,17 +402,70 @@
                 "en": "Building a producer-consumer workflow",
                 "fr": "Building a producer-consumer workflow"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nBuilding a producer-consumer workflow\nVÉRIFICATION INTELLIGENTE\n\nAcme Corp's order pipeline doesn't live in a single workflow. A downstream consumer (Workflow B) already handles order processing — but nothing is sending it data yet.\n\nActivate Workflow B, then build a producer workflow that constructs an order payload and POSTs it to Workflow B using an HTTP Request node.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\nCreate a new workflow, then import 1.2.1_starter_consumer-workflow.json from Desktop > Resources.\nSave the workflow and turn Active on.\nOn Webhook Trigger, copy the Production URL.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Construisez un workflow producteur qui envoie une commande à Workflow B.",
+                "en": "Mise en place d’un envoi de commande entre un workflow producteur et son consommateur."
               },
-              "steps": [],
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « commandes producteur-consommateur », incluant les indications de Workflow B.",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Activez Workflow B fourni dans le pack Neopolis.",
+                    "en": "Activez Workflow B fourni dans le pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Dans le workflow producteur, préparez un payload de commande à partir des données synthétiques.",
+                    "en": "Dans le workflow producteur, préparez un payload de commande à partir des données synthétiques."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez HTTP Request et configurez un POST vers Workflow B.",
+                    "en": "Ajoutez HTTP Request et configurez un POST vers Workflow B."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Exécutez le producteur et vérifiez que Workflow B reçoit la commande.",
+                    "en": "Exécutez le producteur et vérifiez que Workflow B reçoit la commande."
+                  }
+                }
+              ],
               "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "hint": {
+                "fr": "Le corps de la requête doit reprendre les données attendues dans le payload de commande.",
+                "en": "Le corps de la requête doit reprendre les données attendues dans le payload de commande."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Workflow B est activé.",
+                "HTTP Request envoie un POST contenant une commande à Workflow B."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=6",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Mise en place d’un envoi de commande entre un workflow producteur et son consommateur.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -238,17 +489,70 @@
                 "en": "Handle the response from a downstream workflow",
                 "fr": "Handle the response from a downstream workflow"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nHandle the response from a downstream workflow\nVÉRIFICATION INTELLIGENTE\n\nThe producer workflow fires orders to Workflow B, but right now it's fire-and-forget — there's no check on whether the order was actually processed.\n\nAdd an If node that inspects the response status from Workflow B, then route to Edit Fields nodes that produce a clear success or failure summary on each branch.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\nIf you have Workflow A from the previous exercise open, continue to Step 2.\nIf not, create a new workflow and import 1.2.2_starter_producer-workflow.json from Desktop > Resources.\nOn Overview, confirm Workflow B is still Active; if not, import 1.2.1_starter_consumer-workflow.json from Desktop > Resources and activate it.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Présentez un résumé différent selon la réponse reçue de Workflow B.",
+                "en": "Lecture du statut aval et création de messages de succès ou d’échec."
               },
-              "steps": [],
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « réponses Workflow B ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Utilisez les réponses de Workflow B du pack Neopolis comme données d’entrée.",
+                    "en": "Utilisez les réponses de Workflow B du pack Neopolis comme données d’entrée."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez If pour tester le statut de réponse.",
+                    "en": "Ajoutez If pour tester le statut de réponse."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Sur la branche de réussite, ajoutez Edit Fields pour créer un résumé positif.",
+                    "en": "Sur la branche de réussite, ajoutez Edit Fields pour créer un résumé positif."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Sur la branche d’échec, ajoutez Edit Fields pour expliquer clairement le problème.",
+                    "en": "Sur la branche d’échec, ajoutez Edit Fields pour expliquer clairement le problème."
+                  }
+                }
+              ],
               "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "hint": {
+                "fr": "Faites porter la condition de If sur le statut retourné par le workflow consommateur.",
+                "en": "Faites porter la condition de If sur le statut retourné par le workflow consommateur."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "If sépare les réponses réussies et en erreur.",
+                "Chaque branche produit un résumé explicite avec Edit Fields."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=7",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Lecture du statut aval et création de messages de succès ou d’échec.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -298,17 +602,70 @@
                 "en": "Configure a scheduled workflow",
                 "fr": "Configure a scheduled workflow"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nConfigure a scheduled workflow\nVÉRIFICATION INTELLIGENTE\n\nAcme Corp wants a health check that runs on a regular schedule — but it shouldn't fire blindly. Off-hours runs are wasted work, so the workflow needs to know when to proceed and when to skip.\n\nBuild a scheduled workflow with a Schedule Trigger that runs every 30 minutes, stamps each run with execution context, and uses an If node to gate on business hours.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\n5\n\nCreate a new workflow and add Schedule Trigger.\nConfigure it to run every 30 minutes.\n\nNote: The schedule only runs when the workflow is activated. In the editor, Execute Workflow runs the workflow immediately regardless of the schedule.\n\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Planifiez une exécution régulière et ne laissez passer que les heures ouvrées.",
+                "en": "Automatisation périodique enrichie d’un contexte d’exécution et filtrée par horaire."
               },
-              "steps": [],
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « contexte d’exécution planifiée ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Créez un workflow avec Schedule Trigger réglé toutes les 30 minutes.",
+                    "en": "Créez un workflow avec Schedule Trigger réglé toutes les 30 minutes."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Utilisez les valeurs de contexte du pack Neopolis pour identifier chaque exécution.",
+                    "en": "Utilisez les valeurs de contexte du pack Neopolis pour identifier chaque exécution."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez If afin de tester si l’heure appartient aux heures ouvrées.",
+                    "en": "Ajoutez If afin de tester si l’heure appartient aux heures ouvrées."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Exécutez avec des exemples en journée et hors plage, puis comparez les branches.",
+                    "en": "Exécutez avec des exemples en journée et hors plage, puis comparez les branches."
+                  }
+                }
+              ],
               "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "hint": {
+                "fr": "Ajoutez le contexte d’exécution avant de tester la plage horaire.",
+                "en": "Ajoutez le contexte d’exécution avant de tester la plage horaire."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Schedule Trigger est réglé sur une cadence de 30 minutes.",
+                "If laisse passer uniquement les exécutions pendant les heures ouvrées."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=9",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Automatisation périodique enrichie d’un contexte d’exécution et filtrée par horaire.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -332,17 +689,70 @@
                 "en": "Modify a scheduled workflow to POST downstream",
                 "fr": "Modify a scheduled workflow to POST downstream"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nModify a scheduled workflow to POST downstream\nVÉRIFICATION INTELLIGENTE\n\nThe scheduled workflow gates on business hours, but the True branch just sets a status message — it doesn't do anything useful yet.\n\nReplace the placeholder with real work: build an order payload using Edit Fields and POST it to Workflow B with an HTTP Request node, completing a full schedule-to-consumer pipeline.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\nIf you have the scheduled workflow from the previous exercise, keep it open. Otherwise, import 1.3.2_starter_scheduled-workflow.json from Desktop > Resources.\nOn Overview, confirm Workflow B is Active. If missing, import 1.2.1_starter_consumer-workflow.json, save, and activate it.\nCopy the Production URL from Workflow B’s Webhook Trigger and return to the scheduled workflow.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Envoyez périodiquement un payload de commande vers Workflow B.",
+                "en": "Chaîne complète entre un déclenchement planifié et un workflow consommateur."
               },
-              "steps": [],
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « commandes planifiées », avec les informations de Workflow B.",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Ouvrez le workflow planifié alimenté par le pack Neopolis.",
+                    "en": "Ouvrez le workflow planifié alimenté par le pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Edit Fields pour construire les champs de la commande.",
+                    "en": "Ajoutez Edit Fields pour construire les champs de la commande."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez HTTP Request après Edit Fields et envoyez la commande par POST à Workflow B.",
+                    "en": "Ajoutez HTTP Request après Edit Fields et envoyez la commande par POST à Workflow B."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Exécutez le flux et vérifiez la réponse du consommateur.",
+                    "en": "Exécutez le flux et vérifiez la réponse du consommateur."
+                  }
+                }
+              ],
               "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "hint": {
+                "fr": "Placez Edit Fields avant HTTP Request afin de normaliser le corps envoyé.",
+                "en": "Placez Edit Fields avant HTTP Request afin de normaliser le corps envoyé."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Edit Fields construit un payload de commande.",
+                "HTTP Request réalise un POST vers Workflow B après le déclenchement planifié."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=10",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Chaîne complète entre un déclenchement planifié et un workflow consommateur.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         }
@@ -410,17 +820,82 @@
                 "en": "Fetch weather data from an API",
                 "fr": "Fetch weather data from an API"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nFetch weather data from an API\nVÉRIFICATION INTELLIGENTE\n\nReal APIs rarely hand you a tidy row — wttr.in returns nested arrays and objects, while the next step in your stack usually just wants a few trustworthy fields for dashboards or handoffs.\n\nFrom a Manual Trigger, use HTTP Request to pull Stockholm weather, then an Edit Fields node to flatten the nested JSON into a handful of clear top-level fields.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\nBuild a workflow with a Manual Trigger node and an HTTP Request node named Fetch Weather.\nSet Method to GET and URL to https://wttr.in/Stockholm?format=j1. Under Options > Response, set Response Format to JSON.\nExecute the workflow and confirm Fetch Weather's output is nested JSON that includes current_condition and nearest_area.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Récupérez la météo de Stockholm et rendez les données principales faciles à lire.",
+                "en": "Appel météo puis simplification d’une réponse JSON imbriquée."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « météo Stockholm », qui simule la réponse JSON attendue.",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Démarrez avec Manual Trigger et le jeu Neopolis météo Stockholm.",
+                    "en": "Démarrez avec Manual Trigger et le jeu Neopolis météo Stockholm."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez HTTP Request pour récupérer les données météo de Stockholm.",
+                    "en": "Ajoutez HTTP Request pour récupérer les données météo de Stockholm."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez Edit Fields après la réponse et sélectionnez quelques informations utiles.",
+                    "en": "Ajoutez Edit Fields après la réponse et sélectionnez quelques informations utiles."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Exécutez le workflow et vérifiez que les champs finaux ne sont plus imbriqués.",
+                    "en": "Exécutez le workflow et vérifiez que les champs finaux ne sont plus imbriqués."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — météo Stockholm",
+                    "en": "Données synthétiques — météo Stockholm"
+                  },
+                  "description": {
+                    "fr": "Réponse JSON synthétique inspirée d’une API météo, à utiliser pour lire ou aplatir une structure imbriquée. Données synthétiques uniquement.",
+                    "en": "Réponse JSON synthétique inspirée d’une API météo, à utiliser pour lire ou aplatir une structure imbriquée. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/stockholm_weather_680a1cb1.json"
+                }
+              ],
+              "hint": {
+                "fr": "Repérez les objets JSON imbriqués dans la réponse avant de choisir les champs à aplatir.",
+                "en": "Repérez les objets JSON imbriqués dans la réponse avant de choisir les champs à aplatir."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "HTTP Request récupère les données météo de Stockholm.",
+                "Edit Fields expose plusieurs champs JSON au premier niveau."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=2",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Appel météo puis simplification d’une réponse JSON imbriquée.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -444,17 +919,82 @@
                 "en": "Filter API results with query parameters",
                 "fr": "Filter API results with query parameters"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nFilter API results with query parameters\nVÉRIFICATION INTELLIGENTE\n\nAs Acme adds more cities and options, hard-coding everything into one URL gets brittle. Query parameters keep each setting visible so anyone can change inputs without editing the URL by hand.\n\nSwitch HTTP Request to Berlin, move format and lang into Query Parameters, and add a localized description field to Edit Fields alongside your existing flat fields.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\nIf you have the workflow from the previous exercise open, continue to Step 2.\nIf not, create a new workflow and import 2.1.1_solution_fetch-weather.json from Desktop > Resources.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Adaptez la requête météo à Berlin avec des paramètres de requête et une description localisée.",
+                "en": "Paramétrage d’un appel API et ajout d’une description traduite aux données météo."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « météo Berlin ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez le workflow basé sur le pack Neopolis météo Berlin.",
+                    "en": "Chargez le workflow basé sur le pack Neopolis météo Berlin."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Dans HTTP Request, remplacez la ville par Berlin.",
+                    "en": "Dans HTTP Request, remplacez la ville par Berlin."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Placez format et lang dans Query Parameters.",
+                    "en": "Placez format et lang dans Query Parameters."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Complétez Edit Fields avec la description localisée et contrôlez les champs plats obtenus.",
+                    "en": "Complétez Edit Fields avec la description localisée et contrôlez les champs plats obtenus."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — météo Stockholm",
+                    "en": "Données synthétiques — météo Stockholm"
+                  },
+                  "description": {
+                    "fr": "Réponse JSON synthétique inspirée d’une API météo, à utiliser pour lire ou aplatir une structure imbriquée. Données synthétiques uniquement.",
+                    "en": "Réponse JSON synthétique inspirée d’une API météo, à utiliser pour lire ou aplatir une structure imbriquée. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/stockholm_weather_680a1cb1.json"
+                }
+              ],
+              "hint": {
+                "fr": "Déplacez format et lang dans Query Parameters plutôt que de les laisser dans l’adresse de requête.",
+                "en": "Déplacez format et lang dans Query Parameters plutôt que de les laisser dans l’adresse de requête."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "HTTP Request cible Berlin avec format et lang dans Query Parameters.",
+                "Edit Fields contient une description localisée en plus des champs aplatis."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=3",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Paramétrage d’un appel API et ajout d’une description traduite aux données météo.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -504,17 +1044,82 @@
                 "en": "Run and read a JavaScript Code node",
                 "fr": "Run and read a JavaScript Code node"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Exécutez et interprétez une transformation JavaScript existante.",
+                "en": "Observation d’un nœud Code qui simplifie des données météo déjà disponibles."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « lecture Code JavaScript Stockholm ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Ouvrez le workflow du pack Neopolis et examinez les données synthétiques Stockholm.",
+                    "en": "Ouvrez le workflow du pack Neopolis et examinez les données synthétiques Stockholm."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Exécutez le workflow sans modifier le nœud Code.",
+                    "en": "Exécutez le workflow sans modifier le nœud Code."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Consultez l’entrée du nœud Code, puis sa sortie.",
+                    "en": "Consultez l’entrée du nœud Code, puis sa sortie."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Identifiez comment les données épinglées deviennent des champs plats.",
+                    "en": "Identifiez comment les données épinglées deviennent des champs plats."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — météo Stockholm",
+                    "en": "Données synthétiques — météo Stockholm"
+                  },
+                  "description": {
+                    "fr": "Réponse JSON synthétique inspirée d’une API météo, à utiliser pour lire ou aplatir une structure imbriquée. Données synthétiques uniquement.",
+                    "en": "Réponse JSON synthétique inspirée d’une API météo, à utiliser pour lire ou aplatir une structure imbriquée. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/stockholm_weather_680a1cb1.json"
+                }
+              ],
+              "hint": {
+                "fr": "Comparez chaque champ de sortie avec le champ correspondant dans l’entrée du nœud Code.",
+                "en": "Comparez chaque champ de sortie avec le champ correspondant dans l’entrée du nœud Code."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "La sortie du nœud Code est consultée après exécution.",
+                "Le lien entre les données Stockholm épinglées et les champs plats est expliqué."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=5",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Observation d’un nœud Code qui simplifie des données météo déjà disponibles.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -538,17 +1143,82 @@
                 "en": "Run and read a Python Code node",
                 "fr": "Run and read a Python Code node"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nRun and read a Python Code node\nVÉRIFICATION INTELLIGENTE\n\nNot every row in a feed is clean — missing temperatures or empty descriptions should surface before they skew reports. Catching problems upstream keeps the downstream branch reliable.\n\nImport the starter with pinned city data, execute it, and trace how the Python Code node tags each row. Then watch the Is Valid? node route good records to True and broken ones to False.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\nCreate a new workflow, then import 2.2.2_starter_python-code-validate.json from Desktop > Resources.\nExecute the workflow with the pinned weather records.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Suivez le traitement Python et la séparation des lignes valides ou défectueuses.",
+                "en": "Lecture d’un contrôle Python et vérification du routage de validité."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « villes à valider ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Ouvrez le workflow et les données synthétiques de villes du pack Neopolis.",
+                    "en": "Ouvrez le workflow et les données synthétiques de villes du pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Exécutez le workflow sans changer Python Code.",
+                    "en": "Exécutez le workflow sans changer Python Code."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Observez le champ ajouté par Python Code pour chaque ligne.",
+                    "en": "Observez le champ ajouté par Python Code pour chaque ligne."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Consultez les sorties True et False de Is Valid? et reliez-les aux données source.",
+                    "en": "Consultez les sorties True et False de Is Valid? et reliez-les aux données source."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — validation de villes",
+                    "en": "Données synthétiques — validation de villes"
+                  },
+                  "description": {
+                    "fr": "Lignes synthétiques avec valeurs valides et invalides pour une règle d’humidité numérique. Données synthétiques uniquement.",
+                    "en": "Lignes synthétiques avec valeurs valides et invalides pour une règle d’humidité numérique. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/city_validation_rows_9c177f5f.json"
+                }
+              ],
+              "hint": {
+                "fr": "Examinez le marquage ajouté à chaque ligne avant de lire les deux sorties de Is Valid?.",
+                "en": "Examinez le marquage ajouté à chaque ligne avant de lire les deux sorties de Is Valid?."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Python Code ajoute un marquage aux lignes.",
+                "Is Valid? envoie les bonnes lignes vers True et les lignes défectueuses vers False."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=6",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Lecture d’un contrôle Python et vérification du routage de validité.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -572,17 +1242,82 @@
                 "en": "Modify an existing Code node",
                 "fr": "Modify an existing Code node"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nModify an existing Code node\nVÉRIFICATION INTELLIGENTE\n\n\"Something's in the field\" isn't the same as a real value — a friendly \"N/A\" can sail through as non-empty and quietly wreck averages downstream.\n\nTighten the Python Code node so humidity must be numeric, re-run the flow, and let Is Valid? show who gets kicked to the stricter branch.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\nIf you have the workflow from the previous exercise open, continue to Step 2.\nIf not, create a new workflow and import 2.2.2_solution_python-code-validate.json from Desktop > Resources.\nExecute the workflow and confirm Is Valid? routes Stockholm, Oslo, and Tokyo to True and Berlin and London to False.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Renforcez la validation afin que l’humidité soit obligatoirement numérique.",
+                "en": "Durcissement d’une règle Python pour distinguer humidités numériques et valeurs invalides."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « humidité à contrôler ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez le workflow et les lignes synthétiques du pack Neopolis.",
+                    "en": "Chargez le workflow et les lignes synthétiques du pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Dans Python Code, complétez la condition pour exiger une humidité numérique.",
+                    "en": "Dans Python Code, complétez la condition pour exiger une humidité numérique."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Exécutez à nouveau le workflow.",
+                    "en": "Exécutez à nouveau le workflow."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Contrôlez les branches de Is Valid? pour repérer les enregistrements désormais rejetés.",
+                    "en": "Contrôlez les branches de Is Valid? pour repérer les enregistrements désormais rejetés."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — validation de villes",
+                    "en": "Données synthétiques — validation de villes"
+                  },
+                  "description": {
+                    "fr": "Lignes synthétiques avec valeurs valides et invalides pour une règle d’humidité numérique. Données synthétiques uniquement.",
+                    "en": "Lignes synthétiques avec valeurs valides et invalides pour une règle d’humidité numérique. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/city_validation_rows_9c177f5f.json"
+                }
+              ],
+              "hint": {
+                "fr": "Ajoutez la vérification de type à la règle existante, puis comparez les deux sorties après exécution.",
+                "en": "Ajoutez la vérification de type à la règle existante, puis comparez les deux sorties après exécution."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Python Code teste que l’humidité est numérique.",
+                "Is Valid? montre les lignes qui échouent avec la règle renforcée."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=7",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Durcissement d’une règle Python pour distinguer humidités numériques et valeurs invalides.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -632,17 +1367,82 @@
                 "en": "Write and read workflow data",
                 "fr": "Write and read workflow data"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nWrite and read workflow data\nVÉRIFICATION INTELLIGENTE\n\nStateless runs forget what happened five minutes ago, so you can't branch on yesterday's truth or prove what the pipeline actually stored. A tiny table is the difference between a demo and something ops can trust.\n\nCreate an n8n data table, then wire Data Table for insert and get, and finish with an If that reacts to the rows you just persisted.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\nCreate a new workflow, then import 2.3.1_starter_write-read-data.json from Desktop > Resources.\nExecute the workflow and confirm Extract Weather Fields shows city, temp_c, humidity, description, and date.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Écrivez des lignes dans une table, relisez-les, puis réagissez au résultat.",
+                "en": "Création d’une table et enchaînement écriture, lecture et décision."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « lignes de table ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Créez une Data Table destinée aux lignes du pack Neopolis.",
+                    "en": "Créez une Data Table destinée aux lignes du pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Data Table en mode insert pour écrire les données synthétiques.",
+                    "en": "Ajoutez Data Table en mode insert pour écrire les données synthétiques."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez Data Table en mode Get row(s) pour relire les lignes enregistrées.",
+                    "en": "Ajoutez Data Table en mode Get row(s) pour relire les lignes enregistrées."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Ajoutez If pour réagir aux lignes retournées et exécutez le flux.",
+                    "en": "Ajoutez If pour réagir aux lignes retournées et exécutez le flux."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — table météo",
+                    "en": "Données synthétiques — table météo"
+                  },
+                  "description": {
+                    "fr": "Lignes synthétiques pour écrire, relire et dédupliquer des enregistrements dans une Data Table n8n. Données synthétiques uniquement.",
+                    "en": "Lignes synthétiques pour écrire, relire et dédupliquer des enregistrements dans une Data Table n8n. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/data_table_rows_08cfd411.json"
+                }
+              ],
+              "hint": {
+                "fr": "Reliez Get row(s) après l’écriture pour que If puisse évaluer les lignes effectivement persistées.",
+                "en": "Reliez Get row(s) après l’écriture pour que If puisse évaluer les lignes effectivement persistées."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Une Data Table reçoit des lignes par insert.",
+                "Get row(s) relit les lignes et If agit sur ce résultat."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=9",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Création d’une table et enchaînement écriture, lecture et décision.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -666,17 +1466,82 @@
                 "en": "Process only new records",
                 "fr": "Process only new records"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nProcess only new records\nVÉRIFICATION INTELLIGENTE\n\nSchedules and retries mean the same data can arrive twice. Without a guard, duplicate rows stack up and every downstream report drifts from reality. An idempotent write step prevents that.\n\nAdd a Data Table Get row(s) node before the insert, then a Code filter that compares city and date — only new pairs reach the writer.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\nIf you've got the workflow open from the previous exercise, continue with it. Otherwise, load 2.3.1_solution_write-read-data.json from Desktop > Resources. If loading fresh, ensure the weather_log data table exists (columns: city string, temp_c number, humidity number, description string, date string), then open each Data Table node and re-select weather_log in the table picker.\nIn Fetch Weather, set the URL to https://wttr.in/Berlin?format=j1 so the pipeline fetches data not already stored as a duplicate with what is in weather_log.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "N’insérez que les associations ville-date absentes de la table.",
+                "en": "Déduplication avant écriture en comparant chaque paire ville-date aux données existantes."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « relevés ville-date ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez les relevés synthétiques et créez la Data Table correspondante.",
+                    "en": "Chargez les relevés synthétiques et créez la Data Table correspondante."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Data Table Get row(s) avant l’étape insert pour lire les lignes existantes.",
+                    "en": "Ajoutez Data Table Get row(s) avant l’étape insert pour lire les lignes existantes."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez Code pour écarter les paires ville-date déjà présentes.",
+                    "en": "Ajoutez Code pour écarter les paires ville-date déjà présentes."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Reliez uniquement les nouvelles lignes à Data Table en mode insert, puis vérifiez le résultat.",
+                    "en": "Reliez uniquement les nouvelles lignes à Data Table en mode insert, puis vérifiez le résultat."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — table météo",
+                    "en": "Données synthétiques — table météo"
+                  },
+                  "description": {
+                    "fr": "Lignes synthétiques pour écrire, relire et dédupliquer des enregistrements dans une Data Table n8n. Données synthétiques uniquement.",
+                    "en": "Lignes synthétiques pour écrire, relire et dédupliquer des enregistrements dans une Data Table n8n. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/data_table_rows_08cfd411.json"
+                }
+              ],
+              "hint": {
+                "fr": "La comparaison dans Code doit utiliser ensemble la ville et la date, et non un seul de ces champs.",
+                "en": "La comparaison dans Code doit utiliser ensemble la ville et la date, et non un seul de ces champs."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Data Table Get row(s) est placé avant insert.",
+                "Code ne transmet à l’écriture que les paires ville-date nouvelles."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=10",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Déduplication avant écriture en comparant chaque paire ville-date aux données existantes.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         }
@@ -744,17 +1609,82 @@
                 "en": "Process data in batches",
                 "fr": "Process data in batches"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nProcess data in batches\nVÉRIFICATION INTELLIGENTE\n\nAcme's product feed lands as one long list, but ops still needs to know which chunk each row went through — without stripping the original product columns.\n\nImport the starter workflow, add Loop Over Items to walk the list in batches and an Edit Fields node that stamps processed and batch_label, then close the loop so every row gets tagged.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\n5\n\nCreate a new workflow, then import 3.1.1_starter_batch-dataset.json from Desktop > Resources.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Traitez toutes les lignes par lots en ajoutant un marquage de traitement.",
+                "en": "Traitement itératif de données, avec étiquetage de chaque lot."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « lignes par lots ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez les lignes du pack Neopolis dans le workflow.",
+                    "en": "Chargez les lignes du pack Neopolis dans le workflow."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Loop Over Items et choisissez un traitement en batches.",
+                    "en": "Ajoutez Loop Over Items et choisissez un traitement en batches."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez Edit Fields dans la boucle pour renseigner processed et batch_label.",
+                    "en": "Ajoutez Edit Fields dans la boucle pour renseigner processed et batch_label."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Reliez Edit Fields au retour de Loop Over Items, puis vérifiez que toutes les lignes sont marquées.",
+                    "en": "Reliez Edit Fields au retour de Loop Over Items, puis vérifiez que toutes les lignes sont marquées."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — flux produits",
+                    "en": "Données synthétiques — flux produits"
+                  },
+                  "description": {
+                    "fr": "Flux synthétique de produits pour un traitement par lots et une pause entre itérations. Données synthétiques uniquement.",
+                    "en": "Flux synthétique de produits pour un traitement par lots et une pause entre itérations. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/product_feed_37bb211c.json"
+                }
+              ],
+              "hint": {
+                "fr": "La connexion de retour doit ramener le dernier nœud du lot vers Loop Over Items.",
+                "en": "La connexion de retour doit ramener le dernier nœud du lot vers Loop Over Items."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Chaque ligne possède un indicateur processed et un batch_label.",
+                "La boucle traite tous les lots sans s’arrêter au premier."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=2",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Traitement itératif de données, avec étiquetage de chaque lot.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -778,17 +1708,82 @@
                 "en": "Handle rate limits with delays",
                 "fr": "Handle rate limits with delays"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nHandle rate limits with delays\nVÉRIFICATION INTELLIGENTE\n\nIn production, this batch flow will hit an API that throttles rapid requests. You need a pause between iterations without changing the batching logic itself.\n\nImport the finished workflow and add a Wait node on the loop-back path into Loop Over Items so each batch pauses before the next one fires.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\nIf you have the workflow from the previous exercise open, continue to Step 2.\nIf not, create a new workflow and import 3.1.1_solution_batch-processing.json from Desktop > Resources.\nVerify the graph includes Loop Over Items, Add Batch Info, and the existing loop-back wire before continuing.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Ajoutez une pause entre les lots pour limiter le rythme de traitement.",
+                "en": "Ralentissement volontaire d’une boucle afin d’espacer les lots successifs."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « lots avec délai ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Ouvrez le workflow de lots alimenté par le pack Neopolis.",
+                    "en": "Ouvrez le workflow de lots alimenté par le pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Repérez la connexion loop-back vers Loop Over Items.",
+                    "en": "Repérez la connexion loop-back vers Loop Over Items."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez Wait sur cette connexion de retour.",
+                    "en": "Ajoutez Wait sur cette connexion de retour."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Exécutez le workflow et constatez que les batches sont espacés.",
+                    "en": "Exécutez le workflow et constatez que les batches sont espacés."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — flux produits",
+                    "en": "Données synthétiques — flux produits"
+                  },
+                  "description": {
+                    "fr": "Flux synthétique de produits pour un traitement par lots et une pause entre itérations. Données synthétiques uniquement.",
+                    "en": "Flux synthétique de produits pour un traitement par lots et une pause entre itérations. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/product_feed_37bb211c.json"
+                }
+              ],
+              "hint": {
+                "fr": "Insérez Wait sur le chemin qui retourne vers Loop Over Items, après le travail du lot.",
+                "en": "Insérez Wait sur le chemin qui retourne vers Loop Over Items, après le travail du lot."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Wait se trouve sur le chemin loop-back.",
+                "Une pause intervient avant le lancement du lot suivant."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=3",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Ralentissement volontaire d’une boucle afin d’espacer les lots successifs.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -838,17 +1833,82 @@
                 "en": "Split nested data into individual items",
                 "fr": "Split nested data into individual items"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nSplit nested data into individual items\nVÉRIFICATION INTELLIGENTE\n\nThe export bundles line items inside each order, but the warehouse's pick list expects one line per row — nested arrays don't cut it downstream.\n\nImport the starter orders, add Split Out on the items array, and turn those parent orders into individual line rows that still carry the order fields.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\nCreate a new workflow, then import 3.2.1_starter_orders-with-line-items.json from Desktop > Resources.\nOpen the trigger node and inspect the pinned data — five orders, each with a nested items array.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Transformez les articles imbriqués des commandes en lignes individuelles.",
+                "en": "Éclatement d’un tableau d’articles pour obtenir une ligne exploitable par article."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « commandes imbriquées ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez les commandes synthétiques du pack Neopolis.",
+                    "en": "Chargez les commandes synthétiques du pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Split Out après les commandes.",
+                    "en": "Ajoutez Split Out après les commandes."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Configurez Split Out sur le tableau items.",
+                    "en": "Configurez Split Out sur le tableau items."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Exécutez et vérifiez qu’une commande produit plusieurs lignes tout en gardant ses champs parent.",
+                    "en": "Exécutez et vérifiez qu’une commande produit plusieurs lignes tout en gardant ses champs parent."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — commandes et articles",
+                    "en": "Données synthétiques — commandes et articles"
+                  },
+                  "description": {
+                    "fr": "Commandes synthétiques avec tableaux d’articles pour Split Out, calcul de ligne, agrégation et routage. Données synthétiques uniquement.",
+                    "en": "Commandes synthétiques avec tableaux d’articles pour Split Out, calcul de ligne, agrégation et routage. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/nested_orders_72482add.json"
+                }
+              ],
+              "hint": {
+                "fr": "Ciblez le tableau items et vérifiez que les informations parent restent disponibles sur chaque ligne.",
+                "en": "Ciblez le tableau items et vérifiez que les informations parent restent disponibles sur chaque ligne."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Split Out génère une ligne par élément de items.",
+                "Les lignes conservent les informations de leur commande parente."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=5",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Éclatement d’un tableau d’articles pour obtenir une ligne exploitable par article.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -872,17 +1932,82 @@
                 "en": "Compute grouped summaries",
                 "fr": "Compute grouped summaries"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nCompute grouped summaries\nVÉRIFICATION INTELLIGENTE\n\nFinance doesn't want a row per line item — they want rollups by category, similar to a pivot table once the data is flat.\n\nImport the pre-split items and add a Summarize node to compute average price and total quantity, grouped by category.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\nCreate a new workflow, then import 3.2.2_starter_pre-split-line-items.json from Desktop > Resources.\nOpen the trigger node and inspect the pinned data — thirteen individual line items.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Calculez des indicateurs par catégorie à partir de lignes déjà séparées.",
+                "en": "Agrégation de lignes d’articles pour produire un bilan par catégorie."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « articles pré-séparés ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez les articles pré-séparés du pack Neopolis.",
+                    "en": "Chargez les articles pré-séparés du pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Summarize après les données.",
+                    "en": "Ajoutez Summarize après les données."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Regroupez les résultats par catégorie et calculez le prix moyen ainsi que la quantité totale.",
+                    "en": "Regroupez les résultats par catégorie et calculez le prix moyen ainsi que la quantité totale."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Exécutez le workflow et vérifiez un récapitulatif par catégorie.",
+                    "en": "Exécutez le workflow et vérifiez un récapitulatif par catégorie."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — articles déjà séparés",
+                    "en": "Données synthétiques — articles déjà séparés"
+                  },
+                  "description": {
+                    "fr": "Lignes d’articles synthétiques pour calculer des indicateurs regroupés par catégorie. Données synthétiques uniquement.",
+                    "en": "Lignes d’articles synthétiques pour calculer des indicateurs regroupés par catégorie. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/split_items_d9f11b81.json"
+                }
+              ],
+              "hint": {
+                "fr": "Le regroupement se fait sur catégorie ; les deux mesures sont calculées à l’intérieur de chaque groupe.",
+                "en": "Le regroupement se fait sur catégorie ; les deux mesures sont calculées à l’intérieur de chaque groupe."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Summarize regroupe les lignes par catégorie.",
+                "La sortie présente un prix moyen et une quantité totale par groupe."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=6",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Agrégation de lignes d’articles pour produire un bilan par catégorie.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -906,17 +2031,82 @@
                 "en": "Split, process, and reassemble",
                 "fr": "Split, process, and reassemble"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nSplit, process, and reassemble\nVÉRIFICATION INTELLIGENTE\n\nStakeholders think in whole orders, but line-level math has to happen while items are split out. The pattern is: expand, compute, then reassemble into one collection.\n\nImport the nested orders, use Split Out to flatten, Edit Fields to calculate line_total, then Aggregate to collect the enriched items back together.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\n5\n\nCreate a new workflow, then import 3.2.3_starter_orders-with-line-items.json from Desktop > Resources.\nOpen the trigger node and confirm nested items arrays appear in the pinned data.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Éclatez des commandes, calculez le total de chaque ligne, puis recomposez les résultats.",
+                "en": "Séparation, enrichissement et regroupement d’articles de commande."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « commandes à enrichir ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez les commandes imbriquées du pack Neopolis.",
+                    "en": "Chargez les commandes imbriquées du pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Split Out sur les articles des commandes.",
+                    "en": "Ajoutez Split Out sur les articles des commandes."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez Edit Fields pour calculer line_total pour chaque article.",
+                    "en": "Ajoutez Edit Fields pour calculer line_total pour chaque article."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Ajoutez Aggregate pour réunir les articles enrichis, puis contrôlez la structure finale.",
+                    "en": "Ajoutez Aggregate pour réunir les articles enrichis, puis contrôlez la structure finale."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — commandes et articles",
+                    "en": "Données synthétiques — commandes et articles"
+                  },
+                  "description": {
+                    "fr": "Commandes synthétiques avec tableaux d’articles pour Split Out, calcul de ligne, agrégation et routage. Données synthétiques uniquement.",
+                    "en": "Commandes synthétiques avec tableaux d’articles pour Split Out, calcul de ligne, agrégation et routage. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/nested_orders_72482add.json"
+                }
+              ],
+              "hint": {
+                "fr": "Calculez line_total après Split Out, car le prix et la quantité doivent appartenir à une ligne unique.",
+                "en": "Calculez line_total après Split Out, car le prix et la quantité doivent appartenir à une ligne unique."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Chaque article aplati possède line_total.",
+                "Aggregate rassemble les articles enrichis."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=7",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Séparation, enrichissement et regroupement d’articles de commande.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -966,17 +2156,82 @@
                 "en": "Wire up a sub-workflow",
                 "fr": "Wire up a sub-workflow"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nWire up a sub-workflow\nVÉRIFICATION INTELLIGENTE\n\nBoth sides of the priority split need the same processing logic. Copying nodes onto each branch works today, but invites drift and bugs as the workflow grows.\n\nImport the main and sub-workflow starters, then wire an Execute Sub-workflow node on each If branch so both paths call one shared workflow instead of duplicating nodes.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\nCreate a new workflow, then import 3.3.1_starter_sub-workflow.json from Desktop > Resources.\nVerify the sub-workflow begins with an Execute Sub-workflow Trigger node followed by an Edit Fields node, then save it.\nCreate another new workflow and import 3.3.1_starter_main-workflow.json from Desktop > Resources.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Appelez un même sous-workflow depuis les deux branches d’une condition.",
+                "en": "Réutilisation d’un traitement commun depuis plusieurs chemins conditionnels."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP les packs synthétiques Neopolis « workflow principal » et « sous-workflow partagé ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Ouvrez le workflow principal et le sous-workflow du pack Neopolis.",
+                    "en": "Ouvrez le workflow principal et le sous-workflow du pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Repérez les branches de If dans le workflow principal.",
+                    "en": "Repérez les branches de If dans le workflow principal."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez un Execute Sub-workflow sur chaque branche.",
+                    "en": "Ajoutez un Execute Sub-workflow sur chaque branche."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Sélectionnez le même sous-workflow pour les deux appels, puis exécutez des cas couvrant chaque branche.",
+                    "en": "Sélectionnez le même sous-workflow pour les deux appels, puis exécutez des cas couvrant chaque branche."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — commandes à router",
+                    "en": "Données synthétiques — commandes à router"
+                  },
+                  "description": {
+                    "fr": "Commandes synthétiques pour tester un routage conditionnel vers deux sous-workflows construits par l’apprenant. Données synthétiques uniquement.",
+                    "en": "Commandes synthétiques pour tester un routage conditionnel vers deux sous-workflows construits par l’apprenant. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/workflow_routing_orders_09f66cdd.json"
+                }
+              ],
+              "hint": {
+                "fr": "Chaque sortie de If doit conduire à son propre nœud Execute Sub-workflow, mais les deux ciblent le même sous-workflow.",
+                "en": "Chaque sortie de If doit conduire à son propre nœud Execute Sub-workflow, mais les deux ciblent le même sous-workflow."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Les deux branches de If appellent Execute Sub-workflow.",
+                "Un seul sous-workflow partagé remplace la duplication de traitement."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=9",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Réutilisation d’un traitement commun depuis plusieurs chemins conditionnels.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -1000,17 +2255,82 @@
                 "en": "Route orders to different sub-workflows",
                 "fr": "Route orders to different sub-workflows"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nRoute orders to different sub-workflows\nVÉRIFICATION INTELLIGENTE\n\nBig-ticket orders need a discount path; smaller ones need tax — and neither formula belongs bloating the parent flow when each team owns a calculator.\n\nSave both calculator workflows, start a parent with Manual Trigger and pinned orders, then use If plus two Execute Sub-workflow calls to send each order to the right specialist.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\n5\n\nCreate a new workflow, then import 3.3.2_starter_sub-workflow-a.json (Discount Calculator — applies 15% discount) from Desktop > Resources. Save it.\nCreate another new workflow, then import 3.3.2_starter_sub-workflow-b.json (Tax Calculator — applies 10% tax) from Desktop > Resources. Save it.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Dirigez chaque commande vers le sous-workflow spécialiste approprié.",
+                "en": "Orchestration d’ordres par un workflow parent et deux traitements spécialisés."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP les packs synthétiques Neopolis « commandes parent » et « deux calculateurs ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Enregistrez les deux workflows calculateurs du pack Neopolis.",
+                    "en": "Enregistrez les deux workflows calculateurs du pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Créez le workflow parent avec Manual Trigger et les commandes synthétiques.",
+                    "en": "Créez le workflow parent avec Manual Trigger et les commandes synthétiques."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez If pour répartir les commandes selon leur type.",
+                    "en": "Ajoutez If pour répartir les commandes selon leur type."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Ajoutez deux nœuds Execute Sub-workflow, un vers chaque calculateur, puis testez les deux parcours.",
+                    "en": "Ajoutez deux nœuds Execute Sub-workflow, un vers chaque calculateur, puis testez les deux parcours."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — commandes à router",
+                    "en": "Données synthétiques — commandes à router"
+                  },
+                  "description": {
+                    "fr": "Commandes synthétiques pour tester un routage conditionnel vers deux sous-workflows construits par l’apprenant. Données synthétiques uniquement.",
+                    "en": "Commandes synthétiques pour tester un routage conditionnel vers deux sous-workflows construits par l’apprenant. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/workflow_routing_orders_09f66cdd.json"
+                }
+              ],
+              "hint": {
+                "fr": "La condition If doit distinguer les commandes avant l’appel aux deux calculateurs.",
+                "en": "La condition If doit distinguer les commandes avant l’appel aux deux calculateurs."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "If répartit les commandes entre deux chemins.",
+                "Chaque chemin utilise Execute Sub-workflow vers le calculateur adapté."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=10",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Orchestration d’ordres par un workflow parent et deux traitements spécialisés.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         }
@@ -1078,17 +2398,82 @@
                 "en": "Enforce validation checkpoints",
                 "fr": "Enforce validation checkpoints"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nEnforce validation checkpoints\nVÉRIFICATION INTELLIGENTE\n\nRiverbend Retail's webhook cheerfully marks every order as processed, even when order_id is missing or amount is zero. That quietly poisons downstream steps — finance only notices when the numbers refuse to reconcile.\n\nImport the starter and place two If gates before Process Order, each routing bad rows to Stop and Error with a clear message so invalid payloads never reach processing.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\nCreate a new workflow, then import 4.1.1_starter_validation-workflow.json from Desktop > Resources.\nClick Execute Workflow.\nIn Process Order Output, confirm the order is accepted without any validation.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Bloquez les commandes sans identifiant ou dont le montant vaut zéro avant leur traitement.",
+                "en": "Ajout de points de contrôle qui empêchent les commandes invalides d’être traitées."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « commandes à valider ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Chargez les commandes synthétiques contenant des cas invalides.",
+                    "en": "Chargez les commandes synthétiques contenant des cas invalides."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez un premier If pour détecter un order_id manquant.",
+                    "en": "Ajoutez un premier If pour détecter un order_id manquant."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Sur le chemin invalide, ajoutez Stop and Error avec un message explicite.",
+                    "en": "Sur le chemin invalide, ajoutez Stop and Error avec un message explicite."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Ajoutez un second If pour contrôler amount égal à zéro avant Process Order, puis testez les trois cas.",
+                    "en": "Ajoutez un second If pour contrôler amount égal à zéro avant Process Order, puis testez les trois cas."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — validation de commandes",
+                    "en": "Données synthétiques — validation de commandes"
+                  },
+                  "description": {
+                    "fr": "Commandes synthétiques avec identifiant manquant et montant nul pour tester deux points de validation avant traitement. Données synthétiques uniquement.",
+                    "en": "Commandes synthétiques avec identifiant manquant et montant nul pour tester deux points de validation avant traitement. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/validation_orders_9e502eeb.json"
+                }
+              ],
+              "hint": {
+                "fr": "Placez les deux contrôles avant Process Order et donnez un message précis à chaque Stop and Error.",
+                "en": "Placez les deux contrôles avant Process Order et donnez un message précis à chaque Stop and Error."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Les lignes sans order_id sont arrêtées.",
+                "Les lignes dont amount vaut zéro n’atteignent pas Process Order."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=2",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Ajout de points de contrôle qui empêchent les commandes invalides d’être traitées.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -1112,17 +2497,82 @@
                 "en": "Build an error monitor workflow",
                 "fr": "Build an error monitor workflow"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nBuild an error monitor workflow\nVÉRIFICATION INTELLIGENTE\n\nA scheduled job keeps blowing up on a field that isn't there — and the best signal you get is a red execution badge. Operators need context: which workflow failed, what broke, and where it happened.\n\nImport the fragile starter, then create a separate Error Monitor workflow with an Error Trigger, Edit Fields to shape the payload, and a Data Table insert into error_log. Set it as the fragile workflow's Error Workflow and activate to confirm failures land in the table.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\n5\n\nCreate a new workflow, then import 4.1.2_starter_fragile-workflow.json from Desktop > Resources.\nSave the workflow.\nNote the workflow name at the top of the editor — you will link this workflow to your monitor shortly.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Créez un workflow de surveillance qui enregistre les erreurs dans error_log.",
+                "en": "Centralisation des échecs d’exécution dans une table dédiée."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP les packs synthétiques Neopolis « workflow fragile » et « surveillance des erreurs ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Créez une Data Table nommée error_log à partir du schéma Neopolis.",
+                    "en": "Créez une Data Table nommée error_log à partir du schéma Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Dans le workflow de surveillance, reliez Error Trigger à Edit Fields pour formater les informations d’erreur.",
+                    "en": "Dans le workflow de surveillance, reliez Error Trigger à Edit Fields pour formater les informations d’erreur."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez Data Table en mode insert pour enregistrer le résultat dans error_log.",
+                    "en": "Ajoutez Data Table en mode insert pour enregistrer le résultat dans error_log."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Activez ce workflow, définissez-le comme Error Workflow du workflow fragile, puis provoquez un échec et vérifiez la table.",
+                    "en": "Activez ce workflow, définissez-le comme Error Workflow du workflow fragile, puis provoquez un échec et vérifiez la table."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — événements d’erreur",
+                    "en": "Données synthétiques — événements d’erreur"
+                  },
+                  "description": {
+                    "fr": "Événements synthétiques de workflow pour mettre en forme un journal d’erreurs dans une Data Table. Données synthétiques uniquement.",
+                    "en": "Événements synthétiques de workflow pour mettre en forme un journal d’erreurs dans une Data Table. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/error_events_d16d2c07.json"
+                }
+              ],
+              "hint": {
+                "fr": "Le workflow de surveillance doit être activé et choisi comme Error Workflow du workflow fragile.",
+                "en": "Le workflow de surveillance doit être activé et choisi comme Error Workflow du workflow fragile."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Error Trigger alimente un enregistrement dans error_log.",
+                "Une erreur du workflow fragile crée une ligne dans la Data Table."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=3",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Centralisation des échecs d’exécution dans une table dédiée.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -1146,17 +2596,70 @@
                 "en": "Route HTTP errors instead of stopping",
                 "fr": "Route HTTP errors instead of stopping"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nRoute HTTP errors instead of stopping\nVÉRIFICATION INTELLIGENTE\n\nThis workflow calls an API that sometimes answers with HTTP 500. Out of the box, n8n stops the whole run right there — so you capture nothing useful and anything downstream never fires.\n\nImport the starter, set HTTP Request to Continue Using Error Output, and route the red error path into Edit Fields so failures get logged without killing the execution.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\nCreate a new workflow, then import 4.1.3_starter_failing-node-workflow.json from Desktop > Resources.\nExecute the workflow and confirm the run stops at the HTTP Request node.\nIn HTTP Request Output or the execution error details, confirm the request to https://httpstat.us/500 failed.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Capturez une erreur HTTP 500 dans une branche dédiée sans interrompre l’exécution.",
+                "en": "Gestion d’une erreur HTTP attendue par routage vers une sortie d’erreur."
               },
-              "steps": [],
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « journalisation erreur HTTP ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Ajoutez HTTP Request dans le workflow du pack Neopolis et ciblez l’adresse httpstat.us/500.",
+                    "en": "Ajoutez HTTP Request dans le workflow du pack Neopolis et ciblez l’adresse httpstat.us/500."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Activez Continue Using Error Output dans HTTP Request.",
+                    "en": "Activez Continue Using Error Output dans HTTP Request."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Reliez sa sortie d’erreur à Edit Fields.",
+                    "en": "Reliez sa sortie d’erreur à Edit Fields."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Formatez les détails de l’échec, puis exécutez sans arrêter le workflow.",
+                    "en": "Formatez les détails de l’échec, puis exécutez sans arrêter le workflow."
+                  }
+                }
+              ],
               "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "hint": {
+                "fr": "Activez Continue Using Error Output dans HTTP Request avant de relier la sortie d’erreur.",
+                "en": "Activez Continue Using Error Output dans HTTP Request avant de relier la sortie d’erreur."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "HTTP Request poursuit l’exécution malgré la réponse 500.",
+                "Edit Fields produit une information d’échec sur le chemin d’erreur."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=4",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Gestion d’une erreur HTTP attendue par routage vers une sortie d’erreur.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -1206,17 +2709,82 @@
                 "en": "Add logging checkpoints with Data Tables",
                 "fr": "Add logging checkpoints with Data Tables"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nAdd logging checkpoints with Data Tables\nVÉRIFICATION INTELLIGENTE\n\nNobody can see how many records actually made it through each stage of the ingestion run — and you don't want to reshape the main pipeline just to find out. A side-branch audit trail tracks progress without disrupting the data flow.\n\nImport the starter, create an execution_log table, and add Data Table insert nodes as side branches off HTTP Request, Transform Data, and Format Output. Finish with Get row(s) to verify that three checkpoint rows land in the table.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\n5\n\nCreate a new workflow, then import 4.2.1_starter_multi-step-workflow.json from Desktop > Resources.\nExecute the workflow and confirm end-to-end behavior in Format Output Output.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Insérez un point de journalisation après chacune des trois étapes clés du workflow.",
+                "en": "Traçabilité d’une exécution grâce à des insertions de journal à plusieurs étapes."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « workflow avec checkpoints ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Créez une Data Table nommée execution_log selon le pack Neopolis.",
+                    "en": "Créez une Data Table nommée execution_log selon le pack Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez une branche Data Table en mode insert après HTTP Request.",
+                    "en": "Ajoutez une branche Data Table en mode insert après HTTP Request."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez des branches insert similaires après Transform Data et Format Output.",
+                    "en": "Ajoutez des branches insert similaires après Transform Data et Format Output."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Terminez par Data Table en mode Get row(s) et vérifiez la présence de trois lignes de journal.",
+                    "en": "Terminez par Data Table en mode Get row(s) et vérifiez la présence de trois lignes de journal."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — ingestion multi-étapes",
+                    "en": "Données synthétiques — ingestion multi-étapes"
+                  },
+                  "description": {
+                    "fr": "Enregistrements synthétiques pour observer des checkpoints HTTP Request, Transform Data et Format Output. Données synthétiques uniquement.",
+                    "en": "Enregistrements synthétiques pour observer des checkpoints HTTP Request, Transform Data et Format Output. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/ingestion_records_d3c63f6e.json"
+                }
+              ],
+              "hint": {
+                "fr": "Les insertions sont des branches latérales : le flux principal peut continuer en parallèle.",
+                "en": "Les insertions sont des branches latérales : le flux principal peut continuer en parallèle."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "execution_log contient trois lignes de contrôle.",
+                "Get row(s) permet de consulter les trois checkpoints."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=6",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Traçabilité d’une exécution grâce à des insertions de journal à plusieurs étapes.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -1240,17 +2808,82 @@
                 "en": "Build an output evaluation quality gate",
                 "fr": "Build an output evaluation quality gate"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nBuild an output evaluation quality gate\nVÉRIFICATION INTELLIGENTE\n\nAfter formatting, leadership wants an explicit pass-or-fail — not another questionable batch sliding toward the next step. Bad data should show up on a branch you can actually see.\n\nPick up from your logging exercise (or import its solution). Layer in Code as Evaluate Output, split with If on pass, and wire Edit Fields on each branch so $('Evaluate Output') carries the right totals and issues into the summaries.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\n5\n\nIf you've got the workflow open from the previous exercise, continue below.\nIf you need to reload it, import 4.2.1_solution_logging-checkpoints.json from Desktop > Resources. If loading fresh, ensure the execution_log data table exists (columns: step string, item_count number, timestamp string), then open each Data Table node and re-select execution_log in the table picker.\nDelete the Read Log node (you will replace that inspection step with the new quality gate).\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Évaluez la qualité de la sortie et produisez un résumé pour succès ou échec.",
+                "en": "Ajout d’un contrôle de qualité et de comptes rendus distincts selon le résultat."
               },
-              "steps": [],
-              "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « sorties à évaluer ».",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Ouvrez le workflow de journalisation avec les données synthétiques Neopolis.",
+                    "en": "Ouvrez le workflow de journalisation avec les données synthétiques Neopolis."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez Code et nommez son rôle Evaluate Output pour produire les résultats d’évaluation.",
+                    "en": "Ajoutez Code et nommez son rôle Evaluate Output pour produire les résultats d’évaluation."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez If pour tester pass.",
+                    "en": "Ajoutez If pour tester pass."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Ajoutez Edit Fields sur chaque branche afin d’afficher les totaux et les problèmes correspondants.",
+                    "en": "Ajoutez Edit Fields sur chaque branche afin d’afficher les totaux et les problèmes correspondants."
+                  }
+                }
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Données synthétiques — ingestion multi-étapes",
+                    "en": "Données synthétiques — ingestion multi-étapes"
+                  },
+                  "description": {
+                    "fr": "Enregistrements synthétiques pour observer des checkpoints HTTP Request, Transform Data et Format Output. Données synthétiques uniquement.",
+                    "en": "Enregistrements synthétiques pour observer des checkpoints HTTP Request, Transform Data et Format Output. Synthetic data only."
+                  },
+                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/ingestion_records_d3c63f6e.json"
+                }
+              ],
+              "hint": {
+                "fr": "Le nœud Code doit fournir le résultat d’évaluation exploitable par la condition pass de If.",
+                "en": "Le nœud Code doit fournir le résultat d’évaluation exploitable par la condition pass de If."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Evaluate Output calcule des totaux et des problèmes.",
+                "If sépare pass des résultats non conformes avec un résumé sur chaque branche."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=7",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Ajout d’un contrôle de qualité et de comptes rendus distincts selon le résultat.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },
@@ -1301,17 +2934,70 @@
                 "en": "Assemble the end-to-end capstone pipeline",
                 "fr": "Assemble the end-to-end capstone pipeline"
               },
-              "assignment": "Apprendre\n/\nCours\n/\nIntermediate Workflow Automation with n8n\nPlan Du Cours\nPoints de progression Neopolis\n40\nFR\nExercice\nAssemble the end-to-end capstone pipeline\nVÉRIFICATION INTELLIGENTE\n\nStakeholders want one scheduled workflow that pulls weather, normalizes it, skips duplicates, batches the rest, checks quality, and separates clean results from failures — the full toolkit from this chapter on one canvas.\n\nBuild it from scratch: Schedule Trigger and HTTP Request for data ingestion, Code nodes for transforms and deduplication, Loop Over Items for batching, then an evaluation gate with If to split pass/fail outcomes.\n\nInstructions\nPoints de compétences attribués selon les règles Neopolis\n\n1\n\n2\n\n3\n\n4\n\n5\n\nCreate a new workflow.\nAdd a Schedule Trigger node and set the rule to Hours with every 1 hour.\nAdd an HTTP Request node, set Method to GET, and use the URL https://wttr.in/London?format=j1. Under Options > Response, set Response Format to JSON.\nExecute the workflow and confirm parsed JSON weather data appears in Output.\nAstuce\nSuivant\n\nChargement de votre environnement...",
-              "instructions": "",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "assignment": {
+                "fr": "Assemblez une chaîne planifiée qui récupère, transforme, déduplique, traite par lots et évalue des données météo.",
+                "en": "Construction d’un pipeline complet : planification, récupération, traitement, déduplication, lots et contrôle final."
               },
-              "steps": [],
+              "instructions": {
+                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « pipeline météo Londres », incluant des réponses JSON et des doublons simulés.",
+                "en": "Use your own n8n Cloud or Docker instance. Follow the source-grounded setup guidance."
+              },
+              "environmentGuide": {
+                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
+                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
+              },
+              "steps": [
+                {
+                  "number": 1,
+                  "instruction_text": {
+                    "fr": "Ajoutez Schedule Trigger avec une fréquence de 1 heure, puis HTTP Request en GET vers https://wttr.in/London?format=j1 avec une réponse JSON.",
+                    "en": "Ajoutez Schedule Trigger avec une fréquence de 1 heure, puis HTTP Request en GET vers https://wttr.in/London?format=j1 avec une réponse JSON."
+                  }
+                },
+                {
+                  "number": 2,
+                  "instruction_text": {
+                    "fr": "Ajoutez des nœuds Code pour transformer les données du pack Neopolis puis éliminer les doublons.",
+                    "en": "Ajoutez des nœuds Code pour transformer les données du pack Neopolis puis éliminer les doublons."
+                  }
+                },
+                {
+                  "number": 3,
+                  "instruction_text": {
+                    "fr": "Ajoutez Loop Over Items pour traiter les éléments par lots.",
+                    "en": "Ajoutez Loop Over Items pour traiter les éléments par lots."
+                  }
+                },
+                {
+                  "number": 4,
+                  "instruction_text": {
+                    "fr": "Ajoutez If pour séparer les résultats validés et non validés, puis exécutez le pipeline avec le pack synthétique.",
+                    "en": "Ajoutez If pour séparer les résultats validés et non validés, puis exécutez le pipeline avec le pack synthétique."
+                  }
+                }
+              ],
               "resources": [],
-              "hint": "",
-              "solution": "",
-              "successMessage": ""
+              "hint": {
+                "fr": "Construisez et vérifiez chaque segment successivement : récupération, Code, lots, puis décision If.",
+                "en": "Construisez et vérifiez chaque segment successivement : récupération, Code, lots, puis décision If."
+              },
+              "successMessage": "",
+              "learnerCriteria": [
+                "Le workflow est déclenché toutes les heures et interroge la météo de Londres.",
+                "Les données passent par Code, Loop Over Items et une décision If de réussite ou d’échec."
+              ],
+              "minimumAnswerLength": 90,
+              "source_refs": [
+                {
+                  "source": "DataCamp course screen",
+                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=9",
+                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
+                }
+              ],
+              "practiceStatus": "source_screen_verified",
+              "sourceSummary": "Construction d’un pipeline complet : planification, récupération, traitement, déduplication, lots et contrôle final.",
+              "nonDownloadableFiles": [],
+              "serverGradedAssessment": "intermediate_n8n_source_verified"
             }
           ]
         },

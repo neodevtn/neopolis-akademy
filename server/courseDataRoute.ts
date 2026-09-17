@@ -22,6 +22,11 @@ export function sanitizeCourseDataForLearner(content: string): string {
           delete block.correctAnswer;
           delete block.explanation;
         }
+        if (block?.type === "cloud_exercise" && typeof block?.serverGradedAssessment === "string") {
+          delete block.solution;
+          delete block.evaluationPrompt;
+          delete block.rubricCriteria;
+        }
       }
     }
   }

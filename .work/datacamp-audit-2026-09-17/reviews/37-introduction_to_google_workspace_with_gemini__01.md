@@ -1,0 +1,32 @@
+# Revue de contenu — `introduction_to_google_workspace_with_gemini__01`
+
+**Périmètre.** Lecture intégrale de [`client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json`](../../../client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json), puis vérification des preuves locales autorisées. Aucun site DataCamp ni navigateur n’a été utilisé et aucun fichier de cours n’a été modifié.
+
+## Statut de preuve
+
+Aucun fichier local `docs/datacamp_*alignment*.json`, `docs/datacamp_*source*.md` ou `docs/datacamp_*production*.md` ne documente ce cours. La comparaison à une source pédagogique externe est donc **non démontrable localement**. Les constats ci-dessous sont soit observables directement dans le JSON, soit limités aux métadonnées et règles génériques locales suivantes : [`docs/datacamp-course-inventory-2026-09-17.json`](../../../docs/datacamp-course-inventory-2026-09-17.json), [`docs/training-visual-manifest.json`](../../../docs/training-visual-manifest.json), [`scripts/inventory_datacamp_courses.mjs`](../../../scripts/inventory_datacamp_courses.mjs) et [`scripts/audit-datacamp-course.mjs`](../../../scripts/audit-datacamp-course.mjs).
+
+## Constats
+
+1. **Parcours très introductif, sans TP exécutable.** Le JSON contient une leçon, sept activités et huit blocs : trois vidéos, un téléchargement PDF, trois QCM et une revue de ressource. L’inventaire local confirme `practicalBlocks: 0`, `checkpoints: 3`, `chapters: 7` et `blocks: 8` ([`docs/datacamp-course-inventory-2026-09-17.json`](../../../docs/datacamp-course-inventory-2026-09-17.json), entrée du cours). Il n’y a donc aucun bloc `cloud_exercise`, `code_repl`, `terminal_sim` ou exercice équivalent guidant une manipulation dans le Google Workspace de l’apprenant. C’est une insuffisance directement observable, et non une affirmation sur la source DataCamp.
+
+2. **Guidage de l’environnement apprenant insuffisant pour la pratique.** Les transcriptions indiquent que la disponibilité des fonctionnalités dépend de l’édition Google Workspace et des politiques administratives, et renvoient à l’administrateur (JSON, lignes 63 et 141). Pourtant, aucune activité ne demande de vérifier son édition, l’activation de Gemini, les droits disponibles, ni une procédure de repli si une fonctionnalité est absente. Comme le parcours ne contient aucun TP, il ne fournit pas non plus d’objectif opératoire, de données d’essai, de résultat attendu ou de critère de réussite dans l’environnement personnel.
+
+3. **Séquence cohérente au niveau structurel, mais non validée contre une preuve source.** L’ordre local est : introduction vidéo + téléchargement, définition de l’IA générative, fonctionnalités Gemini, trois QCM, puis ressources additionnelles (JSON, activités `dc_ch01_act01` à `dc_ch01_act07`). Tous les chapitres sont verrouillés par `requiredBeforeAdvance: true`. Le script d’audit local prévoit précisément le contrôle du verrouillage séquentiel et des types de blocs autorisés ([`scripts/audit-datacamp-course.mjs`](../../../scripts/audit-datacamp-course.mjs), lignes 86–136). Cette cohérence interne ne permet toutefois pas de conclure à une reprise fidèle de la séquence originale en l’absence de manifeste ou de note source locale.
+
+4. **Présentation linguistique incohérente.** Bien que `sourceLanguage` soit `fr-FR`, les champs `fr` des titres, descriptions, questions, options, explications, indices, instructions et libellés de téléchargement restent largement en anglais : par exemple « What is Generative AI? », « Quiz Question 1 », « Chapter 1 slides » et « View the PDF before continuing » (JSON, activités `dc_ch01_act02`, `dc_ch01_act04` et `dc_ch01_act07`). Le manifeste visuel annonce pourtant `languages: ["EN", "FR"]` et un titre français ([`docs/training-visual-manifest.json`](../../../docs/training-visual-manifest.json), lignes 2127–2143). Le défaut est donc une incohérence de localisation observable, pas une divergence prouvée avec DataCamp.
+
+5. **Téléchargement et ressource redondants.** Le PDF local `/api/assets/chapter_01_slides_0c8da467.pdf` est proposé comme téléchargement dans la première activité, puis comme ressource à consulter dans la septième (JSON, blocs `dc_ch01_slides` et `dc_1_act_07_resource`). La consigne de la seconde occurrence se limite à « View the PDF before continuing » et n’indique ni pages à consulter, ni questions de lecture, ni livrable. Le JSON ne contient aucune dépendance HTTP externe ou instruction d’installation : les médias et le PDF référencent des chemins locaux `/api/assets/`. En revanche, l’accès réel à Gemini dépend explicitement de l’édition et de la politique administrateur, comme indiqué dans les transcriptions.
+
+## Correctifs génériques réutilisables
+
+- Ajouter un bloc standard **Préparation de l’environnement** : compte requis, édition/accès à vérifier, fonctionnalité à activer, droits administrateur, solution de repli et avertissement de confidentialité.
+- Pour chaque démonstration d’outil, ajouter un bloc **TP guidé dans l’environnement de l’apprenant** avec objectif, contexte fictif, étapes numérotées, invite ou données d’entrée, résultat attendu, vérification et nettoyage.
+- Ajouter un bloc **Validation pratique** ou une checklist lorsque l’accès à un service peut varier ; accepter un résultat équivalent documenté si la fonctionnalité est indisponible.
+- Appliquer un contrôle standard de **localisation complète FR** aux titres, descriptions, consignes, réponses, explications, indices, boutons et noms de téléchargements ; conserver les termes d’interface anglais uniquement avec leur équivalent français.
+- Dédupliquer les ressources PDF : conserver soit le téléchargement, soit la revue guidée, ou transformer la revue en **lecture active** avec pages ciblées et questions de synthèse.
+- Utiliser le contrôle d’audit générique existant pour vérifier compteurs, types de blocs, médias locaux et verrouillage séquentiel ([`scripts/audit-datacamp-course.mjs`](../../../scripts/audit-datacamp-course.mjs)).
+
+## Conclusion
+
+La structure locale est séquentielle et techniquement composée de blocs autorisés, mais le cours est **non prêt pour une pratique autonome** : `practicalBlocks: 0`, aucune préparation d’environnement et aucune procédure de substitution ne sont présentes. La fidélité pédagogique à une source DataCamp, les dépendances externes exactes et les téléchargements attendus ne peuvent pas être audités factuellement faute de preuves locales spécifiques au cours.

@@ -2,6 +2,7 @@ import trainingIndex from "../client/src/data/trainingIndex.json";
 import { getCourseCatalogMetrics } from "../client/src/lib/catalogMetrics";
 import { extractTargetJobRoles, resolveTrainingFormat } from "../client/src/lib/trainingCatalogTaxonomy";
 import { localizePublicTrainingText, type PublicTrainingLocale } from "./publicTrainingLocale";
+import { compareCataloguePriority } from "./cataloguePriority";
 
 export type LocalizedText = { fr: string; en: string; ar?: string };
 type LocalizedValue = string | LocalizedText;
@@ -27,6 +28,7 @@ type CatalogCertification = {
   group?: string;
   trainingFormat?: string;
   isStandaloneTP?: boolean;
+  totalActivities?: number;
 };
 
 type ThemeDefinition = {
@@ -254,8 +256,9 @@ function createTheme(definition: ThemeDefinition, locale: PublicTrainingLocale):
   const certificationById = new Map(catalog.certifications.map((certification) => [certification.id, certification]));
   const courses = catalog.courses.filter((course) => courseMatchesTheme(course, certificationById.get(course.certId), definition));
   const certificationIds = new Set(courses.map((course) => course.certId));
-  const certifications = catalog.certifications
+  const certifications = [...catalog.certifications]
     .filter((certification) => certificationIds.has(certification.id))
+    .sort(compareCataloguePriority)
     .map((certification) => {
       const certificationCourses = courses.filter((course) => course.certId === certification.id);
       return {

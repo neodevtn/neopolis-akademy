@@ -1,0 +1,763 @@
+{
+  "generatedAt": "2026-09-17T23:14:38.220Z",
+  "model": "claude-sonnet-4-6",
+  "sources": [
+    {
+      "blockId": "dc_1_act_04_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=4",
+      "title": "Extract and transform nested webhook data",
+      "sourceBrief": "Import the starter workflow, add an Edit Fields node that flattens nested fields using dot notation, and return the cleaned payload with Respond to Webhook."
+    },
+    {
+      "blockId": "dc_1_act_06_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=6",
+      "title": "Building a producer-consumer workflow",
+      "sourceBrief": "Activate Workflow B, then build a producer workflow that constructs an order payload and POSTs it to Workflow B using an HTTP Request node."
+    },
+    {
+      "blockId": "dc_1_act_07_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=7",
+      "title": "Handle the response from a downstream workflow",
+      "sourceBrief": "Add an If node that inspects the response status from Workflow B, then route to Edit Fields nodes that produce a clear success or failure summary on each branch."
+    },
+    {
+      "blockId": "dc_1_act_09_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=9",
+      "title": "Configure a scheduled workflow",
+      "sourceBrief": "Build a scheduled workflow with a Schedule Trigger that runs every 30 minutes, stamps each run with execution context, and uses an If node to gate on business hours."
+    },
+    {
+      "blockId": "dc_1_act_10_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/building-event-driven-and-scheduled-automations?ex=10",
+      "title": "Modify a scheduled workflow to POST downstream",
+      "sourceBrief": "Build an order payload using Edit Fields and POST it to Workflow B with an HTTP Request node, completing a full schedule-to-consumer pipeline."
+    },
+    {
+      "blockId": "dc_2_act_02_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=2",
+      "title": "Fetch weather data from an API",
+      "sourceBrief": "From a Manual Trigger, use HTTP Request to pull Stockholm weather, then an Edit Fields node to flatten nested JSON into a handful of clear top-level fields."
+    },
+    {
+      "blockId": "dc_2_act_03_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=3",
+      "title": "Filter API results with query parameters",
+      "sourceBrief": "Switch HTTP Request to Berlin, move format and lang into Query Parameters, and add a localized description field to Edit Fields alongside existing flat fields."
+    },
+    {
+      "blockId": "dc_2_act_05_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=5",
+      "title": "Run and read a JavaScript Code node",
+      "sourceBrief": "Import the starter, run it, and compare the Code node input and output to see how pinned Stockholm data becomes flat fields; the exercise is about reading the transform, not writing it."
+    },
+    {
+      "blockId": "dc_2_act_06_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=6",
+      "title": "Run and read a Python Code node",
+      "sourceBrief": "Import the starter with pinned city data, execute it, trace how the Python Code node tags each row, then see Is Valid? route good records to True and broken records to False."
+    },
+    {
+      "blockId": "dc_2_act_07_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=7",
+      "title": "Modify an existing Code node",
+      "sourceBrief": "Tighten the Python Code node so humidity must be numeric, re-run the flow, and let Is Valid? show which rows go to the stricter branch."
+    },
+    {
+      "blockId": "dc_2_act_09_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=9",
+      "title": "Write and read workflow data",
+      "sourceBrief": "Create an n8n data table, wire Data Table for insert and get, and finish with an If that reacts to the rows just persisted."
+    },
+    {
+      "blockId": "dc_2_act_10_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=10",
+      "title": "Process only new records",
+      "sourceBrief": "Add a Data Table Get row(s) node before insert, then a Code filter that compares city and date so only new pairs reach the writer."
+    },
+    {
+      "blockId": "dc_3_act_02_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=2",
+      "title": "Process data in batches",
+      "sourceBrief": "Import the starter workflow, add Loop Over Items in batches and an Edit Fields node that stamps processed and batch_label, then close the loop so every row gets tagged."
+    },
+    {
+      "blockId": "dc_3_act_03_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=3",
+      "title": "Handle rate limits with delays",
+      "sourceBrief": "Import the finished workflow and add a Wait node on the loop-back path into Loop Over Items so each batch pauses before the next one fires."
+    },
+    {
+      "blockId": "dc_3_act_05_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=5",
+      "title": "Split nested data into individual items",
+      "sourceBrief": "Import starter orders, add Split Out on the items array, and turn parent orders into individual line rows that still carry order fields."
+    },
+    {
+      "blockId": "dc_3_act_06_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=6",
+      "title": "Compute grouped summaries",
+      "sourceBrief": "Import pre-split items and add a Summarize node to compute average price and total quantity, grouped by category."
+    },
+    {
+      "blockId": "dc_3_act_07_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=7",
+      "title": "Split, process, and reassemble",
+      "sourceBrief": "Import nested orders, use Split Out to flatten, Edit Fields to calculate line_total, then Aggregate to collect enriched items back together."
+    },
+    {
+      "blockId": "dc_3_act_09_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=9",
+      "title": "Wire up a sub-workflow",
+      "sourceBrief": "Import the main and sub-workflow starters, then wire an Execute Sub-workflow node on each If branch so both paths call one shared workflow instead of duplicating nodes."
+    },
+    {
+      "blockId": "dc_3_act_10_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/advanced-data-processing-and-workflow-patterns?ex=10",
+      "title": "Route orders to different sub-workflows",
+      "sourceBrief": "Save both calculator workflows, start a parent with Manual Trigger and pinned orders, then use If plus two Execute Sub-workflow calls to send each order to the right specialist."
+    },
+    {
+      "blockId": "dc_4_act_02_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=2",
+      "title": "Enforce validation checkpoints",
+      "sourceBrief": "Place two If gates before Process Order: one catches a missing order_id and one catches an amount equal to zero. Route invalid rows to Stop and Error with a clear message so they never reach Process Order."
+    },
+    {
+      "blockId": "dc_4_act_03_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=3",
+      "title": "Build an error monitor workflow",
+      "sourceBrief": "Create a separate Error Monitor workflow with an Error Trigger, Edit Fields to shape the payload, and a Data Table insert into error_log. Set it as a fragile workflow's Error Workflow and activate it to confirm failures land in the table."
+    },
+    {
+      "blockId": "dc_4_act_04_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=4",
+      "title": "Route HTTP errors instead of stopping",
+      "sourceBrief": "Use an HTTP Request that reaches https://httpstat.us/500. Set the node to Continue Using Error Output, then route its error path into Edit Fields so a failure is logged without stopping the execution."
+    },
+    {
+      "blockId": "dc_4_act_06_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=6",
+      "title": "Add logging checkpoints with Data Tables",
+      "sourceBrief": "Create an execution_log table and add Data Table insert nodes as side branches off HTTP Request, Transform Data, and Format Output. Finish with Get row(s) to verify three checkpoint rows land in the table."
+    },
+    {
+      "blockId": "dc_4_act_07_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=7",
+      "title": "Build an output evaluation quality gate",
+      "sourceBrief": "Use the logging workflow, add Code as Evaluate Output, split with If on pass, and wire Edit Fields on each branch so the evaluation totals and issues appear in the summaries."
+    },
+    {
+      "blockId": "dc_4_act_09_tp",
+      "sourceUrl": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/reliability-and-production-readiness?ex=9",
+      "title": "Assemble the end-to-end capstone pipeline",
+      "sourceBrief": "Build from scratch with a Schedule Trigger every 1 hour and HTTP Request GET to https://wttr.in/London?format=j1 with JSON response. Then use Code nodes for transforms and deduplication, Loop Over Items for batching, and an If evaluation gate to split pass and fail outcomes."
+    }
+  ],
+  "guides": [
+    {
+      "assessmentTerms": [
+        "Edit Fields",
+        "notation par points",
+        "Respond to Webhook"
+      ],
+      "assignmentFr": "Aplatissez un payload de webhook imbriqué et renvoyez une réponse lisible.",
+      "blockId": "dc_1_act_04_tp",
+      "hintFr": "Utilisez la notation par points pour lire une propriété située dans un objet imbriqué.",
+      "proofFr": [
+        "Le payload final contient des champs de premier niveau compréhensibles.",
+        "Respond to Webhook renvoie le payload nettoyé."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack de données synthétiques Neopolis « webhook imbriqué ».",
+      "sourceSummaryFr": "Transformation d’un message webhook complexe en données simples à retourner.",
+      "stepsFr": [
+        "Chargez le pack Neopolis dans un workflow contenant le webhook.",
+        "Ajoutez Edit Fields après le webhook et récupérez les valeurs imbriquées avec la notation par points.",
+        "Conservez des noms de champs explicites dans la sortie aplatie.",
+        "Reliez Edit Fields à Respond to Webhook, puis exécutez et contrôlez la réponse."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Workflow B",
+        "HTTP Request",
+        "POST",
+        "payload de commande"
+      ],
+      "assignmentFr": "Construisez un workflow producteur qui envoie une commande à Workflow B.",
+      "blockId": "dc_1_act_06_tp",
+      "hintFr": "Le corps de la requête doit reprendre les données attendues dans le payload de commande.",
+      "proofFr": [
+        "Workflow B est activé.",
+        "HTTP Request envoie un POST contenant une commande à Workflow B."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « commandes producteur-consommateur », incluant les indications de Workflow B.",
+      "sourceSummaryFr": "Mise en place d’un envoi de commande entre un workflow producteur et son consommateur.",
+      "stepsFr": [
+        "Activez Workflow B fourni dans le pack Neopolis.",
+        "Dans le workflow producteur, préparez un payload de commande à partir des données synthétiques.",
+        "Ajoutez HTTP Request et configurez un POST vers Workflow B.",
+        "Exécutez le producteur et vérifiez que Workflow B reçoit la commande."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "If",
+        "Edit Fields",
+        "statut de réponse",
+        "Workflow B"
+      ],
+      "assignmentFr": "Présentez un résumé différent selon la réponse reçue de Workflow B.",
+      "blockId": "dc_1_act_07_tp",
+      "hintFr": "Faites porter la condition de If sur le statut retourné par le workflow consommateur.",
+      "proofFr": [
+        "If sépare les réponses réussies et en erreur.",
+        "Chaque branche produit un résumé explicite avec Edit Fields."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « réponses Workflow B ».",
+      "sourceSummaryFr": "Lecture du statut aval et création de messages de succès ou d’échec.",
+      "stepsFr": [
+        "Utilisez les réponses de Workflow B du pack Neopolis comme données d’entrée.",
+        "Ajoutez If pour tester le statut de réponse.",
+        "Sur la branche de réussite, ajoutez Edit Fields pour créer un résumé positif.",
+        "Sur la branche d’échec, ajoutez Edit Fields pour expliquer clairement le problème."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Schedule Trigger",
+        "30 minutes",
+        "If",
+        "heures ouvrées"
+      ],
+      "assignmentFr": "Planifiez une exécution régulière et ne laissez passer que les heures ouvrées.",
+      "blockId": "dc_1_act_09_tp",
+      "hintFr": "Ajoutez le contexte d’exécution avant de tester la plage horaire.",
+      "proofFr": [
+        "Schedule Trigger est réglé sur une cadence de 30 minutes.",
+        "If laisse passer uniquement les exécutions pendant les heures ouvrées."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « contexte d’exécution planifiée ».",
+      "sourceSummaryFr": "Automatisation périodique enrichie d’un contexte d’exécution et filtrée par horaire.",
+      "stepsFr": [
+        "Créez un workflow avec Schedule Trigger réglé toutes les 30 minutes.",
+        "Utilisez les valeurs de contexte du pack Neopolis pour identifier chaque exécution.",
+        "Ajoutez If afin de tester si l’heure appartient aux heures ouvrées.",
+        "Exécutez avec des exemples en journée et hors plage, puis comparez les branches."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Edit Fields",
+        "HTTP Request",
+        "POST",
+        "Workflow B"
+      ],
+      "assignmentFr": "Envoyez périodiquement un payload de commande vers Workflow B.",
+      "blockId": "dc_1_act_10_tp",
+      "hintFr": "Placez Edit Fields avant HTTP Request afin de normaliser le corps envoyé.",
+      "proofFr": [
+        "Edit Fields construit un payload de commande.",
+        "HTTP Request réalise un POST vers Workflow B après le déclenchement planifié."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « commandes planifiées », avec les informations de Workflow B.",
+      "sourceSummaryFr": "Chaîne complète entre un déclenchement planifié et un workflow consommateur.",
+      "stepsFr": [
+        "Ouvrez le workflow planifié alimenté par le pack Neopolis.",
+        "Ajoutez Edit Fields pour construire les champs de la commande.",
+        "Ajoutez HTTP Request après Edit Fields et envoyez la commande par POST à Workflow B.",
+        "Exécutez le flux et vérifiez la réponse du consommateur."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Manual Trigger",
+        "HTTP Request",
+        "Stockholm",
+        "Edit Fields"
+      ],
+      "assignmentFr": "Récupérez la météo de Stockholm et rendez les données principales faciles à lire.",
+      "blockId": "dc_2_act_02_tp",
+      "hintFr": "Repérez les objets JSON imbriqués dans la réponse avant de choisir les champs à aplatir.",
+      "proofFr": [
+        "HTTP Request récupère les données météo de Stockholm.",
+        "Edit Fields expose plusieurs champs JSON au premier niveau."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « météo Stockholm », qui simule la réponse JSON attendue.",
+      "sourceSummaryFr": "Appel météo puis simplification d’une réponse JSON imbriquée.",
+      "stepsFr": [
+        "Démarrez avec Manual Trigger et le jeu Neopolis météo Stockholm.",
+        "Ajoutez HTTP Request pour récupérer les données météo de Stockholm.",
+        "Ajoutez Edit Fields après la réponse et sélectionnez quelques informations utiles.",
+        "Exécutez le workflow et vérifiez que les champs finaux ne sont plus imbriqués."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "HTTP Request",
+        "Berlin",
+        "Query Parameters",
+        "Edit Fields"
+      ],
+      "assignmentFr": "Adaptez la requête météo à Berlin avec des paramètres de requête et une description localisée.",
+      "blockId": "dc_2_act_03_tp",
+      "hintFr": "Déplacez format et lang dans Query Parameters plutôt que de les laisser dans l’adresse de requête.",
+      "proofFr": [
+        "HTTP Request cible Berlin avec format et lang dans Query Parameters.",
+        "Edit Fields contient une description localisée en plus des champs aplatis."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « météo Berlin ».",
+      "sourceSummaryFr": "Paramétrage d’un appel API et ajout d’une description traduite aux données météo.",
+      "stepsFr": [
+        "Chargez le workflow basé sur le pack Neopolis météo Berlin.",
+        "Dans HTTP Request, remplacez la ville par Berlin.",
+        "Placez format et lang dans Query Parameters.",
+        "Complétez Edit Fields avec la description localisée et contrôlez les champs plats obtenus."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Code",
+        "Stockholm",
+        "données épinglées",
+        "champs plats"
+      ],
+      "assignmentFr": "Exécutez et interprétez une transformation JavaScript existante.",
+      "blockId": "dc_2_act_05_tp",
+      "hintFr": "Comparez chaque champ de sortie avec le champ correspondant dans l’entrée du nœud Code.",
+      "proofFr": [
+        "La sortie du nœud Code est consultée après exécution.",
+        "Le lien entre les données Stockholm épinglées et les champs plats est expliqué."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « lecture Code JavaScript Stockholm ».",
+      "sourceSummaryFr": "Observation d’un nœud Code qui simplifie des données météo déjà disponibles.",
+      "stepsFr": [
+        "Ouvrez le workflow du pack Neopolis et examinez les données synthétiques Stockholm.",
+        "Exécutez le workflow sans modifier le nœud Code.",
+        "Consultez l’entrée du nœud Code, puis sa sortie.",
+        "Identifiez comment les données épinglées deviennent des champs plats."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Python Code",
+        "Is Valid?",
+        "True",
+        "False"
+      ],
+      "assignmentFr": "Suivez le traitement Python et la séparation des lignes valides ou défectueuses.",
+      "blockId": "dc_2_act_06_tp",
+      "hintFr": "Examinez le marquage ajouté à chaque ligne avant de lire les deux sorties de Is Valid?.",
+      "proofFr": [
+        "Python Code ajoute un marquage aux lignes.",
+        "Is Valid? envoie les bonnes lignes vers True et les lignes défectueuses vers False."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « villes à valider ».",
+      "sourceSummaryFr": "Lecture d’un contrôle Python et vérification du routage de validité.",
+      "stepsFr": [
+        "Ouvrez le workflow et les données synthétiques de villes du pack Neopolis.",
+        "Exécutez le workflow sans changer Python Code.",
+        "Observez le champ ajouté par Python Code pour chaque ligne.",
+        "Consultez les sorties True et False de Is Valid? et reliez-les aux données source."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Python Code",
+        "humidité",
+        "numérique",
+        "Is Valid?"
+      ],
+      "assignmentFr": "Renforcez la validation afin que l’humidité soit obligatoirement numérique.",
+      "blockId": "dc_2_act_07_tp",
+      "hintFr": "Ajoutez la vérification de type à la règle existante, puis comparez les deux sorties après exécution.",
+      "proofFr": [
+        "Python Code teste que l’humidité est numérique.",
+        "Is Valid? montre les lignes qui échouent avec la règle renforcée."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « humidité à contrôler ».",
+      "sourceSummaryFr": "Durcissement d’une règle Python pour distinguer humidités numériques et valeurs invalides.",
+      "stepsFr": [
+        "Chargez le workflow et les lignes synthétiques du pack Neopolis.",
+        "Dans Python Code, complétez la condition pour exiger une humidité numérique.",
+        "Exécutez à nouveau le workflow.",
+        "Contrôlez les branches de Is Valid? pour repérer les enregistrements désormais rejetés."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Data Table",
+        "insert",
+        "Get row(s)",
+        "If"
+      ],
+      "assignmentFr": "Écrivez des lignes dans une table, relisez-les, puis réagissez au résultat.",
+      "blockId": "dc_2_act_09_tp",
+      "hintFr": "Reliez Get row(s) après l’écriture pour que If puisse évaluer les lignes effectivement persistées.",
+      "proofFr": [
+        "Une Data Table reçoit des lignes par insert.",
+        "Get row(s) relit les lignes et If agit sur ce résultat."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « lignes de table ».",
+      "sourceSummaryFr": "Création d’une table et enchaînement écriture, lecture et décision.",
+      "stepsFr": [
+        "Créez une Data Table destinée aux lignes du pack Neopolis.",
+        "Ajoutez Data Table en mode insert pour écrire les données synthétiques.",
+        "Ajoutez Data Table en mode Get row(s) pour relire les lignes enregistrées.",
+        "Ajoutez If pour réagir aux lignes retournées et exécutez le flux."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Data Table Get row(s)",
+        "insert",
+        "Code",
+        "ville",
+        "date"
+      ],
+      "assignmentFr": "N’insérez que les associations ville-date absentes de la table.",
+      "blockId": "dc_2_act_10_tp",
+      "hintFr": "La comparaison dans Code doit utiliser ensemble la ville et la date, et non un seul de ces champs.",
+      "proofFr": [
+        "Data Table Get row(s) est placé avant insert.",
+        "Code ne transmet à l’écriture que les paires ville-date nouvelles."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « relevés ville-date ».",
+      "sourceSummaryFr": "Déduplication avant écriture en comparant chaque paire ville-date aux données existantes.",
+      "stepsFr": [
+        "Chargez les relevés synthétiques et créez la Data Table correspondante.",
+        "Ajoutez Data Table Get row(s) avant l’étape insert pour lire les lignes existantes.",
+        "Ajoutez Code pour écarter les paires ville-date déjà présentes.",
+        "Reliez uniquement les nouvelles lignes à Data Table en mode insert, puis vérifiez le résultat."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Loop Over Items",
+        "batches",
+        "Edit Fields",
+        "batch_label"
+      ],
+      "assignmentFr": "Traitez toutes les lignes par lots en ajoutant un marquage de traitement.",
+      "blockId": "dc_3_act_02_tp",
+      "hintFr": "La connexion de retour doit ramener le dernier nœud du lot vers Loop Over Items.",
+      "proofFr": [
+        "Chaque ligne possède un indicateur processed et un batch_label.",
+        "La boucle traite tous les lots sans s’arrêter au premier."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « lignes par lots ».",
+      "sourceSummaryFr": "Traitement itératif de données, avec étiquetage de chaque lot.",
+      "stepsFr": [
+        "Chargez les lignes du pack Neopolis dans le workflow.",
+        "Ajoutez Loop Over Items et choisissez un traitement en batches.",
+        "Ajoutez Edit Fields dans la boucle pour renseigner processed et batch_label.",
+        "Reliez Edit Fields au retour de Loop Over Items, puis vérifiez que toutes les lignes sont marquées."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Wait",
+        "Loop Over Items",
+        "batch",
+        "loop-back"
+      ],
+      "assignmentFr": "Ajoutez une pause entre les lots pour limiter le rythme de traitement.",
+      "blockId": "dc_3_act_03_tp",
+      "hintFr": "Insérez Wait sur le chemin qui retourne vers Loop Over Items, après le travail du lot.",
+      "proofFr": [
+        "Wait se trouve sur le chemin loop-back.",
+        "Une pause intervient avant le lancement du lot suivant."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « lots avec délai ».",
+      "sourceSummaryFr": "Ralentissement volontaire d’une boucle afin d’espacer les lots successifs.",
+      "stepsFr": [
+        "Ouvrez le workflow de lots alimenté par le pack Neopolis.",
+        "Repérez la connexion loop-back vers Loop Over Items.",
+        "Ajoutez Wait sur cette connexion de retour.",
+        "Exécutez le workflow et constatez que les batches sont espacés."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Split Out",
+        "items",
+        "commandes",
+        "lignes"
+      ],
+      "assignmentFr": "Transformez les articles imbriqués des commandes en lignes individuelles.",
+      "blockId": "dc_3_act_05_tp",
+      "hintFr": "Ciblez le tableau items et vérifiez que les informations parent restent disponibles sur chaque ligne.",
+      "proofFr": [
+        "Split Out génère une ligne par élément de items.",
+        "Les lignes conservent les informations de leur commande parente."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « commandes imbriquées ».",
+      "sourceSummaryFr": "Éclatement d’un tableau d’articles pour obtenir une ligne exploitable par article.",
+      "stepsFr": [
+        "Chargez les commandes synthétiques du pack Neopolis.",
+        "Ajoutez Split Out après les commandes.",
+        "Configurez Split Out sur le tableau items.",
+        "Exécutez et vérifiez qu’une commande produit plusieurs lignes tout en gardant ses champs parent."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Summarize",
+        "prix moyen",
+        "quantité totale",
+        "catégorie"
+      ],
+      "assignmentFr": "Calculez des indicateurs par catégorie à partir de lignes déjà séparées.",
+      "blockId": "dc_3_act_06_tp",
+      "hintFr": "Le regroupement se fait sur catégorie ; les deux mesures sont calculées à l’intérieur de chaque groupe.",
+      "proofFr": [
+        "Summarize regroupe les lignes par catégorie.",
+        "La sortie présente un prix moyen et une quantité totale par groupe."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « articles pré-séparés ».",
+      "sourceSummaryFr": "Agrégation de lignes d’articles pour produire un bilan par catégorie.",
+      "stepsFr": [
+        "Chargez les articles pré-séparés du pack Neopolis.",
+        "Ajoutez Summarize après les données.",
+        "Regroupez les résultats par catégorie et calculez le prix moyen ainsi que la quantité totale.",
+        "Exécutez le workflow et vérifiez un récapitulatif par catégorie."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Split Out",
+        "Edit Fields",
+        "line_total",
+        "Aggregate"
+      ],
+      "assignmentFr": "Éclatez des commandes, calculez le total de chaque ligne, puis recomposez les résultats.",
+      "blockId": "dc_3_act_07_tp",
+      "hintFr": "Calculez line_total après Split Out, car le prix et la quantité doivent appartenir à une ligne unique.",
+      "proofFr": [
+        "Chaque article aplati possède line_total.",
+        "Aggregate rassemble les articles enrichis."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « commandes à enrichir ».",
+      "sourceSummaryFr": "Séparation, enrichissement et regroupement d’articles de commande.",
+      "stepsFr": [
+        "Chargez les commandes imbriquées du pack Neopolis.",
+        "Ajoutez Split Out sur les articles des commandes.",
+        "Ajoutez Edit Fields pour calculer line_total pour chaque article.",
+        "Ajoutez Aggregate pour réunir les articles enrichis, puis contrôlez la structure finale."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Execute Sub-workflow",
+        "If",
+        "sub-workflow",
+        "branches"
+      ],
+      "assignmentFr": "Appelez un même sous-workflow depuis les deux branches d’une condition.",
+      "blockId": "dc_3_act_09_tp",
+      "hintFr": "Chaque sortie de If doit conduire à son propre nœud Execute Sub-workflow, mais les deux ciblent le même sous-workflow.",
+      "proofFr": [
+        "Les deux branches de If appellent Execute Sub-workflow.",
+        "Un seul sous-workflow partagé remplace la duplication de traitement."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP les packs synthétiques Neopolis « workflow principal » et « sous-workflow partagé ».",
+      "sourceSummaryFr": "Réutilisation d’un traitement commun depuis plusieurs chemins conditionnels.",
+      "stepsFr": [
+        "Ouvrez le workflow principal et le sous-workflow du pack Neopolis.",
+        "Repérez les branches de If dans le workflow principal.",
+        "Ajoutez un Execute Sub-workflow sur chaque branche.",
+        "Sélectionnez le même sous-workflow pour les deux appels, puis exécutez des cas couvrant chaque branche."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Manual Trigger",
+        "If",
+        "Execute Sub-workflow",
+        "commandes"
+      ],
+      "assignmentFr": "Dirigez chaque commande vers le sous-workflow spécialiste approprié.",
+      "blockId": "dc_3_act_10_tp",
+      "hintFr": "La condition If doit distinguer les commandes avant l’appel aux deux calculateurs.",
+      "proofFr": [
+        "If répartit les commandes entre deux chemins.",
+        "Chaque chemin utilise Execute Sub-workflow vers le calculateur adapté."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP les packs synthétiques Neopolis « commandes parent » et « deux calculateurs ».",
+      "sourceSummaryFr": "Orchestration d’ordres par un workflow parent et deux traitements spécialisés.",
+      "stepsFr": [
+        "Enregistrez les deux workflows calculateurs du pack Neopolis.",
+        "Créez le workflow parent avec Manual Trigger et les commandes synthétiques.",
+        "Ajoutez If pour répartir les commandes selon leur type.",
+        "Ajoutez deux nœuds Execute Sub-workflow, un vers chaque calculateur, puis testez les deux parcours."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "If",
+        "order_id",
+        "amount",
+        "Stop and Error",
+        "Process Order"
+      ],
+      "assignmentFr": "Bloquez les commandes sans identifiant ou dont le montant vaut zéro avant leur traitement.",
+      "blockId": "dc_4_act_02_tp",
+      "hintFr": "Placez les deux contrôles avant Process Order et donnez un message précis à chaque Stop and Error.",
+      "proofFr": [
+        "Les lignes sans order_id sont arrêtées.",
+        "Les lignes dont amount vaut zéro n’atteignent pas Process Order."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « commandes à valider ».",
+      "sourceSummaryFr": "Ajout de points de contrôle qui empêchent les commandes invalides d’être traitées.",
+      "stepsFr": [
+        "Chargez les commandes synthétiques contenant des cas invalides.",
+        "Ajoutez un premier If pour détecter un order_id manquant.",
+        "Sur le chemin invalide, ajoutez Stop and Error avec un message explicite.",
+        "Ajoutez un second If pour contrôler amount égal à zéro avant Process Order, puis testez les trois cas."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Error Trigger",
+        "Edit Fields",
+        "Data Table",
+        "error_log",
+        "Error Workflow"
+      ],
+      "assignmentFr": "Créez un workflow de surveillance qui enregistre les erreurs dans error_log.",
+      "blockId": "dc_4_act_03_tp",
+      "hintFr": "Le workflow de surveillance doit être activé et choisi comme Error Workflow du workflow fragile.",
+      "proofFr": [
+        "Error Trigger alimente un enregistrement dans error_log.",
+        "Une erreur du workflow fragile crée une ligne dans la Data Table."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP les packs synthétiques Neopolis « workflow fragile » et « surveillance des erreurs ».",
+      "sourceSummaryFr": "Centralisation des échecs d’exécution dans une table dédiée.",
+      "stepsFr": [
+        "Créez une Data Table nommée error_log à partir du schéma Neopolis.",
+        "Dans le workflow de surveillance, reliez Error Trigger à Edit Fields pour formater les informations d’erreur.",
+        "Ajoutez Data Table en mode insert pour enregistrer le résultat dans error_log.",
+        "Activez ce workflow, définissez-le comme Error Workflow du workflow fragile, puis provoquez un échec et vérifiez la table."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "HTTP Request",
+        "Continue Using Error Output",
+        "Edit Fields",
+        "500"
+      ],
+      "assignmentFr": "Capturez une erreur HTTP 500 dans une branche dédiée sans interrompre l’exécution.",
+      "blockId": "dc_4_act_04_tp",
+      "hintFr": "Activez Continue Using Error Output dans HTTP Request avant de relier la sortie d’erreur.",
+      "proofFr": [
+        "HTTP Request poursuit l’exécution malgré la réponse 500.",
+        "Edit Fields produit une information d’échec sur le chemin d’erreur."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « journalisation erreur HTTP ».",
+      "sourceSummaryFr": "Gestion d’une erreur HTTP attendue par routage vers une sortie d’erreur.",
+      "stepsFr": [
+        "Ajoutez HTTP Request dans le workflow du pack Neopolis et ciblez l’adresse httpstat.us/500.",
+        "Activez Continue Using Error Output dans HTTP Request.",
+        "Reliez sa sortie d’erreur à Edit Fields.",
+        "Formatez les détails de l’échec, puis exécutez sans arrêter le workflow."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Data Table",
+        "execution_log",
+        "HTTP Request",
+        "Transform Data",
+        "Get row(s)"
+      ],
+      "assignmentFr": "Insérez un point de journalisation après chacune des trois étapes clés du workflow.",
+      "blockId": "dc_4_act_06_tp",
+      "hintFr": "Les insertions sont des branches latérales : le flux principal peut continuer en parallèle.",
+      "proofFr": [
+        "execution_log contient trois lignes de contrôle.",
+        "Get row(s) permet de consulter les trois checkpoints."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « workflow avec checkpoints ».",
+      "sourceSummaryFr": "Traçabilité d’une exécution grâce à des insertions de journal à plusieurs étapes.",
+      "stepsFr": [
+        "Créez une Data Table nommée execution_log selon le pack Neopolis.",
+        "Ajoutez une branche Data Table en mode insert après HTTP Request.",
+        "Ajoutez des branches insert similaires après Transform Data et Format Output.",
+        "Terminez par Data Table en mode Get row(s) et vérifiez la présence de trois lignes de journal."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Code",
+        "Evaluate Output",
+        "If",
+        "Edit Fields",
+        "pass"
+      ],
+      "assignmentFr": "Évaluez la qualité de la sortie et produisez un résumé pour succès ou échec.",
+      "blockId": "dc_4_act_07_tp",
+      "hintFr": "Le nœud Code doit fournir le résultat d’évaluation exploitable par la condition pass de If.",
+      "proofFr": [
+        "Evaluate Output calcule des totaux et des problèmes.",
+        "If sépare pass des résultats non conformes avec un résumé sur chaque branche."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « sorties à évaluer ».",
+      "sourceSummaryFr": "Ajout d’un contrôle de qualité et de comptes rendus distincts selon le résultat.",
+      "stepsFr": [
+        "Ouvrez le workflow de journalisation avec les données synthétiques Neopolis.",
+        "Ajoutez Code et nommez son rôle Evaluate Output pour produire les résultats d’évaluation.",
+        "Ajoutez If pour tester pass.",
+        "Ajoutez Edit Fields sur chaque branche afin d’afficher les totaux et les problèmes correspondants."
+      ]
+    },
+    {
+      "assessmentTerms": [
+        "Schedule Trigger",
+        "HTTP Request",
+        "Code",
+        "Loop Over Items",
+        "If"
+      ],
+      "assignmentFr": "Assemblez une chaîne planifiée qui récupère, transforme, déduplique, traite par lots et évalue des données météo.",
+      "blockId": "dc_4_act_09_tp",
+      "hintFr": "Construisez et vérifiez chaque segment successivement : récupération, Code, lots, puis décision If.",
+      "proofFr": [
+        "Le workflow est déclenché toutes les heures et interroge la météo de Londres.",
+        "Les données passent par Code, Loop Over Items et une décision If de réussite ou d’échec."
+      ],
+      "requiresUnavailableStarter": false,
+      "setupFr": "Téléchargez depuis le TP le pack synthétique Neopolis « pipeline météo Londres », incluant des réponses JSON et des doublons simulés.",
+      "sourceSummaryFr": "Construction d’un pipeline complet : planification, récupération, traitement, déduplication, lots et contrôle final.",
+      "stepsFr": [
+        "Ajoutez Schedule Trigger avec une fréquence de 1 heure, puis HTTP Request en GET vers https://wttr.in/London?format=j1 avec une réponse JSON.",
+        "Ajoutez des nœuds Code pour transformer les données du pack Neopolis puis éliminer les doublons.",
+        "Ajoutez Loop Over Items pour traiter les éléments par lots.",
+        "Ajoutez If pour séparer les résultats validés et non validés, puis exécutez le pipeline avec le pack synthétique."
+      ]
+    }
+  ]
+}

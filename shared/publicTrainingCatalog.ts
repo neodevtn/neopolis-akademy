@@ -4,6 +4,7 @@ import { extractTargetJobRoles, resolveTrainingFormat } from "../client/src/lib/
 import { getPublicTrainingThemes } from "./publicTrainingThemes";
 import { localizePublicTrainingText, type PublicTrainingLocale } from "./publicTrainingLocale";
 import { resolveTrainingVisualAsset, type TrainingVisualAsset, type TrainingVisualOverride } from "./trainingVisualAssets";
+import { compareCataloguePriority } from "./cataloguePriority";
 
 type LocalizedText = { fr?: string; en?: string; ar?: string };
 type CatalogCourse = {
@@ -32,6 +33,7 @@ type CatalogCertification = {
   trainingFormat?: string;
   isStandaloneTP?: boolean;
   visualAssets?: TrainingVisualOverride;
+  totalActivities?: number;
 };
 
 const source = trainingIndex as unknown as { certifications: CatalogCertification[]; courses: CatalogCourse[] };
@@ -149,7 +151,9 @@ function trainingFromCertification(certification: CatalogCertification, locale: 
 export function getPublicCatalogueTrainings(locale: PublicTrainingLocale = "fr") {
   const cached = localizedCatalogueCache.get(locale);
   if (cached) return cached;
-  const trainings = source.certifications.map((certification) => trainingFromCertification(certification, locale));
+  const trainings = [...source.certifications]
+    .sort(compareCataloguePriority)
+    .map((certification) => trainingFromCertification(certification, locale));
   localizedCatalogueCache.set(locale, trainings);
   return trainings;
 }
