@@ -23,6 +23,7 @@ import { registerExamAssetRevocations } from "../examAssetRevocation";
 import { getRuntimeVersionManifest } from "../versionManifest";
 import { registerPrivateMessagingWebSocket } from "../privateMessagingRealtime";
 import { registerCourseDataRoute } from "../courseDataRoute";
+import { mayUseAlternatePort, registerDeploymentHealthRoute, resolveHostingPort } from "../deploymentHealth";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -55,6 +56,7 @@ async function startServer() {
   app.disable("x-powered-by");
   app.use(securityHeaders);
   app.use(globalRateLimit);
+  registerDeploymentHealthRoute(app);
 
   // Resend signs the exact raw payload. This parser must be registered before
   // the global JSON parser so signature verification is possible.
@@ -120,12 +122,15 @@ async function startServer() {
   // Sentry error handler - MUST be after all routes and before any other error handlers
   Sentry.setupExpressErrorHandler(app);
 
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
+  const preferredPort = resolveHostingPort(process.env.PORT);
+  // A managed hosting platform probes the port it injects. Falling back to a
+  // neighbouring port is useful only for a local terminal and makes a healthy
+  // production process invisible to the deployment healthcheck.
+  const port = mayUseAlternatePort(process.env.NODE_ENV)
+    ? await findAvailablePort(preferredPort)
+    : preferredPort;
 
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
-  }
+  if (port !== preferredPort) console.log(`Port ${preferredPort} is busy, using port ${port} in development`);
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
