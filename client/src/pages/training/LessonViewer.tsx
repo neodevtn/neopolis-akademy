@@ -88,6 +88,7 @@ export default function LessonViewer({
   const submitClaudeScienceV2Reflection = trpc.training.submitClaudeScienceV2Reflection.useMutation();
   const submitIntermediateN8nPractical = trpc.training.submitIntermediateN8nPractical.useMutation();
   const submitAiMarketingPractical = trpc.training.submitAiMarketingPractical.useMutation();
+  const submitAiFinancePractical = trpc.training.submitAiFinancePractical.useMutation();
   const validateServerChoice = trpc.training.validateServerChoice.useMutation();
   const claudeScienceActivityStatus = trpc.training.getClaudeScienceV2ActivityStatus.useQuery(
     { courseId },
@@ -100,6 +101,10 @@ export default function LessonViewer({
   const aiMarketingActivityStatus = trpc.training.getAiMarketingActivityStatus.useQuery(
     { courseId: "ai_for_marketing__01" },
     { enabled: courseId === "ai_for_marketing__01", retry: false, refetchOnWindowFocus: false },
+  );
+  const aiFinanceActivityStatus = trpc.training.getAiFinanceActivityStatus.useQuery(
+    { courseId: "ai_for_finance__01" },
+    { enabled: courseId === "ai_for_finance__01", retry: false, refetchOnWindowFocus: false },
   );
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
@@ -150,6 +155,12 @@ export default function LessonViewer({
     if (!completed) return;
     setCompletedCloudExercises((previous) => new Set(Array.from(previous).concat(completed)));
   }, [aiMarketingActivityStatus.data]);
+
+  useEffect(() => {
+    const completed = aiFinanceActivityStatus.data?.completedPracticalIds;
+    if (!completed) return;
+    setCompletedCloudExercises((previous) => new Set(Array.from(previous).concat(completed)));
+  }, [aiFinanceActivityStatus.data]);
 
   // Reading progress state
   const [readingProgress, setReadingProgress] = useState(0);
@@ -1042,6 +1053,8 @@ export default function LessonViewer({
             ? submitIntermediateN8nPractical.mutateAsync({ courseId: "intermediate_workflow_automation_with_n8n__01", blockId: String(input.blockId), lessonIndex, chapterIndex: currentChapter, answer: String(input.answer) })
           : block.serverGradedAssessment === "ai_marketing_source_adapted"
             ? submitAiMarketingPractical.mutateAsync({ courseId: "ai_for_marketing__01", blockId: String(input.blockId), lessonIndex, chapterIndex: currentChapter, answer: String(input.answer) })
+          : block.serverGradedAssessment === "ai_finance_source_adapted"
+            ? submitAiFinancePractical.mutateAsync({ courseId: "ai_for_finance__01", blockId: String(input.blockId), lessonIndex, chapterIndex: currentChapter, answer: String(input.answer) })
           : evaluateFreeResponse.mutateAsync(input as any)} onComplete={(id, outcome) => {
           setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
           if (outcome?.rubricEvaluated) recordCompetencyOutcome.mutate({

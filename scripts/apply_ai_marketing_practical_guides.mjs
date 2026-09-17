@@ -36,7 +36,7 @@ for (const lesson of course.lessons ?? []) {
         hint: { fr: guide.hintFr, en: guide.hintFr },
         learnerCriteria: guide.expectedEvidenceFr,
         resources: learnerResources,
-        source_refs: [{ source: "DataCamp course alignment record", relevance: "Objectif et scénario de l’activité adaptés pour un environnement personnel Neopolis sans dépendance à un compte, VM ou ressource DataCamp.", url: "https://app.datacamp.com/learn/courses/ai-for-marketing" }],
+        source_refs: [{ source: "Imported course alignment record", relevance: "Objectif et scénario de l’activité adaptés pour un environnement personnel Neopolis sans dépendance à un compte, VM ou ressource DataCamp.", url: "https://app.datacamp.com/learn/courses/ai-for-marketing" }],
         practiceStatus: "source_adapted_personal_environment",
         serverGradedAssessment: "ai_marketing_source_adapted",
         minimumAnswerLength: 180,

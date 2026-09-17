@@ -47,6 +47,7 @@ import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
 import { getClaudeScienceV2ActivityStatus, getClaudeScienceV2FinalQuiz, submitClaudeScienceV2FinalQuiz, submitClaudeScienceV2Lab, submitClaudeScienceV2Reflection } from "./claudeScienceV2AssessmentService";
 import { getIntermediateN8nActivityStatus, submitIntermediateN8nPractical } from "./intermediateN8nAssessmentService";
 import { getAiMarketingActivityStatus, submitAiMarketingPractical } from "./aiMarketingAssessmentService";
+import { getAiFinanceActivityStatus, submitAiFinancePractical } from "./aiFinanceAssessmentService";
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
   targetLevel: z.enum(["bronze", "silver", "gold"]),
@@ -887,6 +888,21 @@ export const appRouter = router({
     getAiMarketingActivityStatus: protectedProcedure
       .input(z.object({ courseId: z.literal("ai_for_marketing__01") }))
       .query(async ({ ctx, input }) => getAiMarketingActivityStatus({ userId: ctx.user.id, ...input })),
+    submitAiFinancePractical: protectedProcedure
+      .input(z.object({
+        courseId: z.literal("ai_for_finance__01"),
+        blockId: z.string().regex(/^dc_[1-3]_act_(?:02|03|05|06|07|09)_tp$/),
+        lessonIndex: z.number().int().min(0),
+        chapterIndex: z.number().int().min(0),
+        answer: z.string().trim().min(180).max(12000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return submitAiFinancePractical({ userId: ctx.user.id, ...input });
+      }),
+    getAiFinanceActivityStatus: protectedProcedure
+      .input(z.object({ courseId: z.literal("ai_for_finance__01") }))
+      .query(async ({ ctx, input }) => getAiFinanceActivityStatus({ userId: ctx.user.id, ...input })),
     getIntermediateN8nActivityStatus: protectedProcedure
       .input(z.object({ courseId: z.literal("intermediate_workflow_automation_with_n8n__01") }))
       .query(async ({ ctx, input }) => getIntermediateN8nActivityStatus({ userId: ctx.user.id, ...input })),

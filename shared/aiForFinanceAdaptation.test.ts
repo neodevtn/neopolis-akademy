@@ -15,14 +15,14 @@ describe("adaptation DataCamp AI for Finance", () => {
     expect(activities.some((activity) => activity.id === "dc_ch01_act11")).toBe(false);
   });
 
-  it("conserve neuf TP cloud rubricés et autonomes", () => {
+  it("conserve neuf TP cloud guidés, évalués côté serveur et autonomes", () => {
     const cloudBlocks = activities.flatMap((activity) => (activity.blocks as Array<Record<string, unknown>> | undefined) ?? []).filter((block) => block.type === "cloud_exercise");
-    const rubricBlocks = cloudBlocks.filter((block) => Array.isArray(block.rubricCriteria) && block.rubricCriteria.length > 0);
-    expect(rubricBlocks).toHaveLength(9);
-    const learnerFacingFields = ["title", "assignment", "instructions", "hint", "solution", "successMessage", "evaluationPrompt", "environmentGuide", "steps", "resources"];
-    expect(rubricBlocks.every((block) => {
+    const serverGradedBlocks = cloudBlocks.filter((block) => block.serverGradedAssessment === "ai_finance_source_adapted");
+    expect(serverGradedBlocks).toHaveLength(9);
+    const learnerFacingFields = ["title", "assignment", "instructions", "hint", "successMessage", "environmentGuide", "steps", "resources"];
+    expect(serverGradedBlocks.every((block) => {
       const learnerFacingText = JSON.stringify(Object.fromEntries(learnerFacingFields.map((field) => [field, block[field]])));
-      return block.environmentGuide && !learnerFacingText.match(/Copilot|datacamp\.com|\b\d+\s*XP\b|DataCamp\s+(?:VM|Lab|Campus|Workspace)/i);
+      return block.environmentGuide && Array.isArray(block.steps) && block.steps.length >= 4 && Array.isArray(block.learnerCriteria) && block.learnerCriteria.length >= 2 && !learnerFacingText.match(/Copilot|datacamp\.com|\b\d+\s*XP\b|DataCamp\s+(?:VM|Lab|Campus|Workspace)/i) && !Object.hasOwn(block, "solution") && !Object.hasOwn(block, "rubricCriteria") && !Object.hasOwn(block, "evaluationPrompt");
     })).toBe(true);
   });
 

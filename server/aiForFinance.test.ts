@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import course from "../client/public/data/courses/ai_for_finance__01.json";
 import catalog from "../client/src/data/trainingIndex.json";
+import { sanitizeCourseDataForLearner } from "./courseDataRoute";
 
 describe("cours DataCamp L’IA pour la finance", () => {
   const activities = course.lessons.flatMap((lesson: any) => lesson.chapters);
@@ -31,5 +32,24 @@ describe("cours DataCamp L’IA pour la finance", () => {
     expect(serialized).not.toMatch(/https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com/i);
     expect(serialized).not.toContain("/manus-storage/");
     expect(serialized).not.toContain("Perplexity_AI_logo.svg");
+  });
+
+  it("fournit des TP guidés, des ressources gérées et une évaluation protégée", () => {
+    const practicals = blocks.filter((block: any) => block.type === "cloud_exercise");
+    for (const practical of practicals) {
+      expect(practical).toMatchObject({ practiceStatus: "source_adapted_personal_environment", serverGradedAssessment: "ai_finance_source_adapted" });
+      expect(practical.steps.length).toBeGreaterThanOrEqual(4);
+      expect(practical.learnerCriteria.length).toBeGreaterThanOrEqual(2);
+      expect(practical.environmentGuide.fr).toContain("ressources synthétiques");
+      expect(practical.resources.every((resource: any) => String(resource.url).startsWith("/api/assets/"))).toBe(true);
+      expect(practical.source_refs?.[0]?.url).toBe("https://app.datacamp.com/learn/courses/ai-for-finance");
+    }
+    const learner = JSON.parse(sanitizeCourseDataForLearner(JSON.stringify(course)));
+    const learnerPracticals = learner.lessons.flatMap((lesson: any) => lesson.chapters).flatMap((chapter: any) => chapter.blocks || []).filter((block: any) => block.type === "cloud_exercise");
+    for (const practical of learnerPracticals) {
+      expect(practical).not.toHaveProperty("solution");
+      expect(practical).not.toHaveProperty("rubricCriteria");
+      expect(practical).not.toHaveProperty("evaluationPrompt");
+    }
   });
 });
