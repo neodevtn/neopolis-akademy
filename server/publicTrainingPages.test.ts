@@ -121,9 +121,11 @@ describe("pages publiques de formations IA", () => {
   });
 
   it("expose une carte et une image sociale non vides pour chaque formation publique dans chaque langue", () => {
+    const expectedCount = getPublicCatalogueTrainings("fr").length;
+    expect(expectedCount).toBeGreaterThan(0);
     (['fr', 'en', 'ar'] as const).forEach((locale) => {
       const trainings = getPublicCatalogueTrainings(locale);
-      expect(trainings).toHaveLength(115);
+      expect(trainings).toHaveLength(expectedCount);
       trainings.forEach((training) => {
         expect(training.visual.cardPath).toMatch(/^\//);
         expect(training.visual.socialPath).toMatch(/^\//);

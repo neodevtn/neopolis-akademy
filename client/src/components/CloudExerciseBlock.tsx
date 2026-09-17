@@ -68,14 +68,14 @@ interface CloudExerciseBlockProps {
   blockIdx: number;
   onComplete?: (id: string, outcome?: { score: number; rubricEvaluated: boolean }) => void;
   evaluationContext?: { certificationId: string; courseId: string; lessonIndex: number; chapterIndex: number };
-  onEvaluate?: (input: Record<string, unknown>) => Promise<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number }>;
+  onEvaluate?: (input: Record<string, unknown>) => Promise<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string }>;
 }
 
 export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evaluationContext, onEvaluate }: CloudExerciseBlockProps) {
   const [submitted, setSubmitted] = useState(false);
   const [solutionRevealed, setSolutionRevealed] = useState(false);
   const [answer, setAnswer] = useState("");
-  const [evaluation, setEvaluation] = useState<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number } | null>(null);
+  const [evaluation, setEvaluation] = useState<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string } | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [reflectionChoiceId, setReflectionChoiceId] = useState<string | null>(null);
 
@@ -109,8 +109,9 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
   const learnerAssignment = adaptDataCampVmText(tpAssignment, hasUnavailableVmFiles);
   const learnerHint = adaptDataCampVmText(tpHint, hasUnavailableVmFiles);
   const learnerSolution = adaptDataCampVmText(tpSolution, hasUnavailableVmFiles);
+  const revealedSolution = evaluation?.correction || learnerSolution;
   const evaluationPrompt = resolveLocalizedBlockText(block.evaluationPrompt, lang) || learnerAssignment;
-  const completeEvaluation = (data: { score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number }) => {
+  const completeEvaluation = (data: { score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string }) => {
       setEvaluation(data);
       setIsEvaluating(false);
       if (data.passed) {
@@ -337,7 +338,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
         </div>
 
         {/* Solution (only visible after submission) */}
-        {learnerSolution && (
+        {revealedSolution && (
           (solutionRevealed || evaluation) ? (
             <details className="border border-green-200 rounded-lg bg-green-50/50" open>
               <summary className="px-4 py-2 cursor-pointer text-sm font-medium text-green-700 hover:text-green-800 flex items-center gap-2">
@@ -345,7 +346,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
                 {t({ en: 'Solution', fr: 'Correction' })}
               </summary>
               <div className="px-4 pb-3 text-sm text-green-800 bg-green-50 rounded-b-lg prose prose-sm max-w-none">
-                <Streamdown>{learnerSolution}</Streamdown>
+                <Streamdown>{revealedSolution}</Streamdown>
               </div>
             </details>
           ) : (

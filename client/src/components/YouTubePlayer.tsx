@@ -108,6 +108,11 @@ interface YouTubePlayerProps {
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
   onPlaybackChange?: (isPlaying: boolean) => void;
+  language?: string;
+  durationSeconds?: number;
+  objectiveBefore?: string;
+  questionsAfter?: string[];
+  alternativeTextFr?: string;
 }
 
 export function YouTubePlayer({
@@ -120,6 +125,11 @@ export function YouTubePlayer({
   lang,
   t,
   onPlaybackChange,
+  language,
+  durationSeconds,
+  objectiveBefore,
+  questionsAfter,
+  alternativeTextFr,
 }: YouTubePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoCompleted, setAutoCompleted] = useState(false);
@@ -245,6 +255,7 @@ export function YouTubePlayer({
 
       {/* Video player area */}
       <div className="px-3 pt-3 pb-3">
+        {(language || durationSeconds || objectiveBefore) && <div className="mb-3 rounded-lg border border-border bg-muted/30 p-3 text-sm"><p className="font-medium text-foreground">{language && <span>{lang === "fr" ? "Langue" : "Language"} : {language.toUpperCase()}</span>}{language && durationSeconds && <span className="mx-2 text-muted-foreground">·</span>}{durationSeconds && <span>{lang === "fr" ? "Durée" : "Duration"} : {Math.max(1, Math.round(durationSeconds / 60))} min</span>}</p>{objectiveBefore && <p className="mt-1.5 leading-relaxed text-muted-foreground"><strong className="text-foreground">{lang === "fr" ? "Avant la lecture : " : "Before playback: "}</strong>{objectiveBefore}</p>}</div>}
         {!isPlaying ? (
           // Thumbnail with play button
           <div
@@ -351,6 +362,7 @@ export function YouTubePlayer({
             </a>
           )}
         </div>
+        {(questionsAfter?.length || alternativeTextFr) && <div className="mt-4 space-y-3 border-t border-border pt-4 text-sm">{questionsAfter?.length ? <div><p className="font-semibold text-foreground">{lang === "fr" ? "Questions après lecture" : "Questions after viewing"}</p><ol className="mt-2 list-decimal space-y-1 pl-5 text-muted-foreground">{questionsAfter.map((question, index) => <li key={index}>{question}</li>)}</ol></div> : null}{alternativeTextFr ? <details className="rounded-lg border border-border bg-muted/20"><summary className="cursor-pointer px-3 py-2 font-medium text-foreground">{lang === "fr" ? "Alternative textuelle française" : "French text alternative"}</summary><p className="border-t border-border px-3 py-3 leading-relaxed text-muted-foreground">{alternativeTextFr}</p></details> : null}</div>}
       </div>
     </div>
   );

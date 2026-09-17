@@ -44,7 +44,7 @@ import { isValidPassword } from "../shared/accountCredentials";
 import { privateMessagingRouter } from "./privateMessagingRouter";
 import { tektekRouter } from "./tektekRouter";
 import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
-
+import { getClaudeScienceV2ActivityStatus, getClaudeScienceV2FinalQuiz, submitClaudeScienceV2FinalQuiz, submitClaudeScienceV2Lab, submitClaudeScienceV2Reflection } from "./claudeScienceV2AssessmentService";
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
   targetLevel: z.enum(["bronze", "silver", "gold"]),
@@ -802,7 +802,61 @@ export const appRouter = router({
         const explanation = typeof answerKey.explanation === "string"
           ? answerKey.explanation
           : answerKey.explanation?.[input.lang] || answerKey.explanation?.en || "";
-        return { correct: input.selectedId === answerKey.correctAnswer, explanation };
+        const correct = input.selectedId === answerKey.correctAnswer;
+        if (correct) {
+          await recordLearningEvent({
+            userId: ctx.user.id,
+            eventType: "checkpoint_passed",
+            courseId: input.courseId,
+            exerciseId: input.exerciseId,
+            score: 100,
+            success: 1,
+            metadata: { serverValidated: true },
+          });
+        }
+        return { correct, explanation };
+      }),
+    getClaudeScienceV2FinalQuiz: protectedProcedure
+      .input(z.object({ courseId: z.string().min(2).max(200) }))
+      .query(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return getClaudeScienceV2FinalQuiz({ userId: ctx.user.id, ...input });
+      }),
+    getClaudeScienceV2ActivityStatus: protectedProcedure
+      .input(z.object({ courseId: z.string().min(2).max(200) }))
+      .query(async ({ ctx, input }) => getClaudeScienceV2ActivityStatus({ userId: ctx.user.id, ...input })),
+    submitClaudeScienceV2FinalQuiz: protectedProcedure
+      .input(z.object({
+        courseId: z.string().min(2).max(200),
+        answers: z.array(z.object({ questionId: z.string().min(1).max(120), selectedId: z.string().min(1).max(32) })).min(1).max(20),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return submitClaudeScienceV2FinalQuiz({ userId: ctx.user.id, ...input });
+      }),
+    submitClaudeScienceV2Lab: protectedProcedure
+      .input(z.object({
+        courseId: z.string().min(2).max(200),
+        labId: z.string().min(2).max(160),
+        lessonIndex: z.number().int().min(0),
+        chapterIndex: z.number().int().min(0),
+        answer: z.string().trim().min(300).max(12000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return submitClaudeScienceV2Lab({ userId: ctx.user.id, ...input });
+      }),
+    submitClaudeScienceV2Reflection: protectedProcedure
+      .input(z.object({
+        courseId: z.string().min(2).max(200),
+        reflectionId: z.string().min(2).max(200),
+        lessonIndex: z.number().int().min(0),
+        chapterIndex: z.number().int().min(0),
+        answer: z.string().trim().min(100).max(12000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return submitClaudeScienceV2Reflection({ userId: ctx.user.id, ...input });
       }),
 
     saveChapterProgress: protectedProcedure

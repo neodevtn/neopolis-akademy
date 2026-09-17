@@ -1,3 +1,5 @@
+import { CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS } from "./claudeScienceV2Assessments";
+
 type LocalizedText = { en?: string; fr?: string };
 
 export type SensitiveExerciseAnswerKey = {
@@ -6,6 +8,12 @@ export type SensitiveExerciseAnswerKey = {
 };
 
 const sensitiveExerciseAnswerKeys: Record<string, Record<string, SensitiveExerciseAnswerKey>> = {
+  claude_science_01_initiation: Object.fromEntries(Object.entries(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS)
+    .filter(([exerciseId]) => exerciseId.startsWith("claude_science_01_initiation__"))
+    .map(([exerciseId, answer]) => [exerciseId, answer])),
+  claude_science_02_pratique: Object.fromEntries(Object.entries(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS)
+    .filter(([exerciseId]) => exerciseId.startsWith("claude_science_02_pratique__"))
+    .map(([exerciseId, answer]) => [exerciseId, answer])),
   claude_certified_developer_foundations__03: {
     checkpoint4_fix_plugin_definition: {
       correctAnswer: "b",

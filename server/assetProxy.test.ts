@@ -8,6 +8,7 @@ vi.mock("./_core/env", () => ({
 import {
   clearAssetProxyPresignCache,
   getAssetCacheControl,
+  isPrivateLearningCorrectionAssetKey,
   registerAssetProxy,
   VERSIONED_PUBLIC_ASSET_CACHE_CONTROL,
 } from "./assetProxy";
@@ -24,10 +25,31 @@ describe("getAssetCacheControl", () => {
   });
 });
 
+describe("isPrivateLearningCorrectionAssetKey", () => {
+  it("revokes historical Claude Science practical correction keys", () => {
+    expect(isPrivateLearningCorrectionAssetKey("claude-science-v2/03_claude_science_travaux_pratiques/solutions/solution_lab_01_56b642ad.md")).toBe(true);
+    expect(isPrivateLearningCorrectionAssetKey("claude-science-v2/03_claude_science_travaux_pratiques/downloads/expected/clinical_descriptive_expected_c109ec89.json")).toBe(true);
+    expect(isPrivateLearningCorrectionAssetKey("claude-science-v2/03_claude_science_travaux_pratiques/downloads/scripts/solution_gene_expression_3ab97ae8.py")).toBe(true);
+    expect(isPrivateLearningCorrectionAssetKey("claude-science-v2/03_claude_science_travaux_pratiques/downloads/templates/fiche.md")).toBe(false);
+  });
+});
+
 describe("registerAssetProxy", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     clearAssetProxyPresignCache();
+  });
+
+  it("does not request storage for a revoked learning correction", async () => {
+    let handler: ((req: any, res: any) => Promise<void>) | undefined;
+    const app = { get: (_path: string, callback: (req: any, res: any) => Promise<void>) => { handler = callback; } } as unknown as Express;
+    registerAssetProxy(app);
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const res = { status: vi.fn().mockReturnThis(), send: vi.fn() };
+    await handler!({ params: { 0: "claude-science-v2/03_claude_science_travaux_pratiques/solutions/solution_lab_01_56b642ad.md" }, headers: {} }, res);
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("relays a Range request without issuing an upstream HEAD", async () => {

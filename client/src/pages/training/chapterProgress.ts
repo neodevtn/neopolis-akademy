@@ -27,6 +27,7 @@ export function getPersistedCompletionProgress(total: number): ChapterProgress {
 type ChapterBlockLike = {
   type?: string;
   title?: string | { en?: string; fr?: string };
+  optional?: boolean;
 };
 
 /**
@@ -37,6 +38,7 @@ type ChapterBlockLike = {
 export function hasOptionalSupplementaryVideos(chapter?: { blocks?: ChapterBlockLike[] } | null): boolean {
   const blocks = chapter?.blocks ?? [];
   const hasVideo = blocks.some((block) => block.type === "video");
+  const hasExplicitOptionalVideo = blocks.some((block) => block.type === "video" && block.optional === true);
   const hasSupplementLabel = blocks.some((block) => {
     // Content normalization can put the callout title either directly on the
     // block or in a nested field. Inspect only callouts, but tolerate both
@@ -48,7 +50,7 @@ export function hasOptionalSupplementaryVideos(chapter?: { blocks?: ChapterBlock
     return /complement\s+neopolis|neopolis\s+supplement/i.test(serialized);
   });
 
-  return hasVideo && hasSupplementLabel;
+  return hasVideo && (hasSupplementLabel || hasExplicitOptionalVideo);
 }
 
 type GatedBlock = { id?: string; exerciseId?: string; type?: string };
@@ -63,6 +65,8 @@ export function isSequentialActivityNavigationLocked({
   reviewMode = false,
   completedExercises,
   completedCloudExercises,
+  completedCourseFinalQuizzes = new Set<string>(),
+  completedReflections = new Set<string>(),
   completedMatching,
   completedInlineInteractions,
 }: {
@@ -70,6 +74,8 @@ export function isSequentialActivityNavigationLocked({
   reviewMode?: boolean;
   completedExercises: Set<string>;
   completedCloudExercises: Set<string>;
+  completedCourseFinalQuizzes?: Set<string>;
+  completedReflections?: Set<string>;
   completedMatching: Set<string>;
   completedInlineInteractions: Set<string>;
 }): boolean {
@@ -86,6 +92,8 @@ export function isSequentialActivityNavigationLocked({
     const key = completionKey(block, index);
     if (["single_choice_exercise", "multi_choice_exercise", "resource_review", "checkpoint"].includes(block.type || "")) return !completedExercises.has(key);
     if (block.type === "cloud_exercise") return !completedCloudExercises.has(key);
+    if (block.type === "course_final_quiz") return !completedCourseFinalQuizzes.has(key);
+    if (block.type === "reflection") return !completedReflections.has(key);
     if (block.type === "bucket_sort") return !completedMatching.has(key);
     if (["knowledge_check", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type || "")) return !completedInlineInteractions.has(key);
     return false;

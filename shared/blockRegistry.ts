@@ -622,6 +622,22 @@ const genericLearningBlocks: BlockTypeDefinition[] = [
     type: "learning_progress", label: { en: "Learning progress", fr: "Progression d’apprentissage" }, description: { en: "Competency points and progression guidance", fr: "Points de compétences et consignes de progression" }, category: "layout", icon: "ChartNoAxesCombined", color: "bg-emerald-100 text-emerald-700", since: "4.0",
     schema: [{ key: "label", label: { en: "Label", fr: "Libellé" }, type: "i18n_text" }, { key: "copy", label: { en: "Guidance", fr: "Consigne" }, type: "i18n_textarea" }, { key: "points", label: { en: "Competency points", fr: "Points de compétences" }, type: "number", defaultValue: 1 }], defaultData: { type: "learning_progress", label: { en: "", fr: "" }, points: 1 },
   },
+  {
+    type: "annotated_screenshot", label: { en: "Annotated documentation image", fr: "Capture documentaire annotée" }, description: { en: "Attributable documentation image with accessible reading guide, zoom and full screen", fr: "Image documentaire attribuée avec guide accessible, zoom et plein écran" }, category: "media", icon: "Image", color: "bg-sky-100 text-sky-700", since: "4.1",
+    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true }, { key: "imageUrl", label: { en: "Managed image URL", fr: "URL d’image gérée" }, type: "text", required: true }, { key: "alt", label: { en: "Alternative text", fr: "Texte alternatif" }, type: "i18n_text", required: true }, { key: "caption", label: { en: "Caption", fr: "Légende" }, type: "i18n_textarea" }, { key: "guidedZones", label: { en: "Annotated zones", fr: "Zones annotées" }, type: "json" }, { key: "sourceRefs", label: { en: "Source references", fr: "Références sources" }, type: "json", required: true }], defaultData: { type: "annotated_screenshot", title: { en: "", fr: "" }, imageUrl: "", alt: { en: "", fr: "" }, guidedZones: [], sourceRefs: [] },
+  },
+  {
+    type: "source_references", label: { en: "Source references", fr: "Références sources" }, description: { en: "Compact attributable links supporting a teaching assertion", fr: "Liens attribuables appuyant une affirmation pédagogique" }, category: "content", icon: "Landmark", color: "bg-slate-100 text-slate-700", since: "4.1",
+    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text" }, { key: "sources", label: { en: "Sources", fr: "Sources" }, type: "json", required: true }], defaultData: { type: "source_references", title: { en: "References", fr: "Références" }, sources: [] },
+  },
+  {
+    type: "course_final_quiz", label: { en: "Secure final course quiz", fr: "Quiz final sécurisé" }, description: { en: "Server-provided and server-scored final course assessment", fr: "Évaluation finale fournie et corrigée côté serveur" }, category: "assessment", icon: "CircleHelp", color: "bg-indigo-100 text-indigo-700", since: "4.1",
+    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true }, { key: "passingScore", label: { en: "Passing score (%)", fr: "Seuil de réussite (%)" }, type: "number", defaultValue: 75 }], defaultData: { type: "course_final_quiz", title: { en: "Final assessment", fr: "Évaluation finale" }, passingScore: 75 },
+  },
+  {
+    type: "reflection", label: { en: "Learner reflection", fr: "Réflexion apprenant" }, description: { en: "Written post-activity reflection with a configurable minimum length", fr: "Réflexion écrite post-activité avec longueur minimale configurable" }, category: "interactive", icon: "MessageSquareText", color: "bg-violet-100 text-violet-700", since: "4.1",
+    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true }, { key: "prompt", label: { en: "Prompt", fr: "Consigne" }, type: "i18n_textarea", required: true }, { key: "minimumCharacters", label: { en: "Minimum characters", fr: "Nombre minimal de caractères" }, type: "number", defaultValue: 300 }], defaultData: { type: "reflection", title: { en: "Reflection", fr: "Retour critique" }, prompt: { en: "", fr: "" }, minimumCharacters: 300 },
+  },
 ];
 
 const universalCustomizationSchema: BlockFieldSchema[] = [

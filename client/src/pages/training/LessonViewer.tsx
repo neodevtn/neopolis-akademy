@@ -28,6 +28,10 @@ import { CodeReplBlock } from "@/components/blocks/CodeReplBlock";
 import { OrderingBlock } from "@/components/blocks/OrderingBlock";
 import { AiEvaluationBlock } from "@/components/blocks/AiEvaluationBlock";
 import { MultiChoiceBlock } from "@/components/blocks/MultiChoiceBlock";
+import { AnnotatedScreenshotBlock } from "@/components/blocks/AnnotatedScreenshotBlock";
+import { CourseFinalQuizBlock } from "@/components/blocks/CourseFinalQuizBlock";
+import { SourceReferencesBlock } from "@/components/blocks/SourceReferencesBlock";
+import { ReflectionBlock } from "@/components/blocks/ReflectionBlock";
 import { NovasavoLearningBlock } from "@/components/blocks/NovasavoLearningBlocks";
 import { BlockCustomizationFrame } from "@/components/blocks/BlockCustomizationFrame";
 import { ComparisonPanelBlock, KnowledgeCheckBlock, LearningProgressBlock, LearningSectionBlock, LearningToolsBlock, SequenceVisualBlock } from "@/components/blocks/GenericLearningBlocks";
@@ -80,7 +84,13 @@ export default function LessonViewer({
   const { user } = useAuth();
   const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
   const evaluateFreeResponse = trpc.training.evaluateFreeResponse.useMutation();
+  const submitClaudeScienceV2Lab = trpc.training.submitClaudeScienceV2Lab.useMutation();
+  const submitClaudeScienceV2Reflection = trpc.training.submitClaudeScienceV2Reflection.useMutation();
   const validateServerChoice = trpc.training.validateServerChoice.useMutation();
+  const claudeScienceActivityStatus = trpc.training.getClaudeScienceV2ActivityStatus.useQuery(
+    { courseId },
+    { enabled: courseId.startsWith("claude_science_"), retry: false, refetchOnWindowFocus: false },
+  );
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
   // This is what gets persisted as progress - NOT the navigation position
@@ -98,6 +108,8 @@ export default function LessonViewer({
   const [matchingCompleted, setMatchingCompleted] = useState<Set<string>>(new Set());
   // Track completed cloud exercises (TP)
   const [completedCloudExercises, setCompletedCloudExercises] = useState<Set<string>>(new Set());
+  const [completedCourseFinalQuizzes, setCompletedCourseFinalQuizzes] = useState<Set<string>>(new Set());
+  const [completedReflections, setCompletedReflections] = useState<Set<string>>(new Set());
   const [completedNovasavoInteractions, setCompletedNovasavoInteractions] = useState<Set<string>>(new Set());
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
@@ -105,6 +117,17 @@ export default function LessonViewer({
 
   const chapters = useMemo(() => lesson.chapters || [], [lesson.chapters]);
   const totalChapters = chapters.length;
+
+  useEffect(() => {
+    const status = claudeScienceActivityStatus.data;
+    if (!status) return;
+    const completedLabs = status.completedLabs.filter((id): id is string => typeof id === "string");
+    const completedFinalQuizzes = status.completedFinalQuizzes.filter((id): id is string => typeof id === "string");
+    const completedReflections = status.completedReflections.filter((id): id is string => typeof id === "string");
+    setCompletedCloudExercises((previous) => new Set(Array.from(previous).concat(completedLabs)));
+    setCompletedCourseFinalQuizzes((previous) => new Set(Array.from(previous).concat(completedFinalQuizzes)));
+    setCompletedReflections((previous) => new Set(Array.from(previous).concat(completedReflections)));
+  }, [claudeScienceActivityStatus.data]);
 
   // Reading progress state
   const [readingProgress, setReadingProgress] = useState(0);
@@ -147,6 +170,9 @@ export default function LessonViewer({
       setShowChapterQuiz(false);
       setChapterQuizPassed(new Set());
       setCompletedExercises(new Set());
+      setCompletedCloudExercises(new Set());
+      setCompletedCourseFinalQuizzes(new Set());
+      setCompletedReflections(new Set());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lesson.id]); // intentionally excludes initialChapter to only reset on lesson change
@@ -188,6 +214,10 @@ export default function LessonViewer({
           if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
           const cloudIds = blocks.filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
           if (cloudIds.length > 0 && !cloudIds.every((id: string) => completedCloudExercises.has(id))) return;
+          const finalQuizIds = blocks.filter((b: any) => b.type === 'course_final_quiz').map((b: any, i: number) => b.id || `course_final_quiz_${i}`);
+          if (finalQuizIds.length > 0 && !finalQuizIds.every((id: string) => completedCourseFinalQuizzes.has(id))) return;
+          const reflectionIds = blocks.filter((b: any) => b.type === 'reflection').map((b: any, i: number) => b.id || `reflection_${i}`);
+          if (reflectionIds.length > 0 && !reflectionIds.every((id: string) => completedReflections.has(id))) return;
           const novasavoIds = blocks.filter((b: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(b.type)).map((b: any, i: number) => b.id || `novasavo_${i}`);
           if (novasavoIds.length > 0 && !novasavoIds.every((id: string) => completedNovasavoInteractions.has(id))) return;
         }
@@ -198,7 +228,7 @@ export default function LessonViewer({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentChapter, isLastChapter, completedVideos, flipCardsCompleted, matchingCompleted, completedExercises, completedCloudExercises, completedNovasavoInteractions, isReviewMode, chapters]);
+  }, [currentChapter, isLastChapter, completedVideos, flipCardsCompleted, matchingCompleted, completedExercises, completedCloudExercises, completedCourseFinalQuizzes, completedReflections, completedNovasavoInteractions, isReviewMode, chapters]);
 
   // When chapter changes from internal navigation (Next button, etc.) - only scroll
   useEffect(() => {
@@ -232,6 +262,8 @@ export default function LessonViewer({
     reviewMode: isReviewMode,
     completedExercises,
     completedCloudExercises,
+    completedCourseFinalQuizzes,
+    completedReflections,
     completedMatching: matchingCompleted,
     completedInlineInteractions: completedNovasavoInteractions,
   });
@@ -308,6 +340,22 @@ export default function LessonViewer({
         }} /></div>;
       case "learning_section":
         return <LearningSectionBlock key={blockIdx} block={block} lang={lang} />;
+      case "guided_action":
+        return <LearningSectionBlock key={blockIdx} block={{ ...block, sectionKind: "content", body: block.body || block.expectedEvidence }} lang={lang} />;
+      case "annotated_screenshot":
+        return <AnnotatedScreenshotBlock key={blockIdx} block={block} lang={lang} />;
+      case "course_final_quiz":
+        return <CourseFinalQuizBlock key={blockIdx} block={block} courseId={courseId} lang={lang} onComplete={(id) => {
+          setCompletedExercises((previous) => new Set(previous).add(id));
+          setCompletedCourseFinalQuizzes((previous) => new Set(previous).add(id));
+          trackEventOnce("quiz_complete", `course-final-quiz:${courseId}:${id}`, { ...analyticsParams, content_id: id, passed: true });
+        }} />;
+      case "source_references":
+        return <SourceReferencesBlock key={blockIdx} block={block} lang={lang} />;
+      case "reflection":
+        return <ReflectionBlock key={blockIdx} block={block} lang={lang} onSubmit={({ id, answer }) => courseId.startsWith("claude_science_")
+          ? submitClaudeScienceV2Reflection.mutateAsync({ courseId, reflectionId: id, lessonIndex, chapterIndex: currentChapter, answer })
+          : Promise.resolve()} onComplete={(id) => setCompletedReflections((previous) => new Set(Array.from(previous).concat(id)))} />;
       case "knowledge_check":
         return <KnowledgeCheckBlock key={blockIdx} block={block} lang={lang} onComplete={(id, isCorrect) => {
           setCompletedNovasavoInteractions((current) => new Set(current).add(id));
@@ -699,6 +747,11 @@ export default function LessonViewer({
               onMarkComplete={toggleVideoComplete}
               onPlaybackChange={onMediaPlaybackChange}
               watchUrl={videoWatchUrl}
+              language={block.videoLanguage}
+              durationSeconds={block.durationSeconds}
+              objectiveBefore={typeof block.objectiveBefore === "string" ? block.objectiveBefore : (block.objectiveBefore?.[lang] || block.objectiveBefore?.fr || block.objectiveBefore?.en || "")}
+              questionsAfter={(block.questionsAfter || []).map((question: any) => typeof question === "string" ? question : (question?.[lang] || question?.fr || question?.en || "")).filter(Boolean)}
+              alternativeTextFr={block.alternativeTextFr || ""}
               lang={lang}
               t={t}
             />
@@ -961,7 +1014,9 @@ export default function LessonViewer({
         );
       }
       case "cloud_exercise": {
-        return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} evaluationContext={{ certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter }} onEvaluate={(input) => evaluateFreeResponse.mutateAsync(input as any)} onComplete={(id, outcome) => {
+        return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} evaluationContext={{ certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter }} onEvaluate={(input) => block.serverGradedAssessment === "claude_science_v2_lab"
+          ? submitClaudeScienceV2Lab.mutateAsync({ courseId, labId: String(input.blockId), lessonIndex, chapterIndex: currentChapter, answer: String(input.answer) })
+          : evaluateFreeResponse.mutateAsync(input as any)} onComplete={(id, outcome) => {
           setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
           if (outcome?.rubricEvaluated) recordCompetencyOutcome.mutate({
             sourceType: "exercise_passed",
@@ -1323,11 +1378,15 @@ export default function LessonViewer({
                 const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => matchingCompleted.has(id));
               const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review').map((b: any, i: number) => b.id || `quiz_${i}`);
               const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
-              const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
-              const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
+                const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
+                const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
+                const lastCourseFinalQuizIds = (chapter?.blocks || []).filter((b: any) => b.type === 'course_final_quiz').map((b: any, i: number) => b.id || `course_final_quiz_${i}`);
+                const lastAllCourseFinalQuizzesDone = lastCourseFinalQuizIds.length === 0 || lastCourseFinalQuizIds.every((id: string) => completedCourseFinalQuizzes.has(id));
+                const lastReflectionIds = (chapter?.blocks || []).filter((b: any) => b.type === 'reflection').map((b: any, i: number) => b.id || `reflection_${i}`);
+                const lastAllReflectionsDone = lastReflectionIds.length === 0 || lastReflectionIds.every((id: string) => completedReflections.has(id));
                 const lastNovasavoIds = (chapter?.blocks || []).filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type)).map((block: any, index: number) => block.id || `novasavo_${index}`);
                 const lastAllNovasavoDone = lastNovasavoIds.length === 0 || lastNovasavoIds.every((id: string) => completedNovasavoInteractions.has(id));
-                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone || !lastAllNovasavoDone;
+                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone || !lastAllCourseFinalQuizzesDone || !lastAllReflectionsDone || !lastAllNovasavoDone;
                 return (
                   <Button
                     size="sm"
@@ -1409,6 +1468,12 @@ export default function LessonViewer({
                 .map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
               const allCloudExercisesCompleted = chapterCloudExerciseIds.length === 0 || chapterCloudExerciseIds.every((id: string) => completedCloudExercises.has(id));
               const isGatedByCloudExercise = chapterCloudExerciseIds.length > 0 && !allCloudExercisesCompleted && !isReviewMode;
+              const chapterCourseFinalQuizIds = (chapter?.blocks || [])
+                .filter((b: any) => b.type === 'course_final_quiz')
+                .map((b: any, i: number) => b.id || `course_final_quiz_${i}`);
+              const isGatedByCourseFinalQuiz = chapterCourseFinalQuizIds.length > 0 && !chapterCourseFinalQuizIds.every((id: string) => completedCourseFinalQuizzes.has(id)) && !isReviewMode;
+              const chapterReflectionIds = (chapter?.blocks || []).filter((b: any) => b.type === 'reflection').map((b: any, i: number) => b.id || `reflection_${i}`);
+              const isGatedByReflection = chapterReflectionIds.length > 0 && !chapterReflectionIds.every((id: string) => completedReflections.has(id)) && !isReviewMode;
               const isGatedByNovasavo = isGatedByNovasavoInteraction;
               const passageConditions = [
                 isGatedByVideo && t({ en: "Watch or mark the official video as watched.", fr: "Regardez ou marquez comme vue la vidéo officielle." }),
@@ -1417,6 +1482,8 @@ export default function LessonViewer({
                 (isGatedByExercises || isGatedBySingleChoice) && t({ en: "Submit the required validation activity.", fr: "Soumettez l’activité de validation requise." }),
                 isGatedByResourceReview && t({ en: "Open and confirm review of the required local resource.", fr: "Ouvrez puis confirmez la consultation de la ressource locale requise." }),
                 isGatedByCloudExercise && t({ en: "Submit the practical exercise.", fr: "Soumettez l’exercice pratique." }),
+                isGatedByCourseFinalQuiz && t({ en: "Pass the final course assessment.", fr: "Réussissez l’évaluation finale du cours." }),
+                isGatedByReflection && t({ en: "Save the required reflection.", fr: "Enregistrez la réflexion demandée." }),
                 isGatedByNovasavo && t({ en: "Answer the required inline activity.", fr: "Répondez à l’activité intégrée obligatoire." }),
               ].filter(Boolean);
               const chapterTitle = resolveI18n(chapter?.title, 'en');
@@ -1424,7 +1491,7 @@ export default function LessonViewer({
               const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
               const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter) && courseId !== "automatisation_comptable_ia__01";
 
-              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise || isGatedByNovasavo;
+              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise || isGatedByCourseFinalQuiz || isGatedByReflection || isGatedByNovasavo;
               return (
                 <div className="flex w-full min-w-0 flex-col items-stretch gap-2 sm:w-auto sm:items-end sm:gap-1.5">
                   {passageConditions.length > 0 && (
@@ -1458,7 +1525,7 @@ export default function LessonViewer({
                       <>{t({ en: "🎥 Watch video to continue", fr: "🎥 Regardez la vidéo pour continuer" })}</>
                     ) : isGatedByFlipCards ? (
                       <>{t({ en: "🃏 Flip all cards to continue", fr: "🃏 Retournez toutes les cartes" })}</>
-                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise || isGatedByNovasavo) ? (
+                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise || isGatedByCourseFinalQuiz || isGatedByReflection || isGatedByNovasavo) ? (
                       <>{t({ en: "Complete activity to continue", fr: "Validez l'activité pour continuer" })}</>
                     ) : (
                       <>{t({ en: "Next", fr: "Suivant" })} →</>

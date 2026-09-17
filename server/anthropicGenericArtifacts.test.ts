@@ -15,8 +15,8 @@ const bannedArtifacts = [
 ];
 
 describe("nettoyage générique des artefacts Anthropic", () => {
-  it("retire des 28 contenus les marqueurs UI et techniques non sémantiques ciblés", async () => {
-    const files = (await readdir(coursesDir)).filter((file) => file.startsWith("claude_") && file.endsWith(".json"));
+  it("retire des contenus de certification Anthropic les marqueurs UI et techniques non sémantiques ciblés", async () => {
+    const files = (await readdir(coursesDir)).filter((file) => file.startsWith("claude_") && !file.startsWith("claude_science_") && file.endsWith(".json"));
     expect(files.length).toBe(28);
 
     const sources = await Promise.all(files.map((file) => readFile(resolve(coursesDir, file), "utf8")));

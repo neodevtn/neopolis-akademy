@@ -510,7 +510,7 @@ export default function TrainingCourse() {
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            <div className="training-header-language shrink-0"><LanguageSwitcher /></div>
+            {course?.languageSelectionDisabled !== true && <div className="training-header-language shrink-0"><LanguageSwitcher /></div>}
             <button
               onClick={() => logout()}
               className="flex shrink-0 items-center gap-1.5 rounded-full border border-red-200 px-2 py-1.5 text-xs font-medium text-red-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30 sm:px-3"

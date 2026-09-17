@@ -45,6 +45,11 @@ export function getAssetCacheControl(key: string): string {
     : DEFAULT_PUBLIC_ASSET_CACHE_CONTROL;
 }
 
+/** Corrections and expected outputs are assessment material, never public learner downloads. */
+export function isPrivateLearningCorrectionAssetKey(key: string): boolean {
+  return /^claude-science-v2\/03_claude_science_travaux_pratiques\/(?:solutions\/|downloads\/expected\/|downloads\/scripts\/solution_)/.test(key);
+}
+
 function getMimeFromKey(key: string): string | null {
   const ext = key.substring(key.lastIndexOf(".")).toLowerCase();
   return MIME_MAP[ext] || null;
@@ -111,6 +116,10 @@ export function registerAssetProxy(app: Express) {
     const key = (req.params as Record<string, string>)[0];
     if (!key) {
       res.status(400).send("Missing asset key");
+      return;
+    }
+    if (isPrivateLearningCorrectionAssetKey(key)) {
+      res.status(404).send("Asset introuvable");
       return;
     }
     const privateMessageAttachment = key.startsWith("private-messaging/");
