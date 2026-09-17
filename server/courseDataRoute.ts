@@ -25,6 +25,14 @@ export function sanitizeCourseDataForLearner(content: string): string {
       }
     }
   }
+  for (const exercise of course.exercises || []) {
+    if (exercise?.serverValidated === true) {
+      delete exercise.correctAnswer;
+      delete exercise.explanation;
+      delete exercise.correction;
+      for (const option of exercise.options || []) delete option.correct;
+    }
+  }
   return JSON.stringify(course);
 }
 

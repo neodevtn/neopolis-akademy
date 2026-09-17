@@ -15,6 +15,7 @@ import {
 } from "./publicTrainingPages";
 import { getPublicCatalogueTrainings, getPublicCatalogueSitemapEntries } from "@shared/publicTrainingCatalog";
 import { getTrainingVisualAsset } from "@shared/trainingVisualAssets";
+import trainingIndex from "../client/src/data/trainingIndex.json";
 
 describe("pages publiques de formations IA", () => {
   it("rend l’index avec contenu, SEO et données structurées", () => {
@@ -123,7 +124,7 @@ describe("pages publiques de formations IA", () => {
   it("expose une carte et une image sociale non vides pour chaque formation publique dans chaque langue", () => {
     (['fr', 'en', 'ar'] as const).forEach((locale) => {
       const trainings = getPublicCatalogueTrainings(locale);
-      expect(trainings).toHaveLength(115);
+      expect(trainings).toHaveLength((trainingIndex as any).certifications.length);
       trainings.forEach((training) => {
         expect(training.visual.cardPath).toMatch(/^\//);
         expect(training.visual.socialPath).toMatch(/^\//);

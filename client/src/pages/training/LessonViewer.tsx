@@ -28,6 +28,8 @@ import { CodeReplBlock } from "@/components/blocks/CodeReplBlock";
 import { OrderingBlock } from "@/components/blocks/OrderingBlock";
 import { AiEvaluationBlock } from "@/components/blocks/AiEvaluationBlock";
 import { MultiChoiceBlock } from "@/components/blocks/MultiChoiceBlock";
+import { AnnotatedScreenshotBlock } from "@/components/blocks/AnnotatedScreenshotBlock";
+import { ModuleQuizBlock } from "@/components/blocks/ModuleQuizBlock";
 import { NovasavoLearningBlock } from "@/components/blocks/NovasavoLearningBlocks";
 import { BlockCustomizationFrame } from "@/components/blocks/BlockCustomizationFrame";
 import { ComparisonPanelBlock, KnowledgeCheckBlock, LearningProgressBlock, LearningSectionBlock, LearningToolsBlock, SequenceVisualBlock } from "@/components/blocks/GenericLearningBlocks";
@@ -81,6 +83,7 @@ export default function LessonViewer({
   const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
   const evaluateFreeResponse = trpc.training.evaluateFreeResponse.useMutation();
   const validateServerChoice = trpc.training.validateServerChoice.useMutation();
+  const completeModuleLab = trpc.training.completeModuleLab.useMutation();
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
   // This is what gets persisted as progress - NOT the navigation position
@@ -98,6 +101,8 @@ export default function LessonViewer({
   const [matchingCompleted, setMatchingCompleted] = useState<Set<string>>(new Set());
   // Track completed cloud exercises (TP)
   const [completedCloudExercises, setCompletedCloudExercises] = useState<Set<string>>(new Set());
+  // Module quizzes have a server-graded result and unlock the next learning unit only when passed.
+  const [completedModuleQuizzes, setCompletedModuleQuizzes] = useState<Set<string>>(new Set());
   const [completedNovasavoInteractions, setCompletedNovasavoInteractions] = useState<Set<string>>(new Set());
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
@@ -188,6 +193,8 @@ export default function LessonViewer({
           if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
           const cloudIds = blocks.filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
           if (cloudIds.length > 0 && !cloudIds.every((id: string) => completedCloudExercises.has(id))) return;
+          const moduleQuizIds = blocks.filter((b: any) => b.type === 'module_quiz').map((b: any, i: number) => b.id || `module_quiz_${i}`);
+          if (moduleQuizIds.length > 0 && !moduleQuizIds.every((id: string) => completedModuleQuizzes.has(id))) return;
           const novasavoIds = blocks.filter((b: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(b.type)).map((b: any, i: number) => b.id || `novasavo_${i}`);
           if (novasavoIds.length > 0 && !novasavoIds.every((id: string) => completedNovasavoInteractions.has(id))) return;
         }
@@ -227,6 +234,10 @@ export default function LessonViewer({
     .filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(block.type))
     .map((block: any, index: number) => block.id || `novasavo_${index}`);
   const isGatedByNovasavoInteraction = !isReviewMode && novasavoInteractionIds.length > 0 && !novasavoInteractionIds.every((id: string) => completedNovasavoInteractions.has(id));
+  const moduleQuizIds = (chapter?.blocks || [])
+    .filter((block: any) => block.type === "module_quiz")
+    .map((block: any, index: number) => block.id || `module_quiz_${index}`);
+  const isGatedByModuleQuiz = !isReviewMode && moduleQuizIds.length > 0 && !moduleQuizIds.every((id: string) => completedModuleQuizzes.has(id));
   const isTopActivityNavigationLocked = isSequentialActivityNavigationLocked({
     blocks: chapter?.blocks || [],
     reviewMode: isReviewMode,
@@ -234,7 +245,7 @@ export default function LessonViewer({
     completedCloudExercises,
     completedMatching: matchingCompleted,
     completedInlineInteractions: completedNovasavoInteractions,
-  });
+  }) || isGatedByModuleQuiz;
   const analyticsParams = {
     course_slug: courseId,
     category_slug: certId,
@@ -258,7 +269,7 @@ export default function LessonViewer({
 
   useEffect(() => {
     const blocks = chapter?.blocks || [];
-    const hasQuiz = chapter?.type === "quiz" || chapter?.type === "checkpoint" || blocks.some((block: any) => ["single_choice_exercise", "multi_choice_exercise", "checkpoint", "knowledge_check"].includes(block.type));
+    const hasQuiz = chapter?.type === "quiz" || chapter?.type === "checkpoint" || blocks.some((block: any) => ["single_choice_exercise", "multi_choice_exercise", "checkpoint", "knowledge_check", "module_quiz"].includes(block.type));
     const hasExercise = blocks.some((block: any) => ["exercise", "cloud_exercise", "bucket_sort", "matching", "fill_blank", "terminal_sim", "code_repl", "ordering", "ai_evaluation", "resource_review", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type));
     if (hasQuiz) trackEventOnce("quiz_start", `quiz-start:${courseId}:${lessonIndex}:${currentChapter}`, analyticsParams);
     if (hasExercise) trackEventOnce("exercise_start", `exercise-start:${courseId}:${lessonIndex}:${currentChapter}`, { ...analyticsParams, status: "opened" });
@@ -308,6 +319,13 @@ export default function LessonViewer({
         }} /></div>;
       case "learning_section":
         return <LearningSectionBlock key={blockIdx} block={block} lang={lang} />;
+      case "annotated_screenshot":
+        return <AnnotatedScreenshotBlock key={blockIdx} block={block} lang={lang} />;
+      case "module_quiz":
+        return <ModuleQuizBlock key={blockIdx} block={block} courseId={courseId} lang={lang} onComplete={(id) => {
+          setCompletedModuleQuizzes((current) => new Set(current).add(id));
+          trackEventOnce("quiz_complete", `module-quiz-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, score_band: "75_100", passed: true });
+        }} />;
       case "knowledge_check":
         return <KnowledgeCheckBlock key={blockIdx} block={block} lang={lang} onComplete={(id, isCorrect) => {
           setCompletedNovasavoInteractions((current) => new Set(current).add(id));
@@ -699,6 +717,11 @@ export default function LessonViewer({
               onMarkComplete={toggleVideoComplete}
               onPlaybackChange={onMediaPlaybackChange}
               watchUrl={videoWatchUrl}
+              language={block.language}
+              durationSeconds={block.durationSeconds}
+              objectiveBefore={typeof block.objectiveBefore === "string" ? block.objectiveBefore : (block.objectiveBefore?.[lang] || block.objectiveBefore?.fr || block.objectiveBefore?.en)}
+              questionsAfter={(block.questionsAfter || []).map((question: any) => typeof question === "string" ? question : (question?.[lang] || question?.fr || question?.en)).filter(Boolean)}
+              alternativeTextFr={block.alternativeTextFr}
               lang={lang}
               t={t}
             />
@@ -737,6 +760,7 @@ export default function LessonViewer({
               exercise={exercise}
               index={0}
               lang={lang as "en" | "fr"}
+              onEvaluate={exercise.serverValidated ? async (selectedId) => validateServerChoice.mutateAsync({ courseId, exerciseId, selectedId, lang: lang === "fr" ? "fr" : "en" }) : undefined}
               onComplete={(id) => { trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: "completed" }); setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; }); }}
             />
           </div>
@@ -962,7 +986,13 @@ export default function LessonViewer({
       }
       case "cloud_exercise": {
         return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} evaluationContext={{ certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter }} onEvaluate={(input) => evaluateFreeResponse.mutateAsync(input as any)} onComplete={(id, outcome) => {
-          setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
+          const moduleId = String(block.id || "").match(/^csm_(.+)_lab$/)?.[1];
+          const completeLocally = () => setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
+          if (moduleId) {
+            void completeModuleLab.mutateAsync({ courseId, moduleId, activityId: id, lessonIndex, chapterIndex: currentChapter }).then(completeLocally);
+          } else {
+            completeLocally();
+          }
           if (outcome?.rubricEvaluated) recordCompetencyOutcome.mutate({
             sourceType: "exercise_passed",
             sourceKey: courseId,
@@ -1323,11 +1353,13 @@ export default function LessonViewer({
                 const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => matchingCompleted.has(id));
               const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review').map((b: any, i: number) => b.id || `quiz_${i}`);
               const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
-              const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
-              const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
+                const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
+                const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
+                const lastChapterModuleQuizIds = (chapter?.blocks || []).filter((b: any) => b.type === 'module_quiz').map((b: any, i: number) => b.id || `module_quiz_${i}`);
+                const lastAllModuleQuizzesDone = lastChapterModuleQuizIds.length === 0 || lastChapterModuleQuizIds.every((id: string) => completedModuleQuizzes.has(id));
                 const lastNovasavoIds = (chapter?.blocks || []).filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type)).map((block: any, index: number) => block.id || `novasavo_${index}`);
                 const lastAllNovasavoDone = lastNovasavoIds.length === 0 || lastNovasavoIds.every((id: string) => completedNovasavoInteractions.has(id));
-                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone || !lastAllNovasavoDone;
+                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone || !lastAllModuleQuizzesDone || !lastAllNovasavoDone;
                 return (
                   <Button
                     size="sm"
@@ -1409,6 +1441,10 @@ export default function LessonViewer({
                 .map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
               const allCloudExercisesCompleted = chapterCloudExerciseIds.length === 0 || chapterCloudExerciseIds.every((id: string) => completedCloudExercises.has(id));
               const isGatedByCloudExercise = chapterCloudExerciseIds.length > 0 && !allCloudExercisesCompleted && !isReviewMode;
+              const chapterModuleQuizIds = (chapter?.blocks || [])
+                .filter((b: any) => b.type === 'module_quiz')
+                .map((b: any, i: number) => b.id || `module_quiz_${i}`);
+              const isGatedByCurrentModuleQuiz = chapterModuleQuizIds.length > 0 && !chapterModuleQuizIds.every((id: string) => completedModuleQuizzes.has(id)) && !isReviewMode;
               const isGatedByNovasavo = isGatedByNovasavoInteraction;
               const passageConditions = [
                 isGatedByVideo && t({ en: "Watch or mark the official video as watched.", fr: "Regardez ou marquez comme vue la vidéo officielle." }),
@@ -1417,6 +1453,7 @@ export default function LessonViewer({
                 (isGatedByExercises || isGatedBySingleChoice) && t({ en: "Submit the required validation activity.", fr: "Soumettez l’activité de validation requise." }),
                 isGatedByResourceReview && t({ en: "Open and confirm review of the required local resource.", fr: "Ouvrez puis confirmez la consultation de la ressource locale requise." }),
                 isGatedByCloudExercise && t({ en: "Submit the practical exercise.", fr: "Soumettez l’exercice pratique." }),
+                isGatedByCurrentModuleQuiz && t({ en: "Pass the module quiz.", fr: "Réussissez le quiz de module." }),
                 isGatedByNovasavo && t({ en: "Answer the required inline activity.", fr: "Répondez à l’activité intégrée obligatoire." }),
               ].filter(Boolean);
               const chapterTitle = resolveI18n(chapter?.title, 'en');
@@ -1424,7 +1461,7 @@ export default function LessonViewer({
               const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
               const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter) && courseId !== "automatisation_comptable_ia__01";
 
-              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise || isGatedByNovasavo;
+              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise || isGatedByCurrentModuleQuiz || isGatedByNovasavo;
               return (
                 <div className="flex w-full min-w-0 flex-col items-stretch gap-2 sm:w-auto sm:items-end sm:gap-1.5">
                   {passageConditions.length > 0 && (
@@ -1458,7 +1495,7 @@ export default function LessonViewer({
                       <>{t({ en: "🎥 Watch video to continue", fr: "🎥 Regardez la vidéo pour continuer" })}</>
                     ) : isGatedByFlipCards ? (
                       <>{t({ en: "🃏 Flip all cards to continue", fr: "🃏 Retournez toutes les cartes" })}</>
-                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise || isGatedByNovasavo) ? (
+                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise || isGatedByCurrentModuleQuiz || isGatedByNovasavo) ? (
                       <>{t({ en: "Complete activity to continue", fr: "Validez l'activité pour continuer" })}</>
                     ) : (
                       <>{t({ en: "Next", fr: "Suivant" })} →</>
