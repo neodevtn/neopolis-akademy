@@ -76,6 +76,13 @@ describe("Claude Science V2 course collection", () => {
     }
   });
 
+  it("excludes private corrections and expected outputs from the administrative media library", () => {
+    const mediaLibrary = JSON.parse(fs.readFileSync(path.join(root, "client", "public", "data", "mediaLibrary.json"), "utf8"));
+    const urls = Object.keys(mediaLibrary);
+
+    expect(urls.some((url) => /\/claude-science-v2\/03_claude_science_travaux_pratiques\/(?:solutions\/|downloads\/expected\/|downloads\/scripts\/solution_)/.test(url))).toBe(false);
+  });
+
   it("uses Claude Sonnet only for server-side practical evaluation", () => {
     const service = fs.readFileSync(path.join(root, "server", "claudeScienceV2AssessmentService.ts"), "utf8");
     expect(service).toContain('model: "claude-sonnet-4-6"');

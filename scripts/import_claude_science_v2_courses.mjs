@@ -386,7 +386,12 @@ writeJson(indexPath, index);
 
 const mediaLibraryPath = path.join(root, "client", "public", "data", "mediaLibrary.json");
 const mediaLibrary = fs.existsSync(mediaLibraryPath) ? readJson(mediaLibraryPath) : {};
+const isPrivateClaudeScienceAssetUrl = (url) => /\/api\/assets\/claude-science-v2\/03_claude_science_travaux_pratiques\/(?:solutions\/|downloads\/expected\/|downloads\/scripts\/solution_)/.test(url);
+for (const url of Object.keys(mediaLibrary)) {
+  if (isPrivateClaudeScienceAssetUrl(url)) delete mediaLibrary[url];
+}
 for (const asset of Object.values(assetMap)) {
+  if (isPrivateClaudeScienceAssetUrl(asset.url)) continue;
   mediaLibrary[asset.url] = { id: `claude_science_v2_${asset.sha256.slice(0, 18)}`, url: asset.url, title: asset.title, kind: asset.kind, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
 }
 writeJson(mediaLibraryPath, mediaLibrary);

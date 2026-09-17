@@ -55,6 +55,7 @@ function visualProfile(training) {
     if (/api|integration|intégration/.test(source)) return { motif: "code", kind: "api", label: "API", icon: "{}" };
     return { motif: "code", kind: "terminal", label: "Développement", icon: "</>" };
   }
+  if (/recherche médicale|medical research|science|génom|genom|biolog|protéin|protein/.test(source)) return { motif: "research", kind: "science", label: "Recherche", icon: "⌬" };
   if (/agent|rag|llm|claude|prompt/.test(source)) {
     if (/rag|knowledge|document|recherche/.test(source)) return { motif: "agent", kind: "rag", label: "Connaissances", icon: "⌕" };
     if (/claude|conversation|prompt/.test(source)) return { motif: "agent", kind: "conversation", label: "Dialogue", icon: "◌" };
@@ -69,6 +70,7 @@ function visualProfile(training) {
 function visualProfilePriority(training) {
   const title = training.title.toLowerCase();
   const source = `${training.title} ${training.description}`.toLowerCase();
+  if (/recherche médicale|medical research|science|génom|genom|biolog|protéin|protein/.test(source)) return { motif: "research", kind: "science", label: "Recherche", icon: "⌬" };
   if (/workflow|automatisation|automation|n8n/.test(title)) {
     if (/marketing|campaign|campagne|social/.test(source)) return { motif: "workflow", kind: "marketing", label: "Marketing", icon: "✦" };
     if (/onboarding|rh|recrut|collaborateur/.test(source)) return { motif: "workflow", kind: "integration", label: "Intégration", icon: "⌘" };

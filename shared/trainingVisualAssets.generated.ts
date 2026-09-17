@@ -1037,4 +1037,13 @@ export const GENERATED_TRAINING_VISUAL_ASSETS: Record<string, TrainingVisualAsse
     cardHeight: 900,
     alt: { fr: "IA pratique avec Google Gemini et NotebookLM", en: "IA pratique avec Google Gemini et NotebookLM", ar: "IA pratique avec Google Gemini et NotebookLM" },
   },
+  "claude_science_recherche_medicale": {
+    socialPath: "/manus-storage/claude_science_recherche_medicale-social_59f0a648.png",
+    socialWidth: 1200,
+    socialHeight: 630,
+    cardPath: "/api/assets/claude_science_recherche_medicale-card_280583fc.png",
+    cardWidth: 1200,
+    cardHeight: 900,
+    alt: { fr: "Claude Science pour la recherche médicale", en: "Claude Science pour la recherche médicale", ar: "Claude Science pour la recherche médicale" },
+  },
 };
