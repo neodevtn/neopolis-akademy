@@ -17,6 +17,8 @@ describe("chrome public et recherche de formations", () => {
     expect(html).toContain('name="q"');
     expect(html).toContain('placeholder="Métier, compétence ou formation…"');
     expect(html).toContain('id="public-training-search"');
+    expect(html).toContain('href="/formations-ia/golden-jobs"');
+    expect(html).toContain('>Golden Jobs<');
     expect(html).toContain('src="/api/assets/neopolis-akademy-header-user-supplied-240x84_61aeceeb.png"');
     expect(html).toContain('width="120"');
     expect(html).toContain('height="42"');

@@ -4,12 +4,12 @@ import { Link, useLocation } from "wouter";
 import DeferredHomeAuth from "@/components/DeferredHomeAuth";
 import { type Language, useLanguage } from "@/contexts/LanguageContext";
 import { trackEvent } from "@/lib/analytics";
-import { publicTrainingCataloguePath, publicTrainingPath } from "@shared/publicTrainingLocale";
+import { publicGoldenJobsPath, publicTrainingCataloguePath, publicTrainingPath } from "@shared/publicTrainingLocale";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 import { navigateToHomePublicAnchor } from "@/lib/homePublicAnchors";
 import { HeaderBrandLogo, OFFICIAL_NEOPOLIS_AKADEMY_LOGO } from "@/components/BrandLogo";
 
-type PublicPage = "home" | "training" | "news" | "apply" | "legal" | "referral";
+type PublicPage = "home" | "training" | "goldenJobs" | "news" | "apply" | "legal" | "referral";
 
 type LocalizedText = { fr: string; en: string; ar: string };
 
@@ -18,6 +18,7 @@ const labels = {
   why: { fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" },
   partners: { fr: "Partenaires", en: "Partners", ar: "الشركاء" },
   training: { fr: "Formations IA", en: "AI Training", ar: "تدريب الذكاء الاصطناعي" },
+  goldenJobs: { fr: "Golden Jobs", en: "Golden Jobs", ar: "وظائف ذهبية" },
   news: { fr: "AI News", en: "AI News", ar: "أخبار الذكاء الاصطناعي" },
   faq: { fr: "FAQ", en: "FAQ", ar: "الأسئلة الشائعة" },
   signIn: { fr: "Se connecter", en: "Sign in", ar: "تسجيل الدخول" },
@@ -39,6 +40,8 @@ function localizedPath(location: string, locale: Language) {
   if (/^\/(?:en|ar)?$/.test(normalized)) return locale === "fr" ? "/" : `/${locale}`;
   const catalogueMatch = normalized.match(/^\/(?:formations-ia|en\/ai-training|ar\/ai-training)\/catalogue(?:\/([^/]+))?(?:\/([^/]+))?$/);
   if (catalogueMatch) return publicTrainingCataloguePath(locale, catalogueMatch[1], catalogueMatch[2]);
+  const goldenJobsMatch = normalized.match(/^\/(?:formations-ia|en\/ai-training|ar\/ai-training)\/golden-jobs(?:\/([^/]+))?$/);
+  if (goldenJobsMatch) return publicGoldenJobsPath(locale, goldenJobsMatch[1]);
   const match = normalized.match(/^\/(?:formations-ia|en\/ai-training|ar\/ai-training)(?:\/([^/]+))?$/);
   return match ? publicTrainingPath(locale, match[1]) : location;
 }
@@ -74,6 +77,7 @@ function publicLinks(lang: Language, page: PublicPage) {
     { href: homeAnchor("#pourquoi"), label: labels.why, active: false },
     { href: homeAnchor("#partenaires"), label: labels.partners, active: false },
     { href: publicTrainingPath(lang), label: labels.training, active: page === "training" },
+    { href: publicGoldenJobsPath(lang), label: labels.goldenJobs, active: page === "goldenJobs" },
     { href: "/ai-news", label: labels.news, active: page === "news" },
     { href: homeAnchor("#faq"), label: labels.faq, active: false },
   ];
@@ -207,7 +211,7 @@ export function PublicSiteFooter() {
           </div>
           <div>
             <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-white">{t(labels.explore)}</h2>
-            <ul className="mt-3 space-y-2 text-sm"><li><Link href={publicTrainingPath(lang)} className="hover:text-white hover:underline">{t(labels.training)}</Link></li><li><Link href="/ai-news" className="hover:text-white hover:underline">{t(labels.news)}</Link></li><li><Link href={publicTrainingCataloguePath(lang)} className="hover:text-white hover:underline">{t({ fr: "Catalogue", en: "Catalogue", ar: "الكتالوج" })}</Link></li><li><Link href="/apply" className="hover:text-white hover:underline">{t(labels.apply)}</Link></li></ul>
+            <ul className="mt-3 space-y-2 text-sm"><li><Link href={publicTrainingPath(lang)} className="hover:text-white hover:underline">{t(labels.training)}</Link></li><li><Link href={publicGoldenJobsPath(lang)} className="hover:text-white hover:underline">{t(labels.goldenJobs)}</Link></li><li><Link href="/ai-news" className="hover:text-white hover:underline">{t(labels.news)}</Link></li><li><Link href={publicTrainingCataloguePath(lang)} className="hover:text-white hover:underline">{t({ fr: "Catalogue", en: "Catalogue", ar: "الكتالوج" })}</Link></li><li><Link href="/apply" className="hover:text-white hover:underline">{t(labels.apply)}</Link></li></ul>
           </div>
           <div>
             <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-white">{t(labels.contact)}</h2>

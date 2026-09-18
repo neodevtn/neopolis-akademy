@@ -41,7 +41,7 @@ export const goldenJobs: GoldenJob[] = [
     scope: text("Analyse des données, teste des hypothèses et construit des modèles prédictifs ou de segmentation pour répondre à un problème métier défini.", "Analyses data, tests hypotheses and builds predictive or segmentation models for a defined business problem.", "يحلل البيانات ويختبر الفرضيات ويبني نماذج تنبؤية أو للتقسيم لمعالجة مشكلة أعمال محددة."),
     skills: [text("Statistiques & probabilités", "Statistics & probability", "الإحصاء والاحتمالات"), text("Python & SQL", "Python & SQL", "بايثون وSQL"), text("Modélisation & évaluation", "Modelling & evaluation", "النمذجة والتقييم")],
     salary: "45–75 k€ · 75–95 k€ · 95–120 k€",
-    recommendedCertificationIds: ["datacamp_ai_for_data_analysts", "datacamp_efficient_ai_model_training_with_pytorch", "analyse_donnees_reporting_bi_codex"],
+    recommendedCertificationIds: ["claude_certified_associate_foundations", "datacamp_ai_for_data_analysts", "datacamp_efficient_ai_model_training_with_pytorch", "analyse_donnees_reporting_bi_codex"],
     videoGroup: "data",
   },
   {
@@ -51,7 +51,7 @@ export const goldenJobs: GoldenJob[] = [
     scope: text("Industrialise les modèles avec des services robustes, du déploiement, du monitoring et des boucles de réentraînement adaptés à l’usage.", "Productionizes models with robust services, deployment, monitoring and retraining loops suited to the use case.", "يحول النماذج إلى خدمات موثوقة مع النشر والمراقبة ودورات إعادة التدريب الملائمة لحالة الاستخدام."),
     skills: [text("Python & frameworks ML", "Python & ML frameworks", "بايثون وأطر تعلم الآلة"), text("Déploiement de modèles", "Model deployment", "نشر النماذج"), text("MLOps & Cloud", "MLOps & cloud", "MLOps والسحابة")],
     salary: "50–80 k€ · 80–105 k€ · 105–140 k€",
-    recommendedCertificationIds: ["datacamp_efficient_ai_model_training_with_pytorch", "datacamp_deploying_ai_into_production_with_fastapi", "ai_production_infrastructure_model_serving_engineer"],
+    recommendedCertificationIds: ["claude_certified_developer_foundations", "datacamp_efficient_ai_model_training_with_pytorch", "datacamp_deploying_ai_into_production_with_fastapi", "ai_production_infrastructure_model_serving_engineer"],
     videoGroup: "data",
   },
   {
@@ -71,7 +71,7 @@ export const goldenJobs: GoldenJob[] = [
     scope: text("Automatise le cycle de vie des modèles et des LLM : versions, évaluations, performance, coût, latence, sécurité et détection des dégradations.", "Automates model and LLM lifecycles: versions, evaluations, performance, cost, latency, security and degradation detection.", "يؤتمت دورة حياة النماذج وLLM: الإصدارات والتقييمات والأداء والتكلفة وزمن الاستجابة والأمن واكتشاف التدهور."),
     skills: [text("Observabilité IA", "AI observability", "مراقبة الذكاء الاصطناعي"), text("Évaluations automatisées", "Automated evaluations", "التقييمات الآلية"), text("Coûts & performance", "Cost & performance", "التكلفة والأداء")],
     salary: null,
-    recommendedCertificationIds: ["ai_production_infrastructure_model_serving_engineer", "datacamp_deploying_ai_into_production_with_fastapi", "ai_finops_cost_engineering_specialist"],
+    recommendedCertificationIds: ["claude_certified_developer_foundations", "ai_production_infrastructure_model_serving_engineer", "datacamp_deploying_ai_into_production_with_fastapi", "ai_finops_cost_engineering_specialist"],
     videoGroup: "engineering",
   },
   {
@@ -101,7 +101,7 @@ export const goldenJobs: GoldenJob[] = [
     scope: text("Qualifie les cas d’usage, l’expérience, le niveau d’automatisation, la valeur et les limites d’un produit assisté par IA.", "Qualifies use cases, experience, automation level, value and limitations of an AI-assisted product.", "يحدد حالات الاستخدام وتجربة المستخدم ومستوى الأتمتة والقيمة والقيود لمنتج مدعوم بالذكاء الاصطناعي."),
     skills: [text("Stratégie produit IA", "AI product strategy", "استراتيجية منتج الذكاء الاصطناعي"), text("UX & fiabilité", "UX & reliability", "تجربة المستخدم والموثوقية"), text("Valeur & métriques", "Value & metrics", "القيمة والمقاييس")],
     salary: null,
-    recommendedCertificationIds: ["ai_product_management_human_centered_ux_specialist", "datacamp_ai_for_consulting", "transformation_processus_ia"],
+    recommendedCertificationIds: ["claude_certified_associate_foundations", "ai_product_management_human_centered_ux_specialist", "datacamp_ai_for_consulting", "transformation_processus_ia"],
     videoGroup: "leadership",
   },
   {
@@ -111,7 +111,7 @@ export const goldenJobs: GoldenJob[] = [
     scope: text("Pilote la transformation d’un cas d’usage en projet déployé, coordonne les parties prenantes et suit les risques, le budget, les fournisseurs et l’adoption.", "Leads the transformation of a use case into a deployed project, coordinating stakeholders and tracking risk, budget, vendors and adoption.", "يقود تحويل حالة الاستخدام إلى مشروع منشور، وينسق الأطراف المعنية ويتابع المخاطر والميزانية والموردين والاعتماد."),
     skills: [text("Pilotage de projet", "Project delivery", "إدارة المشاريع"), text("Conduite du changement", "Change management", "إدارة التغيير"), text("Risques & parties prenantes", "Risk & stakeholders", "المخاطر والأطراف المعنية")],
     salary: "48–75 k€ · 75–95 k€ · 95–130 k€",
-    recommendedCertificationIds: ["transformation_processus_ia", "datacamp_ai_for_consulting", "ai_governance_compliance_responsible_ai_leader"],
+    recommendedCertificationIds: ["claude_certified_associate_foundations", "transformation_processus_ia", "datacamp_ai_for_consulting", "ai_governance_compliance_responsible_ai_leader"],
     videoGroup: "leadership",
   },
   {
@@ -141,7 +141,7 @@ export const goldenJobs: GoldenJob[] = [
     scope: text("Construit la feuille de route, priorise les investissements, organise les équipes, pilote la gouvernance et met la valeur créée au centre des décisions.", "Builds the roadmap, prioritizes investments, organizes teams, steers governance and keeps created value at the center of decisions.", "يبني خارطة الطريق ويعطي الأولوية للاستثمارات وينظم الفرق ويوجه الحوكمة ويضع القيمة المتحققة في مركز القرارات."),
     skills: [text("Stratégie & roadmap", "Strategy & roadmap", "الاستراتيجية وخارطة الطريق"), text("Gouvernance & ROI", "Governance & ROI", "الحوكمة والعائد"), text("Leadership & acculturation", "Leadership & enablement", "القيادة وبناء الثقافة")],
     salary: "120–160 k€ · 160–250 k€",
-    recommendedCertificationIds: ["transformation_processus_ia", "ai_governance_compliance_responsible_ai_leader", "ai_product_management_human_centered_ux_specialist"],
+    recommendedCertificationIds: ["claude_certified_architect_foundations", "claude_certified_architect_professional", "transformation_processus_ia", "ai_governance_compliance_responsible_ai_leader"],
     videoGroup: "leadership",
   },
 ];
@@ -149,12 +149,12 @@ export const goldenJobs: GoldenJob[] = [
 export const goldenJobsPromotionalVideos = [
   {
     id: "fr",
-    embedUrl: "https://www.youtube.com/embed/bC11OKXkC18",
-    watchUrl: "https://www.youtube.com/watch?v=bC11OKXkC18",
-    channel: "Université Grenoble Alpes",
-    duration: "1:21:35",
-    title: text("Métiers de l’intelligence artificielle", "AI careers (French video)", "مهن الذكاء الاصطناعي (فيديو فرنسي)"),
-    description: text("Conférence d’orientation de l’Université Grenoble Alpes consacrée aux métiers de l’intelligence artificielle.", "A Université Grenoble Alpes career-orientation talk about AI professions.", "لقاء توجيهي من جامعة غرونوبل ألب عن مهن الذكاء الاصطناعي."),
+    embedUrl: "https://www.youtube.com/embed/6L7XD5pvfP8",
+    watchUrl: "https://www.youtube.com/watch?v=6L7XD5pvfP8",
+    channel: "Axel Denem - Expert IA",
+    duration: "26:52",
+    title: text("Voici 10 nouveaux métiers IA d’avenir", "10 emerging AI careers (French video)", "10 مهن واعدة جديدة في الذكاء الاصطناعي (فيديو فرنسي)"),
+    description: text("Présentation des nouveaux métiers de l’IA et des compétences qui deviennent recherchées en 2026.", "An overview of emerging AI jobs and the skills becoming sought after in 2026.", "عرض للمهن الجديدة في الذكاء الاصطناعي والمهارات المطلوبة في عام 2026."),
   },
   {
     id: "en",

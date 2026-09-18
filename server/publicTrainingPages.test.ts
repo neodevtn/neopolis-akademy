@@ -52,14 +52,22 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain('href="/mentions-legales">Mentions légales</a>');
   });
 
-  it("rend Golden Jobs dans les trois langues avec des vidéos YouTube éditoriales et des parcours réels", () => {
+  it("rend Golden Jobs dans les trois langues avec une vidéo YouTube éditoriale adaptée et des parcours réels", () => {
     const frenchHtml = renderPublicGoldenJobs("fr");
     const englishHtml = renderPublicGoldenJobs("en");
     const arabicHtml = renderPublicGoldenJobs("ar");
     const detailHtml = renderPublicGoldenJob("data-engineer", "fr");
 
     expect(frenchHtml).toContain("Golden Jobs : les métiers IA à explorer");
-    expect(frenchHtml).toContain("https://www.youtube.com/embed/");
+    expect((frenchHtml.match(/https:\/\/www\.youtube\.com\/embed\//g) || [])).toHaveLength(1);
+    expect((englishHtml.match(/https:\/\/www\.youtube\.com\/embed\//g) || [])).toHaveLength(1);
+    expect((arabicHtml.match(/https:\/\/www\.youtube\.com\/embed\//g) || [])).toHaveLength(1);
+    expect(frenchHtml).toContain("6L7XD5pvfP8");
+    expect(frenchHtml).not.toContain("bC11OKXkC18");
+    expect(englishHtml).toContain("plbqT4dBNwo");
+    expect(arabicHtml).toContain("tU5YcxMebHA");
+    expect(frenchHtml).not.toContain("Source et limites");
+    expect(detailHtml).not.toContain("Les descriptions et repères de rémunération");
     expect(frenchHtml).toContain("https://akademy.neodev.click/formations-ia/golden-jobs");
     expect(englishHtml).toContain("Golden Jobs: AI career pathways");
     expect(arabicHtml).toContain("مسارات مهنية في الذكاء الاصطناعي");
