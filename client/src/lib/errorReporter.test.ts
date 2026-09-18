@@ -1,11 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { captureException } = vi.hoisted(() => ({
+const { captureException, ensureSentryClient } = vi.hoisted(() => ({
   captureException: vi.fn(),
+  ensureSentryClient: vi.fn(),
 }));
 
 vi.mock("@sentry/react", () => ({
   captureException,
+}));
+
+vi.mock("./sentryClient", () => ({
+  ensureSentryClient,
 }));
 
 import { reportBoundaryError, shouldIgnoreClientError } from "./errorReporter";
@@ -13,6 +18,7 @@ import { reportBoundaryError, shouldIgnoreClientError } from "./errorReporter";
 describe("reportBoundaryError", () => {
   beforeEach(() => {
     captureException.mockClear();
+    ensureSentryClient.mockResolvedValue({ captureException });
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true }));
     vi.stubGlobal("window", { location: { href: "https://akademy.neodev.click/training/test" } });
     vi.stubGlobal("navigator", { userAgent: "vitest" });

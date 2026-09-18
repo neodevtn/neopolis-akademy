@@ -1,5 +1,7 @@
 const CONSENT_KEY = "neopolis_cookie_consent";
 const MEASUREMENT_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID;
+const MANUS_ANALYTICS_ENDPOINT = import.meta.env.VITE_ANALYTICS_ENDPOINT?.replace(/\/$/, "");
+const MANUS_ANALYTICS_WEBSITE_ID = import.meta.env.VITE_ANALYTICS_WEBSITE_ID;
 
 type GtagCommand = (command: "js" | "config" | "event" | "consent", target: unknown, params?: Record<string, unknown>) => void;
 type SafeEventParams = Record<string, string | number | boolean | undefined>;
@@ -146,11 +148,41 @@ export function createDataLayerGtag(dataLayer: unknown[]): GtagCommand {
   };
 }
 
+/**
+ * Charge la mesure d’audience Manus (Umami) uniquement après le consentement
+ * explicite. Ce chargement est distinct de GA4 : les statistiques affichées
+ * dans Manus dépendent de cette balise et non du runtime Google.
+ */
+export function initializeManusAnalytics() {
+  if (
+    typeof window === "undefined" ||
+    typeof document === "undefined" ||
+    !MANUS_ANALYTICS_ENDPOINT ||
+    !MANUS_ANALYTICS_WEBSITE_ID ||
+    !hasAnalyticsConsent()
+  ) {
+    return false;
+  }
+
+  if (document.querySelector("script[data-neopolis-manus-analytics='true']")) return true;
+
+  const script = document.createElement("script");
+  script.defer = true;
+  script.src = `${MANUS_ANALYTICS_ENDPOINT}/umami`;
+  script.setAttribute("data-website-id", MANUS_ANALYTICS_WEBSITE_ID);
+  script.setAttribute("data-neopolis-manus-analytics", "true");
+  document.head.appendChild(script);
+  return true;
+}
+
 export function initializeAnalytics() {
   if (typeof window === "undefined" || !MEASUREMENT_ID) return Promise.resolve(false);
   if (window.gtag) {
     const granted = hasAnalyticsConsent();
-    if (granted) dispatchAnalyticsConsent(true);
+    if (granted) {
+      dispatchAnalyticsConsent(true);
+      initializeManusAnalytics();
+    }
     else lastAnalyticsConsent = false;
     return Promise.resolve(true);
   }
@@ -176,7 +208,10 @@ export function initializeAnalytics() {
   return scriptPromise.then((loaded) => {
     if (!loaded) return false;
     const granted = hasAnalyticsConsent();
-    if (granted) dispatchAnalyticsConsent(true);
+    if (granted) {
+      dispatchAnalyticsConsent(true);
+      initializeManusAnalytics();
+    }
     else lastAnalyticsConsent = false;
     return true;
   });
@@ -188,6 +223,7 @@ export function updateAnalyticsConsent(granted: boolean) {
     void initializeAnalytics().then((loaded) => {
       if (!loaded) return;
       dispatchAnalyticsConsent(true);
+      initializeManusAnalytics();
       trackPageView();
     });
     return;

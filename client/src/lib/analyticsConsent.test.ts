@@ -97,4 +97,70 @@ describe("analytics consent synchronization", () => {
       ["config", "measurement-test"],
     ]);
   });
+
+  it("restaure la balise Manus de mesure d’audience après consentement", async () => {
+    vi.stubEnv("VITE_GA4_MEASUREMENT_ID", "measurement-test");
+    vi.stubEnv("VITE_ANALYTICS_ENDPOINT", "https://manus-analytics.com/");
+    vi.stubEnv("VITE_ANALYTICS_WEBSITE_ID", "website-test");
+    vi.resetModules();
+
+    const appended: Array<{ defer: boolean; src: string; attributes: Record<string, string> }> = [];
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      value: {
+        dataLayer: [],
+        gtag: () => undefined,
+        localStorage: { getItem: () => "accepted" },
+        location: { href: "https://akademy.neodev.click/", origin: "https://akademy.neodev.click" },
+      },
+    });
+    Object.defineProperty(globalThis, "document", {
+      configurable: true,
+      value: {
+        querySelector: () => null,
+        createElement: () => {
+          const script = {
+            defer: false,
+            src: "",
+            attributes: {} as Record<string, string>,
+            setAttribute(name: string, value: string) { this.attributes[name] = value; },
+          };
+          return script;
+        },
+        head: { appendChild: (script: { defer: boolean; src: string; attributes: Record<string, string> }) => appended.push(script) },
+      },
+    });
+
+    const analytics = await import("./analytics");
+    expect(await analytics.initializeAnalytics()).toBe(true);
+    expect(appended).toEqual([
+      expect.objectContaining({
+        defer: true,
+        src: "https://manus-analytics.com/umami",
+        attributes: expect.objectContaining({
+          "data-website-id": "website-test",
+          "data-neopolis-manus-analytics": "true",
+        }),
+      }),
+    ]);
+  });
+
+  it("ne charge pas la mesure Manus sans consentement explicite", async () => {
+    vi.stubEnv("VITE_ANALYTICS_ENDPOINT", "https://manus-analytics.com");
+    vi.stubEnv("VITE_ANALYTICS_WEBSITE_ID", "website-test");
+    vi.resetModules();
+
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      value: { localStorage: { getItem: () => "refused" } },
+    });
+    Object.defineProperty(globalThis, "document", {
+      configurable: true,
+      value: { querySelector: () => null, createElement: vi.fn(), head: { appendChild: vi.fn() } },
+    });
+
+    const analytics = await import("./analytics");
+    expect(analytics.initializeManusAnalytics()).toBe(false);
+    expect(document.head.appendChild).not.toHaveBeenCalled();
+  });
 });

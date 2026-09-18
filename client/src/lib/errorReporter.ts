@@ -1,3 +1,5 @@
+import { ensureSentryClient } from "./sentryClient";
+
 /**
  * Client-side Error Reporter
  * Captures unhandled errors, promise rejections, and React error boundaries
@@ -129,9 +131,9 @@ async function sendReport(report: ErrorReport): Promise<void> {
 export function reportBoundaryError(error: Error, componentStack?: string): void {
   if (shouldIgnoreClientError(error.message)) return;
   // React Error Boundaries consume rendering exceptions before they reach the
-  // browser's global error event. Load Sentry only at error time so the
-  // monitoring SDK does not delay the public landing page's first render.
-  void import("@sentry/react")
+  // browser's global error event. Ensure short sessions get a configured
+  // Sentry client before the exception is forwarded.
+  void ensureSentryClient()
     .then((Sentry) => Sentry.captureException(error, {
       tags: {
         source: "ErrorBoundary",

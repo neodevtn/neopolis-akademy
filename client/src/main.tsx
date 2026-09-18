@@ -20,28 +20,13 @@ const recoverStaleBundleRejection = (event: PromiseRejectionEvent) => {
 };
 window.addEventListener("unhandledrejection", recoverStaleBundleRejection);
 
-const initializeSentry = () => { void ensureSentryClient().catch(() => undefined); };
+// Start the SDK as an asynchronous import at application bootstrap. It does
+// not block React's first render, but it avoids losing errors, traces and
+// short sessions while waiting for an interaction or an arbitrary 15-second
+// fallback timer.
+void ensureSentryClient().catch(() => undefined);
 
-// Keep the first mobile screen free of replay/feedback work. Internal error
-// reporting is already active; Sentry begins on the learner's first real
-// interaction, with a delayed fallback for passive sessions.
-let sentryScheduled = false;
-const startSentryWhenIdle = () => {
-  if (sentryScheduled) return;
-  sentryScheduled = true;
-  for (const event of ["pointerdown", "keydown", "scroll", "touchstart"] as const) {
-    window.removeEventListener(event, startSentryWhenIdle);
-  }
-  const scheduleIdle = window.requestIdleCallback?.bind(window);
-  if (scheduleIdle) scheduleIdle(initializeSentry, { timeout: 2000 });
-  else initializeSentry();
-};
-for (const event of ["pointerdown", "keydown", "scroll", "touchstart"] as const) {
-  window.addEventListener(event, startSentryWhenIdle, { once: true, passive: true });
-}
-globalThis.setTimeout(startSentryWhenIdle, 15_000);
-
-// Initialize client-side error monitoring
+// Initialize the local fallback reporter immediately as well.
 initErrorReporter();
 
 // A cached HTML document can point to a removed Vite chunk immediately after a

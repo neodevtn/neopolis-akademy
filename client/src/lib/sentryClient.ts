@@ -1,5 +1,5 @@
 const isProduction = import.meta.env.MODE === "production";
-export const sentryDsn = "https://f1beaf088d01628e72b6cc5b96511906@sentry.neopolis-dev.com//102";
+export const sentryDsn = "https://f1beaf088d01628e72b6cc5b96511906@sentry.neopolis-dev.com/102";
 export const sentryProject = { organization: "neopolis-development", slug: "neopolis-akademy" };
 let initialized = false;
 let initializationPromise: Promise<typeof import("@sentry/react")> | null = null;
