@@ -956,7 +956,11 @@
         "en": "Answer B is correct because it supplies a role, a concrete data scope, an unambiguous task, constraints, a usable output format, and a way to surface missing data. A adds only a role and a vague quality request. C improves the format but not the context, prioritization, or decision. D changes tone without repairing any specification gap.",
         "fr": "La réponse B est correcte car elle apporte un rôle, un périmètre de données concret, une tâche sans ambiguïté, des contraintes, un format de sortie exploitable et une façon de signaler les données manquantes. A ajoute seulement un rôle et une exigence vague de qualité. C améliore le format, mais pas le contexte, la priorisation ni la décision. D change le ton sans corriger aucune lacune de spécification."
       },
-      "skillTags": ["Prompting", "Context Design", "Business Value"]
+      "skillTags": [
+        "Prompting",
+        "Context Design",
+        "Business Value"
+      ]
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_001",
@@ -1084,38 +1088,6 @@
       "title": {
         "en": "Analysis. Wants tight constraints and explicit ...",
         "fr": "Analyse. Veut des contraintes strictes et explicites ..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__02_008",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_09",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "ExerciseRepair the Prompt·6 min\nExercise: Repair the Underperforming Prompt\nThis exercise puts the whole module together: a weak prompt, its disappointing output, and your job to diagnose what is missing and repair it using the component stack.\nBelow is a prompt, the output it produced, and the author's actual goal. Work in three steps: find the specification gaps, match each fix to the component it repairs, then assemble the repaired prompt. The ideal answer is revealed at the end.\nThe weak prompt",
-        "fr": "Exercice : Réparer le prompt · 6 min\nExercice : Réparer le prompt sous-performant\nCet exercice réunit l'ensemble du module : un prompt faible, sa sortie décevante, et votre tâche consistant à diagnostiquer ce qui manque et le réparer en utilisant la pile de composants.\nCi-dessous se trouve un prompt, la sortie qu'il a produite, et le véritable objectif de l'auteur. Travaillez en trois étapes : repérez les écarts de spécification, associez chaque correctif au composant qu'il répare, puis assemblez le prompt réparé. La réponse idéale est révélée à la fin.\nLe prompt faible"
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Common gaps to look for\n- Vague goal: unclear success criteria or target outcome.\n- Missing audience/context: who will read/use the output and what they already know.\n- No format/length constraints: model may return unfocused text.\n- Missing style/tone or persona: output tone wrong for use case.\n- No examples or edge cases: model can’t infer structure or preferred phrasing.\n- No evaluation criteria/debugging info: author can’t tell if revised prompt improved results.\n\nMap each gap to a component fix\n- Goal → Instruction: state the specific task and desired outcome.\n- Audience/context → Context: supply background, assumptions, and audience profile.\n- Format/length → Output format: exact structure, sections, length limits.\n- Tone/persona → Style: desired voice, formality, and role to adopt.\n- Examples → Examples: include 1–2 good samples and a bad sample.\n- Success metrics → Constraints/Evaluation: list concrete acceptance criteria.\n\nRepaired-prompt template (example)\n“You are a senior B2B marketing copywriter. Task: write a 150–180 word cold email to IT directors at mid‑market SaaS companies to book a 20‑minute demo of our observability tool. Context: recipients know cloud basics but not our product. Key message: reduces MTTR by 40% and integrates with PagerDuty in 15 minutes. Tone: professional, concise, value‑driven, CTA-first. Output format: subject line (≤50 chars); 3 short paragraphs (problem, solution, CTA); one-sentence P.S. Example good subject: ‘Cut MTTR by 40% — 15‑min demo’; bad subject: ‘Introduction’. Acceptance: subject clarity, benefit quantified, CTA explicit, ≤180 words. Provide two variations and a cold-email A/B test subject line.”\n\nWhat a strong student answer includes\n- Specific identified gaps mapped to components\n- The repaired prompt text using those components\n- Brief rationale tying each change to an expected improvement in output.",
-        "fr": "Erreurs fréquentes (écarts de spécification)\n- Objectif flou : pas de résultat mesurable attendu (ex. informer vs. produire un résumé de 200 mots).\n- Contexte insuffisant : données/contraintes manquantes (audience, ton, format).\n- Absence de format de sortie : pas de structure exigée (titres, sections, JSON).\n- Pas d’exemples ni de critères d’évaluation : impossible de calibrer la sortie.\n- Contraintes pratiques non précisées : sources à citer, longueur, style, interdictions.\n\nAssocier chaque correctif au composant\n- Objectif clair → composant « User task / Goal » : définir l’intention et le critère de réussite (KPIs).\n- Contexte & audience → composant « Context » : fournir brève background et besoins utilisateurs.\n- Format de sortie → composant « Output specification » : modèle, balises, JSON, longueur.\n- Ton & style → composant « System prompt / Persona » : voix, niveau de technicité.\n- Exemples et tests → composant « Examples » : entrée/sortie exemplaires et critères d’évaluation.\n- Contraintes (sources, citations) → composant « Constraints » : contraintes éthiques/légales.\n\nPrompt réparé (modèle)\nSystem: « Tu es un rédacteur technique clair et concis. Respecte le format demandé. »\nUser: « Objectif : produire un résumé actionnable du texte ci‑dessous destiné à des managers non techniques. Critère : 5 actions prioritaires, chacune en 1 phrase, + 2 risques. »\nContext: « Public = managers, connaissances techniques limitées. Longueur totale ≤ 200 mots. »\nInput: « [insérer texte source] »\nOutput specification: « Renvoie en JSON {\"actions\":[{\"id\":1,\"action\":\"…\",\"impact\":\"…\"}], \"risks\":[…], \"summary\":\"…\"} »\nExamples: fournir un court exemple d’entrée et sortie attendue.\nConstraints: « Cite uniquement les éléments présents dans le texte ; pas d’inventions. Langue : français. »"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Business Value",
-        "Context Design",
-        "Evaluation"
-      ],
-      "title": {
-        "en": "ExerciseRepair the Prompt",
-        "fr": "Exercice : Réparer le prompt · 6 min"
       }
     },
     {
@@ -1278,5 +1250,10 @@
         "fr": "Note maximale : Couverture complète du cadre de prompting..."
       }
     }
-  ]
+  ],
+  "exerciseCount": 7,
+  "videoCount": 0,
+  "downloadCount": 0,
+  "chapterCount": 9,
+  "totalActivities": 9
 }

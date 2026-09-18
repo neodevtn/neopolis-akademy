@@ -176,7 +176,10 @@
               "hint": "Pour créer un client OpenAI, utilisez la classe OpenAI de la bibliothèque openai.\n\nVous pouvez envoyer des requêtes au point de terminaison de la Responses API avec client.responses.create().\n\nLes invites utilisateur doivent être transmises à l'argument input.",
               "solution": "# Define an OpenAI API client\nclient = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create the OpenAI API request\nresponse = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    input=\"In simple terms, what is the OpenAI Responses API?\",\n    reasoning={\"effort\": \"none\"},\n    max_output_tokens=100\n)\n\n# Print the generated text from the response\nprint(response.output_text)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Passez à la pratique avec la Responses API d'OpenAI ! Vous allez utiliser la bibliothèque openai pour commencer à envoyer des requêtes au point de terminaison de la Responses API.\n\nLa classe OpenAI a déjà été importée depuis openai."
+              ]
             }
           ]
         },
@@ -223,7 +226,10 @@
               "hint": "Le paramètre model doit être défini sur \"gpt-5.4-mini\" en tant que chaîne de caractères.\n\nDans le paramètre instructions, soyez explicite sur ce que l'IA doit faire et ne pas faire : précisez qu'elle ne doit traiter que les demandes concernant le solde du compte et l'historique des transactions.",
               "solution": "# Create a guardrailed AI response\nresponse = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    instructions=\"You are a customer support AI that only answers questions about account balances and transaction history. Politely decline any other requests such as password resets.\",\n    input=\"Can you help me reset my password?\"\n)\n\nprint(response.output_text)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous créez un système d'assistance client alimenté par l'IA pour une société de services financiers. Pour des raisons de sécurité et de conformité, l'IA doit respecter des garde-fous clairs et ne répondre qu'aux questions sur le solde du compte et l'historique des transactions. Elle doit refuser poliment toute autre demande, comme la réinitialisation de mot de passe.\n\nLe client OpenAI est déjà disponible sous le nom client. Il restera accessible pour la suite du cours."
+              ]
             }
           ]
         },
@@ -395,7 +401,10 @@
               "hint": "Il y a trois paramètres essentiels à tester : model, max_output_tokens et reasoning.\n\nLe paramètre reasoning prend un dictionnaire avec une clé 'effort'.\n\nPensez à commencer avec un petit modèle et sans raisonnement, puis à augmenter si nécessaire.",
               "solution": "start_time = time.time()\nprompt = \"How many of the letter 's' are in the sentence, 'Mississippi are possessive over their successes?'\"\n\n# Complete the challenge!\nresponse = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    input=prompt,\n    reasoning={\"effort\": \"none\"}\n)\n\nruntime = time.time() - start_time\n\nprint(response.output_text)\nprint(f\"\\nRuntime: {runtime:.2f} seconds\")",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous avez maintenant testé les différents modèles disponibles ; essayons les deux autres paramètres présentés dans la vidéo : reasoning et max_output_tokens.\n\nVoici le défi :\n\nTrouvez la bonne réponse à la question : Combien de lettres « s » y a‑t‑il dans la phrase « Mississippi are possessive over their successes? » en utilisant un LLM. Alerte divulgâcheur : la réponse est 12.\n\nLe code doit s'exécuter en moins de 8 secondes !\n\nVous pouvez utiliser n'importe quel modèle parmi : gpt-5.4-nano, gpt-5.4-mini et gpt-5.5."
+              ]
             }
           ]
         },
@@ -713,7 +722,10 @@
               "hint": "Utilisez une boucle for pour parcourir response.output.\n\nAccédez à l’attribut .type de chaque élément avec item.type.\n\nLe texte est imbriqué : item.content[0].text pour les éléments de type message.",
               "solution": "# Loop through the output items\nfor item in response.output:\n    # Check for reasoning items\n    if item.type == 'reasoning':\n        print('Found reasoning item')\n    \n    # Check for message items and extract text\n    if item.type == 'message':\n        message_text = item.content[0].text\n        print(message_text)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Avec l’API Responses d’OpenAI, chaque type d’élément contient des informations différentes. Un objet de réponse a été créé et stocké dans la variable response. Votre objectif est de parcourir les éléments de sortie et d’extraire des informations spécifiques selon leur type."
+              ]
             }
           ]
         },
@@ -760,7 +772,10 @@
               "hint": "Accédez au type d’élément avec item.type et utilisez des instructions conditionnelles pour vérifier des types spécifiques.\n\nPour les éléments de raisonnement, accédez au résumé avec item.summary[0] s’il existe.\n\nPour les éléments de message, accédez au texte avec item.content[0].text.",
               "solution": "# Loop through each item in the response output\nfor item in response.output:\n    # Check if the item is a reasoning item\n    if item.type == 'reasoning':\n        if item.summary:\n            print(f\"Reasoning: {item.summary[0]}\")\n        else:\n            print(\"No reasoning summary found.\")    \n    \n    # Check if the item is a message item\n    if item.type == 'message':\n        print(f\"Assistant: {item.content[0].text}\")",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous créez un chatbot qui doit fournir une journalisation détaillée à des fins de débogage. Le chatbot utilise un modèle doté de capacités de raisonnement, et vous souhaitez produire des messages de sortie personnalisés qui distinguent clairement les résumés de raisonnement des réponses de l’assistant. Vous disposez d’un objet response d’un appel d’API précédent qui contient plusieurs éléments de sortie."
+              ]
             }
           ]
         },
@@ -874,7 +889,10 @@
               "hint": "Ajoutez un paramètre tools avec une liste contenant un dictionnaire où \"type\" est défini sur \"web_search\".\n\nAccédez directement au texte de sortie avec response.output_text.",
               "solution": "# Create a response with web search enabled\nresponse = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    tools=[{\"type\": \"web_search\"}],\n    input=\"What is the current temperature in Berlin, Germany?\"\n)\n\n# Print the output text\nprint(response.output_text)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous créez un chatbot d'assistance aux voyages qui doit fournir la météo actuelle aux utilisateurs qui planifient leurs déplacements. Le LLM que vous utilisez a un knowledge cutoff datant de plusieurs mois, il ne peut donc pas accéder aux données météo en temps réel sans outils supplémentaires."
+              ]
             }
           ]
         },
@@ -921,7 +939,10 @@
               "hint": "Pour activer la recherche web, définissez tools=[{\"type\": \"web_search\"}].\n\nPour inclure les sources, définissez include=[\"web_search_call.action.sources\"] ; n’oubliez pas de définir également input sur la chaîne de requête.\n\nUtilisez une instruction conditionnelle dans la boucle pour filtrer les éléments : if item.type == \"web_search_call\", puis accédez aux sources avec item.action.sources.",
               "solution": "# Create a response with web search enabled and sources included\nresponse = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    tools=[{\"type\": \"web_search\"}],\n    input=\"What is the current stock price of Netflix?\",\n    include=[\"web_search_call.action.sources\"]\n)\n\n# Extract and print sources from web search calls\nfor item in response.output:\n    if item.type == \"web_search_call\":\n        print(item.action.sources)\n        \nprint(response.output_text)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous créez un assistant d’analyse financière qui doit fournir aux utilisateurs des informations à jour sur le marché boursier. Comme les LLM ont une date de coupure de connaissances, vous devez activer la recherche web pour accéder aux données en temps réel. Par souci de transparence et de crédibilité, vous souhaitez également montrer aux utilisateurs quelles sources ont été consultées pendant la recherche.\n\nLe client OpenAI a été initialisé sous le nom client, et vous allez interroger le cours actuel de l’action Netflix."
+              ]
             }
           ]
         },
@@ -1129,7 +1150,10 @@
               "hint": "L’URL du point de terminaison de l’API doit être affectée à une variable appelée url.\n\nLes arguments de la fonction (date_time, from_timezone et to_timezone) doivent correspondre au format attendu par l’API : \"dateTime\", \"fromTimezone\" et \"toTimezone\".\n\nUtilisez requests.post(url, json=payload) pour envoyer la requête vers l’URL.",
               "solution": "def convert_timezone(date_time: str, from_timezone: str, to_timezone: str) -> str:\n    \"\"\"\n    Convert a datetime from one timezone to another.\n    \n    Args:\n        date_time: The datetime string in ISO format\n        from_timezone: Source timezone\n        to_timezone: Target timezone\n    \n    Returns:\n        A string with the converted datetime and timezone information\n    \"\"\"\n    # Set the API endpoint\n    url = \"https://api.opentimezone.com/convert\"\n    \n    # Prepare the request payload\n    payload = {\"dateTime\": date_time, \"fromTimezone\": from_timezone, \"toTimezone\": to_timezone}\n    \n    try:\n        # Make the API request and extract converted time\n        response = requests.post(url, json=payload)\n        response.raise_for_status()\n        \n        data = response.json()\n        converted_time = data.get('dateTime', 'N/A')\n        \n        return f\"Time in {to_timezone}: {converted_time}\"\n    \n    except requests.exceptions.RequestException as e:\n        return f\"Error converting timezone: {str(e)}\"\n\n# Test the function\nresult = convert_timezone('2025-01-20T14:30:00', 'America/New_York', 'Europe/London')\nprint(result)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous créez un assistant de planification qui aide à organiser des réunions entre différents fuseaux horaires. L’API OpenTimezone propose des services de conversion de fuseau horaire : vous lui envoyez une date-heure, un fuseau source et un fuseau cible, et elle renvoie l’heure convertie. Votre mission est d’écrire une fonction qui effectue cet appel d’API et renvoie un résultat formaté.\n\nLes modules requests et json ont déjà été importés pour vous."
+              ]
             }
           ]
         },
@@ -1243,7 +1267,10 @@
               "hint": "La définition d’outil est un dictionnaire avec des clés comme \"type\", \"name\", \"description\" et \"parameters\".\n\nSous \"properties\", le nom de chaque paramètre doit être une clé d’un dictionnaire imbriqué contenant les clés \"type\" et \"description\".\n\nLa clé \"required\" doit contenir une liste des noms de paramètres : [\"date_time\", \"from_timezone\", \"to_timezone\"].",
               "solution": "tools = [\n    {\n        # Define a function tool called convert_timezone\n        \"type\": \"function\",\n        \"name\": \"convert_timezone\",\n        \"description\": \"Convert a datetime from one timezone to another using the OpenTimezone API.\",\n        \"parameters\": {\n            \"type\": \"object\",\n            # Define the parameter names, types, and descriptions\n            \"properties\": {\n                \"date_time\": {\n                    \"type\": \"string\",\n                    \"description\": \"The datetime string in ISO format (e.g., '2025-01-20T14:30:00')\"\n                },\n                \"from_timezone\": {\n                    \"type\": \"string\",\n                    \"description\": \"The source timezone (e.g., 'America/New_York', 'Asia/Tokyo')\"\n                },\n                \"to_timezone\": {\n                    \"type\": \"string\",\n                    \"description\": \"The target timezone (e.g., 'Europe/London', 'Australia/Sydney')\"\n                }\n            },\n            # Ensure that all three parameters are required\n            \"required\": [\"date_time\", \"from_timezone\", \"to_timezone\"],\n            \"additionalProperties\": False\n        }\n    }\n]",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous avez créé la fonction convert_timezone() qui utilise l’API OpenTimezone pour convertir des dates/heures entre des fuseaux horaires. Vous devez maintenant créer une définition d’outil au format OpenAI afin que le LLM comprenne comment utiliser cette fonction. La définition d’outil sert de guide pour le modèle : elle décrit l’objectif de la fonction, ses paramètres et ses exigences."
+              ]
             }
           ]
         },
@@ -1290,7 +1317,10 @@
               "hint": "Pour vérifier que le bon appel de fonction est effectué, contrôlez que item.type vaut \"function_call\" et que item.name vaut \"convert_timezone\".\n\nLes arguments demandés par le modèle peuvent être extraits depuis l’attribut .arguments de l’élément d’appel de fonction.\n\nLe message de sortie de l’appel de fonction doit avoir un type égal à \"function_call_output\".",
               "solution": "messages = [{\"role\": \"user\", \"content\": \"What time is 2:30pm on January 20th in New York in Tokyo time?\"}]\nresponse = client.responses.create(model=\"gpt-5.4-mini\", input=messages, tools=tools)\nmessages += response.output\n\n# Process function calls and execute the timezone conversion\nfor item in response.output:\n    if item.type == \"function_call\":\n        if item.name == \"convert_timezone\":\n            timezone_result = convert_timezone(**json.loads(item.arguments))\n            \n            # Append function output to messages\n            messages.append({\"type\": \"function_call_output\", \"call_id\": item.call_id, \"output\": json.dumps({\"convert_timezone\": timezone_result})})\n\n# Make second API request with function results\nresponse = client.responses.create(model=\"gpt-5.4-mini\", input=messages, tools=tools)\nprint(response.output_text)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous avez créé un outil de conversion de fuseau horaire avec la fonction convert_timezone() et vous l’avez défini au format d’outil d’OpenAI. Vous devez maintenant implémenter le workflow complet d’appel de fonction. Le client est déjà initialisé, et la liste tools contient la définition de votre outil de conversion de fuseau horaire. La fonction convert_timezone() est aussi prête à l’emploi.\n\nUne liste messages a été commencée avec une entrée utilisateur qui nécessite les informations de fuseau horaire fournies par votre outil convert_timezone."
+              ]
             }
           ]
         }
@@ -1458,7 +1488,10 @@
               "hint": "La classe MovieRecommendation doit hériter de la classe BaseModel de pydantic : MovieRecommendation(BaseModel).\n\nLa sortie analysée est accessible via response.output_parsed, qui renvoie un objet avec des attributs correspondant aux champs de votre schéma.\n\nAccédez aux attributs avec la notation par points : recommendation.title, recommendation.genre, etc.",
               "solution": "# Define the book recommendation schema\nclass MovieRecommendation(BaseModel):\n    title: str = Field(description=\"The movie title\")\n    genre: str = Field(description=\"Primary genre\")\n    vibe: str = Field(description=\"One-word vibe: cozy, thrilling, emotional, or fun\")\n    why: str = Field(description=\"One sentence explaining why this matches\")\n\n# Generate structured recommendation\nresponse = client.responses.parse(\n    model=\"gpt-5.4-mini\",\n    instructions=\"You are a knowledgeable movie recommender.\",\n    input=\"Recommend a movie for someone who loved Inception and wants something mind-bending\",\n    text_format=MovieRecommendation,\n)\n\n# Extract the parsed output and results\nrecommendation = response.output_parsed\nprint(f\"Title: {recommendation.title}\")\nprint(f\"Reason: {recommendation.why}\")",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous développez un système de recommandation de films personnalisé pour une plateforme de streaming. Pour que les recommandations s’affichent correctement dans l’interface de l’application, vous devez utiliser des sorties structurées avec pydantic et le client OpenAI. Vous allez définir un schéma pour les recommandations de films et extraire les résultats structurés."
+              ]
             }
           ]
         },
@@ -1615,7 +1648,10 @@
               "hint": "Utilisez l'instruction with pour ouvrir un contexte de streaming, et n'oubliez pas de passer stream=True en paramètre.\n\nUtilisez event.type pour vérifier si l'événement est \"response.output_text.delta\".\n\nInitialisez current_text avec une chaîne vide avant la boucle, puis utilisez += pour ajouter chaque event.delta.",
               "solution": "prompt = \"List the core ingredients to make classic egg pasta pasta in a single line.\"\n\n# Open a connection for a streaming request\nwith client.responses.create(model=\"gpt-5.4-mini\", input=prompt, stream=True) as stream:\n    current_text = \"\"\n\n    # Complete the output text streaming\n    for event in stream:\n        if event.type == \"response.output_text.delta\":\n            current_text += event.delta\n            print(current_text)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous créez une application d'assistant culinaire qui génère des recettes en temps réel. Le client OpenAI a été initialisé et configuré pour vous. Vous allez utiliser l'API Responses pour diffuser la génération de la recette et afficher le texte au fur et à mesure afin d'offrir une expérience utilisateur dynamique."
+              ]
             }
           ]
         },
@@ -1662,7 +1698,10 @@
               "hint": "Utilisez une instruction with pour ouvrir le gestionnaire de contexte de streaming avec client.responses.create().\n\nItérez sur les événements avec for event in stream: et vérifiez event.type pour chaque type d’événement.\n\nLes trois types d’événements dont vous avez besoin sont \"response.created\", \"response.output_text.done\" et \"response.completed\".",
               "solution": "prompt = \"Explain how to read a weather forecast in one sentence for a beginner hiker.\"\n\nwith client.responses.create(model=\"gpt-5.4-mini\", input=prompt, stream=True) as stream:\n    for event in stream:\n        # Find response created events\n        if event.type == \"response.created\":\n            print(\"Forecast generation started...\\n\")\n\n        # Find output text completed events\n        elif event.type == \"response.output_text.done\":\n            print(\"\\n--- Forecast complete ---\\n\")\n\n        # Find response completed events\n        elif event.type == \"response.completed\":\n            print(f\"\\nFull forecast:\\n{current_text}\")",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous construisez un assistant météo qui fournit des prévisions en temps réel. Le client OpenAI a été initialisé et configuré pour fonctionner avec la Responses API. Vous allez diffuser des événements sémantiques pour suivre le démarrage de la réponse, la fin des blocs de texte et l’achèvement de la réponse complète. Cela crée une expérience plus engageante en affichant la progression au fur et à mesure que le modèle génère la prévision."
+              ]
             }
           ]
         },
@@ -1709,7 +1748,10 @@
               "hint": "Utilisez client.responses.create() et passez model, input, stream et tools en arguments nommés.\n\nAccédez à la chaîne d'arguments partielle avec event.delta pour les événements delta.\n\nVérifiez les types d'événements \"response.function_call_arguments.done\" et \"response.completed\".",
               "solution": "prompt = \"What time is 2:30pm on January 20th in New York in Tokyo time?\"\n\n# Open the streaming connection and enable tool-calling\nwith client.responses.create(model=\"gpt-5.4-mini\", input=prompt, tools=tools, stream=True) as stream:\n    for event in stream:\n        # Filter for function call arguments delta events\n        if event.type == \"response.function_call_arguments.delta\":\n            print(f\"\\nTool args streaming: {event.delta}\")\n        # Filter for function call arguments complete events\n        elif event.type == \"response.function_call_arguments.done\":\n            print(\"Tool call args complete.\")\n        # Filter for response completed events\n        elif event.type == \"response.completed\":\n            print(\"\\n--- Completed ---\")",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous avez déjà vu combien de cas d'usage sont rendus possibles par les LLM avec appels de fonction, qui disposent de leurs propres types d'événements. C'est utile pour fournir un retour en temps réel lorsque le modèle se prépare à appeler un outil, ou pour la journalisation afin de suivre l'utilisation des outils.\n\nLa fonction convert_timezone() que vous avez définie plus tôt pour convertir des datetimes entre fuseaux horaires, ainsi qu'une liste tools contenant la définition de la fonction pour la Responses API, ont été préparées pour vous."
+              ]
             }
           ]
         },
@@ -1827,7 +1869,10 @@
               "hint": "Les messages basés sur des rôles doivent être structurés comme une liste de dictionnaires envoyée à l’argument input.\n\nChaque dictionnaire de message doit contenir les clés \"role\" et \"content\".\n\nL’invite envoyée à l’argument instructions doit devenir un message envoyé depuis le rôle \"system\".",
               "solution": "# Convert this request to use role-based messages\nresponse = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    input=[\n      {\"role\": \"system\", \"content\": \"You are a product cataloging expert who provides concise descriptions.\"},\n      {\"role\": \"user\", \"content\": \"A mustard-yellow colored winter jacket.\"}\n    ]\n)\n\nprint(response.output_text)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Utiliser les arguments input et instructions pour fournir des chaînes de caractères vous a déjà bien aidé, mais, parfois, une approche basée sur les rôles convient mieux à votre application.\n\nIci, vous disposez d’une requête complète vers la Responses API. Votre tâche consiste à la mettre à jour pour utiliser des messages basés sur les rôles, tout en conservant les mêmes invites. Cela préparera votre application au succès lorsque vous commencerez à intégrer des entrées d’images."
+              ]
             }
           ]
         },
@@ -1874,7 +1919,10 @@
               "hint": "Pour le message utilisateur, définissez \"content\" comme une liste contenant deux dictionnaires : l'un avec \"type\": \"input_text\" et l'autre avec \"type\": \"input_image\".\n\nLe dictionnaire de l'image doit avoir une clé \"image_url\" avec image_url comme valeur.",
               "solution": "messages = [{\"role\": \"system\", \"content\": \"You are a product cataloging expert who provides concise classifications and descriptions.\"}]\n\n# Add user message with text and image\nmessages.append({\n    \"role\": \"user\",\n    \"content\": [\n        {\"type\": \"input_text\", \"text\": \"Classify this product and write a brief but punchy description for our catalog.\"},\n        {\"type\": \"input_image\", \"image_url\": image_url}\n    ]\n})\n\n# Create the response\nresponse = client.responses.create(model=\"gpt-5.4-mini\", input=messages)\n\nprint(response.output_text)\nvisualize_image(image_url)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous créez un système automatisé de catalogage de produits pour une place de marché en ligne. Le système doit analyser des images de produits et générer des descriptions précises pour le catalogue. Vous allez utiliser des messages avec rôles pour envoyer une URL d'image au modèle et demander à la fois une classification et une description.\n\nUne chaîne d'URL pointant vers la photo d'une veste d'hiver est stockée dans image_url, et la fonction visualize_image() a été définie pour vous permettre de comparer l'image avec la description générée."
+              ]
             }
           ]
         },
@@ -1921,7 +1969,10 @@
               "hint": "Utilisez base64.b64encode() pour encoder le contenu du fichier après l’avoir lu en mode binaire avec \"rb\".\n\nPour l’image dans les messages basés sur les rôles, utilisez \"type\": \"input_image\" et formatez l’\"image_url\" comme f\"data:image/png;base64,{image_base64}\".",
               "solution": "# Import base64 module\nimport base64\n\n# Encode the image file as base64\nwith open(image_path, \"rb\") as f:\n    image_base64 = base64.b64encode(f.read()).decode(\"utf-8\")\n\n# Create a response with text and image input\nresponse = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    input=[\n        {\"role\": \"user\", \"content\": [\n            {\"type\": \"input_text\", \"text\": \"What mode of transport contributed the highest number of vehicles during business hours? Answer very concisely.\"},\n            {\"type\": \"input_image\", \"image_url\": f\"data:image/png;base64,{image_base64}\"}\n        ]}\n    ]\n)\n\nprint(response.output_text)\nvisualize_image(image_url)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous travaillez comme data analyst pour le service des transports de Londres. Votre équipe a créé une visualisation montrant le nombre de véhicules sur les routes à différents moments selon plusieurs modes de transport, et vous souhaitez utiliser un modèle d’IA pour en extraire les principaux enseignements.\n\nL’image est stockée localement sous \"LDN_2024_traffic.png\".\n\nCrédits image et données : City Streets 2025 Summary Report by the City of London."
+              ]
             }
           ]
         },
@@ -1990,5 +2041,10 @@
         }
       ]
     }
-  ]
+  ],
+  "exerciseCount": 19,
+  "videoCount": 11,
+  "downloadCount": 3,
+  "chapterCount": 34,
+  "totalActivities": 34
 }

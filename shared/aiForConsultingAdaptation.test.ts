@@ -10,7 +10,7 @@ const blocks = chapters.flatMap((chapter: any) => chapter.blocks ?? []);
 describe("adaptation locale du cours DataCamp ai-for-consulting", () => {
   it("retire uniquement le TP sans rubrique ni ressources locales exploitables", () => {
     expect(chapters.some((chapter: any) => chapter.id === "dc_ch03_act09")).toBe(false);
-    expect(chapters).toHaveLength(30);
+    expect(chapters).toHaveLength(29);
   });
 
   it("conserve les TP rubricés avec des critères source et un seuil complet", () => {

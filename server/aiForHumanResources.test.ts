@@ -9,19 +9,19 @@ describe("cours DataCamp L’IA pour les ressources humaines", () => {
   it("respecte les compteurs canoniques et le rattachement catalogue", () => {
     const certification = catalog.certifications.find((entry: any) => entry.id === "datacamp_ai_for_human_resources");
     const indexCourse = catalog.courses.find((entry: any) => entry.id === "ai_for_human_resources__01");
-    expect(certification).toMatchObject({ totalLessons: 3, totalActivities: 25, totalVideos: 11, totalExercises: 14, totalDownloads: 3 });
-    expect(indexCourse).toMatchObject({ certId: certification?.id, totalActivities: 25, videoCount: 11, exerciseCount: 14, downloadCount: 3 });
+    expect(certification).toMatchObject({ totalLessons: 3, totalActivities: 23, totalVideos: 11, totalExercises: 12, totalDownloads: 3 });
+    expect(indexCourse).toMatchObject({ certId: certification?.id, totalActivities: 23, videoCount: 11, exerciseCount: 12, downloadCount: 3 });
   });
 
   it("préserve les Projector, les TP et les tris interactifs", () => {
     const projectorVideos = blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length);
-    expect(activities).toHaveLength(25);
+    expect(activities).toHaveLength(23);
     expect(projectorVideos).toHaveLength(11);
     expect(projectorVideos.every((block: any) => (block.audioUrl || block.mp4Url) && block.slidesPdf && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
     const rubricTps = blocks.filter((block: any) => block.type === "cloud_exercise");
     expect(rubricTps).toHaveLength(9);
     expect(rubricTps.every((block: any) => Array.isArray(block.rubricCriteria) && block.rubricCriteria.length > 0 && block.maxScore === block.passingScore && block.rubricVersion === "datacamp-source-2026-08-28")).toBe(true);
-    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(5);
+    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(3);
     expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
   });
 

@@ -641,54 +641,6 @@
           ]
         },
         {
-          "id": "dc_ch01_act03",
-          "title": {
-            "en": "Votre premier serveur MCP",
-            "fr": "Votre premier serveur MCP"
-          },
-          "description": {
-            "en": "Découvrez comment MCP peut simplifier comme jamais l'intégration des applications d'IA avec les systèmes environnants ! Comprenez le fonctionnement de MCP, comment définir vos propres outils MCP, et construisez le pont entre client et serveur.",
-            "fr": "Découvrez comment MCP peut simplifier comme jamais l'intégration des applications d'IA avec les systèmes environnants ! Comprenez le fonctionnement de MCP, comment définir vos propres outils MCP, et construisez le pont entre client et serveur."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_03_tp",
-              "title": {
-                "en": "Votre premier serveur MCP",
-                "fr": "Votre premier serveur MCP"
-              },
-              "assignment": "Passez à la pratique avec votre premier serveur MCP ! Nous vous fournissons tout le code ici, que nous expliquerons dans la prochaine vidéo. D'abord, regardez le déroulé du code :\n\nUne instance de serveur MCP est définie avec FastMCP()\n\nUne fonction d'outil (convert_currency()) est écrite pour effectuer une action ; ici, récupérer des informations de change depuis l'API Frankfurter.\n\nCette fonction est transformée en outil MCP à l'aide du décorateur @mcp.tool().",
-              "instructions": "Parcourez le code fourni pour voir comment une fonction est convertie en outil pour un serveur MCP.\n\nÀ la ligne 43, testez l'outil MCP avec un montant et les devises de votre choix pour la conversion (de et vers).\n\nRemarque : vous devez utiliser les codes de devises officiels, comme GBP pour la livre sterling britannique.\n\n### Code de départ\n\n```python\n# Create an MCP server instance\nmcp = FastMCP(\"Currency Converter\")\n\n@mcp.tool()\ndef convert_currency(amount: float, from_currency: str, to_currency: str) -> str:\n    \"\"\"\n    Convert an amount from one currency to another using current exchange rates.\n\n    Args:\n        amount: The amount to convert\n        from_currency: Source currency code (e.g., 'USD', 'EUR', 'GBP')\n        to_currency: Target currency code (e.g., 'USD', 'EUR', 'GBP')\n\n    Returns:\n        A string with the conversion result and exchange rate\n    \"\"\"\n    # API endpoint for Frankfurter\n    url = f\"https://api.frankfurter.dev/v1/latest?base={from_currency}&symbols={to_currency}\"\n\n    try:\n        # Make the API request\n        response = requests.get(url)\n        response.raise_for_status()\n\n        # Parse the response\n        data = response.json()\n\n        # Get the exchange rate\n        rate = data['rates'].get(to_currency)\n\n        if rate is None:\n            return f\"Could not find exchange rate for {from_currency} to {to_currency}\"\n\n        # Calculate the converted amount\n        converted_amount = amount * rate\n\n        return f\"{amount} {from_currency} = {converted_amount:.2f} {to_currency} (Rate: {rate})\"\n\n    except requests.exceptions.RequestException as e:\n        return f\"Error converting currency: {str(e)}\"\n\nprint(\"Testing Currency Converter:\")\nresult = convert_currency(amount=100, from_currency=\"USD\", to_currency=\"EUR\")\nprint(result)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_de8aa784.pdf"
-                }
-              ],
-              "hint": "Il n'y a aucun code à écrire ici ; n'hésitez pas à explorer et à tester le code en modifiant les valeurs de test à la ligne 43.",
-              "solution": "# Create an MCP server instance\nmcp = FastMCP(\"Currency Converter\")\n\n@mcp.tool()\ndef convert_currency(amount: float, from_currency: str, to_currency: str) -> str:\n    \"\"\"\n    Convert an amount from one currency to another using current exchange rates.\n\n    Args:\n        amount: The amount to convert\n        from_currency: Source currency code (e.g., 'USD', 'EUR', 'GBP')\n        to_currency: Target currency code (e.g., 'USD', 'EUR', 'GBP')\n\n    Returns:\n        A string with the conversion result and exchange rate\n    \"\"\"\n    # API endpoint for Frankfurter\n    url = f\"https://api.frankfurter.dev/v1/latest?base={from_currency}&symbols={to_currency}\"\n\n    try:\n        # Make the API request\n        response = requests.get(url)\n        response.raise_for_status()\n\n        # Parse the response\n        data = response.json()\n\n        # Get the exchange rate\n        rate = data['rates'].get(to_currency)\n\n        if rate is None:\n            return f\"Could not find exchange rate for {from_currency} to {to_currency}\"\n\n        # Calculate the converted amount\n        converted_amount = amount * rate\n\n        return f\"{amount} {from_currency} = {converted_amount:.2f} {to_currency} (Rate: {rate})\"\n\n    except requests.exceptions.RequestException as e:\n        return f\"Error converting currency: {str(e)}\"\n\nprint(\"Testing Currency Converter:\")\nresult = convert_currency(amount=100, from_currency=\"USD\", to_currency=\"EUR\")\nprint(result)",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
           "id": "dc_ch01_act04",
           "title": {
             "en": "Créer votre premier serveur MCP",
@@ -959,54 +911,6 @@
                 "en": "C'est le moment de construire votre premier serveur MCP ! Ici, vous allez définir un serveur MCP appelé 'Currency Converter' qui comporte un seul outil, convert_currency(), pour convertir des montants entre différentes devises.\n\nCet outil doit prendre les paramètres amount, from_currency et to_currency, et renvoyer une chaîne contenant le montant converti dans la devise souhaitée, ainsi que le taux de change utilisé.\n\nPar exemple : 100 EUR = 88.04 GBP (Rate: 0.8804).",
                 "fr": "C'est le moment de construire votre premier serveur MCP ! Ici, vous allez définir un serveur MCP appelé 'Currency Converter' qui comporte un seul outil, convert_currency(), pour convertir des montants entre différentes devises.\n\nCet outil doit prendre les paramètres amount, from_currency et to_currency, et renvoyer une chaîne contenant le montant converti dans la devise souhaitée, ainsi que le taux de change utilisé.\n\nPar exemple : 100 EUR = 88.04 GBP (Rate: 0.8804)."
               }
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act06",
-          "title": {
-            "en": "Ajouter des docstrings et des annotations de type",
-            "fr": "Ajouter des docstrings et des annotations de type"
-          },
-          "description": {
-            "en": "Découvrez comment MCP peut simplifier comme jamais l'intégration des applications d'IA avec les systèmes environnants ! Comprenez le fonctionnement de MCP, comment définir vos propres outils MCP, et construisez le pont entre client et serveur.",
-            "fr": "Découvrez comment MCP peut simplifier comme jamais l'intégration des applications d'IA avec les systèmes environnants ! Comprenez le fonctionnement de MCP, comment définir vos propres outils MCP, et construisez le pont entre client et serveur."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_06_tp",
-              "title": {
-                "en": "Ajouter des docstrings et des annotations de type",
-                "fr": "Ajouter des docstrings et des annotations de type"
-              },
-              "assignment": "Il est temps de rendre votre outil convert_currency() plus simple à utiliser pour les LLM grâce aux docstrings et aux annotations de type. Sans cela, le LLM pourrait ne pas savoir quel outil appeler efficacement, ou transmettre des valeurs incorrectement aux arguments — dans les deux cas, les performances de l'application deviennent peu fiables !\n\nUn serveur MCP a déjà été instancié avec FastMCP et assigné à mcp.",
-              "instructions": "Ajoutez les types appropriés aux arguments de la fonction et à l'objet de retour.\n\nComplétez la docstring pour faire correspondre les trois arguments de la fonction à leurs définitions.\n\n### Code de départ\n\n```python\n# Adding typing to the function arguments and return object\n@mcp.tool()\ndef convert_currency(amount: ____, from_currency: ____, to_currency: ____) -> ____:\n    # Complete the docstring with the function arguments\n    \"\"\"\n    Convert an amount from one currency to another using current exchange rates.\n\n    Args:\n        ____: The amount to convert\n        ____: Source currency code (e.g., 'USD', 'EUR', 'GBP')\n        ____: Target currency code (e.g., 'USD', 'EUR', 'GBP')\n\n    Returns:\n        A string with the conversion result and exchange rate\n    \"\"\"\n\n    url = f\"https://api.frankfurter.dev/v1/latest?base={from_currency}&symbols={to_currency}\"\n\n    response = requests.get(url)\n    data = response.json()\n    rate = data['rates'].get(to_currency)\n\n    if rate is None:\n        return f\"Could not find exchange rate for {from_currency} to {to_currency}\"\n\n    converted_amount = amount * rate\n    return f\"{amount} {from_currency} = {converted_amount:.2f} {to_currency} (Rate: {rate})\"\n\nprint(convert_currency(amount=100, from_currency=\"EUR\", to_currency=\"USD\"))\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_de8aa784.pdf"
-                }
-              ],
-              "hint": "L'argument amount doit être une valeur flottante, et les autres types doivent être des chaînes de caractères.",
-              "solution": "# Adding typing to the function arguments and return object\n@mcp.tool()\ndef convert_currency(amount: float, from_currency: str, to_currency: str) -> str:\n    # Complete the docstring with the function arguments\n    \"\"\"\n    Convert an amount from one currency to another using current exchange rates.\n\n    Args:\n        amount: The amount to convert\n        from_currency: Source currency code (e.g., 'USD', 'EUR', 'GBP')\n        to_currency: Target currency code (e.g., 'USD', 'EUR', 'GBP')\n\n    Returns:\n        A string with the conversion result and exchange rate\n    \"\"\"\n\n    url = f\"https://api.frankfurter.dev/v1/latest?base={from_currency}&symbols={to_currency}\"\n\n    response = requests.get(url)\n    data = response.json()\n    rate = data['rates'].get(to_currency)\n\n    if rate is None:\n        return f\"Could not find exchange rate for {from_currency} to {to_currency}\"\n\n    converted_amount = amount * rate\n    return f\"{amount} {from_currency} = {converted_amount:.2f} {to_currency} (Rate: {rate})\"\n\nprint(convert_currency(amount=100, from_currency=\"EUR\", to_currency=\"USD\"))",
-              "successMessage": "",
-              "xp": 100
             }
           ]
         },
@@ -1621,7 +1525,10 @@
               "hint": "Le mot-clé await force l'appel d'outil à se mettre en pause et à attendre la réponse du serveur.\n\nUtilisez session.call_tool() pour déclencher un appel d'outil, en passant les paramètres tool_name et arguments.\n\nL'objet result doit avoir un attribut .content, qui renvoie une liste d'objets avec des attributs .text contenant le résultat de l'appel d'outil.\n\nUtilisez asyncio.run() pour exécuter la fonction call_mcp_tool() avec un jeu d'arguments.",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\nasync def call_mcp_tool(tool_name: str, arguments: dict) -> str:\n    params = StdioServerParameters(\n        command=sys.executable,\n        args=[\"currency_server.py\"],\n    )\n\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n\n            # Call the currency conversion tool\n            result = await session.call_tool(tool_name, arguments)\n            \n            # Extract and print the text content of the server response\n            text_content = result.content[0].text\n\n            print(f\"Conversion Result: {text_content}\")\n            return str(text_content)\n            \n\n# Run the \"convert_currency\" tool\nasyncio.run(\n    call_mcp_tool(\"convert_currency\",\n                  {\"amount\": 250.0, \"from_currency\": \"USD\", \"to_currency\": \"EUR\"})\n)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Passons maintenant au déclenchement d'appels d'outils sur le serveur depuis votre client ! Là encore, vous utiliserez des opérations asynchrones pour éviter tout blocage ou gel en attendant la fin d'autres opérations."
+              ]
             }
           ]
         }
@@ -2059,7 +1966,10 @@
               "hint": "Le décorateur @mcp.resource() prend une chaîne URI comme argument, de la même manière que @mcp.tool() fonctionne pour les outils.\n\nUtilisez la fonction Python open() avec le mode 'r' pour lire le fichier, puis appelez .read() pour en obtenir le contenu.\n\nPour appeler la fonction, vous n'avez pas besoin de lui passer d'arguments : get_currencies().",
               "solution": "from mcp.server.fastmcp import FastMCP\n\nmcp = FastMCP(\"Currency Converter\")\n\n# Define a resource for the currencies file\n@mcp.resource(\"file://currencies.txt\")\ndef get_currencies() -> str:\n    \"\"\"\n    Get the list of currency names published by the European Central Bank for currency conversion.\n\n    Returns:\n        Contents of the currencies.txt file with currency names\n    \"\"\"\n    # Open currencies.txt and read the data\n    try:\n        with open('currencies.txt', 'r') as f:\n            content = f.read()\n        return content\n    except FileNotFoundError:\n        return \"currencies.txt file not found\"\n\n# Test the resource function\nprint(get_currencies())",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous étendez votre serveur MCP pour la conversion de devises afin de lui donner accès à la liste des devises prises en charge par l'API que vous utilisez. La Banque centrale européenne publie une liste de codes de devises dans un fichier nommé currencies.txt, disponible dans le répertoire de votre serveur. Le client pourra s'en servir pour garantir que le LLM transmet les bonnes valeurs d'arguments aux fonctions d'outil.\n\nVotre tâche est de définir une ressource MCP appelée get_currencies() qui lit le contenu de currencies.txt."
+              ]
             }
           ]
         },
@@ -2107,7 +2017,10 @@
               "hint": "La méthode session.list_resources() est asynchrone, pensez donc à utiliser await.\n\nRécupérez la liste des ressources depuis l'objet de réponse via response.resources, puis itérez dessus pour afficher chaque resource.uri.",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\nasync def list_resources():\n    \"\"\"List all available resources from the MCP server.\"\"\"\n    params = StdioServerParameters(command=sys.executable, args=[\"currency_server.py\"])\n\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n            # Get the list of resources\n            response = await session.list_resources()\n\n            print(\"Available resources:\")\n            # Print each resource's URI, name, and description\n            for resource in response.resources:\n                print(f\" - {resource.uri}\")\n                print(f\"   Name: {resource.name}\")\n                print(f\"   Description: {resource.description}\")\n\n            return response.resources\n\nasyncio.run(list_resources())",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Votre serveur a été écrit dans le fichier currency_server.py et est prêt à être connecté ! Pour commencer, créez un client capable de lister les ressources disponibles sur ce serveur."
+              ]
             }
           ]
         },
@@ -2155,7 +2068,10 @@
               "hint": "Utilisez async def pour définir une fonction asynchrone avec le paramètre resource_uri: str\n\nAppelez await session.read_resource(resource_uri) pour récupérer le contenu de la ressource\n\nAccédez aux attributs mimeType et text de chaque objet content dans la boucle en utilisant la notation par points",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\n# Define an async function for reading MCP resources\nasync def read_resource(resource_uri: str):\n    \"\"\"Read a specific resource by URI.\"\"\"\n    params = StdioServerParameters(\n        command=sys.executable,\n        args=[\"currency_server.py\"],\n    )\n\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n\n            print(f\"Reading resource: {resource_uri}\")\n            # Read the resource from the session context\n            resource_content = await session.read_resource(resource_uri)\n\n            # Print the contents of each resource\n            for content in resource_content.contents:\n                print(f\"\\nContent ({content.mimeType}):\")\n                print(content.text)\n\n            return resource_content\n\nasyncio.run(read_resource(\"file://currencies.txt\"))",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Passons maintenant à l'étape finale : ajouter des fonctionnalités au client pour qu'il puisse lire les données de la ressource depuis votre serveur MCP ! Cette liste de devises et de leurs symboles pourrait servir de liste de contrôle à un LLM pour vérifier que l'utilisateur demande une devise prise en charge par l'outil convert_currency() et aussi que les arguments de la fonction de l'outil sont des symboles de devise valides.\n\nLe fichier currency_server.py a été démarré et est prêt à être utilisé."
+              ]
             }
           ]
         },
@@ -2551,7 +2467,10 @@
               "hint": "Utilisez le décorateur @mcp.prompt() avec un argument title ; le nom de la fonction devient l'identifiant de l'invite côté client.\n\nLa fonction doit renvoyer une f-string qui inclut la tâche, les règles, et la requête de l'utilisateur (par exemple : Requête de conversion de devises de l'utilisateur : {currency_request}).\n\nAppelez la fonction d'invite avec une chaîne d'exemple et passez le résultat à print() pour vérifier la sortie.",
               "solution": "# Define a prompt for currency conversion\n@mcp.prompt(title=\"Currency Conversion\")\ndef convert_currency_prompt(currency_request: str) -> str:\n    return f\"\"\"You are a currency conversion assistant.\n\nYour task is to:\n1. Extract the amount and source currency from the user's natural language input.\n2. Identify the target currency.\n3. Use the conversion tool to convert the amount.\n\nRules:\n- If the amount or currencies are ambiguous or missing, ask the user for clarification.\n- Use only supported currency codes (e.g., USD, EUR, GBP).\n\nUser's currency conversion request: {currency_request}\"\"\"\n\n# Test the prompt function\nprint(convert_currency_prompt(\"100 USD to EUR\"))",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous ajoutez une invite réutilisable à votre serveur MCP de conversion de devises afin qu'un LLM sache comment traiter les demandes de conversion et quand demander des précisions (par exemple, montant manquant ou codes de devise manquants). Cela réduit la charge d'invite côté utilisateur et rend l'assistant plus fiable.\n\nUne instance de serveur MCP est déjà créée. Ajoutez une invite à l'aide du décorateur @mcp.prompt() et d'une fonction qui renvoie le modèle d'invite avec la requête de l'utilisateur ajoutée à la fin."
+              ]
             }
           ]
         },
@@ -2599,7 +2518,10 @@
               "hint": "Utilisez StdioServerParameters avec command=sys.executable et args=[\"currency_server.py\"], puis stdio_client et ClientSession.\n\nLa session possède une méthode asynchrone pour lister les prompts ; utilisez await lorsque vous l'appelez.\n\nLa réponse contient une liste .prompts ; chaque objet prompt a un attribut .name.",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\nasync def list_prompts():\n    \"\"\"List all available prompts from the MCP server.\"\"\"\n    params = StdioServerParameters(command=sys.executable, args=[\"currency_server.py\"])\n\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n\n            # List available prompts\n            prompts = await session.list_prompts()\n            print(f\"Available prompts: {[p.name for p in prompts.prompts]}\")\n\n            return prompts.prompts\n\nasyncio.run(list_prompts())",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Votre serveur de devises a été écrit dans currency_server.py avec un outil, une ressource et un prompt. Créez un client qui liste les prompts disponibles sur ce serveur pour découvrir quels modèles de prompt l'LLM peut utiliser."
+              ]
             }
           ]
         },
@@ -2647,7 +2569,10 @@
               "hint": "Appelez la méthode de la session qui récupère un prompt par son nom, en passant le nom du prompt et un dictionnaire arguments dont la clé correspond au paramètre de la fonction de prompt (par exemple, currency_request) ; utilisez await.\n\nLe résultat possède un attribut .messages ; le contenu du premier message a un attribut .text qui contient l'intégralité du prompt.",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\nasync def read_prompt(user_input: str = \"How much is 50 GBP in euros?\", prompt_name: str = \"convert_currency_prompt\") -> str:\n    \"\"\"Retrieve a prompt from the MCP server with user input.\"\"\"\n    params = StdioServerParameters(command=sys.executable, args=[\"currency_server.py\"])\n\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n\n            # Retrieve the prompt with the user's input\n            prompt = await session.get_prompt(prompt_name, arguments={\"currency_request\": user_input})\n\n            # Print the full prompt text (template + user request)\n            text = prompt.messages[0].content.text\n            print(text)\n            return text\n\nasyncio.run(read_prompt(user_input=\"How much is 50 GBP in euros?\"))",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Récupérez maintenant un prompt précis depuis le serveur de devises avec une saisie utilisateur, afin de combiner le modèle et la demande de l'utilisateur. C'est ce que vous transmettriez à un LLM avant qu'il ne décide d'appeler l'outil de conversion."
+              ]
             }
           ]
         },
@@ -3304,7 +3229,10 @@
               "hint": "La méthode client.messages.create() prend une liste messages (avec user_query comme contenu du message utilisateur) et anthropic_tools comme argument tools.\n\nPour appeler l'outil, passez à call_mcp_tool() le nom de l'outil en premier, puis les arguments à lui transmettre.",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\nasync def call_anthropic_llm(user_query: str):\n    \"\"\"Call Claude with MCP tools.\"\"\"\n    \n    print(f\"\\nUser: {user_query}\\n\")\n\n    mcp_tools = await get_tools_from_mcp()\n    \n    anthropic_tools = []\n    for tool in mcp_tools:\n        anthropic_tool = {\n            \"name\": tool.name,\n            \"description\": tool.description or \"\",\n            \"input_schema\": tool.inputSchema,\n        }\n        anthropic_tools.append(anthropic_tool)\n    \n    # Send the user query and formatted tools to the LLM\n    client = AsyncAnthropic(api_key=\"<ANTHROPIC_API_TOKEN>\")\n\n    response = await client.messages.create(\n        model=\"claude-sonnet-4-6\",\n        max_tokens=1024,\n        messages=[{\"role\": \"user\", \"content\": user_query}],\n        tools=anthropic_tools,\n    )\n\n    if response.stop_reason == \"tool_use\":\n        tool_use = next(block for block in response.content if block.type == \"tool_use\")\n        name = tool_use.name\n        args = tool_use.input\n\n        print(f\"Model decided to call: {name}\")\n        print(f\"Arguments: {args}\\n\")\n\n        # Call the MCP tool\n        result = await call_mcp_tool(name, args)\n\n        # Send the result back to Claude for the final response\n        followup = await client.messages.create(\n            model=\"claude-sonnet-4-6\",\n            max_tokens=1024,\n            messages=[\n                {\"role\": \"user\", \"content\": user_query},\n                {\"role\": \"assistant\", \"content\": response.content},\n                {\n                    \"role\": \"user\",\n                    \"content\": [\n                        {\n                            \"type\": \"tool_result\",\n                            \"tool_use_id\": tool_use.id,\n                            \"content\": result,\n                        }\n                    ],\n                },\n            ],\n            tools=anthropic_tools,\n        )\n\n        final_text = next((block.text for block in followup.content if block.type == \"text\"), None)\n        if final_text:\n            print(f\"\\nAssistant: {final_text}\")\n            return str(final_text)\n        else:\n            print(\"No follow-up message from model.\")\n\n    else:\n        text = next((block.text for block in response.content if block.type == \"text\"), \"\")\n        print(f\"\\nAssistant: {text}\")\n        return str(text)\n\n\nif __name__ == \"__main__\":\n    asyncio.run(call_anthropic_llm(\"How much is 250 US dollars in euros?\"))",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Vous avez créé un serveur MCP qui contient un outil de conversion de devises utilisant des taux de change à jour. L'intégrer à un LLM lui donnera la capacité de répondre avec précision aux questions sur les devises et les taux de change — ce qu'il ne peut pas faire par défaut.\n\nL'essentiel du code vous est fourni ici, car l'objectif principal est de comprendre le flux de travail plutôt que la syntaxe."
+              ]
             }
           ]
         },
@@ -3757,7 +3685,10 @@
               "hint": "Utilisez await session.read_resource(\"file://currencies.txt\") pour récupérer la ressource ; le résultat contient une liste .contents et le premier élément possède un attribut .text.\n\nUtilisez await session.get_prompt(\"convert_currency_prompt\", arguments={\"currency_request\": user_query}) pour récupérer le prompt ; le résultat contient .messages[0].content.text pour la chaîne complète du prompt.",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\nasync def get_context_from_mcp(user_query: str) -> tuple[str, str]:\n    \"\"\"Fetch resource content and prompt text from the MCP server.\"\"\"\n    params = StdioServerParameters(command=sys.executable, args=[\"currency_server.py\"])\n\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n\n            # Read the resource (supported currencies)\n            resource_result = await session.read_resource(\"file://currencies.txt\")\n            resource_text = resource_result.contents[0].text\n\n            # Get the prompt with the user's query\n            prompt_result = await session.get_prompt(\"convert_currency_prompt\",\n                arguments={\"currency_request\": user_query})\n            prompt_text = prompt_result.messages[0].content.text\n\n            return resource_text, prompt_text\n\nprint(asyncio.run(get_context_from_mcp(\"How much is 50 GBP in euros?\")))",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Votre serveur de devises expose une ressource (file://currencies.txt) et un prompt (convert_currency_prompt) qui combinent la demande de l'utilisateur avec un contexte et des règles propres à la tâche. Pour alimenter un LLM, le client doit récupérer les deux en une seule passe. Implémentez une fonction utilitaire appelée get_context_from_mcp() qui renvoie le texte de la ressource et le texte du prompt (avec la requête de l'utilisateur déjà intégrée) afin que l'appelant puisse construire le message.\n\nLe fichier currency_server.py est disponible avec un outil, une ressource et un prompt. Utilisez la même session pour lire la ressource et obtenir le prompt avec l'entrée de l'utilisateur."
+              ]
             }
           ]
         },
@@ -3805,7 +3736,10 @@
               "hint": "Lors de la construction de full_prompt, assurez-vous que prompt_text vient avant resource_text.\n\ncall_mcp_tool() prend d'abord le nom de l'outil, puis le dictionnaire d'arguments à utiliser en second.",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\nasync def get_context_from_mcp(user_query: str) -> tuple[str, str]:\n    params = StdioServerParameters(command=sys.executable, args=[\"currency_server.py\"])\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n            resource_result = await session.read_resource(\"file://currencies.txt\")\n            resource_text = resource_result.contents[0].text\n            prompt_result = await session.get_prompt(\"convert_currency_prompt\",\n                arguments={\"currency_request\": user_query})\n            prompt_text = prompt_result.messages[0].content.text\n            return resource_text, prompt_text\n\nasync def get_tools_from_mcp():\n    params = StdioServerParameters(command=sys.executable, args=[\"currency_server.py\"])\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n            response = await session.list_tools()\n            return response.tools\n\nasync def call_mcp_tool(tool_name: str, arguments: dict) -> str:\n    params = StdioServerParameters(command=sys.executable, args=[\"currency_server.py\"])\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n            result = await session.call_tool(tool_name, arguments)\n            return str(result.content[0].text)\n\nasync def call_llm_with_context(user_query: str):\n    \"\"\"Call the LLM with resource and prompt context from MCP.\"\"\"\n    resource_text, prompt_text = await get_context_from_mcp(user_query)\n\n    # Combine the resource and prompt text\n    full_prompt = prompt_text + \"\\n\\nSupported currencies:\\n\" + resource_text\n\n    client = AsyncAnthropic(api_key=\"<ANTHROPIC_API_TOKEN>\")\n    mcp_tools = await get_tools_from_mcp()\n    anthropic_tools = [{\"name\": t.name, \"description\": t.description or \"\", \"input_schema\": t.inputSchema} for t in mcp_tools]\n    \n    # Send full_prompt (as a user message) and the tools list to the model\n    response = await client.messages.create(\n        model=\"claude-sonnet-4-6\",\n        max_tokens=1024,\n        messages=[{\"role\": \"user\", \"content\": full_prompt}],\n        tools=anthropic_tools,\n    )\n\n    # Return the text response\n    if response.stop_reason == \"end_turn\":\n        text = next((block.text for block in response.content if block.type == \"text\"), \"\")\n        print(f\"\\nAssistant: {text}\")\n        return str(text)\n\n    # Call the tool requested in the LLM's tool use\n    if response.stop_reason == \"tool_use\":\n        tool_use = next(block for block in response.content if block.type == \"tool_use\")\n        result = await call_mcp_tool(tool_use.name, tool_use.input)\n        followup = await client.messages.create(\n            model=\"claude-sonnet-4-6\",\n            max_tokens=1024,\n            messages=[\n                {\"role\": \"user\", \"content\": full_prompt},\n                {\"role\": \"assistant\", \"content\": response.content},\n                {\"role\": \"user\", \"content\": [{\"type\": \"tool_result\", \"tool_use_id\": tool_use.id, \"content\": result}]},\n            ],\n            tools=anthropic_tools,\n        )\n        final_text = next((block.text for block in followup.content if block.type == \"text\"), None)\n        if final_text:\n            print(f\"\\nAssistant: {final_text}\")\n            return str(final_text)\n\nprint(\"=== Ambiguous request (prompt asks for clarification) ===\")\nasyncio.run(call_llm_with_context(\"Convert some euros to dollars\"))\nprint(\"\\n=== Unambiguous request (model calls tool) ===\")\nasyncio.run(call_llm_with_context(\"How much is 50 GBP in euros?\"))",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Avec votre fonction utilitaire get_context_from_mcp(user_query) qui renvoie le texte de ressource et le texte d'invite, il est temps de transmettre ces informations au LLM !\n\nLe serveur de devises, get_context_from_mcp(), get_tools_from_mcp(), call_mcp_tool() et le client Claude sont configurés en arrière-plan. Vous devez compléter la fonction qui construit l'invite, appelle le modèle et gère soit un message direct, soit un appel d'outil. On vous a fourni une saisie utilisateur ambiguë et une autre non ambiguë pour voir si vos invites MCP ont fait la différence !"
+              ]
             }
           ]
         }
@@ -4191,7 +4125,10 @@
               "hint": "Les trois méthodes dont vous aurez besoin sont .connect(), .execute() et .close().",
               "solution": "import sqlite3\n\n# Connect to currencies.db\nconn = sqlite3.connect(\"currencies.db\")\nconn.row_factory = sqlite3.Row\n\n# Execute the query\ncursor = conn.execute(\"SELECT code, name FROM currencies WHERE code = ? LIMIT 1\", (\"USD\",))\nrow = cursor.fetchone()\nprint(dict(row))\n\n# Close the connection\nconn.close()",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Avant d'intégrer une base de données dans un serveur MCP, vous allez vous entraîner à créer la connexion, exécuter des requêtes paramétrées et fermer les connexions.\n\nUne base de données nommée currencies.db, qui contient les devises prises en charge par la Banque centrale européenne, est déjà configurée et prête à être utilisée."
+              ]
             }
           ]
         },
@@ -4239,7 +4176,10 @@
               "hint": "Passez le nom de la base de données (\"currencies.db\") à sqlite3.connect().\n\nLes fonctions peuvent être converties en ressources MCP à l'aide du décorateur @mcp.resource().",
               "solution": "from mcp.server.fastmcp import FastMCP\nmcp = FastMCP(\"Currency Converter\")\n\n# Connect to the database on startup\nconn = sqlite3.connect(\"currencies.db\")\nconn.row_factory = sqlite3.Row\n\n# Create an MCP resource\n@mcp.resource(\"db://currencies\")\ndef get_currencies() -> str:\n    \"\"\"\n    Get the list of currency names published by the European Central Bank for currency conversion.\n\n    Returns:\n        One line per currency (code - name), from the database.\n    \"\"\"\n    try:\n        # Query the database\n        cursor = conn.execute(\"SELECT code, name FROM currencies\")\n        rows = cursor.fetchall()\n        return \"\\n\".join(f\"{row['code']} - {row['name']}\" for row in rows)\n    except sqlite3.Error as e: return f\"Error: {e}\"\n\nresult = get_currencies()\nprint(result[:200] + \"...\" if len(result) > 200 else result)",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Il est temps de prendre ces informations de base de données et de les exposer comme une ressource dans le serveur MCP. Cela pourra ensuite servir à vérifier que le LLM demande des codes de devises pris en charge, ou même dans l'interface pour proposer les codes de devises sous forme de menu déroulant ou de saisie semi-automatique.\n\nLa base de données est toujours disponible sous le nom currencies.db, et le code pour instancier un serveur vous a été fourni."
+              ]
             }
           ]
         },
@@ -4287,7 +4227,10 @@
               "hint": "Utilisez le décorateur @mcp.tool() pour transformer une fonction appelée lookup_currencies() qui prend un seul argument (prefix) en un outil MCP.",
               "solution": "# Add lookup_currencies(prefix): find rows where name or code contains prefix\n@mcp.tool()\ndef lookup_currencies(prefix: str) -> str:\n    \"\"\"Find currencies whose code or name contains the given prefix.\"\"\"\n    try:\n        # Use parameterized query and LIMIT 50\n        cursor = conn.execute(\n            \"SELECT code, name FROM currencies WHERE name LIKE ? OR code LIKE ? LIMIT 50\",\n            (f\"%{prefix}%\", f\"%{prefix}%\"),\n        )\n        rows = cursor.fetchall()\n        return \"\\n\".join(f\"{row['code']} - {row['name']}\" for row in rows)\n    except sqlite3.Error as e:\n        return f\"Database error: {e}\"\n\nprint(lookup_currencies(\"Euro\"))",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "Un outil de recherche à la demande permettra au LLM de trouver des devises par nom ou par code sans charger la liste complète. Utilisez une requête paramétrée (espace réservé ?) pour éviter l'injection dans l'invite, et appliquez une limite de lignes afin que les réponses restent bornées."
+              ]
             }
           ]
         },
@@ -4654,102 +4597,6 @@
           ]
         },
         {
-          "id": "dc_ch03_act06",
-          "title": {
-            "en": "Rendre les appels d'outils d'API robustes",
-            "fr": "Rendre les appels d'outils d'API robustes"
-          },
-          "description": {
-            "en": "Voyez ce qu'il faut pour mettre des serveurs MCP en production en explorant en profondeur les bases de données et les API dans les serveurs MCP, ainsi que les considérations supplémentaires qu'elles impliquent. Enfin, intégrez des MCP tiers de manière sécurisée et fiable, pour ne pas réinventer la roue pour vos intégrations préférées.",
-            "fr": "Voyez ce qu'il faut pour mettre des serveurs MCP en production en explorant en profondeur les bases de données et les API dans les serveurs MCP, ainsi que les considérations supplémentaires qu'elles impliquent. Enfin, intégrez des MCP tiers de manière sécurisée et fiable, pour ne pas réinventer la roue pour vos intégrations préférées."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_06_tp",
-              "title": {
-                "en": "Rendre les appels d'outils d'API robustes",
-                "fr": "Rendre les appels d'outils d'API robustes"
-              },
-              "assignment": "En production, l'outil convert_currency() du serveur de devises ne doit pas rester bloqué si l'API de taux de change est lente ou indisponible. Pour atténuer ce risque, vous allez ajouter un timeout à la requête et faire en sorte que toute défaillance renvoie à l'utilisateur un message d'erreur court et clair, plutôt qu'une exception brute.\n\nUn serveur MCP a déjà été instancié et stocké dans la variable mcp.",
-              "instructions": "Implémentez une logique try-except qui tentera l'appel à l'API et échouera proprement en cas d'erreur en capturant l'exception.\n\nAjoutez un délai d'expiration de 10 secondes à l'appel requests.get() pour éviter que la requête ne reste bloquée indéfiniment.\n\n### Code de départ\n\n```python\n@mcp.tool()\ndef convert_currency(amount: float, from_currency: str, to_currency: str) -> str:\n    \"\"\"\n    Convert an amount from one currency to another using current exchange rates.\n\n    Args:\n        amount: The amount to convert\n        from_currency: Source currency code (e.g., 'USD', 'EUR', 'GBP')\n        to_currency: Target currency code (e.g., 'USD', 'EUR', 'GBP')\n\n    Returns:\n        A string with the conversion result and exchange rate\n    \"\"\"\n    url = f\"https://api.frankfurter.dev/v1/latest?base={from_currency}&symbols={to_currency}\"\n    # Implement try-except to gracefully handle errors\n    ____:\n        # Add a 10-second timeout so the request does not hang\n        r = requests.get(url, ____=____)\n        r.raise_for_status()\n        data = r.json()\n        rate = data[\"rates\"].get(to_currency)\n        if rate is None:\n            return f\"Could not find exchange rate for {from_currency} to {to_currency}\"\n        return f\"{amount} {from_currency} = {amount * rate:.2f} {to_currency} (Rate: {rate})\"\n    ____ requests.exceptions.RequestException as e:\n        return f\"Error converting currency: {e}\"\n\nprint(convert_currency(10, \"USD\", \"EUR\"))\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_ad77902f.pdf"
-                }
-              ],
-              "hint": "Les mots-clés try et except permettent d'écrire une logique qui « tente » d'exécuter du code et, en cas d'échec, capture l'exception pour gérer l'erreur proprement.\n\nPassez timeout=10 comme argument nommé à requests.get().",
-              "solution": "@mcp.tool()\ndef convert_currency(amount: float, from_currency: str, to_currency: str) -> str:\n    \"\"\"\n    Convert an amount from one currency to another using current exchange rates.\n\n    Args:\n        amount: The amount to convert\n        from_currency: Source currency code (e.g., 'USD', 'EUR', 'GBP')\n        to_currency: Target currency code (e.g., 'USD', 'EUR', 'GBP')\n\n    Returns:\n        A string with the conversion result and exchange rate\n    \"\"\"\n    url = f\"https://api.frankfurter.dev/v1/latest?base={from_currency}&symbols={to_currency}\"\n    # Implement try-except to gracefully handle errors\n    try:\n        # Add a 10-second timeout so the request does not hang\n        r = requests.get(url, timeout=10)\n        r.raise_for_status()\n        data = r.json()\n        rate = data[\"rates\"].get(to_currency)\n        if rate is None:\n            return f\"Could not find exchange rate for {from_currency} to {to_currency}\"\n        return f\"{amount} {from_currency} = {amount * rate:.2f} {to_currency} (Rate: {rate})\"\n    except requests.exceptions.RequestException as e:\n        return f\"Error converting currency: {e}\"\n\nprint(convert_currency(10, \"USD\", \"EUR\"))",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch03_act07",
-          "title": {
-            "en": "Quand les API nécessitent une authentification",
-            "fr": "Quand les API nécessitent une authentification"
-          },
-          "description": {
-            "en": "Voyez ce qu'il faut pour mettre des serveurs MCP en production en explorant en profondeur les bases de données et les API dans les serveurs MCP, ainsi que les considérations supplémentaires qu'elles impliquent. Enfin, intégrez des MCP tiers de manière sécurisée et fiable, pour ne pas réinventer la roue pour vos intégrations préférées.",
-            "fr": "Voyez ce qu'il faut pour mettre des serveurs MCP en production en explorant en profondeur les bases de données et les API dans les serveurs MCP, ainsi que les considérations supplémentaires qu'elles impliquent. Enfin, intégrez des MCP tiers de manière sécurisée et fiable, pour ne pas réinventer la roue pour vos intégrations préférées."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_07_tp",
-              "title": {
-                "en": "Quand les API nécessitent une authentification",
-                "fr": "Quand les API nécessitent une authentification"
-              },
-              "assignment": "Lorsqu'une API externe exige une clé d'API, la clé doit se trouver dans l'environnement du serveur et être ajoutée uniquement dans l'en-tête de la requête sortante. Le client n'envoie ni ne reçoit jamais la clé. Dans cet exercice, vous allez ajouter une prise en charge facultative de clé d'API à l'outil convert_currency du serveur de conversion de devises.\n\nL'API Frankfurter ne nécessite pas de clé pour un usage de base, mais beaucoup d'API oui. Vous allez lire une clé facultative depuis l'environnement (par exemple CURRENCY_API_KEY) et, si elle est définie, l'ajouter à la requête sous la forme d'un en-tête Authorization: Bearer.\n\nUn serveur MCP a déjà été instancié et stocké dans la variable mcp. Le module os a déjà été importé pour vous.",
-              "instructions": "Lisez la clé d'API \"CURRENCY_API_KEY\" depuis les variables d'environnement et ajoutez-la à l'en-tête \"Authorization\" avec la valeur \"Bearer \" suivie de la clé pour la requête.\n\nPassez les en-têtes dans la requête GET vers l'API.\n\n### Code de départ\n\n```python\n@mcp.tool()\ndef convert_currency(amount: float, from_currency: str, to_currency: str) -> str:\n    \"\"\"Convert an amount from one currency to another using current exchange rates.\"\"\"\n    url = f\"https://api.frankfurter.dev/v1/latest?base={from_currency}&symbols={to_currency}\"\n    # Read optional API key from the server's environment\n    headers = {}\n    api_key = os.environ.get(____)\n    if api_key:\n        headers[\"Authorization\"] = f\"Bearer {____}\"\n    try:\n        # Pass headers (and timeout) to the request; key never goes in the URL\n        r = requests.get(url, ____=____, timeout=10)\n        r.raise_for_status()\n        data = r.json()\n        rate = data[\"rates\"].get(to_currency)\n        if rate is None:\n            return f\"Could not find exchange rate for {from_currency} to {to_currency}\"\n        return f\"{amount} {from_currency} = {amount * rate:.2f} {to_currency} (Rate: {rate})\"\n    except requests.exceptions.RequestException as e:\n        return f\"Error converting currency: {e}\"\n\nprint(convert_currency(10, \"USD\", \"EUR\"))\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_ad77902f.pdf"
-                }
-              ],
-              "hint": "Vous pouvez extraire des variables d'environnement avec os.environ.get(), en passant le nom de la variable en argument.\n\nSi api_key est évaluée à vrai, définissez headers[\"Authorization\"] = f\"Bearer {api_key}\".\n\nPassez headers=headers à requests.get().",
-              "solution": "@mcp.tool()\ndef convert_currency(amount: float, from_currency: str, to_currency: str) -> str:\n    \"\"\"Convert an amount from one currency to another using current exchange rates.\"\"\"\n    url = f\"https://api.frankfurter.dev/v1/latest?base={from_currency}&symbols={to_currency}\"\n    # Read optional API key from the server's environment\n    headers = {}\n    api_key = os.environ.get(\"CURRENCY_API_KEY\")\n    if api_key:\n        headers[\"Authorization\"] = f\"Bearer {api_key}\"\n    try:\n        # Pass headers (and timeout) to the request; key never goes in the URL\n        r = requests.get(url, headers=headers, timeout=10)\n        r.raise_for_status()\n        data = r.json()\n        rate = data[\"rates\"].get(to_currency)\n        if rate is None:\n            return f\"Could not find exchange rate for {from_currency} to {to_currency}\"\n        return f\"{amount} {from_currency} = {amount * rate:.2f} {to_currency} (Rate: {rate})\"\n    except requests.exceptions.RequestException as e:\n        return f\"Error converting currency: {e}\"\n\nprint(convert_currency(10, \"USD\", \"EUR\"))",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
           "id": "dc_ch03_act08",
           "title": {
             "en": "Serveurs MCP tiers",
@@ -5084,7 +4931,10 @@
               "hint": "Vous appelez \"get_book_by_title\" disponible depuis le serveur MCP Open Library.\n\nLe premier élément de contenu possède un attribut .text.",
               "solution": "from mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\n\nasync def main():\n    params = StdioServerParameters(command=OPEN_LIBRARY_SERVER_CMD, args=OPEN_LIBRARY_SERVER_ARGS)\n    async with stdio_client(params) as (reader, writer):\n        async with ClientSession(reader, writer) as session:\n            await session.initialize()\n            # Call get_book_by_title for \"AI\" and assign the result\n            result = await session.call_tool(\"get_book_by_title\", {\"title\": \"AI\"})\n            # Assign the result text and print it\n            text = result.content[0].text\n            print(text)\n\nasyncio.run(main())",
               "successMessage": "",
-              "xp": 100
+              "xp": 100,
+              "learnerCriteria": [
+                "L'Open Library MCP expose des outils qui interrogent l'API Open Library de l'Internet Archive. Dans cet exercice, vous allez vous connecter au serveur, initialiser une session, puis utiliser l'outil get_book_by_title pour rechercher un livre et afficher le résultat.\n\nEn raison de la configuration spécifique des exercices Neopolis Akademy, les command et args définis dans StdioServerParameters() diffèrent de ceux montrés dans la vidéo et de ce que vous utiliseriez en local, mais le principe reste le même : le serveur est lancé à partir des fichiers sources installés."
+              ]
             }
           ]
         },
@@ -5275,5 +5125,10 @@
         }
       ]
     }
-  ]
+  ],
+  "exerciseCount": 17,
+  "videoCount": 11,
+  "downloadCount": 3,
+  "chapterCount": 30,
+  "totalActivities": 30
 }
