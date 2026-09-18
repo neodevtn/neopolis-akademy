@@ -1156,47 +1156,6 @@
           "allChaptersComplete"
         ]
       },
-      "recommendedVideos": [
-        {
-          "videoId": "TqC1qOfiVcQ",
-          "title": "Claude Agent SDK Full Workshop",
-          "channel": "Anthropic",
-          "type": "masterclass",
-          "topics": [
-            "claude",
-            "agent",
-            "sdk",
-            "anthropic",
-            "workshop",
-            "development"
-          ]
-        },
-        {
-          "videoId": "cS-CXkA8XYw",
-          "title": "Production AI Agents with LangGraph",
-          "channel": "AI Engineer",
-          "type": "masterclass",
-          "topics": [
-            "agent",
-            "langgraph",
-            "production",
-            "workflow",
-            "state machine"
-          ]
-        },
-        {
-          "videoId": "IEouqolKqWs",
-          "title": "Master Prompt Engineering: Step-by-Step Guide",
-          "channel": "AI Mastery",
-          "type": "tutorial",
-          "topics": [
-            "prompt",
-            "claude",
-            "step by step",
-            "techniques"
-          ]
-        }
-      ],
       "competencyTags": [
         "prompt_engineering",
         "ai_solution_design",
@@ -1207,7 +1166,9 @@
         "ai_governance",
         "ai_business"
       ],
-      "officialDurationMinutes": 209
+      "officialDurationMinutes": 209,
+      "videoCount": 0,
+      "recommendedVideosManaged": false
     }
   ],
   "exercises": [
@@ -1237,42 +1198,35 @@
           "text": {
             "en": "Add an output constraint that requires exactly one of: billing, technical, or escalation.",
             "fr": "Ajoutez une contrainte de sortie imposant exactement l’une des valeurs suivantes : billing, technical ou escalation."
-          },
-          "correct": true
+          }
         },
         {
           "id": "b",
           "text": {
             "en": "Rewrite the instruction with more polite wording asking Claude to format the result correctly.",
             "fr": "Réécrivez l’instruction avec une formulation plus polie demandant à Claude de formater correctement le résultat."
-          },
-          "correct": false
+          }
         },
         {
           "id": "c",
           "text": {
             "en": "Use only a broader system prompt so Claude can infer the router’s expected label format.",
             "fr": "Utilisez uniquement un prompt système plus général pour que Claude déduise le format d’étiquette attendu par le routeur."
-          },
-          "correct": false
+          }
         },
         {
           "id": "d",
           "text": {
             "en": "Ask Claude to explain why it selected each category before returning its answer.",
             "fr": "Demandez à Claude d’expliquer pourquoi il a choisi chaque catégorie avant de renvoyer sa réponse."
-          },
-          "correct": false
+          }
         }
       ],
-      "correction": {
-        "en": "Correct — Correct. The classification content is right, but the output shape varies; a constraint fixes the form expected by the router.\n\nIncorrect — Incorrect. Rewording does not add the missing structural requirement: the permitted output form.\n\nIncorrect — Incorrect. A system prompt helps maintain behavior across turns, but it does not by itself constrain this specific output shape.\n\nIncorrect — Incorrect. Explanations make the response less compatible with a router that accepts only a fixed label.",
-        "fr": "Correct — Correct. Le contenu de la classification est juste, mais la forme de sortie varie ; une contrainte fixe le format attendu par le routeur.\n\nIncorrect — Incorrect. Une reformulation n’ajoute pas l’exigence structurelle manquante : la forme de sortie autorisée.\n\nIncorrect — Incorrect. Un prompt système aide à maintenir le comportement sur plusieurs tours, mais ne contraint pas à lui seul cette forme de sortie précise.\n\nIncorrect — Incorrect. Les explications rendent la réponse moins compatible avec un routeur qui n’accepte qu’une étiquette fixe."
-      },
       "skillTags": [
         "output constraints",
         "prompt diagnosis"
-      ]
+      ],
+      "serverCorrectionRequired": true
     },
     {
       "id": "ex_claude_certified_developer_foundations__02_checkpoint_002",
@@ -1300,43 +1254,36 @@
           "text": {
             "en": "Return every received thinking block unchanged on the next API turn, along with the tool result.",
             "fr": "Renvoyez chaque bloc de thinking reçu sans modification au tour API suivant, avec le résultat de l’outil."
-          },
-          "correct": true
+          }
         },
         {
           "id": "b",
           "text": {
             "en": "Replace the thinking block with a short summary to save context.",
             "fr": "Remplacez le bloc de thinking par un court résumé pour économiser du contexte."
-          },
-          "correct": false
+          }
         },
         {
           "id": "c",
           "text": {
             "en": "Delete the thinking block after reading it, then return only the tool result.",
             "fr": "Supprimez le bloc de thinking après l’avoir lu, puis renvoyez uniquement le résultat de l’outil."
-          },
-          "correct": false
+          }
         },
         {
           "id": "d",
           "text": {
             "en": "Set a fixed `budget_tokens` value on every request to preserve the reasoning format.",
             "fr": "Définissez une valeur fixe de `budget_tokens` à chaque requête pour préserver le format du raisonnement."
-          },
-          "correct": false
+          }
         }
       ],
-      "correction": {
-        "en": "Correct — Correct. Thinking blocks carry signatures and must be carried back unchanged when Extended Thinking is used with tools.\n\nIncorrect — Incorrect. Summarizing changes the signed block, so the following request can be rejected.\n\nIncorrect — Incorrect. Dropping the block violates the carry-back requirement.\n\nIncorrect — Incorrect. The chapter describes `budget_tokens` as deprecated; effort calibrates reasoning depth on current models.",
-        "fr": "Correct — Correct. Les blocs de thinking portent des signatures et doivent être retransmis tels quels lorsque Extended Thinking est utilisé avec des outils.\n\nIncorrect — Incorrect. Résumer modifie le bloc signé ; la requête suivante peut donc être rejetée.\n\nIncorrect — Incorrect. Supprimer le bloc viole l’exigence de carry-back.\n\nIncorrect — Incorrect. Le chapitre indique que `budget_tokens` est déprécié ; sur les modèles actuels, c’est `effort` qui calibre la profondeur du raisonnement."
-      },
       "skillTags": [
         "Extended Thinking",
         "tool-use",
         "carry-back"
-      ]
+      ],
+      "serverCorrectionRequired": true
     },
     {
       "id": "ex_claude_certified_developer_foundations__02_checkpoint_003",
@@ -1364,43 +1311,36 @@
           "text": {
             "en": "Send a `tool_result` in the immediately following user turn with the exact matching `tool_use_id`.",
             "fr": "Envoyez un `tool_result` dans le tour utilisateur qui suit immédiatement, avec le `tool_use_id` correspondant exactement."
-          },
-          "correct": true
+          }
         },
         {
           "id": "b",
           "text": {
             "en": "Put the tool result in Claude’s next assistant text block.",
             "fr": "Placez le résultat de l’outil dans le prochain bloc text de l’assistant."
-          },
-          "correct": false
+          }
         },
         {
           "id": "c",
           "text": {
             "en": "Use a new ID for the result so each message block has its own identifier.",
             "fr": "Utilisez un nouvel ID pour le résultat afin que chaque bloc de message ait son propre identifiant."
-          },
-          "correct": false
+          }
         },
         {
           "id": "d",
           "text": {
             "en": "Send the result after an unrelated user message, once the local command has finished.",
             "fr": "Envoyez le résultat après un message utilisateur sans rapport, une fois la commande locale terminée."
-          },
-          "correct": false
+          }
         }
       ],
-      "correction": {
-        "en": "Correct — Correct. Tool-use blocks require a matching result ID in the next user turn; otherwise the API validation fails.\n\nIncorrect — Incorrect. The result must be returned by the application as a user-turn `tool_result`, not as assistant prose.\n\nIncorrect — Incorrect. The `tool_result` must use the original tool-use ID so Claude can associate the result with its call.\n\nIncorrect — Incorrect. The pairing must occur in the immediately following user turn; inserting another turn breaks the required sequence.",
-        "fr": "Correct — Correct. Les blocs tool_use exigent un ID de résultat correspondant dans le tour utilisateur suivant ; sinon la validation de l’API échoue.\n\nIncorrect — Incorrect. Le résultat doit être renvoyé par l’application sous forme de `tool_result` dans un tour utilisateur, et non comme prose de l’assistant.\n\nIncorrect — Incorrect. Le `tool_result` doit utiliser l’ID de l’appel d’outil initial afin que Claude puisse relier le résultat à cet appel.\n\nIncorrect — Incorrect. L’appariement doit avoir lieu dans le tour utilisateur immédiatement suivant ; insérer un autre tour casse la séquence requise."
-      },
       "skillTags": [
         "tool schema",
         "tool-use loop",
         "structured blocks"
-      ]
+      ],
+      "serverCorrectionRequired": true
     },
     {
       "id": "ex_claude_certified_developer_foundations__02_checkpoint_004",
@@ -1428,43 +1368,36 @@
           "text": {
             "en": "Discard the provisional assistant turn, do not add it to history, and retry the request.",
             "fr": "Écartez le tour assistant provisoire, ne l’ajoutez pas à l’historique, puis réessayez la requête."
-          },
-          "correct": true
+          }
         },
         {
           "id": "b",
           "text": {
             "en": "Parse the partial JSON and run the tool with whichever arguments have arrived.",
             "fr": "Analysez le JSON partiel et exécutez l’outil avec les arguments déjà arrivés."
-          },
-          "correct": false
+          }
         },
         {
           "id": "c",
           "text": {
             "en": "Save the partial assistant turn so the next request can continue exactly where streaming stopped.",
             "fr": "Enregistrez le tour assistant partiel afin que la requête suivante reprenne exactement là où le streaming s’est arrêté."
-          },
-          "correct": false
+          }
         },
         {
           "id": "d",
           "text": {
             "en": "Treat the last `content_block_delta` as confirmation that the whole message is complete.",
             "fr": "Considérez le dernier `content_block_delta` comme une confirmation que le message entier est terminé."
-          },
-          "correct": false
+          }
         }
       ],
-      "correction": {
-        "en": "Correct — Correct. Without `message_stop`, the assembled turn is incomplete; saving it can corrupt the next request.\n\nIncorrect — Incorrect. Tool input may be invalid or incomplete until `content_block_stop` closes that block.\n\nIncorrect — Incorrect. A half-built tool-use block in history can violate structural pairing rules on the next request.\n\nIncorrect — Incorrect. Only `message_stop` establishes that the complete message has been assembled.",
-        "fr": "Correct — Correct. Sans `message_stop`, le tour assemblé est incomplet ; le sauvegarder peut corrompre la requête suivante.\n\nIncorrect — Incorrect. L’entrée de l’outil peut être invalide ou incomplète jusqu’à ce que `content_block_stop` ferme ce bloc.\n\nIncorrect — Incorrect. Un bloc tool_use à moitié construit dans l’historique peut violer les règles structurelles d’appariement à la requête suivante.\n\nIncorrect — Incorrect. Seul `message_stop` établit que le message complet a été assemblé."
-      },
       "skillTags": [
         "streaming",
         "partial state",
         "interrupted flows"
-      ]
+      ],
+      "serverCorrectionRequired": true
     },
     {
       "id": "ex_claude_certified_developer_foundations__02_checkpoint_005",
@@ -1492,43 +1425,36 @@
           "text": {
             "en": "Compact or summarize the useful history before the next request, so the session stays within the context budget.",
             "fr": "Compactez ou résumez l’historique utile avant la requête suivante afin que la session reste dans le budget de contexte."
-          },
-          "correct": true
+          }
         },
         {
           "id": "b",
           "text": {
             "en": "Assume the API will silently remove the oldest tool results as the window fills.",
             "fr": "Supposez que l’API supprimera silencieusement les résultats d’outil les plus anciens à mesure que la fenêtre se remplit."
-          },
-          "correct": false
+          }
         },
         {
           "id": "c",
           "text": {
             "en": "Keep every local build log in the messages array because prior tool results have no effect on context size.",
             "fr": "Conservez chaque journal de build local dans le tableau messages, car les résultats d’outil antérieurs n’affectent pas la taille du contexte."
-          },
-          "correct": false
+          }
         },
         {
           "id": "d",
           "text": {
             "en": "Wait for `model_context_window_exceeded`, then append more messages to recover the missing output.",
             "fr": "Attendez `model_context_window_exceeded`, puis ajoutez davantage de messages pour récupérer la sortie manquante."
-          },
-          "correct": false
+          }
         }
       ],
-      "correction": {
-        "en": "Correct — Correct. The application must manage a long session by trimming or summarizing history before it exceeds the window.\n\nIncorrect — Incorrect. The chapter states that the API does not silently truncate old content.\n\nIncorrect — Incorrect. Every tool result remains in the context window and consumes budget for the session.\n\nIncorrect — Incorrect. Adding messages increases the context load; history must be managed before the next request.",
-        "fr": "Correct — Correct. L’application doit gérer une longue session en taillant ou en résumant l’historique avant de dépasser la fenêtre.\n\nIncorrect — Incorrect. Le chapitre indique que l’API ne tronque pas silencieusement les anciens contenus.\n\nIncorrect — Incorrect. Chaque résultat d’outil reste dans la fenêtre de contexte et consomme du budget durant la session.\n\nIncorrect — Incorrect. Ajouter des messages augmente la charge de contexte ; l’historique doit être géré avant la requête suivante."
-      },
       "skillTags": [
         "context engineering",
         "context budget",
         "compaction"
-      ]
+      ],
+      "serverCorrectionRequired": true
     },
     {
       "id": "ex_claude_certified_developer_foundations__02_checkpoint_006",
@@ -1556,43 +1482,36 @@
           "text": {
             "en": "Use an agent loop because the goal and allowed local tools are known, but the needed sequence of actions cannot be enumerated in advance.",
             "fr": "Utilisez une boucle agentique car l’objectif et les outils locaux autorisés sont connus, mais la séquence d’actions nécessaire ne peut pas être énumérée à l’avance."
-          },
-          "correct": true
+          }
         },
         {
           "id": "b",
           "text": {
             "en": "Use a fixed workflow because any task with tools should always have predetermined code steps.",
             "fr": "Utilisez un workflow fixe, car toute tâche avec des outils doit toujours avoir des étapes de code prédéterminées."
-          },
-          "correct": false
+          }
         },
         {
           "id": "c",
           "text": {
             "en": "Use an agent because it eliminates context costs and coordination overhead.",
             "fr": "Utilisez un agent parce qu’il élimine les coûts de contexte et la surcharge de coordination."
-          },
-          "correct": false
+          }
         },
         {
           "id": "d",
           "text": {
             "en": "Use a workflow because the agent itself executes shell commands without application code.",
             "fr": "Utilisez un workflow car l’agent exécute lui-même les commandes shell sans code applicatif."
-          },
-          "correct": false
+          }
         }
       ],
-      "correction": {
-        "en": "Correct — Correct. An agent fits work that needs creative sequencing among constrained tools and has an unpredictable path.\n\nIncorrect — Incorrect. A workflow is appropriate only when the exact path can be enumerated in advance.\n\nIncorrect — Incorrect. Agents add coordination overhead, context costs, and additional failure modes.\n\nIncorrect — Incorrect. Claude selects tools, while the application or selected runtime handles execution; this does not determine workflow versus agent.",
-        "fr": "Correct — Correct. Un agent convient à un travail qui exige un enchaînement créatif parmi des outils contraints et dont le chemin est imprévisible.\n\nIncorrect — Incorrect. Un workflow n’est approprié que lorsque le chemin exact peut être énuméré à l’avance.\n\nIncorrect — Incorrect. Les agents ajoutent une surcharge de coordination, des coûts de contexte et des modes de défaillance supplémentaires.\n\nIncorrect — Incorrect. Claude sélectionne les outils, tandis que l’application ou le runtime choisi gère l’exécution ; cela ne détermine pas le choix entre workflow et agent."
-      },
       "skillTags": [
         "agentic loop",
         "workflow vs agent",
         "tool orchestration"
-      ]
+      ],
+      "serverCorrectionRequired": true
     },
     {
       "id": "ex_claude_certified_developer_foundations__02_checkpoint_007",
@@ -1620,43 +1539,36 @@
           "text": {
             "en": "Store relevant state outside the live context, such as in external storage or a summary that can be injected into the next session.",
             "fr": "Stockez l’état pertinent hors du contexte actif, par exemple dans un stockage externe ou dans un résumé injecté à la session suivante."
-          },
-          "correct": true
+          }
         },
         {
           "id": "b",
           "text": {
             "en": "Keep the full prior conversation only in the current messages array and start the new session with an empty history.",
             "fr": "Conservez la conversation antérieure complète uniquement dans le tableau messages actuel et démarrez la nouvelle session avec un historique vide."
-          },
-          "correct": false
+          }
         },
         {
           "id": "c",
           "text": {
             "en": "Make the agent stateless so it can remember the user’s prior preferences without retrieval latency.",
             "fr": "Rendez l’agent stateless afin qu’il puisse mémoriser les préférences antérieures de l’utilisateur sans latence de récupération."
-          },
-          "correct": false
+          }
         },
         {
           "id": "d",
           "text": {
             "en": "Replay every old turn forever in each request, because this has no effect on token cost.",
             "fr": "Rejouez indéfiniment chaque ancien tour dans chaque requête, car cela n’a aucun effet sur le coût en tokens."
-          },
-          "correct": false
+          }
         }
       ],
-      "correction": {
-        "en": "Correct — Correct. State that must survive a session boundary needs persistent storage or a persisted summary.\n\nIncorrect — Incorrect. In-context memory disappears when the session ends, so the next session cannot retrieve it.\n\nIncorrect — Incorrect. A stateless agent retains nothing from prior sessions.\n\nIncorrect — Incorrect. Replaying full history inflates token cost and eventually risks exhausting the context window.",
-        "fr": "Correct — Correct. L’état qui doit survivre à la fin d’une session nécessite un stockage persistant ou un résumé persisté.\n\nIncorrect — Incorrect. La mémoire in-context disparaît à la fin de la session ; la session suivante ne peut donc pas la récupérer.\n\nIncorrect — Incorrect. Un agent stateless ne conserve rien des sessions antérieures.\n\nIncorrect — Incorrect. Rejouer l’historique complet gonfle le coût en tokens et risque à terme d’épuiser la fenêtre de contexte."
-      },
       "skillTags": [
         "memory",
         "persistent state",
         "summarized memory"
-      ]
+      ],
+      "serverCorrectionRequired": true
     },
     {
       "id": "ex_claude_certified_developer_foundations__02_checkpoint_008",
@@ -1684,44 +1596,39 @@
           "text": {
             "en": "Upload the PDF once and reference its `file_id` in later local development requests.",
             "fr": "Téléversez le PDF une fois et référencez son `file_id` dans les requêtes de développement locales ultérieures."
-          },
-          "correct": true
+          }
         },
         {
           "id": "b",
           "text": {
             "en": "Inline the base64-encoded PDF in every request, because repeated payloads do not affect request overhead.",
             "fr": "Incluez le PDF encodé en base64 dans chaque requête, car les charges utiles répétées n’affectent pas le surcoût des requêtes."
-          },
-          "correct": false
+          }
         },
         {
           "id": "c",
           "text": {
             "en": "Use a short-lived authenticated URL, because image and document URLs do not need to be reachable at request time.",
             "fr": "Utilisez une URL authentifiée à courte durée de vie, car les URL d’images et de documents n’ont pas besoin d’être accessibles au moment de la requête."
-          },
-          "correct": false
+          }
         },
         {
           "id": "d",
           "text": {
             "en": "Convert the PDF into a plain text prompt, because PDFs do not use context budget.",
             "fr": "Convertissez le PDF en prompt de texte brut, car les PDF n’utilisent pas de budget de contexte."
-          },
-          "correct": false
+          }
         }
       ],
-      "correction": {
-        "en": "Correct — Correct. For a large asset reused across requests or turns, a file ID avoids repeatedly sending the full bytes.\n\nIncorrect — Incorrect. Repeated inline base64 sends the full payload every time and can dominate request size and latency.\n\nIncorrect — Incorrect. URL references require a stable, public, reachable URL when Claude fetches the asset.\n\nIncorrect — Incorrect. PDFs consume context budget, and the document block is the supported multimodal structure for sending them.",
-        "fr": "Correct — Correct. Pour un actif volumineux réutilisé entre requêtes ou tours, un file ID évite de renvoyer les octets complets à répétition.\n\nIncorrect — Incorrect. Le base64 intégré renvoie la charge utile complète à chaque fois et peut dominer la taille et la latence des requêtes.\n\nIncorrect — Incorrect. Les références URL exigent une URL stable, publique et accessible au moment où Claude récupère l’actif.\n\nIncorrect — Incorrect. Les PDF consomment du budget de contexte, et le bloc document est la structure multimodale prévue pour les envoyer."
-      },
       "skillTags": [
         "multimodal ingestion",
         "PDFs",
         "Files API",
         "context budget"
-      ]
+      ],
+      "serverCorrectionRequired": true
     }
-  ]
+  ],
+  "videoCount": 0,
+  "videoRecommendationStatus": "none"
 }

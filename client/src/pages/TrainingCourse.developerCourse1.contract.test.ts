@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { DEVELOPER_FOUNDATIONS_SECURE_CORRECTIONS } from '../../../server/developerFoundationsCorrectionRegistry';
 
 const root = path.resolve(__dirname, '../../..');
 const coursePath = path.join(root, 'client/public/data/courses/claude_certified_developer_foundations__01.json');
@@ -22,7 +23,7 @@ describe('Developer Foundations course 1 contract', () => {
     expect(content('chapter_01_1').fr).toContain('**MSO** signifie **Model Selection and Optimization**');
     expect(content('chapter_01_1').fr).toContain('**Durée officielle :** 57 minutes');
     const catalog = index.courses.find((item: any) => item.id === course.courseId);
-    expect(catalog).toMatchObject({ officialDurationMinutes: 57, chapterCount: 10, exerciseCount: 6, totalActivities: 6 });
+    expect(catalog).toMatchObject({ officialDurationMinutes: 57, chapterCount: 10, exerciseCount: 5, totalActivities: 5 });
     const certification = index.certifications.find((item: any) => item.id === 'claude_certified_developer_foundations');
     const certificationCourses = index.courses.filter((item: any) => item.certId === certification.id);
     expect(certification.totalVideos).toBe(certificationCourses.reduce((sum: number, item: any) => sum + item.videoCount, 0));
@@ -34,8 +35,10 @@ describe('Developer Foundations course 1 contract', () => {
     for (const exercise of course.exercises) {
       expect(exercise).toMatchObject({ interactionType: 'single_choice', completionRequiresCorrectAnswer: true, required: true, difficulty: 'foundation' });
       expect(exercise.options).toHaveLength(4);
-      expect(exercise.options.filter((option: any) => option.correct)).toHaveLength(1);
-      expect(exercise.correction.fr).toContain('Bonne réponse');
+      expect(exercise).toMatchObject({ serverCorrectionRequired: true });
+      expect(exercise.options.every((option: any) => option.correct === undefined)).toBe(true);
+      expect(DEVELOPER_FOUNDATIONS_SECURE_CORRECTIONS[course.courseId]?.[exercise.id]?.correctOptionIds).toHaveLength(1);
+      expect(DEVELOPER_FOUNDATIONS_SECURE_CORRECTIONS[course.courseId]?.[exercise.id]?.correction?.fr).toContain('Bonne réponse');
       expect(chapter(exercise.chapterId).completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
     }
   });

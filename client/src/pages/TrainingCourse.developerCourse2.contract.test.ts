@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { DEVELOPER_FOUNDATIONS_SECURE_CORRECTIONS } from '../../../server/developerFoundationsCorrectionRegistry';
 
 const root = process.cwd();
 const course = JSON.parse(fs.readFileSync(path.join(root, 'client/public/data/courses/claude_certified_developer_foundations__02.json'), 'utf8'));
@@ -31,7 +32,8 @@ describe('Developer Foundations course 2 content contract', () => {
     expect(course.exercises).toHaveLength(8);
     expect(course.exercises.every((exercise: { interactionType: string; required: boolean; completionRequiresCorrectAnswer: boolean }) => exercise.interactionType === 'single_choice' && exercise.required && exercise.completionRequiresCorrectAnswer)).toBe(true);
     expect(course.exercises.map((exercise: { chapterId: string }) => exercise.chapterId)).toEqual(expectedChapters);
-    expect(course.exercises.every((exercise: { options: { correct: boolean }[] }) => exercise.options.filter((option) => option.correct).length === 1)).toBe(true);
+    expect(course.exercises.every((exercise: { id: string; serverCorrectionRequired?: boolean; options: { correct?: boolean }[] }) => exercise.serverCorrectionRequired === true && exercise.options.every((option) => option.correct === undefined))).toBe(true);
+    expect(course.exercises.every((exercise: { id: string }) => DEVELOPER_FOUNDATIONS_SECURE_CORRECTIONS[course.courseId]?.[exercise.id]?.correctOptionIds?.length === 1)).toBe(true);
     expect(course.exercises.some((exercise: { interactionType: string }) => exercise.interactionType === 'free_text')).toBe(false);
     for (const id of expectedChapters) {
       expect(chapter(id).blocks.some((block: { type: string; exerciseId?: string }) => block.type === 'checkpoint' && block.exerciseId)).toBe(true);
@@ -56,7 +58,7 @@ describe('Developer Foundations course 2 content contract', () => {
     expect(body('chapter_01').fr).toContain('sorties structurées');
     const promptingCheckpoint = course.exercises.find((exercise: { chapterId: string }) => exercise.chapterId === 'chapter_01');
     expect(promptingCheckpoint?.options.map((option) => option.text.fr).join('\n')).not.toContain('system prompt');
-    expect(promptingCheckpoint?.correction.fr).not.toContain('system prompt');
+    expect(DEVELOPER_FOUNDATIONS_SECURE_CORRECTIONS[course.courseId]?.[promptingCheckpoint?.id || '']?.correction.fr).not.toContain('system prompt');
     expect(collectFrenchStrings(course).join('\n')).not.toContain('system prompt');
     expect(body('chapter_11').fr).toContain('l’humain dans la boucle');
     expect(chapterFrenchText('chapter_15')).toContain('Claude Agent SDK');

@@ -62,7 +62,7 @@ describe('Developer Foundations course 5 checkpoint integrity', () => {
     expect(courseText).toContain('Point de contrôle 2 : Choisissez le canal de contribution et le prérequis manquant');
     expect(courseText).toContain('Phase de déploiement — Choix de plateforme guidé par les exigences de conformité');
     expect(courseText).toContain('Point de contrôle 5 : Associer la plateforme de déploiement et la version épinglée');
-    expect(courseText).toContain("Point de contrôle 1 : Corriger le modèle d'accélérateur défectueux");
+    expect(courseText).toContain("Point de contrôle 1 : Corriger le modèle d'accélérateur cassé");
     expect(courseText).toContain('Point de contrôle 3 : extraire les exigences');
     expect(courseText).toContain('Point de contrôle 4 : placer le travail dans la bonne phase');
     expect(packaging).not.toContain('Pull les valeurs spécifiques au domaine');

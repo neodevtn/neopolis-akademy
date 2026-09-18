@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const root = process.cwd();
 const coursePath = path.join(root, 'client/public/data/courses/claude_certified_developer_foundations__01.json');
@@ -175,8 +176,8 @@ catalogCourse.title.en = 'MSO Foundations';
 catalogCourse.title.fr = 'Fondations MSO';
 catalogCourse.officialDurationMinutes = 57;
 catalogCourse.chapterCount = 10;
-catalogCourse.exerciseCount = 6;
-catalogCourse.totalActivities = 6;
+catalogCourse.exerciseCount = 5;
+catalogCourse.totalActivities = 5;
 catalogCourse.videoCount = 0;
 catalogCourse.downloadCount = 0;
 catalogCourse.videos = [];
@@ -191,4 +192,7 @@ developerCertification.totalDownloads = developerCourses.reduce((sum, item) => s
 
 fs.writeFileSync(coursePath, `${JSON.stringify(course, null, 2)}\n`);
 fs.writeFileSync(indexPath, `${JSON.stringify(catalog, null, 2)}\n`);
+// Keep this historical repair script compatible with the current server-owned
+// correction contract when it is invoked by its regression test.
+execFileSync('node', ['scripts/protect_developer_foundations_corrections.mjs'], { cwd: root, stdio: 'pipe' });
 console.log('Developer course 1 normalized.');

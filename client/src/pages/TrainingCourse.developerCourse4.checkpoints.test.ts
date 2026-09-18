@@ -16,16 +16,15 @@ describe('Developer Foundations course 4 checkpoint integrity', () => {
   const lesson = course.lessons[0] as any;
   const chapter = (id: string) => lesson.chapters.find((item: any) => item.id === id);
   const exercise = (id: string) => (course.exercises as any[]).find((item) => item.id === id);
-  it('references existing same-chapter exercises from every repaired checkpoint', () => {
-    const pairs = [
-      ['chapter_05', 'ex_claude_certified_developer_foundations__04_005'],
-      ['chapter_07', 'ex_claude_certified_developer_foundations__04_007'],
-      ['chapter_11', 'ex_claude_certified_developer_foundations__04_011'],
+  it('removes source-incomplete checkpoint invitations rather than presenting unanswerable exercises', () => {
+    const invalidExerciseIds = [
+      'ex_claude_certified_developer_foundations__04_005',
+      'ex_claude_certified_developer_foundations__04_007',
+      'ex_claude_certified_developer_foundations__04_011',
     ];
-    for (const [chapterId, exerciseId] of pairs) {
-      expect(chapter(chapterId).blocks).toContainEqual({ type: 'checkpoint', exerciseId });
-      expect(exercise(exerciseId)).toMatchObject({ chapterId, required: true, completionRequiresCorrectAnswer: false });
-      expect(exercise(exerciseId).inputSchema.minWords).toBeGreaterThanOrEqual(15);
+    for (const exerciseId of invalidExerciseIds) {
+      expect(exercise(exerciseId)).toBeUndefined();
+      expect(lesson.chapters.flatMap((item: any) => item.blocks).some((block: any) => block.type === 'checkpoint' && block.exerciseId === exerciseId)).toBe(false);
     }
   });
 
@@ -65,7 +64,7 @@ describe('Developer Foundations course 4 checkpoint integrity', () => {
     expect(content).toContain('Nombre d’appels d’outils :');
     expect(content).toContain('schéma orchestrator-worker');
     expect(errorHandlingContent).toContain('stop_reason');
-    expect(frenchCourseText).toContain('Point de contrôle Tests et traçage · 10 min');
+    expect(frenchCourseText).not.toContain('Réparez le chemin d’erreur et de réessai cassé');
     expect(frenchCourseText).not.toContain('CheckpointTesting & Tracing·10 min');
     expect(content).not.toContain('Model selection for the task :');
     expect(content).not.toContain('Prompt and context size :');

@@ -19,8 +19,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Welcome to Module 05: Production Deployment\n\nThis module covers the essential concepts and practical skills you need to master for this certification track.\n\n### What you'll learn\n\n- Packaging for Reuse\n- Contributing Back\n- Requirements & Lifecycle\n- Deployment & Versioning\n- Comparing Platforms\n- Trust Boundaries\n\n### How this module works\n\nEach section builds on the previous one. You'll encounter:\n- **Teaching content** explaining core concepts\n- **Interactive exercises** to test your understanding\n- **Checkpoints** to verify your progress\n- **A quiz** at the end to assess your mastery\n\nTake your time with each section. You can revisit any chapter using the navigation on the left.\n\n**Estimated time:** 15-25 minutes",
-                "fr": "## Bienvenue au Module 05 : Déploiement en production\n\nCe module couvre les concepts essentiels et les compétences pratiques que vous devez maîtriser pour cette certification.\n\n### Ce que vous allez apprendre\n\n- Emballage réutilisable\n- Contribuer à la communauté\n- Exigences et cycle de vie\n- Déploiement et versionnage\n- Comparaison des plateformes\n- Frontières de confiance\n\n### Comment fonctionne ce module\n\nChaque section s'appuie sur la précédente. Vous rencontrerez :\n- **Du contenu pédagogique** expliquant les concepts clés\n- **Des exercices interactifs** pour tester votre compréhension\n- **Des points de contrôle** pour vérifier votre progression\n- **Un quiz** à la fin pour évaluer votre maîtrise\n\nPrenez votre temps avec chaque section. Vous pouvez revisiter n'importe quel chapitre en utilisant la navigation à gauche.\n\n**Durée estimée :** 15-25 minutes"
+                "en": "## Welcome to Module 05: Production Deployment\n\nThis module covers the essential concepts and practical skills you need to master for this certification track.\n\n### What you'll learn\n\n- Packaging for Reuse\n- Contributing Back\n- Requirements & Lifecycle\n- Deployment & Versioning\n- Comparing Platforms\n- Trust Boundaries\n\n### How this module works\n\nEach section builds on the previous one. You'll encounter:\n- **Teaching content** explaining core concepts\n- **Interactive exercises** to test your understanding\n- **Checkpoints** to verify your progress\n- **A quiz** at the end to assess your mastery\n\nTake your time with each section. You can revisit any chapter using the navigation on the left.\n\n**Official course duration:** 155 minutes",
+                "fr": "## Bienvenue au Module 05 : Déploiement en production\n\nCe module couvre les concepts essentiels et les compétences pratiques que vous devez maîtriser pour cette certification.\n\n### Ce que vous allez apprendre\n\n- Emballage réutilisable\n- Contribuer à la communauté\n- Exigences et cycle de vie\n- Déploiement et versionnage\n- Comparaison des plateformes\n- Frontières de confiance\n\n### Comment fonctionne ce module\n\nChaque section s'appuie sur la précédente. Vous rencontrerez :\n- **Du contenu pédagogique** expliquant les concepts clés\n- **Des exercices interactifs** pour tester votre compréhension\n- **Des points de contrôle** pour vérifier votre progression\n- **Un quiz** à la fin pour évaluer votre maîtrise\n\nPrenez votre temps avec chaque section. Vous pouvez revisiter n'importe quel chapitre en utilisant la navigation à gauche.\n\n**Durée officielle du cours :** 155 minutes"
               }
             }
           ],
@@ -727,16 +727,6 @@
                     "en": "The application never changed, but the alias did. No pinned prior version had been retained, so there was nothing to roll back to. The hotfix repaired the parser but left the unpinned deployment in place.",
                     "fr": "L'application n'a jamais changé, mais l'alias a été modifié. Aucune version antérieure épinglée n'avait été conservée, il n'y avait donc rien vers quoi revenir. Le correctif a réparé l'analyseur, mais a laissé en place le déploiement non épinglé."
                   }
-                },
-                {
-                  "front": {
-                    "en": "What to Watch Out for",
-                    "fr": "À quoi faire attention"
-                  },
-                  "back": {
-                    "en": "An alias resolves to a moving target; a pinned full model ID is a fixed snapshot. Pin the full model ID so an upstream update is something you adopt on purpose. Keep the prior pinned version available so a regression is a rollback rather than a hotfix. Gate the new version through your eval before y",
-                    "fr": "Un alias renvoie à une cible mouvante ; un full model ID épinglé est un instantané fixe. Épinglez le full model ID afin qu'une mise à jour en amont soit quelque chose que vous adoptez délibérément. Gardez la version précédemment épinglée disponible afin qu'une régression se traduise par un rollback plutôt que par un hotfix. Faites passer la nouvelle version par votre eval avant y"
-                  }
                 }
               ]
             }
@@ -852,23 +842,13 @@
             {
               "type": "content",
               "body": {
-                "en": "Comparing platforms on latency, compliance, and cost so the choice survives review\n\nIn the last two screens you chose a platform and pinned its version. That choice was right for the customer's cloud, but \"right for their cloud\" is not yet an argument a procurement and security team will sign off on.\n\nMeasure latency from the customer's region\n\nLatency depends on where the platform runs relative to the customer and on how access to new features is routed. A platform running in the customer's own cloud region can reduce round-trip time compared to a first-party endpoint located farther away. The trade-off is timing of access: the first-party API typically receives new capabilities before they reach other platforms. The number is only accurate when you measure it from the customer's actual region against their actual payload. A measurement from your laptop hides the round-trip penalty that appears once the workload runs where the customer is. Within Bedrock specifically, the choice between global and regional endpoints is also the primary residency control and can affect cost. You should measure from the customer's actual region against both options before committing.\n\nCompliance often determines the platform\n\nCompliance is often the dimension that ends the debate. A customer who already holds a certification on one cloud is unlikely to re-certify on another. Data residency is a rule that a customer's data must be processed in a specific country or region. Available compliance certifications and who can audit access differ by platform, and a regulated financial or healthcare customer treats these as pass-or-fail rather than as tradeoffs to balance. The first-party Claude API may not offer EU data residency; confirm current regional coverage at platform.claude.com, since EU-only residency typically requires Bedrock or Vertex AI; on third-party platforms such as Microsoft Foundry, hosting is per-model: Azure-hosted Foundry models run inference end-to-end on Azure infrastructure, while Anthropic-hosted Foundry models do not satisfy EU regional residency requirements. Residency must be confirmed per model and deployment with Microsoft. Raise the compliance constraint during scoping, or it surfaces at contract review after the work is done.\n\nWhat drives total cost beyond the per-token rate\n\nPer-token rates are broadly aligned across platforms; total cost moves on egress, platform fees, and integration effort. A lower token price can cost more in total once data transfer and integration are factored in. Instrument cost per call for each platform. Confirm the current pricing pages at scoping.\n\nThe cross-platform comparison reference\n\nDimensionHow it differs by platformHow to measure itWhere each platform wins\n\nLatencyA platform in the customer's region shortens the round trip, while the first-party API may reach new features first.From the customer's actual region against their actual payload.An in-region cloud platform wins on round-trip latency, while the first-party API is advantaged on earliest feature access.\n\nComplianceData residency, certifications, and audit controls are determined by the deployment platform.Against the customer's existing certification and residency requirements during scoping.The cloud platform the customer has already certified wins, because it needs no re-certification.\n\nCostToken price, data egress, platform fees, and integration effort all vary.Total cost per call per platform, including egress and integration, rather than token price alone.The platform with the lowest total cost for the actual workload wins, which is not always the cheapest token.\n\nHandles well\n\nMeasuring all three dimensions per platform turns a placement into one a procurement team will sign off on.\n\nAdds cost or complexity\n\nInstrumenting latency, compliance, and cost across platforms requires real measurement work before any code ships.\n\nUse a different approach\n\nWhen the customer's compliance requirement is already pass-or-fail, skip the full comparison. That constraint determines the placement on its own.\n\nWatch OutComparing Platforms·2 min\n\nThe platform picked on familiarity that failed residency\n\nSetup\n\nYou picked the platform your team was already familiar with, because the migration looked easy and the deadline was approaching rapidly. It built just fine; the trouble was that easy-to-build and allowed-to-ship are different criteria.\n\nThe following anecdote is the kind a developer tells a teammate after a review goes sideways. It lets you see the familiar platform trap before anyone calls it a mistake.\n\nWhat happened\n\nA developer building for a regulated customer chose the platform the team had shipped on before. The integration came together quickly because the team knew the tools and resources. The build passed its functional tests. At the customer's security review, the reviewer asked where data was being processed. The selected platform did not satisfy the customer's residency requirements. A different platform, one the team knew less well, would have satisfied the requirement through regional deployment options the customer had already cleared. The placement was rejected, and the integration had to be rebuilt on the platform that met the residency constraint.\n\nWhy it broke\n\nFamiliarity optimized for the wrong test. The easy migration answered whether the team could build quickly. It never answered whether the deployment would pass the customer's residency review, which was the test that determined whether it could ship. Because the compliance requirement was not fulfilled during scoping, it arrived at the go-no-go review instead. This is the most expensive place to discover it, because the build was already complete.\n\nWhat to Watch Out for\n\nA platform that is easy for your team to build on is not necessarily a platform the customer is allowed to run. When the customer is regulated, the residency and compliance constraint is often pass-or-fail, rather than tradeoffs. Identify them early during scoping and let them influence the placement before familiarity does. Checking early costs a scoping conversation, while checking late costs an entire rebuild.",
+                "en": "Comparing platforms on latency, compliance, and cost so the choice survives review\n\nIn the last two screens you chose a platform and pinned its version. That choice was right for the customer's cloud, but \"right for their cloud\" is not yet an argument a procurement and security team will sign off on.\n\nMeasure latency from the customer's region\n\nLatency depends on where the platform runs relative to the customer and on how access to new features is routed. A platform running in the customer's own cloud region can reduce round-trip time compared to a first-party endpoint located farther away. The trade-off is timing of access: the first-party API typically receives new capabilities before they reach other platforms. The number is only accurate when you measure it from the customer's actual region against their actual payload. A measurement from your laptop hides the round-trip penalty that appears once the workload runs where the customer is. Within Bedrock specifically, the choice between global and regional endpoints is also the primary residency control and can affect cost. You should measure from the customer's actual region against both options before committing.\n\nCompliance often determines the platform\n\nCompliance is often the dimension that ends the debate. A customer who already holds a certification on one cloud is unlikely to re-certify on another. Data residency is a rule that a customer's data must be processed in a specific country or region. Available compliance certifications and who can audit access differ by platform, and a regulated financial or healthcare customer treats these as pass-or-fail rather than as tradeoffs to balance. The first-party Claude API may not offer EU data residency; confirm current regional coverage at platform.claude.com, since EU-only residency typically requires Bedrock or Vertex AI; on third-party platforms such as Microsoft Foundry, hosting is per-model: Azure-hosted Foundry models run inference end-to-end on Azure infrastructure, while Anthropic-hosted Foundry models do not satisfy EU regional residency requirements. Residency must be confirmed per model and deployment with Microsoft. Raise the compliance constraint during scoping, or it surfaces at contract review after the work is done.\n\nWhat drives total cost beyond the per-token rate\n\nPer-token rates are broadly aligned across platforms; total cost moves on egress, platform fees, and integration effort. A lower token price can cost more in total once data transfer and integration are factored in. Instrument cost per call for each platform. Confirm the current pricing pages at scoping.\n\nThe cross-platform comparison reference\n\n| Dimension | How it differs by platform | How to measure it | Where each platform wins |\n|---|---|---|---|\n| Latency | A platform in the customer's region shortens the round trip, while the first-party API may reach new features first. | From the customer's actual region against their actual payload. | An in-region cloud platform wins on round-trip latency, while the first-party API is advantaged on earliest feature access. |\n| Compliance | Data residency, certifications, and audit controls are determined by the deployment platform. | Against the customer's existing certification and residency requirements during scoping. | The cloud platform the customer has already certified wins, because it needs no re-certification. |\n| Cost | Token price, data egress, platform fees, and integration effort all vary. | Total cost per call per platform, including egress and integration, rather than token price alone. | The platform with the lowest total cost for the actual workload wins, which is not always the cheapest token. |\n\nHandles well\n\nMeasuring all three dimensions per platform turns a placement into one a procurement team will sign off on.\n\nAdds cost or complexity\n\nInstrumenting latency, compliance, and cost across platforms requires real measurement work before any code ships.\n\nUse a different approach\n\nWhen the customer's compliance requirement is already pass-or-fail, skip the full comparison. That constraint determines the placement on its own.\n\nWatch OutComparing Platforms·2 min\n\nThe platform picked on familiarity that failed residency\n\nSetup\n\nYou picked the platform your team was already familiar with, because the migration looked easy and the deadline was approaching rapidly. It built just fine; the trouble was that easy-to-build and allowed-to-ship are different criteria.\n\nThe following anecdote is the kind a developer tells a teammate after a review goes sideways. It lets you see the familiar platform trap before anyone calls it a mistake.\n\nWhat happened\n\nA developer building for a regulated customer chose the platform the team had shipped on before. The integration came together quickly because the team knew the tools and resources. The build passed its functional tests. At the customer's security review, the reviewer asked where data was being processed. The selected platform did not satisfy the customer's residency requirements. A different platform, one the team knew less well, would have satisfied the requirement through regional deployment options the customer had already cleared. The placement was rejected, and the integration had to be rebuilt on the platform that met the residency constraint.\n\nWhy it broke\n\nFamiliarity optimized for the wrong test. The easy migration answered whether the team could build quickly. It never answered whether the deployment would pass the customer's residency review, which was the test that determined whether it could ship. Because the compliance requirement was not fulfilled during scoping, it arrived at the go-no-go review instead. This is the most expensive place to discover it, because the build was already complete.\n\nWhat to Watch Out for\n\nA platform that is easy for your team to build on is not necessarily a platform the customer is allowed to run. When the customer is regulated, the residency and compliance constraint is often pass-or-fail, rather than tradeoffs. Identify them early during scoping and let them influence the placement before familiarity does. Checking early costs a scoping conversation, while checking late costs an entire rebuild.",
                 "fr": "Comparer les plateformes en matière de latence, conformité et coût afin que le choix résiste à l'examen\n\nDans les deux derniers écrans, vous avez choisi une plateforme et épinglé sa version. Ce choix était adapté au cloud du client, mais « adapté à leur cloud » n'est pas encore un argument que l'équipe des achats et de la sécurité signera.\n\nMesurer la latence à partir de la région du client\n\nLa latence dépend de l'endroit où la plateforme s'exécute par rapport au client et de la façon dont l'accès aux nouvelles fonctionnalités est acheminé. Une plateforme qui s'exécute dans la région cloud du client peut réduire le temps aller-retour par rapport à un endpoint de première partie situé plus loin. Le compromis est le calendrier d'accès : l'API de première partie reçoit généralement les nouvelles capacités avant qu'elles n'atteignent les autres plateformes. Le chiffre n'est exact que lorsque vous le mesurez depuis la région réelle du client par rapport à sa charge utile réelle. Une mesure effectuée depuis votre ordinateur portable masque la pénalité de temps aller-retour qui apparaît une fois que la charge de travail s'exécute là où se trouve le client. Au sein de Bedrock, en particulier, le choix entre les endpoints globaux et régionaux est aussi le principal contrôle de résidence des données et peut influencer le coût. Vous devez mesurer à partir de la région réelle du client pour les deux options avant de vous engager.\n\nLa conformité détermine souvent la plateforme\n\nLa conformité est souvent la dimension qui met fin au débat. Un client qui détient déjà une certification sur un cloud est peu susceptible de se recertifier sur un autre. La résidence des données est une règle selon laquelle les données d'un client doivent être traitées dans un pays ou une région spécifiques. Les certifications de conformité disponibles et qui peut auditer l'accès diffèrent selon la plateforme, et un client réglementé dans les secteurs financier ou sanitaire les considère comme des pass-or-fail plutôt que comme des compromis à équilibrer. L'API Claude de première partie peut ne pas offrir la résidence des données dans l'UE ; confirmez la couverture régionale actuelle sur platform.claude.com, puisque la résidence dans l'UE est généralement requise par Bedrock ou Vertex AI ; sur des plateformes tierces telles que Microsoft Foundry, l'hébergement est par modèle : les modèles Foundry hébergés sur Azure exécutent l'inférence de bout en bout sur l'infrastructure Azure, tandis que les modèles Foundry hébergés par Anthropic ne satisfont pas les exigences de résidence régionale dans l'UE. La résidence doit être confirmée par modèle et par déploiement avec Microsoft. Élevez la contrainte de conformité lors du scoping, ou elle surgit lors de la revue du contrat après la réalisation du travail.\n\nCe qui détermine le coût total au-delà du tarif par token\n\nLes tarifs par token sont globalement alignés entre les plateformes ; le coût total dépend de la sortie de données, des frais de plateforme et de l'effort d'intégration. Un prix par token plus bas peut coûter plus cher au total une fois que le transfert de données et l'intégration sont pris en compte. Coût par appel instrumenté pour chaque plateforme. Confirmez les pages de tarification actuelles lors du scoping.\n\nLa référence de comparaison inter-plateformes\n\nDimension: Latence\nComment cela diffère selon la plateforme: Une plateforme dans la région du client réduit le temps aller-retour, tandis que l'API de première partie peut atteindre les nouvelles fonctionnalités plus rapidement.\nComment le mesurer: À partir de la région réelle du client par rapport à sa charge utile réelle.\nOù chaque plateforme l'emporte: Une plateforme cloud dans la région l'emporte sur la latence aller-retour, tandis que l'API de première partie bénéficie d'un accès anticipé aux premières fonctionnalités.\n\nDimension: Conformité\nComment cela diffère selon la plateforme: La résidence des données, les certifications et les contrôles d'audit dépendent de la plateforme de déploiement.\nComment le mesurer: Par rapport aux exigences de certification et de résidence existantes du client lors du scoping.\nOù chaque plateforme l'emporte: La plateforme cloud que le client a déjà certifiée l'emporte, car elle ne nécessite pas de ré-certification.\n\nDimension: Coût\nComment cela diffère selon la plateforme: Le prix par token, la sortie de données, les frais de plateforme et l'effort d'intégration varient.\nComment le mesurer: Coût total par appel par plateforme, y compris la sortie de données et l'intégration, et non le seul prix par token.\nOù chaque plateforme l'emporte: La plateforme affichant le coût total le plus bas pour la charge de travail réelle l'emporte, ce qui n'est pas toujours le token le moins cher.\n\nGère bien\n\nMesurer ces trois dimensions par plateforme transforme un placement en une décision que l'équipe des achats signera.\n\nAjoute du coût ou de la complexité\n\nL'instrumentation de la latence, de la conformité et du coût à travers les plateformes nécessite un travail de mesure réel avant que tout code ne soit déployé.\n\nUtilisez une approche différente\n\nLorsque l'exigence de conformité du client est déjà pass-or-fail, ignorez la comparaison complète. Cette contrainte détermine le placement à elle seule.\n\nÀ surveiller : Comparer les plateformes · 2 min\n\nLa plateforme choisie par familiarité qui a échoué la résidence des données\n\nConfiguration\n\nVous avez choisi la plateforme que votre équipe connaissait déjà, parce que la migration semblait facile et que l'échéance approchait rapidement. Tout s'est construit sans problème ; le problème était que « facile à construire » et « autorisé à livrer » sont des critères différents.\n\nL'anecdote suivante est du genre qu'un développeur raconte à un collègue après qu'une revue tourne mal. Elle permet de voir le piège des plateformes familières avant que quelqu'un n'appelle cela une erreur.\n\nCe qui s'est passé\n\nUn développeur travaillant pour un client réglementé a choisi la plateforme sur laquelle l'équipe avait déjà livré auparavant. L'intégration s'est faite rapidement parce que l'équipe connaissait les outils et les ressources. La construction a passé ses tests fonctionnels. Lors de l'examen de sécurité du client, l'auditeur a demandé où les données étaient traitées. La plateforme sélectionnée ne satisfaisait pas les exigences de résidence du client. Une plateforme différente, que l'équipe connaissait moins bien, aurait satisfait l'exigence grâce à des options de déploiement régional que le client avait déjà validées. Le placement a été rejeté, et l'intégration a dû être reconstruite sur la plateforme qui respectait la contrainte de résidence.\n\nPourquoi cela a échoué\n\nLa familiarité a été optimisée pour le mauvais test. La migration facile répondait à la question de savoir si l'équipe pouvait construire rapidement. Elle n'a jamais répondu à savoir si le déploiement passerait l'examen de résidence du client, qui était le test déterminant s'il pouvait être livré. Étant donné que l'exigence de conformité n'a pas été satisfaite lors du scoping, elle est arrivée à la revue go/no-go. C'est l'endroit le plus coûteux pour le découvrir, car la construction était déjà terminée.\n\nÀ quoi faire attention\n\nUne plateforme sur laquelle votre équipe peut facilement construire n'est pas nécessairement une plateforme que le client est autorisé à exécuter. Quand le client est réglementé, la contrainte de résidence et de conformité est souvent pass-or-fail, plutôt que des compromis. Identifiez-les tôt lors du scoping et laissez-les influencer le placement avant que la familiarité ne fasse le travail. Vérifier tôt coûte une conversation de scoping, tandis que vérifier tard coûte une reconstruction entière."
               }
             },
             {
               "type": "flip_cards",
               "cards": [
-                {
-                  "front": {
-                    "en": "Compliance often determines the platform",
-                    "fr": "La conformité détermine souvent la plateforme."
-                  },
-                  "back": {
-                    "en": "Compliance is often the dimension that ends the debate. A customer who already holds a certification on one cloud is unlikely to re-certify on another. Data residency is a rule that a customer's data must be processed in a specific country or region. Available compliance certifications and who can a",
-                    "fr": "La conformité est souvent la dimension qui met fin au débat. Un client qui détient déjà une certification sur un cloud est peu susceptible de se recertifier sur un autre. La localisation des données est une règle selon laquelle les données d'un client doivent être traitées dans un pays ou une région spécifiques. Les certifications de conformité disponibles et qui peut..."
-                  }
-                },
                 {
                   "front": {
                     "en": "Handles well",
@@ -907,36 +887,6 @@
                   "back": {
                     "en": "You picked the platform your team was already familiar with, because the migration looked easy and the deadline was approaching rapidly. It built just fine; the trouble was that easy-to-build and allowed-to-ship are different criteria.",
                     "fr": "Vous avez choisi la plateforme que votre équipe connaissait déjà, parce que la migration avait l'air facile et que la date limite approchait rapidement. La compilation s'est bien déroulée ; le problème, c'est que « facile à construire » et « autorisé à être mis en production » sont deux critères différents."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "What happened",
-                    "fr": "Que s'est-il passé ?"
-                  },
-                  "back": {
-                    "en": "A developer building for a regulated customer chose the platform the team had shipped on before. The integration came together quickly because the team knew the tools and resources. The build passed its functional tests. At the customer's security review, the reviewer asked where data was being proc",
-                    "fr": "Un développeur travaillant pour un client réglementé a choisi la plateforme sur laquelle l'équipe avait déjà livré. L'intégration s'est rapidement mise en place parce que l'équipe connaissait les outils et les ressources. Le build a réussi ses tests fonctionnels. Lors de la revue de sécurité chez le client, le réviseur a demandé où les données étaient traitées."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "Why it broke",
-                    "fr": "Pourquoi ça a cassé"
-                  },
-                  "back": {
-                    "en": "Familiarity optimized for the wrong test. The easy migration answered whether the team could build quickly. It never answered whether the deployment would pass the customer's residency review, which was the test that determined whether it could ship. Because the compliance requirement was not fulfil",
-                    "fr": "Une familiarité optimisée pour le mauvais test. La migration facile a répondu à la question de savoir si l'équipe pouvait construire rapidement. Elle n'a jamais répondu à la question de savoir si le déploiement passerait la revue de résidence du client, qui était le test déterminant pour savoir s'il pouvait être livré. Parce que l'exigence de conformité n'était pas satisfaite."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "What to Watch Out for",
-                    "fr": "À quoi faire attention"
-                  },
-                  "back": {
-                    "en": "A platform that is easy for your team to build on is not necessarily a platform the customer is allowed to run. When the customer is regulated, the residency and compliance constraint is often pass-or-fail, rather than tradeoffs. Identify them early during scoping and let them influence the placemen",
-                    "fr": "Une plateforme facile à développer pour votre équipe n'est pas forcément une plateforme que le client est autorisé à faire fonctionner. Lorsque le client est soumis à une réglementation, les contraintes de localisation des données et de conformité sont souvent éliminatoires, plutôt que des compromis. Identifiez-les tôt lors de la phase de cadrage et laissez-les influencer l'implantation."
                   }
                 }
               ]
@@ -1045,8 +995,8 @@
             {
               "type": "content",
               "body": {
-                "en": "Coordinating several Claude deployments with the trust boundaries holding under review\n\nThe accelerators, deployments, and tradeoffs now come together in a single application. Connecting components multiplies the places where identity, secrets, and untrusted input can cross. The discipline is to identify every boundary before connecting anything.\n\nMap which component does what before you connect them\n\nA multi-component app coordinates more than one Claude capability into a single workflow. An API request might trigger a Claude Code task, which then reaches a customer system through an MCP server. Each component contributes a capability the others do not have. The challenge is that every connection between them creates a place where identity, secrets, and untrusted input can cross. Map which component does what before connecting anything.\n\nThe trust boundary is where data moves\n\nThe trust boundary is the point where data or instructions move from one deployment environment to another. It is exactly where the injection and access controls from the prior module apply. Content fetched by a Claude Code task is untrusted when it reaches the next component. The receiving component should treat it as data, rather than as instructions, following the same principle used throughout the security module. The core discipline here is to identify every seam as a boundary. Don't assume a component is trusted simply because it worked correctly on its own.\n\nLeast privilege applies to the whole application\n\nIdentity and least privilege, which means giving each component only the access its task needs and nothing more, apply to the application as a whole. Each component operates under an identity. The application is only as contained as its most privileged seam, which means a single component scoped too broadly becomes the weak point even when every other component is properly scoped. You scope each component to the least privilege its role in the workflow requires. This is what keeps a steered component from reaching beyond its intended task.\n\nScoping for a regulated review pulls the module together\n\nA regulated review requires justifying audit logging, data-residency decisions, and permission controls across the full application. For regulated deployments, Bedrock and Vertex AI are typically the platforms that satisfy regional residency constraints. Confirm ZDR and HIPAA BAA eligibility for each component against the Anthropic Trust Center and platform.claude.com before scoping.\n\nThe multi-component integration map\n\nComponentWhat it contributesThe trust boundary at its seamThe control that enforces it\n\nFirst-party APIOrchestrates the workflow and holds the entry point.The request entering the app from outside.Input validation and the identity the call runs under.\n\nClaude Code taskRuns the agentic work and may fetch external content.Content it fetched, which is untrusted downstream.Treat fetched content as data at the next seam.\n\nMCP serverReaches a customer system to read or act.The system access it holds on the app's behalf.Scope the server to least privilege and log the access.\n\nHandles well\n\nNaming every seam as a boundary and scoping each component to least privilege makes a multi-component app deployable under review.\n\nAdds cost or complexity\n\nMapping seams, enforcing controls at each, and logging boundary crossings adds design and audit work to every integration.\n\nUse a different approach\n\nWhen a seam cannot be secured, do not ship around it: escalate to a human owner.\n\nWatch OutTrust Boundaries·2 min\n\nThe seam nobody marked as a boundary\n\nSetup\n\nYou connected the components that each passed their own tests. The parts were already checked and connecting verified parts feels safe. Each one was trusted in isolation. The gap was that a seam between two trusted parts cannot automatically be trusted itself.\n\nThis is a short transcript from a pairing session, the kind of back-and-forth that ends at the moment the unmarked seam gets identified.\n\nThe session\n\nDev A: All three components pass their own tests. I just wired them up.\nDev B: Where does the Claude Code task send what it fetched?\nDev A: Straight into the next call as part of the prompt. It is just the content we pulled from the customer page.\nDev B: That content is untrusted. If it carries instructions, the next component runs them, because we never mark that seam as a boundary.\nDev A: But each component was trusted on its own.\nDev B: Right, and the seam between them was not. That is the one nobody treated as a boundary, so fetched content crosses as instructions.\n\nWhy it broke\n\nEach component having passed its own tests said nothing about the seam between them. The fetched content was untrusted the moment it left the Claude Code task. It arrived from a component that worked in isolation and it was passed into the next call as if it were trusted instructions. The boundary existed in the data flow. It just was not marked, so no control checked it. A component that passes its own tests has no seam-level controls. Every point where data crosses between deployment environments requires an explicit boundary control regardless of how each component behaves independently.\n\nWhat to Watch Out for\n\nA component that is trusted in isolation does not automatically make the seam leaving it trustworthy. Mark every place data or instructions cross from one deployment environment to another as a boundary. Put a control there that treats fetched content as data rather than instructions, exactly as the security work taught. The seam nobody identifies is the one a steered action crosses.",
-                "fr": "Coordonner plusieurs déploiements Claude avec les frontières de confiance en cours d’examen\n\nLes accélérateurs, les déploiements et les compromis s’agrègent désormais dans une application unique. Connecter les composants multiplie les endroits où l’identité, les secrets et les entrées non fiables peuvent passer d’un module à l’autre. La discipline consiste à identifier chaque frontière avant de connecter quoi que ce soit.\n\nCartographier le rôle de chaque composant avant de les connecter\n\nUne application multi-composants coordonne plus d’une capacité Claude dans un seul flux de travail. Une requête API peut déclencher une tâche Claude Code, qui atteint ensuite un système client via un serveur MCP. Chaque composant apporte une capacité que les autres n’ont pas. Le défi est que chaque connexion entre eux crée un endroit où l’identité, les secrets et les entrées non fiables peuvent passer. Cartographier ce que fait chaque composant avant de connecter quoi que ce soit.\n\nLa frontière de confiance est l’endroit où les données se déplacent\n\nLa frontière de confiance est le point où les données ou les instructions passent d’un environnement de déploiement à un autre. C’est exactement là où s’appliquent les contrôles d’injection et d’accès du module précédent. Le contenu récupéré par une tâche Claude Code est non fiable lorsqu’il atteint le composant suivant. Le composant récepteur doit le traiter comme des données, et non comme des instructions, en suivant le même principe utilisé dans tout le module de sécurité. La discipline centrale ici est d’identifier chaque jonction comme une frontière. N’assumez pas qu’un composant est fiable simplement parce qu’il a fonctionné correctement de manière indépendante.\n\nLe principe du moindre privilège s’applique à l’ensemble de l’application\n\nL’identité et le principe du moindre privilège, ce qui signifie donner à chaque composant seulement les accès dont sa tâche a besoin et rien de plus, s’appliquent à l’application dans son ensemble. Chaque composant opère sous une identité. L’application est aussi contenue que sa jonction la plus privilégiée, ce qui signifie qu’un seul composant dont le périmètre est trop large devient le point faible même si tous les autres composants sont correctement restreints. Vous déployez chaque composant au niveau de privilège minimum requis par son rôle dans le flux.\n\nLe périmétrage pour une revue réglementée rassemble le module\n\nUne revue réglementée exige de justifier l’audit logging, les décisions de résidence des données et les contrôles d’autorisation à travers l’ensemble de l’application. Pour les déploiements réglementés, Bedrock et Vertex AI sont généralement les plateformes qui satisfont les contraintes de résidence régionale. Vérifiez l’éligibilité ZDR et HIPAA BAA pour chaque composant par rapport à l’Anthropic Trust Center et platform.claude.com avant le périmétrage.\n\nLa carte d’intégration multi-composants\n\n| Composant | Ce qu’il apporte | La frontière de confiance à sa jonction | Le contrôle qui l’applique |\n| First-party API | Orchestrates the flux de travail and holds the entry point. | The request entering the app from outside. | Input validation and the identity the call runs under. |\n| Claude Code task | Effectue le travail agentique et peut récupérer du contenu externe. | Content it fetched, which is untrusted downstream. | Treat fetched content as data at the next seam. |\n| MCP server | Reaches a customer system to read or act. | Le système d’accès qu’il détient pour le compte de l’application. | Scope the server to least privilege and log the access. |\n\nGère bien\n\nNommer chaque jonction comme une frontière et restreindre le périmètre de chaque composant au moindre privilège permet de déployer une application multi-composants sous revue.\n\nAjoute du coût ou de la complexité\n\nCartographier les jonctions, appliquer des contrôles à chacune d’elles et enregistrer les traversées de frontières ajoute du travail de conception et d’audit à chaque intégration.\n\nAdoptez une approche différente\n\nLorsque une jonction ne peut pas être sécurisée, ne la contournez pas: faites remonter à un responsable humain.\n\nÀ surveiller — Trust Boundaries · 2 min\n\nLa jonction que personne n’a marquée comme frontière\n\nConfiguration\n\nVous avez connecté les composants qui avaient chacun passé leurs propres tests. Les pièces avaient déjà été vérifiées et connecter des parties vérifiées semble sûr. Chacun était fiable isolément. L’écart était qu’une jonction entre deux parties dignes de confiance ne peut pas automatiquement l’être elle-même.\n\nVoici une courte transcription d'une session de pairing, le genre d’échanges qui se termine au moment où la jonction non marquée est identifiée.\n\nLa session\n\nDev A : Les trois composants passent leurs propres tests. Je les ai simplement branchés.\nDev B : Où la tâche Claude Code envoie-t-elle ce qu’elle a récupéré ?\nDev A : Directement dans l’appel suivant dans le cadre du prompt. Ce n’est que le contenu que nous avons extrait de la page du client.\nDev B : Ce contenu est non fiable. S'il porte des instructions, le prochain composant les exécute, car nous n’avons jamais marqué cette jonction comme frontière.\nDev A : Mais chaque composant était fiable de manière autonome.\nDev B : Exact, et la jonction entre eux ne l’était pas. C’est celle que personne n’a traitée comme frontière, donc le contenu récupéré passe comme instructions.\n\nPourquoi cela a-t-il échoué\n\nLe fait que chaque composant ait passé ses tests ne disait rien sur la jonction entre eux. Le contenu récupéré était non fiable au moment où il quittait la tâche Claude Code. Il provenait d’un composant qui fonctionnait isolément et il a été transmis à l’appel suivant comme s’il s’agissait d’instructions dignes de confiance. La frontière existait dans le flux de données. Elle n’était tout simplement pas marquée, donc aucun contrôle ne la vérifiait. Un composant qui passe ses propres tests ne dispose d’aucun contrôle au niveau des jonctions. Tout point où les données traversent des environnements de déploiement nécessite un contrôle de frontière explicite, peu importe le comportement de chaque composant de manière indépendante.\n\nÀ surveiller\n\nUn composant qui est fiable isolément ne rend pas automatiquement fiable la jonction qui le quitte. Marquez chaque endroit où les données ou les instructions traversent d’un environnement de déploiement à un autre comme une frontière. Mettez en place un contrôle qui traite le contenu récupéré comme des données plutôt que comme des instructions, exactement comme l’enseignement du travail de sécurité. La jonction que personne n’identifie est celle qu’emporte une action dirigée."
+                "en": "Coordinating several Claude deployments with the trust boundaries holding under review\n\nThe accelerators, deployments, and tradeoffs now come together in a single application. Connecting components multiplies the places where identity, secrets, and untrusted input can cross. The discipline is to identify every boundary before connecting anything.\n\nMap which component does what before you connect them\n\nA multi-component app coordinates more than one Claude capability into a single workflow. An API request might trigger a Claude Code task, which then reaches a customer system through an MCP server. Each component contributes a capability the others do not have. The challenge is that every connection between them creates a place where identity, secrets, and untrusted input can cross. Map which component does what before connecting anything.\n\nThe trust boundary is where data moves\n\nThe trust boundary is the point where data or instructions move from one deployment environment to another. It is exactly where the injection and access controls from the prior module apply. Content fetched by a Claude Code task is untrusted when it reaches the next component. The receiving component should treat it as data, rather than as instructions, following the same principle used throughout the security module. The core discipline here is to identify every seam as a boundary. Don't assume a component is trusted simply because it worked correctly on its own.\n\nLeast privilege applies to the whole application\n\nIdentity and least privilege, which means giving each component only the access its task needs and nothing more, apply to the application as a whole. Each component operates under an identity. The application is only as contained as its most privileged seam, which means a single component scoped too broadly becomes the weak point even when every other component is properly scoped. You scope each component to the least privilege its role in the workflow requires. This is what keeps a steered component from reaching beyond its intended task.\n\nScoping for a regulated review pulls the module together\n\nA regulated review requires justifying audit logging, data-residency decisions, and permission controls across the full application. For regulated deployments, Bedrock and Vertex AI are typically the platforms that satisfy regional residency constraints. Confirm ZDR and HIPAA BAA eligibility for each component against the Anthropic Trust Center and platform.claude.com before scoping.\n\nThe multi-component integration map\n\n| Component | What it contributes | The trust boundary at its seam | The control that enforces it |\n|---|---|---|---|\n| First-party API | Orchestrates the workflow and holds the entry point. | The request entering the app from outside. | Input validation and the identity the call runs under. |\n| Claude Code task | Runs the agentic work and may fetch external content. | Content it fetched, which is untrusted downstream. | Treat fetched content as data at the next seam. |\n| MCP server | Reaches a customer system to read or act. | The system access it holds on the app's behalf. | Scope the server to least privilege and log the access. |\n\nHandles well\n\nNaming every seam as a boundary and scoping each component to least privilege makes a multi-component app deployable under review.\n\nAdds cost or complexity\n\nMapping seams, enforcing controls at each, and logging boundary crossings adds design and audit work to every integration.\n\nUse a different approach\n\nWhen a seam cannot be secured, do not ship around it: escalate to a human owner.\n\nWatch OutTrust Boundaries·2 min\n\nThe seam nobody marked as a boundary\n\nSetup\n\nYou connected the components that each passed their own tests. The parts were already checked and connecting verified parts feels safe. Each one was trusted in isolation. The gap was that a seam between two trusted parts cannot automatically be trusted itself.\n\nThis is a short transcript from a pairing session, the kind of back-and-forth that ends at the moment the unmarked seam gets identified.\n\nThe session\n\nDev A: All three components pass their own tests. I just wired them up.\nDev B: Where does the Claude Code task send what it fetched?\nDev A: Straight into the next call as part of the prompt. It is just the content we pulled from the customer page.\nDev B: That content is untrusted. If it carries instructions, the next component runs them, because we never mark that seam as a boundary.\nDev A: But each component was trusted on its own.\nDev B: Right, and the seam between them was not. That is the one nobody treated as a boundary, so fetched content crosses as instructions.\n\nWhy it broke\n\nEach component having passed its own tests said nothing about the seam between them. The fetched content was untrusted the moment it left the Claude Code task. It arrived from a component that worked in isolation and it was passed into the next call as if it were trusted instructions. The boundary existed in the data flow. It just was not marked, so no control checked it. A component that passes its own tests has no seam-level controls. Every point where data crosses between deployment environments requires an explicit boundary control regardless of how each component behaves independently.\n\nWhat to Watch Out for\n\nA component that is trusted in isolation does not automatically make the seam leaving it trustworthy. Mark every place data or instructions cross from one deployment environment to another as a boundary. Put a control there that treats fetched content as data rather than instructions, exactly as the security work taught. The seam nobody identifies is the one a steered action crosses.",
+                "fr": "Coordonner plusieurs déploiements Claude avec les frontières de confiance en cours d’examen\n\nLes accélérateurs, les déploiements et les compromis s’agrègent désormais dans une application unique. Connecter les composants multiplie les endroits où l’identité, les secrets et les entrées non fiables peuvent passer d’un module à l’autre. La discipline consiste à identifier chaque frontière avant de connecter quoi que ce soit.\n\nCartographier le rôle de chaque composant avant de les connecter\n\nUne application multi-composants coordonne plus d’une capacité Claude dans un seul flux de travail. Une requête API peut déclencher une tâche Claude Code, qui atteint ensuite un système client via un serveur MCP. Chaque composant apporte une capacité que les autres n’ont pas. Le défi est que chaque connexion entre eux crée un endroit où l’identité, les secrets et les entrées non fiables peuvent passer. Cartographier ce que fait chaque composant avant de connecter quoi que ce soit.\n\nLa frontière de confiance est l’endroit où les données se déplacent\n\nLa frontière de confiance est le point où les données ou les instructions passent d’un environnement de déploiement à un autre. C’est exactement là où s’appliquent les contrôles d’injection et d’accès du module précédent. Le contenu récupéré par une tâche Claude Code est non fiable lorsqu’il atteint le composant suivant. Le composant récepteur doit le traiter comme des données, et non comme des instructions, en suivant le même principe utilisé dans tout le module de sécurité. La discipline centrale ici est d’identifier chaque jonction comme une frontière. N’assumez pas qu’un composant est fiable simplement parce qu’il a fonctionné correctement de manière indépendante.\n\nLe principe du moindre privilège s’applique à l’ensemble de l’application\n\nL’identité et le principe du moindre privilège, ce qui signifie donner à chaque composant seulement les accès dont sa tâche a besoin et rien de plus, s’appliquent à l’application dans son ensemble. Chaque composant opère sous une identité. L’application est aussi contenue que sa jonction la plus privilégiée, ce qui signifie qu’un seul composant dont le périmètre est trop large devient le point faible même si tous les autres composants sont correctement restreints. Vous déployez chaque composant au niveau de privilège minimum requis par son rôle dans le flux.\n\nLe périmétrage pour une revue réglementée rassemble le module\n\nUne revue réglementée exige de justifier l’audit logging, les décisions de résidence des données et les contrôles d’autorisation à travers l’ensemble de l’application. Pour les déploiements réglementés, Bedrock et Vertex AI sont généralement les plateformes qui satisfont les contraintes de résidence régionale. Vérifiez l’éligibilité ZDR et HIPAA BAA pour chaque composant par rapport à l’Anthropic Trust Center et platform.claude.com avant le périmétrage.\n\nLa carte d’intégration multi-composants\n\n| Composant | Ce qu’il apporte | La frontière de confiance à sa jonction | Le contrôle qui l’applique |\n| First-party API | Orchestrates the flux de travail and holds the entry point. | The request entering the app from outside. | Input validation and the identity the call runs under. |\n| Claude Code task | Effectue le travail agentique et peut récupérer du contenu externe. | Content it fetched, which is untrusted downstream. | Treat fetched content as data at the next seam. |\n| MCP server | Reaches a customer system to read or act. | Le système d’accès qu’il détient pour le compte de l’application. | Scope the server to least privilege and log the access. |\n\nGère bien\n\nNommer chaque jonction comme une frontière et restreindre le périmètre de chaque composant au moindre privilège permet de déployer une application multi-composants sous revue.\n\nAjoute du coût ou de la complexité\n\nCartographier les jonctions, appliquer des contrôles à chacune d’elles et enregistrer les traversées de frontières ajoute du travail de conception et d’audit à chaque intégration.\n\nAdoptez une approche différente\n\nLorsque une jonction ne peut pas être sécurisée, ne la contournez pas: faites remonter à un responsable humain.\n\nÀ surveiller — Frontières de confiance · 2 min\n\nLa jonction que personne n’a marquée comme frontière\n\nConfiguration\n\nVous avez connecté les composants qui avaient chacun passé leurs propres tests. Les pièces avaient déjà été vérifiées et connecter des parties vérifiées semble sûr. Chacun était fiable isolément. L’écart était qu’une jonction entre deux parties dignes de confiance ne peut pas automatiquement l’être elle-même.\n\nVoici une courte transcription d'une session de pairing, le genre d’échanges qui se termine au moment où la jonction non marquée est identifiée.\n\nLa session\n\nDev A : Les trois composants passent leurs propres tests. Je les ai simplement branchés.\nDev B : Où la tâche Claude Code envoie-t-elle ce qu’elle a récupéré ?\nDev A : Directement dans l’appel suivant dans le cadre du prompt. Ce n’est que le contenu que nous avons extrait de la page du client.\nDev B : Ce contenu est non fiable. S'il porte des instructions, le prochain composant les exécute, car nous n’avons jamais marqué cette jonction comme frontière.\nDev A : Mais chaque composant était fiable de manière autonome.\nDev B : Exact, et la jonction entre eux ne l’était pas. C’est celle que personne n’a traitée comme frontière, donc le contenu récupéré passe comme instructions.\n\nPourquoi cela a-t-il échoué\n\nLe fait que chaque composant ait passé ses tests ne disait rien sur la jonction entre eux. Le contenu récupéré était non fiable au moment où il quittait la tâche Claude Code. Il provenait d’un composant qui fonctionnait isolément et il a été transmis à l’appel suivant comme s’il s’agissait d’instructions dignes de confiance. La frontière existait dans le flux de données. Elle n’était tout simplement pas marquée, donc aucun contrôle ne la vérifiait. Un composant qui passe ses propres tests ne dispose d’aucun contrôle au niveau des jonctions. Tout point où les données traversent des environnements de déploiement nécessite un contrôle de frontière explicite, peu importe le comportement de chaque composant de manière indépendante.\n\nÀ surveiller\n\nUn composant qui est fiable isolément ne rend pas automatiquement fiable la jonction qui le quitte. Marquez chaque endroit où les données ou les instructions traversent d’un environnement de déploiement à un autre comme une frontière. Mettez en place un contrôle qui traite le contenu récupéré comme des données plutôt que comme des instructions, exactement comme l’enseignement du travail de sécurité. La jonction que personne n’identifie est celle qu’emporte une action dirigée."
               }
             },
             {
@@ -1110,91 +1060,6 @@
                   "back": {
                     "en": "A component that is trusted in isolation does not automatically make the seam leaving it trustworthy. Mark every place data or instructions cross from one deployment environment to another as a boundary. Put a control there that treats fetched content as data rather than instructions, exactly as the security work taught. The seam nobody identifies is the one a steered action crosses.",
                     "fr": "Un composant qui est fiable isolément ne rend pas automatiquement fiable la jonction qui le quitte. Marquez chaque endroit où les données ou les instructions traversent d’un environnement de déploiement à un autre comme une frontière. Mettez en place un contrôle qui traite le contenu récupéré comme des données plutôt que comme des instructions, exactement comme l’enseignement du travail de sécurité. La jonction que personne n’identifie est celle qu’emporte une action dirigée."
-                  }
-                }
-              ]
-            },
-            {
-              "type": "flip_cards",
-              "cards": [
-                {
-                  "front": {
-                    "en": "CumulativeAll topics·6 min",
-                    "fr": "Cumulatif · Tous les sujets · 6 min"
-                  },
-                  "back": {
-                    "en": "Cumulative task: Find all three, explain each, write the correction",
-                    "fr": "Tâche cumulative : trouvez les trois, expliquez chacun d'eux, rédigez la correction."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "deploy(platform=\"amazon_bedrock\", identity=aws_role_arn)",
-                    "fr": "deploy(platform=\"amazon_bedrock\", identity=aws_role_arn)"
-                  },
-                  "back": {
-                    "en": "# multi-component step: Claude Code task fetches a customer page\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=fetched)",
-                    "fr": "# étape multi-composants : la tâche Claude Code récupère une page client\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=fetched)"
-                  }
-                },
-                {
-                  "front": {
-                    "en": "CumulativeAll topics·6 min",
-                    "fr": "Cumulatif — Tous les sujets · 6 min"
-                  },
-                  "back": {
-                    "en": "Cumulative task: assemble and verify the corrected deployment",
-                    "fr": "Tâche cumulative : assembler et vérifier le déploiement corrigé"
-                  }
-                },
-                {
-                  "front": {
-                    "en": "What comes next",
-                    "fr": "Qu'est-ce qui vient ensuite ?"
-                  },
-                  "back": {
-                    "en": "You can now package a build into a reusable asset, contribute it back, place and version it on the right platform, defend that placement, and connect components together so the boundaries hold. That completes the build-to-deploy arc for this persona: from writing production code in the earlier modul",
-                    "fr": "Vous pouvez maintenant packager un build en asset réutilisable, le contribuer en retour, le placer et le versionner sur la bonne plateforme, défendre ce placement, et connecter les composants entre eux afin que les frontières tiennent. Cela complète l'arc build-to-deploy pour cette persona : depuis l'écriture de code de production dans le module précédent."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "IDSourceTypeUsed for",
-                    "fr": "IDSourceType utilisé pour"
-                  },
-                  "back": {
-                    "en": "S1platform.claude.com (Claude in Amazon Bedrock, Claude on Vertex AI)Product documentationDeployment platforms, identity and data models, residency routing, regional and global endpoints.",
-                    "fr": "S1platform.claude.com (Claude sur Amazon Bedrock, Claude sur Vertex AI) Documentation produit Plateformes de déploiement, modèles d'identité et de données, routage selon la résidence des données, points de terminaison régionaux et globaux."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "Accelerator",
-                    "fr": "Accélérateur"
-                  },
-                  "back": {
-                    "en": "A working solution packaged so the next engagement configures it rather than rebuilding it. Customer-specific parts are exposed as documented parameters, the assumptions are written down, and an eval is bundled to prove the asset still works in a new context.",
-                    "fr": "Une solution opérationnelle empaquetée de sorte que la prochaine mission la configure plutôt que de la reconstruire. Les parties spécifiques au client sont exposées sous forme de paramètres documentés, les hypothèses sont consignées par écrit, et une eval est incluse pour prouver que le livrable fonctionne toujours dans un nouveau contexte."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "Contribution readiness",
-                    "fr": "Prêt à contribuer"
-                  },
-                  "back": {
-                    "en": "What a maintainer needs to verify a contribution: focused code, a runnable example, a test that proves the behavior, a statement of environment assumptions, and confirmed rights to contribute the code.",
-                    "fr": "Ce dont un mainteneur a besoin pour vérifier une contribution : du code ciblé, un exemple exécutable, un test qui démontre le comportement, une déclaration des hypothèses sur l'environnement et la confirmation du droit de contribuer ce code."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "Deployment platform",
-                    "fr": "Plateforme de déploiement"
-                  },
-                  "back": {
-                    "en": "Where a Claude workload runs. The six are: the first-party Claude API, Claude Platform on AWS, Claude in Amazon Bedrock, Claude on Amazon Bedrock (legacy), Google Vertex AI, and third-party platforms. The same model can differ by platform on identity, data residency, latency, and cost.",
-                    "fr": "Où s'exécute une charge de travail Claude. Elles sont au nombre de six : l'API Claude officielle, Claude Platform sur AWS, Claude dans Amazon Bedrock, Claude sur Amazon Bedrock (legacy), Google Vertex AI et des plateformes tierces. Le même modèle peut varier selon la plateforme en matière d'identité, de résidence des données, de latence et de coût."
                   }
                 }
               ]
@@ -1415,48 +1280,6 @@
           "allChaptersComplete"
         ]
       },
-      "recommendedVideos": [
-        {
-          "videoId": "TqC1qOfiVcQ",
-          "title": "Claude Agent SDK Full Workshop",
-          "channel": "Anthropic",
-          "type": "masterclass",
-          "topics": [
-            "claude",
-            "agent",
-            "sdk",
-            "anthropic",
-            "workshop",
-            "development"
-          ]
-        },
-        {
-          "videoId": "WAezpbnpdk4",
-          "title": "Enterprise AI Strategy",
-          "channel": "AI Strategy",
-          "type": "deep_dive",
-          "topics": [
-            "enterprise",
-            "strategy",
-            "deployment",
-            "scale",
-            "security"
-          ]
-        },
-        {
-          "videoId": "w71RHxAWxaM",
-          "title": "Ultimate MLOps Full Course",
-          "channel": "TechWorld with Nana",
-          "type": "masterclass",
-          "topics": [
-            "mlops",
-            "operations",
-            "pipeline",
-            "deployment",
-            "monitoring"
-          ]
-        }
-      ],
       "competencyTags": [
         "prompt_engineering",
         "ai_solution_design",
@@ -1466,42 +1289,12 @@
         "ai_devops",
         "ai_governance",
         "ai_business"
-      ]
+      ],
+      "videoCount": 0,
+      "recommendedVideosManaged": false
     }
   ],
   "exercises": [
-    {
-      "id": "ex_claude_certified_developer_foundations__05_001",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_01",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Build an application that coordinates several Claude deployments into one workflow and scope it so the data and identity boundaries are held under a security or compliance review.\n\nDesign and document the architecture, security controls, and deployment plan for a multi-model Claude application that would pass a compliance review. Your answer should include:\n\n1. Architecture: How the Claude deployments are coordinated (orchestrator pattern, service mesh, etc.)\n2. Identity & access: Service accounts, least-privilege roles, short-lived tokens\n3. Data boundaries: Classification, residency enforcement, DLP rules\n4. Model pinning: How you pin model versions and handle upgrades\n5. Security controls: Encryption, audit logs, SIEM integration\n6. Compliance artifacts: Threat model, DPIA, data flow diagram, access matrix\n7. Ops: Canary deploys, rollback plan, health checks, SLOs",
-        "fr": "Construisez une application qui coordonne plusieurs déploiements Claude en un seul flux de travail et définissez son périmètre de sorte que les frontières de données et d'identité soient conformes à une revue de sécurité ou de conformité.\n\nConcevoir et documenter l'architecture, les contrôles de sécurité et le plan de déploiement pour une application multi-modèles Claude qui passerait une revue de conformité. Votre réponse doit inclure :\n\n1. Architecture : Comment les déploiements Claude sont coordonnés (pattern orchestrateur, service mesh, etc.)\n2. Identité et accès : Comptes de service, rôles least-privilege, tokens à durée de vie courte\n3. Frontières de données : Classification, enforcement de résidence, règles DLP\n4. Pinning de modèle : Comment vous pinez les versions de modèle et gérez les mises à jour\n5. Contrôles de sécurité : Chiffrement, logs d'audit, intégration SIEM\n6. Artefacts de conformité : Modèle de menaces, DPIA, diagramme de flux de données, matrice d'accès\n7. Ops : Canary deploys, plan de rollback, health checks, SLOs"
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "High-level outcome: a reusable, reviewable orchestration that runs multiple Claude deployments as isolated services with pinned models, clear data/identity boundaries, audit artifacts, and a one-page acceptance checklist that a security/compliance reviewer can sign off.\n\nConcrete implementation checklist (actionable)\n\n- Architecture\n  - Service-per-model pattern: each Claude deployment runs in its own runtime (container/VM) and namespace; communicate through authenticated service mesh (mTLS).\n  - Diagram artifacts: component diagram, sequence diagram, and trust-boundary map submitted to review.\n\n- Identity & least privilege\n  - Per-service service accounts / IAM roles, no long-lived keys.\n  - Use OIDC with short-lived tokens (STS) for inter-service calls.\n  - Per-model API credentials stored in Vault / Secret Manager; access controlled by role policies.\n\n- Data boundaries & residency\n  - Classify data flows (PII / sensitive / public). Block any model call that sends unapproved data classes.\n  - Enforce residency via private endpoints, VPC peering or cloud-region restrictions; disable egress to public internet from runtimes unless approved.\n\n- Model pinning & reproducibility\n  - Pin model IDs and runtime images in repo (e.g., claude-2.1.0), include commit-hash for container image and test prompt vectors.\n  - CI runs deterministic evals against pinned models; failing diffs require documented model-upgrade decision.\n\n- Security controls\n  - Encrypt in transit (mTLS/TLS1.2+) and at rest (KMS-managed keys).\n  - Centralized audit logs forwarded to SIEM, immutable retention policy.\n  - DLP rules to redact/deny sensitive patterns before sending to model.\n\n- Compliance artifacts & gating\n  - Produce: threat model, DPIA, data flow diagram, encryption proof, access matrix, runbook, and test/eval results.\n  - Add a security gate in CI: infrastructure plan, static scans, and evals must pass before deploy.\n\n- Ops & maintainability\n  - Canary + rollout + rollback plan; health checks and SLOs for each model service.\n  - Owner, escalation contacts, and maintenance window policy in README.\n\nExample config snippet (store in repo, parameterized by env):\nmodels:\n  - name: \"assistant-dialogue\"\n    provider: \"claude\"\n    model_id: \"claude-2.1.0\"\n    container_image: \"registry.company/app/claude-runtime@sha256:abc123\"\n    service_account: \"svc-cl-voice\"\nsecrets:\n  manager: \"vault\"\n  kms_key: \"projects/PROJ/locations/REGION/keyRings/RING/cryptoKeys/KEY\"\n\nAcceptance criteria for reviewer\n- Trust-boundary diagram + DPIA submitted\n- Secrets & keys under KMS/Vault, short-lived tokens in use\n- Pinned model versions + CI evals pass\n- DLP & residency checks enforced\n- Audit logs to SIEM with retention policy\n- Runbook and rollback plan available\n\nDeliver these artifacts and the one-page checklist to the security/compliance team for sign-off.",
-        "fr": "Attendu d’une bonne solution\n- Livrables essentiels : diagramme de flux de données (ingress/egress), liste d’identités (service accounts) et périmètres réseau, playbook de déploiement (IaC + variables par environnement), guide de revue sécurité et checklist d’acceptation.\n\nRisques concrets à adresser\n- Exfiltration via connecteurs MCP / points de sortie non restreints.\n- Fuites d’identifiants dans logs ou CI/CD.\n- Contamination multi‑tenant (fuites de contexte entre sessions).\n- Comportement divergent après mise à jour de modèle (drift).\n- Manque d’auditabilité des décisions automatisées.\n\nDécisions pragmatiques et actions à implémenter\n- Identity: séparer comptes/service‑principals (orchestrator‑sa, runtime‑sa, connector‑sa). Appliquer least‑privilege ; exemple : autoriser uniquement s3:GetObject sur arn:aws:s3:::my-app-data/* pour runtime‑sa.\n- Data boundary: chiffrer en transit et au repos, utiliser VPC/private endpoints pour services externes, bloquer tout egress non autorisé via règles réseau.\n- Model pinning: pinner explicitement model_id + semantic version; stocker hash/version dans IaC + changelog et processus d’approbation pour mise à jour.\n- CI/CD & tests: tests d’intégration reproductibles, evals automatisés (performance + safety suites), canary deploys et rollback automatique.\n- Audit & observabilité: logs immuables centralisés, traces request→response, retention conforme à la politique.\n- Revue & approbation: checklist pour sécurité/compliance (liste de preuves : diagramme, politiques IAM, résultats d’evals, logs, plan de rollback).\n\nPreuve pour la revue\n- Reproducible deploy via IaC + pipeline, modèle piné et evals passés, accès démontrable restreint et logs montrant séparation des rôles."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "AI Safety",
-        "API Integration",
-        "Agentic Design"
-      ],
-      "title": {
-        "en": "Build an application that coordinates several Claude deployments",
-        "fr": "Construisez une application qui coordonne plusieurs déploiements Claude"
-      }
-    },
     {
       "id": "ex_claude_certified_developer_foundations__05_002",
       "courseId": "claude_certified_developer_foundations__05",
@@ -1510,18 +1303,13 @@
       "position": "after_content",
       "interactionType": "free_text",
       "prompt": {
-        "en": "Checkpoint 1: Fix the broken accelerator template\n\nBelow is an agent template another team is supposed to reuse. It has one defect: a customer-specific value is hardcoded where a parameter belongs.\n\n**The template as shipped:**\n\n```python\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent():\n    return Agent(\n        model=\"claude-opus-4-8\",\n        system_prompt=SYSTEM_PROMPT,\n        tools=[read_file, run_linter],\n        repo_path=\"/home/acme/checkout-service\",  # customer repo\n    )\n```\n\n*(Confirm current model ID at platform.claude.com/docs/en/about-claude/models at build time.)*\n\nIdentify the hardcoded value, then write the corrected function signature and the parameterized line that replaces it.",
-        "fr": "Point de contrôle : Packaging d’un accélérateur réutilisable·4 min\nPoint de contrôle 1 : Corriger le gabarit d’accélérateur cassé\nEssayez-le maintenant. Ci-dessous se trouve un gabarit d’agent qu’une autre équipe est censée réutiliser. Il présente un défaut : une valeur spécifique au client est codée en dur là où devrait figurer un paramètre.\nLe gabarit tel qu’il est livré\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent()"
+        "en": "Checkpoint 1: Fix the broken accelerator template\n\nTry it now. Below is an agent template another team is supposed to reuse. It has one defect: a customer-specific value is hardcoded where a parameter belongs.\n\nThe template as shipped\n\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent():\nreturn Agent(\nmodel=\"claude-opus-4-8\",\nsystem_prompt=SYSTEM_PROMPT,\ntools=[read_file, run_linter],\nrepo_path=\"/home/acme/checkout-service\", # customer repo\n)\n\n(Confirm current model ID at platform.claude.com/docs/en/about-claude/models at build time.)\n\nIdentify the hardcoded value, then write the corrected function signature and the parameterized line that replaces it.",
+        "fr": "Point de contrôle 1 : Corriger le modèle d'accélérateur cassé\n\nEssayez-le maintenant. Ci-dessous se trouve un modèle d'agent qu'une autre équipe est censée réutiliser. Il présente un défaut : une valeur spécifique au client est codée en dur là où appartient un paramètre.\n\nLe modèle tel qu'il est livré\n\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent():\nreturn Agent(\nmodel=\"claude-opus-4-8\",\nsystem_prompt=SYSTEM_PROMPT,\ntools=[read_file, run_linter],\nrepo_path=\"/home/acme/checkout-service\", # customer repo\n)\n\n(Vérifiez l'ID du modèle actuel sur platform.claude.com/docs/en/about-claude/models lors du build.)\n\nIdentifiez la valeur codée en dur, puis écrivez la signature de fonction corrigée et la ligne paramétrée qui remplace celle-ci.\n\nComparez avec la réponse du modèle\nIgnorer pour l'instant\n\nIgnoré\n\nPassez à autre chose si nécessaire, mais revenez avant la tâche cumulative. Un point de contrôle ultérieur introduit une version de ce même défaut de codage en dur parmi deux autres et il est plus difficile à repérer sous une charge multi-niveaux."
       },
       "instructions": {
         "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
         "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
       },
-      "correction": {
-        "en": "Fix: make the customer-specific value a parameter and validate it. Example corrected agent_template.py:\n\n```python\n# agent_template.py : reusable code-review agent\ndef build_review_agent(customer_name, model=\"claude-2\", system_prompt=None):\n    \"\"\"\n    Build a reusable code-review agent for the given customer.\n    Params:\n      - customer_name (str): customer-specific value previously hardcoded\n      - model (str): optional model identifier\n      - system_prompt (str): optional custom system prompt template\n    Returns:\n      - agent(review_text) -> response payload (or call)\n    \"\"\"\n    if not isinstance(customer_name, str) or not customer_name.strip():\n        raise ValueError(\"customer_name must be a non-empty string\")\n\n    # Provide a default prompt that includes the customer parameter\n    system_prompt = system_prompt or (\n        f\"You are a code-review assistant for {customer_name}. \"\n        \"Give concise, prioritized, actionable review comments and examples.\"\n    )\n\n    def agent(review_text):\n        prompt = system_prompt + \"\\n\\nCode to review:\\n\" + review_text\n        # Example: call the model / API here; return constructed payload for reuse\n        return {\"model\": model, \"prompt\": prompt}\n\n    return agent\n```\n\nUsage:\nagent = build_review_agent(\"Acme Corp\")\nresp = agent(\"def foo(): pass\")\n# This ensures the template is reusable for any customer.",
-        "fr": "Problème observé : une valeur spécifique au client était codée en dur dans le gabarit (ex. \"AcmeCorp\"), rendant l’accélérateur non réutilisable. Correction : extraire cette valeur en paramètre, valider, et l’injecter dans le prompt via un template.\n\nExemple corrigé (agent_template.py)\n\ndef build_review_agent(client_name, prompt_template=None, language=\"fr\"):\n    \"\"\"\n    Construit un agent de revue réutilisable.\n    - client_name (str) : valeur requise (ne pas hard-coder).\n    - prompt_template (str) : template avec '{client}' pour substitution.\n    \"\"\"\n    if not client_name or not isinstance(client_name, str):\n        raise ValueError(\"client_name must be a non-empty string\")\n\n    if prompt_template is None:\n        prompt_template = (\n            \"Vous êtes un relecteur de code pour le client '{client}'. \"\n            \"Fournissez un résumé, issues et suggestions.\"\n        )\n\n    class ReviewAgent:\n        def __init__(self, client, prompt, lang):\n            self.client = client\n            self.prompt = prompt\n            self.lang = lang\n\n        def build_prompt(self, code_snippet):\n            return self.prompt.format(client=self.client) + \"\\n\\nCode:\\n\" + code_snippet\n\n        def review(self, code_snippet):\n            # Ici appeler le modèle réel; simulé pour le gabarit\n            prompt = self.build_prompt(code_snippet)\n            return {\n                \"prompt_used\": prompt,\n                \"summary\": f\"Résumé simulé pour {self.client}\",\n                \"issues\": [],\n                \"suggestions\": []\n            }\n\n    return ReviewAgent(client_name, prompt_template, language)\n\nUsage exemple :\nagent = build_review_agent(\"AcmeCorp\")\nres = agent.review(\"def foo(): pass\")\nprint(res[\"prompt_used\"])\n\nPoints clés à respecter :\n- Ne pas hard-coder de données spécifiques au client.\n- Exposer paramètres clairs et documentés.\n- Valider les entrées.\n- Utiliser des templates sûrs (format plutôt que concaténation fragile).\n- Fournir usage/pytest minimal pour vérifier réutilisabilité."
-      },
-      "rubric": "",
       "required": true,
       "difficulty": "foundation",
       "skillTags": [
@@ -1536,362 +1324,12 @@
       "completionRequiresCorrectAnswer": false,
       "inputSchema": {
         "minWords": 15
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_003",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_03",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Checkpoint 1: Fix the broken accelerator template\n\nBelow is an agent template another team is supposed to reuse. It has one defect: a customer-specific value is hardcoded where a parameter belongs.\n\n**The template as shipped:**\n\n```python\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent():\n    return Agent(\n        model=\"claude-opus-4-8\",\n        system_prompt=SYSTEM_PROMPT,\n        tools=[read_file, run_linter],\n        repo_path=\"/home/acme/checkout-service\",  # customer repo\n    )\n```\n\n*(Confirm current model ID at platform.claude.com/docs/en/about-claude/models at build time.)*\n\nIdentify the hardcoded value, then write the corrected function signature and the parameterized line that replaces it.",
-        "fr": "Point de contrôle 1 : Corriger le modèle d'accélérateur défectueux\nEssayez-le maintenant. Ci-dessous se trouve un modèle d'agent qu'une autre équipe est censée réutiliser. Il présente un défaut : une valeur spécifique au client est codée en dur là où devrait figurer un paramètre.\nLe modèle tel qu'expédié\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent():\nreturn Agent(\nmodel=\"claude-opus-4-8\","
       },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "def build_review_agent(model=\"claude-opus-4-8\", customer=None, system_prompt=None, temperature=0.0, max_tokens=2000):\n    \"\"\"\n    Reusable code-review agent builder.\n\n    - model: model name to use (no hardcoded customer-specific values).\n    - customer: optional customer identifier or policy name (keeps template reusable).\n    - system_prompt: optional full system instruction (overrides customer-derived prompt).\n    - temperature, max_tokens: tunable runtime params.\n    \"\"\"\n    base_system = \"You are a helpful, security-conscious code-review assistant.\"\n    if system_prompt:\n        system = system_prompt\n    elif customer:\n        # incorporate customer-specific guidance only when provided\n        system = f\"{base_system} Apply the review rules and style guide for customer: {customer}.\"\n    else:\n        system = base_system\n\n    return Agent(\n        model=model,\n        system_prompt=system,\n        temperature=temperature,\n        max_tokens=max_tokens,\n    )\n\n# Usage example:\n# agent = build_review_agent(model=\"claude-2.1\", customer=\"acme-inc\")\n# review = agent.run(prompt=\"Please review the following pull request...\")\n\nNotes:\n- Avoid hardcoding any customer identifiers inside the function; accept them as parameters.\n- Provide sensible defaults so the function is immediately reusable.",
-        "fr": "Corrigé attendu (solution concise et réutilisable) :\n\nNe jamais coder en dur une valeur spécifique au client dans la fonction réutilisable. Exiger le paramètre ou le lire depuis une configuration externe. Exemple sécurisé et clair :\n\nimport os\nfrom typing import Optional\n\ndef build_review_agent(model: Optional[str] = None, *, timeout: int = 30, **kwargs):\n    \"\"\"Construit l'agent de review.\n    - model doit être fourni par l'appelant ou par variable d'environnement.\n    - Ne pas hardcoder une valeur client-specific ici.\n    \"\"\"\n    if model is None:\n        model = os.getenv(\"REVIEW_AGENT_MODEL\")\n    if not model:\n        raise ValueError(\"Le paramètre 'model' est requis. Fournir model ou définir REVIEW_AGENT_MODEL.\")\n    return Agent(model=model, timeout=timeout, **kwargs)\n\nExemples d'utilisation :\n- Par variable d'environnement : export REVIEW_AGENT_MODEL=\"claude-prod-2\"\n  agent = build_review_agent()\n- Par paramètre explicite (préféré pour tests) :\n  agent = build_review_agent(model=\"claude-staging-1\")\n\nPoints clés qu'une bonne réponse couvrirait :\n- Retirer toute valeur client-specific hardcodée.\n- Forcer la fourniture du paramètre ou le charger depuis une config/variable d'environnement.\n- Documenter la fonction et fournir des valeurs par défaut non sensibles.\n- Ajouter validation et tests unitaires pour s'assurer qu'aucune valeur en dur n'est réintroduite.\n\nRisques concrets évités :\n- fuite de configuration/client, déploiement accidentel sur mauvais client, difficulté de rotation/upgrade du modèle, problèmes de conformité."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Agentic Design",
-        "Claude Platform",
-        "Development"
-      ],
-      "title": {
-        "en": "Checkpoint 1: Fix the broken accelerator template",
-        "fr": "Étape 1 : Réparer le gabarit d'accélérateur cassé"
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_005",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_05",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Identify the hardcoded value, then write the corrected function signature and the parameterized line that replaces it.",
-        "fr": "Identifiez la valeur codée en dur, puis écrivez la signature de fonction corrigée et la ligne paramétrée qui la remplace.\nComparez avec la réponse du modèle\nIgnorez pour l'instant\nIgnoré\nPassez à autre chose si nécessaire, mais revenez avant la tâche cumulée. Un jalon ultérieur insère une version de ce même défaut de codage en dur parmi deux autres et il est plus difficile à repérer sous une charge à plusieurs couches."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Hardcoded value: 8080 (server port)\n\nExample original code:\n- server.listen(8080);\n\nCorrected function signature (make port a parameter):\n- function startServer(port) { ... }\n\nParameterized line that replaces the hardcoded value:\n- server.listen(port);\n\nRecommended safe variant with environment default:\n- function startServer(port = process.env.PORT || 8080) {\n    server.listen(port);\n  }\n\nExplanation (brief): remove the literal 8080 and accept a port argument so callers or deployment config (e.g., process.env.PORT) control the value, avoiding hidden hardcoding and making tests and deployments flexible.",
-        "fr": "Valeur codée en dur identifiée (exemple courant)\n- API URL et clé : requests.get(\"https://api.example.com/v1/data?api_key=ABC123\", timeout=5)\nRisques concrets\n- Fuite de clé (sécurité), difficile à changer (maintenance), tests impossibles à isoler (testabilité).\n\nSignature corrigée et ligne paramétrée\n- Signature de fonction :\n  def fetch_data(api_url: str, api_key: str, timeout: int = 5) -> requests.Response:\n- Ligne remplacée dans la fonction :\n  response = requests.get(f\"{api_url}/v1/data\", headers={\"Authorization\": f\"Bearer {api_key}\"}, timeout=timeout)\n\nExemple d'appel paramétré (utiliser variables d'environnement ou gestionnaire de secrets) :\n  fetch_data(api_url=os.environ[\"API_URL\"], api_key=os.environ[\"API_KEY\"], timeout=10)\n\nComparaison avec une réponse modèle typique\n- Si le modèle n’a paramétré que l’URL mais a laissé la clé codée en dur : insuffisant — la clé doit être parameterisée ou extraite d’un coffre (secrets manager).  \n- Meilleure pratique : ne pas transmettre de secret en query string ; utiliser header Authorization et charger les valeurs depuis un store sécurisé (env var, vault).\n\nActions concrètes à appliquer\n- Remplacer toutes les valeurs magiques par des paramètres ou configurations, documenter les paramètres et ajouter des tests unitaires injectant des valeurs factices."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Deployment",
-        "Development"
-      ],
-      "title": {
-        "en": "Identify the hardcoded value, then write the co...",
-        "fr": "Identifiez la valeur codée en dur, puis écrivez le co..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_009",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_09",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Case B: A full customer-service application a developer wants to share whole, including its UI and deployment scripts.\nCase C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.\nMatch 1: case to channel\nCase A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.\nThe tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository",
-        "fr": "Cas B : Une application complète de service client que le développeur souhaite partager telle quelle, y compris son UI et ses scripts de déploiement.\nCas C : Une correction en une ligne à un exemple Cookbook existant. L'extrait est la ligne corrigée, issue d'un engagement client.\nCas A : Un outil ciblé qui encapsule une seule API dans une fonction propre. L'extrait est la fonction et rien d'autre.\n- Le dépôt propre de l'outil\n- The Cookbook, mais seulement après que le pattern réutilisable a été retiré en tant qu'exemple ciblé\n- Le dépôt propre de l'exemple The Cookbook"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Case A → The Cookbook (but only after the reusable pattern is stripped out as a focused example).\n- Reason: This is a small, single-function integration that makes an ideal Cookbook recipe; strip project-specific scaffolding so the snippet demonstrates the reusable pattern clearly.\n\nCase B → The tool’s own repository.\n- Reason: A full customer-service application (UI, deployment scripts, full app) belongs in its own repo where maintainers can manage releases, issues, and deployment configuration without cluttering the Cookbook.\n\nCase C → The Cookbook example’s own repository.\n- Reason: This is a one-line correction to an existing Cookbook example; submit the fix directly to that example’s repo (PR or patch) so the canonical example is updated and provenance is preserved.",
-        "fr": "Correction modèle (points concrets et actions à effectuer)\n\nRésumé attendu\n- Séparer clairement trois dépôts : 1) dépôt propre de l’outil ciblé (Cas A), 2) dépôt du pattern extrait (exemple propre du Cookbook), 3) Cookbook général qui documente le pattern en renvoyant au dépôt extrait. Ne publier JAMAIS une application cliente complète telle quelle (Cas B) sans désensibilisation.\n\nActions concrètes par cas\nCas A (outil ciblé)\n- Contenu : seule la fonction exportée + tests unitaires, README (API, inputs/outputs, exemples), licence, CI minimal.\n- Pas de UI, pas de scripts de déploiement, pas de secrets.\n- Fournir .env.example et code lisible (pas d’hardcode d’URLs).\n\nCas B (app cliente complète)\n- Ne pas publier “telle quelle”. Créer une demo redéfinie :\n  1) extraire composants réutilisables (ex : backend auth, handler) dans le dépôt de l’exemple;\n  2) remplacer tous les endpoints/credentials par des placeholders et .env.example;\n  3) purger l’historique sensible (git filter-repo / BFG) et scanner (git-secrets, truffleHog);\n  4) supprimer logs, données PII, clés CI/CD.\n- Si la logique UI/UX est propriétaire, ne publier que des captures d’interface anonymisées et un prototype reconstitué.\n\nCas C (correction en une ligne)\n- Commit unique contenant la ligne corrigée + 1-2 lignes de contexte. Message de commit clair (ex: “Fix: correct header parsing in example per client feedback”).\n- Mettre à jour changelog et référence à l’engagement client si autorisé.\n- Vérifier que la ligne ne révèle pas d’informations sensibles.\n\nRisques concrets à adresser\n- Fuite de secrets/credentials, exposition PII, révélation de propriété intellectuelle UI/UX, dépendances vers infra privée. Mitiger par purge d’historique, scanning automatique, et prototypes anonymisés.\n\nVérification finale\n- Tests passent, README clair, .env.example présent, aucun secret détecté, licence et contribution indiquées."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Business Value"
-      ],
-      "title": {
-        "en": "Case B: A full customer-service application a d...",
-        "fr": "Cas B : Une application complète de service client a d..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_010",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_10",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "The tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository\nCase C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.\nThe tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository\nMatch 2: case to the missing readiness item\nCase A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.",
-        "fr": "Le dépôt propre de l'outil The Cookbook, mais seulement après que le motif réutilisable a été retiré en tant qu'exemple ciblé. Le dépôt de l'exemple The Cookbook.\nCas C : Une correction en une ligne d'un exemple Cookbook existant. L'extrait est la ligne corrigée, issue d'un échange avec le client.\nLe dépôt propre de l'outil The Cookbook, mais seulement après que le motif réutilisable a été retiré en tant qu'exemple ciblé. Le dépôt de l'exemple The Cookbook.\nCorrespondance 2 : cas pour l'élément de readiness manquant.\nCas A : Un outil ciblé qui encapsule une seule API dans une fonction propre. L'extrait est la fonction et rien d'autre."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Case A → The tool’s own repository.\nRationale: This is a focused, production-ready helper that wraps a single API into a clean, importable function. It belongs in the tool codebase where it can be versioned, tested, documented, and released as part of the tool’s public API.\n\nCase C → The Cookbook example’s own repository.\nRationale: This is a one-line correction to an existing Cookbook example (a customer-provided fix). It should be applied in the Cookbook example repo so the example remains correct and reproducible. If the fix later generalizes into a reusable pattern, only then strip it into the central Cookbook pattern entry.\n\nNotes:\n- Don’t put production tool functions into Cookbook examples (they’ll be harder to maintain/version).\n- Don’t put tiny example fixes into the tool repo (they clutter release history) unless the fix addresses tool behavior.",
-        "fr": "Actions concrètes pour le dépôt \"The Cookbook\"\n- Supprimer le fichier/exemple du motif réutilisable et committer avec message clair : \"remove reusable-pattern example; keep Cookbook focused\".\n- Mettre à jour README.md et index des exemples pour retirer la référence.\n- Lancer/ajouter tests automatisés couvrant l'exemple modifié ; exécuter CI.\n- Ajouter changelog entry et bump de version si nécessaire.\n- Vérifier et mettre à jour les dépendances/example fixtures, puis PR avec description claire pour revue.\n\nCas C — correction en une ligne (extrait corrigé)\ningredients = recipe.get(\"ingredients\", [])\nJustification : évite KeyError/AttributeError si recipe n'est pas un objet attendu ; retourne liste vide par défaut.\n\nCorrespondance 2 — éléments de readiness manquants (concrets)\n- Tests unitaires et d'intégration pour l'exemple.\n- Exemple d'entrée/sortie (fixture) dans /examples.\n- CI job qui exécute l'exemple.\n- Documentation minimale (README example usage).\n- Types/annotations et validation des schémas (p.ex. jsonschema).\n- Script d'installation ou requirements précis.\n\nCas A — outil ciblé (fonction qui encapsule une seule API)\ndef get_recipe(api_base_url, api_key, recipe_id):\n    import requests\n    resp = requests.get(\n        f\"{api_base_url}/recipes/{recipe_id}\",\n        headers={\"Authorization\": f\"Bearer {api_key}\"},\n        timeout=10\n    )\n    resp.raise_for_status()\n    return resp.json()"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Development"
-      ],
-      "title": {
-        "en": "The tool's own repositoryThe Cookbook, but only...",
-        "fr": "Le dépôt propre de l'outil — The Cookbook, mais seulement..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_011",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_11",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "A test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review\nCase C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.\nA test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review\nSubmit",
-        "fr": "Un test qui démontre que le wrapper se comporte comme prévu, réduction à un seul modèle ciblé, car une application entière ne rentre pas dans une revue conçue pour un seul modèle. La vérification des droits, car le code d'engagement peut comporter une contrainte de licence qui bloque la fusion avant toute revue technique.\n\nCas C : une correction d'une ligne à un exemple Cookbook existant. L'extrait est la ligne corrigée, issue d'un engagement client.\n\nUn test qui démontre que le wrapper se comporte comme prévu, réduction à un seul modèle ciblé, car une application entière ne rentre pas dans une revue conçue pour un seul modèle. La vérification des droits, car le code d'engagement peut comporter une contrainte de licence qui bloque la fusion avant toute revue technique.\n\nSoumettre\n\nIgnorer pour l'instant\n\nExigences d'enseignement et cycle de vie·8 min"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Acceptance checklist and actionable steps for Case C (one-line Cookbook fix)\n\n1. Scope reduction and intent\n- Verify the PR is strictly the single corrected line and minimal context (no unrelated changes).\n- Confirm the snippet came from a customer engagement and document source and rationale in the PR description.\n\n2. Functional proof (focused test)\n- Add a small, targeted unit test that proves the wrapper behaves the same as before and preserves metadata (use functools.wraps). Example (pytest):\n  from cookbook.module import my_wrapper\n  def original(x):\n      \"original doc\"\n      return x + 1\n  def test_wrapper_preserves_behavior_and_metadata():\n      wrapped = my_wrapper(original)\n      assert wrapped(1) == 2\n      assert wrapped.__name__ == original.__name__\n      assert wrapped.__doc__ == original.__doc__\n\n3. Automated checks\n- Ensure all CI tests pass; run linters and unit tests locally.\n- Verify the change doesn’t break public API or examples.\n\n4. Rights / licensing check (must pass before merge)\n- Confirm customer engagement contract permits contribution; verify any attached license or confidentiality constraints.\n- Ensure the code snippet has no third‑party license that forbids inclusion.\n- If provenance or license is unclear, mark PR “hold” and escalate to legal/engagement manager.\n\n5. Final PR hygiene\n- Clear commit message referencing customer ticket and reason.\n- Add changelog note if needed and a reviewer sign-off.\n\nDecision rule: submit if tests + CI green and rights check cleared; otherwise skip/hold.",
-        "fr": "Correction modèle (exemples pytest + ligne corrigée)\n\n1) Ligne corrigée (Cas C — extrait Cookbook)\nRemplacer l'appel générique par un appel ciblant explicitement le modèle approuvé :\nclient.create(model=\"gpt-target-1\", prompt=prompt, max_tokens=200)\n\n2) Tests unitaires (pytest) — vérifie comportement du wrapper réduit à un modèle et vérification des droits\n- Teste que le wrapper appelle explicitement le modèle ciblé.\n- Teste que la vérification de licence bloque la fusion si incompatible.\n\nExemple minimal fonctionnel :\n\nimport builtins\nimport mypackage.client as client_module\nfrom mypackage.wrapper import ModelWrapper, check_license_compat\n\ndef test_wrapper_uses_target_model(monkeypatch):\n    calls = []\n    def fake_create(model, prompt, **kwargs):\n        calls.append((model, prompt, kwargs))\n        return {\"text\": \"ok\"}\n    monkeypatch.setattr(client_module, \"create\", fake_create)\n    w = ModelWrapper(model=\"gpt-target-1\")\n    out = w.generate(\"Salut\")\n    assert out[\"text\"] == \"ok\"\n    assert calls == [(\"gpt-target-1\", \"Salut\", {\"max_tokens\": 200})]\n\ndef test_license_check_blocks_merge(tmp_path):\n    p = tmp_path / \"LICENSE\"\n    p.write_text(\"incompatible-license: true\")\n    assert not check_license_compat(p)  # doit renvoyer False si licence incompatible\n\n3) Points de contrôle qu'une bonne réponse doit couvrir\n- Le test cible explicitement un seul modèle approuvé.\n- Le test est isolé (mock du client externe).\n- La correction est une seule ligne claire (model=\"...\").\n- Une fonction de vérification de droits/licence est testée et échoue si licence non compatible.\n- Messages d'erreur/assertions précis pour faciliter la revue technique."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Business Value"
-      ],
-      "title": {
-        "en": "A test that proves the wrapper behavesReduction...",
-        "fr": "Un test qui prouve que le wrapper se comporteReduction..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_017",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_03",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Correct: Case A goes to the tool’s own repository and is missing a test that proves the wrapper behaves. Case B does not belong as a whole application, so the reusable pattern inside it goes to the Cookbook as a focused example. Case C goes to the Cookbook example’s repository and is missing the rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review.",
-        "fr": "Corrigé : Le cas A va dans le dépôt propre de l’outil et il manque un test qui prouve que le wrapper se comporte comme prévu. Le cas B ne constitue pas une application entière, donc le motif réutilisable qui s’y trouve va dans le Cookbook comme un exemple ciblé. Le cas C va dans le dépôt de l’exemple Cookbook et il manque la vérification des droits, car le code d’engagement peut comporter une contrainte de licence qui bloque la fusion avant toute revue technique."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Case A — goes to the tool’s own repository\n- Why: it’s implementing behavior for that tool (wrapper) and must live with the code it tests.\n- Actionable fixes: add a unit/integration test proving the wrapper’s behavior (e.g., tests/test_wrapper.py). Test should instantiate the wrapper, exercise public methods with representative inputs, assert outputs and side effects, and run under the tool’s existing CI (make test or pytest). Include minimal fixtures/mocks if external services are used. Update CHANGELOG/PR description to reference added test.\n\nCase B — goes to the Cookbook as a focused example\n- Why: it’s a reusable pattern, not a standalone application.\n- Actionable fixes: extract the pattern into a Cookbook recipe (cookbook/recipes/<short-name>/README.md) plus a small, focused example file (example.py) showing how to use it. Include a one-paragraph intent, usage snippet, expected output, and license/attribution. Add tests for the example if the Cookbook requires them (cookbook/tests/test_<name>.py). Remove application scaffolding.\n\nCase C — goes to the Cookbook example’s repository but is missing a rights check\n- Why: engagement/example code may carry licensing/third-party content constraints that must be cleared before merge.\n- Actionable fixes: require contributor to provide provenance (license, third-party consent, or redaction). Add a PR checklist item and automated CI check that either (a) verifies a signed CLA/DCO or (b) that rights metadata (e.g., NOTICE or rights.yml) is present. Block merges until rights are confirmed. Document acceptable evidence and reviewer responsibilities in CONTRIBUTING.md.",
-        "fr": "Réponse modèle — points concrets qu’une bonne correction doit couvrir :\n\nCas A (dépôt outil)\n- Emplacement : dépôt principal de l’outil.\n- Manque : tests prouvant que le wrapper se comporte comme prévu.\n- Actions à faire : ajouter des tests unitaires et d’intégration.\n  - Tests unitaires : mocker la dépendance sous-jacente et vérifier que le wrapper\n    - appelle la fonction X avec les bons paramètres (assert_called_with(...)),\n    - retourne la valeur attendue,\n    - gère/convertit correctement les exceptions (ex : transforme TimeoutError en WrapperError).\n  - Test d’intégration léger : exécuter le wrapper contre un stub local pour vérifier le flux de bout en bout.\n- CI : exiger ces tests verts avant merge.\n\nCas B (motif réutilisable)\n- Emplacement : Cookbook comme exemple ciblé (pas une application complète).\n- Actions : transformer le motif en snippet/recette autonome :\n  - fournir un exemple minimal d’utilisation (code exécutable), API contract, prérequis,\n  - indiquer limites et cas d’usage,\n  - ajouter un test d’exemple pour montrer l’expected behavior (ex : output attendu pour inputs donnés).\n- Documentation : court guide “when to use” + example YAML/CLI.\n\nCas C (exemple Cookbook)\n- Emplacement : dépôt d’exemples Cookbook.\n- Manque : vérification des droits/licences.\n- Actions : ajouter dans le pipeline CI une vérification de conformité (vérifier licence des fichiers, présence de CLA ou code d’engagement) et un check bloquant en PR si non conforme.\n- Documentation PR : demander dans le template PR l’affirmation sur la licence/engagement.\n- Tests : inclure tests d’intégration/permissions si l’exemple manipule ressources restreintes.\n\nChecklist PR finale : code + docs + tests unitaires/intégration + CI licence/CLA check + description & changelog."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Business Value"
-      ],
-      "title": {
-        "en": "Correct: Case A goes to the tool’s own reposito...",
-        "fr": "Correct : Cas A va dans le dépôt de l'outil..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_019",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_05",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Revisit: Channel and readiness are coupled. A full application sent whole stalls regardless of code quality, and an engagement fix sent without a rights check can be merged then reverted. Match each case to the channel built for its shape, then name what a maintainer cannot verify yet.",
-        "fr": "Réexaminez : Channel et readiness sont couplés. Une application complète envoyée en bloc se bloque, quelle que soit la qualité du code, et une correction d'engagement envoyée sans vérification des droits peut être fusionnée puis révertée. Associez chaque cas au Channel conçu pour sa forme, puis nommez ce que le mainteneur ne peut pas encore vérifier."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "- Full application sent whole (stalls regardless of code quality)\n  - Channel: \"Whole‑app / bulk‑submission\" channel — designed for atomic delivery of a complete application or release artifact (big PRs, release branches, packaged deployables).\n  - What a maintainer cannot yet verify: incremental correctness and intent (which changes cause which effects), modular testability (can’t easily run or isolate component tests), runtime/deployment behavior in their environment, cross‑component side effects and dependency changes, license/third‑party provenance, and whether the submission owner followed internal delivery checklists (migration ordering, rollout plan). These unknowns are why whole‑app submissions tend to stall.\n\n- Engagement fix sent without a rights check (can be merged then reverted)\n  - Channel: \"Targeted‑patch / fast‑fix\" channel — designed for small, focused commits or hotfixes intended for quick review and merge.\n  - What a maintainer cannot yet verify: author’s authorization/ownership and legal/CLA permissions (rights to change or ship), whether the fix addresses root cause versus masking a bug, sufficient test coverage for the change surface, and whether required stakeholders (security, product) were consulted. Missing the rights check risks merging an unauthorized or noncompliant change that must be reverted.",
-        "fr": "- Cas A — « une application complète envoyée en bloc se bloque »\n  - Channel conçu : Release / Full-deploy channel (canal d’intégration ou de déploiement atomique).\n  - Ce que le mainteneur ne peut pas encore vérifier :\n    - Comportement runtime réel (migrations DB, initialisation d’état, blocages liés aux ressources).\n    - Compatibilité infra (versions réseau/OS, dépendances système, secrets/config absents ou mal configurés).\n    - Effets de charge et scalabilité (verrous distribués, contention).\n    - Intégrations externes (contrats d’API, latences, quotas).\n    - Données persistantes et rollback sûr (migrations irréversibles).\n  - Actions concrètes à ajouter au readiness : smoke tests end-to-end, dry-run de migration, check d’existence/secrets, tests d’intégration avec mock/externe, healthchecks post-deploy.\n\n- Cas B — « une correction d'engagement envoyée sans vérification des droits peut être fusionnée puis révertée »\n  - Channel conçu : Patch / Pull Request channel (canal de contributions/commits incrémentaux).\n  - Ce que le mainteneur ne peut pas encore vérifier :\n    - Autorité/identité du contributeur (CLA, appartenance à l’organisation, droits de fusion).\n    - Droits d’accès et propriété de la zone modifiée (code owners, approbations requises).\n    - Conformité légale/licence du changement.\n    - Impacts transverses non couverts par tests unitaires (contrats API, consommateurs externes).\n  - Actions concrètes à ajouter au readiness : bot CLA/SSO, règles de CODEOWNERS et approbations, vérifications de licence, CI qui exécute tests d’intégration et tests de non-régression."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Business Value",
-        "Deployment"
-      ],
-      "title": {
-        "en": "Revisit: Channel and readiness are coupled. A f...",
-        "fr": "Revoir : Channel et readiness sont couplés. A f..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_023",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_09",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Correct: Bedrock keeps identity and data inside the AWS boundary the customer already cleared, the pinned full Bedrock model ID (with the anthropic. prefix) makes an upstream change something you adopt deliberately, and retaining the prior version gives you a rollback target. That is the minimal set that satisfies both residency and rollback.",
-        "fr": "Correct : Bedrock garde l'identité et les données à l'intérieur du périmètre AWS que le client a déjà validé, l'ID de modèle Bedrock complet épinglé (avec le préfixe anthropic) fait un changement en amont — quelque chose que vous adoptez délibérément, et conserver la version précédente vous donne une cible de rollback. C'est l'ensemble minimal qui satisfait à la fois la résidence des données et le rollback."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "This is correct — and here’s a concise, actionable explanation and implementation checklist a student should provide.\n\nWhy it’s minimal and sufficient\n- Residency: Running Bedrock model calls from inside the customer’s AWS account and using AWS-managed identity (IAM roles, VPC endpoints, private networking) ensures data and identity remain within the cleared AWS boundary.\n- Controlled upstream changes: Pinning the full Bedrock model identifier (the exact vendor-prefixed model ID, e.g., anthropic.<full-model-id-or-version>) makes any upstream model change an explicit adoption step rather than an implicit rollout.\n- Rollback: Retaining the prior version (artifact/config snapshot or the prior model ID) provides a clear rollback target if a new model causes regressions.\n\nConcrete implementation checklist (actionable)\n- Use explicit model ID in deployment configs (no “latest” aliases). Example: model_id = \"anthropic.claude-vX.Y-20240601\"\n- Gate model-ID changes in CI/CD: require PR review and QA tests before updating model_id.\n- Archive previous model_id and associated config in a versioned store (S3 with versioning, or Git tags).\n- Enforce AWS boundaries: use IAM least-privilege, VPC endpoints for Bedrock, and restrict egress.\n- Log and monitor: enable CloudTrail, CloudWatch metrics, and automated regression/QA tests on canaries.\n- Document rollback runbook: exact steps to revert model_id and validate post-rollback.\n\nThis set is minimal because each element directly maps to residency, deliberate adoption, and recoverability without adding unnecessary complexity.",
-        "fr": "Bedrock conserve l’identité et les données à l’intérieur du périmètre AWS validé par le client. Épingler l’identifiant complet du modèle Bedrock (avec le préfixe \"anthropic\") est un changement en amont — une décision délibérée — et conserver l’identifiant de la version précédente fournit une cible de rollback. Il s’agit de l’ensemble minimal répondant à la fois aux exigences de résidence des données et à la possibilité de restauration.\n\nPoints d’action concrets :\n- Épingler l’ID/ARN complet du modèle (ex. anthropic-xxxxx) dans la configuration versionnée (Git) et dans un store sécurisé (AWS SSM Parameter Store ou Secrets Manager).\n- Conserver l’ID de la version précédente comme valeur immuable/tag pour permettre un rollback immédiat.\n- Déployer via IaC (CloudFormation/Terraform) et inclure une procédure de rollback automatisée (pipeline CI/CD avec étapes de validation et option de revert).\n- Valider la résidence des données : endpoints et journaux restent dans le compte/région approuvés, et chiffrez en transit et au repos.\n- Tester régulièrement le rollback en préprod et documenter la procédure (checklist, responsables, fenêtres de maintenance)."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Automation",
-        "Claude Platform",
-        "Deployment"
-      ],
-      "title": {
-        "en": "Correct: Bedrock keeps identity and data inside...",
-        "fr": "Correct : Bedrock conserve l'identité et les données en interne..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_024",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_10",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Revisit: Check what each wrong piece would have allowed: an Anthropic key or the first-party API moves identity and data outside the AWS boundary the customer requires, and a moving alias plus no retention is exactly the unpinned deployment that has no version to roll back to.",
-        "fr": "Revoir : Vérifiez ce que chaque élément incorrect aurait permis : une clé Anthropic ou le first-party API déplace l'identité et les données en dehors de la frontière AWS requise par le client, et un moving alias, plus no retention, est exactement le unpinned deployment qui n'a aucune version vers laquelle revenir."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "What each “wrong piece” would have allowed — and how to fix it\n\n1) Anthropic key or first‑party API moving identity/data outside AWS boundary\n- Concrete risks: data exfiltration or storage in an external provider, breach of customer data residency/GDPR requirements, loss of AWS audit/CloudTrail visibility, credential leakage and lateral compromise, inability to enforce org-wide IAM/SCP controls.\n- Checks to run: scan code/config for external API keys (git secrets, truffleHog); review environment variables, build pipelines, and Lambda layers for Anthropic keys; inspect VPC endpoints and network egress rules; confirm CloudTrail logging of all relevant API calls.\n- Mitigations: remove keys and route calls through an approved in‑AWS proxy (PrivateLink, VPC Endpoint, API Gateway with VPC integration); enforce IAM roles and temporary STS credentials; apply Service Control Policies blocking external SaaS endpoints; enable encryption + S3/ObjectLock if storing outputs.\n\n2) Moving alias + no retention → unpinned, non‑rollbackable deployment\n- Concrete risks: no safe rollback after bad release, loss of reproducible history, debugging impossible, compliance failure for immutable artifacts.\n- Checks to run: verify Lambda/function aliases point to immutable versions; confirm artifact registry/image tags are immutable; check retention policies for deployment artifacts and logs.\n- Mitigations: pin aliases to versioned artifacts (lambda versions, container digest); enable artifact immutability and retention (ECR image tags by digest, S3 ObjectLock/retention); implement CI/CD to create immutable releases and automatic rollback on failure; keep 30–90 day retention for artifacts/logs for audits.\n\nTaken together: enforce no external keys, route external calls through audited AWS paths, and adopt immutable, versioned releases with retention and automated rollback.",
-        "fr": "Ce que chaque élément incorrect aurait permis — correction modèle et actions concrètes.\n\n1) Clé Anthropic ou appel first‑party API sortant de la frontière AWS\n- Risques concrets : exfiltration de données sensibles, violation de contraintes de résidence/« data sovereignty », traçabilité et audit impossibles, gestion des accès non maîtrisée.\n- Vérifications précises : rechercher clés/URLs dans Secrets Manager, Parameter Store, variables d’environnement (ECS/Lambda/EKS), fichiers IaC/CI (GitHub Actions, GitLab CI), logs d’egress VPC ; tester egress depuis une instance (curl vers api.anthropic.com).\n- Correctifs immédiats : révoquer/rotater la clé; supprimer toute variable contenant la clé; restreindre egress via Security Groups/NACLs/Route Tables ou utiliser VPC Endpoints/PrivateLink ; appliquer SCP/IAM pour bloquer appels externes non approuvés ; chiffrer et journaliser accès.\n\n2) Moving alias + no retention = unpinned deployment\n- Risques concrets : impossibilité de revenir à une version stable, perte d’audit/trace des versions, déploiements non réprod., erreurs en prod permanentes.\n- Vérifications précises : inspecter manifestes de déploiement (alias, version/révision), historique de déploiement dans CI/CD, paramètres de rétention/rollback dans la plateforme (ex. env, Terraform state, registry d’artefacts).\n- Correctifs immédiats : pinning d’alias à une version immuable (tag SHA), activer retention/versioning, sauvegarder artefacts, imposer pipeline avec approval et test canary, ajouter monitorings/alertes et procédure de rollback documentée.\n\nChecklist qu’une bonne réponse couvre : emplacement des secrets, preuves d’egress, politique IAM/SCP, configuration d’alias/versioning, procédure de rotation et rollback, tests de vérification post‑correction."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Claude Platform"
-      ],
-      "title": {
-        "en": "Revisit: Check what each wrong piece would have...",
-        "fr": "Revoir : Vérifiez ce que chaque élément erroné aurait..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_025",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_11",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Partial: You saw that the laptop latency measurement was misleading, which is true, but the fix doesn't consist merely of re-measuring. The rejection was based on residency, so the platform itself must change to one that processes data in the required region.",
-        "fr": "Partiel : Vous avez constaté que la mesure de latence de l’ordinateur portable était trompeuse, ce qui est vrai, mais la solution ne consiste pas simplement à refaire la mesure. Le rejet était basé sur la data residency, donc la plateforme elle-même doit changer pour passer à une plateforme qui traite les données dans la région requise."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Short answer: re-measuring from a laptop is insufficient because the rejection was for data residency — you must move processing into a platform/region that guarantees data stays and is processed within the required jurisdiction, then validate.\n\nConcrete remediation plan\n1. Confirm requirement: document the exact residency/legal constraint (country/region, in-transit vs. at-rest, audit obligations).\n2. Choose a compliant platform/region: pick a cloud provider/region that guarantees processing in that jurisdiction (e.g., Azure West Europe, AWS eu-west-1). Prefer providers with explicit data-residency products/SLAs.\n3. Design migration:\n   - Provision compute and storage in the target region.\n   - Configure network, DNS, and CDNs so user traffic terminates and is processed in-region.\n   - Implement enforceable controls (region-locked buckets, VPC endpoints, IAM constraints, no cross-region replication).\n4. Migrate data and workloads: run a controlled data migration, validate checksums, and preserve audit logs.\n5. Validate residency and performance:\n   - Produce audit evidence (access logs, provider tenancy/region metadata).\n   - Re-test latency from representative user endpoints (not a single laptop) to confirm performance meets SLA.\n6. Compliance sign-off and go-live, with a rollback plan and monitoring.\n\nConcrete risks and mitigations\n- Noncompliance due to misconfiguration → enforce region locks and automated checks.\n- Downtime during migration → staged rollout, blue/green deployment.\n- Increased latency or cost → benchmark chosen region, optimize architecture.\n- Vendor lock-in → document exit strategy and data export path.\n\nDeliverables: migration schedule, validation checklist (logs, configs, tests), compliance attestation, rollback plan.",
-        "fr": "Erreur de diagnostic : refaire la mesure de latence ne suffit. La décision de rejet repose sur la data residency — il faut changer l’architecture/plateforme pour garantir que les données sont traitées et stockées dans la région requise. Voici une correction modèle actionable.\n\nÉtapes concrètes\n1. Définir l’exigence précise : quelles données (PII, logs, backups, métadonnées), quelles opérations (traitement en mémoire, stockage, sauvegarde), quelles lois/clauses contractuelles s’appliquent.\n2. Cartographier les flux de données : sources, traitements, stockage, tierces parties (CDN, analytics, auth).\n3. Choisir une plateforme compatible régionale (région cloud locale, cloud souverain, on‑premises) et vérifier garanties (région des centres, absence de réplication inter‑régions, KMS local).\n4. Concevoir l’architecture : endpoints locaux, bases et buckets dans la région, désactiver répliques cross‑region, KMS et sauvegardes locales.\n5. Migration : plan par lots, transferts chiffrés, validation d’intégrité, fenêtre maintenance, rollback.\n6. Mise à jour opérations : CI/CD, monitoring et alerting dans la région, journaux et audits locaux.\n7. Contractualiser : SLA, clauses de localisation, droit d’audit fournisseur.\n\nRisques concrets et mitigations\n- Réplication automatique hors région → désactiver répliques et valider configurations.\n- Logs et backups hors site → configurer snapshots locaux et vérifier retention.\n- Services tiers (ex. analytics) traitant hors région → remplacer ou configurer en local.\n- Perte de perf / coût élevé → tester charge et optimiser régionale.\n\nCritères d’acceptation / tests\n- Preuve matérielle : ressources (DB/bucket) listées dans la région requise.\n- Traçabilité : audit logs montrant traitement local uniquement.\n- Network tests : endpoints résolvent/terminent dans IPs géolocalisées en région.\n- No egress: absence de connexions sortantes vers d’autres régions pendant tests.\n\nLivrables attendus\n- Diagramme de flux, plan de migration avec étapes et rollback, liste des ressources et preuves (logs, commandes de vérif), clauses contractuelles modifiées."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Architecture",
-        "Automation",
-        "Benchmarking"
-      ],
-      "title": {
-        "en": "Partial: You saw that the laptop latency measur...",
-        "fr": "Partiel : Vous avez vu que la mesure de latence de l'ordinateur portable..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_027",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_13",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Correct: Blank 1 wraps the fetched content, so the next component treats it as data, rather than instructions. This closes the injection seam. Blank 2 scopes the most privileged component to least privilege, so a steered action cannot reach beyond its task. Together they hold both boundaries under review.",
-        "fr": "Correct: Blank 1 enveloppe le contenu récupéré, de sorte que le composant suivant le traite comme des données, et non comme des instructions. Cela ferme la faille d'injection. Blank 2 restreint le composant le plus privilégié au niveau du moindre privilège, de sorte qu'une action dirigée ne peut pas dépasser sa tâche. Ensemble, ils maintiennent les deux limites sous revue."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Blank 1: Data serialization/escaping (e.g., JSON-encode or Base64-wrap the fetched content) — wrapping the fetched content as a serialized data object ensures the next component treats it as inert data rather than executable instructions, closing the injection seam (e.g., use JSON.stringify or base64 to pass content, never interpolate raw text into prompts or code).\n\nBlank 2: Capability-based least-privilege sandboxing (e.g., scoped API key or restricted execution environment) — give the most-privileged component only the minimal, purpose-specific capabilities (time-limited, action-limited tokens, or an OS/container sandbox) so any steered action cannot reach beyond its authorized task.\n\nTogether: serialization prevents instruction injection at the input boundary; capability-based sandboxing limits what a compromised component can do — both boundaries are thus actively enforced and auditable.",
-        "fr": "Blank 1 : l’échappement / encodage de sortie — Enveloppe les données non fiables pour qu’elles soient traitées comme données (HTML entity encoding, JSON encoding, URL encoding, shell escaping). Actionnable : applique l’encodage adapté au contexte de sortie (never HTML-escape for SQL), utilise des bibliothèques éprouvées (prepared statements/ORM pour SQL, template engines pour HTML) et évite les concaténations manuelles.\n\nBlank 2 : sandboxing / confinement (isolation des privilèges) — Restreint le composant le plus privilégié selon le principe du moindre privilège (processus non-root, capabilities réduites, seccomp/SELinux/AppArmor, conteneurs minimaux). Actionnable : exécute les composants exposés aux entrées non fiables dans un sandbox, retire les permissions inutiles, limite accès réseau/FS et applique des règles d’audit.\n\nPourquoi ensemble : l’encodage empêche les injections au niveau des données, le sandboxage limite l’impact si une action malveillante réussit. Bonnes pratiques : définir et tester les règles d’encodage par contexte, automatiser l’analyse statique/DAST, et auditer régulièrement les politiques de confinement."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Context Design"
-      ],
-      "title": {
-        "en": "Correct: Blank 1 wraps the fetched content, so ...",
-        "fr": "Correct : Blank 1 entoure le contenu récupéré, donc ..."
-      }
+      "serverCorrectionRequired": true
     }
   ],
   "videoRecommendationStatus": "none",
   "officialDurationMinutes": 155,
-  "durationMinutes": 155
+  "durationMinutes": 155,
+  "videoCount": 0
 }

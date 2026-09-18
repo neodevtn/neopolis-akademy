@@ -1,88 +1,46 @@
 {
   "findings": [
     {
-      "chapter_id": "chapter_01_1",
-      "evidence": "L’introduction annonce une « Durée estimée : 15-25 minutes » pour le module, alors que les seuls chapitres minutés totalisent déjà 109 minutes (20 + 14 + 12 + 10 + 29 + 24), hors introduction, récapitulatif et ressources.",
+      "chapter_id": "course",
+      "evidence": "`officialDurationMinutes` et `durationMinutes` valent 211, tandis que la somme des seuls chapitres explicitement minutés est de 124 minutes (20 + 14 + 12 + 10 + 29 + 24 + 7 + 8). Les chapitres non minutés ne documentent pas les 87 minutes restantes.",
       "issue_type": "duration",
-      "recommended_fix": "Remplacer la durée du module par une estimation cohérente avec le total des chapitres, ou préciser explicitement qu’il s’agit uniquement de la durée de l’introduction.",
+      "recommended_fix": "Réconcilier la durée officielle avec les durées de chapitre : soit renseigner des durées explicites pour les chapitres non minutés et les activités, soit corriger les deux totaux du cours à la durée réellement calculée.",
       "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_11",
+      "evidence": "Dans le contenu français, la « liste de vérification » est structurellement fragmentée : l’en-tête est collé (`Menace | Où elle entre | Le contrôle qui la bloque | Ce qui est enregistré`), mais les lignes suivantes mélangent séparateurs et contenu. La ligne « Évasion du sandbox » contient notamment cinq segments séparés par `|` alors que l’en-tête en annonce quatre.",
+      "issue_type": "structure",
+      "recommended_fix": "Reconstruire cette section en véritable tableau Markdown à quatre colonnes, avec une ligne de séparateurs et exactement quatre cellules par ligne, ou la convertir en sous-sections homogènes.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_11",
+      "evidence": "La version française conserve des fragments anglais visibles hors code, par exemple : `identity with least privilege, secrets dans un secret manager, auth configuration verrouillée` et `OS-level sandboxing: filesystem isolation scoped to the working directory, network isolation scoped to permitted endpoints only. Configured via Claude Code settings; documented on code.claude.com.`",
+      "issue_type": "localization",
+      "recommended_fix": "Traduire les phrases explicatives destinées à l’apprenant en français, en conservant seulement les identifiants techniques, noms de produits Anthropic et éléments de code nécessaires.",
+      "severity": "high"
+    },
+    {
+      "chapter_id": "chapter_09",
+      "evidence": "Dans la version française, la liste des leviers reste entièrement en anglais : `Model selection`, `Prompt & context size`, `Number of tool calls`, `Streamed vs. batched`, `Streaming with tool use`. Ces libellés sont du contenu pédagogique affiché, et non du code.",
+      "issue_type": "localization",
+      "recommended_fix": "Localiser les cinq libellés de leviers en français de façon cohérente avec les paragraphes explicatifs qui suivent.",
+      "severity": "medium"
     },
     {
       "chapter_id": "chapter_01",
-      "evidence": "Plusieurs verso de flip cards sont coupés en plein mot : « Twenty cases that include irregular and edge inputs will catch a bre » / « permettront de détecter une bre » et « inputs you did not think to ».",
-      "issue_type": "truncation",
-      "recommended_fix": "Restaurer le texte complet de chaque verso tronqué et ajouter un contrôle de longueur/rendu avant publication.",
-      "severity": "high"
-    },
-    {
-      "chapter_id": "chapter_01",
-      "evidence": "Le tableau de sélection est sérialisé comme du texte concaténé : « Task typeGrading methodWhat it catchesWhere it is unreliable », suivi de colonnes et lignes sans séparateurs visuels.",
+      "evidence": "Dans le contenu anglais, la liste des quatre décisions est fragmentée : `1Success criteria`, `2Failure handling`, `3Cost and latency budget`, `4Trust boundary`, sans espace ni ponctuation entre le numéro et le titre.",
       "issue_type": "structure",
-      "recommended_fix": "Rendre le contenu sous forme de tableau Markdown/HTML réel, avec en-têtes, colonnes et séparateurs accessibles.",
-      "severity": "medium"
-    },
-    {
-      "chapter_id": "chapter_03",
-      "evidence": "Le tableau de référence est fragmenté : « LevelWhat it isolatesWhat it cannot catch », puis « UnitOne function… » sans délimitation de colonnes. La version française présente le même défaut : « NiveauCe qu’il isoleCe qu’il ne peut pas attraper ».",
-      "issue_type": "structure",
-      "recommended_fix": "Convertir les deux versions en tableau structuré avec cellules distinctes, plutôt qu’en texte concaténé.",
-      "severity": "medium"
-    },
-    {
-      "chapter_id": "chapter_05",
-      "evidence": "Le checkpoint embarqué référence `ex_claude_certified_developer_foundations__04_003`, alors que cet exercice est déclaré avec `chapterId: chapter_03` et porte sur le choix d’une méthode de notation, non sur la gestion des erreurs. L’exercice déclaré pour `chapter_05` (`ex_..._005`) n’est pas référencé par ce checkpoint.",
-      "issue_type": "activity",
-      "recommended_fix": "Rattacher le checkpoint de `chapter_05` à l’exercice de gestion des erreurs correspondant, et supprimer ou reclasser les exercices orphelins/mal associés.",
-      "severity": "high"
-    },
-    {
-      "chapter_id": "chapter_05",
-      "evidence": "La table de décision française mélange des phrases entières en anglais : « Rate limit (429) Réessayable Exponential backoff with jitter, honor retry-after, capped attempts. After the cap… », « Bad request (400) Fail fast No retry… », « Tool result error Depends on the tool… ».",
-      "issue_type": "localization",
-      "recommended_fix": "Traduire intégralement les cellules de tableau destinées à la version française, en conservant seulement les identifiants techniques nécessaires.",
-      "severity": "high"
-    },
-    {
-      "chapter_id": "chapter_05",
-      "evidence": "Le tableau de décision est également présenté comme un pseudo-tableau concaténé : « Error typeRetriable or fail-fastBackoff strategyFallback behavior » dans la version anglaise.",
-      "issue_type": "structure",
-      "recommended_fix": "Utiliser un tableau structuré avec quatre colonnes explicites dans les deux langues.",
-      "severity": "medium"
-    },
-    {
-      "chapter_id": "chapter_07",
-      "evidence": "Le checkpoint pointe vers `ex_claude_certified_developer_foundations__04_004`, mais aucun exercice portant cet identifiant n’existe dans `exercises`. L’activité de sélection de modèle est donc non résoluble depuis le chapitre.",
-      "issue_type": "activity",
-      "recommended_fix": "Créer/réattacher l’exercice `ex_..._004` attendu, ou modifier le checkpoint pour référencer l’exercice existant consacré à la sélection des modèles.",
-      "severity": "high"
-    },
-    {
-      "chapter_id": "chapter_09",
-      "evidence": "Les flip cards comportent plusieurs coupures manifestes : « retu », « a tran », « which c », ainsi que la conclusion française interrompue « … est un tran ».",
-      "issue_type": "truncation",
-      "recommended_fix": "Restaurer les fins de cartes complètes et empêcher la troncature silencieuse des champs `back`.",
-      "severity": "high"
-    },
-    {
-      "chapter_id": "chapter_09",
-      "evidence": "La version française conserve de nombreux intitulés et segments pédagogiques non traduits : « Model selection », « Prompt & context size », « Streamed vs. batched », « MetricWhere to instrument itSingle-agent versus orchestrator-worker », ainsi que des blocs de référence majoritairement en anglais.",
-      "issue_type": "localization",
-      "recommended_fix": "Localiser les intitulés, tableaux et explications destinés à l’apprenant francophone ; réserver l’anglais aux mots-clés de code et noms de produits nécessaires.",
-      "severity": "high"
-    },
-    {
-      "chapter_id": "chapter_09",
-      "evidence": "Le tableau final est fragmenté en texte brut : « MetricWhere to instrument itSingle-agent versus orchestrator-worker », puis des valeurs distribuées sur des lignes sans structure tabulaire fiable.",
-      "issue_type": "structure",
-      "recommended_fix": "Reconstruire le tableau en composant structuré à trois colonnes et vérifier son rendu sur les deux locales.",
+      "recommended_fix": "Restaurer une liste numérotée valide (`1. Success criteria`, etc.) afin d’éviter des pseudo-titres collés et de rendre la hiérarchie lisible.",
       "severity": "medium"
     },
     {
       "chapter_id": "chapter_11",
-      "evidence": "Le checkpoint référence `ex_claude_certified_developer_foundations__04_006`, absent de la liste `exercises`. Les tâches cumulatives sont incluses dans un bloc de contenu, mais aucune activité de checkpoint résoluble ne leur est rattachée.",
-      "issue_type": "activity",
-      "recommended_fix": "Ajouter l’exercice `ex_..._006` correspondant aux tâches cumulatives, ou remplacer la référence par un exercice existant correctement rattaché à `chapter_11`.",
-      "severity": "high"
+      "evidence": "Le contenu français commence par `Les mécanismes d’observabilité et d’ences des hooks...` : le segment `d’ences` est manifestement tronqué ou corrompu et empêche la lecture de la phrase.",
+      "issue_type": "truncation",
+      "recommended_fix": "Restaurer la formulation française complète, par exemple en remplaçant le segment corrompu par une coordination lisible entre les mécanismes d’observabilité et les hooks.",
+      "severity": "medium"
     }
   ]
 }

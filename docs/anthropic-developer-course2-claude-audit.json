@@ -1,99 +1,142 @@
 {
-  "activity_assessment": "Non conforme au volume attendu de 8 activités interactives. Le cours contient 17 composants interactifs intégrés aux chapitres (9 blocs flip_cards, 4 bucket_sort et 4 checkpoint), auxquels s’ajoutent 8 exercices free_text déclarés à la racine du cours : 25 ensembles interactifs au total. Les 8 exercices racine ne sont pas intégrés dans les chapitres, même s’ils portent chacun un chapterId ; ils doivent être signalés et conservés dans l’analyse. Plusieurs sont en outre rattachés au mauvais chapitre ou dupliquent un checkpoint déjà présent : ex_003 est rattaché à chapter_03 mais traite le checkpoint 1 de chapter_01 ; ex_005 est rattaché à chapter_05 mais traite Extended Thinking de chapter_03 ; ex_007, ex_009 et ex_010 sont rattachés à chapter_07, chapter_09 et chapter_10 mais portent sur les schémas d’outils ; ex_011 et ex_012 sont rattachés à chapter_11 et chapter_12 mais portent sur le streaming de chapter_07. Les corrections fournies dans certains exercices contredisent aussi le contenu : ex_005 recommande Extended Thinking pour une classification massive alors que chapter_03 indique de le laisser désactivé pour la classification ; ex_011 et ex_012 donnent des correctifs opposés concernant la conservation d’un tour partiel après interruption de flux.",
+  "activity_assessment": "Conforme quantitativement : 8 exercices racine sont fournis, tous obligatoires et tous rattachés à un chapterId existant (chapitres 01, 03, 05, 07, 09, 11, 13 et 15). Aucun exercice racine sans rattachement de chapitre n’est démontré. En revanche, certaines cartes et certains pseudo-tableaux dégradent la lisibilité et la cohérence pédagogique des activités.",
   "confirmed_findings": [
     {
-      "category": "Durée et métriques du parcours",
-      "chapter_id": "course",
-      "correction_scope": "La durée officielle est de 209 min, mais les seules durées explicites des chapitres totalisent 127 min : chapter_01 (20), chapter_03 (12), chapter_05 (20), chapter_07 (16), chapter_09 (16), chapter_11 (22), chapter_13 (8) et chapter_15 (13). Même en ajoutant les 15 à 25 min annoncées dans l’introduction, le total documenté reste entre 142 et 152 min. Les écrans chapter_10, chapter_11_1 et chapter_12 n’ont pas de durée. Renseigner et réconcilier les durées sans prétendre que 209 min est démontré par les données actuelles.",
-      "evidence": "Somme des champs durationMinutes = 127. chapter_01_1 annonce seulement « Durée estimée : 15-25 minutes ». La durée officielle demandée est 209 min.",
-      "severity": "critique"
-    },
-    {
-      "category": "Structure des écrans",
+      "category": "durée et structure",
       "chapter_id": "lesson_01",
-      "correction_scope": "Le volume de 12 écrans est respecté : 12 chapitres sont présents. En revanche, l’ordre de navigation est incohérent : chapter_15 est suivi de chapter_10, chapter_11_1 puis chapter_12. Remettre l’ordre pédagogique et la numérotation en cohérence, sans supprimer les chapitres.",
-      "evidence": "Les chapitres listés sont chapter_01_1, chapter_01, chapter_03, chapter_05, chapter_07, chapter_09, chapter_11, chapter_13, chapter_15, chapter_10, chapter_11_1 et chapter_12.",
-      "severity": "majeure"
+      "correction_scope": "Vérifier et compléter la ventilation de durée par écran et activité.",
+      "evidence": "La durée officielle du module est de 209 minutes et le cours compte bien 12 écrans. Les huit chapitres pédagogiques dotés d’une durée totalisent toutefois seulement 127 minutes (20+12+20+16+16+22+8+13), laissant 82 minutes non ventilées dans les données fournies.",
+      "severity": "élevée"
     },
     {
-      "category": "Exercices racine hors chapitre",
-      "chapter_id": "course.exercises",
-      "correction_scope": "Signaler les 8 exercices stockés dans la collection racine exercises et les rattacher structurellement aux chapitres concernés si le modèle de contenu le permet ; ne pas les supprimer. Corriger les chapterId et les titres lorsque leur contenu ne correspond pas au chapitre assigné. Éviter les doublons entre ces exercices et les blocs checkpoint déjà intégrés aux chapitres.",
-      "evidence": "Les 8 objets ex_claude_certified_developer_foundations__02_001 à _012 sont au niveau course.exercises, hors de lessons[].chapters[].blocks[]. Plusieurs ont des chapterId incompatibles avec leur prompt.",
+      "category": "français incomplet",
+      "chapter_id": "chapter_07",
+      "correction_scope": "Traduire intégralement le contenu français et supprimer les doublons anglais-français.",
+      "evidence": "Le champ fr commence par plusieurs paragraphes anglais complets, puis répète leur traduction française. Des sections entières alternent ensuite les deux langues, notamment les explications sur les événements de streaming, les règles de gestion des blocs partiels et le postmortem.",
       "severity": "critique"
     },
     {
-      "category": "Cohérence pédagogique des activités",
-      "chapter_id": "chapter_03; chapter_05; chapter_07; chapter_09; chapter_10; chapter_11; chapter_12",
-      "correction_scope": "Réconcilier les consignes, réponses attendues et emplacement des activités. En particulier, l’exercice ex_005 doit être aligné avec la règle de chapter_03 selon laquelle la classification est une tâche mécanique pour laquelle Extended Thinking reste désactivé. Les exercices ex_011 et ex_012 doivent adopter la règle de chapter_07 : ne pas sauvegarder un tour assistant partiel lorsqu’un flux n’a pas atteint message_stop.",
-      "evidence": "chapter_03 indique « Mechanical or lookup tasks: classification ... Leave it off », tandis que ex_005 corrige par « Enable it ». chapter_07 demande de jeter le tour partiel ; la correction française de ex_012 recommande au contraire de l’ajouter dans except/finally.",
+      "category": "français incomplet et localisation",
+      "chapter_id": "chapter_01",
+      "correction_scope": "Localiser les libellés génériques, descriptions de passages et comportements de sortie qui restent en anglais ; conserver sans transformation les noms produits Anthropic.",
+      "evidence": "La version française conserve de nombreux segments génériques non localisés dans le scénario et le tableau des six passes : « Returns full sentences », « Parser breaks », « Added », « Output correct », « Works on 80% », « Latency drops ». Le cours est donc partiellement français seulement.",
+      "severity": "élevée"
+    },
+    {
+      "category": "français incomplet et localisation",
+      "chapter_id": "chapter_05",
+      "correction_scope": "Réviser le français courant, localiser les termes génériques et homogénéiser le vocabulaire technique hors noms produits.",
+      "evidence": "Le texte français conserve massivement des formulations génériques anglaises ou hybrides : « schema », « name », « input_schema », « required array », « text block », « tool_use block », « tool_result block », « thinking block », « handler », « events », « boolean », « allowlisting », « denylisting ». Plusieurs phrases de dialogue restent entièrement en anglais.",
+      "severity": "élevée"
+    },
+    {
+      "category": "français incomplet et localisation",
+      "chapter_id": "chapter_09",
+      "correction_scope": "Traduire les formulations génériques et corriger les anglicismes lorsque ce ne sont pas des noms produits.",
+      "evidence": "La version française contient notamment « fetch-once », « search-across-rounds », « summarizer », « summarization », « current Opus and Sonnet », « 200k standard », « tool outputs », « fixtures », ainsi que des phrases de tableau non localisées ou hybridées. Cela ne respecte pas une localisation française complète.",
+      "severity": "élevée"
+    },
+    {
+      "category": "français incomplet et grammaticalité",
+      "chapter_id": "chapter_11",
+      "correction_scope": "Réécrire les passages fautifs en français grammatical et localiser les termes génériques.",
+      "evidence": "Exemples démontrés : « le Agent SDK », « le surface des outils », « point de contrôl’humain », « stateful », « sandbox », « planner, executor et evaluator », ainsi que de nombreux tableaux concaténés sans séparateurs. La phrase finale affirme aussi que « les contraintes ci-dessous » couvrent des cas, alors qu’aucune nouvelle liste correspondante ne suit dans ce chapitre.",
       "severity": "critique"
     },
     {
-      "category": "Localisation française incomplète",
-      "chapter_id": "chapter_01; chapter_07",
-      "correction_scope": "Traduire intégralement les phrases génériques, les libellés, les tableaux, les dialogues et les contenus pédagogiques restés en anglais. Conserver sans traduction les identifiants de code, les valeurs de paramètres, les noms de blocs et les noms produits Anthropic.",
-      "evidence": "chapter_01 commence sa version française par « System prompts, XML, few-shot, and output constraints » et conserve ensuite des sections entières telles que « Stack all four techniques ». chapter_07 commence par un paragraphe anglais complet avant sa traduction française, puis alterne anglais et français tout au long du contenu.",
-      "severity": "critique"
+      "category": "français incomplet et grammaticalité",
+      "chapter_id": "chapter_13",
+      "correction_scope": "Compléter les passages manquants, corriger la grammaire et localiser les termes génériques.",
+      "evidence": "Le début répète une construction incomplète : « portée de mémoire est la façon… » et « Au-delà de portée de mémoire ». Par rapport au texte anglais, la version française omet aussi les sections « Handles well », « Adds cost or complexity » et « Use a different approach » présentes avant la section Skills.",
+      "severity": "élevée"
     },
     {
-      "category": "Qualité linguistique française",
-      "chapter_id": "chapter_01; chapter_05; chapter_09; chapter_11; chapter_15",
-      "correction_scope": "Réviser la grammaire, l’accord, la ponctuation et les anglicismes génériques. Localiser les termes génériques dans le texte courant — par exemple schéma, contrainte de sortie, gestionnaire, exécution, charge utile, tableau de contenu, appel d’outil — tout en préservant les clés de code et les noms techniques lorsqu’ils figurent dans des extraits ou identifiants.",
-      "evidence": "Exemples démontrés : « du prose » dans chapter_01 ; « S'amarche bien » et « L'mcp_toolset » dans chapter_05 ; « Bien gère » dans chapter_09 ; « le humain dans la boucle », « Cet stockage », « La non-déterminisme », « la surface des outils » et « plansIncorrects » dans chapter_11 ; « repeint la question » dans chapter_15.",
-      "severity": "critique"
+      "category": "nom produit Anthropic transformé",
+      "chapter_id": "chapter_13",
+      "correction_scope": "Préserver strictement le nom produit Claude Code.",
+      "evidence": "Le texte français utilise « CLAUDE Code CLI » au lieu de « Claude Code ». La carte finale transforme également « Claude Agent SDK » en « SDK pour l’agent Claude », alors que le nom produit doit rester inchangé.",
+      "severity": "élevée"
     },
     {
-      "category": "Noms de produits Anthropic",
-      "chapter_id": "chapter_11; chapter_13; chapter_15",
-      "correction_scope": "Préserver strictement les noms produits Anthropic, notamment Claude, Claude Code, Skills, Projects, Code Execution et MCP. Ne pas les franciser ni les reformuler. Corriger les traductions ou reformulations qui transforment un nom de produit, tout en traduisant le texte explicatif autour de ce nom.",
-      "evidence": "Le cours emploie notamment « SDK pour l'agent Claude » au lieu de Claude Agent SDK dans les cartes de chapter_15, et alterne « skills », « Skill » et « skill » dans le texte français de chapter_11 et chapter_13.",
-      "severity": "majeure"
+      "category": "renderer Markdown — pseudo-tableau illisible",
+      "chapter_id": "chapter_01",
+      "correction_scope": "Convertir les tableaux concaténés en tableaux Markdown valides ou en listes structurées.",
+      "evidence": "Le texte anglais contient notamment « What you observedWhat the prompt is missingWhy this technique is the fix », « Stack all four techniquesStacking all four techniques… » et « PassWhat was addedOutput behavior ». Ces lignes sont des colonnes concaténées, non des tableaux Markdown lisibles.",
+      "severity": "élevée"
     },
     {
-      "category": "Lisibilité Markdown — pseudo-tableaux non balisés",
-      "chapter_id": "chapter_01; chapter_03; chapter_07; chapter_09; chapter_11; chapter_13; chapter_15",
-      "correction_scope": "Transformer les tableaux conceptuels en listes structurées ou en tableaux Markdown valides avec ligne d’en-tête et séparateur. Ne pas conserver des colonnes seulement séparées par des espaces, des tirets longs ou une concaténation de libellés, car le renderer Markdown standard les affichera comme des paragraphes illisibles.",
-      "evidence": "Exemples : « Ce que vous avez observé — Ce que le prompt manque — Pourquoi cette technique corrige » dans chapter_01 ; « Forme de la tâche Extended thinking appel Raison » dans chapter_03 ; « EventWhat it signalsWhat your handler does » dans chapter_07 ; « StrategyWhat it doesWhen to applyWhat continuity you lose » dans chapter_09 ; « Choisir un workflow lorsque…Choisir un agent lorsque… » et « #ItemQuoi vérifier » dans chapter_11 ; « Portée Ce qui persiste Coût Quand l’utiliser Ce que vous perdez » dans chapter_13 ; « Inline base64 / Référence URL / Files API » dans chapter_15.",
-      "severity": "critique"
+      "category": "renderer Markdown — pseudo-tableau illisible",
+      "chapter_id": "chapter_03",
+      "correction_scope": "Structurer le tableau de décision avec une syntaxe Markdown valide.",
+      "evidence": "La version anglaise présente « Task shapeExtended thinking callReason » et la version française « Forme de la tâche — Appel à Extended Thinking — Raison », suivis de cellules concaténées sans tableau Markdown. Des cartes reprennent aussi un intitulé déformé : « Tâche formeÉtendue réflexion motifAppel ».",
+      "severity": "élevée"
     },
     {
-      "category": "Lisibilité Markdown — titres et blocs de code",
-      "chapter_id": "chapter_01; chapter_05; chapter_07; chapter_11; chapter_15",
-      "correction_scope": "Baliser les titres comme titres Markdown et entourer les exemples de code par des clôtures de code adaptées. Séparer visuellement les métadonnées « Watch Out », les titres, les minutages et les exemples. Conserver les identifiants de code, sans les traduire.",
-      "evidence": "Des chaînes telles que « Watch OutPrompting Craft·5 min », « Watch OutStreaming Responses·5 min », « CheckpointTool-use and Schema Design·4 min » et « Attention Multimodal et Batch Ingestion · 4 min » sont concaténées. Les pseudo-codes et JSON sont présentés comme texte ordinaire dans les contenus de chapter_07, chapter_11 et chapter_15.",
-      "severity": "majeure"
+      "category": "renderer Markdown — pseudo-tableau illisible",
+      "chapter_id": "chapter_05",
+      "correction_scope": "Harmoniser tous les tableaux sous forme de tables Markdown valides et éviter les en-têtes concaténés dans les cartes.",
+      "evidence": "Même si certains tableaux français utilisent des pipes, le contenu comporte aussi des pseudo-tableaux concaténés tels que « Block typeRoleContainsCritical rule », « DecisionHow to handle itWhy it matters » et des cartes dont les faces reprennent ces chaînes illisibles.",
+      "severity": "élevée"
     },
     {
-      "category": "Intégrité des cartes pédagogiques",
-      "chapter_id": "chapter_01; chapter_03; chapter_05; chapter_09; chapter_13",
-      "correction_scope": "Restaurer les contenus tronqués et vérifier que chaque face avant et arrière forme une unité pédagogique complète. Les cartes ne doivent ni répéter des pseudo-en-têtes de tableau ni s’arrêter au milieu d’une phrase.",
-      "evidence": "Plusieurs backs sont tronqués : chapter_01 se termine par « la seule acceptable » ; chapter_03 par « omis par def » et « dépendances i » ; chapter_05 et chapter_09 contiennent aussi des fins coupées. Des fronts tels que « PassWhat was addedOutput behavior » ou « Block typeRoleContainsCritical rule » ne sont pas lisibles comme intitulés de carte.",
-      "severity": "majeure"
+      "category": "renderer Markdown — pseudo-tableau illisible",
+      "chapter_id": "chapter_07",
+      "correction_scope": "Remplacer les lignes événement-signal-action concaténées par un tableau Markdown unique et localisé.",
+      "evidence": "La section française affiche successivement « Événement — Signal — Action du gestionnaire », puis des lignes anglaises concaténées comme « message_startA new message is beginning… » avant leur traduction. Le rendu Markdown standard ne peut pas restituer une structure de tableau claire.",
+      "severity": "élevée"
     },
     {
-      "category": "Ressources vidéo sans provenance explicite",
-      "chapter_id": "chapter_11_1",
-      "correction_scope": "Signaler les 8 blocs video du chapitre Tutoriels Pratiques comme ressources sans provenance explicite et les compléter avec leurs métadonnées de provenance avant publication : identifiant ou URL, titre, auteur ou chaîne, et relation avec l’objectif pédagogique. Ne pas inférer leur source à partir des trois vidéos recommandées au niveau lesson.",
-      "evidence": "chapter_11_1 contient huit blocs de type video sans videoId, titre, chaîne, URL ni source. À l’inverse, les trois recommendedVideos de lesson_01 ont chacune videoId, title et channel explicites.",
-      "severity": "majeure"
+      "category": "renderer Markdown — pseudo-tableau illisible",
+      "chapter_id": "chapter_09",
+      "correction_scope": "Mettre en forme les comparatifs de stratégie et le postmortem avec des tableaux Markdown cohérents.",
+      "evidence": "Les sections « StrategyWhat it doesWhen to applyWhat continuity you lose », « DéveloppementProduction » et leur équivalent français sont des pseudo-tableaux concaténés. Les données de développement et de production deviennent difficiles à comparer dans un renderer Markdown standard.",
+      "severity": "élevée"
     },
     {
-      "category": "Cohérence des titres et de la progression",
-      "chapter_id": "chapter_10; chapter_11_1; chapter_12; chapter_15",
-      "correction_scope": "Harmoniser les titres français et la progression finale. Corriger notamment la capitalisation et les formulations génériques ; veiller à ce que les ressources pratiques et la conclusion arrivent dans un ordre cohérent après le contenu principal.",
-      "evidence": "« Tutoriels Pratiques » utilise une majuscule interne non cohérente ; chapter_15 contient des cartes « What comes next » et « Sources » avant chapter_10 « Points clés à retenir », chapter_11_1 « Tutoriels Pratiques » et chapter_12 « Module terminé ».",
-      "severity": "modérée"
+      "category": "renderer Markdown — pseudo-tableau illisible",
+      "chapter_id": "chapter_11",
+      "correction_scope": "Convertir les matrices de décision et la checklist en tableaux Markdown ou listes numérotées structurées.",
+      "evidence": "Le chapitre utilise notamment « Choose a workflow when…Choose an agent when… », « #ItemWhat to verify », « Insertion pointWhat triggers the checkRisk level it addresses » et « ConstraintWhat it tends to rule out in codeWhat usually survives a code review ». Ces constructions ne sont pas des tables Markdown valides.",
+      "severity": "élevée"
+    },
+    {
+      "category": "renderer Markdown — pseudo-tableau illisible",
+      "chapter_id": "chapter_13",
+      "correction_scope": "Structurer les comparatifs de mémoire et de chargement des Skills.",
+      "evidence": "Les intitulés « ScopeWhat persistsCostWhen to useWhat you lose » et « PatternWhen it loadsContext costBest for » sont concaténés, dans la version anglaise comme dans la version française. Ils compromettent la lecture des distinctions entre mémoire, CLAUDE.md et Skills.",
+      "severity": "élevée"
+    },
+    {
+      "category": "renderer Markdown — pseudo-tableau illisible",
+      "chapter_id": "chapter_15",
+      "correction_scope": "Transformer les comparatifs d’ingestion et de sélection d’API en tableaux Markdown cohérents.",
+      "evidence": "Les blocs « Inline base64 / URL reference / Files API » et « Use caseRight API patternWhy » sont présentés comme des colonnes textuelles sans syntaxe Markdown de tableau dans la version anglaise. La version française mélange ensuite lignes à séparateurs et contenu non tabulaire.",
+      "severity": "moyenne"
+    },
+    {
+      "category": "activité incohérente",
+      "chapter_id": "chapter_13",
+      "correction_scope": "Rattacher les cartes « Buggy implementation » à une activité complète ou les retirer de cette séquence pédagogique sans supprimer l’exercice racine associé.",
+      "evidence": "Deux flip cards reproduisent la même définition incomplète de get_customer_data et annoncent « four bugs, one in each of four layers », mais aucun code complet à quatre couches, aucune correction, ni exercice racine correspondant ne sont fournis dans les données. L’activité est donc pédagogiquement orpheline.",
+      "severity": "élevée"
+    },
+    {
+      "category": "cohérence de titrage",
+      "chapter_id": "chapter_10",
+      "correction_scope": "Aligner le nom du module final avec le titre de cours fourni.",
+      "evidence": "L’écran final affirme « Prompt Engineering for Developers » / « Ingénierie de prompts pour développeurs », alors que le titre source du cours est « Claude Certified Developer - Foundations / Production-Grade Prompting, Agents & Tool Use ». Cette reformulation réduit et modifie le périmètre annoncé du module.",
+      "severity": "moyenne"
     }
   ],
-  "media_assessment": "Les trois recommendedVideos de lesson_01 disposent d’une provenance explicite minimale par leur videoId, leur titre et leur chaîne : Anthropic, AI Engineer et AI Mastery. Elles ne sont donc pas signalées comme non sourcées sur la base des seules données fournies. En revanche, les huit blocs video de chapter_11_1 n’ont aucune métadonnée de provenance ou de contenu et doivent être signalés avant publication.",
+  "media_assessment": "Les 3 vidéos recommandées indiquent toutes une provenance explicite via le champ channel (« Anthropic », « AI Engineer », « AI Mastery »). Aucune ressource vidéo sans provenance explicite n’est démontrée dans les données fournies. L’écran de ressources indique également explicitement qu’aucune vidéo sans provenance n’est proposée.",
   "preserve": [
-    "Les 12 écrans existants : le volume d’écrans demandé est atteint.",
-    "La couverture thématique Developer Foundations : prompting, Extended Thinking, utilisation d’outils, streaming, ingénierie du contexte, construction d’agents, mémoire et ingestion multimodale.",
-    "Les exemples concrets de modes de défaillance, notamment les sorties mal formatées, les tool_result mal appariés, les flux interrompus et le débordement de contexte.",
-    "Les trois recommendedVideos ayant une chaîne et un videoId explicitement renseignés.",
-    "Les noms produits Anthropic déjà employés tels que Claude, Claude Code, MCP, Skills et Code Execution ; ils doivent être préservés tels quels lors de la révision linguistique.",
-    "Les exercices racine doivent être conservés dans l’analyse et corrigés ou rattachés, non supprimés."
+    "La durée officielle de 209 minutes est bien déclarée au niveau de la leçon et rappelée dans l’introduction.",
+    "Le cours contient bien 12 écrans déclarés.",
+    "Les 8 exercices racine sont tous rattachés à un chapitre existant ; aucun exercice racine hors chapitre n’est démontré et ils ne doivent pas être supprimés de l’analyse.",
+    "Les 8 exercices obligatoires couvrent les thèmes structurants du parcours Developer Foundations : contraintes de sortie, Extended Thinking, utilisation d’outils, streaming, contexte, agents, mémoire et ingestion multimodale.",
+    "Les noms produits exacts déjà correctement employés, notamment Claude, Claude Code, Skills, Code Execution et MCP, doivent être conservés sans traduction ni transformation.",
+    "Les tableaux français déjà écrits avec une syntaxe Markdown à pipes dans certaines sections de chapter_05 doivent être préservés comme modèle de rendu à généraliser.",
+    "Le signalement explicite de l’absence de vidéos sans provenance dans l’écran de ressources doit être préservé."
   ],
-  "summary": "Le cours respecte le nombre de 12 écrans, mais ne démontre pas la durée officielle de 209 min : seulement 127 min sont renseignées par métadonnées, ou 142 à 152 min en incluant l’estimation de l’introduction. Il dépasse largement les 8 activités interactives attendues et cumule 8 exercices à la racine, plusieurs mal rattachés, dupliqués ou contradictoires. La localisation française est incomplète et fréquemment non grammaticale. De nombreux pseudo-tableaux, titres concaténés et blocs de code non clôturés nuisent à la lecture dans un renderer Markdown standard. Les 8 vidéos de Tutoriels Pratiques sont sans provenance explicite. Les points à préserver sont la couverture Developer Foundations, les scénarios pédagogiques concrets, les 12 écrans et les noms produits Anthropic non transformés."
+  "summary": "Le cours respecte les volumes attendus de 12 écrans et 8 exercices rattachés, mais sa qualité de publication est bloquée par une ventilation de durée insuffisante, un français souvent incomplet ou hybride, plusieurs transformations de noms produits, des pseudo-tableaux incompatibles avec un rendu Markdown standard et une activité orpheline dans le chapitre sur la mémoire. Les vidéos ont toutes une provenance explicite."
 }
