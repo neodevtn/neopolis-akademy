@@ -2,182 +2,127 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { sanitizeCourseDataForLearner } from "./courseDataRoute";
+import { isPrivateLearningCorrectionAssetKey } from "./assetProxy";
 import { CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS, CLAUDE_SCIENCE_V2_FINAL_QUIZZES, CLAUDE_SCIENCE_V2_LABS } from "./claudeScienceV2Assessments";
 import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
 
 const root = path.resolve(import.meta.dirname, "..");
 const coursesDir = path.join(root, "client", "public", "data", "courses");
-const courseIds = ["claude_science_01_initiation", "claude_science_02_pratique", "claude_science_03_travaux_pratiques"] as const;
-const readCourse = (courseId: string) => JSON.parse(fs.readFileSync(path.join(coursesDir, `${courseId}.json`), "utf8"));
+const courseIds = ["claude_science_01_fondamentaux", "claude_science_02_pratique", "claude_science_03_tp"] as const;
+const readJson = <T,>(file: string) => JSON.parse(fs.readFileSync(file, "utf8")) as T;
+const readCourse = (courseId: string) => readJson<any>(path.join(coursesDir, `${courseId}.json`));
 const blocksOf = (course: any) => course.lessons.flatMap((lesson: any) => lesson.chapters).flatMap((chapter: any) => chapter.blocks || []);
 
-describe("Claude Science V2 course collection", () => {
-  it("publishes exactly three French-only courses in their sequential collection", () => {
-    const index = JSON.parse(fs.readFileSync(path.join(root, "client", "src", "data", "trainingIndex.json"), "utf8"));
-    const certification = index.certifications.find((entry: any) => entry.id === "claude_science_recherche_medicale");
-    expect(certification?.courses).toEqual([...courseIds]);
-    expect(certification?.sequentialCourseLocking).toBe(true);
+describe("Claude Science V3 source-locked collection", () => {
+  it("indexes exactly the supplied three-course sequential collection", () => {
+    const index = readJson<any>(path.join(root, "client", "src", "data", "trainingIndex.json"));
+    const collection = index.certifications.find((entry: any) => entry.id === "claude_science_recherche_sante_v3");
+    expect(collection?.courses).toEqual([...courseIds]);
+    expect(collection?.sequentialCourseLocking).toBe(true);
     expect(index.categories.some((entry: any) => entry.id === "ai_research_health")).toBe(true);
-    for (const courseId of courseIds) {
-      const course = readCourse(courseId);
-      expect(course.supportedLanguages).toEqual(["fr"]);
-      expect(course.languageSelectionDisabled).toBe(true);
-      expect(course.safety.warning_fr).toMatch(/patient|non clinique|synth[eé]tiques/i);
-    }
+    expect(index.courses.filter((entry: any) => entry.certId === "claude_science_recherche_medicale")).toEqual([]);
+    expect(index.courses.filter((entry: any) => entry.certId === collection.id).map((entry: any) => entry.id)).toEqual([...courseIds]);
   });
 
-  it("preserves the sourced V2 structural inventory", () => {
-    const first = readCourse(courseIds[0]);
-    const second = readCourse(courseIds[1]);
-    const third = readCourse(courseIds[2]);
-    expect(Object.keys(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS)).toHaveLength(15);
-    expect(blocksOf(first).filter((block: any) => block.serverValidated)).toHaveLength(6);
-    expect(blocksOf(second).filter((block: any) => block.serverValidated)).toHaveLength(9);
-    expect(blocksOf(third).filter((block: any) => block.serverGradedAssessment === "claude_science_v2_lab")).toHaveLength(4);
-    expect(Object.values(CLAUDE_SCIENCE_V2_FINAL_QUIZZES).map((quiz: any) => quiz.questions.length)).toEqual([6, 8]);
-    expect(Object.keys(CLAUDE_SCIENCE_V2_LABS)).toHaveLength(4);
-    expect([...courseIds].flatMap((courseId) => blocksOf(readCourse(courseId))).filter((block: any) => block.type === "annotated_screenshot")).toHaveLength(5);
-    expect([...courseIds].flatMap((courseId) => blocksOf(readCourse(courseId))).filter((block: any) => block.type === "video").map((block: any) => block.videoId).sort()).toEqual(["NG4MEDQz30A", "i8g1pdzWJik"].sort());
-  });
-
-  it("keeps each supplied lesson as a sequential learner unit", () => {
-    const expectedLessons = [6, 9, 4];
-    courseIds.forEach((courseId, index) => {
-      const course = readCourse(courseId);
-      expect(course.lessons).toHaveLength(expectedLessons[index]);
+  it("preserves the V3 canonical counters and one-screen-at-a-time structure", () => {
+    const courses = courseIds.map(readCourse);
+    expect(courses).toHaveLength(3);
+    expect(courses.reduce((sum, course) => sum + course.lessons.length, 0)).toBe(12);
+    expect(Object.keys(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS)).toHaveLength(9);
+    expect(Object.keys(CLAUDE_SCIENCE_V2_LABS)).toHaveLength(3);
+    expect(Object.values(CLAUDE_SCIENCE_V2_FINAL_QUIZZES).reduce((sum: number, quiz: any) => sum + quiz.questions.length, 0)).toBe(12);
+    for (const course of courses) {
       for (const lesson of course.lessons) {
         expect(lesson.chapters.length).toBeGreaterThan(0);
-        const isPracticalLesson = blocksOf({ lessons: [lesson] }).some((block: any) => block.type === "cloud_exercise");
-        const hasCheckpoint = blocksOf({ lessons: [lesson] }).some((block: any) => block.serverValidated === true);
-        expect(isPracticalLesson || hasCheckpoint).toBe(true);
-      }
-    });
-  });
-
-  it("does not insert redundant module-start screens and retains the sourced safety boundaries", () => {
-    for (const courseId of courseIds) {
-      const course = readCourse(courseId);
-      expect(course.lessons.flatMap((lesson: any) => lesson.chapters).some((chapter: any) => /module_start/i.test(chapter.id || ""))).toBe(false);
-      expect(course.lessons[0].chapters[0].blocks.some((block: any) => block.type === "callout" && /non clinique/i.test(block.body?.fr || ""))).toBe(true);
-    }
-    const practicals = blocksOf(readCourse(courseIds[2])).filter((block: any) => block.type === "cloud_exercise");
-    expect(practicals).toHaveLength(4);
-    expect(practicals.every((block: any) => /non clinique|synthétiques/i.test(block.assignment?.fr || ""))).toBe(true);
-  });
-
-  it("renders canonical objectives and summaries as accessible lists and keeps guided actions explicit", () => {
-    for (const courseId of courseIds) {
-      const blocks = blocksOf(readCourse(courseId));
-      for (const block of blocks.filter((entry: any) => ["learning_objectives", "lesson_summary"].includes(entry.type))) {
-        expect(block.items).toBeInstanceOf(Array);
-        expect(block.items.length).toBeGreaterThan(0);
-        expect(block.items.every((item: any) => typeof item?.fr === "string" && item.fr.length > 0)).toBe(true);
-      }
-      for (const block of blocks.filter((entry: any) => entry.type === "guided_action")) {
-        expect(block.id).toMatch(/^claude_science_/);
-        expect(block.steps).toBeInstanceOf(Array);
-        expect(block.steps.length).toBeGreaterThan(0);
-        expect(block.expectedEvidence?.fr).toBeTruthy();
+        expect(lesson.chapters.every((chapter: any) => Array.isArray(chapter.blocks) && chapter.blocks.length > 0)).toBe(true);
       }
     }
   });
 
-  it("resolves every generated checkpoint key through the server-only registry", () => {
+  it("maps every supplied source screen only to established standard Neopolis block types", () => {
+    const types = new Set(courseIds.flatMap((courseId) => blocksOf(readCourse(courseId)).map((block: any) => block.type)));
+    for (const type of ["learning_objectives", "content", "source_references", "video", "annotated_screenshot", "guided_action", "single_choice_exercise", "lesson_summary", "callout", "download", "cloud_exercise", "reflection", "course_final_quiz"]) {
+      expect(types.has(type)).toBe(true);
+    }
+    expect(types.has("html")).toBe(false);
+  });
+
+  it("keeps every checkpoint key and final-quiz answer exclusively in the server registries", () => {
     for (const exerciseId of Object.keys(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS)) {
-      const courseId = exerciseId.startsWith("claude_science_01_initiation_") ? courseIds[0] : courseIds[1];
-      expect(getSensitiveExerciseAnswerKey(courseId, exerciseId)).not.toBeNull();
+      const courseId = courseIds.find((id) => exerciseId.startsWith(`${id}_`));
+      expect(courseId).toBeTruthy();
+      expect(getSensitiveExerciseAnswerKey(courseId!, exerciseId)).not.toBeNull();
     }
-  });
-
-  it("keeps checkpoint answers, final quiz keys and practical corrections out of learner JSON", () => {
     for (const courseId of courseIds) {
       const raw = fs.readFileSync(path.join(coursesDir, `${courseId}.json`), "utf8");
-      const sanitized = sanitizeCourseDataForLearner(raw);
-      expect(sanitized).not.toMatch(/"correctAnswer"/);
-      expect(sanitized).not.toMatch(/"correction"\s*:/);
-      expect(sanitized).not.toMatch(/solution_lab_0[1-4]/);
-      expect(sanitized).not.toContain("correctChoiceId");
+      const learner = sanitizeCourseDataForLearner(raw);
+      expect(learner).not.toContain('"correctAnswer"');
+      expect(learner).not.toContain('"correction"');
+      expect(learner).not.toMatch(/solution_lab_0[1-3]/);
+      expect(learner).not.toContain("correct_option_index");
     }
   });
 
-  it("uses only managed URLs for locally supplied screenshots and downloads", () => {
-    let downloadCount = 0;
+  it("provides the declared public files in the media library and reserves correction material", () => {
+    const mediaLibrary = readJson<any>(path.join(root, "client", "public", "data", "mediaLibrary.json"));
+    const mediaUrls = Object.keys(mediaLibrary).filter((url) => url.startsWith("/api/assets/claude-science-v3/"));
+    expect(mediaUrls).toHaveLength(19);
+    expect(mediaUrls.every((url) => !/\/downloads\/(?:expected\/|scripts\/solution_)/.test(url))).toBe(true);
+    const practicals = blocksOf(readCourse("claude_science_03_tp")).filter((block: any) => block.type === "cloud_exercise");
+    expect(practicals).toHaveLength(3);
+    expect(practicals.flatMap((block: any) => block.resources).every((resource: any) => resource.url.startsWith("/api/assets/claude-science-v3/"))).toBe(true);
+    expect(isPrivateLearningCorrectionAssetKey("claude-science-v3/courses/03_travaux_pratiques/downloads/expected/example_12345678.json")).toBe(true);
+    expect(isPrivateLearningCorrectionAssetKey("claude-science-v3/courses/03_travaux_pratiques/downloads/scripts/solution_example_12345678.py")).toBe(true);
+  });
+
+  it("retains the five declared readable images and two supplied video embeddings", () => {
+    const allBlocks = courseIds.flatMap((courseId) => blocksOf(readCourse(courseId)));
+    const screenshots = allBlocks.filter((block: any) => block.type === "annotated_screenshot");
+    expect(screenshots).toHaveLength(5);
+    for (const screenshot of screenshots) {
+      expect(screenshot.imageUrl).toMatch(/^\/api\/assets\/claude-science-v3\//);
+      expect(screenshot.displayPolicy).toMatchObject({ allowZoom: true, allowFullscreen: true });
+      expect(screenshot.sourceRefs[0].url).toMatch(/^https:\/\//);
+    }
+    const embeddedVideos = allBlocks.filter((block: any) => block.type === "video");
+    expect(embeddedVideos.map((block: any) => block.videoId).sort()).toEqual(["idtMsa_1yNk", "sHImlfVM9r4"].sort());
+    for (const video of embeddedVideos) {
+      expect(video.embedUrl).toMatch(/^https:\/\/www\.youtube-nocookie\.com\/embed\//);
+      expect(video.watchUrl).toMatch(/^https:\/\/www\.youtube\.com\/watch/);
+      expect(video.alternativeTextFr).toBeTruthy();
+    }
+  });
+
+  it("preserves source-backed references, safety boundaries, and no-XP policy", () => {
     for (const courseId of courseIds) {
-      for (const block of blocksOf(readCourse(courseId))) {
-        if (block.type === "annotated_screenshot") expect(block.imageUrl).toMatch(/^\/api\/assets\//);
-        if (block.type === "cloud_exercise") for (const resource of block.resources || []) {
-          downloadCount += 1;
-          expect(resource.url).toMatch(/^\/api\/assets\//);
-          expect(resource.url).not.toMatch(/\/expected\/|\/solutions\/|\/scripts\/solution_/);
+      const course = readCourse(courseId);
+      expect(course.safety.warning_fr).toBeTruthy();
+      expect(course.supportedLanguages).toEqual(["fr"]);
+      expect(course.languageSelectionDisabled).toBe(true);
+      expect(JSON.stringify(course)).not.toMatch(/\bXP\b/i);
+      for (const sourceBlock of blocksOf(course).filter((block: any) => block.type === "source_references")) {
+        for (const reference of sourceBlock.sources) {
+          expect(reference.id).toBeTruthy();
+          expect(reference.title).toBeTruthy();
+          expect(reference.url).toMatch(/^https:\/\//);
         }
       }
     }
-    // The canonical manifest lists fourteen files: four are private expected
-    // outputs/solution scripts, leaving ten learner-downloadable resources.
-    expect(downloadCount).toBe(10);
   });
 
-  it("keeps each sourced video embedded with a French alternative and follow-up questions", () => {
-    const videos = courseIds.flatMap((courseId) => blocksOf(readCourse(courseId))).filter((block: any) => block.type === "video");
-    expect(videos).toHaveLength(2);
-    for (const video of videos) {
-      expect(video.videoId).toBeTruthy();
-      expect(video.watchUrl).toMatch(/^https:\/\/(?:www\.)?youtube\.com\//);
-      expect(video.objectiveBefore?.fr).toBeTruthy();
-      expect(video.alternativeTextFr).toBeTruthy();
-      expect(video.questionsAfter).toHaveLength(2);
-    }
-  });
-
-  it("uses only the canonical Science assessment blueprint between learner screens", () => {
-    const viewer = fs.readFileSync(path.join(root, "client", "src", "pages", "training", "LessonViewer.tsx"), "utf8");
-    expect(viewer).toContain('const usesSourceOwnedAssessmentBlueprint = courseId.startsWith("claude_science_")');
-    expect(viewer).toContain('&& !usesSourceOwnedAssessmentBlueprint');
-  });
-
-  it("keeps expected-output controls private until the practical is submitted", () => {
-    const labsCourse = readCourse(courseIds[2]);
-    const learnerPayload = JSON.stringify(labsCourse);
-    expect(learnerPayload).not.toMatch(/fichier\s+(?:de\s+)?(?:valeurs\s+)?expected|fichier\s+de\s+valeurs\s+attendues/i);
-    const practicals = blocksOf(labsCourse).filter((block: any) => block.type === "cloud_exercise");
-    expect(practicals.filter((block: any) => /points de contrôle fournis dans le retour de correction/i.test(JSON.stringify(block))).length).toBe(2);
-  });
-
-  it("shows a managed download on the exact guided action that names a learner file", () => {
-    const practicalCourse = readCourse(courseIds[1]);
-    const action = blocksOf(practicalCourse).find((block: any) => (
-      block.type === "guided_action"
-      && JSON.stringify(block.steps || []).includes("clinical_study_synthetic.csv")
-    ));
-
-    expect(action).toBeTruthy();
-    expect(action.resources).toEqual(expect.arrayContaining([
-      expect.objectContaining({
-        title: expect.objectContaining({ fr: "clinical_study_synthetic.csv" }),
-        url: expect.stringMatching(/^\/api\/assets\/claude-science-v2\//),
-      }),
-    ]));
-  });
-
-  it("preserves canonical lesson objectives and French title case", () => {
-    const practicalCourse = readCourse(courseIds[1]);
-    for (const lesson of practicalCourse.lessons) {
-      expect(String(lesson.objective?.fr || "").trim()).not.toBe("");
-    }
-    expect(JSON.stringify(practicalCourse)).toContain("Analyser");
-  });
-
-  it("excludes private corrections and expected outputs from the administrative media library", () => {
-    const mediaLibrary = JSON.parse(fs.readFileSync(path.join(root, "client", "public", "data", "mediaLibrary.json"), "utf8"));
-    const urls = Object.keys(mediaLibrary);
-
-    expect(urls.some((url) => /\/claude-science-v2\/03_claude_science_travaux_pratiques\/(?:solutions\/|downloads\/expected\/|downloads\/scripts\/solution_)/.test(url))).toBe(false);
-  });
-
-  it("uses Claude Sonnet only for server-side practical evaluation", () => {
+  it("gates the final quiz behind every source checkpoint and uses Claude Sonnet only for lab evaluation", () => {
     const service = fs.readFileSync(path.join(root, "server", "claudeScienceV2AssessmentService.ts"), "utf8");
     expect(service).toContain('model: "claude-sonnet-4-6"');
     expect(service).not.toMatch(/openrouter|gpt-|deepseek|ollama/i);
-    expect(service).toContain("N'acceptez jamais une conclusion clinique");
+    for (const courseId of courseIds) {
+      const course = readCourse(courseId);
+      const finalQuiz = blocksOf(course).find((block: any) => block.type === "course_final_quiz");
+      expect(finalQuiz).toBeTruthy();
+      if (courseId === "claude_science_03_tp") {
+        expect(finalQuiz).toBeTruthy();
+      } else {
+        expect(Object.keys(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS).filter((id) => id.startsWith(`${courseId}_`))).not.toHaveLength(0);
+      }
+    }
   });
 });

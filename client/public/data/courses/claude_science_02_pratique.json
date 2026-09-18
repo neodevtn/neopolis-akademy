@@ -1,7 +1,7 @@
 {
   "courseId": "claude_science_02_pratique",
-  "certificationId": "claude_science_recherche_medicale",
-  "collectionId": "parcours_claude_science_recherche_medicale",
+  "certificationId": "claude_science_recherche_sante_v3",
+  "collectionId": "claude_science_recherche_sante_v3",
   "language": "fr",
   "supportedLanguages": [
     "fr"
@@ -10,29 +10,29 @@
   "safety": {
     "synthetic_data_only": true,
     "non_clinical": true,
-    "warning_fr": "Formation non clinique. Ne pas utiliser de donnees de sante protegees. Les sorties ne constituent ni un diagnostic, ni un triage, ni une recommandation therapeutique."
+    "warning_fr": "Claude Science est un outil de recherche et n'est pas destine a un usage clinique ou diagnostique. Ne chargez aucune information de sante protegee dans les exercices."
   },
   "lessons": [
     {
-      "id": "claude_science_02_pratique_01_installer_01_02",
-      "moduleId": "01_installer",
+      "id": "claude_science_02_pratique_c2_m1_c2_l1",
+      "moduleId": "c2_m1",
       "title": {
-        "fr": "Installer et réussir le premier lancement",
-        "en": "Installer et reussir le premier lancement"
+        "fr": "Installer Claude Science et verifier le poste",
+        "en": "Installer Claude Science et verifier le poste"
       },
       "objective": {
-        "fr": "Installer l'application sur un poste compatible et vérifier son etat initial.",
-        "en": "Installer l'application sur un poste compatible et verifier son etat initial."
+        "fr": "Installer la version adaptee et valider un premier lancement sans donnee sensible.",
+        "en": "Installer la version adaptee et valider un premier lancement sans donnee sensible."
       },
-      "estimatedMinutes": 30,
+      "estimatedMinutes": 15,
       "recommendedVideosManaged": false,
       "recommendedVideos": [],
       "chapters": [
         {
-          "id": "claude_science_02_pratique_01_installer_01_02_screen_1",
+          "id": "claude_science_02_pratique_c2_m1_c2_l1_screen_1",
           "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
+            "fr": "Objectifs",
+            "en": "Objectifs"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -40,43 +40,39 @@
             {
               "type": "callout",
               "variant": "danger",
-              "title": {
-                "fr": "Limites non cliniques",
-                "en": "Limites non cliniques"
-              },
               "body": {
-                "fr": "Formation non clinique. Ne pas utiliser de données de santé protégées. Les sorties ne constituent ni un diagnostic, ni un triage, ni une recommandation thérapeutique.\n\nCadre Neopolis : contenu pédagogique non clinique. Utilisez uniquement les données synthétiques fournies et faites valider toute décision réelle par les personnes compétentes.",
-                "en": "Formation non clinique. Ne pas utiliser de donnees de sante protegees. Les sorties ne constituent ni un diagnostic, ni un triage, ni une recommandation therapeutique.\n\nCadre Neopolis : contenu pédagogique non clinique. Utilisez uniquement les données synthétiques fournies et faites valider toute décision réelle par les personnes compétentes."
+                "fr": "Claude Science est un outil de recherche et n'est pas destine a un usage clinique ou diagnostique. Ne chargez aucune information de sante protegee dans les exercices.",
+                "en": "Claude Science est un outil de recherche et n'est pas destine a un usage clinique ou diagnostique. Ne chargez aucune information de sante protegee dans les exercices."
               }
             },
             {
               "type": "learning_objectives",
               "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
+                "fr": "Objectifs",
+                "en": "Objectifs"
               },
               "items": [
                 {
-                  "fr": "Choisir l'installateur adapte",
-                  "en": "Choisir l'installateur adapte"
-                },
-                {
-                  "fr": "Vérifier les prerequis",
+                  "fr": "Verifier les prerequis",
                   "en": "Verifier les prerequis"
                 },
                 {
-                  "fr": "Diagnostiquer un premier lancement incomplet",
-                  "en": "Diagnostiquer un premier lancement incomplet"
+                  "fr": "Installer depuis la page officielle",
+                  "en": "Installer depuis la page officielle"
+                },
+                {
+                  "fr": "Valider Python et R sans donnee sensible",
+                  "en": "Valider Python et R sans donnee sensible"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_01_installer_01_02_screen_2",
+          "id": "claude_science_02_pratique_c2_m1_c2_l1_screen_2",
           "title": {
-            "fr": "Installation par systeme et controles de base",
-            "en": "Installation par systeme et controles de base"
+            "fr": "Prerequis et installation officielle",
+            "en": "Prerequis et installation officielle"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -84,377 +80,168 @@
             {
               "type": "content",
               "body": {
-                "fr": "La documentation officielle couvre macOS, Windows 11 et Linux x64. Le premier lancement initialise le runtime et les environnements Python et R ; il peut donc etre sensiblement plus long que les suivants. Sur Linux, le sandbox depend notamment de bubblewrap recent et de socat. Sur Windows, certaines operations de shell, git ou changement de dossier demandent une autorisation systeme ponctuelle. Sur macOS, une mauvaise architecture d'installateur se traduit typiquement par une application barree ou non prise en charge.\n\nL'application conserve ses projets, artefacts, conversations et reglages dans un repertoire local dedie. Une desinstallation standard conserve ces données, alors qu'une purge les supprime. Ce point doit etre compris avant toute intervention de support ou migration de poste. Sur Team ou Enterprise, l'administrateur doit aussi avoir active Claude Science pour l'organisation.\n\nLe controle de recette minimal comprend : ouverture de l'application, connexion au compte, achevement de l'assistant, disponibilite des environnements de depart, creation d'un projet d'essai et apparition d'une carte de permission lorsqu'un dossier est reference. Ne commencez pas un travail scientifique tant que ces controles ne sont pas documentes.",
-                "en": "La documentation officielle couvre macOS, Windows 11 et Linux x64. Le premier lancement initialise le runtime et les environnements Python et R ; il peut donc etre sensiblement plus long que les suivants. Sur Linux, le sandbox depend notamment de bubblewrap recent et de socat. Sur Windows, certaines operations de shell, git ou changement de dossier demandent une autorisation systeme ponctuelle. Sur macOS, une mauvaise architecture d'installateur se traduit typiquement par une application barree ou non prise en charge.\n\nL'application conserve ses projets, artefacts, conversations et reglages dans un repertoire local dedie. Une desinstallation standard conserve ces donnees, alors qu'une purge les supprime. Ce point doit etre compris avant toute intervention de support ou migration de poste. Sur Team ou Enterprise, l'administrateur doit aussi avoir active Claude Science pour l'organisation.\n\nLe controle de recette minimal comprend : ouverture de l'application, connexion au compte, achevement de l'assistant, disponibilite des environnements de depart, creation d'un projet d'essai et apparition d'une carte de permission lorsqu'un dossier est reference. Ne commencez pas un travail scientifique tant que ces controles ne sont pas documentes."
-              }
+                "fr": "Au 18 septembre 2026, la documentation officielle exige un compte Claude Pro, Max, Team ou Enterprise ; sur Team et Enterprise, un proprietaire doit activer Claude Science. Les plateformes annoncees sont macOS 13 ou ulterieur, Windows 11 x64 et Linux x64 sur une distribution glibc. Environ 5 Go d'espace libre sont recommandes. Linux requiert notamment socat, bubblewrap 0.8.0 ou ulterieur et les espaces de noms utilisateur non privilegies.\n\nLe chemin recommande est de telecharger l'installateur depuis la page produit. Le premier lancement configure le runtime et les environnements Python et R. Sous Linux, la documentation fournit aussi l'installateur en ligne de commande. Les commandes d'un tutoriel tiers ne doivent etre utilisees que si elles restent conformes a la documentation Anthropic courante.\n\nLe test initial se fait dans un projet d'exemple ou un projet vide, sans donnee medicale. L'objectif est de confirmer l'ouverture, l'authentification, le noyau Python, le noyau R et la creation d'un artefact texte.",
+                "en": "Au 18 septembre 2026, la documentation officielle exige un compte Claude Pro, Max, Team ou Enterprise ; sur Team et Enterprise, un proprietaire doit activer Claude Science. Les plateformes annoncees sont macOS 13 ou ulterieur, Windows 11 x64 et Linux x64 sur une distribution glibc. Environ 5 Go d'espace libre sont recommandes. Linux requiert notamment socat, bubblewrap 0.8.0 ou ulterieur et les espaces de noms utilisateur non privilegies.\n\nLe chemin recommande est de telecharger l'installateur depuis la page produit. Le premier lancement configure le runtime et les environnements Python et R. Sous Linux, la documentation fournit aussi l'installateur en ligne de commande. Les commandes d'un tutoriel tiers ne doivent etre utilisees que si elles restent conformes a la documentation Anthropic courante.\n\nLe test initial se fait dans un projet d'exemple ou un projet vide, sans donnee medicale. L'objectif est de confirmer l'ouverture, l'authentification, le noyau Python, le noyau R et la creation d'un artefact texte."
+              },
+              "sourceClaims": [
+                {
+                  "claim_id": "C2-L1-01",
+                  "statement_fr": "Claude Science prend en charge macOS 13+, Windows 11 x64 et Linux x64 glibc.",
+                  "source_ref": "anthropic_overview"
+                },
+                {
+                  "claim_id": "C2-L1-02",
+                  "statement_fr": "Le premier lancement configure des environnements Python et R.",
+                  "source_ref": "anthropic_get_started"
+                },
+                {
+                  "claim_id": "C2-L1-03",
+                  "statement_fr": "L'installation doit partir de la page produit officielle.",
+                  "source_ref": "anthropic_get_started"
+                }
+              ]
             },
             {
               "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
               "sources": [
-                {
-                  "id": "anthropic_get_started",
-                  "title": "Get started with Claude Science",
-                  "url": "https://claude.com/docs/claude-science/get-started"
-                },
                 {
                   "id": "anthropic_overview",
-                  "title": "Claude Science - Overview",
+                  "title": "Claude Science - overview",
                   "url": "https://claude.com/docs/claude-science/overview"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_01_installer_01_02_screen_3",
-          "title": {
-            "fr": "Realiser une fiche de recette d'installation",
-            "en": "Realiser une fiche de recette d'installation"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "guided_action",
-              "id": "claude_science_02_pratique_01_installer_01_02_screen_3",
-              "title": {
-                "fr": "Realiser une fiche de recette d'installation",
-                "en": "Realiser une fiche de recette d'installation"
-              },
-              "steps": [
-                {
-                  "fr": "Noter le systeme, la version, l'architecture et l'espace disque disponible.",
-                  "en": "Noter le systeme, la version, l'architecture et l'espace disque disponible."
                 },
-                {
-                  "fr": "Vérifier que Python et R terminent leur initialisation.",
-                  "en": "Verifier que Python et R terminent leur initialisation."
-                },
-                {
-                  "fr": "Creer un projet d'essai sans donnee sensible.",
-                  "en": "Creer un projet d'essai sans donnee sensible."
-                },
-                {
-                  "fr": "Consigner toute erreur et la correction appliquee sans effacer le repertoire de données.",
-                  "en": "Consigner toute erreur et la correction appliquee sans effacer le repertoire de donnees."
-                }
-              ],
-              "expectedEvidence": {
-                "fr": "Une fiche d'installation datee avec quatre controles reussis ou une anomalie reproductible.",
-                "en": "Une fiche d'installation datee avec quatre controles reussis ou une anomalie reproductible."
-              },
-              "resources": []
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_01_installer_01_02_screen_4",
-          "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
-          },
-          "type": "checkpoint",
-          "requiredBeforeAdvance": true,
-          "passThreshold": 1,
-          "blocks": [
-            {
-              "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_01_installer_01_02_checkpoint_4",
-              "question": {
-                "fr": "Sur Linux, quel controle est explicitement recommande avant de demarrer Claude Science ?",
-                "en": "Sur Linux, quel controle est explicitement recommande avant de demarrer Claude Science ?"
-              },
-              "options": [
-                {
-                  "id": "a",
-                  "text": {
-                    "fr": "Vérifier une version de bubblewrap au moins egale a 0.8.0 et la presence de socat.",
-                    "en": "Verifier une version de bubblewrap au moins egale a 0.8.0 et la presence de socat."
-                  }
-                },
-                {
-                  "id": "b",
-                  "text": {
-                    "fr": "Desactiver le sandbox pour eviter les permissions.",
-                    "en": "Desactiver le sandbox pour eviter les permissions."
-                  }
-                },
-                {
-                  "id": "c",
-                  "text": {
-                    "fr": "Installer obligatoirement CUDA avant l'application.",
-                    "en": "Installer obligatoirement CUDA avant l'application."
-                  }
-                },
-                {
-                  "id": "d",
-                  "text": {
-                    "fr": "Creer un compte API separe.",
-                    "en": "Creer un compte API separe."
-                  }
-                }
-              ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
-            }
-          ],
-          "exerciseId": "claude_science_02_pratique_01_installer_01_02_checkpoint_4"
-        },
-        {
-          "id": "claude_science_02_pratique_01_installer_01_02_screen_5",
-          "title": {
-            "fr": "À retenir",
-            "en": "A retenir"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "lesson_summary",
-              "title": {
-                "fr": "À retenir",
-                "en": "A retenir"
-              },
-              "items": [
-                {
-                  "fr": "Choisir la bonne plateforme",
-                  "en": "Choisir la bonne plateforme"
-                },
-                {
-                  "fr": "Attendre l'initialisation",
-                  "en": "Attendre l'initialisation"
-                },
-                {
-                  "fr": "Tester avec un projet neutre",
-                  "en": "Tester avec un projet neutre"
-                },
-                {
-                  "fr": "Preserver le repertoire local",
-                  "en": "Preserver le repertoire local"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "claude_science_02_pratique_02_utiliser_02_01",
-      "moduleId": "02_utiliser",
-      "title": {
-        "fr": "Lancer une première analyse reproductible",
-        "en": "Lancer une premiere analyse reproductible"
-      },
-      "objective": {
-        "fr": "Transformer une demande en plan approuve, execution controlee et artefacts.",
-        "en": "Transformer une demande en plan approuve, execution controlee et artefacts."
-      },
-      "estimatedMinutes": 35,
-      "recommendedVideosManaged": false,
-      "recommendedVideos": [],
-      "chapters": [
-        {
-          "id": "claude_science_02_pratique_02_utiliser_02_01_screen_1",
-          "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "learning_objectives",
-              "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
-              },
-              "items": [
-                {
-                  "fr": "Formuler une definition de termine",
-                  "en": "Formuler une definition de termine"
-                },
-                {
-                  "fr": "Evaluer un plan avant execution",
-                  "en": "Evaluer un plan avant execution"
-                },
-                {
-                  "fr": "Conserver les preuves",
-                  "en": "Conserver les preuves"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_02_utiliser_02_01_screen_2",
-          "title": {
-            "fr": "Du besoin scientifique a l'execution",
-            "en": "Du besoin scientifique a l'execution"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "fr": "Une première analyse ne commence pas par « analyse ce fichier », mais par une question, un perimetre et une definition de termine. Pour un CSV synthetique, precisez la population, les variables, les controles de qualite, les statistiques attendues, les graphiques, les formats de sortie et les limites d'interprétation. Une demande precise rend le plan de Claude verifiable avant le premier calcul.\n\nClaude peut proposer un plan en plusieurs etapes. L'utilisateur doit vérifier les colonnes utilisees, les transformations, la gestion des valeurs manquantes, les hypotheses statistiques et les sorties. Le plan approuve apparait ensuite dans la conversation et ses etapes sont marquees au fur et a mesure. Une approbation ne vaut pas validation des résultats : elle autorise seulement une méthode comprise.\n\nPendant l'execution, inspectez le code et les dependances avant de les autoriser. Apres l'execution, comparez les effectifs, les types, les bornes et quelques calculs simples a un controle independant. Les tableaux et figures importants doivent etre sauvegardes comme artefacts plutot que copies hors contexte.",
-                "en": "Une premiere analyse ne commence pas par « analyse ce fichier », mais par une question, un perimetre et une definition de termine. Pour un CSV synthetique, precisez la population, les variables, les controles de qualite, les statistiques attendues, les graphiques, les formats de sortie et les limites d'interpretation. Une demande precise rend le plan de Claude verifiable avant le premier calcul.\n\nClaude peut proposer un plan en plusieurs etapes. L'utilisateur doit verifier les colonnes utilisees, les transformations, la gestion des valeurs manquantes, les hypotheses statistiques et les sorties. Le plan approuve apparait ensuite dans la conversation et ses etapes sont marquees au fur et a mesure. Une approbation ne vaut pas validation des resultats : elle autorise seulement une methode comprise.\n\nPendant l'execution, inspectez le code et les dependances avant de les autoriser. Apres l'execution, comparez les effectifs, les types, les bornes et quelques calculs simples a un controle independant. Les tableaux et figures importants doivent etre sauvegardes comme artefacts plutot que copies hors contexte."
-              }
-            },
-            {
-              "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
-              "sources": [
                 {
                   "id": "anthropic_get_started",
                   "title": "Get started with Claude Science",
                   "url": "https://claude.com/docs/claude-science/get-started"
                 },
                 {
-                  "id": "anthropic_core",
-                  "title": "Claude Science core concepts",
-                  "url": "https://claude.com/docs/claude-science/core-concepts"
-                },
-                {
-                  "id": "anthropic_artifacts",
-                  "title": "Artifacts",
-                  "url": "https://claude.com/docs/claude-science/artifacts"
+                  "id": "nig_tutorial",
+                  "title": "Using Claude Science on the NIG Supercomputer",
+                  "url": "https://sc.ddbj.nig.ac.jp/en/advanced_guides/AI_agents/Claude_Science/"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_01_screen_3",
+          "id": "claude_science_02_pratique_c2_m1_c2_l1_screen_3",
           "title": {
-            "fr": "Exécuter l'analyse descriptive synthetique",
-            "en": "Executer l'analyse descriptive synthetique"
+            "fr": "Recette de premier lancement",
+            "en": "Recette de premier lancement"
           },
           "type": "teaching",
           "requiredBeforeAdvance": true,
           "blocks": [
             {
               "type": "guided_action",
-              "id": "claude_science_02_pratique_02_utiliser_02_01_screen_3",
+              "id": "claude_science_02_pratique_c2_m1_c2_l1_screen_3",
               "title": {
-                "fr": "Exécuter l'analyse descriptive synthetique",
-                "en": "Executer l'analyse descriptive synthetique"
+                "fr": "Recette de premier lancement",
+                "en": "Recette de premier lancement"
               },
               "steps": [
                 {
-                  "fr": "Telecharger clinical_study_synthetic.csv et decrire la definition de termine.",
-                  "en": "Telecharger clinical_study_synthetic.csv et decrire la definition de termine."
+                  "fr": "Verifier plan, systeme, espace disque et accord institutionnel.",
+                  "en": "Verifier plan, systeme, espace disque et accord institutionnel."
                 },
                 {
-                  "fr": "Demander un plan sans execution et corriger toute hypothese implicite.",
-                  "en": "Demander un plan sans execution et corriger toute hypothese implicite."
+                  "fr": "Telecharger depuis la page officielle et installer.",
+                  "en": "Telecharger depuis la page officielle et installer."
                 },
                 {
-                  "fr": "Autoriser l'execution apres lecture du code.",
-                  "en": "Autoriser l'execution apres lecture du code."
+                  "fr": "Se connecter sans fournir de cle API.",
+                  "en": "Se connecter sans fournir de cle API."
                 },
                 {
-                  "fr": "Comparer les effectifs et statistiques aux valeurs de reference fournies.",
-                  "en": "Comparer les effectifs et statistiques aux valeurs de reference fournies."
+                  "fr": "Creer un projet d'essai sans donnees sensibles.",
+                  "en": "Creer un projet d'essai sans donnees sensibles."
                 },
                 {
-                  "fr": "Sauvegarder le tableau, la figure et la note de limites comme artefacts.",
-                  "en": "Sauvegarder le tableau, la figure et la note de limites comme artefacts."
+                  "fr": "Demander l'affichage des versions Python et R, puis sauvegarder un artefact texte.",
+                  "en": "Demander l'affichage des versions Python et R, puis sauvegarder un artefact texte."
+                },
+                {
+                  "fr": "Consigner chaque resultat dans la fiche de recette fournie.",
+                  "en": "Consigner chaque resultat dans la fiche de recette fournie."
                 }
               ],
               "expectedEvidence": {
-                "fr": "Le plan approuve, le script execute, deux artefacts et un tableau de comparaison aux controles.",
-                "en": "Le plan approuve, le script execute, deux artefacts et un tableau de comparaison aux controles."
+                "fr": "La fiche downloads/templates/fiche_recette_installation.md completee.",
+                "en": "La fiche downloads/templates/fiche_recette_installation.md completee."
               },
               "resources": [
                 {
                   "title": {
-                    "fr": "clinical_study_synthetic.csv",
-                    "en": "clinical_study_synthetic.csv"
+                    "fr": "fiche_recette_installation.md",
+                    "en": "fiche_recette_installation.md"
                   },
                   "description": {
-                    "fr": "Donnée synthétique fournie pour cette action. Téléchargez-la avant de commencer.",
-                    "en": "Synthetic data supplied for this action. Download it before you begin."
+                    "fr": "fiche_recette_installation.md",
+                    "en": "fiche_recette_installation.md"
                   },
-                  "url": "/api/assets/claude-science-v2/03_claude_science_travaux_pratiques/downloads/data/clinical_study_synthetic_057e2ddf.csv",
-                  "sha256": "8fbb9a67d62e214749e953366244d4440828ab6b38fdb3219d8f76c2311ae90e"
+                  "filename": "fiche_recette_installation.md",
+                  "url": "/api/assets/claude-science-v3/courses/03_travaux_pratiques/downloads/templates/fiche_recette_installation_67a4af62.md",
+                  "sha256": "2f870d03d51990834bff541c8c00df308185d4bc30e53b80464626ab174fbd12",
+                  "size": 211
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_01_screen_4",
+          "id": "claude_science_02_pratique_c2_m1_c2_l1_screen_4",
           "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
+            "fr": "Checkpoint",
+            "en": "Checkpoint"
           },
           "type": "checkpoint",
           "requiredBeforeAdvance": true,
-          "passThreshold": 1,
           "blocks": [
             {
               "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_02_utiliser_02_01_checkpoint_4",
+              "id": "claude_science_02_pratique_c2_m1_c2_l1_checkpoint_4",
               "question": {
-                "fr": "Quelle étape doit preceder l'autorisation d'exécuter une analyse multi-etapes ?",
-                "en": "Quelle etape doit preceder l'autorisation d'executer une analyse multi-etapes ?"
+                "fr": "Quel est le bon premier test apres l'installation ?",
+                "en": "Quel est le bon premier test apres l'installation ?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Vérifier que le plan correspond a la question, aux données et aux controles attendus.",
-                    "en": "Verifier que le plan correspond a la question, aux donnees et aux controles attendus."
+                    "fr": "Un projet vide, les versions Python/R et un artefact simple, sans donnee sensible.",
+                    "en": "Un projet vide, les versions Python/R et un artefact simple, sans donnee sensible."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Accepter automatiquement le plan parce qu'il est genere dans le sandbox.",
-                    "en": "Accepter automatiquement le plan parce qu'il est genere dans le sandbox."
+                    "fr": "Importer directement une base patient reelle.",
+                    "en": "Importer directement une base patient reelle."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Supprimer les sorties intermediaires pour gagner de la place.",
-                    "en": "Supprimer les sorties intermediaires pour gagner de la place."
+                    "fr": "Donner un acces global en ecriture au disque.",
+                    "en": "Donner un acces global en ecriture au disque."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Remplacer les données synthetiques par des dossiers patients.",
-                    "en": "Remplacer les donnees synthetiques par des dossiers patients."
+                    "fr": "Installer un paquet inconnu avec des privileges administrateur dans le sandbox.",
+                    "en": "Installer un paquet inconnu avec des privileges administrateur dans le sandbox."
                   }
                 }
               ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
+              "serverValidated": true
             }
-          ],
-          "exerciseId": "claude_science_02_pratique_02_utiliser_02_01_checkpoint_4"
+          ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_01_screen_5",
+          "id": "claude_science_02_pratique_c2_m1_c2_l1_screen_5",
           "title": {
-            "fr": "À retenir",
+            "fr": "A retenir",
             "en": "A retenir"
           },
           "type": "teaching",
@@ -463,25 +250,21 @@
             {
               "type": "lesson_summary",
               "title": {
-                "fr": "À retenir",
+                "fr": "A retenir",
                 "en": "A retenir"
               },
               "items": [
                 {
-                  "fr": "Definition de termine explicite",
-                  "en": "Definition de termine explicite"
+                  "fr": "Installer depuis Anthropic",
+                  "en": "Installer depuis Anthropic"
                 },
                 {
-                  "fr": "Plan examine avant execution",
-                  "en": "Plan examine avant execution"
+                  "fr": "Verifier les prerequis dates",
+                  "en": "Verifier les prerequis dates"
                 },
                 {
-                  "fr": "Code inspecte",
-                  "en": "Code inspecte"
-                },
-                {
-                  "fr": "Résultats controles independamment",
-                  "en": "Resultats controles independamment"
+                  "fr": "Premier test sans donnee sensible",
+                  "en": "Premier test sans donnee sensible"
                 }
               ]
             }
@@ -490,25 +273,25 @@
       ]
     },
     {
-      "id": "claude_science_02_pratique_02_utiliser_02_02",
-      "moduleId": "02_utiliser",
+      "id": "claude_science_02_pratique_c2_m1_c2_l2",
+      "moduleId": "c2_m1",
       "title": {
-        "fr": "Lire et versionner les artefacts",
-        "en": "Lire et versionner les artefacts"
+        "fr": "Projets, sessions, dossiers et permissions",
+        "en": "Projets, sessions, dossiers et permissions"
       },
       "objective": {
-        "fr": "Evaluer un résultat a partir de son fichier, son code, son environnement et son historique.",
-        "en": "Evaluer un resultat a partir de son fichier, son code, son environnement et son historique."
+        "fr": "Accorder uniquement les acces necessaires et conserver une session lisible.",
+        "en": "Accorder uniquement les acces necessaires et conserver une session lisible."
       },
-      "estimatedMinutes": 35,
+      "estimatedMinutes": 15,
       "recommendedVideosManaged": false,
       "recommendedVideos": [],
       "chapters": [
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_02_screen_1",
+          "id": "claude_science_02_pratique_c2_m1_c2_l2_screen_1",
           "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
+            "fr": "Objectifs",
+            "en": "Objectifs"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -516,31 +299,31 @@
             {
               "type": "learning_objectives",
               "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
+                "fr": "Objectifs",
+                "en": "Objectifs"
               },
               "items": [
                 {
-                  "fr": "Identifier les composantes d'un artefact",
-                  "en": "Identifier les composantes d'un artefact"
+                  "fr": "Distinguer projet et session",
+                  "en": "Distinguer projet et session"
                 },
                 {
-                  "fr": "Comparer deux versions",
-                  "en": "Comparer deux versions"
+                  "fr": "Choisir la portee d'une permission",
+                  "en": "Choisir la portee d'une permission"
                 },
                 {
-                  "fr": "Eviter les exports orphelins",
-                  "en": "Eviter les exports orphelins"
+                  "fr": "Appliquer le moindre privilege",
+                  "en": "Appliquer le moindre privilege"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_02_screen_2",
+          "id": "claude_science_02_pratique_c2_m1_c2_l2_screen_2",
           "title": {
-            "fr": "Un résultat defendable conserve son histoire",
-            "en": "Un resultat defendable conserve son histoire"
+            "fr": "Une permission explicite pour chaque nouvelle capacite",
+            "en": "Une permission explicite pour chaque nouvelle capacite"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -548,36 +331,49 @@
             {
               "type": "content",
               "body": {
-                "fr": "Un artefact est un fichier sauvegarde dans le projet : figure, jeu transforme, rapport, notebook ou autre sortie. Sa valeur ne reside pas seulement dans l'image finale. Claude Science associe au résultat le code qui l'a produit, l'environnement d'execution et la conversation qui a conduit a cette version. Cette provenance permet de comprendre, reproduire ou contester un résultat plusieurs semaines plus tard.\n\nLorsqu'une figure evolue, la nouvelle apparence doit rester reliee au code modifie. Une consigne en langage naturel peut declencher un changement de code puis une nouvelle execution ; il faut donc comparer les versions, vérifier les axes, echelles, filtres, effectifs et transformations. Une figure plus jolie peut etre methodologiquement moins correcte.\n\nUn export utilise dans un rapport doit etre accompagne d'un identifiant de version et d'une note de validation. Evitez de renommer ou de deplacer directement les fichiers internes de l'application, car cela peut rompre les liens de provenance. Utilisez les mecanismes de l'application pour gerer les artefacts.",
-                "en": "Un artefact est un fichier sauvegarde dans le projet : figure, jeu transforme, rapport, notebook ou autre sortie. Sa valeur ne reside pas seulement dans l'image finale. Claude Science associe au resultat le code qui l'a produit, l'environnement d'execution et la conversation qui a conduit a cette version. Cette provenance permet de comprendre, reproduire ou contester un resultat plusieurs semaines plus tard.\n\nLorsqu'une figure evolue, la nouvelle apparence doit rester reliee au code modifie. Une consigne en langage naturel peut declencher un changement de code puis une nouvelle execution ; il faut donc comparer les versions, verifier les axes, echelles, filtres, effectifs et transformations. Une figure plus jolie peut etre methodologiquement moins correcte.\n\nUn export utilise dans un rapport doit etre accompagne d'un identifiant de version et d'une note de validation. Evitez de renommer ou de deplacer directement les fichiers internes de l'application, car cela peut rompre les liens de provenance. Utilisez les mecanismes de l'application pour gerer les artefacts."
-              }
+                "fr": "Un projet regroupe des sessions et leurs artefacts, avec des instructions personnalisees et des permissions de dossiers pouvant persister. Une session est un fil de travail avec son propre espace et ses noyaux. Separez exploration, analyse principale et validation afin de ne pas melanger les hypotheses et les sorties.\n\nUne carte apparait lorsqu'un nouvel acces est requis : dossier en lecture seule ou lecture-ecriture, execution de code, installation, hote reseau, outil de connecteur, credential ou job distant. La portee depend de l'action et peut aller d'une seule utilisation au projet ou au global. Les autorisations persistantes sont revocables dans Settings > Permissions.\n\nLe moindre privilege signifie un dossier precis, lecture seule quand l'ecriture n'est pas requise, une portee courte et une revue apres l'activite. Le sandbox limite disque et reseau, mais ne remplace pas la gouvernance des donnees.",
+                "en": "Un projet regroupe des sessions et leurs artefacts, avec des instructions personnalisees et des permissions de dossiers pouvant persister. Une session est un fil de travail avec son propre espace et ses noyaux. Separez exploration, analyse principale et validation afin de ne pas melanger les hypotheses et les sorties.\n\nUne carte apparait lorsqu'un nouvel acces est requis : dossier en lecture seule ou lecture-ecriture, execution de code, installation, hote reseau, outil de connecteur, credential ou job distant. La portee depend de l'action et peut aller d'une seule utilisation au projet ou au global. Les autorisations persistantes sont revocables dans Settings > Permissions.\n\nLe moindre privilege signifie un dossier precis, lecture seule quand l'ecriture n'est pas requise, une portee courte et une revue apres l'activite. Le sandbox limite disque et reseau, mais ne remplace pas la gouvernance des donnees."
+              },
+              "sourceClaims": [
+                {
+                  "claim_id": "C2-L2-01",
+                  "statement_fr": "Un projet regroupe sessions et artefacts ; une session est un fil de conversation.",
+                  "source_ref": "anthropic_core"
+                },
+                {
+                  "claim_id": "C2-L2-02",
+                  "statement_fr": "Chaque nouveau type d'acces produit une carte de permission.",
+                  "source_ref": "anthropic_core"
+                },
+                {
+                  "claim_id": "C2-L2-03",
+                  "statement_fr": "Les autorisations persistantes peuvent etre revoquees dans les reglages.",
+                  "source_ref": "anthropic_core"
+                }
+              ]
             },
             {
               "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
               "sources": [
                 {
-                  "id": "anthropic_artifacts",
-                  "title": "Artifacts",
-                  "url": "https://claude.com/docs/claude-science/artifacts"
+                  "id": "anthropic_core",
+                  "title": "Claude Science - core concepts",
+                  "url": "https://claude.com/docs/claude-science/core-concepts"
                 },
                 {
-                  "id": "anthropic_product",
-                  "title": "Claude Science (beta) - page produit officielle",
-                  "url": "https://claude.com/product/claude-science"
+                  "id": "anthropic_data",
+                  "title": "How Claude Science works with your data",
+                  "url": "https://claude.com/docs/claude-science/how-claude-science-works-with-your-data"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_02_screen_3",
+          "id": "claude_science_02_pratique_c2_m1_c2_l2_screen_3",
           "title": {
-            "fr": "Lire un artefact single-cell sans le surinterpreter",
-            "en": "Lire un artefact single-cell sans le surinterpreter"
+            "fr": "Calcul local, distant et controle des acces",
+            "en": "Calcul local, distant et controle des acces"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -585,220 +381,210 @@
             {
               "type": "annotated_screenshot",
               "title": {
-                "fr": "Lire un artefact single-cell sans le surinterpreter",
-                "en": "Lire un artefact single-cell sans le surinterpreter"
+                "fr": "Calcul local, distant et controle des acces",
+                "en": "Calcul local, distant et controle des acces"
               },
-              "imageUrl": "/api/assets/claude-science-v2/02_claude_science_installation_utilisation_optimisation/media/official/single-cell-rna-seq_e2606b89.webp",
+              "imageUrl": "/api/assets/claude-science-v3/media/official/science-pillars-compute_4347c596.webp",
               "alt": {
-                "fr": "Exemple officiel de workflow single-cell RNA-seq.",
-                "en": "Exemple officiel de workflow single-cell RNA-seq."
+                "fr": "Visuel officiel Anthropic illustrant la circulation entre workbench et environnements de calcul.",
+                "en": "Visuel officiel Anthropic illustrant la circulation entre workbench et environnements de calcul."
               },
               "caption": {
-                "fr": "Exemple officiel de workflow single-cell RNA-seq.\n\nPoints a observer :\n1. Les sorties scientifiques rendues\n2. La possibilite d'inspecter les figures\n3. Le lien nécessaire avec les etapes de calcul",
-                "en": "Exemple officiel de workflow single-cell RNA-seq.\n\nPoints a observer :\n1. Les sorties scientifiques rendues\n2. La possibilite d'inspecter les figures\n3. Le lien necessaire avec les etapes de calcul"
-              },
-              "purpose": {
-                "fr": "Apprendre a lire une sortie scientifique versionnee tout en retrouvant ses choix de calcul.",
-                "en": "Apprendre a lire une sortie scientifique versionnee tout en retrouvant ses choix de calcul."
-              },
-              "learnerAction": {
-                "fr": "Formuler trois observations strictement descriptives, puis lister les informations de méthode encore necessaires.",
-                "en": "Formuler trois observations strictement descriptives, puis lister les informations de methode encore necessaires."
-              },
-              "interpretationWarning": {
-                "fr": "Une projection claire et des marqueurs plausibles ne suffisent pas a valider une annotation cellulaire.",
-                "en": "Une projection claire et des marqueurs plausibles ne suffisent pas a valider une annotation cellulaire."
+                "fr": "Visuel officiel Anthropic illustrant la circulation entre workbench et environnements de calcul.",
+                "en": "Visuel officiel Anthropic illustrant la circulation entre workbench et environnements de calcul."
               },
               "guidedZones": [
                 {
                   "id": "A",
-                  "position": "en-tete",
                   "label": {
-                    "fr": "Nom et version",
-                    "en": "Nom et version"
+                    "fr": "Poste local",
+                    "en": "Poste local"
                   },
                   "explanation": {
-                    "fr": "Le nom de fichier et la version v3 identifient l'artefact exact.",
-                    "en": "Le nom de fichier et la version v3 identifient l'artefact exact."
+                    "fr": "Les fichiers restent sur l'infrastructure choisie, sauf les contenus lus et envoyes au modele.",
+                    "en": "Les fichiers restent sur l'infrastructure choisie, sauf les contenus lus et envoyes au modele."
                   },
                   "check": {
-                    "fr": "Citer la version precise dans le rapport.",
-                    "en": "Citer la version precise dans le rapport."
+                    "fr": "Identifier le dossier exact a autoriser.",
+                    "en": "Identifier le dossier exact a autoriser."
                   }
                 },
                 {
                   "id": "B",
-                  "position": "figure gauche",
                   "label": {
-                    "fr": "Projection UMAP",
-                    "en": "Projection UMAP"
+                    "fr": "Sandbox",
+                    "en": "Sandbox"
                   },
                   "explanation": {
-                    "fr": "La projection resume des similarites dans un espace reduit ; la proximite visuelle n'est pas une preuve de filiation ni de causalite.",
-                    "en": "La projection resume des similarites dans un espace reduit ; la proximite visuelle n'est pas une preuve de filiation ni de causalite."
+                    "fr": "Le code local est limite par les permissions et le reseau refuse par defaut.",
+                    "en": "Le code local est limite par les permissions et le reseau refuse par defaut."
                   },
                   "check": {
-                    "fr": "Vérifier preprocessing, variables, graine aleatoire et méthode de reduction.",
-                    "en": "Verifier preprocessing, variables, graine aleatoire et methode de reduction."
+                    "fr": "Examiner chaque carte d'acces.",
+                    "en": "Examiner chaque carte d'acces."
                   }
                 },
                 {
                   "id": "C",
-                  "position": "figure droite",
                   "label": {
-                    "fr": "Marqueurs de types cellulaires",
-                    "en": "Marqueurs de types cellulaires"
+                    "fr": "Calcul distant",
+                    "en": "Calcul distant"
                   },
                   "explanation": {
-                    "fr": "La taille et la couleur codent deux mesures differentes selon les legendes.",
-                    "en": "La taille et la couleur codent deux mesures differentes selon les legendes."
+                    "fr": "Un job SSH s'execute avec les droits du compte distant.",
+                    "en": "Un job SSH s'execute avec les droits du compte distant."
                   },
                   "check": {
-                    "fr": "Lire les deux legendes et vérifier la definition des marqueurs.",
-                    "en": "Lire les deux legendes et verifier la definition des marqueurs."
+                    "fr": "Valider la commande et le repertoire de travail.",
+                    "en": "Valider la commande et le repertoire de travail."
                   }
                 },
                 {
                   "id": "D",
-                  "position": "coin superieur droit",
                   "label": {
-                    "fr": "Actions de l'artefact",
-                    "en": "Actions de l'artefact"
+                    "fr": "Resultats",
+                    "en": "Resultats"
                   },
                   "explanation": {
-                    "fr": "Les actions permettent d'ouvrir ou telecharger la sortie sans perdre son identite.",
-                    "en": "Les actions permettent d'ouvrir ou telecharger la sortie sans perdre son identite."
+                    "fr": "Les sorties doivent revenir comme artefacts tracables.",
+                    "en": "Les sorties doivent revenir comme artefacts tracables."
                   },
                   "check": {
-                    "fr": "Telecharger avec le script et le manifeste, pas comme image isolee.",
-                    "en": "Telecharger avec le script et le manifeste, pas comme image isolee."
+                    "fr": "Verifier provenance et taille des fichiers.",
+                    "en": "Verifier provenance et taille des fichiers."
                   }
                 }
               ],
+              "displayPolicy": {
+                "allowZoom": true,
+                "allowFullscreen": true,
+                "max_initial_height_px": 2000
+              },
               "sourceRefs": [
                 {
                   "id": "anthropic_product",
-                  "title": "Claude Science (beta) - page produit officielle",
+                  "title": "Claude Science - page produit",
                   "url": "https://claude.com/product/claude-science"
                 }
-              ],
-              "displayPolicy": {
-                "mode": "fit_width_then_zoom",
-                "max_initial_height_px": 720,
-                "allow_fullscreen": true,
-                "allow_zoom": true,
-                "never_display_full_webpage_capture": true
-              }
+              ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_02_screen_4",
+          "id": "claude_science_02_pratique_c2_m1_c2_l2_screen_4",
           "title": {
-            "fr": "Auditer une figure avant reutilisation",
-            "en": "Auditer une figure avant reutilisation"
+            "fr": "Construire la matrice de permissions",
+            "en": "Construire la matrice de permissions"
           },
           "type": "teaching",
           "requiredBeforeAdvance": true,
           "blocks": [
             {
               "type": "guided_action",
-              "id": "claude_science_02_pratique_02_utiliser_02_02_screen_4",
+              "id": "claude_science_02_pratique_c2_m1_c2_l2_screen_4",
               "title": {
-                "fr": "Auditer une figure avant reutilisation",
-                "en": "Auditer une figure avant reutilisation"
+                "fr": "Construire la matrice de permissions",
+                "en": "Construire la matrice de permissions"
               },
               "steps": [
                 {
-                  "fr": "Ouvrir la figure et identifier son fichier source.",
-                  "en": "Ouvrir la figure et identifier son fichier source."
+                  "fr": "Lister les dossiers indispensables.",
+                  "en": "Lister les dossiers indispensables."
                 },
                 {
-                  "fr": "Consulter le code et les données qui ont produit les points affiches.",
-                  "en": "Consulter le code et les donnees qui ont produit les points affiches."
+                  "fr": "Choisir lecture seule ou lecture-ecriture pour chacun.",
+                  "en": "Choisir lecture seule ou lecture-ecriture pour chacun."
                 },
                 {
-                  "fr": "Vérifier les axes, unites, groupes, effectifs et valeurs manquantes.",
-                  "en": "Verifier les axes, unites, groupes, effectifs et valeurs manquantes."
+                  "fr": "Lister les hotes reseau et connecteurs necessaires.",
+                  "en": "Lister les hotes reseau et connecteurs necessaires."
                 },
                 {
-                  "fr": "Comparer la version retenue a la precedente.",
-                  "en": "Comparer la version retenue a la precedente."
+                  "fr": "Choisir la portee la plus courte.",
+                  "en": "Choisir la portee la plus courte."
                 },
                 {
-                  "fr": "Ajouter une note indiquant qui a valide quoi et a quelle date.",
-                  "en": "Ajouter une note indiquant qui a valide quoi et a quelle date."
+                  "fr": "Prevoir la revocation et la date de revue.",
+                  "en": "Prevoir la revocation et la date de revue."
                 }
               ],
               "expectedEvidence": {
-                "fr": "Une fiche d'audit reliant la figure a son code, son jeu de données, sa version et son validateur.",
-                "en": "Une fiche d'audit reliant la figure a son code, son jeu de donnees, sa version et son validateur."
+                "fr": "Le fichier downloads/templates/matrice_permissions.csv complete.",
+                "en": "Le fichier downloads/templates/matrice_permissions.csv complete."
               },
-              "resources": []
+              "resources": [
+                {
+                  "title": {
+                    "fr": "matrice_permissions.csv",
+                    "en": "matrice_permissions.csv"
+                  },
+                  "description": {
+                    "fr": "matrice_permissions.csv",
+                    "en": "matrice_permissions.csv"
+                  },
+                  "filename": "matrice_permissions.csv",
+                  "url": "/api/assets/claude-science-v3/courses/03_travaux_pratiques/downloads/templates/matrice_permissions_cd311bb3.csv",
+                  "sha256": "6172196ff35db37d4a9d4d363164588ef60480a7ebed6c1e8894c7d753c43451",
+                  "size": 65
+                }
+              ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_02_screen_5",
+          "id": "claude_science_02_pratique_c2_m1_c2_l2_screen_5",
           "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
+            "fr": "Checkpoint",
+            "en": "Checkpoint"
           },
           "type": "checkpoint",
           "requiredBeforeAdvance": true,
-          "passThreshold": 1,
           "blocks": [
             {
               "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_02_utiliser_02_02_checkpoint_5",
+              "id": "claude_science_02_pratique_c2_m1_c2_l2_checkpoint_5",
               "question": {
-                "fr": "Quel ensemble permet de defendre un artefact scientifique ?",
-                "en": "Quel ensemble permet de defendre un artefact scientifique ?"
+                "fr": "Quelle permission convient pour consulter un CSV de reference sans le modifier ?",
+                "en": "Quelle permission convient pour consulter un CSV de reference sans le modifier ?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Le résultat, le code execute, l'environnement et l'historique qui l'a produit.",
-                    "en": "Le resultat, le code execute, l'environnement et l'historique qui l'a produit."
+                    "fr": "Lecture seule sur le dossier precis contenant le CSV.",
+                    "en": "Lecture seule sur le dossier precis contenant le CSV."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Une capture d'ecran sans fichier source.",
-                    "en": "Une capture d'ecran sans fichier source."
+                    "fr": "Lecture-ecriture sur tout le disque.",
+                    "en": "Lecture-ecriture sur tout le disque."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Le texte final, meme si le code a ete supprime.",
-                    "en": "Le texte final, meme si le code a ete supprime."
+                    "fr": "Acces global permanent a tous les dossiers.",
+                    "en": "Acces global permanent a tous les dossiers."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Le nom du modele uniquement.",
-                    "en": "Le nom du modele uniquement."
+                    "fr": "Copie du CSV dans une conversation publique.",
+                    "en": "Copie du CSV dans une conversation publique."
                   }
                 }
               ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
+              "serverValidated": true
             }
-          ],
-          "exerciseId": "claude_science_02_pratique_02_utiliser_02_02_checkpoint_5"
+          ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_02_screen_6",
+          "id": "claude_science_02_pratique_c2_m1_c2_l2_screen_6",
           "title": {
-            "fr": "À retenir",
+            "fr": "A retenir",
             "en": "A retenir"
           },
           "type": "teaching",
@@ -807,25 +593,21 @@
             {
               "type": "lesson_summary",
               "title": {
-                "fr": "À retenir",
+                "fr": "A retenir",
                 "en": "A retenir"
               },
               "items": [
                 {
-                  "fr": "Artefact = fichier versionne",
-                  "en": "Artefact = fichier versionne"
+                  "fr": "Projet et session ont des portees differentes",
+                  "en": "Projet et session ont des portees differentes"
                 },
                 {
-                  "fr": "Provenance = code + environnement + historique",
-                  "en": "Provenance = code + environnement + historique"
+                  "fr": "Chaque capacite demande une autorisation",
+                  "en": "Chaque capacite demande une autorisation"
                 },
                 {
-                  "fr": "Toute version doit etre inspectee",
-                  "en": "Toute version doit etre inspectee"
-                },
-                {
-                  "fr": "Ne pas manipuler directement le stockage interne",
-                  "en": "Ne pas manipuler directement le stockage interne"
+                  "fr": "Revoquer apres usage",
+                  "en": "Revoquer apres usage"
                 }
               ]
             }
@@ -834,25 +616,25 @@
       ]
     },
     {
-      "id": "claude_science_02_pratique_02_utiliser_02_03",
-      "moduleId": "02_utiliser",
+      "id": "claude_science_02_pratique_c2_m2_c2_l3",
+      "moduleId": "c2_m2",
       "title": {
-        "fr": "Commenter un résultat et utiliser le reviewer",
-        "en": "Commenter un resultat et utiliser le reviewer"
+        "fr": "Concevoir puis executer une premiere analyse",
+        "en": "Concevoir puis executer une premiere analyse"
       },
       "objective": {
-        "fr": "Iterer sur une zone precise puis interpreter correctement le controle du reviewer.",
-        "en": "Iterer sur une zone precise puis interpreter correctement le controle du reviewer."
+        "fr": "Obtenir un plan verifiable avant tout calcul et controler chaque etape.",
+        "en": "Obtenir un plan verifiable avant tout calcul et controler chaque etape."
       },
-      "estimatedMinutes": 30,
+      "estimatedMinutes": 15,
       "recommendedVideosManaged": false,
       "recommendedVideos": [],
       "chapters": [
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_03_screen_1",
+          "id": "claude_science_02_pratique_c2_m2_c2_l3_screen_1",
           "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
+            "fr": "Objectifs",
+            "en": "Objectifs"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -860,31 +642,31 @@
             {
               "type": "learning_objectives",
               "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
+                "fr": "Objectifs",
+                "en": "Objectifs"
               },
               "items": [
                 {
-                  "fr": "Ecrire un commentaire actionnable",
-                  "en": "Ecrire un commentaire actionnable"
+                  "fr": "Ecrire une demande testable",
+                  "en": "Ecrire une demande testable"
                 },
                 {
-                  "fr": "Lire une alerte du reviewer",
-                  "en": "Lire une alerte du reviewer"
+                  "fr": "Faire approuver un plan",
+                  "en": "Faire approuver un plan"
                 },
                 {
-                  "fr": "Connaitre les limites de cette verification",
-                  "en": "Connaitre les limites de cette verification"
+                  "fr": "Verifier les entrees avant execution",
+                  "en": "Verifier les entrees avant execution"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_03_screen_2",
+          "id": "claude_science_02_pratique_c2_m2_c2_l3_screen_2",
           "title": {
-            "fr": "Deux controles differents : commentaire et reviewer",
-            "en": "Deux controles differents : commentaire et reviewer"
+            "fr": "Plan avant execution",
+            "en": "Plan avant execution"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -892,278 +674,139 @@
             {
               "type": "content",
               "body": {
-                "fr": "Les commentaires servent a ancrer une demande sur une partie precise d'un artefact. Au lieu d'ecrire « corrige la figure », pointez la legende, un axe, une valeur ou un paragraphe, puis formulez le changement attendu et son critere d'acceptation. Enregistrer un commentaire ne l'envoie pas encore a Claude : les commentaires en attente partent avec le message suivant. Une fois envoyes, ils apparaissent comme des cartes dans la conversation. Ils n'ont ni fil de discussion ni etat « resolu » ; pour poursuivre apres une modification, commentez la nouvelle version de l'artefact.\n\nLe reviewer constitue une étape de verification distincte. Il relit les reponses recentes, le plan approuve, les artefacts sauvegardes et la trace d'execution pour vérifier que les affirmations correspondent a ce qui a ete execute. Il peut signaler une citation non retracable, un nombre sans origine ou une figure incoherente avec son code.\n\nLa documentation officielle precise cependant que le reviewer ne relance pas les analyses et n'elimine pas les erreurs. Il ne remplace pas une reproduction indépendante, un controle statistique, une revue de code ou une validation scientifique. Une absence d'alerte signifie seulement qu'aucune incoherence n'a ete detectee selon son perimetre.",
-                "en": "Les commentaires servent a ancrer une demande sur une partie precise d'un artefact. Au lieu d'ecrire « corrige la figure », pointez la legende, un axe, une valeur ou un paragraphe, puis formulez le changement attendu et son critere d'acceptation. Enregistrer un commentaire ne l'envoie pas encore a Claude : les commentaires en attente partent avec le message suivant. Une fois envoyes, ils apparaissent comme des cartes dans la conversation. Ils n'ont ni fil de discussion ni etat « resolu » ; pour poursuivre apres une modification, commentez la nouvelle version de l'artefact.\n\nLe reviewer constitue une etape de verification distincte. Il relit les reponses recentes, le plan approuve, les artefacts sauvegardes et la trace d'execution pour verifier que les affirmations correspondent a ce qui a ete execute. Il peut signaler une citation non retracable, un nombre sans origine ou une figure incoherente avec son code.\n\nLa documentation officielle precise cependant que le reviewer ne relance pas les analyses et n'elimine pas les erreurs. Il ne remplace pas une reproduction independante, un controle statistique, une revue de code ou une validation scientifique. Une absence d'alerte signifie seulement qu'aucune incoherence n'a ete detectee selon son perimetre."
-              }
+                "fr": "Une demande scientifique utile precise la question, les fichiers autorises, les exclusions, les variables, les controles, les sorties attendues et la definition de termine. Elle demande d'abord un plan sans execution. Cette separation permet de verifier que la population, les transformations et les hypotheses correspondent au protocole.\n\nClaude peut proposer un plan pour un travail multi-etapes. L'utilisateur l'approuve ou demande des modifications ; les etapes approuvees sont ensuite marquees comme terminees. Avant d'autoriser du code, il faut examiner les fichiers vises, la commande, l'environnement et les sorties prevues.\n\nPour une premiere analyse, limitez le perimetre : inventaire du fichier, types, valeurs manquantes, doublons, statistiques descriptives et une figure. Toute conclusion causale, clinique ou confirmatoire est hors perimetre de ce test.",
+                "en": "Une demande scientifique utile precise la question, les fichiers autorises, les exclusions, les variables, les controles, les sorties attendues et la definition de termine. Elle demande d'abord un plan sans execution. Cette separation permet de verifier que la population, les transformations et les hypotheses correspondent au protocole.\n\nClaude peut proposer un plan pour un travail multi-etapes. L'utilisateur l'approuve ou demande des modifications ; les etapes approuvees sont ensuite marquees comme terminees. Avant d'autoriser du code, il faut examiner les fichiers vises, la commande, l'environnement et les sorties prevues.\n\nPour une premiere analyse, limitez le perimetre : inventaire du fichier, types, valeurs manquantes, doublons, statistiques descriptives et une figure. Toute conclusion causale, clinique ou confirmatoire est hors perimetre de ce test."
+              },
+              "sourceClaims": [
+                {
+                  "claim_id": "C2-L3-01",
+                  "statement_fr": "Claude peut proposer un plan que l'utilisateur approuve avant le travail.",
+                  "source_ref": "anthropic_core"
+                },
+                {
+                  "claim_id": "C2-L3-02",
+                  "statement_fr": "Le premier parcours inclut l'approbation des cartes d'acces au dossier et d'execution.",
+                  "source_ref": "anthropic_get_started"
+                }
+              ]
             },
             {
               "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
               "sources": [
                 {
-                  "id": "anthropic_comments",
-                  "title": "Comments",
-                  "url": "https://claude.com/docs/claude-science/comments"
+                  "id": "anthropic_core",
+                  "title": "Claude Science - core concepts",
+                  "url": "https://claude.com/docs/claude-science/core-concepts"
                 },
                 {
-                  "id": "anthropic_reviewer",
-                  "title": "The reviewer",
-                  "url": "https://claude.com/docs/claude-science/the-reviewer"
-                },
-                {
-                  "id": "anthropic_overview",
-                  "title": "Claude Science - Overview",
-                  "url": "https://claude.com/docs/claude-science/overview"
+                  "id": "anthropic_get_started",
+                  "title": "Get started with Claude Science",
+                  "url": "https://claude.com/docs/claude-science/get-started"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_03_screen_3",
+          "id": "claude_science_02_pratique_c2_m2_c2_l3_screen_3",
           "title": {
-            "fr": "Commenter, inspecter et telecharger un artefact",
-            "en": "Commenter, inspecter et telecharger un artefact"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "annotated_screenshot",
-              "title": {
-                "fr": "Commenter, inspecter et telecharger un artefact",
-                "en": "Commenter, inspecter et telecharger un artefact"
-              },
-              "imageUrl": "/api/assets/claude-science-v2/02_claude_science_installation_utilisation_optimisation/media/official/science-pillars-domain_9501418e.webp",
-              "alt": {
-                "fr": "Vue officielle des outils specialises et des connecteurs scientifiques.",
-                "en": "Vue officielle des outils specialises et des connecteurs scientifiques."
-              },
-              "caption": {
-                "fr": "Vue officielle des outils specialises et des connecteurs scientifiques.\n\nPoints a observer :\n1. Le commentaire epingle sur une zone precise\n2. Les onglets de provenance de l'artefact\n3. Le telechargement du script et l'identification des entrees",
-                "en": "Vue officielle des outils specialises et des connecteurs scientifiques.\n\nPoints a observer :\n1. Le commentaire epingle sur une zone precise\n2. Les onglets de provenance de l'artefact\n3. Le telechargement du script et l'identification des entrees"
-              },
-              "purpose": {
-                "fr": "Lire l'ecran d'inspection d'un artefact et comprendre comment une remarque ciblee devient une nouvelle version tracable.",
-                "en": "Lire l'ecran d'inspection d'un artefact et comprendre comment une remarque ciblee devient une nouvelle version tracable."
-              },
-              "learnerAction": {
-                "fr": "Rediger un commentaire cible sur la figure, puis citer les onglets a consulter pour vérifier la nouvelle version.",
-                "en": "Rediger un commentaire cible sur la figure, puis citer les onglets a consulter pour verifier la nouvelle version."
-              },
-              "interpretationWarning": {
-                "fr": "Les commentaires n'ont ni fil de discussion ni etat 'resolu'. Apres une nouvelle version, il faut commenter cette nouvelle version si une correction supplementaire est nécessaire.",
-                "en": "Les commentaires n'ont ni fil de discussion ni etat 'resolu'. Apres une nouvelle version, il faut commenter cette nouvelle version si une correction supplementaire est necessaire."
-              },
-              "guidedZones": [
-                {
-                  "id": "A",
-                  "position": "colonne gauche",
-                  "label": {
-                    "fr": "Projet et historique des sessions",
-                    "en": "Projet et historique des sessions"
-                  },
-                  "explanation": {
-                    "fr": "La liste de gauche permet de revenir au contexte de travail qui a produit l'artefact.",
-                    "en": "La liste de gauche permet de revenir au contexte de travail qui a produit l'artefact."
-                  },
-                  "check": {
-                    "fr": "Confirmer le projet et la session d'origine avant de commenter le résultat.",
-                    "en": "Confirmer le projet et la session d'origine avant de commenter le resultat."
-                  }
-                },
-                {
-                  "id": "B",
-                  "position": "zone centrale",
-                  "label": {
-                    "fr": "Artefact annote",
-                    "en": "Artefact annote"
-                  },
-                  "explanation": {
-                    "fr": "La figure est affichee avec un commentaire epingle sur une zone precise. Une remarque localisee est plus actionnable qu'une demande generale.",
-                    "en": "La figure est affichee avec un commentaire epingle sur une zone precise. Une remarque localisee est plus actionnable qu'une demande generale."
-                  },
-                  "check": {
-                    "fr": "Le commentaire doit nommer la zone, le changement demande et le critere d'acceptation.",
-                    "en": "Le commentaire doit nommer la zone, le changement demande et le critere d'acceptation."
-                  }
-                },
-                {
-                  "id": "C",
-                  "position": "en-tete de l'artefact",
-                  "label": {
-                    "fr": "Version de l'artefact",
-                    "en": "Version de l'artefact"
-                  },
-                  "explanation": {
-                    "fr": "Le numero de version permet de comparer l'etat avant et apres correction sans ecraser l'historique.",
-                    "en": "Le numero de version permet de comparer l'etat avant et apres correction sans ecraser l'historique."
-                  },
-                  "check": {
-                    "fr": "Conserver les versions importantes et noter laquelle est citee dans le rapport.",
-                    "en": "Conserver les versions importantes et noter laquelle est citee dans le rapport."
-                  }
-                },
-                {
-                  "id": "D",
-                  "position": "panneau droit, onglets",
-                  "label": {
-                    "fr": "Code, journal, messages, environnement et revue",
-                    "en": "Code, journal, messages, environnement et revue"
-                  },
-                  "explanation": {
-                    "fr": "Ces onglets donnent acces aux elements de provenance : code execute, journal, contexte, environnement et conclusions du reviewer.",
-                    "en": "Ces onglets donnent acces aux elements de provenance : code execute, journal, contexte, environnement et conclusions du reviewer."
-                  },
-                  "check": {
-                    "fr": "Relier toute affirmation importante a au moins un element inspectable dans ces onglets.",
-                    "en": "Relier toute affirmation importante a au moins un element inspectable dans ces onglets."
-                  }
-                },
-                {
-                  "id": "E",
-                  "position": "panneau droit, action et entrees",
-                  "label": {
-                    "fr": "Telechargement du script et fichiers d'entree",
-                    "en": "Telechargement du script et fichiers d'entree"
-                  },
-                  "explanation": {
-                    "fr": "Le script et les entrees identifiees permettent de sortir de l'interface avec un paquet reproductible.",
-                    "en": "Le script et les entrees identifiees permettent de sortir de l'interface avec un paquet reproductible."
-                  },
-                  "check": {
-                    "fr": "Vérifier qu'aucun secret ni chemin personnel n'est inclus avant le partage.",
-                    "en": "Verifier qu'aucun secret ni chemin personnel n'est inclus avant le partage."
-                  }
-                }
-              ],
-              "sourceRefs": [
-                {
-                  "id": "anthropic_product",
-                  "title": "Claude Science (beta) - page produit officielle",
-                  "url": "https://claude.com/product/claude-science"
-                }
-              ],
-              "displayPolicy": {
-                "mode": "fit_width_then_zoom",
-                "max_initial_height_px": 720,
-                "allow_fullscreen": true,
-                "allow_zoom": true,
-                "never_display_full_webpage_capture": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_02_utiliser_02_03_screen_4",
-          "title": {
-            "fr": "Traiter une alerte de reviewer",
-            "en": "Traiter une alerte de reviewer"
+            "fr": "Rediger le prompt de premiere analyse",
+            "en": "Rediger le prompt de premiere analyse"
           },
           "type": "teaching",
           "requiredBeforeAdvance": true,
           "blocks": [
             {
               "type": "guided_action",
-              "id": "claude_science_02_pratique_02_utiliser_02_03_screen_4",
+              "id": "claude_science_02_pratique_c2_m2_c2_l3_screen_3",
               "title": {
-                "fr": "Traiter une alerte de reviewer",
-                "en": "Traiter une alerte de reviewer"
+                "fr": "Rediger le prompt de premiere analyse",
+                "en": "Rediger le prompt de premiere analyse"
               },
               "steps": [
                 {
-                  "fr": "Identifier l'affirmation contestee et l'artefact auquel elle se rapporte.",
-                  "en": "Identifier l'affirmation contestee et l'artefact auquel elle se rapporte."
+                  "fr": "Nommer la question et le fichier synthetique.",
+                  "en": "Nommer la question et le fichier synthetique."
                 },
                 {
-                  "fr": "Retrouver le code et la sortie d'execution correspondants.",
-                  "en": "Retrouver le code et la sortie d'execution correspondants."
+                  "fr": "Demander un plan sans execution.",
+                  "en": "Demander un plan sans execution."
                 },
                 {
-                  "fr": "Recalculer independamment la valeur critique.",
-                  "en": "Recalculer independamment la valeur critique."
+                  "fr": "Exiger inventaire, valeurs manquantes, doublons et controles de plage.",
+                  "en": "Exiger inventaire, valeurs manquantes, doublons et controles de plage."
                 },
                 {
-                  "fr": "Corriger le résultat ou documenter pourquoi l'alerte est non applicable.",
-                  "en": "Corriger le resultat ou documenter pourquoi l'alerte est non applicable."
+                  "fr": "Definir le tableau et la figure attendus.",
+                  "en": "Definir le tableau et la figure attendus."
                 },
                 {
-                  "fr": "Faire valider la resolution par le responsable scientifique.",
-                  "en": "Faire valider la resolution par le responsable scientifique."
+                  "fr": "Interdire toute interpretation clinique ou causale.",
+                  "en": "Interdire toute interpretation clinique ou causale."
                 }
               ],
               "expectedEvidence": {
-                "fr": "Une fiche alerte-preuve-decision avec lien vers l'artefact corrige.",
-                "en": "Une fiche alerte-preuve-decision avec lien vers l'artefact corrige."
+                "fr": "Un prompt complet et une liste de criteres d'acceptation.",
+                "en": "Un prompt complet et une liste de criteres d'acceptation."
               },
               "resources": []
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_03_screen_5",
+          "id": "claude_science_02_pratique_c2_m2_c2_l3_screen_4",
           "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
+            "fr": "Checkpoint",
+            "en": "Checkpoint"
           },
           "type": "checkpoint",
           "requiredBeforeAdvance": true,
-          "passThreshold": 1,
           "blocks": [
             {
               "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_02_utiliser_02_03_checkpoint_5",
+              "id": "claude_science_02_pratique_c2_m2_c2_l3_checkpoint_4",
               "question": {
-                "fr": "Que signifie l'absence d'alerte du reviewer ?",
-                "en": "Que signifie l'absence d'alerte du reviewer ?"
+                "fr": "Quelle consigne cree la meilleure porte de controle ?",
+                "en": "Quelle consigne cree la meilleure porte de controle ?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Qu'aucune incoherence n'a ete detectee dans son perimetre, sans garantie d'exactitude scientifique.",
-                    "en": "Qu'aucune incoherence n'a ete detectee dans son perimetre, sans garantie d'exactitude scientifique."
+                    "fr": "Propose un plan detaille sans executer, liste les points a confirmer et attends mon accord.",
+                    "en": "Propose un plan detaille sans executer, liste les points a confirmer et attends mon accord."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Que le résultat est cliniquement valide.",
-                    "en": "Que le resultat est cliniquement valide."
+                    "fr": "Analyse tout et choisis seul la meilleure methode.",
+                    "en": "Analyse tout et choisis seul la meilleure methode."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Que l'analyse a ete reproduite independamment.",
-                    "en": "Que l'analyse a ete reproduite independamment."
+                    "fr": "Donne directement la conclusion finale.",
+                    "en": "Donne directement la conclusion finale."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Que les citations proviennent toutes d'une revue systematique.",
-                    "en": "Que les citations proviennent toutes d'une revue systematique."
+                    "fr": "Ignore les anomalies pour gagner du temps.",
+                    "en": "Ignore les anomalies pour gagner du temps."
                   }
                 }
               ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
+              "serverValidated": true
             }
-          ],
-          "exerciseId": "claude_science_02_pratique_02_utiliser_02_03_checkpoint_5"
+          ]
         },
         {
-          "id": "claude_science_02_pratique_02_utiliser_02_03_screen_6",
+          "id": "claude_science_02_pratique_c2_m2_c2_l3_screen_5",
           "title": {
-            "fr": "À retenir",
+            "fr": "A retenir",
             "en": "A retenir"
           },
           "type": "teaching",
@@ -1172,25 +815,21 @@
             {
               "type": "lesson_summary",
               "title": {
-                "fr": "À retenir",
+                "fr": "A retenir",
                 "en": "A retenir"
               },
               "items": [
                 {
-                  "fr": "Commentaires ancres et actionnables",
-                  "en": "Commentaires ancres et actionnables"
+                  "fr": "Question et perimetre explicites",
+                  "en": "Question et perimetre explicites"
                 },
                 {
-                  "fr": "Reviewer fonde sur les traces",
-                  "en": "Reviewer fonde sur les traces"
+                  "fr": "Plan avant code",
+                  "en": "Plan avant code"
                 },
                 {
-                  "fr": "Pas de reexecution automatique",
-                  "en": "Pas de reexecution automatique"
-                },
-                {
-                  "fr": "Validation externe toujours nécessaire",
-                  "en": "Validation externe toujours necessaire"
+                  "fr": "Critere d'acceptation avant resultat",
+                  "en": "Critere d'acceptation avant resultat"
                 }
               ]
             }
@@ -1199,25 +838,25 @@
       ]
     },
     {
-      "id": "claude_science_02_pratique_03_outils_03_01",
-      "moduleId": "03_outils",
+      "id": "claude_science_02_pratique_c2_m2_c2_l4",
+      "moduleId": "c2_m2",
       "title": {
-        "fr": "Choisir et documenter l'environnement d'analyse",
-        "en": "Choisir et documenter l'environnement d'analyse"
+        "fr": "Python, R, environnements et artefacts",
+        "en": "Python, R, environnements et artefacts"
       },
       "objective": {
-        "fr": "Savoir cadrer une execution Python ou R sans devenir administrateur systeme.",
-        "en": "Savoir cadrer une execution Python ou R sans devenir administrateur systeme."
+        "fr": "Conserver le code, les versions de paquets et les sorties necessaires a la reproduction.",
+        "en": "Conserver le code, les versions de paquets et les sorties necessaires a la reproduction."
       },
-      "estimatedMinutes": 35,
+      "estimatedMinutes": 15,
       "recommendedVideosManaged": false,
       "recommendedVideos": [],
       "chapters": [
         {
-          "id": "claude_science_02_pratique_03_outils_03_01_screen_1",
+          "id": "claude_science_02_pratique_c2_m2_c2_l4_screen_1",
           "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
+            "fr": "Objectifs",
+            "en": "Objectifs"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -1225,31 +864,31 @@
             {
               "type": "learning_objectives",
               "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
+                "fr": "Objectifs",
+                "en": "Objectifs"
               },
               "items": [
                 {
-                  "fr": "Choisir un environnement adapte au protocole",
-                  "en": "Choisir un environnement adapte au protocole"
+                  "fr": "Comprendre les noyaux persistants",
+                  "en": "Comprendre les noyaux persistants"
                 },
                 {
-                  "fr": "Comprendre le risque d'un noyau persistant",
-                  "en": "Comprendre le risque d'un noyau persistant"
+                  "fr": "Distinguer environnement de depart et de tache",
+                  "en": "Distinguer environnement de depart et de tache"
                 },
                 {
-                  "fr": "Demander une reexecution propre",
-                  "en": "Demander une reexecution propre"
+                  "fr": "Exporter la provenance",
+                  "en": "Exporter la provenance"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_03_outils_03_01_screen_2",
+          "id": "claude_science_02_pratique_c2_m2_c2_l4_screen_2",
           "title": {
-            "fr": "Le chercheur valide la méthode ; Claude peut préparer le code",
-            "en": "Le chercheur valide la methode ; Claude peut preparer le code"
+            "fr": "L'environnement fait partie du resultat",
+            "en": "L'environnement fait partie du resultat"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -1257,134 +896,144 @@
             {
               "type": "content",
               "body": {
-                "fr": "Claude Science peut ecrire et exécuter du Python, du R et des commandes shell. Le chercheur n'a pas besoin de devenir ingenieur logiciel pour utiliser ces fonctions, mais il doit pouvoir expliquer la question, les variables, les transformations et les controles demandes. Le langage se choisit selon le protocole valide, les pratiques de l'equipe et la possibilite de faire relire l'analyse par une personne competente.\n\nAvant une execution, demandez a Claude de presenter en langage clair les fichiers lus, les variables utilisees, les exclusions, les valeurs manquantes, les sorties attendues et les paquets indispensables. Une installation de paquet modifie l'environnement et merite une autorisation distincte. Pour une analyse a partager, conservez les versions logicielles, la graine aleatoire et les parametres importants dans une fiche jointe au résultat.\n\nLes noyaux persistants conservent parfois des variables d'une étape precedente. Pour vérifier qu'un résultat ne depend pas d'un etat cache, relancez les etapes critiques dans une session propre. Si vous ne pouvez pas relire le code, faites controler le script par un biostatisticien ou un analyste qualifie avant d'interpreter les résultats.",
-                "en": "Claude Science peut ecrire et executer du Python, du R et des commandes shell. Le chercheur n'a pas besoin de devenir ingenieur logiciel pour utiliser ces fonctions, mais il doit pouvoir expliquer la question, les variables, les transformations et les controles demandes. Le langage se choisit selon le protocole valide, les pratiques de l'equipe et la possibilite de faire relire l'analyse par une personne competente.\n\nAvant une execution, demandez a Claude de presenter en langage clair les fichiers lus, les variables utilisees, les exclusions, les valeurs manquantes, les sorties attendues et les paquets indispensables. Une installation de paquet modifie l'environnement et merite une autorisation distincte. Pour une analyse a partager, conservez les versions logicielles, la graine aleatoire et les parametres importants dans une fiche jointe au resultat.\n\nLes noyaux persistants conservent parfois des variables d'une etape precedente. Pour verifier qu'un resultat ne depend pas d'un etat cache, relancez les etapes critiques dans une session propre. Si vous ne pouvez pas relire le code, faites controler le script par un biostatisticien ou un analyste qualifie avant d'interpreter les resultats."
-              }
+                "fr": "Claude Science fournit des noyaux Python et R persistants dans une session. Le premier lancement cree des environnements de depart en lecture seule avec des bibliotheques courantes. Lorsqu'un paquet manque, Claude peut proposer un environnement de tache nomme, partage entre les projets de la machine.\n\nUne installation dans un environnement est durable ; une installation executee directement dans une cellule ne survit pas necessairement au redemarrage du noyau. Le sandbox n'offre ni acces root ni gestionnaire de paquets systeme. La reproductibilite exige donc le nom de l'environnement, la version du langage, la liste des paquets et le journal d'execution.\n\nLorsqu'un fichier devient un artefact, ses versions et sa provenance peuvent etre inspectees. Sauvegardez le script, le tableau de resultats, la figure et une note de limites comme artefacts distincts. Ne vous contentez pas d'une valeur copiee dans la conversation.",
+                "en": "Claude Science fournit des noyaux Python et R persistants dans une session. Le premier lancement cree des environnements de depart en lecture seule avec des bibliotheques courantes. Lorsqu'un paquet manque, Claude peut proposer un environnement de tache nomme, partage entre les projets de la machine.\n\nUne installation dans un environnement est durable ; une installation executee directement dans une cellule ne survit pas necessairement au redemarrage du noyau. Le sandbox n'offre ni acces root ni gestionnaire de paquets systeme. La reproductibilite exige donc le nom de l'environnement, la version du langage, la liste des paquets et le journal d'execution.\n\nLorsqu'un fichier devient un artefact, ses versions et sa provenance peuvent etre inspectees. Sauvegardez le script, le tableau de resultats, la figure et une note de limites comme artefacts distincts. Ne vous contentez pas d'une valeur copiee dans la conversation."
+              },
+              "sourceClaims": [
+                {
+                  "claim_id": "C2-L4-01",
+                  "statement_fr": "Python et R utilisent des noyaux persistants au sein de la session.",
+                  "source_ref": "anthropic_tools"
+                },
+                {
+                  "claim_id": "C2-L4-02",
+                  "statement_fr": "Les environnements de tache peuvent etre reutilises sur la machine.",
+                  "source_ref": "anthropic_tools"
+                },
+                {
+                  "claim_id": "C2-L4-03",
+                  "statement_fr": "La provenance d'un artefact enregistre environnement et journal d'execution.",
+                  "source_ref": "anthropic_artifacts"
+                }
+              ]
             },
             {
               "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
               "sources": [
                 {
                   "id": "anthropic_tools",
-                  "title": "Tools and environments",
+                  "title": "Claude Science - tools and environments",
                   "url": "https://claude.com/docs/claude-science/tools-and-environments"
                 },
                 {
-                  "id": "anthropic_core",
-                  "title": "Claude Science core concepts",
-                  "url": "https://claude.com/docs/claude-science/core-concepts"
+                  "id": "anthropic_artifacts",
+                  "title": "Claude Science - artifacts",
+                  "url": "https://claude.com/docs/claude-science/artifacts"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_03_outils_03_01_screen_3",
+          "id": "claude_science_02_pratique_c2_m2_c2_l4_screen_3",
           "title": {
-            "fr": "Préparer une fiche d'analyse reproductible",
-            "en": "Preparer une fiche d'analyse reproductible"
+            "fr": "Definir le paquet minimal reproductible",
+            "en": "Definir le paquet minimal reproductible"
           },
           "type": "teaching",
           "requiredBeforeAdvance": true,
           "blocks": [
             {
               "type": "guided_action",
-              "id": "claude_science_02_pratique_03_outils_03_01_screen_3",
+              "id": "claude_science_02_pratique_c2_m2_c2_l4_screen_3",
               "title": {
-                "fr": "Préparer une fiche d'analyse reproductible",
-                "en": "Preparer une fiche d'analyse reproductible"
+                "fr": "Definir le paquet minimal reproductible",
+                "en": "Definir le paquet minimal reproductible"
               },
               "steps": [
                 {
-                  "fr": "Décrire la question, la population, les variables et les exclusions.",
-                  "en": "Decrire la question, la population, les variables et les exclusions."
+                  "fr": "Sauvegarder le script Python ou R.",
+                  "en": "Sauvegarder le script Python ou R."
                 },
                 {
-                  "fr": "Demander a Claude la liste des fichiers, paquets et versions utilises.",
-                  "en": "Demander a Claude la liste des fichiers, paquets et versions utilises."
+                  "fr": "Sauvegarder le tableau de resultats et la figure.",
+                  "en": "Sauvegarder le tableau de resultats et la figure."
                 },
                 {
-                  "fr": "Faire vérifier les transformations statistiques par la personne competente.",
-                  "en": "Faire verifier les transformations statistiques par la personne competente."
+                  "fr": "Ouvrir la provenance et noter versions et commandes.",
+                  "en": "Ouvrir la provenance et noter versions et commandes."
                 },
                 {
-                  "fr": "Relancer un résultat critique dans une session propre et comparer les valeurs.",
-                  "en": "Relancer un resultat critique dans une session propre et comparer les valeurs."
+                  "fr": "Exporter une note de methode et de limites.",
+                  "en": "Exporter une note de methode et de limites."
+                },
+                {
+                  "fr": "Relancer sur une session propre lorsque le protocole l'exige.",
+                  "en": "Relancer sur une session propre lorsque le protocole l'exige."
                 }
               ],
               "expectedEvidence": {
-                "fr": "Une fiche méthode-environnement lisible par le chercheur et la preuve qu'un résultat cle est reproduit dans une session propre.",
-                "en": "Une fiche methode-environnement lisible par le chercheur et la preuve qu'un resultat cle est reproduit dans une session propre."
+                "fr": "Quatre artefacts relies : code, resultat, figure et note de methode.",
+                "en": "Quatre artefacts relies : code, resultat, figure et note de methode."
               },
               "resources": []
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_03_outils_03_01_screen_4",
+          "id": "claude_science_02_pratique_c2_m2_c2_l4_screen_4",
           "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
+            "fr": "Checkpoint",
+            "en": "Checkpoint"
           },
           "type": "checkpoint",
           "requiredBeforeAdvance": true,
-          "passThreshold": 1,
           "blocks": [
             {
               "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_03_outils_03_01_checkpoint_4",
+              "id": "claude_science_02_pratique_c2_m2_c2_l4_checkpoint_4",
               "question": {
-                "fr": "Pourquoi une session propre est-elle utile avant de publier ?",
-                "en": "Pourquoi une session propre est-elle utile avant de publier ?"
+                "fr": "Pourquoi la liste des versions de paquets doit-elle accompagner le resultat ?",
+                "en": "Pourquoi la liste des versions de paquets doit-elle accompagner le resultat ?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Elle revele les dependances implicites a des variables ou paquets charges auparavant.",
-                    "en": "Elle revele les dependances implicites a des variables ou paquets charges auparavant."
+                    "fr": "Parce qu'elle permet de reconstruire l'environnement ayant produit l'artefact.",
+                    "en": "Parce qu'elle permet de reconstruire l'environnement ayant produit l'artefact."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Elle rend automatiquement le résultat statistiquement significatif.",
-                    "en": "Elle rend automatiquement le resultat statistiquement significatif."
+                    "fr": "Parce qu'elle prouve a elle seule la validite scientifique.",
+                    "en": "Parce qu'elle prouve a elle seule la validite scientifique."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Elle remplace le besoin de conserver les versions de paquets.",
-                    "en": "Elle remplace le besoin de conserver les versions de paquets."
+                    "fr": "Parce qu'elle remplace le journal d'execution.",
+                    "en": "Parce qu'elle remplace le journal d'execution."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Elle autorise l'usage de données sensibles.",
-                    "en": "Elle autorise l'usage de donnees sensibles."
+                    "fr": "Parce qu'elle autorise l'usage de donnees sensibles.",
+                    "en": "Parce qu'elle autorise l'usage de donnees sensibles."
                   }
                 }
               ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
+              "serverValidated": true
             }
-          ],
-          "exerciseId": "claude_science_02_pratique_03_outils_03_01_checkpoint_4"
+          ]
         },
         {
-          "id": "claude_science_02_pratique_03_outils_03_01_screen_5",
+          "id": "claude_science_02_pratique_c2_m2_c2_l4_screen_5",
           "title": {
-            "fr": "À retenir",
+            "fr": "A retenir",
             "en": "A retenir"
           },
           "type": "teaching",
@@ -1393,25 +1042,21 @@
             {
               "type": "lesson_summary",
               "title": {
-                "fr": "À retenir",
+                "fr": "A retenir",
                 "en": "A retenir"
               },
               "items": [
                 {
-                  "fr": "Choix du langage justifie",
-                  "en": "Choix du langage justifie"
+                  "fr": "Noyau persistant ne signifie pas environnement immutable",
+                  "en": "Noyau persistant ne signifie pas environnement immutable"
                 },
                 {
-                  "fr": "Dependances versionnees",
-                  "en": "Dependances versionnees"
+                  "fr": "Sauvegarder chaque sortie utile",
+                  "en": "Sauvegarder chaque sortie utile"
                 },
                 {
-                  "fr": "Secrets exclus",
-                  "en": "Secrets exclus"
-                },
-                {
-                  "fr": "Reexecution dans un environnement propre",
-                  "en": "Reexecution dans un environnement propre"
+                  "fr": "Exporter la provenance avec le resultat",
+                  "en": "Exporter la provenance avec le resultat"
                 }
               ]
             }
@@ -1420,25 +1065,25 @@
       ]
     },
     {
-      "id": "claude_science_02_pratique_03_outils_03_02",
-      "moduleId": "03_outils",
+      "id": "claude_science_02_pratique_c2_m3_c2_l5",
+      "moduleId": "c2_m3",
       "title": {
-        "fr": "Connecter les bases, la littérature et les skills",
-        "en": "Connecter les bases, la litterature et les skills"
+        "fr": "Litterature, connecteurs, reviewer et calcul distant",
+        "en": "Litterature, connecteurs, reviewer et calcul distant"
       },
       "objective": {
-        "fr": "Acceder a des sources externes en conservant provenance, droits et perimetre.",
-        "en": "Acceder a des sources externes en conservant provenance, droits et perimetre."
+        "fr": "Utiliser les integrations sans contourner les droits ni perdre le controle des donnees.",
+        "en": "Utiliser les integrations sans contourner les droits ni perdre le controle des donnees."
       },
-      "estimatedMinutes": 40,
+      "estimatedMinutes": 15,
       "recommendedVideosManaged": false,
       "recommendedVideos": [],
       "chapters": [
         {
-          "id": "claude_science_02_pratique_03_outils_03_02_screen_1",
+          "id": "claude_science_02_pratique_c2_m3_c2_l5_screen_1",
           "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
+            "fr": "Objectifs",
+            "en": "Objectifs"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -1446,31 +1091,31 @@
             {
               "type": "learning_objectives",
               "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
+                "fr": "Objectifs",
+                "en": "Objectifs"
               },
               "items": [
                 {
-                  "fr": "Distinguer connecteur et skill",
-                  "en": "Distinguer connecteur et skill"
+                  "fr": "Verifier l'acces a la litterature",
+                  "en": "Verifier l'acces a la litterature"
                 },
                 {
-                  "fr": "Vérifier le droit d'acces au texte integral",
-                  "en": "Verifier le droit d'acces au texte integral"
+                  "fr": "Utiliser le reviewer a bon escient",
+                  "en": "Utiliser le reviewer a bon escient"
                 },
                 {
-                  "fr": "Tracer une source externe",
-                  "en": "Tracer une source externe"
+                  "fr": "Evaluer un job distant avant approbation",
+                  "en": "Evaluer un job distant avant approbation"
                 }
               ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_03_outils_03_02_screen_2",
+          "id": "claude_science_02_pratique_c2_m3_c2_l5_screen_2",
           "title": {
-            "fr": "Sources, outils et procedures reutilisables",
-            "en": "Sources, outils et procedures reutilisables"
+            "fr": "Etendre le workbench sans etendre aveuglement la confiance",
+            "en": "Etendre le workbench sans etendre aveuglement la confiance"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -1478,31 +1123,44 @@
             {
               "type": "content",
               "body": {
-                "fr": "Un connecteur donne acces a une source ou un outil externe pendant l'analyse. Un skill formalise une procedure reutilisable, avec des instructions et parfois des ressources. Les deux peuvent accélérer le travail, mais ils n'apportent pas automatiquement une garantie de qualite. Avant activation, identifiez l'editeur, les permissions, les hotes contactes, les données transmises et la facon dont les résultats seront cites.\n\nPour la littérature, Claude Science peut recuperer du texte integral en acces ouvert. Les contenus payants exigent les cles editeur ou le proxy documentaire auquel l'institution est autorisee. Une reference bibliographique n'est pas une preuve suffisante : enregistrez l'identifiant, la version, la date d'acces, le passage utilise et le statut d'acces.\n\nUne recherche exploratoire peut aider a cartographier un domaine ou préparer une strategie. Elle ne constitue pas automatiquement une revue systematique. Les criteres PICO, le protocole, les requetes completes, le double screening, la resolution des conflits et le diagramme PRISMA demandent un processus dedie.",
-                "en": "Un connecteur donne acces a une source ou un outil externe pendant l'analyse. Un skill formalise une procedure reutilisable, avec des instructions et parfois des ressources. Les deux peuvent accelerer le travail, mais ils n'apportent pas automatiquement une garantie de qualite. Avant activation, identifiez l'editeur, les permissions, les hotes contactes, les donnees transmises et la facon dont les resultats seront cites.\n\nPour la litterature, Claude Science peut recuperer du texte integral en acces ouvert. Les contenus payants exigent les cles editeur ou le proxy documentaire auquel l'institution est autorisee. Une reference bibliographique n'est pas une preuve suffisante : enregistrez l'identifiant, la version, la date d'acces, le passage utilise et le statut d'acces.\n\nUne recherche exploratoire peut aider a cartographier un domaine ou preparer une strategie. Elle ne constitue pas automatiquement une revue systematique. Les criteres PICO, le protocole, les requetes completes, le double screening, la resolution des conflits et le diagramme PRISMA demandent un processus dedie."
-              }
+                "fr": "Pour la litterature, Claude Science cherche d'abord des versions en acces ouvert, puis utilise les routes editeur ou le proxy institutionnel auxquels l'utilisateur a deja droit. Aucune cle ne contourne un paywall. Chaque reference utilisee dans un rapport doit rester retrouvable par titre, DOI, PMID ou URL et etre lue dans sa source primaire.\n\nLe reviewer peut signaler une citation qui ne soutient pas l'affirmation ou un DOI incoherent. Il ne remplace pas une double lecture, une evaluation du risque de biais ni les exigences d'une revue systematique. Le TP de ce cours est une recherche exploratoire, pas une revue PRISMA complete.\n\nUn hote SSH permet d'utiliser un poste de laboratoire ou un cluster. Un job distant s'execute hors du sandbox avec les droits du compte utilisateur. Il faut donc examiner script, commande, repertoire, ressources, donnees transferees et sorties avant l'approbation. Si cette preparation est trop complexe ou non autorisee, restez sur le calcul local du cours.",
+                "en": "Pour la litterature, Claude Science cherche d'abord des versions en acces ouvert, puis utilise les routes editeur ou le proxy institutionnel auxquels l'utilisateur a deja droit. Aucune cle ne contourne un paywall. Chaque reference utilisee dans un rapport doit rester retrouvable par titre, DOI, PMID ou URL et etre lue dans sa source primaire.\n\nLe reviewer peut signaler une citation qui ne soutient pas l'affirmation ou un DOI incoherent. Il ne remplace pas une double lecture, une evaluation du risque de biais ni les exigences d'une revue systematique. Le TP de ce cours est une recherche exploratoire, pas une revue PRISMA complete.\n\nUn hote SSH permet d'utiliser un poste de laboratoire ou un cluster. Un job distant s'execute hors du sandbox avec les droits du compte utilisateur. Il faut donc examiner script, commande, repertoire, ressources, donnees transferees et sorties avant l'approbation. Si cette preparation est trop complexe ou non autorisee, restez sur le calcul local du cours."
+              },
+              "sourceClaims": [
+                {
+                  "claim_id": "C2-L5-01",
+                  "statement_fr": "Claude Science ne contourne pas les paywalls et utilise les droits existants.",
+                  "source_ref": "anthropic_literature"
+                },
+                {
+                  "claim_id": "C2-L5-02",
+                  "statement_fr": "Le reviewer peut verifier la relation entre citation et affirmation.",
+                  "source_ref": "anthropic_reviewer"
+                },
+                {
+                  "claim_id": "C2-L5-03",
+                  "statement_fr": "Un job SSH s'execute hors sandbox avec les droits du compte distant.",
+                  "source_ref": "anthropic_remote"
+                }
+              ]
             },
             {
               "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
               "sources": [
                 {
-                  "id": "anthropic_connectors",
-                  "title": "Connectors and skills",
-                  "url": "https://claude.com/docs/claude-science/connectors-and-skills"
-                },
-                {
                   "id": "anthropic_literature",
-                  "title": "Literature access",
+                  "title": "Claude Science - literature access",
                   "url": "https://claude.com/docs/claude-science/literature-access"
                 },
                 {
-                  "id": "anthropic_product",
-                  "title": "Claude Science (beta) - page produit officielle",
-                  "url": "https://claude.com/product/claude-science"
+                  "id": "anthropic_reviewer",
+                  "title": "Claude Science - the reviewer",
+                  "url": "https://claude.com/docs/claude-science/the-reviewer"
+                },
+                {
+                  "id": "anthropic_remote",
+                  "title": "Claude Science - remote compute clusters",
+                  "url": "https://claude.com/docs/claude-science/remote-compute-clusters"
                 },
                 {
                   "id": "prisma_2020",
@@ -1514,240 +1172,10 @@
           ]
         },
         {
-          "id": "claude_science_02_pratique_03_outils_03_02_screen_3",
+          "id": "claude_science_02_pratique_c2_m3_c2_l5_screen_3",
           "title": {
-            "fr": "Tracer une recherche exploratoire",
-            "en": "Tracer une recherche exploratoire"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "guided_action",
-              "id": "claude_science_02_pratique_03_outils_03_02_screen_3",
-              "title": {
-                "fr": "Tracer une recherche exploratoire",
-                "en": "Tracer une recherche exploratoire"
-              },
-              "steps": [
-                {
-                  "fr": "Formuler une question PICO ou une question exploratoire explicite.",
-                  "en": "Formuler une question PICO ou une question exploratoire explicite."
-                },
-                {
-                  "fr": "Noter les bases, connecteurs et termes de recherche utilises.",
-                  "en": "Noter les bases, connecteurs et termes de recherche utilises."
-                },
-                {
-                  "fr": "Enregistrer DOI, PMID, version et date d'acces pour chaque source retenue.",
-                  "en": "Enregistrer DOI, PMID, version et date d'acces pour chaque source retenue."
-                },
-                {
-                  "fr": "Relier chaque affirmation a un passage verifie.",
-                  "en": "Relier chaque affirmation a un passage verifie."
-                },
-                {
-                  "fr": "Etiqueter clairement le résultat comme recherche exploratoire ou revue systematique.",
-                  "en": "Etiqueter clairement le resultat comme recherche exploratoire ou revue systematique."
-                }
-              ],
-              "expectedEvidence": {
-                "fr": "Une matrice source-affirmation comprenant identifiant, citation, passage, statut de verification et limites.",
-                "en": "Une matrice source-affirmation comprenant identifiant, citation, passage, statut de verification et limites."
-              },
-              "resources": []
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_03_outils_03_02_screen_4",
-          "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
-          },
-          "type": "checkpoint",
-          "requiredBeforeAdvance": true,
-          "passThreshold": 1,
-          "blocks": [
-            {
-              "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_03_outils_03_02_checkpoint_4",
-              "question": {
-                "fr": "Quelle pratique rend une affirmation issue de la littérature plus auditabile ?",
-                "en": "Quelle pratique rend une affirmation issue de la litterature plus auditabile ?"
-              },
-              "options": [
-                {
-                  "id": "a",
-                  "text": {
-                    "fr": "Conserver l'identifiant, le passage verifie, la date d'acces et le lien avec l'affirmation.",
-                    "en": "Conserver l'identifiant, le passage verifie, la date d'acces et le lien avec l'affirmation."
-                  }
-                },
-                {
-                  "id": "b",
-                  "text": {
-                    "fr": "Garder uniquement le titre propose par Claude.",
-                    "en": "Garder uniquement le titre propose par Claude."
-                  }
-                },
-                {
-                  "id": "c",
-                  "text": {
-                    "fr": "Supposer que toute citation du reviewer est correcte.",
-                    "en": "Supposer que toute citation du reviewer est correcte."
-                  }
-                },
-                {
-                  "id": "d",
-                  "text": {
-                    "fr": "Melanger recherche exploratoire et revue systematique.",
-                    "en": "Melanger recherche exploratoire et revue systematique."
-                  }
-                }
-              ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
-            }
-          ],
-          "exerciseId": "claude_science_02_pratique_03_outils_03_02_checkpoint_4"
-        },
-        {
-          "id": "claude_science_02_pratique_03_outils_03_02_screen_5",
-          "title": {
-            "fr": "À retenir",
-            "en": "A retenir"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "lesson_summary",
-              "title": {
-                "fr": "À retenir",
-                "en": "A retenir"
-              },
-              "items": [
-                {
-                  "fr": "Connecteur = acces",
-                  "en": "Connecteur = acces"
-                },
-                {
-                  "fr": "Skill = procedure",
-                  "en": "Skill = procedure"
-                },
-                {
-                  "fr": "Droits documentaires respectes",
-                  "en": "Droits documentaires respectes"
-                },
-                {
-                  "fr": "Recherche exploratoire clairement nommee",
-                  "en": "Recherche exploratoire clairement nommee"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "claude_science_02_pratique_04_qualite_04_02",
-      "moduleId": "04_qualite",
-      "title": {
-        "fr": "Analyser sans surinterpreter",
-        "en": "Analyser sans surinterpreter"
-      },
-      "objective": {
-        "fr": "Conduire une exploration descriptive et separer résultat, hypothese et conclusion clinique.",
-        "en": "Conduire une exploration descriptive et separer resultat, hypothese et conclusion clinique."
-      },
-      "estimatedMinutes": 45,
-      "recommendedVideosManaged": false,
-      "recommendedVideos": [],
-      "chapters": [
-        {
-          "id": "claude_science_02_pratique_04_qualite_04_02_screen_1",
-          "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "learning_objectives",
-              "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
-              },
-              "items": [
-                {
-                  "fr": "Pre-specifier l'analyse",
-                  "en": "Pre-specifier l'analyse"
-                },
-                {
-                  "fr": "Controler les sorties",
-                  "en": "Controler les sorties"
-                },
-                {
-                  "fr": "Rediger des limites proportionnees",
-                  "en": "Rediger des limites proportionnees"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_04_02_screen_2",
-          "title": {
-            "fr": "Une belle figure n'est pas une conclusion medicale",
-            "en": "Une belle figure n'est pas une conclusion medicale"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "fr": "Les exemples de Claude Science couvrent genomique, single-cell, proteines, evolution et cheminformatique. Dans tous ces domaines, le workbench peut accélérer la preparation du code et la production d'artefacts. Il ne transforme pas une exploration en preuve causale. L'analyse doit commencer par un objectif et un plan : population, variables, exclusions, transformations, comparaisons, seuils et sorties.\n\nDans une analyse descriptive, rapportez effectifs, données manquantes, distributions et incertitudes avant de commenter les differences. Un fold-change ou une correlation n'est ni un mecanisme biologique, ni un diagnostic. Les analyses multiples, le biais de selection, la qualite des mesures et la taille d'echantillon doivent etre discutes.\n\nLe reviewer peut reperer une incoherence entre texte, code et figure, mais il ne valide pas le design de l'etude. La conclusion finale doit distinguer observation, interprétation plausible, test nécessaire et decision reservee aux experts. Pour une revue systematique ou une synthese reglementee, utilisez un processus specialise plutot qu'un simple workflow exploratoire.",
-                "en": "Les exemples de Claude Science couvrent genomique, single-cell, proteines, evolution et cheminformatique. Dans tous ces domaines, le workbench peut accelerer la preparation du code et la production d'artefacts. Il ne transforme pas une exploration en preuve causale. L'analyse doit commencer par un objectif et un plan : population, variables, exclusions, transformations, comparaisons, seuils et sorties.\n\nDans une analyse descriptive, rapportez effectifs, donnees manquantes, distributions et incertitudes avant de commenter les differences. Un fold-change ou une correlation n'est ni un mecanisme biologique, ni un diagnostic. Les analyses multiples, le biais de selection, la qualite des mesures et la taille d'echantillon doivent etre discutes.\n\nLe reviewer peut reperer une incoherence entre texte, code et figure, mais il ne valide pas le design de l'etude. La conclusion finale doit distinguer observation, interpretation plausible, test necessaire et decision reservee aux experts. Pour une revue systematique ou une synthese reglementee, utilisez un processus specialise plutot qu'un simple workflow exploratoire."
-              }
-            },
-            {
-              "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
-              "sources": [
-                {
-                  "id": "anthropic_product",
-                  "title": "Claude Science (beta) - page produit officielle",
-                  "url": "https://claude.com/product/claude-science"
-                },
-                {
-                  "id": "paperguide",
-                  "title": "How to Use Claude Science for Scientific Research in 2026",
-                  "url": "https://paperguide.ai/blog/how-to-use-claude-science/"
-                },
-                {
-                  "id": "anthropic_reviewer",
-                  "title": "The reviewer",
-                  "url": "https://claude.com/docs/claude-science/the-reviewer"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_04_02_screen_3",
-          "title": {
-            "fr": "Distinguer visualisation, annotation et preuve biologique",
-            "en": "Distinguer visualisation, annotation et preuve biologique"
+            "fr": "Outils specialises et connecteurs",
+            "en": "Outils specialises et connecteurs"
           },
           "type": "teaching",
           "requiredBeforeAdvance": false,
@@ -1755,569 +1183,149 @@
             {
               "type": "annotated_screenshot",
               "title": {
-                "fr": "Distinguer visualisation, annotation et preuve biologique",
-                "en": "Distinguer visualisation, annotation et preuve biologique"
+                "fr": "Outils specialises et connecteurs",
+                "en": "Outils specialises et connecteurs"
               },
-              "imageUrl": "/api/assets/claude-science-v2/02_claude_science_installation_utilisation_optimisation/media/official/protein-structure_45d1c52f.webp",
+              "imageUrl": "/api/assets/claude-science-v3/media/official/science-pillars-domain_d658189d.webp",
               "alt": {
-                "fr": "Exemple officiel de visualisation de structure proteique.",
-                "en": "Exemple officiel de visualisation de structure proteique."
+                "fr": "Visuel officiel Anthropic illustrant les outils et sources scientifiques relies au workbench.",
+                "en": "Visuel officiel Anthropic illustrant les outils et sources scientifiques relies au workbench."
               },
               "caption": {
-                "fr": "Exemple officiel de visualisation de structure proteique.\n\nPoints a observer :\n1. La richesse du rendu scientifique\n2. La difference entre visualiser et valider\n3. La necessite de relier toute annotation aux données sources",
-                "en": "Exemple officiel de visualisation de structure proteique.\n\nPoints a observer :\n1. La richesse du rendu scientifique\n2. La difference entre visualiser et valider\n3. La necessite de relier toute annotation aux donnees sources"
-              },
-              "purpose": {
-                "fr": "Lire un tableau de structure proteique en separant les données sources, les scores du modele et les interpretations.",
-                "en": "Lire un tableau de structure proteique en separant les donnees sources, les scores du modele et les interpretations."
-              },
-              "learnerAction": {
-                "fr": "Choisir un indicateur et retrouver sa source, sa signification, son unite et sa limite d'interprétation.",
-                "en": "Choisir un indicateur et retrouver sa source, sa signification, son unite et sa limite d'interpretation."
-              },
-              "interpretationWarning": {
-                "fr": "Cette synthese est un support d'exploration et non une interprétation clinique de variant.",
-                "en": "Cette synthese est un support d'exploration et non une interpretation clinique de variant."
+                "fr": "Visuel officiel Anthropic illustrant les outils et sources scientifiques relies au workbench.",
+                "en": "Visuel officiel Anthropic illustrant les outils et sources scientifiques relies au workbench."
               },
               "guidedZones": [
                 {
                   "id": "A",
-                  "position": "bandeau superieur",
                   "label": {
-                    "fr": "Identite et indicateurs",
-                    "en": "Identite et indicateurs"
+                    "fr": "Source",
+                    "en": "Source"
                   },
                   "explanation": {
-                    "fr": "Le gene, la proteine, la longueur, le score moyen, le domaine et le nombre de variants cadrent l'objet analyse.",
-                    "en": "Le gene, la proteine, la longueur, le score moyen, le domaine et le nombre de variants cadrent l'objet analyse."
+                    "fr": "Identifier le fournisseur, les droits et la version.",
+                    "en": "Identifier le fournisseur, les droits et la version."
                   },
                   "check": {
-                    "fr": "Vérifier chaque valeur dans sa base source et sa version.",
-                    "en": "Verifier chaque valeur dans sa base source et sa version."
+                    "fr": "Conserver l'identifiant primaire.",
+                    "en": "Conserver l'identifiant primaire."
                   }
                 },
                 {
                   "id": "B",
-                  "position": "grand panneau gauche",
                   "label": {
-                    "fr": "Structure et confiance locale",
-                    "en": "Structure et confiance locale"
+                    "fr": "Connecteur",
+                    "en": "Connecteur"
                   },
                   "explanation": {
-                    "fr": "La couleur de la structure encode la confiance par residu, pas l'importance clinique.",
-                    "en": "La couleur de la structure encode la confiance par residu, pas l'importance clinique."
+                    "fr": "Limiter les outils a ceux necessaires au projet.",
+                    "en": "Limiter les outils a ceux necessaires au projet."
                   },
                   "check": {
-                    "fr": "Lire la legende pLDDT avant de commenter une region.",
-                    "en": "Lire la legende pLDDT avant de commenter une region."
+                    "fr": "Verifier la portee de l'autorisation.",
+                    "en": "Verifier la portee de l'autorisation."
                   }
                 },
                 {
                   "id": "C",
-                  "position": "panneaux droits",
                   "label": {
-                    "fr": "Confiance, domaine et variants",
-                    "en": "Confiance, domaine et variants"
+                    "fr": "Execution",
+                    "en": "Execution"
                   },
                   "explanation": {
-                    "fr": "Les syntheses combinent plusieurs sources qui doivent etre citees separement.",
-                    "en": "Les syntheses combinent plusieurs sources qui doivent etre citees separement."
+                    "fr": "Distinguer recherche, telechargement et calcul.",
+                    "en": "Distinguer recherche, telechargement et calcul."
                   },
                   "check": {
-                    "fr": "Distinguer prediction structurale, domaine annote et classification de variant.",
-                    "en": "Distinguer prediction structurale, domaine annote et classification de variant."
+                    "fr": "Conserver les requetes et commandes.",
+                    "en": "Conserver les requetes et commandes."
                   }
                 },
                 {
                   "id": "D",
-                  "position": "bandeau inferieur",
                   "label": {
-                    "fr": "Architecture et positions",
-                    "en": "Architecture et positions"
+                    "fr": "Artefact",
+                    "en": "Artefact"
                   },
                   "explanation": {
-                    "fr": "La vue lineaire relie domaines et positions de variants a la sequence.",
-                    "en": "La vue lineaire relie domaines et positions de variants a la sequence."
+                    "fr": "Relier chaque affirmation a une source ou un calcul.",
+                    "en": "Relier chaque affirmation a une source ou un calcul."
                   },
                   "check": {
-                    "fr": "Ne pas deduire une pathogenicite nouvelle de la seule proximite graphique.",
-                    "en": "Ne pas deduire une pathogenicite nouvelle de la seule proximite graphique."
+                    "fr": "Completer la matrice source-affirmation.",
+                    "en": "Completer la matrice source-affirmation."
                   }
-                }
-              ],
-              "sourceRefs": [
-                {
-                  "id": "anthropic_product",
-                  "title": "Claude Science (beta) - page produit officielle",
-                  "url": "https://claude.com/product/claude-science"
                 }
               ],
               "displayPolicy": {
-                "mode": "fit_width_then_zoom",
-                "max_initial_height_px": 720,
-                "allow_fullscreen": true,
-                "allow_zoom": true,
-                "never_display_full_webpage_capture": true
-              }
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_04_02_screen_4",
-          "title": {
-            "fr": "Reviser un paragraphe de résultats",
-            "en": "Reviser un paragraphe de resultats"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "guided_action",
-              "id": "claude_science_02_pratique_04_qualite_04_02_screen_4",
-              "title": {
-                "fr": "Reviser un paragraphe de résultats",
-                "en": "Reviser un paragraphe de resultats"
+                "allowZoom": true,
+                "allowFullscreen": true,
+                "max_initial_height_px": 2000
               },
-              "steps": [
-                {
-                  "fr": "Surligner chaque nombre et retrouver son artefact source.",
-                  "en": "Surligner chaque nombre et retrouver son artefact source."
-                },
-                {
-                  "fr": "Remplacer les formulations causales non justifiees par des formulations descriptives.",
-                  "en": "Remplacer les formulations causales non justifiees par des formulations descriptives."
-                },
-                {
-                  "fr": "Ajouter effectifs, incertitudes et données manquantes.",
-                  "en": "Ajouter effectifs, incertitudes et donnees manquantes."
-                },
-                {
-                  "fr": "Lister au moins trois limites pertinentes.",
-                  "en": "Lister au moins trois limites pertinentes."
-                },
-                {
-                  "fr": "Faire relire la version finale par un expert du domaine.",
-                  "en": "Faire relire la version finale par un expert du domaine."
-                }
-              ],
-              "expectedEvidence": {
-                "fr": "Un paragraphe avant/apres et une table reliant chaque affirmation a une preuve.",
-                "en": "Un paragraphe avant/apres et une table reliant chaque affirmation a une preuve."
-              },
-              "resources": []
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_04_02_screen_5",
-          "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
-          },
-          "type": "checkpoint",
-          "requiredBeforeAdvance": true,
-          "passThreshold": 1,
-          "blocks": [
-            {
-              "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_04_qualite_04_02_checkpoint_5",
-              "question": {
-                "fr": "Quelle formulation est acceptable pour une analyse exploratoire d'expression génique ?",
-                "en": "Quelle formulation est acceptable pour une analyse exploratoire d'expression genique ?"
-              },
-              "options": [
-                {
-                  "id": "a",
-                  "text": {
-                    "fr": "Le gene presente une difference descriptive dans ce jeu synthetique, a confirmer sur un protocole independant.",
-                    "en": "Le gene presente une difference descriptive dans ce jeu synthetique, a confirmer sur un protocole independant."
-                  }
-                },
-                {
-                  "id": "b",
-                  "text": {
-                    "fr": "Le gene cause la maladie et doit devenir une cible thérapeutique.",
-                    "en": "Le gene cause la maladie et doit devenir une cible therapeutique."
-                  }
-                },
-                {
-                  "id": "c",
-                  "text": {
-                    "fr": "Le reviewer a valide le mecanisme biologique.",
-                    "en": "Le reviewer a valide le mecanisme biologique."
-                  }
-                },
-                {
-                  "id": "d",
-                  "text": {
-                    "fr": "La figure suffit a etablir un diagnostic.",
-                    "en": "La figure suffit a etablir un diagnostic."
-                  }
-                }
-              ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
-            }
-          ],
-          "exerciseId": "claude_science_02_pratique_04_qualite_04_02_checkpoint_5"
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_04_02_screen_6",
-          "title": {
-            "fr": "À retenir",
-            "en": "A retenir"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "lesson_summary",
-              "title": {
-                "fr": "À retenir",
-                "en": "A retenir"
-              },
-              "items": [
-                {
-                  "fr": "Plan avant calcul",
-                  "en": "Plan avant calcul"
-                },
-                {
-                  "fr": "Résultats descriptifs",
-                  "en": "Resultats descriptifs"
-                },
-                {
-                  "fr": "Provenance de chaque nombre",
-                  "en": "Provenance de chaque nombre"
-                },
-                {
-                  "fr": "Aucune inference clinique automatique",
-                  "en": "Aucune inference clinique automatique"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "claude_science_02_pratique_04_qualite_03_03",
-      "moduleId": "04_qualite",
-      "title": {
-        "fr": "Savoir quand utiliser un calcul distant ou un stockage institutionnel",
-        "en": "Savoir quand utiliser un calcul distant ou un stockage institutionnel"
-      },
-      "objective": {
-        "fr": "Decider si une analyse doit rester locale ou etre confiee a une infrastructure approuvee.",
-        "en": "Decider si une analyse doit rester locale ou etre confiee a une infrastructure approuvee."
-      },
-      "estimatedMinutes": 40,
-      "recommendedVideosManaged": false,
-      "recommendedVideos": [],
-      "chapters": [
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_03_screen_1",
-          "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "learning_objectives",
-              "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
-              },
-              "items": [
-                {
-                  "fr": "Reconnaître une analyse trop lourde pour le poste local",
-                  "en": "Reconnaitre une analyse trop lourde pour le poste local"
-                },
-                {
-                  "fr": "Préparer une demande au support technique",
-                  "en": "Preparer une demande au support technique"
-                },
-                {
-                  "fr": "Conserver la provenance du calcul",
-                  "en": "Conserver la provenance du calcul"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_03_screen_2",
-          "title": {
-            "fr": "Le chercheur decide du cadre ; l'equipe technique execute dans l'infrastructure approuvee",
-            "en": "Le chercheur decide du cadre ; l'equipe technique execute dans l'infrastructure approuvee"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "fr": "Claude Science peut travailler avec une machine distante, un cluster de calcul ou un stockage cloud controle par l'organisation. Ces fonctions concernent surtout les analyses volumineuses, par exemple l'imagerie, la genomique ou des simulations. Un chercheur en santé doit d'abord savoir reconnaitre le besoin, definir les entrees et sorties, et vérifier que l'infrastructure a ete approuvee. La configuration technique peut etre realisee avec le data manager ou l'equipe informatique.\n\nAvant tout transfert, documentez la classification des données, l'emplacement autorise, la personne responsable, la duree de conservation et la destination des résultats. Demandez une estimation sur un petit echantillon synthetique. Avant lancement, faites confirmer les ressources, les chemins, les journaux et la destination des sorties par l'equipe competente.\n\nLes identifiants restent dans les mecanismes de credentials prevus, jamais dans une conversation, un notebook ou une capture. Apres execution, le dossier de provenance relie les entrees, la méthode, l'identifiant du calcul, les journaux et les artefacts. Cette leçon apprend a commander et controler le travail, pas a administrer un cluster.",
-                "en": "Claude Science peut travailler avec une machine distante, un cluster de calcul ou un stockage cloud controle par l'organisation. Ces fonctions concernent surtout les analyses volumineuses, par exemple l'imagerie, la genomique ou des simulations. Un chercheur en sante doit d'abord savoir reconnaitre le besoin, definir les entrees et sorties, et verifier que l'infrastructure a ete approuvee. La configuration technique peut etre realisee avec le data manager ou l'equipe informatique.\n\nAvant tout transfert, documentez la classification des donnees, l'emplacement autorise, la personne responsable, la duree de conservation et la destination des resultats. Demandez une estimation sur un petit echantillon synthetique. Avant lancement, faites confirmer les ressources, les chemins, les journaux et la destination des sorties par l'equipe competente.\n\nLes identifiants restent dans les mecanismes de credentials prevus, jamais dans une conversation, un notebook ou une capture. Apres execution, le dossier de provenance relie les entrees, la methode, l'identifiant du calcul, les journaux et les artefacts. Cette lecon apprend a commander et controler le travail, pas a administrer un cluster."
-              }
-            },
-            {
-              "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
-              "sources": [
-                {
-                  "id": "anthropic_remote",
-                  "title": "Remote compute clusters",
-                  "url": "https://claude.com/docs/claude-science/remote-compute-clusters"
-                },
-                {
-                  "id": "anthropic_storage",
-                  "title": "Cloud storage",
-                  "url": "https://claude.com/docs/claude-science/cloud-storage"
-                },
-                {
-                  "id": "anthropic_tools",
-                  "title": "Tools and environments",
-                  "url": "https://claude.com/docs/claude-science/tools-and-environments"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_03_screen_3",
-          "title": {
-            "fr": "Suivre un calcul distant et son environnement vivant",
-            "en": "Suivre un calcul distant et son environnement vivant"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "annotated_screenshot",
-              "title": {
-                "fr": "Suivre un calcul distant et son environnement vivant",
-                "en": "Suivre un calcul distant et son environnement vivant"
-              },
-              "imageUrl": "/api/assets/claude-science-v2/02_claude_science_installation_utilisation_optimisation/media/official/science-pillars-compute_4fe45bc1.webp",
-              "alt": {
-                "fr": "Vue officielle de l'orchestration des environnements et du calcul.",
-                "en": "Vue officielle de l'orchestration des environnements et du calcul."
-              },
-              "caption": {
-                "fr": "Vue officielle de l'orchestration des environnements et du calcul.\n\nPoints a observer :\n1. Les configurations comparees\n2. L'etat des executions\n3. Le notebook et les sorties relies a chaque run",
-                "en": "Vue officielle de l'orchestration des environnements et du calcul.\n\nPoints a observer :\n1. Les configurations comparees\n2. L'etat des executions\n3. Le notebook et les sorties relies a chaque run"
-              },
-              "purpose": {
-                "fr": "Comprendre la vue de calcul : pilotage des essais, etat des jobs, visualisation des sorties et inspection du notebook.",
-                "en": "Comprendre la vue de calcul : pilotage des essais, etat des jobs, visualisation des sorties et inspection du notebook."
-              },
-              "learnerAction": {
-                "fr": "Choisir un run, relever ses parametres, son statut, son résultat et la preuve permettant de le reproduire.",
-                "en": "Choisir un run, relever ses parametres, son statut, son resultat et la preuve permettant de le reproduire."
-              },
-              "interpretationWarning": {
-                "fr": "Cet ecran montre le suivi d'un calcul. Les permissions d'acces apparaissent dans des cartes distinctes et ne sont pas visibles ici.",
-                "en": "Cet ecran montre le suivi d'un calcul. Les permissions d'acces apparaissent dans des cartes distinctes et ne sont pas visibles ici."
-              },
-              "guidedZones": [
-                {
-                  "id": "A",
-                  "position": "colonne gauche",
-                  "label": {
-                    "fr": "Projet et sessions de calcul",
-                    "en": "Projet et sessions de calcul"
-                  },
-                  "explanation": {
-                    "fr": "La navigation separe les executions et conserve leur contexte. Elle ne represente pas une autorisation de securite.",
-                    "en": "La navigation separe les executions et conserve leur contexte. Elle ne represente pas une autorisation de securite."
-                  },
-                  "check": {
-                    "fr": "Nommer la session selon l'objectif et le jeu de données pour eviter les melanges.",
-                    "en": "Nommer la session selon l'objectif et le jeu de donnees pour eviter les melanges."
-                  }
-                },
-                {
-                  "id": "B",
-                  "position": "panneau central, partie haute",
-                  "label": {
-                    "fr": "Plan d'experimentation",
-                    "en": "Plan d'experimentation"
-                  },
-                  "explanation": {
-                    "fr": "Le tableau de balayage d'hyperparametres explicite les configurations lancees et leur statut.",
-                    "en": "Le tableau de balayage d'hyperparametres explicite les configurations lancees et leur statut."
-                  },
-                  "check": {
-                    "fr": "Vérifier les parametres, le nombre de runs et les ressources avant soumission.",
-                    "en": "Verifier les parametres, le nombre de runs et les ressources avant soumission."
-                  }
-                },
-                {
-                  "id": "C",
-                  "position": "panneau central, partie basse",
-                  "label": {
-                    "fr": "Résultats compares",
-                    "en": "Resultats compares"
-                  },
-                  "explanation": {
-                    "fr": "Les graphiques permettent de comparer les runs, mais ils doivent rester lies aux identifiants, logs et fichiers produits.",
-                    "en": "Les graphiques permettent de comparer les runs, mais ils doivent rester lies aux identifiants, logs et fichiers produits."
-                  },
-                  "check": {
-                    "fr": "Retrouver le run source de chaque courbe et vérifier l'echelle des axes.",
-                    "en": "Retrouver le run source de chaque courbe et verifier l'echelle des axes."
-                  }
-                },
-                {
-                  "id": "D",
-                  "position": "panneau droit",
-                  "label": {
-                    "fr": "Notebook et noyau persistant",
-                    "en": "Notebook et noyau persistant"
-                  },
-                  "explanation": {
-                    "fr": "Le code, les sorties et l'etat du noyau sont visibles. Un noyau persistant peut conserver des variables d'une execution anterieure.",
-                    "en": "Le code, les sorties et l'etat du noyau sont visibles. Un noyau persistant peut conserver des variables d'une execution anterieure."
-                  },
-                  "check": {
-                    "fr": "Pour la validation finale, relancer dans une session propre avec un environnement documente.",
-                    "en": "Pour la validation finale, relancer dans une session propre avec un environnement documente."
-                  }
-                }
-              ],
               "sourceRefs": [
                 {
                   "id": "anthropic_product",
-                  "title": "Claude Science (beta) - page produit officielle",
+                  "title": "Claude Science - page produit",
                   "url": "https://claude.com/product/claude-science"
                 }
-              ],
-              "displayPolicy": {
-                "mode": "fit_width_then_zoom",
-                "max_initial_height_px": 720,
-                "allow_fullscreen": true,
-                "allow_zoom": true,
-                "never_display_full_webpage_capture": true
-              }
+              ]
             }
           ]
         },
         {
-          "id": "claude_science_02_pratique_04_qualite_03_03_screen_4",
+          "id": "claude_science_02_pratique_c2_m3_c2_l5_screen_4",
           "title": {
-            "fr": "Préparer une demande de calcul encadree",
-            "en": "Preparer une demande de calcul encadree"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "guided_action",
-              "id": "claude_science_02_pratique_04_qualite_03_03_screen_4",
-              "title": {
-                "fr": "Préparer une demande de calcul encadree",
-                "en": "Preparer une demande de calcul encadree"
-              },
-              "steps": [
-                {
-                  "fr": "Expliquer la question scientifique, la taille des données et la sortie attendue.",
-                  "en": "Expliquer la question scientifique, la taille des donnees et la sortie attendue."
-                },
-                {
-                  "fr": "Classer les données et confirmer l'infrastructure institutionnelle autorisee.",
-                  "en": "Classer les donnees et confirmer l'infrastructure institutionnelle autorisee."
-                },
-                {
-                  "fr": "Demander un essai sur données synthetiques ou sur un petit echantillon autorise.",
-                  "en": "Demander un essai sur donnees synthetiques ou sur un petit echantillon autorise."
-                },
-                {
-                  "fr": "Faire valider les ressources et les transferts par l'equipe technique.",
-                  "en": "Faire valider les ressources et les transferts par l'equipe technique."
-                },
-                {
-                  "fr": "Archiver l'identifiant du calcul, les journaux et les sommes de controle des sorties.",
-                  "en": "Archiver l'identifiant du calcul, les journaux et les sommes de controle des sorties."
-                }
-              ],
-              "expectedEvidence": {
-                "fr": "Une fiche de demande de calcul comprenant objectif, données autorisees, responsable, controles et preuves attendues.",
-                "en": "Une fiche de demande de calcul comprenant objectif, donnees autorisees, responsable, controles et preuves attendues."
-              },
-              "resources": []
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_03_screen_5",
-          "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
+            "fr": "Checkpoint",
+            "en": "Checkpoint"
           },
           "type": "checkpoint",
           "requiredBeforeAdvance": true,
-          "passThreshold": 1,
           "blocks": [
             {
               "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_04_qualite_03_03_checkpoint_5",
+              "id": "claude_science_02_pratique_c2_m3_c2_l5_checkpoint_4",
               "question": {
-                "fr": "Quel ensemble permet de relier un résultat a un calcul distant ?",
-                "en": "Quel ensemble permet de relier un resultat a un calcul distant ?"
+                "fr": "Avant d'approuver un job sur un cluster, que faut-il verifier ?",
+                "en": "Avant d'approuver un job sur un cluster, que faut-il verifier ?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "La méthode soumise, l'identifiant du calcul, les journaux et le manifeste des sorties.",
-                    "en": "La methode soumise, l'identifiant du calcul, les journaux et le manifeste des sorties."
+                    "fr": "Le script, la commande, le repertoire, les ressources, les donnees transferees et les sorties attendues.",
+                    "en": "Le script, la commande, le repertoire, les ressources, les donnees transferees et les sorties attendues."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Seulement une capture du graphique final.",
-                    "en": "Seulement une capture du graphique final."
+                    "fr": "Uniquement le nom du cluster.",
+                    "en": "Uniquement le nom du cluster."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Le mot de passe dans la conversation.",
-                    "en": "Le mot de passe dans la conversation."
+                    "fr": "Rien, puisque le job reste dans le sandbox local.",
+                    "en": "Rien, puisque le job reste dans le sandbox local."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Une estimation orale des ressources utilisees.",
-                    "en": "Une estimation orale des ressources utilisees."
+                    "fr": "Seulement la lisibilite de la figure finale.",
+                    "en": "Seulement la lisibilite de la figure finale."
                   }
                 }
               ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
+              "serverValidated": true
             }
-          ],
-          "exerciseId": "claude_science_02_pratique_04_qualite_03_03_checkpoint_5"
+          ]
         },
         {
-          "id": "claude_science_02_pratique_04_qualite_03_03_screen_6",
+          "id": "claude_science_02_pratique_c2_m3_c2_l5_screen_5",
           "title": {
-            "fr": "À retenir",
+            "fr": "A retenir",
             "en": "A retenir"
           },
           "type": "teaching",
@@ -2326,304 +1334,25 @@
             {
               "type": "lesson_summary",
               "title": {
-                "fr": "À retenir",
+                "fr": "A retenir",
                 "en": "A retenir"
               },
               "items": [
                 {
-                  "fr": "Besoin scientifique explicite",
-                  "en": "Besoin scientifique explicite"
+                  "fr": "Droits de lecture existants uniquement",
+                  "en": "Droits de lecture existants uniquement"
                 },
                 {
-                  "fr": "Infrastructure institutionnelle approuvee",
-                  "en": "Infrastructure institutionnelle approuvee"
+                  "fr": "Verifier chaque citation primaire",
+                  "en": "Verifier chaque citation primaire"
                 },
                 {
-                  "fr": "Secrets hors des prompts",
-                  "en": "Secrets hors des prompts"
+                  "fr": "Reviewer utile mais limite",
+                  "en": "Reviewer utile mais limite"
                 },
                 {
-                  "fr": "Journaux et sorties archives",
-                  "en": "Journaux et sorties archives"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "claude_science_02_pratique_04_qualite_03_04",
-      "moduleId": "04_qualite",
-      "title": {
-        "fr": "Optimiser Claude Science sans perdre la rigueur",
-        "en": "Optimiser Claude Science sans perdre la rigueur"
-      },
-      "objective": {
-        "fr": "Rendre un workflow de recherche plus rapide sans diminuer les controles scientifiques.",
-        "en": "Rendre un workflow de recherche plus rapide sans diminuer les controles scientifiques."
-      },
-      "estimatedMinutes": 40,
-      "recommendedVideosManaged": false,
-      "recommendedVideos": [],
-      "chapters": [
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_04_screen_1",
-          "title": {
-            "fr": "Objectifs de la leçon",
-            "en": "Objectifs de la lecon"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "learning_objectives",
-              "title": {
-                "fr": "Objectifs de la leçon",
-                "en": "Objectifs de la lecon"
-              },
-              "items": [
-                {
-                  "fr": "Decouper une question en etapes validables",
-                  "en": "Decouper une question en etapes validables"
-                },
-                {
-                  "fr": "Reutiliser une procedure approuvee",
-                  "en": "Reutiliser une procedure approuvee"
-                },
-                {
-                  "fr": "Tester avant une analyse complete",
-                  "en": "Tester avant une analyse complete"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_04_screen_2",
-          "title": {
-            "fr": "Optimiser le workflow, pas seulement le temps de calcul",
-            "en": "Optimiser le workflow, pas seulement le temps de calcul"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "fr": "L'optimisation commence par une question bien delimitee et des sessions courtes avec un objectif unique. Chargez seulement les dossiers et variables necessaires. Sur un gros jeu, testez le workflow sur un echantillon synthetique ou reduit avant l'analyse complete. Demandez un plan, verifiez les controles scientifiques puis autorisez l'execution par etapes.\n\nConservez les transformations stables sous forme de scripts ou de skills revises plutot que de les regenerer a chaque session. Un workflow reutilisable doit expliciter ses entrees, sorties, dependances, controles et limites. Versionnez-le et testez-le avec un cas connu avant de le proposer a d'autres chercheurs.\n\nPour limiter les erreurs, separez exploration et analyse finale. L'exploration accepte des essais rapides ; l'analyse finale exige un protocole fige, des entrees stables, des journaux, des sommes de controle et une reexecution propre. Ne lancez une analyse volumineuse qu'apres validation d'un petit cas et accord du responsable scientifique.",
-                "en": "L'optimisation commence par une question bien delimitee et des sessions courtes avec un objectif unique. Chargez seulement les dossiers et variables necessaires. Sur un gros jeu, testez le workflow sur un echantillon synthetique ou reduit avant l'analyse complete. Demandez un plan, verifiez les controles scientifiques puis autorisez l'execution par etapes.\n\nConservez les transformations stables sous forme de scripts ou de skills revises plutot que de les regenerer a chaque session. Un workflow reutilisable doit expliciter ses entrees, sorties, dependances, controles et limites. Versionnez-le et testez-le avec un cas connu avant de le proposer a d'autres chercheurs.\n\nPour limiter les erreurs, separez exploration et analyse finale. L'exploration accepte des essais rapides ; l'analyse finale exige un protocole fige, des entrees stables, des journaux, des sommes de controle et une reexecution propre. Ne lancez une analyse volumineuse qu'apres validation d'un petit cas et accord du responsable scientifique."
-              }
-            },
-            {
-              "type": "source_references",
-              "title": {
-                "fr": "Références",
-                "en": "Références"
-              },
-              "sources": [
-                {
-                  "id": "anthropic_core",
-                  "title": "Claude Science core concepts",
-                  "url": "https://claude.com/docs/claude-science/core-concepts"
-                },
-                {
-                  "id": "anthropic_tools",
-                  "title": "Tools and environments",
-                  "url": "https://claude.com/docs/claude-science/tools-and-environments"
-                },
-                {
-                  "id": "anthropic_connectors",
-                  "title": "Connectors and skills",
-                  "url": "https://claude.com/docs/claude-science/connectors-and-skills"
-                },
-                {
-                  "id": "anthropic_remote",
-                  "title": "Remote compute clusters",
-                  "url": "https://claude.com/docs/claude-science/remote-compute-clusters"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_04_screen_3",
-          "title": {
-            "fr": "Démonstration vidéo",
-            "en": "Demonstration video"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "video",
-              "id": "i8g1pdzWJik",
-              "videoId": "i8g1pdzWJik",
-              "title": {
-                "fr": "The Briefing: AI for Science",
-                "en": "The Briefing: AI for Science"
-              },
-              "watchUrl": "https://www.youtube.com/watch?v=i8g1pdzWJik",
-              "videoLanguage": "en",
-              "durationSeconds": 6509,
-              "objectiveBefore": {
-                "fr": "Avant la lecture, notez les fonctions visibles et distinguez-les des commentaires du présentateur.",
-                "en": "Avant la lecture, notez les fonctions visibles et distinguez-les des commentaires du presentateur."
-              },
-              "questionsAfter": [
-                {
-                  "fr": "Quelle action de l'utilisateur déclenche une execution ?",
-                  "en": "Quelle action de l'utilisateur declenche une execution ?"
-                },
-                {
-                  "fr": "Quel résultat reste a vérifier humainement ?",
-                  "en": "Quel resultat reste a verifier humainement ?"
-                }
-              ],
-              "alternativeTextFr": "Ressource longue facultative. La lecon fournit une synthese autonome ; la video sert a approfondir les cas d'usage et les limites de l'IA pour la science.",
-              "optional": true,
-              "provenance": {
-                "source": "Anthropic",
-                "official": true,
-                "type": "official_video"
-              }
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_04_screen_4",
-          "title": {
-            "fr": "Optimiser un workflow existant",
-            "en": "Optimiser un workflow existant"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "guided_action",
-              "id": "claude_science_02_pratique_04_qualite_03_04_screen_4",
-              "title": {
-                "fr": "Optimiser un workflow existant",
-                "en": "Optimiser un workflow existant"
-              },
-              "steps": [
-                {
-                  "fr": "Identifier les etapes repetees et les convertir en script parametre.",
-                  "en": "Identifier les etapes repetees et les convertir en script parametre."
-                },
-                {
-                  "fr": "Ajouter un petit jeu de test et des sorties attendues.",
-                  "en": "Ajouter un petit jeu de test et des sorties attendues."
-                },
-                {
-                  "fr": "Mesurer duree, memoire et taille des artefacts.",
-                  "en": "Mesurer duree, memoire et taille des artefacts."
-                },
-                {
-                  "fr": "Separer le profil exploration du profil production.",
-                  "en": "Separer le profil exploration du profil production."
-                },
-                {
-                  "fr": "Documenter quand rester en local et quand solliciter l'infrastructure institutionnelle.",
-                  "en": "Documenter quand rester en local et quand solliciter l'infrastructure institutionnelle."
-                }
-              ],
-              "expectedEvidence": {
-                "fr": "Une fiche avant/apres montrant gains, controles conserves et conditions d'utilisation.",
-                "en": "Une fiche avant/apres montrant gains, controles conserves et conditions d'utilisation."
-              },
-              "resources": []
-            }
-          ]
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_04_screen_5",
-          "title": {
-            "fr": "Vérifier la notion essentielle",
-            "en": "Verifier la notion essentielle"
-          },
-          "type": "checkpoint",
-          "requiredBeforeAdvance": true,
-          "passThreshold": 1,
-          "blocks": [
-            {
-              "type": "single_choice_exercise",
-              "id": "claude_science_02_pratique_04_qualite_03_04_checkpoint_5",
-              "question": {
-                "fr": "Quelle strategie est la plus sure avant une analyse volumineuse ?",
-                "en": "Quelle strategie est la plus sure avant une analyse volumineuse ?"
-              },
-              "options": [
-                {
-                  "id": "a",
-                  "text": {
-                    "fr": "Valider le pipeline et ses controles sur un petit jeu avant de dimensionner le job complet.",
-                    "en": "Valider le pipeline et ses controles sur un petit jeu avant de dimensionner le job complet."
-                  }
-                },
-                {
-                  "id": "b",
-                  "text": {
-                    "fr": "Soumettre directement avec les ressources maximales.",
-                    "en": "Soumettre directement avec les ressources maximales."
-                  }
-                },
-                {
-                  "id": "c",
-                  "text": {
-                    "fr": "Supprimer les logs pour accélérer.",
-                    "en": "Supprimer les logs pour accelerer."
-                  }
-                },
-                {
-                  "id": "d",
-                  "text": {
-                    "fr": "Regenerer le script a chaque execution sans versionnement.",
-                    "en": "Regenerer le script a chaque execution sans versionnement."
-                  }
-                }
-              ],
-              "serverValidated": true,
-              "hint": {
-                "fr": "Relisez les éléments sourcés de cette leçon avant de répondre.",
-                "en": "Relisez les éléments sourcés de cette leçon avant de répondre."
-              },
-              "sourceRefs": []
-            }
-          ],
-          "exerciseId": "claude_science_02_pratique_04_qualite_03_04_checkpoint_5"
-        },
-        {
-          "id": "claude_science_02_pratique_04_qualite_03_04_screen_6",
-          "title": {
-            "fr": "À retenir",
-            "en": "A retenir"
-          },
-          "type": "teaching",
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "lesson_summary",
-              "title": {
-                "fr": "À retenir",
-                "en": "A retenir"
-              },
-              "items": [
-                {
-                  "fr": "Sessions delimitees",
-                  "en": "Sessions delimitees"
-                },
-                {
-                  "fr": "Prototype reduit",
-                  "en": "Prototype reduit"
-                },
-                {
-                  "fr": "Scripts reutilisables",
-                  "en": "Scripts reutilisables"
-                },
-                {
-                  "fr": "Profils exploration et production",
-                  "en": "Profils exploration et production"
+                  "fr": "Calcul distant seulement si gouverne",
+                  "en": "Calcul distant seulement si gouverne"
                 }
               ]
             }
@@ -2632,8 +1361,8 @@
         {
           "id": "claude_science_02_pratique_final_evaluation",
           "title": {
-            "fr": "Évaluation finale",
-            "en": "Évaluation finale"
+            "fr": "Quiz - Installation et pratique reproductible",
+            "en": "Quiz - Installation et pratique reproductible"
           },
           "type": "quiz",
           "requiredBeforeAdvance": true,
@@ -2643,10 +1372,10 @@
               "id": "claude_science_02_pratique_final_quiz",
               "courseId": "claude_science_02_pratique",
               "title": {
-                "fr": "Évaluation finale du cours",
-                "en": "Evaluation finale du cours"
+                "fr": "Quiz - Installation et pratique reproductible",
+                "en": "Quiz - Installation et pratique reproductible"
               },
-              "passingScore": 75
+              "passingScore": 80
             }
           ]
         }
@@ -2656,56 +1385,64 @@
   "exercises": [],
   "sections": [
     {
-      "id": "01_installer",
+      "id": "c2_m1",
       "title": {
-        "fr": "Installation et premier lancement",
-        "en": "Installation et premier lancement"
+        "fr": "Installer et securiser le premier projet",
+        "en": "Installer et securiser le premier projet"
       },
       "lessons": [
-        "Installer et reussir le premier lancement"
+        {
+          "fr": "Installer Claude Science et verifier le poste",
+          "en": "Installer Claude Science et verifier le poste"
+        },
+        {
+          "fr": "Projets, sessions, dossiers et permissions",
+          "en": "Projets, sessions, dossiers et permissions"
+        }
       ]
     },
     {
-      "id": "02_utiliser",
+      "id": "c2_m2",
       "title": {
-        "fr": "Projets, analyses et artefacts",
-        "en": "Projets, analyses et artefacts"
+        "fr": "Executer et documenter une analyse",
+        "en": "Executer et documenter une analyse"
       },
       "lessons": [
-        "Lancer une premiere analyse reproductible",
-        "Lire et versionner les artefacts",
-        "Commenter un resultat et utiliser le reviewer"
+        {
+          "fr": "Concevoir puis executer une premiere analyse",
+          "en": "Concevoir puis executer une premiere analyse"
+        },
+        {
+          "fr": "Python, R, environnements et artefacts",
+          "en": "Python, R, environnements et artefacts"
+        }
       ]
     },
     {
-      "id": "03_outils",
+      "id": "c2_m3",
       "title": {
-        "fr": "Environnement d'analyse, littérature et connecteurs",
-        "en": "Environnement d'analyse, litterature et connecteurs"
+        "fr": "Etendre le workflow avec controle",
+        "en": "Etendre le workflow avec controle"
       },
       "lessons": [
-        "Choisir et documenter l'environnement d'analyse",
-        "Connecter les bases, la litterature et les skills"
-      ]
-    },
-    {
-      "id": "04_qualite",
-      "title": {
-        "fr": "Interprétation, calcul encadré et optimisation",
-        "en": "Interpretation, calcul encadre et optimisation"
-      },
-      "lessons": [
-        "Analyser sans surinterpreter",
-        "Savoir quand utiliser un calcul distant ou un stockage institutionnel",
-        "Optimiser Claude Science sans perdre la rigueur"
+        {
+          "fr": "Litterature, connecteurs, reviewer et calcul distant",
+          "en": "Litterature, connecteurs, reviewer et calcul distant"
+        }
       ]
     }
   ],
   "competencyTags": [
-    "research_method",
-    "ai_governance",
-    "reproducibility",
-    "human_validation"
+    "installation",
+    "permissions",
+    "sandbox",
+    "Python",
+    "R",
+    "artefacts",
+    "provenance",
+    "litterature",
+    "reviewer",
+    "calcul distant"
   ],
   "downloadableResources": []
 }

@@ -46,7 +46,7 @@ function learnerQuestion(question: any) {
 }
 
 async function requireCheckpointsForFinalQuiz(userId: number, courseId: string) {
-  const required = Object.keys(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS).filter((key) => key.startsWith(`${courseId}__`));
+  const required = Object.keys(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS).filter((key) => key.startsWith(`${courseId}_`));
   const events = await getLearnerLearningEvents(userId);
   const passed = new Set(events
     .filter((event) => event.courseId === courseId && event.eventType === "checkpoint_passed" && event.success === 1)
@@ -62,13 +62,14 @@ export async function getClaudeScienceV2FinalQuiz(input: { userId: number; cours
   if (!quiz) throw new TRPCError({ code: "NOT_FOUND", message: "Aucune évaluation finale pour ce cours." });
   await requireCheckpointsForFinalQuiz(input.userId, input.courseId);
   const attempts = (await getExerciseResults(String(input.userId), input.courseId)).filter((attempt) => attempt.moduleId === quiz.id);
+  const maxAttempts = Number.isFinite(quiz.maxAttempts) ? Number(quiz.maxAttempts) : null;
   return {
     id: quiz.id,
     title: { fr: quiz.title, en: quiz.title },
     passingScore: quiz.passingScore,
-    maxAttempts: quiz.maxAttempts,
+    maxAttempts,
     attemptsUsed: attempts.length,
-    remainingAttempts: Math.max(0, quiz.maxAttempts - attempts.length),
+    remainingAttempts: maxAttempts === null ? null : Math.max(0, maxAttempts - attempts.length),
     questions: quiz.questions.map(learnerQuestion),
   };
 }
@@ -79,7 +80,8 @@ export async function submitClaudeScienceV2FinalQuiz(input: { userId: number; co
   if (!quiz) throw new TRPCError({ code: "NOT_FOUND", message: "Aucune évaluation finale pour ce cours." });
   await requireCheckpointsForFinalQuiz(input.userId, input.courseId);
   const priorAttempts = (await getExerciseResults(String(input.userId), input.courseId)).filter((attempt) => attempt.moduleId === quiz.id);
-  if (priorAttempts.length >= quiz.maxAttempts) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Le nombre maximal de tentatives est atteint." });
+  const maxAttempts = Number.isFinite(quiz.maxAttempts) ? Number(quiz.maxAttempts) : null;
+  if (maxAttempts !== null && priorAttempts.length >= maxAttempts) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Le nombre maximal de tentatives est atteint." });
 
   const answersById = new Map(input.answers.map((answer) => [answer.questionId, answer.selectedId]));
   if (answersById.size !== quiz.questions.length || !quiz.questions.every((question: any) => answersById.has(question.id))) {
@@ -190,7 +192,7 @@ export async function submitClaudeScienceV2Lab(input: { userId: number; courseId
   if (passed) {
     await applyCompetencyEvent({ userId: input.userId, sourceType: "exercise_passed", sourceKey: input.courseId, eventKey: `claude-science-v2-lab:${lab.id}`, score: evaluation.score, competencyTags: getContentCompetencyTags({ courseId: input.courseId }), evidence: { labId: lab.id, attemptNumber: persistence.attemptNumber } });
   }
-  return { ...evaluation, passed, attemptNumber: persistence.attemptNumber, correction: lab.correction, correctionSha256: lab.correctionSha256, model: "claude-sonnet-4-6" };
+  return { ...evaluation, passed, attemptNumber: persistence.attemptNumber, correction: lab.correction, correctionSha256: lab.correctionSha256, correctionResources: lab.correctionResources || [], model: "claude-sonnet-4-6" };
 }
 
 export async function submitClaudeScienceV2Reflection(input: { userId: number; courseId: string; reflectionId: string; lessonIndex: number; chapterIndex: number; answer: string }) {
@@ -219,6 +221,25 @@ export async function getClaudeScienceV2ActivityStatus(input: { userId: number; 
   const completedFinalQuizzes = new Set(courseEvents.filter((event) => event.eventType === "course_final_quiz_submitted").map((event) => event.exerciseId).filter(Boolean));
   const completedReflections = new Set(courseEvents.filter((event) => event.eventType === "learning_reflection_submitted").map((event) => event.exerciseId).filter(Boolean));
   return { completedLabs: Array.from(completedLabs), completedFinalQuizzes: Array.from(completedFinalQuizzes), completedReflections: Array.from(completedReflections) };
+}
+
+/**
+ * V3 declares a small set of expected outputs and solution scripts as
+ * post-submission correction resources. Their storage keys never enter the
+ * learner course JSON; the proxy checks this server-side submission record.
+ */
+export async function mayAccessClaudeScienceCorrectionAsset(input: { userId: number; key: string }) {
+  const lab = Object.values(CLAUDE_SCIENCE_V2_LABS).find((candidate: any) => (
+    Array.isArray(candidate.correctionResources)
+    && candidate.correctionResources.some((resource: any) => resource?.url === `/api/assets/${input.key}`)
+  ));
+  if (!lab) return false;
+  const events = await getLearnerLearningEvents(input.userId);
+  return events.some((event) => (
+    event.courseId === lab.courseId
+    && event.exerciseId === lab.id
+    && event.eventType === "practical_lab_submitted"
+  ));
 }
 
 export function isClaudeScienceV2Course(courseId: string) {

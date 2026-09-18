@@ -48,11 +48,16 @@ export function getAssetCacheControl(key: string): string {
 /** Corrections and expected outputs are assessment material, never public learner downloads. */
 export function isPrivateLearningCorrectionAssetKey(key: string): boolean {
   return /^claude-science-v2\/03_claude_science_travaux_pratiques\/(?:solutions\/|downloads\/expected\/|downloads\/scripts\/solution_)/.test(key)
+    || /^claude-science-v3\/courses\/03_travaux_pratiques\/downloads\/(?:expected\/|scripts\/solution_)/.test(key)
     || key.startsWith("n8n-foundations/corrections/");
 }
 
 function isN8nFoundationsCorrectionAssetKey(key: string): boolean {
   return key.startsWith("n8n-foundations/corrections/");
+}
+
+function isClaudeScienceV3CorrectionAssetKey(key: string): boolean {
+  return /^claude-science-v3\/courses\/03_travaux_pratiques\/downloads\/(?:expected\/|scripts\/solution_)/.test(key);
 }
 
 /** Accept a safe filename only, preventing Content-Disposition header injection. */
@@ -130,12 +135,13 @@ export function registerAssetProxy(app: Express) {
       return;
     }
     const n8nCorrectionAsset = isN8nFoundationsCorrectionAssetKey(key);
-    if (isPrivateLearningCorrectionAssetKey(key) && !n8nCorrectionAsset) {
+    const claudeScienceV3CorrectionAsset = isClaudeScienceV3CorrectionAssetKey(key);
+    if (isPrivateLearningCorrectionAssetKey(key) && !n8nCorrectionAsset && !claudeScienceV3CorrectionAsset) {
       res.status(404).send("Asset introuvable");
       return;
     }
     const privateMessageAttachment = key.startsWith("private-messaging/");
-    const cacheControl = privateMessageAttachment || n8nCorrectionAsset ? "private, no-store" : getAssetCacheControl(key);
+    const cacheControl = privateMessageAttachment || n8nCorrectionAsset || claudeScienceV3CorrectionAsset ? "private, no-store" : getAssetCacheControl(key);
     const downloadFilename = getRequestedDownloadFilename(req.query?.download);
 
     // Protect application files - require admin auth
@@ -179,6 +185,21 @@ export function registerAssetProxy(app: Express) {
         }
       } catch {
         res.status(401).json({ error: "Authentification requise" });
+        return;
+      }
+    }
+
+    if (claudeScienceV3CorrectionAsset) {
+      try {
+        const { sdk } = await import("./_core/sdk");
+        const user = await sdk.authenticateRequest(req);
+        const { mayAccessClaudeScienceCorrectionAsset } = await import("./claudeScienceV2AssessmentService");
+        if (!user || !(await mayAccessClaudeScienceCorrectionAsset({ userId: user.id, key }))) {
+          res.status(404).send("Asset introuvable");
+          return;
+        }
+      } catch {
+        res.status(404).send("Asset introuvable");
         return;
       }
     }

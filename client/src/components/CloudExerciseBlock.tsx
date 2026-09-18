@@ -400,7 +400,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
               <Streamdown>{evaluation.feedback}</Streamdown>
               {evaluation.strengths.length > 0 && <ul className="list-disc pl-5 text-green-700">{evaluation.strengths.map((item, index) => <li key={index}><Streamdown>{item}</Streamdown></li>)}</ul>}
               {evaluation.improvements.length > 0 && <ul className="list-disc pl-5 text-amber-700">{evaluation.improvements.map((item, index) => <li key={index}><Streamdown>{item}</Streamdown></li>)}</ul>}
-              {evaluation.passed && (evaluation.correctionResources?.length ?? 0) > 0 && (
+              {(evaluation.correctionResources?.length ?? 0) > 0 && (
                 <div className="rounded-md border border-green-300 bg-white p-3">
                   <p className="font-semibold text-green-900">{t({ en: "Correction explained", fr: "Correction expliquée" })}</p>
                   <div className="mt-2 space-y-2">

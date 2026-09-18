@@ -1,374 +1,213 @@
-/** Generated from the supplied Claude Science V2 package. Correct answers and TP corrections remain server-only. */
-export const CLAUDE_SCIENCE_V2_CERTIFICATION_ID = "claude_science_recherche_medicale" as const;
-export const CLAUDE_SCIENCE_V2_COURSE_ORDER = ["claude_science_01_initiation","claude_science_02_pratique","claude_science_03_travaux_pratiques"] as const;
+/** Generated only from the supplied Claude Science V3 package. Correct answers and corrections remain server-only. */
+export const CLAUDE_SCIENCE_V2_CERTIFICATION_ID = "claude_science_recherche_sante_v3" as const;
+export const CLAUDE_SCIENCE_V2_COURSE_ORDER = ["claude_science_01_fondamentaux","claude_science_02_pratique","claude_science_03_tp"] as const;
 export const CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS = {
-  "claude_science_01_initiation_01_ia_recherche_00_01_checkpoint_4": {
+  "claude_science_01_fondamentaux_c1_m1_c1_l1_checkpoint_4": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "La valeur scientifique vient de la methode et des preuves, non de la fluidite du texte genere.",
-      "en": "La valeur scientifique vient de la methode et des preuves, non de la fluidite du texte genere."
+      "fr": "Le produit accelere des taches auditables, sans remplacer la methode ni la validation scientifique."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   },
-  "claude_science_01_initiation_01_ia_recherche_00_02_checkpoint_4": {
+  "claude_science_01_fondamentaux_c1_m1_c1_l2_checkpoint_5": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "Pre-specifier les decisions limite les ajustements opportunistes apres observation des resultats.",
-      "en": "Pre-specifier les decisions limite les ajustements opportunistes apres observation des resultats."
+      "fr": "La documentation des artefacts designe le journal d'execution comme trace autoritative."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   },
-  "claude_science_01_initiation_02_claude_science_00_03_checkpoint_4": {
+  "claude_science_01_fondamentaux_c1_m2_c1_l3_checkpoint_6": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "La separation plan-execution cree une porte de revue avant toute modification ou calcul.",
-      "en": "La separation plan-execution cree une porte de revue avant toute modification ou calcul."
+      "fr": "Une visualisation n'acquiert de valeur scientifique qu'avec sa provenance, ses controles et une interpretation proportionnee."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   },
-  "claude_science_01_initiation_02_claude_science_01_01_checkpoint_6": {
+  "claude_science_01_fondamentaux_c1_m2_c1_l4_checkpoint_4": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "Le workbench produit des elements inspectables, sans transformer Claude en autorite clinique.",
-      "en": "Le workbench produit des elements inspectables, sans transformer Claude en autorite clinique."
+      "fr": "Le stockage local et le transit vers le modele sont deux questions distinctes."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   },
-  "claude_science_01_initiation_03_conformite_04_01_checkpoint_4": {
+  "claude_science_02_pratique_c2_m1_c2_l1_checkpoint_4": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "Le stockage reste local, mais les contenus utilises dans une reponse peuvent transiter vers le service de modele.",
-      "en": "Le stockage reste local, mais les contenus utilises dans une reponse peuvent transiter vers le service de modele."
+      "fr": "La recette doit d'abord verifier l'environnement avec un contenu neutre et reversible."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   },
-  "claude_science_01_initiation_03_conformite_01_03_checkpoint_4": {
+  "claude_science_02_pratique_c2_m1_c2_l2_checkpoint_5": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "Le moindre privilege limite l'acces au dossier exact et au mode lecture seule lorsque l'ecriture n'est pas necessaire.",
-      "en": "Le moindre privilege limite l'acces au dossier exact et au mode lecture seule lorsque l'ecriture n'est pas necessaire."
+      "fr": "Le moindre privilege limite le dossier, le mode et la duree de l'autorisation."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   },
-  "claude_science_02_pratique_01_installer_01_02_checkpoint_4": {
+  "claude_science_02_pratique_c2_m2_c2_l3_checkpoint_4": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "Les dependances du sandbox Linux sont un prerequis officiel, alors qu'aucune cle API n'est requise pour la connexion standard.",
-      "en": "Les dependances du sandbox Linux sont un prerequis officiel, alors qu'aucune cle API n'est requise pour la connexion standard."
+      "fr": "Le plan sans execution permet une revue avant toute action sur les donnees."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   },
-  "claude_science_02_pratique_02_utiliser_02_01_checkpoint_4": {
+  "claude_science_02_pratique_c2_m2_c2_l4_checkpoint_4": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "Le plan est une proposition methodologique. Il doit etre compris et corrige avant l'execution.",
-      "en": "Le plan est une proposition methodologique. Il doit etre compris et corrige avant l'execution."
+      "fr": "La reproduction exige le code, les donnees autorisees, l'environnement et la trace d'execution."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   },
-  "claude_science_02_pratique_02_utiliser_02_02_checkpoint_5": {
+  "claude_science_02_pratique_c2_m3_c2_l5_checkpoint_4": {
     "correctAnswer": "a",
     "explanation": {
-      "fr": "La provenance relie la sortie aux operations effectivement executees.",
-      "en": "La provenance relie la sortie aux operations effectivement executees."
+      "fr": "Le job distant est hors sandbox et agit avec les droits du compte utilisateur."
     },
     "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
-    }
-  },
-  "claude_science_02_pratique_02_utiliser_02_03_checkpoint_5": {
-    "correctAnswer": "a",
-    "explanation": {
-      "fr": "Le reviewer controle la coherence avec les traces disponibles ; il ne remplace pas une validation externe.",
-      "en": "Le reviewer controle la coherence avec les traces disponibles ; il ne remplace pas une validation externe."
-    },
-    "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
-    }
-  },
-  "claude_science_02_pratique_03_outils_03_01_checkpoint_4": {
-    "correctAnswer": "a",
-    "explanation": {
-      "fr": "Un noyau persistant peut cacher un etat non documente ; une reconstruction propre teste la reproductibilite.",
-      "en": "Un noyau persistant peut cacher un etat non documente ; une reconstruction propre teste la reproductibilite."
-    },
-    "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
-    }
-  },
-  "claude_science_02_pratique_03_outils_03_02_checkpoint_4": {
-    "correctAnswer": "a",
-    "explanation": {
-      "fr": "La provenance bibliographique doit permettre de retrouver exactement la source et le passage utilises.",
-      "en": "La provenance bibliographique doit permettre de retrouver exactement la source et le passage utilises."
-    },
-    "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
-    }
-  },
-  "claude_science_02_pratique_04_qualite_04_02_checkpoint_5": {
-    "correctAnswer": "a",
-    "explanation": {
-      "fr": "Une analyse exploratoire rapporte ce qui est observe et les validations encore necessaires.",
-      "en": "Une analyse exploratoire rapporte ce qui est observe et les validations encore necessaires."
-    },
-    "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
-    }
-  },
-  "claude_science_02_pratique_04_qualite_03_03_checkpoint_5": {
-    "correctAnswer": "a",
-    "explanation": {
-      "fr": "La chaine d'audit relie la question, la methode, l'execution et les fichiers produits.",
-      "en": "La chaine d'audit relie la question, la methode, l'execution et les fichiers produits."
-    },
-    "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
-    }
-  },
-  "claude_science_02_pratique_04_qualite_03_04_checkpoint_5": {
-    "correctAnswer": "a",
-    "explanation": {
-      "fr": "Un essai reduit detecte les erreurs de logique avant de consommer des ressources importantes.",
-      "en": "Un essai reduit detecte les erreurs de logique avant de consommer des ressources importantes."
-    },
-    "incorrectExplanation": {
-      "fr": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil.",
-      "en": "Relisez la procedure et identifiez ce qui constitue une preuve verifiable, une autorisation explicite ou une limite de l'outil."
+      "fr": "Relisez la source associee, puis repondez a nouveau. La correction ne doit pas etre affichee avant soumission."
     }
   }
 } as const;
 export const CLAUDE_SCIENCE_V2_FINAL_QUIZZES = {
-  "claude_science_01_initiation": {
-    "id": "claude_science_01_initiation_final_quiz",
-    "title": "Evaluation finale du cours",
-    "passingScore": 75,
-    "maxAttempts": 3,
+  "claude_science_01_fondamentaux": {
+    "id": "claude_science_01_fondamentaux_final_quiz",
+    "title": "Quiz - Fondamentaux et gouvernance",
+    "passingScore": 80,
+    "maxAttempts": null,
     "questions": [
       {
-        "id": "q1_1",
+        "id": "quiz_course_01_q01",
         "prompt": "Quel role convient a Claude Science dans une etude en sante ?",
         "options": [
           {
             "id": "a",
-            "text": "Choisir le traitement d'un patient"
+            "text": "Assistant de recherche sous controle humain"
           },
           {
             "id": "b",
-            "text": "Assister des taches tracables sous validation humaine"
+            "text": "Dispositif de diagnostic"
           },
           {
             "id": "c",
-            "text": "Certifier la validite statistique"
+            "text": "Comite d'ethique automatise"
           },
           {
             "id": "d",
-            "text": "Remplacer l'investigateur principal"
-          }
-        ],
-        "correctAnswer": "b",
-        "explanation": "Il assiste des taches tracables tandis que les decisions scientifiques et cliniques restent humaines.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_overview",
-            "title": "Claude Science - Overview",
-            "url": "https://claude.com/docs/claude-science/overview"
-          },
-          {
-            "id": "anthropic_product",
-            "title": "Claude Science (beta) - page produit officielle",
-            "url": "https://claude.com/product/claude-science"
-          }
-        ]
-      },
-      {
-        "id": "q1_2",
-        "prompt": "Qu'est-ce qui constitue la preuve d'un resultat produit avec une IA ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Le ton convaincant de la reponse"
-          },
-          {
-            "id": "b",
-            "text": "Le protocole, l'execution, les controles et la validation humaine"
-          },
-          {
-            "id": "c",
-            "text": "La longueur de la conversation"
-          },
-          {
-            "id": "d",
-            "text": "L'absence d'alerte du reviewer"
-          }
-        ],
-        "correctAnswer": "b",
-        "explanation": "Le protocole, les donnees autorisees, l'execution, les controles et la validation humaine constituent la preuve.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_core",
-            "title": "Claude Science core concepts",
-            "url": "https://claude.com/docs/claude-science/core-concepts"
-          },
-          {
-            "id": "anthropic_artifacts",
-            "title": "Artifacts",
-            "url": "https://claude.com/docs/claude-science/artifacts"
-          }
-        ]
-      },
-      {
-        "id": "q1_3",
-        "prompt": "Comment reduire le risque d'une consigne trop vague avant une analyse ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Demander directement la conclusion"
-          },
-          {
-            "id": "b",
-            "text": "Autoriser tous les dossiers"
-          },
-          {
-            "id": "c",
-            "text": "Expliciter la demande et exiger un plan avant execution"
-          },
-          {
-            "id": "d",
-            "text": "Laisser Claude choisir les criteres apres les resultats"
-          }
-        ],
-        "correctAnswer": "c",
-        "explanation": "Il faut expliciter question, entrees, contraintes, sorties et demander un plan avant execution.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_core",
-            "title": "Claude Science core concepts",
-            "url": "https://claude.com/docs/claude-science/core-concepts"
-          }
-        ]
-      },
-      {
-        "id": "q1_4",
-        "prompt": "Quelle permission respecte le moindre privilege pour consulter un jeu de reference ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Lecture seule temporaire sur le dossier exact"
-          },
-          {
-            "id": "b",
-            "text": "Lecture-ecriture permanente sur le disque"
-          },
-          {
-            "id": "c",
-            "text": "Acces global a tous les projets"
-          },
-          {
-            "id": "d",
-            "text": "Copie dans une conversation publique"
+            "text": "Source de preuve autonome"
           }
         ],
         "correctAnswer": "a",
-        "explanation": "Un acces temporaire en lecture seule au dossier exact est suffisant.",
+        "explanation": "Claude Science assiste des taches de recherche mais ne remplace ni validation ni decision clinique.",
         "sourceRefs": [
           {
-            "id": "anthropic_core",
-            "title": "Claude Science core concepts",
-            "url": "https://claude.com/docs/claude-science/core-concepts"
+            "id": "anthropic_overview",
+            "title": "Claude Science - overview",
+            "url": "https://claude.com/docs/claude-science/overview"
           }
         ]
       },
       {
-        "id": "q1_5",
-        "prompt": "Pourquoi un fichier stocke localement doit-il quand meme etre classe avant usage ?",
+        "id": "quiz_course_01_q02",
+        "prompt": "Quelle trace prime si le code affiche et ce qui a tourne divergent ?",
         "options": [
           {
             "id": "a",
-            "text": "Parce qu'il devient automatiquement public"
+            "text": "Le journal d'execution"
           },
           {
             "id": "b",
-            "text": "Parce que son contenu lu peut etre transmis au service de modele"
+            "text": "Le dernier message"
           },
           {
             "id": "c",
-            "text": "Parce que le sandbox desactive le chiffrement"
+            "text": "Le titre de l'artefact"
           },
           {
             "id": "d",
-            "text": "Parce que toute donnee locale est une donnee clinique"
+            "text": "La capture d'ecran"
           }
         ],
-        "correctAnswer": "b",
-        "explanation": "Son contenu peut etre transmis au service de modele lorsqu'il est lu pour produire une reponse.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_data",
-            "title": "How Claude Science works with your data",
-            "url": "https://claude.com/docs/claude-science/how-claude-science-works-with-your-data"
-          }
-        ]
-      },
-      {
-        "id": "q1_6",
-        "prompt": "Quel partage est acceptable a la fin d'un exercice du cours ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Une capture isolee sans methode"
-          },
-          {
-            "id": "b",
-            "text": "Un export patient pseudonymise"
-          },
-          {
-            "id": "c",
-            "text": "Un paquet synthetique documente et valide humainement"
-          },
-          {
-            "id": "d",
-            "text": "Le contenu complet du dossier personnel"
-          }
-        ],
-        "correctAnswer": "c",
-        "explanation": "Un paquet sans secret, sur donnees synthetiques, avec methode, provenance, limites et validation humaine.",
+        "correctAnswer": "a",
+        "explanation": "Le journal d'execution documente ce qui a effectivement ete lance.",
         "sourceRefs": [
           {
             "id": "anthropic_artifacts",
-            "title": "Artifacts",
+            "title": "Claude Science - artifacts",
             "url": "https://claude.com/docs/claude-science/artifacts"
+          }
+        ]
+      },
+      {
+        "id": "quiz_course_01_q03",
+        "prompt": "Que fait le reviewer ?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Il compare des affirmations a la trace sans reexecuter l'analyse"
           },
+          {
+            "id": "b",
+            "text": "Il choisit automatiquement la meilleure methode"
+          },
+          {
+            "id": "c",
+            "text": "Il approuve une utilisation clinique"
+          },
+          {
+            "id": "d",
+            "text": "Il remplace la revue par les pairs"
+          }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Le reviewer controle la coherence, pas la pertinence scientifique complete.",
+        "sourceRefs": [
+          {
+            "id": "anthropic_reviewer",
+            "title": "Claude Science - the reviewer",
+            "url": "https://claude.com/docs/claude-science/the-reviewer"
+          }
+        ]
+      },
+      {
+        "id": "quiz_course_01_q04",
+        "prompt": "Pourquoi un fichier local doit-il etre classe ?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Son contenu lu peut etre envoye au modele"
+          },
+          {
+            "id": "b",
+            "text": "Tous les fichiers sont publics"
+          },
+          {
+            "id": "c",
+            "text": "Le sandbox le publie"
+          },
+          {
+            "id": "d",
+            "text": "Le reviewer le copie"
+          }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Local et non transmis ne sont pas synonymes.",
+        "sourceRefs": [
           {
             "id": "anthropic_data",
             "title": "How Claude Science works with your data",
@@ -380,260 +219,273 @@ export const CLAUDE_SCIENCE_V2_FINAL_QUIZZES = {
   },
   "claude_science_02_pratique": {
     "id": "claude_science_02_pratique_final_quiz",
-    "title": "Evaluation finale du cours",
-    "passingScore": 75,
-    "maxAttempts": 3,
+    "title": "Quiz - Installation et pratique reproductible",
+    "passingScore": 80,
+    "maxAttempts": null,
     "questions": [
       {
-        "id": "q2_1",
-        "prompt": "Que faut-il verifier avant d'approuver un plan ?",
+        "id": "quiz_course_02_q01",
+        "prompt": "Quel test doit preceder l'usage de donnees reelles ?",
         "options": [
           {
             "id": "a",
-            "text": "Uniquement la longueur du texte"
+            "text": "Projet vide, Python/R et artefact neutre"
           },
           {
             "id": "b",
-            "text": "Question, donnees, transformations, controles et sorties"
+            "text": "Import d'un dossier patient"
           },
           {
             "id": "c",
-            "text": "Le style graphique final"
+            "text": "Acces global en ecriture"
           },
           {
             "id": "d",
-            "text": "Le nombre de tokens"
+            "text": "Job distant non relu"
           }
         ],
-        "correctAnswer": "b",
-        "explanation": "Question, donnees, transformations, controles et sorties doivent etre explicites.",
+        "correctAnswer": "a",
+        "explanation": "La recette initiale doit etre neutre, reversible et documentee.",
+        "sourceRefs": [
+          {
+            "id": "anthropic_get_started",
+            "title": "Get started with Claude Science",
+            "url": "https://claude.com/docs/claude-science/get-started"
+          }
+        ]
+      },
+      {
+        "id": "quiz_course_02_q02",
+        "prompt": "Quelle permission respecte le moindre privilege ?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Lecture seule sur le dossier necessaire"
+          },
+          {
+            "id": "b",
+            "text": "Lecture-ecriture sur tout le disque"
+          },
+          {
+            "id": "c",
+            "text": "Acces global permanent"
+          },
+          {
+            "id": "d",
+            "text": "Aucune carte d'autorisation"
+          }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Limiter dossier, mode et portee reduit l'exposition.",
         "sourceRefs": [
           {
             "id": "anthropic_core",
-            "title": "Claude Science core concepts",
+            "title": "Claude Science - core concepts",
             "url": "https://claude.com/docs/claude-science/core-concepts"
           }
         ]
       },
       {
-        "id": "q2_2",
-        "prompt": "Pourquoi conserver l'environnement d'un artefact ?",
+        "id": "quiz_course_02_q03",
+        "prompt": "Que faut-il faire avant une analyse multi-etapes ?",
         "options": [
           {
             "id": "a",
-            "text": "Pour cacher le code"
+            "text": "Faire proposer un plan sans execution et le relire"
           },
           {
             "id": "b",
-            "text": "Pour reconstruire les conditions d'execution"
+            "text": "Demander une conclusion"
           },
           {
             "id": "c",
-            "text": "Pour supprimer les versions precedentes"
+            "text": "Ignorer les exclusions"
           },
           {
             "id": "d",
-            "text": "Pour valider un diagnostic"
+            "text": "Installer tous les paquets"
           }
         ],
-        "correctAnswer": "b",
-        "explanation": "Il permet de reconstruire les conditions d'execution.",
+        "correctAnswer": "a",
+        "explanation": "Le plan cree une porte de validation avant le code.",
+        "sourceRefs": [
+          {
+            "id": "anthropic_core",
+            "title": "Claude Science - core concepts",
+            "url": "https://claude.com/docs/claude-science/core-concepts"
+          }
+        ]
+      },
+      {
+        "id": "quiz_course_02_q04",
+        "prompt": "Quel ensemble rend un artefact reproductible ?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Code, environnement, journal d'execution et donnees autorisees"
+          },
+          {
+            "id": "b",
+            "text": "Figure seule"
+          },
+          {
+            "id": "c",
+            "text": "Texte seul"
+          },
+          {
+            "id": "d",
+            "text": "Nom du modele seul"
+          }
+        ],
+        "correctAnswer": "a",
+        "explanation": "La reproduction depend de la trace complete.",
         "sourceRefs": [
           {
             "id": "anthropic_artifacts",
-            "title": "Artifacts",
+            "title": "Claude Science - artifacts",
+            "url": "https://claude.com/docs/claude-science/artifacts"
+          },
+          {
+            "id": "anthropic_tools",
+            "title": "Claude Science - tools and environments",
+            "url": "https://claude.com/docs/claude-science/tools-and-environments"
+          }
+        ]
+      }
+    ]
+  },
+  "claude_science_03_tp": {
+    "id": "claude_science_03_tp_final_quiz",
+    "title": "Quiz - Validation des travaux pratiques",
+    "passingScore": 80,
+    "maxAttempts": null,
+    "questions": [
+      {
+        "id": "quiz_course_03_q01",
+        "prompt": "Quelle donnee est autorisee dans les TP ?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Uniquement les jeux synthetiques fournis"
+          },
+          {
+            "id": "b",
+            "text": "Dossier patient pseudonymise"
+          },
+          {
+            "id": "c",
+            "text": "Export hospitalier"
+          },
+          {
+            "id": "d",
+            "text": "DICOM reel"
+          }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Le paquet impose des donnees synthetiques uniquement.",
+        "sourceRefs": [
+          {
+            "id": "anthropic_data",
+            "title": "How Claude Science works with your data",
+            "url": "https://claude.com/docs/claude-science/how-claude-science-works-with-your-data"
+          }
+        ]
+      },
+      {
+        "id": "quiz_course_03_q02",
+        "prompt": "Comment qualifier les fold-changes du TP d'expression genique ?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Descriptifs et non cliniques"
+          },
+          {
+            "id": "b",
+            "text": "Preuves d'efficacite"
+          },
+          {
+            "id": "c",
+            "text": "Diagnostics"
+          },
+          {
+            "id": "d",
+            "text": "Resultats confirmatoires"
+          }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Le faible jeu synthetique sert a apprendre la trace, pas a conclure biologiquement.",
+        "sourceRefs": [
+          {
+            "id": "anthropic_overview",
+            "title": "Claude Science - overview",
+            "url": "https://claude.com/docs/claude-science/overview"
+          }
+        ]
+      },
+      {
+        "id": "quiz_course_03_q03",
+        "prompt": "Quand consulter la correction d'un TP ?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Apres soumission des livrables"
+          },
+          {
+            "id": "b",
+            "text": "Avant de commencer"
+          },
+          {
+            "id": "c",
+            "text": "Pendant le quiz"
+          },
+          {
+            "id": "d",
+            "text": "Jamais"
+          }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Les corrections sont masquees jusqu'a la soumission.",
+        "sourceRefs": [
+          {
+            "id": "anthropic_artifacts",
+            "title": "Claude Science - artifacts",
             "url": "https://claude.com/docs/claude-science/artifacts"
           }
         ]
       },
       {
-        "id": "q2_3",
-        "prompt": "Que fait le reviewer ?",
+        "id": "quiz_course_03_q04",
+        "prompt": "Que doit contenir le rapport final ?",
         "options": [
           {
             "id": "a",
-            "text": "Il reproduit toute l'etude sur un autre cluster"
+            "text": "Question, methode, resultats, provenance, limites et validation"
           },
           {
             "id": "b",
-            "text": "Il compare les affirmations aux traces disponibles"
+            "text": "Seulement la figure"
           },
           {
             "id": "c",
-            "text": "Il certifie les conclusions cliniques"
+            "text": "Seulement le prompt"
           },
           {
             "id": "d",
-            "text": "Il remplace la revue de code"
+            "text": "Une conclusion clinique"
           }
         ],
-        "correctAnswer": "b",
-        "explanation": "Il compare les affirmations aux plans, artefacts et traces disponibles.",
+        "correctAnswer": "a",
+        "explanation": "Le rapport doit relier chaque affirmation a une source ou une execution.",
         "sourceRefs": [
+          {
+            "id": "anthropic_artifacts",
+            "title": "Claude Science - artifacts",
+            "url": "https://claude.com/docs/claude-science/artifacts"
+          },
           {
             "id": "anthropic_reviewer",
-            "title": "The reviewer",
+            "title": "Claude Science - the reviewer",
             "url": "https://claude.com/docs/claude-science/the-reviewer"
-          }
-        ]
-      },
-      {
-        "id": "q2_4",
-        "prompt": "Quel commentaire est le plus actionnable ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Ameliore tout"
-          },
-          {
-            "id": "b",
-            "text": "Rends cela scientifique"
-          },
-          {
-            "id": "c",
-            "text": "Sur l'axe Y, afficher l'unite et verifier la plage 0-100"
-          },
-          {
-            "id": "d",
-            "text": "Recommence"
-          }
-        ],
-        "correctAnswer": "c",
-        "explanation": "Celui qui designe une zone, demande un changement et donne un critere d'acceptation.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_comments",
-            "title": "Comments",
-            "url": "https://claude.com/docs/claude-science/comments"
-          }
-        ]
-      },
-      {
-        "id": "q3_1",
-        "prompt": "Quel risque introduit un noyau persistant ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Il interdit Python"
-          },
-          {
-            "id": "b",
-            "text": "Une variable ancienne peut influencer le resultat"
-          },
-          {
-            "id": "c",
-            "text": "Il chiffre automatiquement les secrets"
-          },
-          {
-            "id": "d",
-            "text": "Il supprime les paquets"
-          }
-        ],
-        "correctAnswer": "b",
-        "explanation": "Une variable ancienne peut influencer une execution sans apparaitre dans le script courant.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_tools",
-            "title": "Tools and environments",
-            "url": "https://claude.com/docs/claude-science/tools-and-environments"
-          }
-        ]
-      },
-      {
-        "id": "q3_2",
-        "prompt": "Que faut-il tracer pour une source bibliographique ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Uniquement le titre"
-          },
-          {
-            "id": "b",
-            "text": "Identifiant, version, date et passage"
-          },
-          {
-            "id": "c",
-            "text": "Le nom du navigateur"
-          },
-          {
-            "id": "d",
-            "text": "Le nombre de pages du rapport"
-          }
-        ],
-        "correctAnswer": "b",
-        "explanation": "Identifiant, version, date d'acces et passage utilise.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_literature",
-            "title": "Literature access",
-            "url": "https://claude.com/docs/claude-science/literature-access"
-          }
-        ]
-      },
-      {
-        "id": "q3_3",
-        "prompt": "Ou placer une cle d'acces cloud ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Dans le prompt"
-          },
-          {
-            "id": "b",
-            "text": "Dans la legende d'une figure"
-          },
-          {
-            "id": "c",
-            "text": "Dans le mecanisme de credentials"
-          },
-          {
-            "id": "d",
-            "text": "Dans un CSV partage"
-          }
-        ],
-        "correctAnswer": "c",
-        "explanation": "Dans le mecanisme de credentials prevu, jamais dans le prompt ou le notebook.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_storage",
-            "title": "Cloud storage",
-            "url": "https://claude.com/docs/claude-science/cloud-storage"
-          }
-        ]
-      },
-      {
-        "id": "q3_4",
-        "prompt": "Avant un calcul distant sur une infrastructure institutionnelle, que doit valider le chercheur ?",
-        "options": [
-          {
-            "id": "a",
-            "text": "Seulement le nom du calcul"
-          },
-          {
-            "id": "b",
-            "text": "Le besoin scientifique, les donnees autorisees, les responsables, les controles et les sorties"
-          },
-          {
-            "id": "c",
-            "text": "Uniquement la duree"
-          },
-          {
-            "id": "d",
-            "text": "Le theme de couleur"
-          }
-        ],
-        "correctAnswer": "b",
-        "explanation": "Le besoin scientifique, les donnees autorisees, les responsables, les controles et les sorties attendues.",
-        "sourceRefs": [
-          {
-            "id": "anthropic_remote",
-            "title": "Remote compute clusters",
-            "url": "https://claude.com/docs/claude-science/remote-compute-clusters"
-          },
-          {
-            "id": "anthropic_storage",
-            "title": "Cloud storage",
-            "url": "https://claude.com/docs/claude-science/cloud-storage"
           }
         ]
       }
@@ -643,166 +495,143 @@ export const CLAUDE_SCIENCE_V2_FINAL_QUIZZES = {
 export const CLAUDE_SCIENCE_V2_LABS = {
   "lab_01": {
     "id": "lab_01",
-    "courseId": "claude_science_03_travaux_pratiques",
-    "title": "Recette d'installation et matrice de permissions",
+    "courseId": "claude_science_03_tp",
+    "title": "Cadrer une recherche bibliographique exploratoire",
     "maxScore": 100,
     "passingScore": 75,
     "rubric": [
       {
-        "id": "cadrage",
-        "label": "Cadrage",
-        "description": "La question, le périmètre et les données autorisées sont explicitement définis.",
+        "id": "question",
+        "label": "question",
         "weight": 20
       },
       {
-        "id": "methode",
-        "label": "Méthode",
-        "description": "Les étapes suivent une méthode lisible et vérifiable.",
+        "id": "criteres",
+        "label": "criteres",
         "weight": 25
       },
       {
-        "id": "reproductibilite",
-        "label": "Reproductibilité",
-        "description": "Les fichiers, versions, paramètres et contrôles nécessaires sont documentés.",
+        "id": "tracabilite",
+        "label": "tracabilite",
         "weight": 25
       },
       {
-        "id": "validation",
-        "label": "Validation",
-        "description": "Les contrôles indépendants et la validation humaine sont décrits.",
-        "weight": 20
+        "id": "incertitude",
+        "label": "incertitude",
+        "weight": 15
       },
       {
         "id": "limites",
-        "label": "Limites",
-        "description": "Les limites, incertitudes et l'absence de portée clinique sont explicites.",
-        "weight": 10
+        "label": "limites",
+        "weight": 15
       }
     ],
-    "correction": "# Correction expliquee - TP 01\n\n## Resultat attendu\n\nLa fiche mentionne le systeme, l'architecture, l'espace disponible et l'etat de Python et R. Le projet d'essai ne contient aucune donnee medicale. La matrice accorde uniquement la lecture au dossier du TP, pour une portee courte, avec une justification et une date de revue.\n\n## Raisonnement\n\nUne installation reussie ne se limite pas a l'ouverture de l'application. Il faut prouver que les environnements sont prets, que la carte de permission est comprise et que l'autorisation peut etre revoquee. Un acces lecture-ecriture ou un dossier parent trop large doit etre refuse et corrige.\n\n## Erreurs typiques\n\n- tester avec un fichier patient ;\n- accorder tout le disque ;\n- confondre succes de connexion et succes des environnements ;\n- oublier la preuve de revocation.\n\n## Grille de controle\n\n- Toutes les donnees sont synthetiques.\n- Les permissions sont justifiees.\n- Le code et l'environnement sont conserves.\n- Les controles independants sont documentes.\n- Les limites et la validation humaine sont explicites.\n",
-    "correctionSha256": "bb96ba4b446d64282437da1a1ebca8d731258f3aff8a93c0237e9e9731bd7c3c"
+    "correction": "# Correction expliquee - TP 1\n\nCette correction n'est visible qu'apres la soumission.\n\n## Resultat attendu\n\n- Question PICO ou PECO explicite.\n- Criteres pre-specifies avant le tri.\n- Chaque notice classee `include`, `exclude` ou `uncertain` avec justification.\n- Les cas incertains restent visibles et sont soumis a une seconde lecture.\n- Chaque affirmation du compte rendu pointe vers un identifiant de notice ; aucune reference n'est inventee.\n- Le rapport indique clairement qu'il s'agit d'un corpus synthetique et d'un exercice exploratoire, pas d'une revue systematique PRISMA.\n\n## Erreurs frequentes\n\n- Modifier les criteres apres avoir vu les resultats.\n- Transformer `uncertain` en inclusion sans seconde lecture.\n- Presenter un titre fictif comme une publication reelle.\n",
+    "correctionSha256": "e54a7718cae5756bb56ca2cd524b7f8577ce77a4c4d1b063daad87851f2298d4",
+    "correctionResources": []
   },
   "lab_02": {
     "id": "lab_02",
-    "courseId": "claude_science_03_travaux_pratiques",
-    "title": "Analyse descriptive reproductible",
+    "courseId": "claude_science_03_tp",
+    "title": "Analyser un jeu clinique synthetique avec Python ou R",
     "maxScore": 100,
     "passingScore": 75,
     "rubric": [
       {
-        "id": "cadrage",
-        "label": "Cadrage",
-        "description": "La question, le périmètre et les données autorisées sont explicitement définis.",
-        "weight": 20
-      },
-      {
-        "id": "methode",
-        "label": "Méthode",
-        "description": "Les étapes suivent une méthode lisible et vérifiable.",
+        "id": "controle_qualite",
+        "label": "controle_qualite",
         "weight": 25
       },
       {
-        "id": "reproductibilite",
-        "label": "Reproductibilité",
-        "description": "Les fichiers, versions, paramètres et contrôles nécessaires sont documentés.",
+        "id": "calculs",
+        "label": "calculs",
         "weight": 25
       },
       {
-        "id": "validation",
-        "label": "Validation",
-        "description": "Les contrôles indépendants et la validation humaine sont décrits.",
+        "id": "figure",
+        "label": "figure",
+        "weight": 15
+      },
+      {
+        "id": "provenance",
+        "label": "provenance",
         "weight": 20
       },
       {
         "id": "limites",
-        "label": "Limites",
-        "description": "Les limites, incertitudes et l'absence de portée clinique sont explicites.",
-        "weight": 10
+        "label": "limites",
+        "weight": 15
       }
     ],
-    "correction": "# Correction expliquee - TP 02\n\n## Valeurs de controle\n\n- 240 lignes, 0 identifiant duplique et 8 suivis manquants ;\n- 120 participants par bras ;\n- moyenne initiale : 59,5325 controle et 60,4617 intervention ;\n- moyenne de suivi sur cas complets : 60,7612 controle et 64,7328 intervention ;\n- variation moyenne sur cas complets : 1,2345 controle et 4,2922 intervention ;\n- taux descriptif d'evenement indesirable : 0,1083 controle et 0,1000 intervention.\n\n## Interpretation correcte\n\nCes nombres decrivent un jeu synthetique. La difference de variation ne demontre ni efficacite, ni causalite. Il faut documenter la gestion des huit valeurs manquantes et eviter de comparer des moyennes sans rappeler que le protocole est fictif.\n\n## Controle\n\nLe script de reference calcule `followup_score - baseline_score`, groupe par bras et arrondit seulement les sorties. Une divergence exige de verifier types, valeurs manquantes, filtre et sens de la soustraction.\n\n## Grille de controle\n\n- Toutes les donnees sont synthetiques.\n- Les permissions sont justifiees.\n- Le code et l'environnement sont conserves.\n- Les controles independants sont documentes.\n- Les limites et la validation humaine sont explicites.\n",
-    "correctionSha256": "2eaa67fb577b2d90c3a7de4f43c1781db2b7c89ce0f8304d4a1f7a44f665da47"
+    "correction": "# Correction expliquee - TP 2\n\nCette correction n'est visible qu'apres la soumission.\n\nExecutez `downloads/scripts/solution_descriptive_analysis.py` depuis l'environnement Python du projet. Une version R equivalente est fournie.\n\n## Controles obligatoires\n\n- 240 lignes et identifiants uniques.\n- Scores dans l'intervalle 0-100 hors valeurs manquantes.\n- Valeurs manquantes comptees avant les moyennes.\n- Statistiques descriptives par bras, sans test causal ni conclusion d'efficacite.\n- Figure marquee comme donnees synthetiques.\n\nComparez le JSON obtenu a `downloads/expected/clinical_descriptive_expected.json`. Tout ecart doit etre explique avant validation.\n",
+    "correctionSha256": "5482c01f21ad6c508186407b658a8d083da1f708cc75c92bf78253f8c8492a6b",
+    "correctionResources": [
+      {
+        "title": "solution_descriptive_analysis.py",
+        "filename": "solution_descriptive_analysis.py",
+        "url": "/api/assets/claude-science-v3/courses/03_travaux_pratiques/downloads/scripts/solution_descriptive_analysis_d804392f.py",
+        "sha256": "cdb87336d7578ffab605287409762c3d7c5b7885180fba2c7ce6943bde0d1fce",
+        "size": 1556
+      },
+      {
+        "title": "clinical_descriptive_expected.json",
+        "filename": "clinical_descriptive_expected.json",
+        "url": "/api/assets/claude-science-v3/courses/03_travaux_pratiques/downloads/expected/clinical_descriptive_expected_7062f6fe.json",
+        "sha256": "0fd820bf1c821ae1e863f425759230f6bff2b3811b634e675851dcbabf2ba7c5",
+        "size": 495
+      }
+    ]
   },
   "lab_03": {
     "id": "lab_03",
-    "courseId": "claude_science_03_travaux_pratiques",
-    "title": "Recherche bibliographique exploratoire et piste de preuve",
+    "courseId": "claude_science_03_tp",
+    "title": "Capstone expression genique : figure et rapport reproductible",
     "maxScore": 100,
     "passingScore": 75,
     "rubric": [
       {
-        "id": "cadrage",
-        "label": "Cadrage",
-        "description": "La question, le périmètre et les données autorisées sont explicitement définis.",
+        "id": "controle_qualite",
+        "label": "controle_qualite",
         "weight": 20
       },
       {
-        "id": "methode",
-        "label": "Méthode",
-        "description": "Les étapes suivent une méthode lisible et vérifiable.",
+        "id": "calculs",
+        "label": "calculs",
         "weight": 25
+      },
+      {
+        "id": "figure",
+        "label": "figure",
+        "weight": 15
       },
       {
         "id": "reproductibilite",
-        "label": "Reproductibilité",
-        "description": "Les fichiers, versions, paramètres et contrôles nécessaires sont documentés.",
+        "label": "reproductibilite",
         "weight": 25
-      },
-      {
-        "id": "validation",
-        "label": "Validation",
-        "description": "Les contrôles indépendants et la validation humaine sont décrits.",
-        "weight": 20
       },
       {
         "id": "limites",
-        "label": "Limites",
-        "description": "Les limites, incertitudes et l'absence de portée clinique sont explicites.",
-        "weight": 10
+        "label": "limites",
+        "weight": 15
       }
     ],
-    "correction": "# Correction expliquee - TP 03\n\n## Tri bibliographique attendu\n\nLe CSV comporte 36 references fictives : 12 `include`, 12 `exclude`, 12 `uncertain`; 9 enregistrements par type de source; 24 en acces ouvert et 12 sans acces ouvert. Ces etiquettes servent uniquement a verifier la manipulation du fichier, pas a simuler une vraie revue systematique.\n\n## Methode attendue\n\nLa question, les termes, la periode et les criteres sont ecrits avant le tri. Les 12 cas `uncertain` restent dans une file de verification et ne sont jamais forces dans la categorie `include` ou `exclude` par Claude. Le statut d'acces ouvert ne doit pas etre confondu avec la qualite metodologique. Comme les titres et etiquettes sont fictifs, aucune conclusion scientifique ne peut etre tiree du jeu.\n\n## Piste de preuve attendue\n\nElle contient la requete complete, la date, les bases visees, les criteres, les decisions de tri, les cas incertains, l'identifiant de chaque reference et le passage qui resterait a verifier. La note finale indique explicitement l'absence de double screening, de verification des textes integraux et de diagramme PRISMA.\n\n## Erreurs typiques\n\n- modifier les criteres apres avoir vu les resultats ;\n- assimiler une etiquette synthetique a une decision scientifique ;\n- citer un article sans avoir verifie le passage ;\n- presenter la recherche exploratoire comme une revue systematique.\n\n## Grille de controle\n\n- Toutes les donnees sont synthetiques.\n- Les permissions sont justifiees.\n- Le code et l'environnement sont conserves.\n- Les controles independants sont documentes.\n- Les limites et la validation humaine sont explicites.\n",
-    "correctionSha256": "3da9f4087244813f347e8264f65ef040a3a28de7c171b48cca3dfa4e1adbc5fb"
-  },
-  "lab_04": {
-    "id": "lab_04",
-    "courseId": "claude_science_03_travaux_pratiques",
-    "title": "Capstone : dossier d'expression génique reproductible",
-    "maxScore": 100,
-    "passingScore": 75,
-    "rubric": [
+    "correction": "# Correction expliquee - TP 3\n\nCette correction n'est visible qu'apres la soumission.\n\nExecutez `downloads/scripts/solution_gene_expression.py` depuis l'environnement Python du projet. Une version R equivalente est fournie.\n\n## Controles obligatoires\n\n- 120 genes fictifs, six echantillons synthetiques et aucune valeur manquante.\n- Moyennes controle et traitement calculees par ligne.\n- `log2((moyenne_traitement + 1) / (moyenne_controle + 1))` utilise uniquement comme indicateur descriptif.\n- Top 20 classe par valeur absolue du fold-change descriptif.\n- Figure, script, environnement et journal d'execution conserves.\n- Rapport indiquant qu'aucun test statistique, resultat biologique ou conclusion clinique n'est produit.\n\nComparez le JSON obtenu a `downloads/expected/gene_expression_expected.json` et la table au CSV attendu.\n",
+    "correctionSha256": "0ed54353c276f6c10a6c4a26ad90c59a1aa0bc98baf96df907a4f47f15414cf8",
+    "correctionResources": [
       {
-        "id": "cadrage",
-        "label": "Cadrage",
-        "description": "La question, le périmètre et les données autorisées sont explicitement définis.",
-        "weight": 20
+        "title": "solution_gene_expression.py",
+        "filename": "solution_gene_expression.py",
+        "url": "/api/assets/claude-science-v3/courses/03_travaux_pratiques/downloads/scripts/solution_gene_expression_0cada8fe.py",
+        "sha256": "82277d2c73b606ed0b61e745f891537479182c88cf24ab1ae543e57fd6b98eb0",
+        "size": 1627
       },
       {
-        "id": "methode",
-        "label": "Méthode",
-        "description": "Les étapes suivent une méthode lisible et vérifiable.",
-        "weight": 25
-      },
-      {
-        "id": "reproductibilite",
-        "label": "Reproductibilité",
-        "description": "Les fichiers, versions, paramètres et contrôles nécessaires sont documentés.",
-        "weight": 25
-      },
-      {
-        "id": "validation",
-        "label": "Validation",
-        "description": "Les contrôles indépendants et la validation humaine sont décrits.",
-        "weight": 20
-      },
-      {
-        "id": "limites",
-        "label": "Limites",
-        "description": "Les limites, incertitudes et l'absence de portée clinique sont explicites.",
-        "weight": 10
+        "title": "gene_expression_expected.json",
+        "filename": "gene_expression_expected.json",
+        "url": "/api/assets/claude-science-v3/courses/03_travaux_pratiques/downloads/expected/gene_expression_expected_b5210521.json",
+        "sha256": "fba34312fe98e877296bdc209413d74e18af1afc59e4a0c997fc400b549bacb0",
+        "size": 3306
       }
-    ],
-    "correction": "# Correction expliquee - TP 04\n\n## Valeurs de controle\n\nLe jeu comporte 120 genes et 6 echantillons. Le calcul descriptif est `log2((moyenne_traitement + 1) / (moyenne_controle + 1))`. Les cinq amplitudes les plus fortes commencent par :\n\n1. GENE_0015 : -1,080783 ;\n2. GENE_0023 : -1,068344 ;\n3. GENE_0010 : 1,040252 ;\n4. GENE_0014 : -1,007475 ;\n5. GENE_0012 : 0,981415.\n\n## Interpretation correcte\n\nCe classement est purement descriptif. Il n'inclut ni modele de dispersion, ni test statistique, ni correction de multiplicite, ni validation biologique. Le rapport doit donc parler de differences descriptives dans un jeu synthetique et proposer les validations suivantes, jamais une cible therapeutique ou un biomarqueur clinique.\n\n## Paquet final\n\nIl comprend les donnees hachees, le script, l'environnement, le tableau complet, la figure, les controles, la matrice affirmation-preuve, les alertes du reviewer et la preuve de reexecution dans une session propre.\n\n## Grille de controle\n\n- Toutes les donnees sont synthetiques.\n- Les permissions sont justifiees.\n- Le code et l'environnement sont conserves.\n- Les controles independants sont documentes.\n- Les limites et la validation humaine sont explicites.\n",
-    "correctionSha256": "6c61e8b955278629dafeee1e19d5d2d35b78192f2fa7a809d22e0a46df8962a7"
+    ]
   }
 } as const;
