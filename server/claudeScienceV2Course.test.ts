@@ -143,6 +143,22 @@ describe("Claude Science V2 course collection", () => {
     expect(practicals.filter((block: any) => /points de contrôle fournis dans le retour de correction/i.test(JSON.stringify(block))).length).toBe(2);
   });
 
+  it("shows a managed download on the exact guided action that names a learner file", () => {
+    const practicalCourse = readCourse(courseIds[1]);
+    const action = blocksOf(practicalCourse).find((block: any) => (
+      block.type === "guided_action"
+      && JSON.stringify(block.steps || []).includes("clinical_study_synthetic.csv")
+    ));
+
+    expect(action).toBeTruthy();
+    expect(action.resources).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        title: expect.objectContaining({ fr: "clinical_study_synthetic.csv" }),
+        url: expect.stringMatching(/^\/api\/assets\/claude-science-v2\//),
+      }),
+    ]));
+  });
+
   it("preserves canonical lesson objectives and French title case", () => {
     const practicalCourse = readCourse(courseIds[1]);
     for (const lesson of practicalCourse.lessons) {

@@ -105,6 +105,34 @@ function sourceList(value) {
     .map((item) => local(item));
 }
 
+const learnerFileMentionPattern = /\b[A-Za-z0-9][A-Za-z0-9_.-]*\.(?:csv|tsv|json|py|md|pdf|xlsx?)\b/g;
+
+/**
+ * Makes a learner-required file available on the exact source screen that
+ * names it. Only media-library assets explicitly marked as learner downloads
+ * can be returned; expected outputs and correction files are never exposed.
+ */
+function resourcesNamedInSource(value) {
+  const filenames = [...new Set(String(value || "").match(learnerFileMentionPattern) || [])];
+  return filenames.flatMap((filename) => {
+    const matched = Object.entries(assetMap).find(([relativePath, asset]) => (
+      asset.kind === "download"
+      && path.basename(relativePath).toLowerCase() === filename.toLowerCase()
+      && !relativePath.includes("/expected/")
+      && !relativePath.includes("/solutions/")
+      && !/\/scripts\/solution_/i.test(relativePath)
+    ));
+    if (!matched) return [];
+    const [, asset] = matched;
+    return [{
+      title: local(filename, filename),
+      description: local("Donnée synthétique fournie pour cette action. Téléchargez-la avant de commencer.", "Synthetic data supplied for this action. Download it before you begin."),
+      url: asset.url,
+      sha256: asset.sha256,
+    }];
+  });
+}
+
 /** Expected-output files are correction material and remain server-only. */
 function learnerSafeLabInstruction(value) {
   const text = String(value || "");
@@ -135,7 +163,14 @@ function screenToChapter({ screen, course, module, lesson, catalog, media, cours
   }
   if (screen.type === "GuidedAction") {
     const blocks = [
-      { type: "guided_action", id: chapterId, title: local(screen.title), steps: sourceList(screen.body_fr), expectedEvidence: local(screen.expected_evidence_fr) },
+      {
+        type: "guided_action",
+        id: chapterId,
+        title: local(screen.title),
+        steps: sourceList(screen.body_fr),
+        expectedEvidence: local(screen.expected_evidence_fr),
+        resources: resourcesNamedInSource(screen.body_fr),
+      },
     ];
     const refsBlock = sourceBlock(refs);
     if (refsBlock) blocks.push(refsBlock);
@@ -444,7 +479,21 @@ for (const url of Object.keys(mediaLibrary)) {
 }
 for (const asset of Object.values(assetMap)) {
   if (isPrivateClaudeScienceAssetUrl(asset.url)) continue;
-  mediaLibrary[asset.url] = { id: `claude_science_v2_${asset.sha256.slice(0, 18)}`, url: asset.url, title: asset.title, kind: asset.kind, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+  const existing = mediaLibrary[asset.url];
+  const id = `claude_science_v2_${asset.sha256.slice(0, 18)}`;
+  const unchanged = existing
+    && existing.id === id
+    && existing.title === asset.title
+    && existing.kind === asset.kind;
+  const now = new Date().toISOString();
+  mediaLibrary[asset.url] = {
+    id,
+    url: asset.url,
+    title: asset.title,
+    kind: asset.kind,
+    createdAt: existing?.createdAt || now,
+    updatedAt: unchanged ? existing.updatedAt : now,
+  };
 }
 writeJson(mediaLibraryPath, mediaLibrary);
 

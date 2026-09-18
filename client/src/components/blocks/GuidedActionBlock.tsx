@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2, ClipboardCheck } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -43,6 +43,7 @@ export function GuidedActionBlock({
     ? block.steps.map((step: unknown) => text(step, lang)).filter(Boolean)
     : toSteps(block.body, lang);
   const expectedEvidence = text(block.expectedEvidence, lang);
+  const resources = Array.isArray(block.resources) ? block.resources.filter((resource: any) => resource?.url) : [];
   const actionId = String(block.id || "guided_action");
   const [response, setResponse] = useState(savedResponse);
   const [attested, setAttested] = useState(false);
@@ -67,6 +68,21 @@ export function GuidedActionBlock({
       {expectedEvidence && (
         <div className="mt-4 rounded-xl border border-blue-200 bg-white p-4 text-sm leading-relaxed text-slate-700">
           <strong className="text-slate-900">{lang === "fr" ? "Preuve attendue :" : "Expected evidence:"}</strong> {expectedEvidence}
+        </div>
+      )}
+      {resources.length > 0 && (
+        <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <p className="text-sm font-semibold text-emerald-950">{lang === "fr" ? "Fichiers nécessaires à cette action" : "Files needed for this action"}</p>
+          <div className="mt-2 space-y-2">
+            {resources.map((resource: any, index: number) => {
+              const title = text(resource.title, lang) || (lang === "fr" ? "Télécharger le fichier" : "Download file");
+              const description = text(resource.description, lang);
+              return <a key={`${resource.url}-${index}`} href={resource.url} target="_blank" rel="noreferrer" className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-white p-3 text-sm text-emerald-900 transition-colors hover:bg-emerald-100">
+                <Download className="mt-0.5 h-4 w-4 shrink-0" />
+                <span className="min-w-0"><strong className="break-all">{title}</strong>{description && <span className="mt-0.5 block text-xs text-emerald-800">{description}</span>}</span>
+              </a>;
+            })}
+          </div>
         </div>
       )}
       {completed ? (
