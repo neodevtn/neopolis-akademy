@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import catalog from "@/data/trainingIndex.json";
-import { extractTargetJobRoles, getTrainingFormatDefinitions, resolveTrainingFormat } from "./trainingCatalogTaxonomy";
+import { CAREER_FAMILY_DEFINITIONS, extractTargetJobRoles, getCareerFamilyIds, getTrainingFormatDefinitions, matchesCatalogueSearchText, normalizeCatalogueSearchTokens, resolveTrainingFormat } from "./trainingCatalogTaxonomy";
 
 describe("taxonomie de formation", () => {
   it("déclare les trois sous-catégories de formation demandées", () => {
@@ -11,7 +11,7 @@ describe("taxonomie de formation", () => {
     ]);
   });
 
-  it("classe les quarante TP comme tutoriels autonomes et expose tous leurs métiers au filtre", () => {
+  it("classe les quarante TP comme tutoriels autonomes et les résume dans des familles métier sans doublon", () => {
     const certifications = (catalog as any).certifications.filter((certification: any) => certification.group === "ia_appliquee_metiers_tp");
     const courses = (catalog as any).courses.filter((course: any) => course.certId?.startsWith("ia_appliquee_metiers_tp__formation_"));
     const visibleRoles = extractTargetJobRoles(courses);
@@ -20,10 +20,16 @@ describe("taxonomie de formation", () => {
     expect(certifications.every((certification: any) => resolveTrainingFormat(certification) === "tutorial_tp")).toBe(true);
     expect(courses).toHaveLength(40);
     expect(courses.every((course: any) => typeof course.targetJob === "string" && course.targetJob.length > 0)).toBe(true);
-    for (const course of courses) {
-      for (const role of course.targetJob.split(",").map((value: string) => value.trim())) {
-        expect(visibleRoles).toContain(role);
-      }
-    }
+    expect(visibleRoles.length).toBeLessThanOrEqual(CAREER_FAMILY_DEFINITIONS.length);
+    expect(new Set(visibleRoles).size).toBe(visibleRoles.length);
+    expect(getCareerFamilyIds(courses).length).toBeGreaterThan(0);
+    expect(visibleRoles).toContain("Commerce, marketing & relation client");
+  });
+
+  it("intersecte une recherche textuelle avec les autres critères sans sensibilité aux accents", () => {
+    expect(normalizeCatalogueSearchTokens("  Développer  agents IA ")).toEqual(["developper", "agents", "ia"]);
+    expect(matchesCatalogueSearchText("Développer des agents IA avec Python et API", "developper agents")).toBe(true);
+    expect(matchesCatalogueSearchText("Développer des agents IA avec Python et API", "developper finance")).toBe(false);
+    expect(matchesCatalogueSearchText("Développer des agents IA avec Python et API", "")).toBe(true);
   });
 });

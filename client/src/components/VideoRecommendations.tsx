@@ -13,8 +13,11 @@ export interface RecommendedVideo {
   topics: string[];
 }
 
-export function shouldRenderVideoRecommendations(lesson: { recommendedVideosManaged?: boolean }): boolean {
-  return lesson.recommendedVideosManaged !== false;
+export function shouldRenderVideoRecommendations(lesson: { recommendedVideosManaged?: boolean; recommendedVideos?: RecommendedVideo[] }): boolean {
+  // Keyword matching looked plausible but could recommend a video outside the
+  // actual learning sequence. A recommendation is now visible only after an
+  // explicit editorial validation on the lesson itself.
+  return lesson.recommendedVideosManaged === true && Array.isArray(lesson.recommendedVideos) && lesson.recommendedVideos.length > 0;
 }
 
 interface I18nText { en?: string; fr?: string; }
@@ -107,18 +110,11 @@ function FeedbackPopover({ videoId, videoTitle, lessonId, certId, t, onDismissed
 export function VideoRecommendations({ lesson, lang, t, lessonId, certId }: VideoRecommendationsProps) {
   const [dismissedVideos, setDismissedVideos] = useState<Set<string>>(new Set());
   const recommendationsDisabled = !shouldRenderVideoRecommendations(lesson);
-  const catalogQuery = trpc.videoRecommendations.getCatalog.useQuery();
   const feedbackQuery = trpc.videoFeedback.getMyFeedback.useQuery({ certId: certId || '' }, { enabled: !!certId });
-  const selectedVideos = useMemo(() => {
-    const explicit = Array.isArray(lesson.recommendedVideos) ? lesson.recommendedVideos : [];
-    if (explicit.length > 0) return explicit;
-    if (!catalogQuery.data) return [];
-    return selectRecommendedVideos(getLessonText(lesson, lang), catalogQuery.data.videos, catalogQuery.data.topicAliases);
-  }, [catalogQuery.data, lang, lesson]);
+  const selectedVideos = useMemo(() => Array.isArray(lesson.recommendedVideos) ? lesson.recommendedVideos : [], [lesson.recommendedVideos]);
   const reportedIds = new Set((feedbackQuery.data || []).map((item) => item.videoId).concat(Array.from(dismissedVideos)));
   const visibleVideos = selectedVideos.filter((video) => !reportedIds.has(video.videoId));
   if (recommendationsDisabled) return null;
-  if (catalogQuery.isLoading && !lesson.recommendedVideos?.length) return null;
   if (visibleVideos.length === 0) return null;
 
   return <section className="mb-4 mt-8 px-1" aria-label={t({ en: 'Recommended Videos', fr: 'Vidéos recommandées' })}>

@@ -16,8 +16,10 @@ describe("selectRecommendedVideos", () => {
     expect(selectRecommendedVideos("Unrelated topic", catalog, { rag: ["rag"] })).toEqual([]);
   });
 
-  it("honors an explicit instruction to hide generic recommendations", () => {
+  it("shows recommendations only after explicit editorial validation", () => {
     expect(shouldRenderVideoRecommendations({ recommendedVideosManaged: false })).toBe(false);
-    expect(shouldRenderVideoRecommendations({})).toBe(true);
+    expect(shouldRenderVideoRecommendations({})).toBe(false);
+    expect(shouldRenderVideoRecommendations({ recommendedVideosManaged: true })).toBe(false);
+    expect(shouldRenderVideoRecommendations({ recommendedVideosManaged: true, recommendedVideos: catalog })).toBe(true);
   });
 });

@@ -11,6 +11,8 @@ import {
   publicTrainingCopy,
   publicTrainingCatalogueHrefAlternates,
   publicTrainingCataloguePath,
+  publicGoldenJobsHrefAlternates,
+  publicGoldenJobsPath,
   publicTrainingHrefAlternates,
   publicTrainingLocaleMeta,
   publicTrainingLocales,
@@ -30,6 +32,7 @@ import { searchPublicCatalogueTrainings } from "@shared/publicTrainingSearch";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 import { PUBLIC_SOCIAL_ASSETS } from "@shared/publicSocialAssets";
 import { resolveTrainingVisualAsset } from "@shared/trainingVisualAssets";
+import { GOLDEN_JOBS_SOURCE_URL, getGoldenJob, getGoldenJobText, goldenJobs, goldenJobsPromotionalVideos } from "@shared/goldenJobs";
 import { ORGANIZATION_SOCIAL_PROFILES } from "./seo";
 import { ENV } from "./_core/env";
 
@@ -76,6 +79,7 @@ function publicChromeCopy(locale: PublicTrainingLocale) {
     explore: locale === "ar" ? "استكشاف" : locale === "en" ? "Explore" : "Explorer",
     contact: locale === "ar" ? "التواصل" : "Contact",
     legal: locale === "ar" ? "الإشعار القانوني" : locale === "en" ? "Legal notice" : "Mentions légales",
+    goldenJobs: locale === "ar" ? "وظائف ذهبية" : locale === "en" ? "Golden Jobs" : "Golden Jobs",
     lead: locale === "ar" ? "طوّر مهارات عملية في الذكاء الاصطناعي لمهنتك." : locale === "en" ? "Build practical AI skills for your profession." : "Développer des compétences IA utiles dans votre métier.",
     rights: locale === "ar" ? "جميع الحقوق محفوظة." : locale === "en" ? "All rights reserved." : "Tous droits réservés.",
   };
@@ -164,11 +168,11 @@ function styles() {
     main { padding: 42px 0 60px; } h2 { margin: 0; color: #13294b; font-size: clamp(1.45rem, 3vw, 2.15rem); letter-spacing: -.03em; line-height: 1.18; } h3 { margin: 0; font-size: 1.08rem; color: #162f57; letter-spacing: -.02em; }
     .section-intro { margin: 12px 0 24px; max-width: 820px; color: #526178; }.metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin: 28px 0 44px; }.metric { padding: 17px; min-width: 0; background: #fff; border: 1px solid #e4e9f1; border-radius: 12px; }.metric-number { display: block; color: #193c73; font-size: 1.8rem; font-weight: 820; letter-spacing: -.04em; }.metric-label { display: block; margin-top: 2px; color: #62738e; font-size: .82rem; font-weight: 650; }
     .themes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }.theme-card, .training-card, .use-case { display: flex; flex-direction: column; min-width: 0; padding: 20px; background: #fff; border: 1px solid #e4e9f1; border-radius: 14px; text-decoration: none; }.theme-card:hover, .training-card:hover { border-color: #9db6dc; box-shadow: 0 12px 28px rgba(18, 47, 87, .09); }.accent { display: block; width: 42px; height: 4px; margin-bottom: 17px; border-radius: 999px; }.accent-blue { background: #3171c4; }.accent-violet { background: #7350ba; }.accent-emerald { background: #20856e; }.accent-amber { background: #bd7412; }.accent-rose { background: #bd4b6a; }.card-copy { margin: 10px 0 18px; color: #596a82; font-size: .94rem; }.card-meta { margin-top: auto; color: #1c4d8e; font-size: .86rem; font-weight: 760; }.use-case-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }.use-case h3 { font-size: 1.02rem; }.use-case p { margin: 10px 0 0; color: #526178; font-size: .9rem; }.domain-line { margin: 12px 0 0; color: #657791; font-size: .78rem; }
-    .split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); gap: 28px; align-items: start; margin-top: 16px; }.panel { background: #fff; border: 1px solid #e4e9f1; border-radius: 14px; padding: 22px; }.bar-list { display: grid; gap: 14px; }.bar-title { display: flex; justify-content: space-between; gap: 10px; color: #334763; font-size: .9rem; font-weight: 700; }.bar-track { width: 100%; height: 9px; overflow: hidden; background: #e9eff7; border-radius: 999px; margin-top: 7px; }.bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #1d4f91, #388f9f); }.training-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }.training-card-image { display: block; width: calc(100% + 40px); max-width: none; height: auto; aspect-ratio: 4 / 3; margin: -20px -20px 18px; object-fit: cover; border-radius: 14px 14px 0 0; background: #fdfaf4; }.training-top { display: flex; gap: 10px; align-items: center; }.training-icon { width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 9px; background: #edf4ff; }.badge { display: inline-flex; width: fit-content; margin: 14px 0 0; padding: 4px 8px; color: #26578d; background: #eaf3ff; border-radius: 999px; font-size: .74rem; font-weight: 760; }.stats-line { margin-top: 13px; color: #51627b; font-size: .84rem; }.chip-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; }.chip { color: #3e5473; background: #f1f5fa; padding: 6px 9px; border-radius: 999px; font-size: .81rem; }.context { margin-top: 42px; padding: 24px; color: #2a4266; background: #eaf4f5; border-inline-start: 4px solid #247b87; border-radius: 8px; }.context p { margin: 8px 0 0; }.context a { color: #135d70; font-weight: 700; }.site-footer { margin-top: 54px; padding: 40px 0 20px; color: #d9e1ee; background: #10213e; font-size: .88rem; }.footer-grid { display: grid; grid-template-columns: 1.25fr repeat(3, 1fr); gap: 30px; }.footer-logo { width: 137px; height: 48px; object-fit: contain; filter: brightness(0) invert(1); }.footer-title { margin: 0; color: #fff; font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }.footer-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 8px; }.footer-list a { text-decoration: none; color: #d9e1ee; }.footer-list a:hover { color: #fff; text-decoration: underline; }.footer-bottom { margin-top: 30px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.15); color: #9babbe; text-align: center; font-size: .78rem; }
+    .split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); gap: 28px; align-items: start; margin-top: 16px; }.panel { background: #fff; border: 1px solid #e4e9f1; border-radius: 14px; padding: 22px; }.bar-list { display: grid; gap: 14px; }.bar-title { display: flex; justify-content: space-between; gap: 10px; color: #334763; font-size: .9rem; font-weight: 700; }.bar-track { width: 100%; height: 9px; overflow: hidden; background: #e9eff7; border-radius: 999px; margin-top: 7px; }.bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #1d4f91, #388f9f); }.training-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }.training-card-image { display: block; width: calc(100% + 40px); max-width: none; height: auto; aspect-ratio: 4 / 3; margin: -20px -20px 18px; object-fit: cover; border-radius: 14px 14px 0 0; background: #fdfaf4; }.training-top { display: flex; gap: 10px; align-items: center; }.training-icon { width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 9px; background: #edf4ff; }.badge { display: inline-flex; width: fit-content; margin: 14px 0 0; padding: 4px 8px; color: #26578d; background: #eaf3ff; border-radius: 999px; font-size: .74rem; font-weight: 760; }.stats-line { margin-top: 13px; color: #51627b; font-size: .84rem; }.chip-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; }.chip { color: #3e5473; background: #f1f5fa; padding: 6px 9px; border-radius: 999px; font-size: .81rem; }.context { margin-top: 42px; padding: 24px; color: #2a4266; background: #eaf4f5; border-inline-start: 4px solid #247b87; border-radius: 8px; }.context p { margin: 8px 0 0; }.context a { color: #135d70; font-weight: 700; }.golden-video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }.golden-video { overflow: hidden; background: #0e254a; border: 1px solid #31537f; border-radius: 14px; box-shadow: 0 16px 34px rgba(12,31,62,.16); }.golden-video iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #0e254a; }.golden-video figcaption { padding: 14px 16px 16px; color: #edf4ff; }.golden-video h3 { color: #fff; }.golden-video p { margin: 5px 0 0; color: #c9daef; font-size: .87rem; }.golden-video a { color: #d6f1ff; font-weight: 700; }.golden-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }.golden-card { min-width: 0; padding: 22px; color: #172033; background: #fff; border: 1px solid #dfe7f2; border-radius: 14px; box-shadow: 0 8px 20px rgba(18,47,87,.06); }.golden-card h2 { font-size: 1.34rem; }.golden-card p { color: #526178; }.golden-salary { display: inline-flex; margin-top: 14px; padding: 6px 9px; color: #185e4e; background: #e9f8f2; border-radius: 999px; font-size: .8rem; font-weight: 790; }.golden-muted { color: #69798f; background: #f1f4f8; }.golden-link-list { display: grid; gap: 8px; margin-top: 16px; }.golden-link-list a { color: #174b8c; font-size: .9rem; font-weight: 720; text-decoration: none; }.golden-link-list a:hover { text-decoration: underline; }.source-note { margin-top: 20px; color: #69798f; font-size: .82rem; }.site-footer { margin-top: 54px; padding: 40px 0 20px; color: #d9e1ee; background: #10213e; font-size: .88rem; }.footer-grid { display: grid; grid-template-columns: 1.25fr repeat(3, 1fr); gap: 30px; }.footer-logo { width: 137px; height: 48px; object-fit: contain; filter: brightness(0) invert(1); }.footer-title { margin: 0; color: #fff; font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }.footer-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 8px; }.footer-list a { text-decoration: none; color: #d9e1ee; }.footer-list a:hover { color: #fff; text-decoration: underline; }.footer-bottom { margin-top: 30px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.15); color: #9babbe; text-align: center; font-size: .78rem; }
     html[dir="rtl"] .bar-fill { background: linear-gradient(270deg, #1d4f91, #388f9f); } html[dir="rtl"] .language-nav { direction: ltr; }
     @media (max-width: 900px) { .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }.themes { grid-template-columns: repeat(2, minmax(0, 1fr)); }.split, .hero-with-visual { grid-template-columns: 1fr; }.hero-visual { max-width: 560px; } }
     @media (max-width: 900px) { .nav a:nth-child(-n+3) { display: none; }.footer-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 640px) { .shell { width: min(100% - 24px, 1440px); }.content-shell { padding-inline: 1rem; }.topbar { min-height: 64px; gap: 8px; }.brand-logo { width: 154px; height: 38px; }.nav, .language-nav { display: none; }.mobile-nav { display: block; }.apply-link { padding: 9px 11px; font-size: .78rem; }.hero { padding: 48px 0 40px; }.metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }.themes, .training-grid, .use-case-grid, .footer-grid { grid-template-columns: 1fr; }.metric { padding: 14px; } }
+    @media (max-width: 640px) { .shell { width: min(100% - 24px, 1440px); }.content-shell { padding-inline: 1rem; }.topbar { min-height: 64px; gap: 8px; }.brand-logo { width: 154px; height: 38px; }.nav, .language-nav { display: none; }.mobile-nav { display: block; }.apply-link { padding: 9px 11px; font-size: .78rem; }.hero { padding: 48px 0 40px; }.metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }.themes, .training-grid, .use-case-grid, .golden-grid, .golden-video-grid, .footer-grid { grid-template-columns: 1fr; }.metric { padding: 14px; } }
   </style>`;
 }
 
@@ -180,8 +184,8 @@ function layout(body: string, options: Parameters<typeof head>[0]) {
   const searchForm = `<form class="public-chrome-search" role="search" action="${publicTrainingCataloguePath(options.locale)}" method="get"><label class="sr-only" for="public-training-search">${escapeHtml(copy.searchTraining)}</label><span class="public-chrome-search-icon" aria-hidden="true">⌕</span><input id="public-training-search" name="q" type="search" minlength="2" autocomplete="off" placeholder="${escapeHtml(copy.searchPlaceholder)}" /><button type="submit" aria-label="${escapeHtml(copy.searchTraining)}">⌕</button></form>`;
   const mobileSearchForm = searchForm.replace('class="public-chrome-search"', 'class="public-chrome-search public-chrome-search-mobile"').replace('for="public-training-search"', 'for="public-training-search-mobile"').replace('id="public-training-search"', 'id="public-training-search-mobile"');
   return `<!doctype html><html lang="${publicTrainingLocaleMeta[options.locale].languageTag}" dir="${publicTrainingLocaleMeta[options.locale].direction}"><head>${head(options)}${styles()}</head><body>
-    <header class="public-chrome-header"><div class="public-chrome-shell"><a class="public-chrome-brand" href="/" aria-label="Neopolis Akademy"><img class="public-chrome-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="180" height="63" /></a><nav class="public-chrome-nav" aria-label="${escapeHtml(chrome.program)}"><a class="public-chrome-nav-link" href="/#formule">${escapeHtml(chrome.formula)}</a><a class="public-chrome-nav-link" href="/#pourquoi">${escapeHtml(chrome.why)}</a><a class="public-chrome-nav-link" href="/#partenaires">${escapeHtml(chrome.partners)}</a><a class="public-chrome-nav-link" href="${publicTrainingPath(options.locale)}" aria-current="page">${escapeHtml(copy.navTraining)}</a><a class="public-chrome-nav-link" href="/ai-news">${escapeHtml(copy.navNews)}</a><a class="public-chrome-nav-link" href="/#faq">${escapeHtml(chrome.faq)}</a>${searchForm}<a class="public-chrome-signin" href="/login">${escapeHtml(copy.navSignIn)}</a></nav><div class="public-chrome-actions"><nav class="public-chrome-language public-chrome-locale-desktop" aria-label="Language">${languageLinks}</nav><details class="public-chrome-mobile"><summary aria-label="${escapeHtml(chrome.program)}"><span aria-hidden="true">☰</span></summary><nav class="public-chrome-mobile-panel" aria-label="${escapeHtml(chrome.program)}"><div class="public-chrome-nav"><a class="public-chrome-nav-link" href="/#formule">${escapeHtml(chrome.formula)}</a><a class="public-chrome-nav-link" href="/#pourquoi">${escapeHtml(chrome.why)}</a><a class="public-chrome-nav-link" href="/#partenaires">${escapeHtml(chrome.partners)}</a><a class="public-chrome-nav-link" href="${publicTrainingPath(options.locale)}" aria-current="page">${escapeHtml(copy.navTraining)}</a><a class="public-chrome-nav-link" href="/ai-news">${escapeHtml(copy.navNews)}</a><a class="public-chrome-nav-link" href="/#faq">${escapeHtml(chrome.faq)}</a>${mobileSearchForm}<a class="public-chrome-signin" href="/login">${escapeHtml(copy.navSignIn)}</a><a class="public-chrome-apply" href="/apply"><span>${escapeHtml(chrome.apply)}</span><span class="public-chrome-apply-chevron">›</span></a><nav class="public-chrome-language" aria-label="Language">${languageLinks}</nav></div></nav></details><a class="public-chrome-apply" href="/apply"><span>${escapeHtml(chrome.apply)}</span><span class="public-chrome-apply-chevron">›</span></a></div></div></header>
-    ${body}<footer class="site-footer"><div class="shell"><div class="footer-grid"><div><img class="footer-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="137" height="48" /><p>${escapeHtml(chrome.lead)}</p></div><div><h2 class="footer-title">${escapeHtml(chrome.program)}</h2><ul class="footer-list"><li><a href="/#formule">${escapeHtml(chrome.formula)}</a></li><li><a href="/#pourquoi">${escapeHtml(chrome.why)}</a></li><li><a href="/#partenaires">${escapeHtml(chrome.partners)}</a></li><li><a href="/#faq">${escapeHtml(chrome.faq)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.explore)}</h2><ul class="footer-list"><li><a href="${publicTrainingPath(options.locale)}">${escapeHtml(copy.navTraining)}</a></li><li><a href="/ai-news">${escapeHtml(copy.navNews)}</a></li><li><a href="${publicTrainingCataloguePath(options.locale)}">${escapeHtml(copy.navCatalogue)}</a></li><li><a href="/apply">${escapeHtml(chrome.apply)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.contact)}</h2><ul class="footer-list"><li><a href="mailto:info@neopolis-dev.com">info@neopolis-dev.com</a></li><li><a href="https://www.neopolis-dev.com" rel="noopener noreferrer">Neopolis Development ↗</a></li><li><a href="https://fr.linkedin.com/company/neopolis-development" rel="noopener noreferrer">LinkedIn ↗</a></li><li><a href="https://fr-fr.facebook.com/neopolisdev/" rel="noopener noreferrer">Facebook ↗</a></li><li><a href="/mentions-legales">${escapeHtml(chrome.legal)}</a></li></ul></div></div><div class="footer-bottom">© 2026 Neopolis Development. ${escapeHtml(chrome.rights)}</div></div></footer></body></html>`;
+    <header class="public-chrome-header"><div class="public-chrome-shell"><a class="public-chrome-brand" href="/" aria-label="Neopolis Akademy"><img class="public-chrome-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="180" height="63" /></a><nav class="public-chrome-nav" aria-label="${escapeHtml(chrome.program)}"><a class="public-chrome-nav-link" href="/#formule">${escapeHtml(chrome.formula)}</a><a class="public-chrome-nav-link" href="/#pourquoi">${escapeHtml(chrome.why)}</a><a class="public-chrome-nav-link" href="/#partenaires">${escapeHtml(chrome.partners)}</a><a class="public-chrome-nav-link" href="${publicTrainingPath(options.locale)}" aria-current="page">${escapeHtml(copy.navTraining)}</a><a class="public-chrome-nav-link" href="${publicGoldenJobsPath(options.locale)}">${escapeHtml(chrome.goldenJobs)}</a><a class="public-chrome-nav-link" href="/ai-news">${escapeHtml(copy.navNews)}</a><a class="public-chrome-nav-link" href="/#faq">${escapeHtml(chrome.faq)}</a>${searchForm}<a class="public-chrome-signin" href="/login">${escapeHtml(copy.navSignIn)}</a></nav><div class="public-chrome-actions"><nav class="public-chrome-language public-chrome-locale-desktop" aria-label="Language">${languageLinks}</nav><details class="public-chrome-mobile"><summary aria-label="${escapeHtml(chrome.program)}"><span aria-hidden="true">☰</span></summary><nav class="public-chrome-mobile-panel" aria-label="${escapeHtml(chrome.program)}"><div class="public-chrome-nav"><a class="public-chrome-nav-link" href="/#formule">${escapeHtml(chrome.formula)}</a><a class="public-chrome-nav-link" href="/#pourquoi">${escapeHtml(chrome.why)}</a><a class="public-chrome-nav-link" href="/#partenaires">${escapeHtml(chrome.partners)}</a><a class="public-chrome-nav-link" href="${publicTrainingPath(options.locale)}" aria-current="page">${escapeHtml(copy.navTraining)}</a><a class="public-chrome-nav-link" href="${publicGoldenJobsPath(options.locale)}">${escapeHtml(chrome.goldenJobs)}</a><a class="public-chrome-nav-link" href="/ai-news">${escapeHtml(copy.navNews)}</a><a class="public-chrome-nav-link" href="/#faq">${escapeHtml(chrome.faq)}</a>${mobileSearchForm}<a class="public-chrome-signin" href="/login">${escapeHtml(copy.navSignIn)}</a><a class="public-chrome-apply" href="/apply"><span>${escapeHtml(chrome.apply)}</span><span class="public-chrome-apply-chevron">›</span></a><nav class="public-chrome-language" aria-label="Language">${languageLinks}</nav></div></nav></details><a class="public-chrome-apply" href="/apply"><span>${escapeHtml(chrome.apply)}</span><span class="public-chrome-apply-chevron">›</span></a></div></div></header>
+    ${body}<footer class="site-footer"><div class="shell"><div class="footer-grid"><div><img class="footer-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="137" height="48" /><p>${escapeHtml(chrome.lead)}</p></div><div><h2 class="footer-title">${escapeHtml(chrome.program)}</h2><ul class="footer-list"><li><a href="/#formule">${escapeHtml(chrome.formula)}</a></li><li><a href="/#pourquoi">${escapeHtml(chrome.why)}</a></li><li><a href="/#partenaires">${escapeHtml(chrome.partners)}</a></li><li><a href="/#faq">${escapeHtml(chrome.faq)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.explore)}</h2><ul class="footer-list"><li><a href="${publicTrainingPath(options.locale)}">${escapeHtml(copy.navTraining)}</a></li><li><a href="${publicGoldenJobsPath(options.locale)}">${escapeHtml(chrome.goldenJobs)}</a></li><li><a href="/ai-news">${escapeHtml(copy.navNews)}</a></li><li><a href="${publicTrainingCataloguePath(options.locale)}">${escapeHtml(copy.navCatalogue)}</a></li><li><a href="/apply">${escapeHtml(chrome.apply)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.contact)}</h2><ul class="footer-list"><li><a href="mailto:info@neopolis-dev.com">info@neopolis-dev.com</a></li><li><a href="https://www.neopolis-dev.com" rel="noopener noreferrer">Neopolis Development ↗</a></li><li><a href="https://fr.linkedin.com/company/neopolis-development" rel="noopener noreferrer">LinkedIn ↗</a></li><li><a href="https://fr-fr.facebook.com/neopolisdev/" rel="noopener noreferrer">Facebook ↗</a></li><li><a href="/mentions-legales">${escapeHtml(chrome.legal)}</a></li></ul></div></div><div class="footer-bottom">© 2026 Neopolis Development. ${escapeHtml(chrome.rights)}</div></div></footer></body></html>`;
 }
 
 function metricCards(metrics: PublicTrainingMetrics, locale: PublicTrainingLocale) {
@@ -326,7 +330,7 @@ export function renderPublicTrainingCatalogue(locale: PublicTrainingLocale = "fr
 export function renderPublicCatalogueTraining(training: PublicCatalogueTraining, locale: PublicTrainingLocale = "fr") {
   const copy = publicTrainingCopy[locale];
   const path = publicTrainingCataloguePath(locale, training.slug);
-  const body = `${hero(training.title, training.description || copy.catalogueLead, locale, training.visual)}<main class="content-shell">${breadcrumb([{ label: copy.breadcrumbCatalogue, href: publicTrainingCataloguePath(locale) }, { label: training.title }])}<section aria-labelledby="training-overview"><h2 id="training-overview">${escapeHtml(copy.trainingOverview)}</h2><p class="section-intro">${escapeHtml(training.description || copy.catalogueLead)}</p>${catalogueMetricCards(training.metrics, locale)}<p><span class="badge">${escapeHtml(training.format)}${training.level ? ` · ${escapeHtml(training.level)}` : ""}</span></p></section><section class="split" aria-labelledby="course-list"><div><h2 id="course-list">${escapeHtml(copy.includedCourses)}</h2><div class="training-grid">${training.courses.map((course) => courseCard(training, course, locale)).join("")}</div></div><aside class="panel"><h2>${escapeHtml(copy.rolesTitle)}</h2>${training.roles.length ? `<h3>${escapeHtml(copy.targetRoles)}</h3><div class="chip-list">${training.roles.map((role) => `<span class="chip">${escapeHtml(role)}</span>`).join("")}</div>` : ""}<h3 style="margin-top:22px">${escapeHtml(copy.skills)}</h3><div class="chip-list">${training.skills.map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div>${training.relatedDomains.length ? `<h3 style="margin-top:22px">${escapeHtml(copy.relatedDomains)}</h3><div class="chip-list">${training.relatedDomains.map((domain) => `<a class="chip" href="${publicTrainingPath(locale, domain.slug)}">${escapeHtml(domain.title)}</a>`).join("")}</div>` : ""}</aside></section><section class="context"><h2>${escapeHtml(copy.accessTraining)}</h2><p>${escapeHtml(copy.availableTrainingText)} <a href="/login">${escapeHtml(copy.navSignIn)}</a>.</p></section></main>`;
+  const body = `${hero(training.title, training.description || copy.catalogueLead, locale, training.visual)}<main class="content-shell">${breadcrumb([{ label: copy.breadcrumbCatalogue, href: publicTrainingCataloguePath(locale) }, { label: training.title }])}<section aria-labelledby="training-overview"><h2 id="training-overview">${escapeHtml(copy.trainingOverview)}</h2><p class="section-intro">${escapeHtml(training.description || copy.catalogueLead)}</p>${catalogueMetricCards(training.metrics, locale)}<p><span class="badge">${escapeHtml(training.format)}${training.level ? ` · ${escapeHtml(training.level)}` : ""}</span></p></section><section class="split" aria-labelledby="course-list"><div><h2 id="course-list">${escapeHtml(copy.includedCourses)}</h2><div class="training-grid">${training.courses.map((course) => courseCard(training, course, locale)).join("")}</div></div><aside class="panel"><h2>${escapeHtml(copy.rolesTitle)}</h2>${training.roles.length ? `<h3>${escapeHtml(copy.targetRoles)}</h3><div class="chip-list">${training.roles.map((role) => `<span class="chip">${escapeHtml(role)}</span>`).join("")}</div>` : ""}<h3 style="margin-top:22px">${escapeHtml(copy.skills)}</h3><div class="chip-list">${training.skills.map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div>${training.relatedDomains.length ? `<h3 style="margin-top:22px">${escapeHtml(copy.relatedDomains)}</h3><div class="chip-list">${training.relatedDomains.map((domain) => `<a class="chip" href="${publicTrainingPath(locale, domain.slug)}">${escapeHtml(domain.title)}</a>`).join("")}</div>` : ""}</aside></section><section class="context"><h2>${escapeHtml(copy.accessTraining)}</h2><p>${escapeHtml(copy.availableTrainingText)} <a href="/login">${escapeHtml(copy.navSignIn)}</a>.</p><p><a href="${publicGoldenJobsPath(locale)}">${escapeHtml(locale === "fr" ? "Explorer les Golden Jobs et leurs parcours" : locale === "en" ? "Explore Golden Jobs and their learning paths" : "استكشف الوظائف الذهبية ومساراتها التعليمية")}</a></p></section></main>`;
   return layout(body, {
     locale,
     title: `${training.title} | ${SITE_NAME}`,
@@ -343,7 +347,7 @@ export function renderPublicCatalogueTraining(training: PublicCatalogueTraining,
 export function renderPublicCatalogueCourse(training: PublicCatalogueTraining, course: PublicCatalogueCourse, locale: PublicTrainingLocale = "fr") {
   const copy = publicTrainingCopy[locale];
   const path = publicTrainingCataloguePath(locale, training.slug, course.slug);
-  const body = `${hero(course.title, course.description || training.description || copy.catalogueLead, locale, training.visual)}<main class="content-shell">${breadcrumb([{ label: copy.breadcrumbCatalogue, href: publicTrainingCataloguePath(locale) }, { label: training.title, href: publicTrainingCataloguePath(locale, training.slug) }, { label: course.title }])}<section aria-labelledby="course-overview"><h2 id="course-overview">${escapeHtml(copy.courseOverview)}</h2><p class="section-intro">${escapeHtml(course.description || training.description || copy.catalogueLead)}</p>${catalogueMetricCards(course.metrics, locale)}${course.level ? `<span class="badge">${escapeHtml(course.level)}</span>` : ""}</section><section class="split"><div><h2>${escapeHtml(copy.courseSkills)}</h2><div class="chip-list">${[...course.skills, ...course.tags].map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div></div><aside class="panel"><h2>${escapeHtml(copy.trainingOverview)}</h2><p class="section-intro">${escapeHtml(training.title)}</p><a class="button" style="background:#173f7b;color:#fff" href="${publicTrainingCataloguePath(locale, training.slug)}">${escapeHtml(copy.includedCourses)}</a></aside></section><section class="context"><h2>${escapeHtml(copy.accessTraining)}</h2><p>${escapeHtml(copy.availableTrainingText)} <a href="/login">${escapeHtml(copy.navSignIn)}</a>.</p></section></main>`;
+  const body = `${hero(course.title, course.description || training.description || copy.catalogueLead, locale, training.visual)}<main class="content-shell">${breadcrumb([{ label: copy.breadcrumbCatalogue, href: publicTrainingCataloguePath(locale) }, { label: training.title, href: publicTrainingCataloguePath(locale, training.slug) }, { label: course.title }])}<section aria-labelledby="course-overview"><h2 id="course-overview">${escapeHtml(copy.courseOverview)}</h2><p class="section-intro">${escapeHtml(course.description || training.description || copy.catalogueLead)}</p>${catalogueMetricCards(course.metrics, locale)}${course.level ? `<span class="badge">${escapeHtml(course.level)}</span>` : ""}</section><section class="split"><div><h2>${escapeHtml(copy.courseSkills)}</h2><div class="chip-list">${[...course.skills, ...course.tags].map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div></div><aside class="panel"><h2>${escapeHtml(copy.trainingOverview)}</h2><p class="section-intro">${escapeHtml(training.title)}</p><a class="button" style="background:#173f7b;color:#fff" href="${publicTrainingCataloguePath(locale, training.slug)}">${escapeHtml(copy.includedCourses)}</a></aside></section><section class="context"><h2>${escapeHtml(copy.accessTraining)}</h2><p>${escapeHtml(copy.availableTrainingText)} <a href="/login">${escapeHtml(copy.navSignIn)}</a>.</p><p><a href="${publicGoldenJobsPath(locale)}">${escapeHtml(locale === "fr" ? "Explorer les Golden Jobs et leurs parcours" : locale === "en" ? "Explore Golden Jobs and their learning paths" : "استكشف الوظائف الذهبية ومساراتها التعليمية")}</a></p></section></main>`;
   return layout(body, {
     locale,
     title: `${course.title} | ${SITE_NAME}`,
@@ -381,6 +385,130 @@ export function renderPublicTrainingNotFound(locale: PublicTrainingLocale = "fr"
   return layout(`<main class="content-shell" style="padding:72px 0"><h1>${escapeHtml(copy.notFoundTitle)}</h1><p class="section-intro">${escapeHtml(copy.notFoundText)}</p><a class="button" style="background:#173f7b;color:#fff" href="${publicTrainingPath(locale)}">${escapeHtml(copy.notFoundLink)}</a></main>`, { locale, title: `${copy.notFoundTitle} | ${SITE_NAME}`, description: copy.notFoundText, canonicalPath: publicTrainingPath(locale), noindex: true, schema: { "@context": "https://schema.org", "@type": "WebPage", name: copy.notFoundTitle } });
 }
 
+function goldenJobsCopy(locale: PublicTrainingLocale) {
+  if (locale === "ar") return {
+    title: "Golden Jobs: مسارات مهنية في الذكاء الاصطناعي",
+    lead: "اكتشف أدوار الذكاء الاصطناعي الناشئة والمهارات المرتبطة بها والدورات المتاحة في Neopolis Akademy.",
+    introTitle: "اختيار مسار تعلم، لا وعد وظيفي",
+    intro: "تربط هذه الصفحة بين ملفات مهنية موثقة ومسارات تدريبية موجودة في الكتالوج. وهي تساعدك على تنظيم التعلم ولا تشكل وعداً بالتوظيف أو بالراتب.",
+    videoTitle: "اكتشف عالم المهن التقنية",
+    skills: "مهارات أساسية",
+    learning: "مسارات Neopolis ذات الصلة",
+    salary: "مؤشر الرواتب في المصدر",
+    salaryMissing: "لا توجد إشارة رقمية لهذا الدور في المصدر.",
+    source: "المصدر والتحفظات",
+    sourceText: "تعتمد الأوصاف ومؤشرات الرواتب المعروضة على دليل digiRocks. الأرقام المنشورة هي مؤشرات لسوق باريس كما يعرضها المصدر وتتغير حسب الخبرة والجهة والسياق؛ ولا تمثل عرض راتب أو وعداً بالتوظيف.",
+    details: "عرض المسار",
+    back: "عرض كل الوظائف الذهبية",
+  };
+  if (locale === "en") return {
+    title: "Golden Jobs: AI career pathways",
+    lead: "Explore emerging AI roles, their core skills and the learning paths available in Neopolis Akademy.",
+    introTitle: "Choose a learning path, not a job promise",
+    intro: "This page connects documented career profiles with training that actually exists in the catalogue. It helps structure learning and is not a promise of employment or compensation.",
+    videoTitle: "Explore technical career worlds",
+    skills: "Core skills",
+    learning: "Relevant Neopolis paths",
+    salary: "Source salary benchmark",
+    salaryMissing: "No role-specific numeric benchmark is supplied by the source.",
+    source: "Source and limitations",
+    sourceText: "The descriptions and salary benchmarks come from the digiRocks recruitment guide. Figures are Paris market benchmarks as published by that source and vary by experience, employer and context; they are neither an offer nor a hiring promise.",
+    details: "View pathway",
+    back: "View all Golden Jobs",
+  };
+  return {
+    title: "Golden Jobs : les métiers IA à explorer",
+    lead: "Découvrez les rôles IA émergents, leurs compétences structurantes et les parcours disponibles dans Neopolis Akademy.",
+    introTitle: "Choisir un parcours d’apprentissage, pas une promesse d’emploi",
+    intro: "Cette page relie des profils métiers documentés à des formations réellement présentes au catalogue. Elle sert à structurer un apprentissage et ne constitue ni une promesse d’embauche ni une garantie de rémunération.",
+    videoTitle: "Explorer des univers métiers techniques",
+    skills: "Compétences structurantes",
+    learning: "Parcours Neopolis pertinents",
+    salary: "Repère de rémunération dans la source",
+    salaryMissing: "Aucun repère chiffré spécifique n’est fourni par la source pour ce rôle.",
+    source: "Source et limites",
+    sourceText: "Les descriptions et repères de rémunération proviennent du guide de recrutement digiRocks. Les chiffres sont des repères de marché à Paris tels que publiés par cette source et varient selon l’expérience, l’employeur et le contexte ; ils ne sont ni une offre ni une promesse d’embauche.",
+    details: "Voir le parcours",
+    back: "Voir tous les Golden Jobs",
+  };
+}
+
+function goldenJobTrainingLinks(job: NonNullable<ReturnType<typeof getGoldenJob>>, locale: PublicTrainingLocale) {
+  return job.recommendedCertificationIds.flatMap((certificationId) => {
+    const trainingSlug = getPublicCatalogueTrainingSlug(certificationId);
+    if (!trainingSlug) return [];
+    const training = getPublicCatalogueTraining(trainingSlug, locale);
+    if (!training) return [];
+    return [`<a href="${publicTrainingCataloguePath(locale, trainingSlug)}">${escapeHtml(training.title)} <span aria-hidden="true">→</span></a>`];
+  }).join("");
+}
+
+function goldenJobsSchema(locale: PublicTrainingLocale, jobSlug?: string) {
+  const job = jobSlug ? getGoldenJob(jobSlug) : null;
+  const copy = goldenJobsCopy(locale);
+  if (job) return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: `${getGoldenJobText(job.title, locale)} | ${copy.title}`,
+    description: getGoldenJobText(job.summary, locale),
+    url: absolute(publicGoldenJobsPath(locale, job.slug)),
+    inLanguage: publicTrainingLocaleMeta[locale].languageTag,
+    about: { "@type": "Occupation", name: getGoldenJobText(job.title, locale), description: getGoldenJobText(job.scope, locale) },
+  };
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${copy.title} | ${SITE_NAME}`,
+    description: copy.lead,
+    url: absolute(publicGoldenJobsPath(locale)),
+    inLanguage: publicTrainingLocaleMeta[locale].languageTag,
+    mainEntity: { "@type": "ItemList", itemListElement: goldenJobs.map((entry, index) => ({ "@type": "ListItem", position: index + 1, name: getGoldenJobText(entry.title, locale), url: absolute(publicGoldenJobsPath(locale, entry.slug)) })) },
+  };
+}
+
+function goldenVideoCards(locale: PublicTrainingLocale) {
+  return `<div class="golden-video-grid">${goldenJobsPromotionalVideos.map((video) => `<figure class="golden-video"><iframe src="${video.embedUrl}?rel=0" title="${escapeHtml(getGoldenJobText(video.title, locale))}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><figcaption><h3>${escapeHtml(getGoldenJobText(video.title, locale))}</h3><p>${escapeHtml(getGoldenJobText(video.description, locale))}</p><p><a href="${video.watchUrl}" rel="noopener noreferrer">${escapeHtml(video.channel)} · ${escapeHtml(video.duration)} · YouTube ↗</a></p></figcaption></figure>`).join("")}</div>`;
+}
+
+function goldenJobCard(job: typeof goldenJobs[number], locale: PublicTrainingLocale) {
+  const copy = goldenJobsCopy(locale);
+  const title = getGoldenJobText(job.title, locale);
+  return `<article class="golden-card"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(getGoldenJobText(job.summary, locale))}</p><div class="chip-list">${job.skills.map((skill) => `<span class="chip">${escapeHtml(getGoldenJobText(skill, locale))}</span>`).join("")}</div><span class="golden-salary${job.salary ? "" : " golden-muted"}">${escapeHtml(job.salary ? `${copy.salary} : ${job.salary}` : copy.salaryMissing)}</span><div class="golden-link-list"><a href="${publicGoldenJobsPath(locale, job.slug)}">${escapeHtml(copy.details)} <span aria-hidden="true">→</span></a></div></article>`;
+}
+
+export function renderPublicGoldenJobs(locale: PublicTrainingLocale = "fr") {
+  const copy = goldenJobsCopy(locale);
+  const body = `${hero(copy.title, copy.lead, locale)}<main class="content-shell"><section aria-labelledby="golden-intro"><h2 id="golden-intro">${escapeHtml(copy.introTitle)}</h2><p class="section-intro">${escapeHtml(copy.intro)}</p></section><section aria-labelledby="golden-videos" style="margin-top:42px"><h2 id="golden-videos">${escapeHtml(copy.videoTitle)}</h2>${goldenVideoCards(locale)}</section><section aria-labelledby="golden-list" style="margin-top:42px"><h2 id="golden-list">${escapeHtml(copy.title)}</h2><div class="golden-grid">${goldenJobs.map((job) => goldenJobCard(job, locale)).join("")}</div></section><section class="context"><h2>${escapeHtml(copy.source)}</h2><p>${escapeHtml(copy.sourceText)} <a href="${GOLDEN_JOBS_SOURCE_URL}" rel="noopener noreferrer">digiRocks ↗</a></p></section></main>`;
+  return layout(body, {
+    locale,
+    title: `${copy.title} | ${SITE_NAME}`,
+    description: copy.lead,
+    keywords: locale === "fr" ? "métiers IA, Golden Jobs, carrière IA, formation IA, salaires IA, MENA" : locale === "en" ? "AI careers, Golden Jobs, AI training, AI roles, AI salary benchmarks, MENA" : "وظائف الذكاء الاصطناعي, وظائف ذهبية, تدريب الذكاء الاصطناعي, مسارات مهنية, رواتب الذكاء الاصطناعي, منطقة الشرق الأوسط وشمال أفريقيا",
+    canonicalPath: publicGoldenJobsPath(locale),
+    hrefAlternates: publicGoldenJobsHrefAlternates(),
+    xDefaultPath: publicGoldenJobsPath("fr"),
+    schema: goldenJobsSchema(locale),
+  });
+}
+
+export function renderPublicGoldenJob(jobSlug: string, locale: PublicTrainingLocale = "fr") {
+  const job = getGoldenJob(jobSlug);
+  if (!job) return renderPublicTrainingNotFound(locale);
+  const copy = goldenJobsCopy(locale);
+  const title = getGoldenJobText(job.title, locale);
+  const body = `${hero(title, getGoldenJobText(job.summary, locale), locale)}<main class="content-shell">${breadcrumb([{ label: copy.title, href: publicGoldenJobsPath(locale) }, { label: title }])}<section class="split" aria-labelledby="job-scope"><article class="panel"><h2 id="job-scope">${escapeHtml(title)}</h2><p class="section-intro">${escapeHtml(getGoldenJobText(job.scope, locale))}</p><h3>${escapeHtml(copy.skills)}</h3><div class="chip-list">${job.skills.map((skill) => `<span class="chip">${escapeHtml(getGoldenJobText(skill, locale))}</span>`).join("")}</div></article><aside class="panel"><h2>${escapeHtml(copy.salary)}</h2><p class="section-intro">${escapeHtml(job.salary || copy.salaryMissing)}</p><p class="source-note">${escapeHtml(copy.sourceText)} <a href="${GOLDEN_JOBS_SOURCE_URL}" rel="noopener noreferrer">digiRocks ↗</a></p></aside></section><section aria-labelledby="job-learning" style="margin-top:42px"><h2 id="job-learning">${escapeHtml(copy.learning)}</h2><p class="section-intro">${escapeHtml(copy.intro)}</p><div class="golden-link-list">${goldenJobTrainingLinks(job, locale)}</div></section><section class="context"><a href="${publicGoldenJobsPath(locale)}">${escapeHtml(copy.back)} <span aria-hidden="true">→</span></a></section></main>`;
+  return layout(body, {
+    locale,
+    title: `${title} | ${copy.title} | ${SITE_NAME}`,
+    description: getGoldenJobText(job.summary, locale),
+    keywords: [title, ...job.skills.map((skill) => getGoldenJobText(skill, locale)), "AI training"].slice(0, 8).join(", "),
+    canonicalPath: publicGoldenJobsPath(locale, job.slug),
+    hrefAlternates: publicGoldenJobsHrefAlternates(job.slug),
+    xDefaultPath: publicGoldenJobsPath("fr", job.slug),
+    schema: goldenJobsSchema(locale, job.slug),
+  });
+}
+
 // Des lots courts limitent le temps de transfert sur les instances serverless et
 // évitent qu’un ralentissement réseau transforme un XML valide en lecture partielle.
 const PUBLIC_SITEMAP_BATCH_SIZE = 50;
@@ -408,6 +536,8 @@ export function getPublicTrainingSitemapFiles(): PublicSitemapFile[] {
     ...publicTrainingLocales.flatMap((locale) => [
       sitemapUrl(publicTrainingPath(locale), publicTrainingHrefAlternates(), publicTrainingPath("fr")),
       ...getPublicTrainingThemes(locale).map((theme) => sitemapUrl(publicTrainingPath(locale, theme.slug), publicTrainingHrefAlternates(theme.slug), publicTrainingPath("fr", theme.slug))),
+      sitemapUrl(publicGoldenJobsPath(locale), publicGoldenJobsHrefAlternates(), publicGoldenJobsPath("fr")),
+      ...goldenJobs.map((job) => sitemapUrl(publicGoldenJobsPath(locale, job.slug), publicGoldenJobsHrefAlternates(job.slug), publicGoldenJobsPath("fr", job.slug))),
     ]),
     ...publicTrainingLocales.map((locale) => sitemapUrl(publicTrainingCataloguePath(locale), publicTrainingCatalogueHrefAlternates(), publicTrainingCataloguePath("fr"))),
   ];
@@ -416,7 +546,11 @@ export function getPublicTrainingSitemapFiles(): PublicSitemapFile[] {
     ...training.courses.map((course) => sitemapUrl(publicTrainingCataloguePath(locale, training.slug, course.slug), publicTrainingCatalogueHrefAlternates(training.slug, course.slug), publicTrainingCataloguePath("fr", training.slug, course.slug))),
   ]));
 
-  const files: PublicSitemapFile[] = [{ path: "/sitemaps/static.xml", urlCount: staticEntries.length, xml: sitemapUrlset(staticEntries) }];
+  const files: PublicSitemapFile[] = [];
+  for (let index = 0; index < staticEntries.length; index += PUBLIC_SITEMAP_BATCH_SIZE) {
+    const entries = staticEntries.slice(index, index + PUBLIC_SITEMAP_BATCH_SIZE);
+    files.push({ path: `/sitemaps/static${index === 0 ? "" : `-${Math.floor(index / PUBLIC_SITEMAP_BATCH_SIZE) + 1}`}.xml`, urlCount: entries.length, xml: sitemapUrlset(entries) });
+  }
   for (let index = 0; index < formationEntries.length; index += PUBLIC_SITEMAP_BATCH_SIZE) {
     const entries = formationEntries.slice(index, index + PUBLIC_SITEMAP_BATCH_SIZE);
     files.push({ path: `/sitemaps/formations-${Math.floor(index / PUBLIC_SITEMAP_BATCH_SIZE) + 1}.xml`, urlCount: entries.length, xml: sitemapUrlset(entries) });
@@ -465,6 +599,8 @@ export function registerPublicTrainingPages(app: Express) {
     const result = getPublicCatalogueCourse(req.params.trainingSlug, req.params.courseSlug, locale);
     return result ? sendHtml(res, renderPublicCatalogueCourse(result.training, result.course, locale)) : sendHtml(res, renderPublicTrainingNotFound(locale), 404);
   };
+  const goldenJobs = (locale: PublicTrainingLocale) => (_req: Request, res: Response) => sendHtml(res, renderPublicGoldenJobs(locale));
+  const goldenJob = (locale: PublicTrainingLocale) => (req: Request, res: Response) => sendHtml(res, renderPublicGoldenJob(req.params.jobSlug, locale));
   app.get("/formations-ia", index("fr"));
   app.get("/en/ai-training", index("en"));
   app.get("/ar/ai-training", index("ar"));
@@ -477,6 +613,12 @@ export function registerPublicTrainingPages(app: Express) {
   app.get("/formations-ia/catalogue/:trainingSlug", catalogueTraining("fr"));
   app.get("/en/ai-training/catalogue/:trainingSlug", catalogueTraining("en"));
   app.get("/ar/ai-training/catalogue/:trainingSlug", catalogueTraining("ar"));
+  app.get("/formations-ia/golden-jobs", goldenJobs("fr"));
+  app.get("/en/ai-training/golden-jobs", goldenJobs("en"));
+  app.get("/ar/ai-training/golden-jobs", goldenJobs("ar"));
+  app.get("/formations-ia/golden-jobs/:jobSlug", goldenJob("fr"));
+  app.get("/en/ai-training/golden-jobs/:jobSlug", goldenJob("en"));
+  app.get("/ar/ai-training/golden-jobs/:jobSlug", goldenJob("ar"));
   app.get("/formations-ia/:themeSlug", theme("fr"));
   app.get("/en/ai-training/:themeSlug", theme("en"));
   app.get("/ar/ai-training/:themeSlug", theme("ar"));
@@ -491,7 +633,7 @@ export function registerPublicTrainingPages(app: Express) {
   });
   // Search Console conserve les soumissions directes historiques. Ces alias doivent
   // donc rester des documents XML 200 (et non des redirections ou le repli SPA).
-  app.get(/^\/(static|formations-[1-9]\d*)\.xml$/, (req: Request, res: Response) => {
+  app.get(/^\/(static(?:-[1-9]\d*)?|formations-[1-9]\d*)\.xml$/, (req: Request, res: Response) => {
     const sitemapName = req.params[0];
     const sitemap = sitemapName ? sitemapByPath.get(`/sitemaps/${sitemapName}.xml`) : null;
     return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");

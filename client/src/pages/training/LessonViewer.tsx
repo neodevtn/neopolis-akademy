@@ -362,6 +362,10 @@ export default function LessonViewer({
     completedGuidedActions,
     completedMatching: matchingCompleted,
     completedInlineInteractions: completedNovasavoInteractions,
+  } as Parameters<typeof isSequentialActivityNavigationLocked>[0] & {
+    completedCourseFinalQuizzes: Set<string>;
+    completedReflections: Set<string>;
+    completedGuidedActions: Set<string>;
   });
   const analyticsParams = {
     course_slug: courseId,

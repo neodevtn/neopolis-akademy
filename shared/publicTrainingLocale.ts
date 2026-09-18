@@ -232,10 +232,20 @@ export function publicTrainingCataloguePath(locale: PublicTrainingLocale, traini
   return courseSlug ? `${root}/${encodeURIComponent(trainingSlug)}/${encodeURIComponent(courseSlug)}` : `${root}/${encodeURIComponent(trainingSlug)}`;
 }
 
+/** Public, localized career page linked from every training catalogue view. */
+export function publicGoldenJobsPath(locale: PublicTrainingLocale, jobSlug?: string) {
+  const root = `${publicTrainingLocaleMeta[locale].pathPrefix}/golden-jobs`;
+  return jobSlug ? `${root}/${encodeURIComponent(jobSlug)}` : root;
+}
+
 export function publicTrainingHrefAlternates(themeSlug?: string) {
   return publicTrainingLocales.map((locale) => ({ locale, href: publicTrainingPath(locale, themeSlug) }));
 }
 
 export function publicTrainingCatalogueHrefAlternates(trainingSlug?: string, courseSlug?: string) {
   return publicTrainingLocales.map((locale) => ({ locale, href: publicTrainingCataloguePath(locale, trainingSlug, courseSlug) }));
+}
+
+export function publicGoldenJobsHrefAlternates(jobSlug?: string) {
+  return publicTrainingLocales.map((locale) => ({ locale, href: publicGoldenJobsPath(locale, jobSlug) }));
 }

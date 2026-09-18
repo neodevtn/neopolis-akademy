@@ -7,6 +7,8 @@ import {
   registerPublicTrainingPages,
   renderPublicCatalogueCourse,
   renderPublicCatalogueTraining,
+  renderPublicGoldenJob,
+  renderPublicGoldenJobs,
   renderPublicTrainingCatalogue,
   renderPublicTrainingIndex,
   renderPublicTrainingNotFound,
@@ -37,6 +39,7 @@ describe("pages publiques de formations IA", () => {
 
     expect(html).toContain('class="public-chrome-nav-link" href="/#formule">La Formule</a>');
     expect(html).toContain('class="public-chrome-nav-link" href="/ai-news">AI News</a>');
+    expect(html).toContain('class="public-chrome-nav-link" href="/formations-ia/golden-jobs">Golden Jobs</a>');
     expect(html).toContain('class="public-chrome-signin" href="/login">Se connecter</a>');
     expect(html).toContain('role="search" action="/formations-ia/catalogue" method="get"');
     expect(html).toContain('class="public-chrome-apply" href="/apply"><span>Postuler</span>');
@@ -47,6 +50,23 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain('href="https://fr.linkedin.com/company/neopolis-development"');
     expect(html).toContain('href="https://fr-fr.facebook.com/neopolisdev/"');
     expect(html).toContain('href="/mentions-legales">Mentions légales</a>');
+  });
+
+  it("rend Golden Jobs dans les trois langues avec des vidéos YouTube éditoriales et des parcours réels", () => {
+    const frenchHtml = renderPublicGoldenJobs("fr");
+    const englishHtml = renderPublicGoldenJobs("en");
+    const arabicHtml = renderPublicGoldenJobs("ar");
+    const detailHtml = renderPublicGoldenJob("data-engineer", "fr");
+
+    expect(frenchHtml).toContain("Golden Jobs : les métiers IA à explorer");
+    expect(frenchHtml).toContain("https://www.youtube.com/embed/");
+    expect(frenchHtml).toContain("https://akademy.neodev.click/formations-ia/golden-jobs");
+    expect(englishHtml).toContain("Golden Jobs: AI career pathways");
+    expect(arabicHtml).toContain("مسارات مهنية في الذكاء الاصطناعي");
+    expect(detailHtml).toContain("Data Engineer");
+    expect(detailHtml).toContain("AI Data Engineering and RAG Practitioner");
+    expect(detailHtml).toContain('href="/formations-ia/catalogue/');
+    expect(detailHtml).not.toContain('href="/training/');
   });
 
   it("rend une page de grand domaine avec cas d’usage, formations, indicateurs et métadonnées propres", () => {

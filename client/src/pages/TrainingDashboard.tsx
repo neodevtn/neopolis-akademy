@@ -57,7 +57,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { TrainingSearchPanel } from "@/components/TrainingSearchPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
 import { ReferralProgramTab } from "@/components/ReferralProgramTab";
-import { extractTargetJobRoles, getTrainingFormatDefinitions, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
+import { getCareerFamilyIds, getTrainingFormatDefinitions, matchesCatalogueSearchText, normalizeCatalogueSearchTokens, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 import { isAdministrativeRole } from "@shared/roles";
 import { TalentJourneyTab } from "@/components/TalentJourneyTab";
@@ -847,6 +847,7 @@ function CatalogTab({
   const requestedGroup = new URLSearchParams(urlSearch).get("group") || "all";
   const selectedGroup = requestedGroup === "all" || groups.some(([key]) => key === requestedGroup) ? requestedGroup : "all";
   const requestedQuery = new URLSearchParams(urlSearch).get("search") || "";
+  const normalizedSearchTokens = normalizeCatalogueSearchTokens(requestedQuery);
   const navigateCatalog = (group: string, search: string) => navigate(buildNavigationUrl("/training", { tab: "catalog", group: group === "all" ? null : group, search: search || null }));
   const selectGroup = (group: string) => navigateCatalog(group, requestedQuery);
   const [levelFilter, setLevelFilter] = useState("all");
@@ -867,7 +868,8 @@ function CatalogTab({
 
   const catalogMetadata = useMemo(() => certCompletionData.map((cert) => {
     const source = JSON.stringify({ title: cert.title, description: cert.description, group: cert.group }).toLowerCase();
-    const targetJobRoles = extractTargetJobRoles(coursesByCertification.get(cert.id) || []);
+    const relatedCourses = coursesByCertification.get(cert.id) || [];
+    const targetJobRoles = getCareerFamilyIds(relatedCourses);
     const includes = (...terms: string[]) => terms.some((term) => source.includes(term));
     const skills = [
       includes("rag", "retrieval", "vector", "weaviate", "haystack", "llamaindex", "graph") && "rag",
@@ -886,21 +888,25 @@ function CatalogTab({
       includes("windsurf") && "windsurf",
     ].filter(Boolean) as string[];
     const roles = [
-      (skills.includes("development") || skills.includes("rag") || skills.includes("agents")) && "engineer",
-      skills.includes("data_bi") && "analyst",
-      (skills.includes("prompting") || skills.includes("productivity")) && "business",
-      includes("strategy", "governance", "management", "consulting") && "manager",
+      (skills.includes("development") || skills.includes("rag") || skills.includes("agents")) && "ai_engineering",
+      skills.includes("data_bi") && "data_bi",
+      (skills.includes("prompting") || skills.includes("productivity")) && "business_customer",
+      includes("strategy", "governance", "management", "consulting") && "ai_product_governance",
       ...targetJobRoles,
     ].filter(Boolean) as string[];
     const activityCount = Number(cert.totalActivities || 0);
     const duration = activityCount <= 15 ? "short" : activityCount <= 30 ? "medium" : "long";
     const level = String((cert.level as any)?.en || "beginner").toLowerCase();
-    return { id: cert.id, level, skills, roles: Array.from(new Set(roles)), technologies, duration, trainingFormat: cert.trainingFormat, hasExam: cert.hasExam };
+    const searchText = JSON.stringify({ certification: cert, courses: relatedCourses })
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase("fr");
+    return { id: cert.id, level, skills, roles: Array.from(new Set(roles)), technologies, duration, trainingFormat: cert.trainingFormat, hasExam: cert.hasExam, searchText };
   }), [certCompletionData, coursesByCertification]);
   const metadataByCertification = new Map(catalogMetadata.map((metadata) => [metadata.id, metadata]));
   const filterLabels = {
     skills: { rag: "RAG", agents: "Agents IA", prompting: "Prompt engineering", development: "Développement IA", data_bi: "Data & BI", productivity: "IA au travail" },
-    roles: { engineer: "Ingénieur·e IA", analyst: "Data analyst / BI", business: "Métier & productivité", manager: "Manager / consultant" },
+    roles: { data_bi: "Data, analyse & BI", ai_engineering: "Ingénierie IA & automatisation", ai_product_governance: "Produit, stratégie & gouvernance IA", business_customer: "Commerce, marketing & relation client", finance: "Finance & contrôle", hr_operations: "RH & opérations", legal_compliance: "Juridique & conformité" },
     technologies: { claude: "Claude", openai: "OpenAI", langchain: "LangChain", langgraph: "LangGraph", hugging_face: "Hugging Face", pytorch: "PyTorch", snowflake: "Snowflake", databricks: "Databricks", mongodb: "MongoDB", weaviate: "Weaviate", haystack: "Haystack", crewai: "CrewAI", llamaindex: "LlamaIndex", google_cloud: "Google Cloud", microsoft_copilot: "Microsoft Copilot", windsurf: "Windsurf" },
     durations: { short: "Courte — jusqu’à 15 activités", medium: "Moyenne — 16 à 30 activités", long: "Approfondie — plus de 30 activités" },
   } as const;
@@ -916,7 +922,8 @@ function CatalogTab({
       && (technologyFilter === "all" || metadata?.technologies.includes(technologyFilter))
       && (durationFilter === "all" || metadata?.duration === durationFilter)
       && (trainingFormatFilter === "all" || metadata?.trainingFormat === trainingFormatFilter)
-      && (examFilter === "all" || (examFilter === "with_exam" ? Boolean(metadata?.hasExam) : !metadata?.hasExam));
+      && (examFilter === "all" || (examFilter === "with_exam" ? Boolean(metadata?.hasExam) : !metadata?.hasExam))
+      && matchesCatalogueSearchText(metadata?.searchText || "", requestedQuery);
   }).sort(compareCataloguePriority);
   const clearAdvancedFilters = () => { setLevelFilter("all"); setSkillFilter("all"); setRoleFilter("all"); setTechnologyFilter("all"); setDurationFilter("all"); setTrainingFormatFilter("all"); setExamFilter("all"); };
   const hasAdvancedFilters = [levelFilter, skillFilter, roleFilter, technologyFilter, durationFilter, trainingFormatFilter, examFilter].some((filter) => filter !== "all");
@@ -941,7 +948,7 @@ function CatalogTab({
         </div>
         <p className="mt-3 text-xs text-muted-foreground">{t({ en: "Duration is estimated from the published number of learning activities.", fr: "La durée est estimée à partir du nombre d’activités pédagogiques publiées." })}</p>
       </div>
-      <p className="text-sm text-muted-foreground">{t({ en: "Suggested order: beginner pathways first, then finance and Excel, short courses, and finally longer advanced pathways.", fr: "Ordre conseillé : parcours débutants, puis finance et Excel, formations courtes, enfin parcours avancés et plus longs." })}</p>
+      <p className="text-sm text-muted-foreground">{normalizedSearchTokens.length > 0 ? t({ en: `${filteredCerts.length} training programme(s) match your search and all selected criteria.`, fr: `${filteredCerts.length} formation(s) correspondent à votre recherche et à tous les critères sélectionnés.` }) : t({ en: "Suggested order: beginner pathways first, then finance and Excel, short courses, and finally longer advanced pathways.", fr: "Ordre conseillé : parcours débutants, puis finance et Excel, formations courtes, enfin parcours avancés et plus longs." })}</p>
       {/* Filter pills */}
       <div className="flex flex-wrap gap-2">
         <button
