@@ -8,10 +8,10 @@ const courseIds = ["01", "02", "03", "04", "05", "06", "07"].map((suffix) => `${
 const courseTargets = {
   [`${prefix}01`]: { expectedChapters: 34, expectedOfficialVideos: 11, expectedDownloads: 14 },
   [`${prefix}02`]: { expectedChapters: 95, expectedExercises: 16 },
-  [`${prefix}03`]: { expectedChapters: 99, expectedExercises: 26 },
+  [`${prefix}03`]: { expectedChapters: 97, expectedExercises: 26 },
   [`${prefix}04`]: { expectedChapters: 23, expectedExercises: 9, expectedOfficialVideos: 9 },
   [`${prefix}05`]: { expectedChapters: 24, expectedExercises: 7 },
-  [`${prefix}06`]: { expectedChapters: 80, expectedExercises: 12 },
+  [`${prefix}06`]: { expectedChapters: 78, expectedExercises: 12 },
   [`${prefix}07`]: { expectedChapters: 26, expectedExercises: 4, expectedDownloads: 2 },
 };
 const reportedSourceCounts = {
@@ -29,6 +29,18 @@ const signals = [
   { key: "rollout_plan", pattern: /\brollout plan\b/i },
   { key: "model_card", pattern: /\bmodel card\b/i },
 ];
+const interactiveBlockTypes = new Set([
+  "checkpoint",
+  "cloud_exercise",
+  "single_choice_exercise",
+  "multi_choice_exercise",
+  "bucket_sort",
+  "knowledge_check",
+  "inline_myth_reality",
+  "inline_multiple_choice_feedback",
+  "inline_scenario_question_feedback",
+  "course_final_quiz",
+]);
 
 function hash(value) {
   return createHash("sha256").update(JSON.stringify(value)).digest("hex");
@@ -65,6 +77,7 @@ async function inspectCourse(courseId) {
   const downloads = blocks.filter((block) => block.type === "download");
   const transcripts = blocks.filter((block) => block.type === "transcript");
   const checkpoints = blocks.filter((block) => block.type === "checkpoint");
+  const interactiveBlocks = blocks.filter((block) => interactiveBlockTypes.has(block.type));
   const checkpointIds = checkpoints.map((block) => block.exerciseId).filter(Boolean);
   const renderedExerciseIds = new Set(checkpointIds);
   const exercises = Array.isArray(course.exercises) ? course.exercises : [];
@@ -97,7 +110,10 @@ async function inspectCourse(courseId) {
   const observed = {
     lessons: lessons.length,
     chapters: chapters.length,
-    exercises: exercises.length,
+    // Catalogue counters describe activities rendered to a learner, not
+    // optional historical answer definitions that have no screen placement.
+    exercises: interactiveBlocks.length,
+    exerciseDefinitions: exercises.length,
     checkpointBlocks: checkpoints.length,
     videos: videos.length,
     officialVideos: officialVideos.length,

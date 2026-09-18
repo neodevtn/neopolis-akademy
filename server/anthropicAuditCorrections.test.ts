@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ARCHITECT_FOUNDATIONS_SECURE_CORRECTIONS } from "./architectFoundationsCorrectionRegistry";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { normalizeCourseContent } from "../client/src/pages/training/contentNormalization";
@@ -207,8 +208,10 @@ describe("Anthropic certification audit corrections", () => {
   it("normalizes only the generic French localization defects approved by Claude Sonnet", () => {
     const architectFoundations = readCourse("claude_certified_architect_foundations__01");
     const architectProfessional = readCourse("claude_certified_architect_professional__05");
-    expect(architectFoundations.exercises[28].correction.fr).toContain("fiche de modèle");
-    expect(architectFoundations.exercises[28].correction.fr).not.toContain("model card");
+    const architectCorrection = ARCHITECT_FOUNDATIONS_SECURE_CORRECTIONS.claude_certified_architect_foundations__01?.[architectFoundations.exercises[28].id]?.correction as { fr?: string } | undefined;
+    expect(architectFoundations.exercises[28]).toMatchObject({ serverCorrectionRequired: true });
+    expect(architectCorrection?.fr).toContain("fiche de modèle");
+    expect(architectCorrection?.fr).not.toContain("model card");
     expect(architectProfessional.exercises[0].correction.fr).toContain("bonnes pratiques");
     expect(architectProfessional.exercises[0].correction.fr).not.toContain("best practices");
   });

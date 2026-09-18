@@ -50,6 +50,7 @@ import { getAiMarketingActivityStatus, submitAiMarketingPractical } from "./aiMa
 import { getAiFinanceActivityStatus, submitAiFinancePractical } from "./aiFinanceAssessmentService";
 import { completeGuidedAction, getGuidedActionStatus } from "./guidedActionService";
 import { getN8nFoundationsActivityStatus, submitN8nFoundationsWorkflow } from "./n8nFoundationsAssessmentService";
+import { getArchitectFoundationsCheckpointCorrection, getArchitectFoundationsCheckpointStatus, submitArchitectFoundationsCheckpoint } from "./architectFoundationsCheckpointService";
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
   targetLevel: z.enum(["bronze", "silver", "gold"]),
@@ -821,6 +822,26 @@ export const appRouter = router({
         }
         return { correct, explanation };
       }),
+    getArchitectFoundationsCheckpointStatus: protectedProcedure
+      .input(z.object({ courseId: z.string().regex(/^claude_certified_architect_foundations__0[1-7]$/) }))
+      .query(async ({ ctx, input }) => getArchitectFoundationsCheckpointStatus({ userId: ctx.user.id, ...input })),
+    submitArchitectFoundationsCheckpoint: protectedProcedure
+      .input(z.object({
+        courseId: z.string().regex(/^claude_certified_architect_foundations__0[1-7]$/),
+        exerciseId: z.string().min(2).max(255),
+        answer: z.string().max(12000),
+        selectedOptionIds: z.array(z.string().min(1).max(80)).max(20).default([]),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return submitArchitectFoundationsCheckpoint({ userId: ctx.user.id, ...input });
+      }),
+    getArchitectFoundationsCheckpointCorrection: protectedProcedure
+      .input(z.object({
+        courseId: z.string().regex(/^claude_certified_architect_foundations__0[1-7]$/),
+        exerciseId: z.string().min(2).max(255),
+      }))
+      .query(async ({ ctx, input }) => getArchitectFoundationsCheckpointCorrection({ userId: ctx.user.id, ...input })),
     getGuidedActionStatus: protectedProcedure
       .input(z.object({ courseId: z.string().regex(/^[a-z0-9_]+$/i).max(200) }))
       .query(async ({ ctx, input }) => getGuidedActionStatus({ userId: ctx.user.id, ...input })),

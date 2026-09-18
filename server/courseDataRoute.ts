@@ -15,6 +15,18 @@ function parseCourseData(content: string): any | null {
 export function sanitizeCourseDataForLearner(content: string): string {
   const course = parseCourseData(content);
   if (!course || !Array.isArray(course.lessons)) return content;
+  // Legacy checkpoints can declare their interactive prompt in the public
+  // course payload, while their correction is held server-side.  Keeping this
+  // sanitization in addition to the content migration prevents an accidental
+  // editor export from making a correction visible before a real submission.
+  for (const exercise of course.exercises || []) {
+    if (exercise?.serverCorrectionRequired === true) {
+      delete exercise.correction;
+      delete exercise.rubric;
+      delete exercise.sampleAnswer;
+      for (const option of exercise.options || []) delete option.correct;
+    }
+  }
   for (const lesson of course.lessons) {
     for (const chapter of lesson?.chapters || []) {
       for (const block of chapter?.blocks || []) {

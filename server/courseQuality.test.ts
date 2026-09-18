@@ -76,12 +76,18 @@ describe('Course JSON Quality', () => {
     }
   });
 
-  it('every exercise should have correction field (can be empty for free_text self-assessment)', () => {
+  it('every exercise should have a local correction or explicitly use a server-held correction', () => {
     for (const file of courseFiles) {
       const data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf-8'));
       if (data.exercises && Array.isArray(data.exercises)) {
         for (const ex of data.exercises) {
-          // correction field must exist (even if empty string for free_text exercises)
+          // Server-held corrections prevent the correction from being exposed
+          // in a static learner payload before a real submission.
+          if (ex.serverCorrectionRequired === true) {
+            expect('correction' in ex).toBe(false);
+            continue;
+          }
+          // Local correction field must exist (even if empty for free-text self-assessment).
           expect('correction' in ex).toBe(true);
           // For non-free_text types, correction should have content
           if (ex.interactionType !== 'free_text') {

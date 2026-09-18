@@ -8,7 +8,8 @@ describe('ExerciseRenderer completion contract', () => {
   it('can require an entirely correct choice set before completing a checkpoint', () => {
     expect(source).toContain('completionRequiresCorrectAnswer?: boolean');
     expect(source).toContain('hasExactCorrectChoiceSet(shuffledOptions, selectedOptions)');
-    expect(source).toContain('if (shouldComplete) onComplete?.(exercise.id, answer);');
+    expect(source).toContain('const localShouldComplete = !exercise.completionRequiresCorrectAnswer || selectedAnswersAreCorrect;');
+    expect(source).toContain('if (shouldComplete && !serverSubmissionRequired) await onComplete?.(exercise.id, answer, Array.from(selectedOptions));');
   });
 
   it('falls back to the exact English interaction type outside French', () => {

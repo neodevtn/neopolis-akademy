@@ -83,6 +83,7 @@ export default function LessonViewer({
   courseTheme?: any;
 }) {
   const { user } = useAuth();
+  const trpcUtils = trpc.useUtils();
   const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
   const evaluateFreeResponse = trpc.training.evaluateFreeResponse.useMutation();
   const submitClaudeScienceV2Lab = trpc.training.submitClaudeScienceV2Lab.useMutation();
@@ -92,6 +93,7 @@ export default function LessonViewer({
   const submitAiMarketingPractical = trpc.training.submitAiMarketingPractical.useMutation();
   const submitAiFinancePractical = trpc.training.submitAiFinancePractical.useMutation();
   const validateServerChoice = trpc.training.validateServerChoice.useMutation();
+  const submitArchitectFoundationsCheckpoint = trpc.training.submitArchitectFoundationsCheckpoint.useMutation();
   const completeGuidedAction = trpc.training.completeGuidedAction.useMutation();
   const guidedActionStatus = trpc.training.getGuidedActionStatus.useQuery(
     { courseId },
@@ -108,6 +110,10 @@ export default function LessonViewer({
   const n8nFoundationsActivityStatus = trpc.training.getN8nFoundationsActivityStatus.useQuery(
     { courseId: "initiation_automatisation_workflows_n8n__01" },
     { enabled: courseId === "initiation_automatisation_workflows_n8n__01", retry: false, refetchOnWindowFocus: false },
+  );
+  const architectFoundationsCheckpointStatus = trpc.training.getArchitectFoundationsCheckpointStatus.useQuery(
+    { courseId: courseId as "claude_certified_architect_foundations__01" | "claude_certified_architect_foundations__02" | "claude_certified_architect_foundations__03" | "claude_certified_architect_foundations__04" | "claude_certified_architect_foundations__05" | "claude_certified_architect_foundations__06" | "claude_certified_architect_foundations__07" },
+    { enabled: Boolean(user) && /^claude_certified_architect_foundations__0[1-7]$/.test(courseId), retry: false, refetchOnWindowFocus: false },
   );
   const aiMarketingActivityStatus = trpc.training.getAiMarketingActivityStatus.useQuery(
     { courseId: "ai_for_marketing__01" },
@@ -177,6 +183,12 @@ export default function LessonViewer({
   }, [n8nFoundationsActivityStatus.data]);
 
   useEffect(() => {
+    const completed = architectFoundationsCheckpointStatus.data?.passedExerciseIds;
+    if (!completed) return;
+    setCompletedExercises((previous) => new Set(Array.from(previous).concat(completed)));
+  }, [architectFoundationsCheckpointStatus.data]);
+
+  useEffect(() => {
     const completed = aiMarketingActivityStatus.data?.completedPracticalIds;
     if (!completed) return;
     setCompletedCloudExercises((previous) => new Set(Array.from(previous).concat(completed)));
@@ -208,6 +220,9 @@ export default function LessonViewer({
     return Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
   }, [chapters, currentChapter, lang]);
   const isClaudeScienceCourse = courseId.startsWith("claude_science_");
+  const loadArchitectFoundationsCheckpointCorrection = useCallback((exerciseId: string) =>
+    trpcUtils.training.getArchitectFoundationsCheckpointCorrection.fetch({ courseId: courseId as any, exerciseId }),
+  [courseId, trpcUtils]);
   const displayedDurationMinutes = isClaudeScienceCourse
     ? Math.max(0, Number(lesson.estimatedMinutes) || 0)
     : estimatedReadingTime;
@@ -873,7 +888,21 @@ export default function LessonViewer({
               exercise={exercise}
               index={0}
               lang={lang as "en" | "fr"}
-              onComplete={(id) => { trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: "completed" }); setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; }); }}
+              hasServerSubmission={Boolean(exercise.serverCorrectionRequired && architectFoundationsCheckpointStatus.data?.submittedExerciseIds.includes(exerciseId))}
+              loadServerSubmissionResult={exercise.serverCorrectionRequired ? loadArchitectFoundationsCheckpointCorrection : undefined}
+              onComplete={async (id, answer, selectedOptionIds) => {
+                if (exercise.serverCorrectionRequired === true) {
+                  const result = await submitArchitectFoundationsCheckpoint.mutateAsync({ courseId: courseId as any, exerciseId: id, answer, selectedOptionIds });
+                  await architectFoundationsCheckpointStatus.refetch();
+                  if (result.passed) {
+                    trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: "completed" });
+                    setCompletedExercises((prev) => new Set(Array.from(prev).concat(id)));
+                  }
+                  return result;
+                }
+                trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: "completed" });
+                setCompletedExercises((prev) => new Set(Array.from(prev).concat(id)));
+              }}
             />
           </div>
         );

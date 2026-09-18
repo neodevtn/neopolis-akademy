@@ -136,6 +136,14 @@ interface ExerciseRubric {
   commonMistakes: LocalizedText[];
 }
 
+interface ExerciseSubmissionResult {
+  passed?: boolean;
+  correction?: any;
+  rubric?: any;
+  sampleAnswer?: any;
+  correctOptionIds?: string[];
+}
+
 interface Exercise {
   id: string;
   interactionType?: 'free_text' | 'single_choice' | 'multi_choice' | 'code' | 'checklist' | 'scenario';
@@ -158,7 +166,9 @@ interface ExerciseRendererProps {
   exercise: Exercise;
   index: number;
   lang: 'en' | 'fr';
-  onComplete?: (exerciseId: string, answer: string) => void;
+  onComplete?: (exerciseId: string, answer: string, selectedOptionIds: string[]) => Promise<ExerciseSubmissionResult | void> | ExerciseSubmissionResult | void;
+  hasServerSubmission?: boolean;
+  loadServerSubmissionResult?: (exerciseId: string) => Promise<ExerciseSubmissionResult>;
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -271,7 +281,7 @@ function clearDraft(exerciseId: string) {
 // --- Auto-save status type ---
 type AutoSaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
-export function ExerciseRenderer({ exercise, index, lang, onComplete }: ExerciseRendererProps) {
+export function ExerciseRenderer({ exercise, index, lang, onComplete, hasServerSubmission = false, loadServerSubmissionResult }: ExerciseRendererProps) {
   // Restore from localStorage on mount: prioritize submitted attempt, then draft
   const savedAttempt = useMemo(() => loadAttempt(exercise.id), [exercise.id]);
   const savedDraft = useMemo(() => loadDraft(exercise.id), [exercise.id]);
@@ -283,6 +293,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
   const [submitted, setSubmitted] = useState(!!savedAttempt);
   const [showCorrection, setShowCorrection] = useState(false);
   const [showRubric, setShowRubric] = useState(false);
+  const [submissionResult, setSubmissionResult] = useState<ExerciseSubmissionResult | null>(null);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Auto-save state
   const [autoSaveStatus, setAutoSaveStatus] = useState<AutoSaveStatus>(savedDraft ? 'saved' : 'idle');
@@ -290,6 +303,18 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevAnswerRef = useRef(userAnswer);
   const prevOptionsRef = useRef(selectedOptions);
+
+  // A server-confirmed submission survives reloads and device changes. The
+  // correction itself is requested only after that independent server signal.
+  useEffect(() => {
+    if (!exercise.serverCorrectionRequired || !hasServerSubmission || !loadServerSubmissionResult) return;
+    let active = true;
+    setSubmitted(true);
+    loadServerSubmissionResult(exercise.id)
+      .then((result) => { if (active) setSubmissionResult(result); })
+      .catch(() => { /* Leave correction hidden when the authorization cannot be confirmed. */ });
+    return () => { active = false; };
+  }, [exercise.id, exercise.serverCorrectionRequired, hasServerSubmission, loadServerSubmissionResult]);
 
   const interactionType = exercise.interactionType || 'free_text';
   const TypeIcon = TYPE_ICONS[interactionType] || FileText;
@@ -568,18 +593,34 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     }
   }, [submitted, exercise, wordCount, userAnswer, selectedOptions, interactionType]);
 
-  const handleSubmit = () => {
-    setSubmitted(true);
+  const handleSubmit = async () => {
     const answer = interactionType === 'single_choice' || interactionType === 'multi_choice' || interactionType === 'checklist'
       ? Array.from(selectedOptions).join(',')
       : userAnswer;
     const selectedAnswersAreCorrect = interactionType === 'single_choice' || interactionType === 'multi_choice'
       ? hasExactCorrectChoiceSet(shuffledOptions, selectedOptions)
       : true;
-    const shouldComplete = !exercise.completionRequiresCorrectAnswer || selectedAnswersAreCorrect;
-    saveAttempt(exercise.id, userAnswer, Array.from(selectedOptions));
-    setAutoSaveStatus('idle');
-    if (shouldComplete) onComplete?.(exercise.id, answer);
+    const localShouldComplete = !exercise.completionRequiresCorrectAnswer || selectedAnswersAreCorrect;
+    const serverSubmissionRequired = exercise.serverCorrectionRequired === true;
+    setSubmissionError(null);
+    setIsSubmitting(true);
+    try {
+      const result: ExerciseSubmissionResult | undefined = serverSubmissionRequired
+        ? (await onComplete?.(exercise.id, answer, Array.from(selectedOptions))) || { passed: false }
+        : undefined;
+      if (result) setSubmissionResult(result);
+      setSubmitted(true);
+      saveAttempt(exercise.id, userAnswer, Array.from(selectedOptions));
+      setAutoSaveStatus('idle');
+      const shouldComplete = serverSubmissionRequired
+        ? result?.passed !== false
+        : localShouldComplete;
+      if (shouldComplete && !serverSubmissionRequired) await onComplete?.(exercise.id, answer, Array.from(selectedOptions));
+    } catch {
+      setSubmissionError(lang === 'fr' ? 'La soumission n’a pas abouti. Vérifiez votre connexion puis réessayez.' : 'Submission did not complete. Check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -588,6 +629,8 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     setSubmitted(false);
     setShowCorrection(false);
     setShowRubric(false);
+    setSubmissionResult(null);
+    setSubmissionError(null);
     clearAttempt(exercise.id);
     clearDraft(exercise.id);
     setAutoSaveStatus('idle');
@@ -622,11 +665,19 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
   const getOptionResult = (option: ExerciseOption) => {
     if (!submitted) return null;
     const isSelected = selectedOptions.has(option.id);
-    if (isSelected && option.correct) return 'correct';
-    if (isSelected && !option.correct) return 'incorrect';
-    if (!isSelected && option.correct) return 'missed';
+    const isCorrect = submissionResult?.correctOptionIds
+      ? submissionResult.correctOptionIds.includes(option.id)
+      : option.correct;
+    if (isSelected && isCorrect) return 'correct';
+    if (isSelected && !isCorrect) return 'incorrect';
+    if (!isSelected && isCorrect) return 'missed';
     return null;
   };
+
+  const correction = (submissionResult?.correction || exercise.correction) as LocalizedText | undefined;
+  const rubric = (submissionResult?.rubric || exercise.rubric) as ExerciseRubric | undefined;
+  const sampleAnswer = (submissionResult?.sampleAnswer || exercise.sampleAnswer) as LocalizedText | undefined;
+  const hasCorrection = Boolean(getText(correction) || getText(sampleAnswer) || (rubric?.keyPoints?.length ?? 0) > 0 || (rubric?.commonMistakes?.length ?? 0) > 0);
 
   // Format time for display
   const formatSavedTime = (isoString: string) => {
@@ -951,7 +1002,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
                     onClick={() => {
                       const answer = userAnswer;
                       saveAttempt(exercise.id, answer, Array.from(selectedOptions));
-                      if (onComplete) onComplete(exercise.id, answer);
+                      if (onComplete && !exercise.serverCorrectionRequired) onComplete(exercise.id, answer, Array.from(selectedOptions));
                     }}
                     disabled={!userAnswer.trim()}
                     size="sm"
@@ -1020,26 +1071,26 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
           {!submitted ? (
             <Button
               onClick={handleSubmit}
-              disabled={!canSubmit}
+              disabled={!canSubmit || isSubmitting}
               size="sm"
               className="gap-1.5"
             >
               <Send className="h-3.5 w-3.5" />
-              {lang === 'fr' ? 'Soumettre' : 'Submit'}
+              {isSubmitting ? (lang === 'fr' ? 'Soumission…' : 'Submitting…') : (lang === 'fr' ? 'Soumettre' : 'Submit')}
             </Button>
           ) : (
             <>
-              <Button
-                onClick={() => setShowCorrection(!showCorrection)}
-                variant="outline"
-                size="sm"
-                className="gap-1.5"
-              >
-                <Eye className="h-3.5 w-3.5" />
-                {showCorrection
-                  ? (lang === 'fr' ? 'Masquer correction' : 'Hide correction')
-                  : (lang === 'fr' ? 'Voir la correction' : 'Show correction')}
-              </Button>
+              {hasCorrection && <Button
+                  onClick={() => setShowCorrection(!showCorrection)}
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5"
+                >
+                  <Eye className="h-3.5 w-3.5" />
+                  {showCorrection
+                    ? (lang === 'fr' ? 'Masquer correction' : 'Hide correction')
+                    : (lang === 'fr' ? 'Voir la correction' : 'Show correction')}
+                </Button>}
               <Button
                 onClick={handleReset}
                 variant="ghost"
@@ -1060,37 +1111,39 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
               </Badge>
             ))}
           </div>
-        </div>
+          </div>
+
+          {submissionError && <p role="alert" className="text-xs text-red-600 dark:text-red-400">{submissionError}</p>}
 
         {/* Correction Panel */}
         {showCorrection && (
           <div className="space-y-3 pt-3 border-t border-border/50 animate-in fade-in slide-in-from-top-2 duration-200">
             {/* Correction text */}
-            {getText(exercise.correction) && (
+            {getText(correction) && (
               <div className="bg-green-50 dark:bg-green-900/20 rounded-md p-3 border border-green-200 dark:border-green-800">
                 <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-1">
                   {lang === 'fr' ? 'Correction' : 'Correction'}
                 </p>
                 <div className="text-sm text-gray-800 dark:text-gray-200 space-y-1">
-                  {renderMarkdownText(getText(exercise.correction))}
+                  {renderMarkdownText(getText(correction))}
                 </div>
               </div>
             )}
 
             {/* Sample answer */}
-            {getText(exercise.sampleAnswer) && (
+            {getText(sampleAnswer) && (
               <div className="bg-blue-50 dark:bg-blue-900/20 rounded-md p-3 border border-blue-200 dark:border-blue-800">
                 <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 mb-1">
                   {lang === 'fr' ? 'Réponse modèle' : 'Sample Answer'}
                 </p>
                 <div className="text-sm text-gray-800 dark:text-gray-200 space-y-1">
-                  {renderMarkdownText(getText(exercise.sampleAnswer))}
+                  {renderMarkdownText(getText(sampleAnswer))}
                 </div>
               </div>
             )}
 
             {/* Rubric */}
-            {((exercise.rubric?.keyPoints?.length ?? 0) > 0 || (exercise.rubric?.commonMistakes?.length ?? 0) > 0) && (
+            {((rubric?.keyPoints?.length ?? 0) > 0 || (rubric?.commonMistakes?.length ?? 0) > 0) && (
               <div>
                 <button
                   onClick={() => setShowRubric(!showRubric)}
@@ -1101,25 +1154,25 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
                 </button>
                 {showRubric && (
                   <div className="mt-2 space-y-2 animate-in fade-in slide-in-from-top-1 duration-150">
-                    {exercise.rubric?.keyPoints && exercise.rubric.keyPoints.length > 0 && (
+                    {rubric?.keyPoints && rubric.keyPoints.length > 0 && (
                       <div>
                         <p className="text-xs font-medium text-green-600 mb-1">
                           {lang === 'fr' ? 'Points clés :' : 'Key Points:'}
                         </p>
                         <ul className="text-xs space-y-0.5 pl-4 list-disc text-muted-foreground">
-                          {exercise.rubric.keyPoints.map((kp, i) => (
+                          {rubric.keyPoints.map((kp, i) => (
                             <li key={i}>{getText(kp)}</li>
                           ))}
                         </ul>
                       </div>
                     )}
-                    {exercise.rubric?.commonMistakes && exercise.rubric.commonMistakes.length > 0 && (
+                    {rubric?.commonMistakes && rubric.commonMistakes.length > 0 && (
                       <div>
                         <p className="text-xs font-medium text-red-600 mb-1">
                           {lang === 'fr' ? 'Erreurs fréquentes :' : 'Common Mistakes:'}
                         </p>
                         <ul className="text-xs space-y-0.5 pl-4 list-disc text-muted-foreground">
-                          {exercise.rubric.commonMistakes.map((cm, i) => (
+                          {rubric.commonMistakes.map((cm, i) => (
                             <li key={i}>{getText(cm)}</li>
                           ))}
                         </ul>

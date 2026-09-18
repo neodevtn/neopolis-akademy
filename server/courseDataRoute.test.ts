@@ -85,6 +85,30 @@ describe("course data route", () => {
     expect(learnerBlock).not.toHaveProperty("rubricCriteria");
   });
 
+  it("masks server-owned legacy checkpoint corrections and choice keys", () => {
+    const raw = JSON.stringify({
+      lessons: [],
+      exercises: [{
+        id: "secured_checkpoint",
+        serverCorrectionRequired: true,
+        prompt: { fr: "Question visible" },
+        correction: { fr: "Correction privée" },
+        rubric: { keyPoints: [{ fr: "Critère privé" }] },
+        options: [{ id: "a", correct: true }, { id: "b", correct: false }],
+      }, {
+        id: "public_legacy_exercise",
+        correction: { fr: "Conservation rétrocompatible" },
+      }],
+    });
+
+    const learnerData = JSON.parse(sanitizeCourseDataForLearner(raw));
+    expect(learnerData.exercises[0]).toMatchObject({ id: "secured_checkpoint", serverCorrectionRequired: true, prompt: { fr: "Question visible" } });
+    expect(learnerData.exercises[0]).not.toHaveProperty("correction");
+    expect(learnerData.exercises[0]).not.toHaveProperty("rubric");
+    expect(learnerData.exercises[0].options).toEqual([{ id: "a" }, { id: "b" }]);
+    expect(learnerData.exercises[1].correction).toEqual({ fr: "Conservation rétrocompatible" });
+  });
+
   it("keeps the Developer 3 sensitive answer key in the server-only registry", () => {
     expect(getSensitiveExerciseAnswerKey("claude_certified_developer_foundations__03", "checkpoint4_fix_plugin_definition")).toMatchObject({
       correctAnswer: "b",
