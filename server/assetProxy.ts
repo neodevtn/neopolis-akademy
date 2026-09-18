@@ -47,7 +47,18 @@ export function getAssetCacheControl(key: string): string {
 
 /** Corrections and expected outputs are assessment material, never public learner downloads. */
 export function isPrivateLearningCorrectionAssetKey(key: string): boolean {
-  return /^claude-science-v2\/03_claude_science_travaux_pratiques\/(?:solutions\/|downloads\/expected\/|downloads\/scripts\/solution_)/.test(key);
+  return /^claude-science-v2\/03_claude_science_travaux_pratiques\/(?:solutions\/|downloads\/expected\/|downloads\/scripts\/solution_)/.test(key)
+    || key.startsWith("n8n-foundations/corrections/");
+}
+
+function isN8nFoundationsCorrectionAssetKey(key: string): boolean {
+  return key.startsWith("n8n-foundations/corrections/");
+}
+
+/** Accept a safe filename only, preventing Content-Disposition header injection. */
+export function getRequestedDownloadFilename(value: unknown): string | null {
+  const filename = typeof value === "string" ? value.trim() : "";
+  return /^[a-z0-9][a-z0-9._-]{0,180}$/i.test(filename) ? filename : null;
 }
 
 function getMimeFromKey(key: string): string | null {
@@ -118,12 +129,14 @@ export function registerAssetProxy(app: Express) {
       res.status(400).send("Missing asset key");
       return;
     }
-    if (isPrivateLearningCorrectionAssetKey(key)) {
+    const n8nCorrectionAsset = isN8nFoundationsCorrectionAssetKey(key);
+    if (isPrivateLearningCorrectionAssetKey(key) && !n8nCorrectionAsset) {
       res.status(404).send("Asset introuvable");
       return;
     }
     const privateMessageAttachment = key.startsWith("private-messaging/");
-    const cacheControl = privateMessageAttachment ? "private, no-store" : getAssetCacheControl(key);
+    const cacheControl = privateMessageAttachment || n8nCorrectionAsset ? "private, no-store" : getAssetCacheControl(key);
+    const downloadFilename = getRequestedDownloadFilename(req.query?.download);
 
     // Protect application files - require admin auth
     if (key.startsWith("applications/")) {
@@ -146,6 +159,21 @@ export function registerAssetProxy(app: Express) {
         const user = await sdk.authenticateRequest(req);
         const allowed = await canAccessPrivateMessageAttachment({ userId: user.id, role: user.role }, key);
         if (!allowed) {
+          res.status(404).send("Asset introuvable");
+          return;
+        }
+      } catch {
+        res.status(401).json({ error: "Authentification requise" });
+        return;
+      }
+    }
+
+    if (n8nCorrectionAsset) {
+      try {
+        const { sdk } = await import("./_core/sdk");
+        const user = await sdk.authenticateRequest(req);
+        const { mayAccessN8nFoundationsCorrection } = await import("./n8nFoundationsAssessmentService");
+        if (!user || !(await mayAccessN8nFoundationsCorrection({ userId: user.id, key }))) {
           res.status(404).send("Asset introuvable");
           return;
         }
@@ -188,8 +216,9 @@ export function registerAssetProxy(app: Express) {
         if (contentLength) res.set("Content-Length", contentLength);
         if (contentRange) res.set("Content-Range", contentRange);
         res.set("Accept-Ranges", "bytes");
-        if (!privateMessageAttachment) res.set("Access-Control-Allow-Origin", "*");
+        if (!privateMessageAttachment && !n8nCorrectionAsset) res.set("Access-Control-Allow-Origin", "*");
         res.set("Cache-Control", cacheControl);
+        if (downloadFilename) res.set("Content-Disposition", `attachment; filename="${downloadFilename}"`);
 
         const arrayBuf = await rangeResp.arrayBuffer();
         res.send(Buffer.from(arrayBuf));
@@ -207,8 +236,9 @@ export function registerAssetProxy(app: Express) {
         res.set("Content-Type", contentType);
         if (contentLength) res.set("Content-Length", contentLength);
         res.set("Accept-Ranges", "bytes");
-        if (!privateMessageAttachment) res.set("Access-Control-Allow-Origin", "*");
+        if (!privateMessageAttachment && !n8nCorrectionAsset) res.set("Access-Control-Allow-Origin", "*");
         res.set("Cache-Control", cacheControl);
+        if (downloadFilename) res.set("Content-Disposition", `attachment; filename="${downloadFilename}"`);
 
         const arrayBuf = await fileResp.arrayBuffer();
         res.send(Buffer.from(arrayBuf));

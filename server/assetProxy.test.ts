@@ -8,6 +8,7 @@ vi.mock("./_core/env", () => ({
 import {
   clearAssetProxyPresignCache,
   getAssetCacheControl,
+  getRequestedDownloadFilename,
   isPrivateLearningCorrectionAssetKey,
   registerAssetProxy,
   VERSIONED_PUBLIC_ASSET_CACHE_CONTROL,
@@ -31,6 +32,18 @@ describe("isPrivateLearningCorrectionAssetKey", () => {
     expect(isPrivateLearningCorrectionAssetKey("claude-science-v2/03_claude_science_travaux_pratiques/downloads/expected/clinical_descriptive_expected_c109ec89.json")).toBe(true);
     expect(isPrivateLearningCorrectionAssetKey("claude-science-v2/03_claude_science_travaux_pratiques/downloads/scripts/solution_gene_expression_3ab97ae8.py")).toBe(true);
     expect(isPrivateLearningCorrectionAssetKey("claude-science-v2/03_claude_science_travaux_pratiques/downloads/templates/fiche.md")).toBe(false);
+  });
+
+  it("marks n8n workflow corrections as non-public assets", () => {
+    expect(isPrivateLearningCorrectionAssetKey("n8n-foundations/corrections/currency_rates_solution_020a4d9b.json")).toBe(true);
+    expect(isPrivateLearningCorrectionAssetKey("n8n-foundations/starters/currency_rates_start_5ad1e45c.json")).toBe(false);
+  });
+});
+
+describe("getRequestedDownloadFilename", () => {
+  it("permits ordinary filenames but rejects header-injection characters", () => {
+    expect(getRequestedDownloadFilename("workflow_solution.json")).toBe("workflow_solution.json");
+    expect(getRequestedDownloadFilename("attachment\r\nX-Injected: yes")).toBeNull();
   });
 });
 

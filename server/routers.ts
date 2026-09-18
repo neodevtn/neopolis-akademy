@@ -49,6 +49,7 @@ import { getIntermediateN8nActivityStatus, submitIntermediateN8nPractical } from
 import { getAiMarketingActivityStatus, submitAiMarketingPractical } from "./aiMarketingAssessmentService";
 import { getAiFinanceActivityStatus, submitAiFinancePractical } from "./aiFinanceAssessmentService";
 import { completeGuidedAction, getGuidedActionStatus } from "./guidedActionService";
+import { getN8nFoundationsActivityStatus, submitN8nFoundationsWorkflow } from "./n8nFoundationsAssessmentService";
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
   targetLevel: z.enum(["bronze", "silver", "gold"]),
@@ -889,6 +890,18 @@ export const appRouter = router({
         await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         return submitIntermediateN8nPractical({ userId: ctx.user.id, ...input });
       }),
+    submitN8nFoundationsWorkflow: protectedProcedure
+      .input(z.object({
+        courseId: z.literal("initiation_automatisation_workflows_n8n__01"),
+        blockId: z.enum(["ch01_ex02_tp", "ch01_ex04_tp", "ch01_ex05_tp", "ch01_ex08_tp", "ch02_ex08_tp", "ch02_ex10_tp", "ch03_ex04_tp", "ch03_ex06_tp", "ch03_ex07_tp", "ch03_ex11_tp"]),
+        lessonIndex: z.number().int().min(0),
+        chapterIndex: z.number().int().min(0),
+        workflowJson: z.string().trim().min(2).max(300_000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return submitN8nFoundationsWorkflow({ userId: ctx.user.id, ...input });
+      }),
     submitAiMarketingPractical: protectedProcedure
       .input(z.object({
         courseId: z.literal("ai_for_marketing__01"),
@@ -922,6 +935,9 @@ export const appRouter = router({
     getIntermediateN8nActivityStatus: protectedProcedure
       .input(z.object({ courseId: z.literal("intermediate_workflow_automation_with_n8n__01") }))
       .query(async ({ ctx, input }) => getIntermediateN8nActivityStatus({ userId: ctx.user.id, ...input })),
+    getN8nFoundationsActivityStatus: protectedProcedure
+      .input(z.object({ courseId: z.literal("initiation_automatisation_workflows_n8n__01") }))
+      .query(async ({ ctx, input }) => getN8nFoundationsActivityStatus({ userId: ctx.user.id, ...input })),
 
     saveChapterProgress: protectedProcedure
       .input(z.object({

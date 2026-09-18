@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { CloudExerciseBlock } from "@/components/CloudExerciseBlock";
-import { adaptDataCampVmText, toCompetencyPercentage } from "@/components/CloudExerciseBlock";
+import { adaptDataCampVmText, getUnavailableExerciseResourceNames, shouldRecordClientCompetency, toCompetencyPercentage } from "@/components/CloudExerciseBlock";
 import { renderInlineFormatting } from "@/pages/training/PageContent";
 
 describe("Cloud exercise learner criteria", () => {
@@ -52,5 +52,17 @@ describe("Cloud exercise learner criteria", () => {
     expect(toCompetencyPercentage(3, 4)).toBe(75);
     expect(toCompetencyPercentage(-1, 4)).toBe(0);
     expect(toCompetencyPercentage(8, 4)).toBe(100);
+  });
+
+  it("does not label a supplied starter workflow as an unavailable source file", () => {
+    expect(getUnavailableExerciseResourceNames({
+      resources: [{ filename: "currency_exchange.json", url: "/api/assets/n8n-foundations/starters/currency_exchange.json" }],
+      referencedFiles: [{ filename: "currency_exchange.json", local_path: null }],
+    })).toEqual([]);
+  });
+
+  it("leaves competency recording to the server for server-graded activities", () => {
+    expect(shouldRecordClientCompetency({ serverGradedAssessment: "n8n_foundations_workflow_json" }, { rubricEvaluated: true })).toBe(false);
+    expect(shouldRecordClientCompetency({}, { rubricEvaluated: true })).toBe(true);
   });
 });

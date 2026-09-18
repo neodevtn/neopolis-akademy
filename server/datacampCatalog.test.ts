@@ -287,7 +287,7 @@ describe("catalogue DataCamp", () => {
     expect(firstActivity.blocks.findIndex((block: { id?: string }) => block.id === preparation.id)).toBe(0);
   });
 
-  it("exposes l’introduction n8n comme un cours navigable avec ses compteurs canoniques", () => {
+  it("exposes l’introduction n8n comme un cours navigable avec ses ressources réellement fournies", () => {
     const certification = trainingIndex.certifications.find(
       (item) => item.id === "initiation_automatisation_workflows_n8n",
     );
@@ -301,7 +301,7 @@ describe("catalogue DataCamp", () => {
       totalActivities: 32,
       totalVideos: 10,
       totalExercises: 22,
-      totalDownloads: 3,
+      totalDownloads: 12,
     });
     expect(course).toMatchObject({
       certId: "initiation_automatisation_workflows_n8n",
@@ -309,7 +309,7 @@ describe("catalogue DataCamp", () => {
       totalActivities: 32,
       videoCount: 10,
       exerciseCount: 22,
-      downloadCount: 3,
+      downloadCount: 12,
     });
   });
 

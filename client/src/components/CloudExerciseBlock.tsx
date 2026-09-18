@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Timer, CheckCircle2, ChevronDown, Download } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { Timer, CheckCircle2, ChevronDown, Download, FileUp, FileJson, X } from "lucide-react";
 import PageContent, { renderInlineFormatting } from "@/pages/training/PageContent";
 import { Streamdown } from "streamdown";
 import { hasRequiredAnswerLength, resolveLocalizedBlockText, resolveMinimumAnswerLength, resolvePostRevealReflectionOptions } from "./blocks/cloudExerciseValidation";
+import { Button } from "@/components/ui/button";
 
 /**
  * Extract learner-friendly objectives from the raw grading prompt.
@@ -61,6 +62,22 @@ export function toCompetencyPercentage(score: number, maxScore: number): number 
   return Math.max(0, Math.min(100, Math.round((score / maxScore) * 100)));
 }
 
+/** Keeps source-file notices truthful when the same filename is offered as a resource. */
+export function getUnavailableExerciseResourceNames(block: { resources?: unknown; nonDownloadableFiles?: unknown; referencedFiles?: unknown }): string[] {
+  const resources = Array.isArray(block.resources) ? block.resources : [];
+  const availableNames = new Set(resources.map((resource: any) => String(resource?.filename || resource?.title || "").trim().toLowerCase()).filter(Boolean));
+  const candidates = [
+    ...(Array.isArray(block.nonDownloadableFiles) ? block.nonDownloadableFiles : []),
+    ...(Array.isArray(block.referencedFiles) ? block.referencedFiles.filter((file: any) => !file?.local_path && file?.filename).map((file: any) => file.filename) : []),
+  ];
+  return Array.from(new Set(candidates.map((filename) => String(filename || "").trim()).filter((filename) => filename && !availableNames.has(filename.toLowerCase()))));
+}
+
+/** Server-graded activities already record competency evidence authoritatively. */
+export function shouldRecordClientCompetency(block: { serverGradedAssessment?: unknown }, outcome?: { rubricEvaluated?: boolean }): boolean {
+  return Boolean(outcome?.rubricEvaluated) && !(typeof block.serverGradedAssessment === "string" && block.serverGradedAssessment.length > 0);
+}
+
 interface CloudExerciseBlockProps {
   block: any;
   lang: string;
@@ -68,16 +85,20 @@ interface CloudExerciseBlockProps {
   blockIdx: number;
   onComplete?: (id: string, outcome?: { score: number; rubricEvaluated: boolean }) => void;
   evaluationContext?: { certificationId: string; courseId: string; lessonIndex: number; chapterIndex: number };
-  onEvaluate?: (input: Record<string, unknown>) => Promise<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string }>;
+  onEvaluate?: (input: Record<string, unknown>) => Promise<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string; correctionResources?: Array<{ title?: string; url: string; filename?: string; sha256?: string; size?: number }> }>;
 }
 
 export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evaluationContext, onEvaluate }: CloudExerciseBlockProps) {
   const [submitted, setSubmitted] = useState(false);
   const [solutionRevealed, setSolutionRevealed] = useState(false);
   const [answer, setAnswer] = useState("");
-  const [evaluation, setEvaluation] = useState<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string } | null>(null);
+  const [evaluation, setEvaluation] = useState<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string; correctionResources?: Array<{ title?: string; url: string; filename?: string; sha256?: string; size?: number }> } | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [reflectionChoiceId, setReflectionChoiceId] = useState<string | null>(null);
+  const [workflowJson, setWorkflowJson] = useState("");
+  const [workflowFilename, setWorkflowFilename] = useState("");
+  const [workflowUploadError, setWorkflowUploadError] = useState("");
+  const workflowFileInputRef = useRef<HTMLInputElement>(null);
 
   const tpTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || '') : (block.title || '');
   const tpAssignment = resolveLocalizedBlockText(block.assignment, lang);
@@ -91,9 +112,12 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
   const tpPrompt = resolveLocalizedBlockText(block.prompt, lang);
   const rubricCriteria = Array.isArray(block.rubricCriteria) ? block.rubricCriteria : [];
   const learnerCriteria = Array.isArray(block.learnerCriteria) ? block.learnerCriteria : [];
+  const localizedLearnerCriteria = learnerCriteria.map((criterion: unknown) => resolveLocalizedBlockText(criterion, lang)).filter(Boolean);
   const usesServerGradedAssessment = typeof block.serverGradedAssessment === "string" && block.serverGradedAssessment.length > 0;
+  const requiresWorkflowUpload = Boolean(block.workflowUploadRequired);
   const minimumAnswerLength = resolveMinimumAnswerLength(block.minimumAnswerLength);
-  const hasMinimumAnswer = hasRequiredAnswerLength(answer, minimumAnswerLength);
+  const submittedAnswer = requiresWorkflowUpload ? workflowJson : answer;
+  const hasMinimumAnswer = hasRequiredAnswerLength(submittedAnswer, minimumAnswerLength);
   const reflectionOptions = resolvePostRevealReflectionOptions(block.postRevealReflectionOptions, lang);
   const reflectionIsRequired = Boolean(block.requirePostRevealReflection) && reflectionOptions.length > 0;
   const reflectionTitle = resolveLocalizedBlockText(block.postRevealReflectionTitle, lang);
@@ -101,19 +125,14 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
   const usesTrackedRubric = (rubricCriteria.length > 0 || usesServerGradedAssessment) && Boolean(evaluationContext);
   const maxScore = Number(block.maxScore) || rubricCriteria.length || 1;
   const passingScore = Number(block.passingScore) || maxScore;
-  const tpNonDl = Array.from(new Set([
-    ...(Array.isArray(block.nonDownloadableFiles) ? block.nonDownloadableFiles : []),
-    ...(Array.isArray(block.referencedFiles)
-      ? block.referencedFiles.filter((file: any) => !file?.local_path && file?.filename).map((file: any) => file.filename)
-      : []),
-  ]));
+  const tpNonDl = getUnavailableExerciseResourceNames(block);
   const hasUnavailableVmFiles = tpNonDl.length > 0;
   const learnerAssignment = adaptDataCampVmText(tpAssignment, hasUnavailableVmFiles);
   const learnerHint = adaptDataCampVmText(tpHint, hasUnavailableVmFiles);
   const learnerSolution = adaptDataCampVmText(tpSolution, hasUnavailableVmFiles);
   const revealedSolution = evaluation?.correction || learnerSolution;
   const evaluationPrompt = resolveLocalizedBlockText(block.evaluationPrompt, lang) || learnerAssignment;
-  const completeEvaluation = (data: { score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string }) => {
+  const completeEvaluation = (data: { score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number; correction?: string; correctionResources?: Array<{ title?: string; url: string; filename?: string; sha256?: string; size?: number }> }) => {
       setEvaluation(data);
       setIsEvaluating(false);
       if (data.passed) {
@@ -143,13 +162,41 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
     void onEvaluate({
       ...evaluationContext,
       blockId: block.id || `cloud_exercise_${blockIdx}`,
-      answer,
+      answer: submittedAnswer,
+      workflowJson: requiresWorkflowUpload ? workflowJson : undefined,
       prompt: evaluationPrompt,
       rubric: rubricCriteria,
       maxScore,
       passingScore,
       lang: lang === "en" ? "en" : "fr",
     }).then(completeEvaluation).catch(failEvaluation);
+  };
+
+  const selectWorkflowFile = async (file?: File | null) => {
+    if (!file) return;
+    setWorkflowUploadError("");
+    if (!/\.json$/i.test(file.name) && file.type !== "application/json") {
+      setWorkflowJson("");
+      setWorkflowFilename("");
+      setWorkflowUploadError(t({ en: "Choose an exported n8n JSON file.", fr: "Choisissez un fichier JSON exporté par n8n." }));
+      return;
+    }
+    if (file.size > 300_000) {
+      setWorkflowJson("");
+      setWorkflowFilename("");
+      setWorkflowUploadError(t({ en: "This workflow file is too large (300 KB maximum).", fr: "Ce fichier de workflow est trop volumineux (300 Ko maximum)." }));
+      return;
+    }
+    try {
+      const content = await file.text();
+      JSON.parse(content);
+      setWorkflowJson(content);
+      setWorkflowFilename(file.name);
+    } catch {
+      setWorkflowJson("");
+      setWorkflowFilename("");
+      setWorkflowUploadError(t({ en: "This file is not valid JSON.", fr: "Ce fichier n’est pas un JSON valide." }));
+    }
   };
 
   const selectReflection = (choiceId: string) => {
@@ -248,10 +295,10 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
         )}
 
         {/* Evaluation criteria - transformed into learner-friendly rubric */}
-        {(tpPrompt || rubricCriteria.length > 0 || learnerCriteria.length > 0) && (() => {
+        {(tpPrompt || rubricCriteria.length > 0 || localizedLearnerCriteria.length > 0) && (() => {
           // Parse the raw grading prompt into learner-friendly bullets
-          const bullets = learnerCriteria.length > 0
-            ? learnerCriteria
+          const bullets = localizedLearnerCriteria.length > 0
+            ? localizedLearnerCriteria
             : rubricCriteria.length > 0
             ? rubricCriteria.map((criterion: any) => criterion.label || criterion.description).filter(Boolean)
             : extractLearnerObjectives(tpPrompt);
@@ -284,7 +331,8 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
           </details>
         )}
 
-        {/* Non-downloadable files notice */}
+        {/* Only surface genuinely unavailable references. A resource already present
+            above must never be misrepresented as an inaccessible source artifact. */}
         {tpNonDl.length > 0 && (
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
             <p className="text-xs font-medium text-gray-500 mb-1">
@@ -297,15 +345,37 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
         {/* Answer zone + Submit button */}
         <div className="border border-border rounded-lg p-4 bg-muted/20">
           <p className="font-semibold text-sm text-foreground mb-2">
-            {t({ en: 'Your answer / Proof of completion', fr: 'Votre réponse / Preuve de réalisation' })}
+            {requiresWorkflowUpload
+              ? t({ en: "Submit your completed workflow", fr: "Remettez votre workflow terminé" })
+              : t({ en: 'Your answer / Proof of completion', fr: 'Votre réponse / Preuve de réalisation' })}
           </p>
-          <textarea
-            className="w-full min-h-[100px] p-3 rounded-lg border border-border bg-background text-sm text-foreground resize-y placeholder:text-muted-foreground"
-            placeholder={t({ en: 'Describe what you did, paste your workflow JSON, or note the result...', fr: 'Décrivez ce que vous avez fait, collez votre workflow JSON, ou notez le résultat...' })}
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            disabled={submitted || isEvaluating}
-          />
+          {requiresWorkflowUpload ? (
+            <>
+              <input ref={workflowFileInputRef} type="file" accept="application/json,.json" className="sr-only" disabled={submitted || isEvaluating} onChange={(event) => void selectWorkflowFile(event.target.files?.[0])} />
+              {workflowFilename ? (
+                <div className="flex items-center gap-3 rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-950">
+                  <FileJson className="h-5 w-5 shrink-0 text-emerald-700" />
+                  <span className="min-w-0 flex-1 truncate font-medium">{workflowFilename}</span>
+                  {!submitted && <Button type="button" size="icon" variant="ghost" aria-label={t({ en: "Remove selected workflow", fr: "Retirer le workflow sélectionné" })} onClick={() => { setWorkflowJson(""); setWorkflowFilename(""); if (workflowFileInputRef.current) workflowFileInputRef.current.value = ""; }}><X className="h-4 w-4" /></Button>}
+                </div>
+              ) : (
+                <button type="button" disabled={submitted || isEvaluating} onClick={() => workflowFileInputRef.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); void selectWorkflowFile(event.dataTransfer.files?.[0]); }} className="flex min-h-28 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-blue-300 bg-blue-50/50 px-4 py-5 text-center text-sm text-blue-900 transition-colors hover:border-blue-500 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60">
+                  <FileUp className="h-6 w-6 text-blue-700" />
+                  <span className="font-semibold">{t({ en: "Drop your exported n8n JSON here or choose a file", fr: "Déposez ici votre JSON n8n exporté ou choisissez un fichier" })}</span>
+                  <span className="text-xs text-blue-800">{t({ en: "JSON only · 300 KB maximum · no credential or secret", fr: "JSON uniquement · 300 Ko maximum · sans identifiant ni secret" })}</span>
+                </button>
+              )}
+              {workflowUploadError && <p className="mt-2 text-xs font-medium text-destructive">{workflowUploadError}</p>}
+            </>
+          ) : (
+            <textarea
+              className="w-full min-h-[100px] p-3 rounded-lg border border-border bg-background text-sm text-foreground resize-y placeholder:text-muted-foreground"
+              placeholder={t({ en: 'Describe what you did, paste your workflow JSON, or note the result...', fr: 'Décrivez ce que vous avez fait, collez votre workflow JSON, ou notez le résultat...' })}
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              disabled={submitted || isEvaluating}
+            />
+          )}
           {!submitted && minimumAnswerLength > 1 && !hasMinimumAnswer && (
             <p className="mt-2 text-xs text-muted-foreground">
               {t({
@@ -330,6 +400,19 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
               <Streamdown>{evaluation.feedback}</Streamdown>
               {evaluation.strengths.length > 0 && <ul className="list-disc pl-5 text-green-700">{evaluation.strengths.map((item, index) => <li key={index}><Streamdown>{item}</Streamdown></li>)}</ul>}
               {evaluation.improvements.length > 0 && <ul className="list-disc pl-5 text-amber-700">{evaluation.improvements.map((item, index) => <li key={index}><Streamdown>{item}</Streamdown></li>)}</ul>}
+              {evaluation.passed && (evaluation.correctionResources?.length ?? 0) > 0 && (
+                <div className="rounded-md border border-green-300 bg-white p-3">
+                  <p className="font-semibold text-green-900">{t({ en: "Correction explained", fr: "Correction expliquée" })}</p>
+                  <div className="mt-2 space-y-2">
+                    {evaluation.correctionResources!.map((resource, index) => (
+                      <a key={`${resource.url}-${index}`} href={resource.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-green-800 underline underline-offset-2 hover:text-green-950">
+                        <Download className="h-4 w-4 shrink-0" />
+                        {resource.title || resource.filename || t({ en: "Download correction", fr: "Télécharger la correction" })}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
               {usesTrackedRubric && <p className={evaluation.passed ? "font-medium text-green-700" : "font-medium text-amber-700"}>{evaluation.passed ? t({ en: "Requirement met: you may continue. The associated competency points are being recorded.", fr: "Seuil atteint : vous pouvez continuer. Les points de compétences associés sont enregistrés." }) : t({ en: "Requirement not yet met: refine your response and try again.", fr: "Seuil non atteint : améliorez votre réponse et réessayez." })}</p>}
             </div>
           )}
