@@ -9,7 +9,38 @@ const certificationId = "claude_science_recherche_medicale";
 const collectionId = "parcours_claude_science_recherche_medicale";
 const categoryId = "ai_research_health";
 
-const local = (fr, en = fr) => ({ fr, en });
+function restoreFrenchTypography(value) {
+  let text = String(value || "");
+  const replacements = [
+    [/\bgenerative\b/gi, "générative"], [/\bmethode\b/gi, "méthode"], [/\bConformite\b/g, "Conformité"],
+    [/\bdonnees\b/gi, "données"], [/\bsante\b/gi, "santé"], [/\brecherche medicale\b/gi, "recherche médicale"],
+    [/\bactivite\b/gi, "activité"], [/\blecon\b/gi, "leçon"], [/\bpremiere\b/gi, "première"],
+    [/\breussir\b/gi, "réussir"], [/\bProteger\b/g, "Protéger"], [/\bresultat\b/gi, "résultat"],
+    [/\bresultats\b/gi, "résultats"], [/\blitterature\b/gi, "littérature"], [/\banalyse\b/gi, "analyse"],
+    [/\binterpre?tation\b/gi, "interprétation"], [/\bencadre\b/gi, "encadré"], [/\boptimiser\b/gi, "optimiser"],
+    [/\bgenique\b/gi, "génique"], [/\butiliser\b/gi, "utiliser"], [/\bprojets\b/gi, "projets"],
+    [/\bprotegees\b/gi, "protégées"], [/\btherapeutique\b/gi, "thérapeutique"], [/\btaches\b/gi, "tâches"],
+    [/\baccelerer\b/gi, "accélérer"], [/\bReconnaitre\b/g, "Reconnaître"], [/\bautomatisation\b/gi, "automatisation"],
+    [/\betape\b/gi, "étape"], [/\bDecrire\b/g, "Décrire"], [/\bpreparer\b/gi, "préparer"],
+    [/\bexecuter\b/gi, "exécuter"], [/\bnecessaire\b/gi, "nécessaire"], [/\bindependante\b/gi, "indépendante"],
+    [/\bverifier\b/gi, "vérifier"], [/\bpreuve\b/gi, "preuve"], [/\bevaluation\b/gi, "évaluation"],
+    [/\bDemonstration\b/g, "Démonstration"], [/\bpresentateur\b/gi, "présentateur"], [/\bvideo\b/gi, "vidéo"],
+    [/\bdeclenche\b/gi, "déclenche"], [/\bresultat reste a\b/gi, "résultat reste à"],
+    [/\bDe la question de recherche a la preuve\b/g, "De la question de recherche à la preuve"],
+    [/\bInitiation a Claude\b/g, "Initiation à Claude"], [/\bA retenir\b/g, "À retenir"],
+  ];
+  for (const [pattern, replacement] of replacements) {
+    text = text.replace(pattern, (match) => match[0] === match[0].toUpperCase()
+      ? `${replacement[0].toUpperCase()}${replacement.slice(1)}`
+      : replacement);
+  }
+  text = text
+    .replace(/^projets,/u, "Projets,")
+    .replace(/^interprétation,/u, "Interprétation,")
+    .replace(/^(TP \d+ - )analyse\b/u, "$1Analyse");
+  return text;
+}
+const local = (fr, en = fr) => ({ fr: restoreFrenchTypography(fr), en });
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 const writeJson = (file, value) => fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
 const writeText = (file, value) => fs.writeFileSync(file, value);
@@ -66,6 +97,23 @@ function sourceBlock(references) {
   };
 }
 
+function sourceList(value) {
+  return trim(value)
+    .split(/\n+/)
+    .map((line) => line.trim().replace(/^(?:[-•*]|\d+[.)])\s*/, "").trim())
+    .filter(Boolean)
+    .map((item) => local(item));
+}
+
+/** Expected-output files are correction material and remain server-only. */
+function learnerSafeLabInstruction(value) {
+  const text = String(value || "");
+  if (/fichier\s+(?:de\s+)?(?:valeurs\s+)?expected|fichier\s+de\s+valeurs\s+attendues/i.test(text)) {
+    return "Après votre soumission, utilisez les points de contrôle fournis dans le retour de correction pour documenter les éventuels écarts.";
+  }
+  return text;
+}
+
 function screenToChapter({ screen, course, module, lesson, catalog, media, courseId }) {
   const chapterId = asKey(courseId, module.id, lesson.id, "screen", screen.order);
   const common = {
@@ -77,7 +125,7 @@ function screenToChapter({ screen, course, module, lesson, catalog, media, cours
   const refs = sourceRefs(screen.sources, catalog);
 
   if (screen.type === "Objectives") {
-    return { ...common, requiredBeforeAdvance: false, blocks: [{ type: "learning_objectives_panel", title: local(screen.title), objectives: local(screen.body_fr) }] };
+    return { ...common, requiredBeforeAdvance: false, blocks: [{ type: "learning_objectives", title: local(screen.title), items: sourceList(screen.body_fr) }] };
   }
   if (screen.type === "SourceGroundedText") {
     const blocks = [{ type: "content", body: local(screen.body_fr) }];
@@ -87,14 +135,14 @@ function screenToChapter({ screen, course, module, lesson, catalog, media, cours
   }
   if (screen.type === "GuidedAction") {
     const blocks = [
-      { type: "guided_action", title: local(screen.title), body: local(screen.body_fr), expectedEvidence: local(screen.expected_evidence_fr) },
+      { type: "guided_action", id: chapterId, title: local(screen.title), steps: sourceList(screen.body_fr), expectedEvidence: local(screen.expected_evidence_fr) },
     ];
     const refsBlock = sourceBlock(refs);
     if (refsBlock) blocks.push(refsBlock);
     return { ...common, blocks };
   }
   if (screen.type === "LessonSummary") {
-    return { ...common, requiredBeforeAdvance: false, blocks: [{ type: "key_points_summary", title: local(screen.title), body: local(screen.body_fr) }] };
+    return { ...common, requiredBeforeAdvance: false, blocks: [{ type: "lesson_summary", title: local(screen.title), items: sourceList(screen.body_fr) }] };
   }
   if (screen.type === "CheckpointMCQ") {
     const exerciseId = asKey(courseId, module.id, lesson.id, "checkpoint", screen.order);
@@ -155,7 +203,7 @@ function screenToChapter({ screen, course, module, lesson, catalog, media, cours
     return {
       ...common,
       requiredBeforeAdvance: false,
-      blocks: [{ type: "callout", variant: "warning", title: local(screen.title), body: local(`${course.safety.warning_fr}\n\n${screen.body_fr}`) }, ...resourceBlocks(screen.required_files || [], course)],
+      blocks: [{ type: "callout", variant: "warning", title: local(screen.title), body: local(`${course.safety.warning_fr}\n\n${learnerSafeLabInstruction(screen.body_fr)}`) }, ...resourceBlocks(screen.required_files || [], course)],
     };
   }
   if (screen.type === "PracticalLab") {
@@ -170,10 +218,10 @@ function screenToChapter({ screen, course, module, lesson, catalog, media, cours
         type: "cloud_exercise",
         id: labId,
         title: local(screen.title),
-        assignment: local(`${course.safety.warning_fr}\nCadre Neopolis : TP non clinique. Utilisez uniquement les données synthétiques fournies ; aucune conclusion clinique ni donnée patient.\n\n${screen.instructions_fr.join("\n")}`),
+        assignment: local(`${course.safety.warning_fr}\nCadre Neopolis : TP non clinique. Utilisez uniquement les données synthétiques fournies ; aucune conclusion clinique ni donnée patient.\n\n${screen.instructions_fr.map(learnerSafeLabInstruction).join("\n")}`),
         environmentGuide: local("Téléchargez uniquement les fichiers ci-dessous dans un dossier de travail isolé. Aucun dossier patient, secret ou identifiant ne doit être ajouté."),
         resources: resourcesFor(screen.required_files || [], course),
-        steps: screen.instructions_fr.map((value) => local(value)),
+        steps: screen.instructions_fr.map((value) => local(learnerSafeLabInstruction(value))),
         rubricCriteria: rubric,
         evaluationPrompt: local(`Évaluez strictement la preuve de réalisation du TP « ${screen.title} ». Les données doivent rester synthétiques, la démarche doit être vérifiable et aucune conclusion clinique ne doit être formulée.`),
         maxScore: Number(screen.grading?.total_points || 100),
@@ -244,13 +292,11 @@ for (const sourceCourse of sourceCourses) {
   Object.assign(allSources, sourceCourse._catalog);
   const courseLessons = [];
   for (const module of sourceCourse.modules) {
-    for (const [lessonPosition, lesson] of module.lessons.entries()) {
+    for (const lesson of module.lessons) {
       const chapters = [];
-      if (lessonPosition === 0) {
-        chapters.push({ id: asKey(sourceCourse.id, module.id, "module_start"), title: local(module.title), type: "module", requiredBeforeAdvance: false, blocks: [warningBlock(sourceCourse.safety), { type: "learning_section", title: local(module.title), body: local(`Objectif du module : ${module.skill_tags?.join(", ") || "apprendre et vérifier"}.`) }] });
-      }
       for (const screen of lesson.screens) {
         const chapter = screenToChapter({ screen, course: sourceCourse, module, lesson, catalog: sourceCourse._catalog, media: sourceCourse._media, courseId: sourceCourse.id });
+        if (courseLessons.length === 0 && chapters.length === 0) chapter.blocks.unshift(warningBlock(sourceCourse.safety));
         if (chapter._privateCheckpoint) {
           checkpointKeys[chapter._privateCheckpoint.exerciseId] = {
             correctAnswer: chapter._privateCheckpoint.correctAnswer,
@@ -278,7 +324,7 @@ for (const sourceCourse of sourceCourses) {
         id: asKey(sourceCourse.id, module.id, lesson.id),
         moduleId: module.id,
         title: local(lesson.title),
-        objective: local(lesson.objective_fr || lesson.description_fr || ""),
+        objective: local(lesson.objective_fr || lesson.objective || lesson.description_fr || ""),
         estimatedMinutes: Number(lesson.estimated_minutes || 0),
         recommendedVideosManaged: false,
         recommendedVideos: [],
@@ -312,7 +358,11 @@ for (const sourceCourse of sourceCourses) {
     safety: sourceCourse.safety,
     lessons: courseLessons,
     exercises: [],
-    sections: sourceCourse.modules.map((module) => ({ id: module.id, title: local(module.title) })),
+    sections: sourceCourse.modules.map((module) => ({
+      id: module.id,
+      title: local(module.title),
+      lessons: module.lessons.map((lesson) => lesson.title),
+    })),
     competencyTags: ["research_method", "ai_governance", "reproducibility", "human_validation"],
     downloadableResources: sourceCourse.id === "claude_science_03_travaux_pratiques" ? Object.values(assetMap).filter((asset) => asset.kind === "download" && !asset.key.includes("solutions/")).map((asset) => ({ title: local(asset.title), url: asset.url, sha256: asset.sha256 })) : [],
   };
@@ -345,7 +395,9 @@ index.certifications.push({
   totalExercises: totalCheckpoints + totalQuestions + 4,
   totalVideos: 2,
   totalDownloads: Object.values(assetMap).filter((asset) => asset.kind === "download" && !asset.key.includes("solutions/")).length,
-  totalActivities: totalChapters,
+  // Screens rhythm a lesson in the reader; only the 19 canonical lessons are
+  // learner-facing catalogue units and must feed neither catalogue nor KPI counts.
+  totalActivities: totalLessons,
   courses: courseIds,
   group: categoryId,
   trainingFormat: "formation",
@@ -369,11 +421,11 @@ for (const [indexPosition, { sourceCourse, courseJson }] of courseMetadata.entri
     acquiredSkills: ["Cadrer une analyse non clinique", "Documenter la provenance", "Appliquer le moindre privilège", "Vérifier une sortie avec un contrôle humain"],
     level: local(sourceCourse.level.replace(/_/g, " ")), 
     lessonCount: sourceCourse.lesson_count,
-    chapterCount: courseJson.lessons.reduce((total, lesson) => total + lesson.chapters.length, 0),
+    chapterCount: sourceCourse.lesson_count,
     exerciseCount: sourceCourse.checkpoint_count + (finalQuiz?.questions.length || 0) + sourceCourse.lab_count,
     videoCount: Object.keys(sourceCourse._videos || {}).length,
     downloadCount: sourceCourse.id === "claude_science_03_travaux_pratiques" ? courseJson.downloadableResources.length : 0,
-    totalActivities: courseJson.lessons.reduce((total, lesson) => total + lesson.chapters.length, 0),
+    totalActivities: sourceCourse.lesson_count,
     estimatedDurationMinutes: Math.round(Number(sourceCourse.estimated_duration_hours || 0) * 60),
     source_refs: ["anthropic_product", "anthropic_overview"],
     learningTheme: "laboratory",

@@ -9,10 +9,10 @@ export type SensitiveExerciseAnswerKey = {
 
 const sensitiveExerciseAnswerKeys: Record<string, Record<string, SensitiveExerciseAnswerKey>> = {
   claude_science_01_initiation: Object.fromEntries(Object.entries(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS)
-    .filter(([exerciseId]) => exerciseId.startsWith("claude_science_01_initiation__"))
+    .filter(([exerciseId]) => exerciseId.startsWith("claude_science_01_initiation_"))
     .map(([exerciseId, answer]) => [exerciseId, answer])),
   claude_science_02_pratique: Object.fromEntries(Object.entries(CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS)
-    .filter(([exerciseId]) => exerciseId.startsWith("claude_science_02_pratique__"))
+    .filter(([exerciseId]) => exerciseId.startsWith("claude_science_02_pratique_"))
     .map(([exerciseId, answer]) => [exerciseId, answer])),
   claude_certified_developer_foundations__03: {
     checkpoint4_fix_plugin_definition: {

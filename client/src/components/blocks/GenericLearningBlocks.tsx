@@ -15,6 +15,37 @@ export function LearningSectionBlock({ block, lang }: { block: any; lang: string
   </section>;
 }
 
+function listItems(block: any, lang: string): string[] {
+  const values = Array.isArray(block.items) && block.items.length ? block.items : (block.objectives || block.body || []);
+  if (Array.isArray(values)) return values.map((item) => text(item, lang)).filter(Boolean);
+  return text(values, lang)
+    .split(/\n+/)
+    .map((item) => item.trim().replace(/^(?:[-•*]|\d+[.)])\s*/, "").trim())
+    .filter(Boolean);
+}
+
+/** Reusable list panel rendered beneath the screen title, without duplicating it. */
+export function LearningObjectivesBlock({ block, lang }: { block: any; lang: string }) {
+  const items = listItems(block, lang);
+  return <section className="w-full min-w-0 max-w-full rounded-2xl border border-border bg-card p-5 sm:p-7">
+    <p className="text-xs font-bold uppercase tracking-wider text-[var(--course-primary)]">{lang === "fr" ? "À l’issue de cette leçon" : "By the end of this lesson"}</p>
+    <ul className="mt-4 space-y-3">
+      {items.map((item, index) => <li key={index} className="flex min-w-0 gap-3 rounded-xl bg-[var(--course-surface-muted)] p-3 text-sm leading-relaxed"><span className="font-bold text-[var(--course-primary)]">{String(index + 1).padStart(2, "0")}</span><span className="min-w-0 break-words">{item}</span></li>)}
+    </ul>
+  </section>;
+}
+
+/** Reusable recap panel rendered beneath the source screen title. */
+export function LessonSummaryBlock({ block, lang }: { block: any; lang: string }) {
+  const items = listItems(block, lang);
+  return <section className="w-full min-w-0 max-w-full rounded-2xl border border-emerald-200 bg-emerald-50 p-5 sm:p-7">
+    <p className="text-xs font-bold uppercase tracking-wider text-emerald-800">{lang === "fr" ? "Synthèse" : "Summary"}</p>
+    <ul className="mt-4 space-y-3">
+      {items.map((item, index) => <li key={index} className="flex min-w-0 gap-3 text-sm leading-relaxed text-emerald-950"><span className="font-bold text-emerald-700">✓</span><span className="min-w-0 break-words">{item}</span></li>)}
+    </ul>
+  </section>;
+}
+
 export function KnowledgeCheckBlock({ block, lang, onComplete }: { block: any; lang: string; onComplete: (id: string, isCorrect: boolean) => void }) {
   const [answer, setAnswer] = useState<string | null>(null);
   const mode = block.mode || "multiple_choice";

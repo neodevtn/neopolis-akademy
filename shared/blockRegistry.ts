@@ -595,6 +595,18 @@ const genericLearningBlocks: BlockTypeDefinition[] = [
     ], defaultData: { type: "learning_section", sectionKind: "content", title: { en: "", fr: "" } },
   },
   {
+    type: "learning_objectives", label: { en: "Learning objectives", fr: "Objectifs d’apprentissage" }, description: { en: "List of concrete objectives rendered below the source screen title", fr: "Liste d’objectifs concrets rendue sous le titre de l’écran source" }, category: "layout", icon: "ListChecks", color: "bg-blue-100 text-blue-700", since: "4.2",
+    schema: [{ key: "title", label: { en: "Screen title", fr: "Titre d’écran" }, type: "i18n_text", required: true }, { key: "items", label: { en: "Objectives", fr: "Objectifs" }, type: "json", required: true }], defaultData: { type: "learning_objectives", title: { en: "Learning objectives", fr: "Objectifs d’apprentissage" }, items: [] },
+  },
+  {
+    type: "lesson_summary", label: { en: "Lesson summary", fr: "Synthèse de leçon" }, description: { en: "Compact, list-based summary rendered below the screen title", fr: "Synthèse compacte en liste rendue sous le titre de l’écran" }, category: "content", icon: "ListChecks", color: "bg-emerald-100 text-emerald-700", since: "4.2",
+    schema: [{ key: "title", label: { en: "Screen title", fr: "Titre d’écran" }, type: "i18n_text", required: true }, { key: "items", label: { en: "Key points", fr: "Points clés" }, type: "json", required: true }], defaultData: { type: "lesson_summary", title: { en: "Summary", fr: "Synthèse" }, items: [] },
+  },
+  {
+    type: "guided_action", label: { en: "Guided action", fr: "Action guidée" }, description: { en: "Required source-defined learner action with durable confirmation", fr: "Action apprenant sourcée et obligatoire avec confirmation durable" }, category: "interactive", icon: "ClipboardCheck", color: "bg-indigo-100 text-indigo-700", since: "4.2",
+    schema: [{ key: "id", label: { en: "Stable action ID", fr: "Identifiant stable" }, type: "text", required: true }, { key: "title", label: { en: "Screen title", fr: "Titre d’écran" }, type: "i18n_text", required: true }, { key: "steps", label: { en: "Steps", fr: "Étapes" }, type: "json", required: true }, { key: "expectedEvidence", label: { en: "Expected evidence", fr: "Preuve attendue" }, type: "i18n_textarea" }], defaultData: { type: "guided_action", id: "", title: { en: "Guided action", fr: "Action guidée" }, steps: [] },
+  },
+  {
     type: "knowledge_check", label: { en: "Knowledge check", fr: "Vérification des acquis" }, description: { en: "Configurable myth/reality, multiple-choice or scenario interaction", fr: "Interaction configurable mythe/réalité, QCM ou scénario" }, category: "interactive", icon: "CircleHelp", color: "bg-indigo-100 text-indigo-700", since: "4.0",
     schema: [
       { key: "mode", label: { en: "Interaction mode", fr: "Mode d’interaction" }, type: "select", options: [{ value: "myth_reality", label: "Mythe / réalité" }, { value: "multiple_choice", label: "Choix multiple" }, { value: "scenario", label: "Scénario" }], defaultValue: "multiple_choice" },

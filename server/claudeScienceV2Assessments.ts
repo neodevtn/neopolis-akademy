@@ -767,7 +767,7 @@ export const CLAUDE_SCIENCE_V2_LABS = {
   "lab_04": {
     "id": "lab_04",
     "courseId": "claude_science_03_travaux_pratiques",
-    "title": "Capstone : dossier d'expression genique reproductible",
+    "title": "Capstone : dossier d'expression génique reproductible",
     "maxScore": 100,
     "passingScore": 75,
     "rubric": [

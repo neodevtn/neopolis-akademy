@@ -48,6 +48,7 @@ import { getClaudeScienceV2ActivityStatus, getClaudeScienceV2FinalQuiz, submitCl
 import { getIntermediateN8nActivityStatus, submitIntermediateN8nPractical } from "./intermediateN8nAssessmentService";
 import { getAiMarketingActivityStatus, submitAiMarketingPractical } from "./aiMarketingAssessmentService";
 import { getAiFinanceActivityStatus, submitAiFinancePractical } from "./aiFinanceAssessmentService";
+import { completeGuidedAction, getGuidedActionStatus } from "./guidedActionService";
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
   targetLevel: z.enum(["bronze", "silver", "gold"]),
@@ -818,6 +819,21 @@ export const appRouter = router({
           });
         }
         return { correct, explanation };
+      }),
+    getGuidedActionStatus: protectedProcedure
+      .input(z.object({ courseId: z.string().regex(/^[a-z0-9_]+$/i).max(200) }))
+      .query(async ({ ctx, input }) => getGuidedActionStatus({ userId: ctx.user.id, ...input })),
+    completeGuidedAction: protectedProcedure
+      .input(z.object({
+        courseId: z.string().regex(/^[a-z0-9_]+$/i).max(200),
+        actionId: z.string().regex(/^[a-z0-9_-]+$/i).max(255),
+        lessonIndex: z.number().int().min(0),
+        chapterIndex: z.number().int().min(0),
+        response: z.string().trim().min(5).max(5000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
+        return completeGuidedAction({ userId: ctx.user.id, ...input });
       }),
     getClaudeScienceV2FinalQuiz: protectedProcedure
       .input(z.object({ courseId: z.string().min(2).max(200) }))

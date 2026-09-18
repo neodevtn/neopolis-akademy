@@ -137,14 +137,15 @@ export default function TrainingCourse() {
   // MUST be declared before any conditional returns (Rules of Hooks)
   const handleChapterChange = useCallback((current: number, total: number) => {
     const safeProgress = normalizeChapterProgress({ current, total });
+    const lessonIndex = Math.max(0, activeLessonIndex ?? 0);
     setChapterProgress(safeProgress);
     trackProgressMilestones(safeProgress.current, safeProgress.total, "chapter");
-    navigateCoursePosition(0, safeProgress.current);
+    navigateCoursePosition(lessonIndex, safeProgress.current);
     // Persist chapter progress to database - uses refs/closures to avoid stale values
     if (courseId) {
-      persistChapterProgress(courseId, 0, safeProgress.current, safeProgress.total);
+      persistChapterProgress(courseId, lessonIndex, safeProgress.current, safeProgress.total);
     }
-  }, [courseId, navigateCoursePosition, persistChapterProgress, trackProgressMilestones]);
+  }, [activeLessonIndex, courseId, navigateCoursePosition, persistChapterProgress, trackProgressMilestones]);
 
   const handleMediaPlaybackChange = useCallback((isPlaying: boolean, mediaId?: string) => {
     mediaPlayingRef.current = isPlaying;
@@ -492,7 +493,7 @@ export default function TrainingCourse() {
             </Link>
             <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
               <BrandLogo className="h-7 max-w-[112px] shrink-0 object-contain sm:h-8 sm:max-w-[160px]" />
-              <span className="hidden rounded-full bg-primary/15 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary sm:inline">Training</span>
+              <span className="hidden rounded-full bg-primary/15 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary sm:inline">{t({ en: "Training", fr: "Formation" })}</span>
             </div>
           </div>
           <div className="training-header-actions flex shrink-0 items-center gap-0.5 sm:gap-3">

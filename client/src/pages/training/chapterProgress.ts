@@ -67,6 +67,7 @@ export function isSequentialActivityNavigationLocked({
   completedCloudExercises,
   completedCourseFinalQuizzes = new Set<string>(),
   completedReflections = new Set<string>(),
+  completedGuidedActions = new Set<string>(),
   completedMatching,
   completedInlineInteractions,
 }: {
@@ -76,6 +77,7 @@ export function isSequentialActivityNavigationLocked({
   completedCloudExercises: Set<string>;
   completedCourseFinalQuizzes?: Set<string>;
   completedReflections?: Set<string>;
+  completedGuidedActions?: Set<string>;
   completedMatching: Set<string>;
   completedInlineInteractions: Set<string>;
 }): boolean {
@@ -94,6 +96,7 @@ export function isSequentialActivityNavigationLocked({
     if (block.type === "cloud_exercise") return !completedCloudExercises.has(key);
     if (block.type === "course_final_quiz") return !completedCourseFinalQuizzes.has(key);
     if (block.type === "reflection") return !completedReflections.has(key);
+    if (block.type === "guided_action") return !completedGuidedActions.has(key);
     if (block.type === "bucket_sort") return !completedMatching.has(key);
     if (["knowledge_check", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type || "")) return !completedInlineInteractions.has(key);
     return false;
