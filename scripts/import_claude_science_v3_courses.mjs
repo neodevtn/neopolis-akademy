@@ -22,6 +22,22 @@ const sourceRegistry = readJson(path.join(packageRoot, "SOURCE_REGISTRY.json")).
 const mediaManifest = readJson(path.join(packageRoot, "media", "media_manifest.json"));
 const videoManifest = readJson(path.join(packageRoot, "media", "videos_manifest.json"));
 const assetMap = readJson(assetMapPath);
+// The V3 package replaces the curriculum but does not include a catalogue or
+// social card. Preserve the previously approved Neopolis visual, which remains
+// hosted in the managed media library and is administrable in the catalogue.
+const collectionVisualAssets = {
+  cardPath: "/api/assets/claude_science_recherche_medicale-card_280583fc.png",
+  cardWidth: 1200,
+  cardHeight: 900,
+  socialPath: "/manus-storage/claude_science_recherche_medicale-social_59f0a648.png",
+  socialWidth: 1200,
+  socialHeight: 630,
+  alt: {
+    fr: "Claude Science pour la recherche en santé",
+    en: "Claude Science for health research",
+    ar: "Claude Science للبحث الصحي",
+  },
+};
 
 function required(value, identifier) {
   if (value === undefined || value === null || value === "") throw new Error(`Missing required value: ${identifier}`);
@@ -283,7 +299,7 @@ index.categories.push({ id: categoryId, title: local("IA pour la recherche scien
 index.certifications = (index.certifications || []).filter((entry) => entry.id !== "claude_science_recherche_medicale" && entry.id !== collection.id);
 index.courses = (index.courses || []).filter((entry) => !oldClaudeScienceCourseIds.has(entry.id));
 const sourceIds = [...new Set(courses.flatMap(({ course }) => course.modules.flatMap((module) => module.lessons.flatMap((lesson) => lesson.sources || []))))];
-index.certifications.push({ id: collection.id, title: local(collection.title), description: local(""), level: local(""), icon: "", courseCount: collection.metrics.courses, totalLessons: collection.metrics.lessons, totalExercises: collection.metrics.checkpoints + collection.metrics.labs + collection.metrics.final_quiz_questions, totalVideos: Object.keys(videoManifest).length, totalDownloads: Object.values(assetMap).filter((asset) => asset.visibility === "public").length, totalActivities: collection.metrics.lessons, courses: collection.course_order, group: categoryId, trainingFormat: "formation", source_refs: sourceIds, sequentialCourseLocking: Boolean(collection.sequential_locking_between_courses), language: collection.language });
+index.certifications.push({ id: collection.id, title: local(collection.title), description: local(""), level: local(""), icon: "", visualAssets: collectionVisualAssets, courseCount: collection.metrics.courses, totalLessons: collection.metrics.lessons, totalExercises: collection.metrics.checkpoints + collection.metrics.labs + collection.metrics.final_quiz_questions, totalVideos: Object.keys(videoManifest).length, totalDownloads: Object.values(assetMap).filter((asset) => asset.visibility === "public").length, totalActivities: collection.metrics.lessons, courses: collection.course_order, group: categoryId, trainingFormat: "formation", source_refs: sourceIds, sequentialCourseLocking: Boolean(collection.sequential_locking_between_courses), language: collection.language });
 for (const [order, { course, courseJson }] of catalogEntries.entries()) {
   const finalQuiz = finalQuizzes[course.id];
   index.courses.push({ id: course.id, certId: collection.id, title: local(course.title), description: local(course.description), order: order + 1, subCategoryId: "research_health", subCategory: local(course.category), tags: course.modules.flatMap((module) => module.skill_tags || []), targetJob: course.target_audience.join(", "), tools: [], acquiredSkills: course.modules.flatMap((module) => module.skill_tags || []), level: local(course.level), lessonCount: course.lesson_count, chapterCount: course.lesson_count, exerciseCount: course.checkpoint_count + (finalQuiz?.questions.length || 0) + (course.id === "claude_science_03_tp" ? 3 : 0), videoCount: courseJson.lessons.flatMap((lesson) => lesson.chapters).flatMap((chapter) => chapter.blocks).filter((block) => block.type === "video").length, downloadCount: courseJson.lessons.flatMap((lesson) => lesson.chapters).flatMap((chapter) => chapter.blocks).filter((block) => block.type === "download").length, totalActivities: course.lesson_count, estimatedDurationMinutes: course.estimated_minutes, source_refs: sourceIds, supportedLanguages: [course.language], languageSelectionDisabled: true, ...(order > 0 ? { sequentialPreviousCourseId: catalogEntries[order - 1].course.id } : {}) });
@@ -293,11 +309,26 @@ writeJson(indexPath, index);
 const mediaLibraryPath = path.join(root, "client", "public", "data", "mediaLibrary.json");
 const mediaLibrary = fs.existsSync(mediaLibraryPath) ? readJson(mediaLibraryPath) : {};
 for (const [url, item] of Object.entries(mediaLibrary)) {
-  if (String(url).includes("/claude-science-v2/") || String(url).includes("/claude-science-v3/")) delete mediaLibrary[url];
+  // V2 records are superseded. Preserve unchanged V3 records below so a
+  // deterministic re-import does not create timestamp-only catalogue diffs.
+  if (String(url).includes("/claude-science-v2/")) delete mediaLibrary[url];
+}
+const publicV3AssetUrls = new Set(Object.values(assetMap).filter((asset) => asset.visibility === "public").map((asset) => asset.url));
+for (const url of Object.keys(mediaLibrary)) {
+  if (url.includes("/claude-science-v3/") && !publicV3AssetUrls.has(url)) delete mediaLibrary[url];
 }
 for (const asset of Object.values(assetMap)) {
   if (asset.visibility !== "public") continue;
-  mediaLibrary[asset.url] = { id: `claude_science_v3_${asset.sha256.slice(0, 18)}`, url: asset.url, title: path.basename(asset.path), kind: asset.kind, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+  const previous = mediaLibrary[asset.url];
+  const timestamp = new Date().toISOString();
+  mediaLibrary[asset.url] = {
+    id: `claude_science_v3_${asset.sha256.slice(0, 18)}`,
+    url: asset.url,
+    title: path.basename(asset.path),
+    kind: asset.kind,
+    createdAt: previous?.createdAt || timestamp,
+    updatedAt: previous?.updatedAt || timestamp,
+  };
 }
 writeJson(mediaLibraryPath, mediaLibrary);
 

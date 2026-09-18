@@ -8,6 +8,12 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { isSequentialLessonLocked } from "@shared/learningAccess";
 import { canBypassLearningSequence } from "@shared/roles";
 
+/** Accept both legacy string lists and localized course-section metadata. */
+export function normalizeSectionLessonTitles(lessons: unknown): string[] {
+  if (!Array.isArray(lessons)) return [];
+  return lessons.map((title: unknown) => resolveI18n(title, "en"));
+}
+
 export function LessonSidebarContent({
   lessons,
   lang,
@@ -65,8 +71,12 @@ export function LessonSidebarContent({
       const sectionTitle = section.title ? (typeof section.title === 'object' ? resolveI18n(section.title, lang) : section.title) : '';
       const sectionLessons = section.lessons || [];
       if (sectionLessons.length > 0) {
+        // Section metadata can be localized, while historical course data
+        // sometimes stores only strings. Resolve both shapes before using
+        // string comparison so navigation never crashes on an i18n object.
+        const sectionLessonTitles = normalizeSectionLessonTitles(sectionLessons);
         // Find the first non-generic lesson title in this section for boundary matching
-        const uniqueTitle = sectionLessons.find((t: string) => t && !genericTitles.has(t.toLowerCase()));
+        const uniqueTitle = sectionLessonTitles.find((title: string) => title && !genericTitles.has(title.toLowerCase()));
         let foundIdx = -1;
         if (uniqueTitle) {
           // Search from expected position to handle repeated titles
@@ -74,7 +84,7 @@ export function LessonSidebarContent({
             const lt = lessons[i].title ? (typeof lessons[i].title === 'object' ? resolveI18n(lessons[i].title, 'en') : lessons[i].title) : '';
             if (lt && uniqueTitle && lt.toLowerCase() === uniqueTitle.toLowerCase()) {
               // The section starts at the first lesson before this unique one (could be Module Introduction)
-              foundIdx = Math.max(searchFrom, i - sectionLessons.indexOf(uniqueTitle));
+              foundIdx = Math.max(searchFrom, i - sectionLessonTitles.indexOf(uniqueTitle));
               break;
             }
           }
