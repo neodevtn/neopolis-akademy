@@ -176,7 +176,13 @@ export function initializeManusAnalytics() {
 }
 
 export function initializeAnalytics() {
-  if (typeof window === "undefined" || !MEASUREMENT_ID) return Promise.resolve(false);
+  if (typeof window === "undefined") return Promise.resolve(false);
+  // Audience measurement in Manus must not disappear if GA4 is unavailable or
+  // temporarily blocked: both providers are initialized independently.
+  if (!MEASUREMENT_ID) {
+    initializeManusAnalytics();
+    return Promise.resolve(false);
+  }
   if (window.gtag) {
     const granted = hasAnalyticsConsent();
     if (granted) {
@@ -220,10 +226,10 @@ export function initializeAnalytics() {
 export function updateAnalyticsConsent(granted: boolean) {
   if (typeof window === "undefined") return;
   if (granted) {
+    initializeManusAnalytics();
     void initializeAnalytics().then((loaded) => {
       if (!loaded) return;
       dispatchAnalyticsConsent(true);
-      initializeManusAnalytics();
       trackPageView();
     });
     return;

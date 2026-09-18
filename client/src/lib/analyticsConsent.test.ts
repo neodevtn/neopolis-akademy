@@ -163,4 +163,29 @@ describe("analytics consent synchronization", () => {
     expect(analytics.initializeManusAnalytics()).toBe(false);
     expect(document.head.appendChild).not.toHaveBeenCalled();
   });
+
+  it("garde la mesure Manus disponible si GA4 est indisponible", async () => {
+    vi.stubEnv("VITE_GA4_MEASUREMENT_ID", "");
+    vi.stubEnv("VITE_ANALYTICS_ENDPOINT", "https://manus-analytics.com");
+    vi.stubEnv("VITE_ANALYTICS_WEBSITE_ID", "website-test");
+    vi.resetModules();
+
+    const appended: Array<{ src: string }> = [];
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      value: { localStorage: { getItem: () => "accepted" } },
+    });
+    Object.defineProperty(globalThis, "document", {
+      configurable: true,
+      value: {
+        querySelector: () => null,
+        createElement: () => ({ defer: false, src: "", setAttribute: () => undefined }),
+        head: { appendChild: (script: { src: string }) => appended.push(script) },
+      },
+    });
+
+    const analytics = await import("./analytics");
+    expect(await analytics.initializeAnalytics()).toBe(false);
+    expect(appended).toEqual([expect.objectContaining({ src: "https://manus-analytics.com/umami" })]);
+  });
 });
