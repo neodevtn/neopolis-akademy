@@ -33,7 +33,13 @@ import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 import { PUBLIC_SOCIAL_ASSETS } from "@shared/publicSocialAssets";
 import { resolveTrainingVisualAsset } from "@shared/trainingVisualAssets";
 import { GOLDEN_JOBS_SOURCE_URL, getGoldenJob, getGoldenJobText, goldenJobs, goldenJobsPromotionalVideos } from "@shared/goldenJobs";
+import {
+  AGENTIC_DISCOVERY_UPDATED_AT,
+  getAgenticDiscoveryDocuments,
+  getAgenticSearchTarget,
+} from "@shared/agenticDiscovery";
 import { ORGANIZATION_SOCIAL_PROFILES } from "./seo";
+import { getAiNewsFeed, type AiNewsFeed } from "./aiNews";
 import { ENV } from "./_core/env";
 
 const SITE_NAME = "Neopolis Akademy";
@@ -53,6 +59,7 @@ const absolute = (path: string) => `${ORIGIN}${path}`;
 function organizationSchema() {
   return {
     "@type": "Organization",
+    "@id": `${ORIGIN}/#organization`,
     name: SITE_NAME,
     url: ORIGIN,
     logo: `${ORIGIN}${PUBLIC_SOCIAL_ASSETS.square.path}`,
@@ -60,11 +67,51 @@ function organizationSchema() {
   };
 }
 
-function schemaWithOrganization(schema: Record<string, unknown>) {
+function websiteSchema() {
+  return {
+    "@type": "WebSite",
+    "@id": `${ORIGIN}/#website`,
+    name: SITE_NAME,
+    url: `${ORIGIN}/`,
+    publisher: { "@id": `${ORIGIN}/#organization` },
+    inLanguage: ["fr-FR", "en", "ar"],
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: getAgenticSearchTarget() },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+function schemaWithOrganization(schema: Record<string, unknown>, canonicalPath: string, locale: PublicTrainingLocale, title: string, description: string) {
   const { "@context": _context, ...pageSchema } = schema;
+  const canonical = absolute(canonicalPath);
+  const pageTypes = new Set(["WebPage", "CollectionPage", "AboutPage"]);
+  const schemaType = typeof pageSchema["@type"] === "string" ? pageSchema["@type"] : "";
+  const graphPage = pageTypes.has(schemaType)
+    ? {
+        ...pageSchema,
+        "@id": `${canonical}#webpage`,
+        isPartOf: { "@id": `${ORIGIN}/#website` },
+        publisher: { "@id": `${ORIGIN}/#organization` },
+        dateModified: AGENTIC_DISCOVERY_UPDATED_AT,
+      }
+    : {
+        "@type": "WebPage",
+        "@id": `${canonical}#webpage`,
+        name: title,
+        description,
+        url: canonical,
+        inLanguage: publicTrainingLocaleMeta[locale].languageTag,
+        isPartOf: { "@id": `${ORIGIN}/#website` },
+        publisher: { "@id": `${ORIGIN}/#organization` },
+        dateModified: AGENTIC_DISCOVERY_UPDATED_AT,
+        mainEntity: { "@id": `${canonical}#main` },
+      };
+  const mainEntity = pageTypes.has(schemaType) ? null : { ...pageSchema, "@id": `${canonical}#main` };
   return {
     "@context": "https://schema.org",
-    "@graph": [organizationSchema(), pageSchema],
+    "@graph": [organizationSchema(), websiteSchema(), graphPage, ...(mainEntity ? [mainEntity] : [])],
   };
 }
 
@@ -114,6 +161,10 @@ function head({ locale, title, description, canonicalPath, keywords, noindex = f
     ${ENV.googleSiteVerification ? `<meta name="google-site-verification" content="${escapeHtml(ENV.googleSiteVerification)}" />` : ""}
     ${keywords ? `<meta name="keywords" content="${escapeHtml(keywords)}" />` : ""}
     <link rel="canonical" href="${canonical}" />
+    <link rel="sitemap" type="application/xml" href="${ORIGIN}/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" title="LLM context" href="${ORIGIN}/llms.txt" />
+    <link rel="alternate" type="application/json" title="Machine-readable public catalogue" href="${ORIGIN}/ai-index.json" />
+    <link rel="alternate" type="application/rss+xml" title="Neopolis Akademy AI News" href="${ORIGIN}/ai-news/rss.xml" />
     ${alternates.map(({ locale: alternateLocale, href }) => `<link rel="alternate" hreflang="${publicTrainingLocaleMeta[alternateLocale].languageTag}" href="${absolute(href)}" />`).join("\n    ")}
     <link rel="alternate" hreflang="x-default" href="${absolute(xDefaultPath || publicTrainingPath("fr", themeSlug))}" />
     <meta property="og:type" content="website" />
@@ -136,7 +187,7 @@ function head({ locale, title, description, canonicalPath, keywords, noindex = f
     <meta name="twitter:image" content="${twitterImageUrl}" />
     <meta name="twitter:image:alt" content="${escapeHtml(socialImageAlt)}" />
     ${noindex ? '<meta name="robots" content="noindex, follow" />' : '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />'}
-    <script type="application/ld+json">${toJson(schemaWithOrganization(schema))}</script>`;
+    <script type="application/ld+json">${toJson(schemaWithOrganization(schema, canonicalPath, locale, title, description))}</script>`;
 }
 
 function styles() {
@@ -287,12 +338,20 @@ function catalogueSchema(training: PublicCatalogueTraining, locale: PublicTraini
     },
     mainEntity: {
       "@type": "Course",
+      "@id": `${absolute(path)}#course`,
       name: item.title,
       description: item.description,
       url: absolute(path),
       inLanguage: publicTrainingLocaleMeta[locale].languageTag,
       educationalLevel: item.level || undefined,
-      provider: { "@type": "Organization", name: SITE_NAME, url: ORIGIN },
+      teaches: course ? course.skills : training.skills,
+      occupationalCategory: training.roles,
+      isAccessibleForFree: true,
+      provider: { "@id": `${ORIGIN}/#organization` },
+      hasCourseInstance: {
+        "@type": "CourseInstance",
+        courseMode: "online",
+      },
     },
   };
 }
@@ -453,7 +512,13 @@ function goldenJobsSchema(locale: PublicTrainingLocale, jobSlug?: string) {
     description: getGoldenJobText(job.summary, locale),
     url: absolute(publicGoldenJobsPath(locale, job.slug)),
     inLanguage: publicTrainingLocaleMeta[locale].languageTag,
-    about: { "@type": "Occupation", name: getGoldenJobText(job.title, locale), description: getGoldenJobText(job.scope, locale) },
+    about: {
+      "@type": "Occupation",
+      "@id": `${absolute(publicGoldenJobsPath(locale, job.slug))}#occupation`,
+      name: getGoldenJobText(job.title, locale),
+      description: getGoldenJobText(job.scope, locale),
+      skills: job.skills.map((skill) => getGoldenJobText(skill, locale)),
+    },
   };
   return {
     "@context": "https://schema.org",
@@ -524,7 +589,7 @@ export type PublicSitemapFile = {
 let publicSitemapFilesCache: PublicSitemapFile[] | null = null;
 
 function sitemapUrl(path: string, alternates?: { locale: PublicTrainingLocale; href: string }[], xDefaultPath?: string) {
-  return `<url><loc>${escapeHtml(absolute(path))}</loc>${alternates?.map((alternate) => `<xhtml:link rel="alternate" hreflang="${escapeHtml(publicTrainingLocaleMeta[alternate.locale].languageTag)}" href="${escapeHtml(absolute(alternate.href))}" />`).join("") || ""}${alternates ? `<xhtml:link rel="alternate" hreflang="x-default" href="${escapeHtml(absolute(xDefaultPath || alternates.find((item) => item.locale === "fr")?.href || path))}" />` : ""}</url>`;
+  return `<url><loc>${escapeHtml(absolute(path))}</loc><lastmod>${AGENTIC_DISCOVERY_UPDATED_AT}</lastmod>${alternates?.map((alternate) => `<xhtml:link rel="alternate" hreflang="${escapeHtml(publicTrainingLocaleMeta[alternate.locale].languageTag)}" href="${escapeHtml(absolute(alternate.href))}" />`).join("") || ""}${alternates ? `<xhtml:link rel="alternate" hreflang="x-default" href="${escapeHtml(absolute(xDefaultPath || alternates.find((item) => item.locale === "fr")?.href || path))}" />` : ""}</url>`;
 }
 
 function sitemapUrlset(entries: string[]) {
@@ -563,11 +628,19 @@ export function getPublicTrainingSitemapFiles(): PublicSitemapFile[] {
 
 export function renderPublicTrainingSitemap() {
   const sitemapFiles = getPublicTrainingSitemapFiles();
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapFiles.map((file) => `<sitemap><loc>${escapeHtml(absolute(file.path))}</loc></sitemap>`).join("")}</sitemapindex>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapFiles.map((file) => `<sitemap><loc>${escapeHtml(absolute(file.path))}</loc><lastmod>${AGENTIC_DISCOVERY_UPDATED_AT}</lastmod></sitemap>`).join("")}</sitemapindex>`;
 }
 
 export function renderPublicTrainingSitemapFile(pathname: string) {
   return getPublicTrainingSitemapFiles().find((file) => file.path === pathname) || null;
+}
+
+export function renderAiNewsRss(feed: AiNewsFeed) {
+  const items = feed.articles.slice(0, 50).map((article) => {
+    const publishedAt = article.publishedAt ? new Date(article.publishedAt).toUTCString() : "";
+    return `<item><title>${escapeHtml(article.title)}</title><link>${escapeHtml(article.url)}</link><guid isPermaLink="true">${escapeHtml(article.url)}</guid>${publishedAt ? `<pubDate>${publishedAt}</pubDate>` : ""}<description>${escapeHtml(article.excerpt || `${article.sourceLabel} — ${article.sourceCategory}`)}</description><category>${escapeHtml(article.sourceCategory)}</category></item>`;
+  }).join("");
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Neopolis Akademy — AI News</title><link>${ORIGIN}/ai-news</link><description>Veille publique sur les annonces, outils, analyses et recherches en intelligence artificielle.</description><language>fr-FR</language><lastBuildDate>${new Date(feed.updatedAt).toUTCString()}</lastBuildDate><atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="${ORIGIN}/ai-news/rss.xml" rel="self" type="application/rss+xml" />${items}</channel></rss>`;
 }
 
 export function registerPublicTrainingPages(app: Express) {
@@ -584,7 +657,19 @@ export function registerPublicTrainingPages(app: Express) {
   };
   const sitemapFiles = getPublicTrainingSitemapFiles();
   const sitemapByPath = new Map(sitemapFiles.map((file) => [file.path, file]));
-  const sitemapIndexXml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapFiles.map((file) => `<sitemap><loc>${escapeHtml(absolute(file.path))}</loc></sitemap>`).join("")}</sitemapindex>`;
+  const sitemapIndexXml = renderPublicTrainingSitemap();
+  for (const document of getAgenticDiscoveryDocuments()) {
+    app.get(document.path, (_req: Request, res: Response) => {
+      const payload = Buffer.from(document.body, "utf8");
+      return res.status(200).set({
+        "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+        "Content-Type": document.contentType,
+        "Content-Length": String(payload.byteLength),
+        "X-Content-Type-Options": "nosniff",
+        Link: `<${ORIGIN}/llms.txt>; rel="alternate"; type="text/plain", <${ORIGIN}/ai-index.json>; rel="alternate"; type="application/json"`,
+      }).end(payload);
+    });
+  }
   const index = (locale: PublicTrainingLocale) => (_req: Request, res: Response) => sendHtml(res, renderPublicTrainingIndex(locale));
   const theme = (locale: PublicTrainingLocale) => (req: Request, res: Response) => {
     const resolved = getPublicTrainingTheme(req.params.themeSlug, locale);
@@ -640,5 +725,18 @@ export function registerPublicTrainingPages(app: Express) {
     const sitemap = sitemapName ? sitemapByPath.get(`/sitemaps/${sitemapName}.xml`) : null;
     return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");
   });
-  app.get("/robots.txt", (_req: Request, res: Response) => res.status(200).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send(`User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap-index.xml\n`));
+  app.get("/ai-news/rss.xml", async (_req: Request, res: Response) => {
+    try {
+      const feed = await getAiNewsFeed();
+      const payload = Buffer.from(renderAiNewsRss(feed), "utf8");
+      return res.status(200).set({
+        "Cache-Control": "public, max-age=480, stale-while-revalidate=86400",
+        "Content-Type": "application/rss+xml; charset=utf-8",
+        "Content-Length": String(payload.byteLength),
+        "X-Content-Type-Options": "nosniff",
+      }).end(payload);
+    } catch {
+      return res.status(503).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("AI News temporairement indisponible");
+    }
+  });
 }

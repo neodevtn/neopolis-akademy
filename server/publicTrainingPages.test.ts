@@ -5,6 +5,7 @@ import type { AddressInfo } from "node:net";
 import {
   getPublicTrainingSitemapFiles,
   registerPublicTrainingPages,
+  renderAiNewsRss,
   renderPublicCatalogueCourse,
   renderPublicCatalogueTraining,
   renderPublicGoldenJob,
@@ -32,6 +33,32 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain('x-neopolis-akademy-1200x675_28f812f5.png');
     expect(html).toContain('<meta property="og:image:secure_url"');
     expect(html).toContain('<meta property="og:image:type" content="image/png" />');
+    expect(html).toContain('type="application/rss+xml" title="Neopolis Akademy AI News"');
+  });
+
+  it("rend un flux RSS AI News XML valide à partir des articles publics", () => {
+    const rss = renderAiNewsRss({
+      updatedAt: "2026-09-19T18:00:00.000Z",
+      stale: false,
+      sources: [],
+      articles: [{
+        id: "source:https://example.com/ai?a=1&b=2",
+        sourceId: "source",
+        sourceLabel: "Source publique",
+        sourceCategory: "Analyse",
+        title: "IA & métiers",
+        excerpt: "Une analyse <publique>.",
+        url: "https://example.com/ai?a=1&b=2",
+        publishedAt: "2026-09-19T17:00:00.000Z",
+        topics: ["métiers"],
+      }],
+    });
+
+    expect(rss).toContain('<rss version="2.0">');
+    expect(rss).toContain("IA &amp; métiers");
+    expect(rss).toContain("https://example.com/ai?a=1&amp;b=2");
+    expect(rss).toContain("Une analyse &lt;publique&gt;.");
+    expect(rss).toContain("/ai-news/rss.xml");
   });
 
   it("expose le même menu principal et le même footer public dans le HTML des formations", () => {
@@ -186,7 +213,8 @@ describe("pages publiques de formations IA", () => {
     expect(urlsets).toContain("comptabilite-finance");
     expect(urlsets).toContain("/formations-ia/catalogue/");
     expect(urlsets).not.toContain("/training/");
-    expect(urlsets).not.toContain("<lastmod>");
+    expect(urlsets).toContain("<lastmod>2026-09-19</lastmod>");
+    expect(index).toContain("<lastmod>2026-09-19</lastmod>");
     expect(sitemapFiles.reduce((total, file) => total + file.urlCount, 0)).toBeGreaterThan(getPublicCatalogueSitemapEntries().length);
   });
 

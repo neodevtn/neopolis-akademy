@@ -1,5 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
+import { faqItems } from "../client/src/data/faqData";
+import { AGENTIC_DISCOVERY_UPDATED_AT, getAgenticSearchTarget } from "@shared/agenticDiscovery";
 import { PUBLIC_SOCIAL_ASSETS } from "@shared/publicSocialAssets";
 import { ENV } from "./_core/env";
 
@@ -221,29 +223,66 @@ function toJsonLd(value: unknown) {
 
 function publicPageSchema(page: SeoPage, canonicalUrl: string) {
   const locale = LOCALE_METADATA[page.locale || "fr"];
+  const organizationId = `${CANONICAL_ORIGIN}/#organization`;
+  const websiteId = `${CANONICAL_ORIGIN}/#website`;
+  const pageId = `${canonicalUrl}#webpage`;
+  const graph: Array<Record<string, unknown>> = [
+    {
+      "@type": "Organization",
+      "@id": organizationId,
+      name: SITE_NAME,
+      url: `${CANONICAL_ORIGIN}/`,
+      logo: {
+        "@type": "ImageObject",
+        url: `${CANONICAL_ORIGIN}${PUBLIC_SOCIAL_ASSETS.square.path}`,
+        width: PUBLIC_SOCIAL_ASSETS.square.width,
+        height: PUBLIC_SOCIAL_ASSETS.square.height,
+      },
+      sameAs: ORGANIZATION_SOCIAL_PROFILES,
+    },
+    {
+      "@type": "WebSite",
+      "@id": websiteId,
+      name: SITE_NAME,
+      url: `${CANONICAL_ORIGIN}/`,
+      publisher: { "@id": organizationId },
+      inLanguage: ["fr-FR", "en", "ar"],
+      potentialAction: {
+        "@type": "SearchAction",
+        target: { "@type": "EntryPoint", urlTemplate: getAgenticSearchTarget() },
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": page.path === "/ai-news" ? "CollectionPage" : "WebPage",
+      "@id": pageId,
+      name: page.title,
+      description: page.description,
+      url: canonicalUrl,
+      inLanguage: locale.inLanguage,
+      isPartOf: { "@id": websiteId },
+      publisher: { "@id": organizationId },
+      dateModified: AGENTIC_DISCOVERY_UPDATED_AT,
+      primaryImageOfPage: { "@type": "ImageObject", url: SHARE_IMAGE_URL },
+    },
+  ];
+  if (page.path === "/" || page.path === "/en" || page.path === "/ar") {
+    const language = page.locale || "fr";
+    graph.push({
+      "@type": "FAQPage",
+      "@id": `${canonicalUrl}#faq`,
+      inLanguage: locale.inLanguage,
+      isPartOf: { "@id": pageId },
+      mainEntity: faqItems.map((item) => ({
+        "@type": "Question",
+        name: item.q[language],
+        acceptedAnswer: { "@type": "Answer", text: item.a[language] },
+      })),
+    });
+  }
   return {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        name: SITE_NAME,
-        url: CANONICAL_ORIGIN,
-        logo: `${CANONICAL_ORIGIN}${PUBLIC_SOCIAL_ASSETS.square.path}`,
-        sameAs: ORGANIZATION_SOCIAL_PROFILES,
-      },
-      {
-        "@type": "WebPage",
-        name: page.title,
-        description: page.description,
-        url: canonicalUrl,
-        inLanguage: locale.inLanguage,
-        isPartOf: {
-          "@type": "WebSite",
-          name: SITE_NAME,
-          url: CANONICAL_ORIGIN,
-        },
-      },
-    ],
+    "@graph": graph,
   };
 }
 
@@ -352,6 +391,11 @@ export function renderSeoHead(requestUrl: string) {
     searchConsoleVerification,
     keywords,
     `<link rel="canonical" href="${canonicalUrl}" />`,
+    `<link rel="sitemap" type="application/xml" href="${CANONICAL_ORIGIN}/sitemap-index.xml" />`,
+    `<link rel="alternate" type="text/plain" title="LLM context" href="${CANONICAL_ORIGIN}/llms.txt" />`,
+    `<link rel="alternate" type="application/json" title="Machine-readable public catalogue" href="${CANONICAL_ORIGIN}/ai-index.json" />`,
+    `<link rel="alternate" type="application/rss+xml" title="Neopolis Akademy AI News" href="${CANONICAL_ORIGIN}/ai-news/rss.xml" />`,
+    `<meta name="author" content="${SITE_NAME}" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="${SITE_NAME}" />`,
     `<meta property="og:locale" content="${locale.ogLocale}" />`,

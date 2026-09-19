@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx watch --import ./server/instrument.ts server/_core/index.ts",
+    "prebuild": "tsx scripts/generate_agentic_discovery.ts",
     "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js && esbuild server/instrument.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/instrument.js && mkdir -p dist/data && cp server/data/*.json dist/data/",
     "start": "NODE_ENV=production node --import ./dist/instrument.js dist/index.js",
     "check": "tsc --noEmit",
@@ -52,6 +53,9 @@
     "check:course-metrics": "node scripts/check-course-metrics.mjs",
     "check:block-qa": "node scripts/check-block-qa-samples.mjs",
     "qa:publish": "node scripts/run-publication-qa.mjs",
+    "qa:seo-agentic": "tsx scripts/audit_seo_agentic_search.ts --write-report",
+    "seo:indexnow:dry-run": "tsx scripts/submit_indexnow.ts",
+    "seo:indexnow:submit": "tsx scripts/submit_indexnow.ts --submit",
     "validate-courses:fix": "node scripts/validate-courses.mjs --fix"
   },
   "dependencies": {
