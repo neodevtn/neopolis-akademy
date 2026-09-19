@@ -447,6 +447,8 @@ export const learnerOrientationProfiles = mysqlTable("learner_orientation_profil
   userId: int("userId").notNull(),
   status: mysqlEnum("status", ["not_started", "goals_set", "completed"]).notNull().default("not_started"),
   goals: json("goals"),
+  careerFamilyIds: json("careerFamilyIds"),
+  aspiration: text("aspiration"),
   wantsOfficialCertification: int("wantsOfficialCertification").notNull().default(0),
   officialCertificationIds: json("officialCertificationIds"),
   certificationTargetDates: json("certificationTargetDates"),

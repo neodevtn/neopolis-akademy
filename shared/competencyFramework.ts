@@ -20,12 +20,12 @@ export const DEFAULT_COMPETENCIES = [
   { id: "ai_business", title: { fr: "Stratégie et adoption IA", en: "AI strategy & adoption" }, description: { fr: "Identifier la valeur, conduire l’adoption et accompagner les métiers.", en: "Identify value, lead adoption and support business teams." }, category: "Impact métier", icon: "briefcase-business", color: "rose", sortOrder: 90 },
 ] as const;
 
-const TAGGED_EVENT_RULES: Array<{ sourceType: CompetencySourceType; label: string; points: number; minScore: number | null }> = [
-  { sourceType: "exercise_passed", label: "Exercice validé", points: 1, minScore: 70 },
-  { sourceType: "quiz_passed", label: "Quiz validé", points: 1, minScore: 66.67 },
-  { sourceType: "checkpoint_passed", label: "Checkpoint validé", points: 1.5, minScore: 60 },
-  { sourceType: "skill_badge", label: "Badge obtenu", points: 1.5, minScore: null },
-  { sourceType: "certification", label: "Certification obtenue", points: 2, minScore: null },
+export const TAGGED_EVENT_RULES: Array<{ sourceType: CompetencySourceType; label: string; points: number; minScore: number | null }> = [
+  { sourceType: "exercise_passed", label: "Exercice validé", points: 2, minScore: 70 },
+  { sourceType: "quiz_passed", label: "Quiz validé", points: 2, minScore: 75 },
+  { sourceType: "checkpoint_passed", label: "Checkpoint validé", points: 0.75, minScore: 70 },
+  { sourceType: "skill_badge", label: "Badge obtenu", points: 3, minScore: null },
+  { sourceType: "certification", label: "Certification obtenue", points: 10, minScore: null },
 ];
 
 /** Chaque événement ne contribue qu’aux compétences explicitement taguées sur son contenu. */

@@ -18,9 +18,9 @@ describe("applyCompetencyEvent", () => {
 
   it("groups duplicate lookup and contribution insertion for all eligible rules", async () => {
     const rules = [
-      { id: 11, competencyId: "prompt_engineering", points: "1.00", minScore: null },
-      { id: 12, competencyId: "ai_solution_design", points: "0.50", minScore: null },
-      { id: 13, competencyId: "other", points: "2.00", minScore: null },
+      { id: 11, competencyId: "prompt_engineering", sourceKey: "tagged", points: "1.00", minScore: null },
+      { id: 12, competencyId: "ai_solution_design", sourceKey: "tagged", points: "0.50", minScore: null },
+      { id: 13, competencyId: "other", sourceKey: "tagged", points: "2.00", minScore: null },
     ];
     const values = vi.fn().mockReturnValue({ onDuplicateKeyUpdate: vi.fn().mockResolvedValue(undefined) });
     const insert = vi.fn().mockReturnValue({ values });
@@ -36,11 +36,12 @@ describe("applyCompetencyEvent", () => {
 
     await expect(applyCompetencyEvent({
       userId: 42,
-      sourceType: "quiz",
+      sourceType: "quiz_passed",
       sourceKey: "course:lesson:quiz",
       eventKey: "event-1",
+      score: 80,
       competencyTags: ["prompt_engineering", "ai_solution_design"],
-    })).resolves.toEqual([{ competencyId: "ai_solution_design", points: 0.5 }]);
+    })).resolves.toEqual([{ competencyId: "ai_solution_design", points: 0.25 }]);
 
     expect(select).toHaveBeenCalledTimes(3);
     expect(insert).toHaveBeenCalledOnce();

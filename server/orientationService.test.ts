@@ -83,7 +83,7 @@ describe("getAdminOrientationOverview", () => {
     expect(getUserCompetencies).not.toHaveBeenCalled();
     expect(overview).toHaveLength(2);
     const first = overview[0].orientation;
-    expect(first.competencies.find((competency) => competency.id === "prompt_engineering")).toMatchObject({ rawPoints: 40, level: 40, targetPoints: 35 });
+    expect(first.competencies.find((competency) => competency.id === "prompt_engineering")).toMatchObject({ rawPoints: 40, level: 4.9, targetPoints: 50 });
     expect(first.competencies.find((competency) => competency.id === "ai_solution_design")).toMatchObject({ rawPoints: 2, level: 2, targetPoints: null });
     expect(first.profile).toMatchObject({ wantsOfficialCertification: true, officialCertificationIds: ["cert-prompt"] });
     expect(first.pendingProposal).toMatchObject({ id: 77, goals: [{ competencyId: "prompt_engineering", targetLevel: "gold" }] });

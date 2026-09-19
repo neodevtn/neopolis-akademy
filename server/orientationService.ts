@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, inArray, isNotNull, isNull, ne, or } from "drizzle-orm";
-import { competencyDefinitions, learnerCompetencyContributions, learnerOrientationProfiles, learnerOrientationProposals, users } from "../drizzle/schema";
-import { clampCompetencyLevel } from "../shared/competencyFramework";
+import { applications, competencyDefinitions, learnerCompetencyContributions, learnerOrientationProfiles, learnerOrientationProposals, users } from "../drizzle/schema";
+import { CAREER_FAMILY_DEFINITIONS, inferCareerFamilyIds, parseCareerFamilyIds } from "../shared/careerPathways";
+import { scoreCompetencyEvidence } from "../shared/competencyEvidence";
 import {
   buildOrientationRecommendations,
   getDiagnosticPoints,
@@ -10,6 +11,7 @@ import {
   type OrientationGoal,
 } from "../shared/orientationFramework";
 import { buildOrientationTrajectory } from "../shared/orientationTrajectory";
+import trainingIndex from "../client/src/data/trainingIndex.json";
 import { getDb } from "./db";
 import { ensureCompetencyFramework, getUserCompetencies } from "./competencyService";
 import { createCommunication } from "./adminDb";
@@ -24,6 +26,35 @@ type OrientationProfile = typeof learnerOrientationProfiles.$inferSelect;
 type OrientationProposal = typeof learnerOrientationProposals.$inferSelect;
 type CompetencyDefinition = typeof competencyDefinitions.$inferSelect;
 type CompetencyContribution = typeof learnerCompetencyContributions.$inferSelect;
+const availableCertificationIds = (trainingIndex.certifications || []).map((certification) => certification.id);
+
+function normalizeAspiration(value: unknown) {
+  return typeof value === "string" ? value.trim().slice(0, 2000) : "";
+}
+
+function candidateContextText(application: typeof applications.$inferSelect | null | undefined) {
+  if (!application) return "";
+  return [
+    application.currentRole,
+    application.sector,
+    application.motivation,
+    application.aiAgentSector,
+    application.aiAgentScenario,
+    application.aiAgentImpact,
+    application.technicalTools,
+    application.certifications,
+  ].filter((value): value is string => typeof value === "string" && Boolean(value.trim())).join(" \n");
+}
+
+async function getCandidateCareerContext(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [user] = await db.select({ email: users.email }).from(users).where(eq(users.id, userId)).limit(1);
+  if (!user?.email) return { text: "", inferredCareerFamilyIds: [] as string[] };
+  const [application] = await db.select().from(applications).where(eq(applications.email, user.email)).orderBy(desc(applications.createdAt)).limit(1);
+  const text = candidateContextText(application);
+  return { text, inferredCareerFamilyIds: inferCareerFamilyIds(text) };
+}
 
 function parseGoals(value: unknown): OrientationGoal[] {
   if (!Array.isArray(value)) return [];
@@ -93,8 +124,26 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
   const officialCertificationIds = parseStringList(profile?.officialCertificationIds);
   const certificationTargetDates = parseCertificationTargetDates(profile?.certificationTargetDates);
   const diagnosticPoints = assessment?.diagnosticPoints || {};
+  const aspiration = normalizeAspiration(profile?.aspiration);
+  const selectedCareerFamilyIds = parseCareerFamilyIds(profile?.careerFamilyIds);
+  const candidateContext = await getCandidateCareerContext(userId);
+  const inferredCareerFamilyIds = Array.from(new Set([
+    ...selectedCareerFamilyIds,
+    ...inferCareerFamilyIds(aspiration),
+    ...candidateContext.inferredCareerFamilyIds,
+  ])).slice(0, 4);
   const recommendations = goals.length
-    ? buildOrientationRecommendations({ goals, competencyPoints, diagnosticPoints, wantsOfficialCertification, officialCertificationIds })
+    ? buildOrientationRecommendations({
+      goals,
+      competencyPoints,
+      diagnosticPoints,
+      wantsOfficialCertification,
+      officialCertificationIds,
+      careerFamilyIds: selectedCareerFamilyIds,
+      aspiration,
+      candidateContext: candidateContext.text,
+      availableCertificationIds,
+    })
     : [];
   const [trajectory, pendingProposal] = await Promise.all([
     getOrientationTrajectory(userId, profile, goals, certificationTargetDates),
@@ -106,6 +155,9 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
       id: profile.id,
       status: profile.status,
       goals,
+      careerFamilyIds: selectedCareerFamilyIds,
+      inferredCareerFamilyIds,
+      aspiration,
       wantsOfficialCertification,
       officialCertificationIds,
       certificationTargetDates,
@@ -116,6 +168,9 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
     } : {
       status: "not_started" as const,
       goals: [],
+      careerFamilyIds: [],
+      inferredCareerFamilyIds: candidateContext.inferredCareerFamilyIds,
+      aspiration: "",
       wantsOfficialCertification: false,
       officialCertificationIds: [],
       certificationTargetDates: {},
@@ -137,6 +192,7 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
         : null,
     })),
     questions: getOrientationQuestions(goals).map(({ correctChoiceId, rationale, ...question }) => question),
+    careerFamilies: CAREER_FAMILY_DEFINITIONS.map(({ keywords, foundationCertificationIds, recommendedCertificationIds, primaryCompetencyIds, ...family }) => family),
     recommendations,
     trajectory,
     pendingProposal,
@@ -154,6 +210,8 @@ export async function getLearnerOrientation(userId: number) {
 export async function saveLearnerOrientationGoals(input: {
   userId: number;
   goals: OrientationGoal[];
+  careerFamilyIds?: unknown;
+  aspiration?: unknown;
   wantsOfficialCertification: boolean;
   officialCertificationIds: string[];
   certificationTargetDates?: unknown;
@@ -162,10 +220,14 @@ export async function saveLearnerOrientationGoals(input: {
   if (!db) throw new Error("Database not available");
   const now = new Date();
   const certificationTargetDates = parseCertificationTargetDates(input.certificationTargetDates);
+  const careerFamilyIds = parseCareerFamilyIds(input.careerFamilyIds);
+  const aspiration = normalizeAspiration(input.aspiration);
   await db.insert(learnerOrientationProfiles).values({
     userId: input.userId,
     status: "goals_set",
     goals: input.goals,
+    careerFamilyIds,
+    aspiration,
     wantsOfficialCertification: input.wantsOfficialCertification ? 1 : 0,
     officialCertificationIds: input.officialCertificationIds,
     certificationTargetDates,
@@ -177,6 +239,8 @@ export async function saveLearnerOrientationGoals(input: {
     set: {
       status: "goals_set",
       goals: input.goals,
+      careerFamilyIds,
+      aspiration,
       wantsOfficialCertification: input.wantsOfficialCertification ? 1 : 0,
       officialCertificationIds: input.officialCertificationIds,
       certificationTargetDates,
@@ -206,12 +270,17 @@ export async function completeLearnerOrientation(input: {
   const diagnosticPoints = getDiagnosticPoints(goals, answers);
   const competencies = await getUserCompetencies(input.userId);
   const competencyPoints = Object.fromEntries(competencies.map((competency) => [competency.id, competency.level]));
+  const candidateContext = await getCandidateCareerContext(input.userId);
   const recommendations = buildOrientationRecommendations({
     goals,
     competencyPoints,
     diagnosticPoints,
     wantsOfficialCertification: profile.wantsOfficialCertification === 1,
     officialCertificationIds: parseStringList(profile.officialCertificationIds),
+    careerFamilyIds: profile.careerFamilyIds,
+    aspiration: normalizeAspiration(profile.aspiration),
+    candidateContext: candidateContext.text,
+    availableCertificationIds,
   });
   const completedAt = new Date();
   const assessment: StoredAssessment = { answers, diagnosticPoints, completedAt: completedAt.toISOString() };
@@ -253,9 +322,12 @@ export async function respondToOrientationProposal(input: { userId: number; prop
     .where(and(eq(learnerOrientationProposals.id, input.proposalId), eq(learnerOrientationProposals.userId, input.userId), eq(learnerOrientationProposals.status, "pending"))).limit(1);
   if (!proposal) throw new Error("Proposition introuvable ou déjà traitée");
   if (input.accept) {
+    const [currentProfile] = await db.select().from(learnerOrientationProfiles).where(eq(learnerOrientationProfiles.userId, input.userId)).limit(1);
     await saveLearnerOrientationGoals({
       userId: input.userId,
       goals: parseGoals(proposal.goals),
+      careerFamilyIds: currentProfile?.careerFamilyIds,
+      aspiration: currentProfile?.aspiration,
       wantsOfficialCertification: proposal.wantsOfficialCertification === 1,
       officialCertificationIds: parseStringList(proposal.officialCertificationIds),
       certificationTargetDates: proposal.certificationTargetDates,
@@ -316,8 +388,8 @@ export async function getAdminOrientationOverview(input: { userId?: number; limi
     const contributionsByCompetency = contributionsByUserAndCompetency.get(user.id) || new Map<string, CompetencyContribution[]>();
     const competencies = definitions.map((definition) => {
       const entries = contributionsByCompetency.get(definition.id) || [];
-      const rawPoints = entries.reduce((total, entry) => total + Number(entry.points), 0);
-      return { ...definition, rawPoints, level: clampCompetencyLevel(rawPoints, Number(definition.maxPoints)) };
+      const summary = scoreCompetencyEvidence(entries, Number(definition.maxPoints));
+      return { ...definition, rawPoints: summary.rawPoints, level: summary.level };
     });
     const competencyPoints = Object.fromEntries(competencies.map((competency) => [competency.id, competency.level]));
     const wantsOfficialCertification = profile.wantsOfficialCertification === 1;
@@ -342,6 +414,9 @@ export async function getAdminOrientationOverview(input: { userId?: number; limi
           id: profile.id,
           status: profile.status,
           goals,
+          careerFamilyIds: parseCareerFamilyIds(profile.careerFamilyIds),
+          inferredCareerFamilyIds: parseCareerFamilyIds(profile.careerFamilyIds),
+          aspiration: normalizeAspiration(profile.aspiration),
           wantsOfficialCertification,
           officialCertificationIds,
           certificationTargetDates,
@@ -364,7 +439,16 @@ export async function getAdminOrientationOverview(input: { userId?: number; limi
         })),
         questions: getOrientationQuestions(goals).map(({ correctChoiceId, rationale, ...question }) => question),
         recommendations: goals.length
-          ? buildOrientationRecommendations({ goals, competencyPoints, diagnosticPoints: assessment?.diagnosticPoints || {}, wantsOfficialCertification, officialCertificationIds })
+          ? buildOrientationRecommendations({
+            goals,
+            competencyPoints,
+            diagnosticPoints: assessment?.diagnosticPoints || {},
+            wantsOfficialCertification,
+            officialCertificationIds,
+            careerFamilyIds: profile.careerFamilyIds,
+            aspiration: normalizeAspiration(profile.aspiration),
+            availableCertificationIds,
+          })
           : [],
         trajectory,
         pendingProposal: pendingProposal ? {

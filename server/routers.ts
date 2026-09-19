@@ -92,6 +92,8 @@ export const appRouter = router({
     getMine: protectedProcedure.query(async ({ ctx }) => getLearnerOrientation(ctx.user.id)),
     saveGoals: protectedProcedure.input(z.object({
       goals: orientationGoalsSchema,
+      careerFamilyIds: z.array(z.string().min(1).max(80)).max(4).default([]),
+      aspiration: z.string().trim().max(2000).default(""),
       wantsOfficialCertification: z.boolean().default(false),
       officialCertificationIds: z.array(z.string().min(2).max(200)).max(8).default([]),
       certificationTargetDates: z.record(z.string(), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).default({}),

@@ -7,9 +7,9 @@ import { canAddOrientationGoal, MAX_ORIENTATION_GOALS, toggleOrientationGoal, ty
 type Goal = OrientationGoal;
 
 const TARGETS = [
-  { id: "bronze", label: "Bronze", points: 10, description: "Autonomie de base" },
-  { id: "silver", label: "Argent", points: 35, description: "Maîtrise opérationnelle" },
-  { id: "gold", label: "Or", points: 70, description: "Maîtrise avancée" },
+  { id: "bronze", label: "Bronze", points: 20, description: "Autonomie de base" },
+  { id: "silver", label: "Argent", points: 50, description: "Maîtrise opérationnelle" },
+  { id: "gold", label: "Or", points: 80, description: "Maîtrise avancée" },
 ] as const;
 
 function titleOf(value: any, fallback = "Compétence") {
@@ -29,7 +29,7 @@ export function OrientationPanel({
 }: {
   orientation: any;
   certifications: any[];
-  onSaveGoals: (input: { goals: Goal[]; wantsOfficialCertification: boolean; officialCertificationIds: string[]; certificationTargetDates: Record<string, string> }) => void;
+  onSaveGoals: (input: { goals: Goal[]; careerFamilyIds: string[]; aspiration: string; wantsOfficialCertification: boolean; officialCertificationIds: string[]; certificationTargetDates: Record<string, string> }) => void;
   onCompleteDiagnostic: (answers: Array<{ questionId: string; choiceId: string }>) => void;
   onRespondToProposal: (input: { proposalId: number; accept: boolean }) => void;
   savingGoals?: boolean;
@@ -38,6 +38,8 @@ export function OrientationPanel({
 }) {
   const profile = orientation?.profile;
   const [goals, setGoals] = useState<Goal[]>(profile?.goals || []);
+  const [careerFamilyIds, setCareerFamilyIds] = useState<string[]>(profile?.careerFamilyIds || []);
+  const [aspiration, setAspiration] = useState<string>(profile?.aspiration || "");
   const [wantsOfficial, setWantsOfficial] = useState(Boolean(profile?.wantsOfficialCertification));
   const [certificationIds, setCertificationIds] = useState<string[]>(profile?.officialCertificationIds || []);
   const [certificationTargetDates, setCertificationTargetDates] = useState<Record<string, string>>(profile?.certificationTargetDates || {});
@@ -46,6 +48,8 @@ export function OrientationPanel({
 
   useEffect(() => {
     setGoals(profile?.goals || []);
+    setCareerFamilyIds(profile?.careerFamilyIds || []);
+    setAspiration(profile?.aspiration || "");
     setWantsOfficial(Boolean(profile?.wantsOfficialCertification));
     setCertificationIds(profile?.officialCertificationIds || []);
     setCertificationTargetDates(profile?.certificationTargetDates || {});
@@ -78,7 +82,7 @@ export function OrientationPanel({
     });
   };
 
-  const saveGoals = () => onSaveGoals({ goals, wantsOfficialCertification: wantsOfficial, officialCertificationIds: certificationIds, certificationTargetDates });
+  const saveGoals = () => onSaveGoals({ goals, careerFamilyIds, aspiration, wantsOfficialCertification: wantsOfficial, officialCertificationIds: certificationIds, certificationTargetDates });
 
   if (!orientation) {
     return <div className="rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground">Chargement de votre orientation personnalisée…</div>;
@@ -119,7 +123,21 @@ export function OrientationPanel({
       {stage === "goals" && (
         <div className="space-y-6 rounded-2xl border border-border bg-card p-5 md:p-7">
           <div>
-            <h3 className="text-lg font-bold text-foreground">1. Vos compétences prioritaires</h3>
+            <h3 className="text-lg font-bold text-foreground">1. Votre projet professionnel</h3>
+            <p className="mt-1 text-sm text-muted-foreground">Choisissez jusqu’à quatre familles métier. Les parcours seront aussi recalculés à partir de votre candidature et de l’objectif libre ci-dessous.</p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {(orientation.careerFamilies || []).map((family: any) => {
+                const selected = careerFamilyIds.includes(family.id);
+                const disabled = !selected && careerFamilyIds.length >= 4;
+                return <label key={family.id} className={`flex items-start gap-3 rounded-xl border p-4 ${selected ? "border-primary bg-primary/5" : "border-border"} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}><input type="checkbox" checked={selected} disabled={disabled} onChange={() => setCareerFamilyIds((current) => selected ? current.filter((id) => id !== family.id) : [...current, family.id])} className="mt-1 h-4 w-4 accent-primary" /><span><span className="block font-semibold text-foreground">{titleOf(family.title)}</span><span className="mt-1 block text-xs leading-5 text-muted-foreground">{titleOf(family.description, "")}</span></span></label>;
+              })}
+            </div>
+            <label className="mt-4 block text-sm font-semibold text-foreground">Ce que je veux atteindre librement<textarea value={aspiration} maxLength={2000} onChange={(event) => setAspiration(event.target.value)} rows={4} placeholder="Ex. Je suis médecin généraliste et je veux apprendre à analyser la littérature clinique, structurer mes données de recherche et automatiser ma veille sans exposer de données patients." className="mt-2 w-full resize-y rounded-xl border border-input bg-background px-4 py-3 text-sm font-normal text-foreground placeholder:text-muted-foreground" /><span className="mt-1 block text-right text-xs font-normal text-muted-foreground">{aspiration.length} / 2 000</span></label>
+            {profile?.inferredCareerFamilyIds?.length ? <p className="mt-3 text-xs text-muted-foreground">Votre candidature et votre objectif sont également rapprochés automatiquement des familles pertinentes ; vous pouvez toujours corriger la sélection.</p> : null}
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-foreground">2. Vos compétences prioritaires</h3>
             <p className="mt-1 text-sm text-muted-foreground">Sélectionnez jusqu’à cinq compétences. Pour chacune, choisissez le niveau de maîtrise attendu.</p>
             <p className="mt-2 text-sm font-medium text-primary" role="status" aria-live="polite">
               {goals.length} / {MAX_ORIENTATION_GOALS} compétence{goals.length > 1 ? "s" : ""} sélectionnée{goals.length > 1 ? "s" : ""}

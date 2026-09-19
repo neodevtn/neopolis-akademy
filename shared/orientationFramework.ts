@@ -1,4 +1,5 @@
-import { COMPETENCY_PATHS } from "./competencyProgression";
+import { CAREER_FAMILY_DEFINITIONS, getCareerFamily, inferCareerFamilyIds, parseCareerFamilyIds, type CareerFamilyId } from "./careerPathways";
+import { COMPETENCY_PATHS, COMPETENCY_RECOMMENDATION_PATHS } from "./competencyProgression";
 
 export type OrientationTargetLevel = "bronze" | "silver" | "gold";
 export type OrientationGoal = {
@@ -16,9 +17,9 @@ export type OrientationQuestion = {
 };
 
 export const ORIENTATION_TARGETS: Record<OrientationTargetLevel, { points: number; label: { fr: string; en: string } }> = {
-  bronze: { points: 10, label: { fr: "Bronze · autonomie de base", en: "Bronze · foundational autonomy" } },
-  silver: { points: 35, label: { fr: "Argent · maîtrise opérationnelle", en: "Silver · operational proficiency" } },
-  gold: { points: 70, label: { fr: "Or · maîtrise avancée", en: "Gold · advanced mastery" } },
+  bronze: { points: 20, label: { fr: "Bronze · autonomie de base", en: "Bronze · foundational autonomy" } },
+  silver: { points: 50, label: { fr: "Argent · maîtrise opérationnelle", en: "Silver · operational proficiency" } },
+  gold: { points: 80, label: { fr: "Or · maîtrise avancée", en: "Gold · advanced mastery" } },
 };
 
 export const ORIENTATION_QUESTION_BANK: OrientationQuestion[] = [
@@ -142,6 +143,8 @@ export type OrientationRecommendation = {
   certificationId: string;
   reason: string;
   type: "foundation" | "target" | "advanced";
+  source: "competency" | "career" | "aspiration" | "certification";
+  careerFamilyId?: CareerFamilyId;
 };
 
 export function getOrientationQuestions(goals: OrientationGoal[]) {
@@ -159,30 +162,59 @@ export function getDiagnosticPoints(goals: OrientationGoal[], answers: Orientati
   }));
 }
 
+export function resolveOrientationCareerFamilies(input: {
+  careerFamilyIds?: unknown;
+  aspiration?: string | null;
+  candidateContext?: string | null;
+}): CareerFamilyId[] {
+  return Array.from(new Set([
+    ...parseCareerFamilyIds(input.careerFamilyIds),
+    ...inferCareerFamilyIds(input.aspiration || ""),
+    ...inferCareerFamilyIds(input.candidateContext || ""),
+  ])).slice(0, 4);
+}
+
 export function buildOrientationRecommendations(input: {
   goals: OrientationGoal[];
   competencyPoints: Record<string, number>;
   diagnosticPoints: Record<string, number>;
   wantsOfficialCertification: boolean;
   officialCertificationIds?: string[];
+  careerFamilyIds?: unknown;
+  aspiration?: string | null;
+  candidateContext?: string | null;
+  availableCertificationIds?: string[];
 }) {
   const recommendations: OrientationRecommendation[] = [];
   const seen = new Set<string>();
+  const available = input.availableCertificationIds?.length ? new Set(input.availableCertificationIds) : null;
   const add = (recommendation: Omit<OrientationRecommendation, "order">) => {
-    if (seen.has(recommendation.certificationId)) return;
+    if (seen.has(recommendation.certificationId) || (available && !available.has(recommendation.certificationId))) return;
     seen.add(recommendation.certificationId);
     recommendations.push({ ...recommendation, order: recommendations.length + 1 });
   };
 
+  for (const certificationId of input.officialCertificationIds || []) add({
+    competencyId: input.goals[0]?.competencyId || "ai_solution_design",
+    currentPoints: 0,
+    diagnosticPoints: 0,
+    targetPoints: 50,
+    certificationId,
+    type: "target",
+    source: "certification",
+    reason: "Certification officielle explicitement choisie dans votre objectif.",
+  });
+
   for (const goal of input.goals) {
+    const paths = COMPETENCY_RECOMMENDATION_PATHS[goal.competencyId] || [];
     const path = COMPETENCY_PATHS[goal.competencyId];
-    if (!path) continue;
+    if (!path || !paths.length) continue;
     const currentPoints = Math.max(0, Number(input.competencyPoints[goal.competencyId] || 0));
     const diagnosticPoints = Math.max(0, Number(input.diagnosticPoints[goal.competencyId] || 0));
     const assessedPoints = Math.max(currentPoints, diagnosticPoints);
     const targetPoints = ORIENTATION_TARGETS[goal.targetLevel].points;
 
-    if (assessedPoints < 10 && path.certificationId !== "ia_pour_les_nuls") {
+    if (assessedPoints < 20 && path.certificationId !== "ia_pour_les_nuls") {
       add({
         competencyId: goal.competencyId,
         currentPoints,
@@ -191,24 +223,29 @@ export function buildOrientationRecommendations(input: {
         certificationId: "ia_pour_les_nuls",
         type: "foundation",
         reason: "Consolider les fondamentaux avant la spécialisation choisie.",
+        source: "competency",
       });
     }
 
-    if (assessedPoints < targetPoints || input.wantsOfficialCertification || input.officialCertificationIds?.includes(path.certificationId)) {
-      add({
-        competencyId: goal.competencyId,
-        currentPoints,
-        diagnosticPoints,
-        targetPoints,
-        certificationId: path.certificationId,
-        type: "target",
-        reason: assessedPoints >= targetPoints
-          ? "Préparer la certification ou approfondir la compétence choisie."
-          : "Réduire l’écart entre le niveau actuel et l’objectif déclaré.",
-      });
+    if (assessedPoints < targetPoints || input.wantsOfficialCertification) {
+      const pathCount = goal.targetLevel === "gold" ? 3 : goal.targetLevel === "silver" ? 2 : 1;
+      for (const certificationId of paths.slice(0, pathCount)) {
+        add({
+          competencyId: goal.competencyId,
+          currentPoints,
+          diagnosticPoints,
+          targetPoints,
+          certificationId,
+          type: certificationId === paths[0] ? "target" : "advanced",
+          reason: certificationId === paths[0]
+            ? "Réduire l’écart entre le niveau vérifié et l’objectif de compétence déclaré."
+            : "Diversifier les preuves par un parcours complémentaire du catalogue actuel.",
+          source: "competency",
+        });
+      }
     }
 
-    if (goal.targetLevel === "gold" && assessedPoints >= 35 && path.certificationId !== "claude_certified_architect_professional") {
+    if (goal.targetLevel === "gold" && assessedPoints >= 50 && path.certificationId !== "claude_certified_architect_professional") {
       add({
         competencyId: goal.competencyId,
         currentPoints,
@@ -217,9 +254,59 @@ export function buildOrientationRecommendations(input: {
         certificationId: "claude_certified_architect_professional",
         type: "advanced",
         reason: "Approfondir la conception, la gouvernance et les pratiques de niveau professionnel.",
+        source: "competency",
       });
     }
   }
 
-  return recommendations;
+  const careerFamilyIds = resolveOrientationCareerFamilies(input);
+  const explicitlySelected = new Set(parseCareerFamilyIds(input.careerFamilyIds));
+  for (const careerFamilyId of careerFamilyIds) {
+    const family = getCareerFamily(careerFamilyId);
+    if (!family) continue;
+    const familyCompetencyId = family.primaryCompetencyIds.find((id) => input.goals.some((goal) => goal.competencyId === id)) || family.primaryCompetencyIds[0] || input.goals[0]?.competencyId || "ai_business";
+    const currentPoints = Math.max(0, Number(input.competencyPoints[familyCompetencyId] || 0));
+    const diagnosticPoints = Math.max(0, Number(input.diagnosticPoints[familyCompetencyId] || 0));
+    if (Math.max(currentPoints, diagnosticPoints) < 20) {
+      const foundationId = family.foundationCertificationIds.find((id) => !seen.has(id));
+      if (foundationId) add({
+        competencyId: familyCompetencyId,
+        currentPoints,
+        diagnosticPoints,
+        targetPoints: 20,
+        certificationId: foundationId,
+        type: "foundation",
+        source: explicitlySelected.has(careerFamilyId) ? "career" : "aspiration",
+        careerFamilyId,
+        reason: `Construire le socle utile au projet « ${family.title.fr} » avant les parcours spécialisés.`,
+      });
+    }
+    for (const certificationId of family.recommendedCertificationIds.slice(0, 4)) add({
+      competencyId: familyCompetencyId,
+      currentPoints,
+      diagnosticPoints,
+      targetPoints: 50,
+      certificationId,
+      type: "target",
+      source: explicitlySelected.has(careerFamilyId) ? "career" : "aspiration",
+      careerFamilyId,
+      reason: explicitlySelected.has(careerFamilyId)
+        ? `Parcours directement aligné sur la famille métier « ${family.title.fr} » choisie.`
+        : `Parcours associé au projet professionnel détecté : « ${family.title.fr} ».` ,
+    });
+  }
+
+  const selected: OrientationRecommendation[] = [];
+  const selectedIds = new Set<string>();
+  const select = (recommendation: OrientationRecommendation | undefined) => {
+    if (!recommendation || selected.length >= 12 || selectedIds.has(recommendation.certificationId)) return;
+    selectedIds.add(recommendation.certificationId);
+    selected.push(recommendation);
+  };
+  recommendations.filter((item) => item.source === "certification").forEach(select);
+  recommendations.filter((item) => item.type === "foundation").slice(0, 2).forEach(select);
+  for (const goal of input.goals) select(recommendations.find((item) => item.source === "competency" && item.competencyId === goal.competencyId && item.type !== "foundation"));
+  for (const careerFamilyId of careerFamilyIds) select(recommendations.find((item) => item.careerFamilyId === careerFamilyId && item.type !== "foundation"));
+  recommendations.forEach(select);
+  return selected.map((recommendation, index) => ({ ...recommendation, order: index + 1 }));
 }

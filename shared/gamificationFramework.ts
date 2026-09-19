@@ -3,9 +3,9 @@ export type RankDefinition = { id: string; label: string; minPoints: number; col
 export const DEFAULT_GAMIFICATION_RANKS: RankDefinition[] = [
   { id: "starting", label: "À démarrer", minPoints: 0, color: "slate", icon: "circle", sortOrder: 10 },
   { id: "emerging", label: "Émergent", minPoints: 5, color: "sky", icon: "sprout", sortOrder: 20 },
-  { id: "bronze", label: "Bronze", minPoints: 10, color: "amber", icon: "medal", sortOrder: 30 },
-  { id: "silver", label: "Argent", minPoints: 35, color: "slate", icon: "badge-check", sortOrder: 40 },
-  { id: "gold", label: "Or", minPoints: 70, color: "yellow", icon: "crown", sortOrder: 50 },
+  { id: "bronze", label: "Bronze", minPoints: 20, color: "amber", icon: "medal", sortOrder: 30 },
+  { id: "silver", label: "Argent", minPoints: 50, color: "slate", icon: "badge-check", sortOrder: 40 },
+  { id: "gold", label: "Or", minPoints: 80, color: "yellow", icon: "crown", sortOrder: 50 },
 ];
 
 export const DEFAULT_GAMIFICATION_SETTINGS = {

@@ -57,7 +57,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { TrainingSearchPanel } from "@/components/TrainingSearchPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
 import { ReferralProgramTab } from "@/components/ReferralProgramTab";
-import { getCareerFamilyIds, getTrainingFormatDefinitions, matchesCatalogueSearchText, normalizeCatalogueSearchTokens, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
+import { CAREER_FAMILY_DEFINITIONS, getCertificationCareerFamilyIds, getTrainingFormatDefinitions, matchesCatalogueSearchText, normalizeCatalogueSearchTokens, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 import { isAdministrativeRole } from "@shared/roles";
 import { TalentJourneyTab } from "@/components/TalentJourneyTab";
@@ -869,7 +869,7 @@ function CatalogTab({
   const catalogMetadata = useMemo(() => certCompletionData.map((cert) => {
     const source = JSON.stringify({ title: cert.title, description: cert.description, group: cert.group }).toLowerCase();
     const relatedCourses = coursesByCertification.get(cert.id) || [];
-    const targetJobRoles = getCareerFamilyIds(relatedCourses);
+    const targetJobRoles = getCertificationCareerFamilyIds({ certificationId: cert.id, searchText: source, courses: relatedCourses });
     const includes = (...terms: string[]) => terms.some((term) => source.includes(term));
     const skills = [
       includes("rag", "retrieval", "vector", "weaviate", "haystack", "llamaindex", "graph") && "rag",
@@ -887,13 +887,7 @@ function CatalogTab({
       includes("llamaindex") && "llamaindex", includes("google cloud") && "google_cloud", includes("copilot") && "microsoft_copilot",
       includes("windsurf") && "windsurf",
     ].filter(Boolean) as string[];
-    const roles = [
-      (skills.includes("development") || skills.includes("rag") || skills.includes("agents")) && "ai_engineering",
-      skills.includes("data_bi") && "data_bi",
-      (skills.includes("prompting") || skills.includes("productivity")) && "business_customer",
-      includes("strategy", "governance", "management", "consulting") && "ai_product_governance",
-      ...targetJobRoles,
-    ].filter(Boolean) as string[];
+    const roles = targetJobRoles;
     const activityCount = Number(cert.totalActivities || 0);
     const duration = activityCount <= 15 ? "short" : activityCount <= 30 ? "medium" : "long";
     const level = String((cert.level as any)?.en || "beginner").toLowerCase();
@@ -904,9 +898,10 @@ function CatalogTab({
     return { id: cert.id, level, skills, roles: Array.from(new Set(roles)), technologies, duration, trainingFormat: cert.trainingFormat, hasExam: cert.hasExam, searchText };
   }), [certCompletionData, coursesByCertification]);
   const metadataByCertification = new Map(catalogMetadata.map((metadata) => [metadata.id, metadata]));
+  const careerFamilyLabels = Object.fromEntries(CAREER_FAMILY_DEFINITIONS.map((family) => [family.id, t(family.title)]));
   const filterLabels = {
     skills: { rag: "RAG", agents: "Agents IA", prompting: "Prompt engineering", development: "Développement IA", data_bi: "Data & BI", productivity: "IA au travail" },
-    roles: { data_bi: "Data, analyse & BI", ai_engineering: "Ingénierie IA & automatisation", ai_product_governance: "Produit, stratégie & gouvernance IA", business_customer: "Commerce, marketing & relation client", finance: "Finance & contrôle", hr_operations: "RH & opérations", legal_compliance: "Juridique & conformité" },
+    roles: careerFamilyLabels,
     technologies: { claude: "Claude", openai: "OpenAI", langchain: "LangChain", langgraph: "LangGraph", hugging_face: "Hugging Face", pytorch: "PyTorch", snowflake: "Snowflake", databricks: "Databricks", mongodb: "MongoDB", weaviate: "Weaviate", haystack: "Haystack", crewai: "CrewAI", llamaindex: "LlamaIndex", google_cloud: "Google Cloud", microsoft_copilot: "Microsoft Copilot", windsurf: "Windsurf" },
     durations: { short: "Courte — jusqu’à 15 activités", medium: "Moyenne — 16 à 30 activités", long: "Approfondie — plus de 30 activités" },
   } as const;

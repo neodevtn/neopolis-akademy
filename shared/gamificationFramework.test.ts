@@ -5,7 +5,9 @@ describe("gamification framework", () => {
   it("introduces the emerging rank at 5 points", () => {
     expect(getRankForLevel(4.9).id).toBe("starting");
     expect(getRankForLevel(5).id).toBe("emerging");
-    expect(getRankForLevel(10).id).toBe("bronze");
+    expect(getRankForLevel(10).id).toBe("emerging");
+    expect(getRankForLevel(20).id).toBe("bronze");
+    expect(getRankForLevel(80).id).toBe("gold");
   });
 
   it("identifies the next attainable rank from configured thresholds", () => {
