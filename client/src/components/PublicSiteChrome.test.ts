@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { PublicSiteHeader } from "./PublicSiteChrome";
+import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 
 describe("chrome public et recherche de formations", () => {
   it("rend un formulaire de recherche accessible qui mène au catalogue public", () => {
@@ -22,5 +23,12 @@ describe("chrome public et recherche de formations", () => {
     expect(html).toContain('src="/api/assets/neopolis-akademy-header-user-supplied-240x84_61aeceeb.png"');
     expect(html).toContain('width="120"');
     expect(html).toContain('height="42"');
+  });
+
+  it("uses the compact navigation before a desktop header can overflow", () => {
+    expect(PUBLIC_CHROME_STYLES).toContain("@media (min-width: 1537px)");
+    expect(PUBLIC_CHROME_STYLES).toContain("@media (max-width: 1536px) and (min-width: 640px)");
+    expect(PUBLIC_CHROME_STYLES).toContain(".public-chrome-mobile { display: block; }");
+    expect(PUBLIC_CHROME_STYLES).toContain("flex-wrap: nowrap");
   });
 });

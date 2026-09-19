@@ -180,7 +180,6 @@ export function PublicSiteHeader({ active = "home" }: { active?: PublicPage }) {
         <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
           <NavigationLinks page={active} />
           <PublicTrainingSearch />
-          <DeferredHomeAuth slot="training" fallback={<Link href="/login" className="public-chrome-signin">{t(labels.signIn)}</Link>} />
         </nav>
         <div className="public-chrome-actions">
           <div className="public-chrome-locale-desktop"><LocaleLinks /></div>

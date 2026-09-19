@@ -44,6 +44,7 @@ import { isEvaluationGateLocked, requiredCorrectAnswers } from "@shared/evaluati
 import { isAdministrativeRole } from "@shared/roles";
 import { trackEventOnce } from "@/lib/analytics";
 import { getRequiredMatchingInteractionIds } from "./matchingGate";
+import { extractExplicitScreenHeading, localizedBlockText } from "./screenContentHeading";
 
 export default function LessonViewer({
   lesson,
@@ -489,7 +490,7 @@ export default function LessonViewer({
         return <LearningProgressBlock key={blockIdx} block={block} lang={lang} />;
       case "content": {
         const body = block.body || {};
-        let text = typeof body === "string" ? body : (body[lang] || body.en || "");
+        let text = localizedBlockText(body, lang);
         if (!text) return null;
         // Skip content blocks that are text duplicates of the following bucket_sort exercise
         const allBlocks = chapter?.blocks || [];
@@ -507,25 +508,11 @@ export default function LessonViewer({
             return null;
           }
         }
-        // Skip the first line of the first content block since it's used as the screen title
+        // Remove a first line only when it is an explicit Markdown title. Plain prose
+        // belongs to the learner content and must never be promoted into a display title.
         const isFirstContentBlock = blockIdx === (chapter?.blocks || []).findIndex((b: any) => b.type === 'content');
         if (isFirstContentBlock) {
-          const lines = text.split('\n');
-          const firstNonEmpty = lines.findIndex((l: string) => l.trim().length > 0);
-          if (firstNonEmpty >= 0) {
-            // Remove the first non-empty line (used as screen title)
-            lines.splice(firstNonEmpty, 1);
-            // Also check if the next non-empty line was used as screen description
-            const secondNonEmpty = lines.findIndex((l: string) => l.trim().length > 0);
-            if (secondNonEmpty >= 0) {
-              const secondLine = lines[secondNonEmpty].trim().replace(/^#{1,6}\s+/, '');
-              if (secondLine.length < 120 && secondLine.length > 20) {
-                // This was likely used as screen description - skip it too
-                lines.splice(secondNonEmpty, 1);
-              }
-            }
-            text = lines.join('\n');
-          }
+          text = extractExplicitScreenHeading(text).content;
         }
         if (!text.trim()) return null;
         // If this content block precedes a cloud_exercise AND contains setup instructions,
@@ -1232,22 +1219,12 @@ export default function LessonViewer({
           <div>
           {/* Chapter header - Skilljar style: badge shows type + chapter name, title shows screen title */}
           {chapter && (() => {
-            // Extract screen title from first content block's first line
+            // A screen title can come only from explicit Markdown, never from a
+            // regular introductory paragraph.
             const firstContentBlock = chapter.blocks?.find((b: any) => b.type === 'content');
             let screenTitle = '';
-            let screenDescription = '';
             if (firstContentBlock) {
-              const body = firstContentBlock.body || {};
-              const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
-              const textLines = text.split('\n').filter((l: string) => l.trim().length > 0);
-              if (textLines.length > 0) {
-                // Strip markdown heading prefixes (##, ###, etc.)
-                screenTitle = textLines[0].trim().replace(/^#{1,6}\s+/, '').replace(/\*\*/g, '');
-                // If second line is a short description (< 120 chars), use it
-                if (textLines.length > 1 && textLines[1].trim().length < 120 && textLines[1].trim().length > 20) {
-                  screenDescription = textLines[1].trim().replace(/^#{1,6}\s+/, '').replace(/\*\*/g, '');
-                }
-              }
+              screenTitle = extractExplicitScreenHeading(localizedBlockText(firstContentBlock.body, lang)).title;
             }
             // Fall back to chapter title if no screen title found
             const displayTitle = screenTitle || resolveI18n(chapter.title, lang);
@@ -1304,14 +1281,8 @@ export default function LessonViewer({
                 </h2>
                 {/* Decorative separator */}
                 <div className="mt-4 mb-2 w-12 h-0.5 bg-[#c75b3a]/60 rounded-full" />
-                {/* Screen description - italic serif */}
-                {screenDescription && (
-                  <p className="mt-3 text-base text-muted-foreground italic" style={{ fontFamily: 'Lora, Georgia, serif' }}>
-                    {screenDescription}
-                  </p>
-                )}
                 {/* Chapter description fallback */}
-                {!screenDescription && chapter.description && (
+                {!screenTitle && chapter.description && (
                   <p className="mt-3 text-base text-muted-foreground italic" style={{ fontFamily: 'Lora, Georgia, serif' }}>
                     {resolveI18n(chapter.description, lang)}
                   </p>
@@ -1374,30 +1345,15 @@ export default function LessonViewer({
             let illustContent = '';
             let contentAfterTitle = '';
             if (firstCB) {
-              const body = firstCB.body || {};
-              const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
-              illustTitle = text.split('\n').find((l: string) => l.trim().length > 0) || '';
+              const text = localizedBlockText(firstCB.body, lang);
+              const explicitHeading = extractExplicitScreenHeading(text);
+              illustTitle = explicitHeading.title || resolveI18n(chapter.title, lang);
               illustContent = text;
-              // Compute content remaining after title (and optional description) removal
-              const lines = text.split('\n');
-              const firstNonEmpty = lines.findIndex((l: string) => l.trim().length > 0);
-              if (firstNonEmpty >= 0) {
-                const remaining = [...lines];
-                remaining.splice(firstNonEmpty, 1);
-                const secondNonEmpty = remaining.findIndex((l: string) => l.trim().length > 0);
-                if (secondNonEmpty >= 0) {
-                  const secondLine = remaining[secondNonEmpty].trim().replace(/^#{1,6}\s+/, '');
-                  if (secondLine.length < 120 && secondLine.length > 20) {
-                    remaining.splice(secondNonEmpty, 1);
-                  }
-                }
-                contentAfterTitle = remaining.join('\n').trim();
-              }
+              contentAfterTitle = explicitHeading.content.trim();
             }
             // Compute total text length across all content blocks
             const totalTextLen = contentBlocks.reduce((acc: number, b: any) => {
-              const body = b.body || {};
-              const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
+              const text = localizedBlockText(b.body, lang);
               return acc + text.trim().length;
             }, 0);
             // Screen is sparse if:

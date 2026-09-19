@@ -19,18 +19,20 @@ export const PUBLIC_CHROME_STYLES = `
     min-height: 64px;
     margin: 0 auto;
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
   }
   .public-chrome-brand { display: flex; flex: 0 0 auto; align-items: center; }
   .public-chrome-logo { display: block; width: 120px; height: 42px; flex: 0 0 120px; object-fit: contain; image-rendering: auto; }
-  .public-chrome-nav { display: none; min-width: 0; margin-inline: auto; align-items: center; gap: 2px; }
+  .public-chrome-nav { display: none; min-width: 0; margin-inline: auto; align-items: center; flex-wrap: nowrap; gap: 0; overflow: hidden; }
   .public-chrome-nav-link {
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
     border-radius: 6px;
-    padding: 8px 12px;
+    flex: 0 0 auto;
+    padding: 8px 9px;
     color: #475569;
     font-size: 12.5px;
     font-weight: 500;
@@ -53,14 +55,14 @@ export const PUBLIC_CHROME_STYLES = `
     text-decoration: none;
   }
   .public-chrome-signin:hover { background: #17335f; box-shadow: 0 4px 12px rgba(30, 58, 110, .18); }
-  .public-chrome-search { position: relative; display: inline-flex; flex: 0 0 184px; width: 184px; min-width: 0; align-items: center; margin-inline: 6px 2px; border: 1px solid #d9e2ef; border-radius: 8px; background: #fff; color: #334155; }
+  .public-chrome-search { position: relative; display: inline-flex; flex: 0 1 184px; width: 184px; min-width: 132px; align-items: center; margin-inline: 5px 1px; border: 1px solid #d9e2ef; border-radius: 8px; background: #fff; color: #334155; }
   .public-chrome-search:focus-within { border-color: #6d94c7; box-shadow: 0 0 0 3px rgba(36, 89, 156, .12); }
   .public-chrome-search-icon { position: absolute; inset-inline-start: 9px; pointer-events: none; color: #64748b; }
   .public-chrome-search input { width: 100%; min-width: 0; height: 34px; border: 0; outline: 0; background: transparent; padding: 0 34px 0 30px; color: #172033; font: inherit; font-size: 12px; }
   .public-chrome-search input::placeholder { color: #94a3b8; }
   .public-chrome-search button { position: absolute; inset-inline-end: 3px; display: inline-grid; width: 28px; height: 28px; place-items: center; border: 0; border-radius: 6px; background: #eef4fb; color: #1e4d89; cursor: pointer; }
   .public-chrome-search button:hover { background: #dceafa; }
-  .public-chrome-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; margin-inline-start: auto; }
+  .public-chrome-actions { display: flex; flex: 0 0 auto; align-items: center; flex-wrap: nowrap; gap: 6px; margin-inline-start: auto; }
   .public-chrome-language { display: flex; flex: 0 0 auto; align-items: center; gap: 2px; direction: ltr; }
   .public-chrome-language-link {
     display: inline-flex;
@@ -135,14 +137,18 @@ export const PUBLIC_CHROME_STYLES = `
   @media (min-width: 640px) {
     .public-chrome-locale-desktop { display: block; }
   }
-  @media (min-width: 1024px) {
+  @media (min-width: 1537px) {
     .public-chrome-nav { display: flex; }
     .public-chrome-mobile { display: none; }
     .public-chrome-actions { margin-inline-start: 0; }
   }
-  @media (max-width: 1360px) and (min-width: 1024px) {
-    .public-chrome-nav-link:nth-child(-n+3) { display: none; }
-    .public-chrome-search { flex-basis: 170px; width: 170px; }
+  /* Below 1537px, all navigation remains available from the compact trigger
+     instead of selectively hiding links or allowing the header to wrap. */
+  @media (max-width: 1536px) and (min-width: 640px) {
+    .public-chrome-nav { display: none; }
+    .public-chrome-mobile { display: block; }
+    .public-chrome-actions { margin-inline-start: auto; }
+    .public-chrome-apply { min-height: 38px; padding-inline: 13px; font-size: 13px; }
   }
   @media (max-width: 639px) {
     .public-chrome-shell { width: min(100% - 24px, 1440px); gap: 8px; }
