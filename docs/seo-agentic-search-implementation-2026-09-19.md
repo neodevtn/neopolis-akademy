@@ -70,6 +70,11 @@ Un audit dédié vérifie automatiquement : couverture du catalogue, trois langu
 | RSS AI News | PASS — HTTP 200, RSS 2.0, 50 entrées lors du contrôle |
 | QA de publication | PASS — matrice complète sans échec |
 | Build production | PASS |
+| Publication sur le domaine canonique | PASS |
+| Contrôle public Googlebot/ClaudeBot/OAI-SearchBot | PASS |
+| Soumission IndexNow | PASS — 960 URL acceptées, HTTP 200 |
+
+Le contrôle post-publication a confirmé HTTP 200 et les bons types MIME pour `robots.txt`, `llms.txt`, `llms-full.txt`, `ai-index.json`, le flux RSS, l’index de sitemaps et le catalogue public. Aucune redirection, aucun cookie requis et aucun `X-Robots-Tag: noindex` n’ont été observés sur ces ressources. Les graphes `Organization`, `WebSite`, `SearchAction`, `FAQPage`, `Course` et `BreadcrumbList` ont également été retrouvés dans le HTML public correspondant.
 
 ## Références méthodologiques
 
