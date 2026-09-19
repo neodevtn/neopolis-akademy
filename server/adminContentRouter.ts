@@ -13,6 +13,7 @@ import { courseLifecycleStates } from "../drizzle/schema";
 import { getCourseCatalogKpis, getDb } from "./db";
 import { addExamQuestion, deleteExamConfiguration, deleteExamQuestion, disableExamConfiguration, getExamDefinition, getExamDefinitions, getMockExamQuestions, getQuestionsForCertification, saveExamConfiguration, updateExamQuestion } from "./examDefinition";
 import { normalizeExamConfiguration } from "../shared/examConfiguration";
+import { enqueuePublicContentUpdate, getIndexNowAutomationStatus, processPendingIndexNowSubmissions } from "./indexNowAutomation";
 
 /**
  * Admin Content Management Router
@@ -57,7 +58,22 @@ async function syncCatalogMetrics(dataDir: string) {
   return enriched;
 }
 
+async function queuePublicReindex(event: string, discriminator = "") {
+  if (process.env.NODE_ENV !== "production") return;
+  try {
+    await enqueuePublicContentUpdate(event, discriminator);
+  } catch (error) {
+    // A search-engine outage must not roll back an already persisted admin edit.
+    // The deployment-start trigger remains a second recovery path.
+    console.error(`[IndexNow] Unable to queue ${event}`, error);
+  }
+}
+
 export const adminContentRouter = router({
+  getIndexNowStatus: adminProcedure.query(async () => getIndexNowAutomationStatus()),
+
+  retryIndexNow: adminProcedure.mutation(async () => processPendingIndexNowSubmissions()),
+
   listMediaAssets: adminProcedure.query(async () => listGlobalMediaAssets(getDataDir())),
 
   saveMediaAsset: adminProcedure
@@ -66,7 +82,11 @@ export const adminContentRouter = router({
       title: z.string().max(240),
       kind: z.enum(["youtube", "video", "audio", "pdf", "image", "download", "slides"]),
     }))
-    .mutation(async ({ input }) => saveMediaMetadata(getDataDir(), input)),
+    .mutation(async ({ input }) => {
+      const asset = await saveMediaMetadata(getDataDir(), input);
+      await queuePublicReindex("media.save", input.url);
+      return asset;
+    }),
 
   uploadMediaAsset: adminProcedure
     .input(z.object({
@@ -81,16 +101,26 @@ export const adminContentRouter = router({
       if (bytes.byteLength > 8 * 1024 * 1024) throw new Error("Le fichier dépasse 8 Mo. Pour les vidéos plus lourdes, utilisez une URL /api/assets/ déjà importée.");
       const safeFilename = input.filename.replace(/[^a-zA-Z0-9._-]/g, "_");
       const uploaded = await storagePut(`media-library/${safeFilename}`, bytes, input.mimeType);
-      return saveMediaMetadata(getDataDir(), { url: uploaded.url, title: input.title || input.filename, kind: input.kind });
+      const asset = await saveMediaMetadata(getDataDir(), { url: uploaded.url, title: input.title || input.filename, kind: input.kind });
+      await queuePublicReindex("media.upload", uploaded.url);
+      return asset;
     }),
 
   replaceMediaAsset: adminProcedure
     .input(z.object({ fromUrl: z.string().min(1), toUrl: z.string().min(1) }))
-    .mutation(async ({ input }) => replaceMediaEverywhere(getDataDir(), input.fromUrl, input.toUrl)),
+    .mutation(async ({ input }) => {
+      const result = await replaceMediaEverywhere(getDataDir(), input.fromUrl, input.toUrl);
+      await queuePublicReindex("media.replace", input.toUrl);
+      return result;
+    }),
 
   removeUnusedMediaAsset: adminProcedure
     .input(z.object({ url: z.string().min(1) }))
-    .mutation(async ({ input }) => removeUnusedMediaMetadata(getDataDir(), input.url)),
+    .mutation(async ({ input }) => {
+      const result = await removeUnusedMediaMetadata(getDataDir(), input.url);
+      if (result.success) await queuePublicReindex("media.remove", input.url);
+      return result;
+    }),
 
   // List all available courses with their metadata
   listCourses: adminProcedure.query(async () => {
@@ -141,6 +171,7 @@ export const adminContentRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Base de données indisponible.");
       await db.insert(courseLifecycleStates).values({ courseId: input.courseId, status: input.status, reason: input.reason || null, updatedBy: ctx.user.id }).onDuplicateKeyUpdate({ set: { status: input.status, reason: input.reason || null, updatedBy: ctx.user.id, updatedAt: new Date() } });
+      await queuePublicReindex("course.lifecycle", `${input.courseId}:${input.status}`);
       return { success: true };
     }),
 
@@ -150,6 +181,7 @@ export const adminContentRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Base de données indisponible.");
       await Promise.all(input.courseIds.map((courseId) => db.insert(courseLifecycleStates).values({ courseId, status: input.status, reason: input.reason || null, updatedBy: ctx.user.id }).onDuplicateKeyUpdate({ set: { status: input.status, reason: input.reason || null, updatedBy: ctx.user.id, updatedAt: new Date() } })));
+      await queuePublicReindex("course.lifecycle.bulk", `${input.status}:${input.courseIds.join(",")}`);
       return { success: true, count: input.courseIds.length };
     }),
 
@@ -186,6 +218,7 @@ export const adminContentRouter = router({
           await writeJsonFile(quizzesPath, quizzes);
         }
       } catch { /* The course can exist without a chapter quiz bank. */ }
+      await queuePublicReindex("course.update", input.courseId);
       return { success: true };
     }),
 
@@ -216,6 +249,7 @@ export const adminContentRouter = router({
           await writeJsonFile(quizzesPath, quizzes);
         }
       } catch { /* The course can exist without a chapter quiz bank. */ }
+      await queuePublicReindex("course.draft.publish", input.courseId);
       return { success: true, validation };
     }),
 
@@ -418,6 +452,7 @@ export const adminContentRouter = router({
       data.lessons[input.lessonIndex].chapters[input.chapterIndex].blocks = input.blocks;
       await writeJsonFile(filePath, data);
       await syncCatalogMetrics(dataDir);
+      await queuePublicReindex("course.chapter.update", `${input.courseId}:${input.lessonIndex}:${input.chapterIndex}`);
       return { success: true };
     }),
 
@@ -452,6 +487,7 @@ export const adminContentRouter = router({
       Object.assign(data.exercises[input.exerciseIndex], input.data);
       await writeJsonFile(filePath, data);
       await syncCatalogMetrics(dataDir);
+      await queuePublicReindex("course.exercise.update", `${input.courseId}:${input.exerciseIndex}`);
       return { success: true };
     }),
 
@@ -481,6 +517,7 @@ export const adminContentRouter = router({
       const indexPath = path.resolve(import.meta.dirname, "..", "client", "src", "data", "trainingIndex.json");
       const enriched = await enrichCatalogMetrics(input.data, getDataDir());
       await writeJsonFile(indexPath, enriched);
+      await queuePublicReindex("catalog.update", "trainingIndex");
       return { success: true, data: enriched };
     }),
 });

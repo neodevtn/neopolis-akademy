@@ -8,7 +8,9 @@ import {
   getAgenticDiscoveryDocuments,
   getAgenticDiscoverySummary,
   getAgenticPublicUrls,
+  getIndexNowContentRevision,
   getIndexNowPayload,
+  renderIndexNowManifest,
   renderLlmsTxt,
   renderRobotsTxt,
 } from "@shared/agenticDiscovery";
@@ -47,12 +49,17 @@ describe("SEO and agentic-search discovery", () => {
       "/llms.txt",
       "/llms-full.txt",
       "/ai-index.json",
+      "/indexnow-manifest.json",
       INDEXNOW_KEY_PATH,
     ]);
     expect(renderLlmsTxt()).toContain("## Français");
     expect(renderLlmsTxt()).toContain("## English");
     expect(renderLlmsTxt()).toContain("## العربية");
     expect(documents.find((document) => document.path === "/llms-full.txt")!.body.length).toBeGreaterThan(100_000);
+    expect(JSON.parse(renderIndexNowManifest())).toMatchObject({
+      revision: getIndexNowContentRevision(),
+      urlCount: getAgenticPublicUrls().length,
+    });
   });
 
   it("enriches public pages with site search, FAQ and Course knowledge graphs", () => {

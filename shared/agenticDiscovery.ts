@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { goldenJobs, getGoldenJobText } from "./goldenJobs";
 import { getPublicCatalogueTrainings } from "./publicTrainingCatalog";
 import {
@@ -234,6 +235,25 @@ export function getIndexNowPayload(urlList = getAgenticPublicUrls()) {
   };
 }
 
+/** Stable fingerprint of the public catalogue and every canonical URL submitted to IndexNow. */
+export function getIndexNowContentRevision() {
+  return createHash("sha256")
+    .update(renderAgenticIndexJson())
+    .update("\n")
+    .update(getAgenticPublicUrls().sort().join("\n"))
+    .digest("hex");
+}
+
+export function renderIndexNowManifest() {
+  return `${JSON.stringify({
+    schemaVersion: "1.0",
+    revision: getIndexNowContentRevision(),
+    dateModified: AGENTIC_DISCOVERY_UPDATED_AT,
+    urlCount: getAgenticPublicUrls().length,
+    keyLocation: absolute(INDEXNOW_KEY_PATH),
+  }, null, 2)}\n`;
+}
+
 export function getAgenticDiscoverySummary() {
   const index = buildAgenticIndex();
   return {
@@ -271,6 +291,7 @@ export function getAgenticDiscoveryDocuments() {
     { path: "/llms.txt", body: renderLlmsTxt(), contentType: "text/plain; charset=utf-8" },
     { path: "/llms-full.txt", body: renderLlmsFullTxt(), contentType: "text/plain; charset=utf-8" },
     { path: "/ai-index.json", body: renderAgenticIndexJson(), contentType: "application/json; charset=utf-8" },
+    { path: "/indexnow-manifest.json", body: renderIndexNowManifest(), contentType: "application/json; charset=utf-8" },
     { path: INDEXNOW_KEY_PATH, body: renderIndexNowKey(), contentType: "text/plain; charset=utf-8" },
   ] as const;
 }

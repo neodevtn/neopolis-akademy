@@ -337,6 +337,31 @@ export const scheduledJobRegistry = mysqlTable("scheduled_job_registry", {
 export type ScheduledJobRegistry = typeof scheduledJobRegistry.$inferSelect;
 export type InsertScheduledJobRegistry = typeof scheduledJobRegistry.$inferInsert;
 
+/**
+ * File durable et idempotente des révisions publiques à notifier à IndexNow.
+ * Une révision n'est soumise qu'une fois, même si plusieurs instances démarrent.
+ */
+export const indexNowSubmissionState = mysqlTable("indexnow_submission_state", {
+  id: int("id").autoincrement().primaryKey(),
+  revision: varchar("revision", { length: 64 }).notNull(),
+  reason: varchar("reason", { length: 120 }).notNull(),
+  status: mysqlEnum("status", ["pending", "processing", "submitted", "failed"]).notNull().default("pending"),
+  urlCount: int("urlCount").notNull().default(0),
+  attemptCount: int("attemptCount").notNull().default(0),
+  lastHttpStatus: int("lastHttpStatus"),
+  lastError: text("lastError"),
+  requestedAt: timestamp("requestedAt").defaultNow().notNull(),
+  nextAttemptAt: timestamp("nextAttemptAt").defaultNow().notNull(),
+  lastAttemptAt: timestamp("lastAttemptAt"),
+  submittedAt: timestamp("submittedAt"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("indexnow_submission_revision_unique").on(table.revision),
+  index("indexnow_submission_status_next_idx").on(table.status, table.nextAttemptAt),
+]);
+export type IndexNowSubmissionState = typeof indexNowSubmissionState.$inferSelect;
+export type InsertIndexNowSubmissionState = typeof indexNowSubmissionState.$inferInsert;
+
 /** Une unique session active par apprenant et certification, restaurée après rafraîchissement. */
 export const examSessions = mysqlTable("exam_sessions", {
   id: int("id").autoincrement().primaryKey(),

@@ -36,6 +36,14 @@ Une intégration **IndexNow** a été ajoutée en mode contrôlé :
 - mode dry-run par défaut ;
 - soumission réelle uniquement après publication et vérification du domaine.
 
+### Automatisation après mise à jour du contenu
+
+IndexNow ne dépend plus d’une commande manuelle. Chaque build produit un identifiant de déploiement unique et un manifeste public contenant l’empreinte du catalogue. Au démarrage d’une version de production, la plateforme enregistre la version dans une file durable, attend que le manifeste correspondant soit réellement disponible sur `akademy.neodev.click`, puis soumet les URL canoniques. Une même version ne peut donc être envoyée qu’une seule fois, même si plusieurs instances démarrent simultanément.
+
+Les modifications administratives qui affectent l’offre publique déclenchent également la file : métadonnées de cours, publication d’un brouillon, blocs pédagogiques, exercices, catalogue, cycle de vie d’un cours et médiathèque. Les modifications privées — réponses, corrections, progression ou données personnelles — ne sont jamais ajoutées à la charge utile.
+
+La file `indexnow_submission_state` conserve la révision, le motif, le nombre d’URL, le statut, les tentatives, le dernier code HTTP et la prochaine échéance. Les erreurs réseau ou fournisseur sont reprises avec attente progressive, au maximum six tentatives. Un heartbeat authentifié et enregistré pour le projet relance les éléments dus toutes les quinze minutes ; les appels directs ou les identités de tâche inconnues sont rejetés. Les commandes d’exploitation `seo:indexnow:ensure` et `seo:indexnow:status` permettent respectivement de réparer l’enregistrement du heartbeat et de consulter la file.
+
 ### Knowledge Graph et données structurées
 
 Les pages publiques exposent maintenant un graphe cohérent comprenant :
@@ -61,11 +69,13 @@ Un audit dédié vérifie automatiquement : couverture du catalogue, trois langu
 | Contrôle | Résultat |
 |---|---|
 | TypeScript | PASS |
-| Tests unitaires globaux | PASS — 974 réussis, 2 ignorés |
+| Tests unitaires globaux | PASS — 980 réussis, 2 ignorés |
 | Tests SEO/agentic ciblés | PASS |
 | Audit SEO/agentic | PASS |
 | Sitemaps | PASS — 960 URL, 20 lots, aucun doublon |
 | Parité IndexNow | PASS — 960/960 URL |
+| Automatisation IndexNow | PASS — file durable, déduplication par révision et heartbeat 15 minutes actifs |
+| Test bout-en-bout de la file | PASS — 960 URL, 1 tentative, HTTP 200, statut `submitted` |
 | Googlebot, ChatGPT-User et ClaudeBot en local | PASS — HTTP 200, sans redirection, cookie ni `X-Robots-Tag` |
 | RSS AI News | PASS — HTTP 200, RSS 2.0, 50 entrées lors du contrôle |
 | QA de publication | PASS — matrice complète sans échec |
@@ -89,4 +99,4 @@ L’implémentation suit les recommandations officielles de Google sur les [site
 
 ## Limites et suivi
 
-La publication de ces signaux ne garantit pas une indexation ou une citation immédiate : les moteurs conservent leur propre calendrier d’exploration et d’évaluation. Après publication, la procédure finale consiste à contrôler les endpoints sur le domaine canonique avec plusieurs user-agents, soumettre les 960 URL à IndexNow, puis surveiller Search Console et les journaux d’exploration sans modifier quotidiennement les sitemaps.
+La publication de ces signaux ne garantit pas une indexation ou une citation immédiate : les moteurs conservent leur propre calendrier d’exploration et d’évaluation. Après chaque publication, la plateforme contrôle désormais la révision publique et soumet automatiquement les 960 URL à IndexNow. La surveillance de Search Console et des journaux d’exploration reste utile, sans modifier quotidiennement les sitemaps.

@@ -541,6 +541,14 @@ export async function registerProjectHeartbeatJob(jobKey: string, taskUid: strin
   await db.insert(scheduledJobRegistry).values({ jobKey, taskUid }).onDuplicateKeyUpdate({ set: { taskUid } });
 }
 
+export async function getProjectHeartbeatTaskUid(jobKey: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [row] = await db.select({ taskUid: scheduledJobRegistry.taskUid }).from(scheduledJobRegistry)
+    .where(eq(scheduledJobRegistry.jobKey, jobKey)).limit(1);
+  return row?.taskUid || null;
+}
+
 export async function getExamSession(userId: number, certificationId: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

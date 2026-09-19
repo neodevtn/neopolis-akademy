@@ -17,6 +17,7 @@ import certificateRouter from "../certificate";
 import { inactiveLearnerCheckHandler } from "../scheduledInactiveCheck";
 import { scheduledCommunicationSendHandler } from "../scheduledCommunicationSend";
 import { scheduledExamReminderHandler } from "../scheduledExamReminder";
+import { scheduledIndexNowRetryHandler } from "../scheduledIndexNow";
 import resendWebhookRouter from "../resendWebhook";
 import { registerPublicTrainingPages } from "../publicTrainingPages";
 import { registerExamAssetRevocations } from "../examAssetRevocation";
@@ -24,6 +25,7 @@ import { getRuntimeVersionManifest } from "../versionManifest";
 import { registerPrivateMessagingWebSocket } from "../privateMessagingRealtime";
 import { registerCourseDataRoute } from "../courseDataRoute";
 import { mayUseAlternatePort, registerDeploymentHealthRoute, resolveHostingPort } from "../deploymentHealth";
+import { startIndexNowAutomation } from "../indexNowAutomation";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -88,6 +90,7 @@ async function startServer() {
   app.post("/api/scheduled/inactive-learner-check", inactiveLearnerCheckHandler);
   app.post("/api/scheduled/send-communication", scheduledCommunicationSendHandler);
   app.post("/api/scheduled/exam-reminder", scheduledExamReminderHandler);
+  app.post("/api/scheduled/indexnow-retry", scheduledIndexNowRetryHandler);
 
   // Ce sous-chemin reste sous le préfixe tRPC, déjà routé vers Express par la
   // passerelle publique, mais retourne l’asset JSON brut avec no-store.
@@ -134,6 +137,7 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    startIndexNowAutomation();
   });
 }
 

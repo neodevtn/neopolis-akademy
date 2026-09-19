@@ -1,9 +1,11 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { getAgenticDiscoveryDocuments, getAgenticDiscoverySummary } from "../shared/agenticDiscovery";
+import { getAgenticDiscoveryDocuments, getAgenticDiscoverySummary, getIndexNowContentRevision } from "../shared/agenticDiscovery";
 
 const root = path.resolve(import.meta.dirname, "..");
 const publicDirectory = path.join(root, "client", "public");
+const serverDataDirectory = path.join(root, "server", "data");
 
 function writeIfChanged(filePath: string, content: string) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -19,9 +21,20 @@ const results = getAgenticDiscoveryDocuments().map((document) => ({
   bytes: Buffer.byteLength(document.body, "utf8"),
 }));
 
+const builtAt = new Date().toISOString();
+const contentRevision = getIndexNowContentRevision();
+const deploymentRevision = createHash("sha256").update(`${contentRevision}:${builtAt}`).digest("hex");
+writeIfChanged(path.join(serverDataDirectory, "indexnowDeployment.json"), `${JSON.stringify({
+  schemaVersion: "1.0",
+  contentRevision,
+  deploymentRevision,
+  builtAt,
+}, null, 2)}\n`);
+
 console.log(JSON.stringify({
   generated: results.length,
   changed: results.filter((result) => result.changed).length,
   summary: getAgenticDiscoverySummary(),
+  deploymentRevision,
   files: results,
 }, null, 2));
