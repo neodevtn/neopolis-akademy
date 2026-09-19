@@ -443,6 +443,7 @@ export default function TrainingDashboard() {
               {journeySection === "orientation" ? <OrientationPanel
                 orientation={orientationQuery.data}
                 certifications={trainingIndex.certifications as any[]}
+                lang={lang}
                 savingGoals={saveOrientationGoalsMutation.isPending}
                 respondingToProposal={respondToOrientationProposalMutation.isPending}
                 completing={completeOrientationMutation.isPending}

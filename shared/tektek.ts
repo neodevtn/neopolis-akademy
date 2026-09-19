@@ -20,6 +20,14 @@ export type TekTekSource = {
   text: string;
   timeSeconds: number | null;
   score?: number;
+  submissionGuidance?: {
+    mode: "prompt" | "artifact" | "mixed" | "evidence";
+    title: string;
+    introduction: string;
+    instruction: string;
+    placeholder: string;
+    criteria: string[];
+  };
 };
 
 export type TekTekCitation = Pick<TekTekSource, "id" | "certificationId" | "courseId" | "lessonIndex" | "chapterIndex" | "blockId" | "kind" | "title" | "timeSeconds">;
@@ -75,5 +83,15 @@ export function formatTekTekCitation(citation: TekTekCitation, language: TekTekL
 }
 
 export function isLikelyAssessmentQuestion(question: string) {
-  return /(bonne\s+(réponse|option)|donne(?:-moi)?\s+la\s+réponse|answer\s+for\s+(this|the)\s+(quiz|question)|correct\s+(answer|option)|réponds?\s+à\s+(ma|la)\s+place|soumettre|submit)/i.test(question);
+  if (isLikelySubmissionClarificationQuestion(question)) return false;
+  const frenchOrEnglish = /(bonne\s+(réponse|option)|donne(?:-moi)?\s+la\s+réponse|réponse\s+(?:toute\s+)?prête\s+à\s+(?:copier|coller|soumettre)|answer\s+for\s+(this|the)\s+(quiz|question)|correct\s+(answer|option)|ready[- ]to[- ]submit\s+answer|réponds?\s+à\s+(ma|la)\s+place|fais\s+(?:le|l['’])(?:exercice|activité)\s+à\s+ma\s+place)/i.test(question);
+  const arabic = /(?:أعطني|اعطني|اكتب|أنجز|انجز).{0,35}(?:الإجابة\s+الصحيحة|جواباً\s+جاهزاً|جوابا\s+جاهزا|التمرين\s+مكاني|النشاط\s+مكاني)/i.test(question);
+  return frenchOrEnglish || arabic;
+}
+
+/** Asking what evidence or format to submit is legitimate coaching, not answer fishing. */
+export function isLikelySubmissionClarificationQuestion(question: string) {
+  const frenchOrEnglish = /(que|quoi|qu['’]est-ce que|quel(?:le)?|comment|où).{0,45}(soumettre|remettre|coller|écrire|rédiger|répondre)|(?:soumettre|remettre|coller).{0,45}(quoi|quel(?:le)?|comment|format|preuve|élément)|what.{0,45}(submit|paste|write|provide)|how.{0,45}(submit|format|answer)|submission.{0,30}(format|evidence|instructions)|preuve\s+de\s+réalisation|proof\s+of\s+completion/i.test(question);
+  const arabic = /(?:ماذا|ما\s+الذي|كيف|أي).{0,45}(?:أسلّم|اسلم|أقدّم|اقدم|ألصق|الصق|أكتب|اكتب)|(?:التسليم|الدليل|الإثبات|التنسيق).{0,30}(?:المطلوب|كيف|ماذا|ما)/i.test(question);
+  return frenchOrEnglish || arabic;
 }

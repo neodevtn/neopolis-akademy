@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { getAssessmentSubmissionGuidance, getVisibleAssessmentCriteria } from "../shared/assessmentSubmissionGuidance";
 import type { TekTekSource, TekTekSourceKind } from "../shared/tektek";
 
 type Localized = string | { fr?: string; en?: string; ar?: string } | null | undefined;
@@ -109,11 +110,27 @@ function selectContextTokens(context: string, sources: TekTekSource[], requireRe
 
 function safeBlockText(block: CourseRecord, language: string) {
   const values: string[] = [];
-  const keys = ["title", "heading", "description", "body", "content", "contentLeft", "contentRight", "script", "transcript", "prompt", "instructions", "question", "statement", "task", "learningObjective"];
+  const keys = ["title", "heading", "description", "body", "content", "contentLeft", "contentRight", "script", "transcript", "prompt", "assignment", "instructions", "environmentGuide", "hint", "submissionInstructions", "expectedDeliverable", "answerFormat", "question", "statement", "task", "learningObjective"];
   for (const key of keys) {
     const value = block[key];
     if (typeof value === "string") values.push(value);
     else if (value && typeof value === "object" && !Array.isArray(value)) values.push(textFor(value as Localized, language));
+  }
+  for (const key of ["learnerCriteria", "rubricCriteria", "steps"]) {
+    const entries = Array.isArray(block[key]) ? block[key] as unknown[] : [];
+    entries.forEach((entry) => {
+      if (typeof entry === "string") {
+        values.push(entry);
+        return;
+      }
+      if (!entry || typeof entry !== "object") return;
+      const record = entry as CourseRecord;
+      for (const nestedKey of ["label", "description", "text", "instruction", "instructions_text", "instruction_text"]) {
+        const nested = record[nestedKey];
+        if (typeof nested === "string") values.push(nested);
+        else if (nested && typeof nested === "object" && !Array.isArray(nested)) values.push(textFor(nested as Localized, language));
+      }
+    });
   }
   return compactText(values.filter(Boolean).join("\n"));
 }
@@ -186,8 +203,21 @@ function buildSources(training: TekTekTraining, language = "fr") {
           const blockId = typeof block.id === "string" ? block.id : `block-${blockIndex}`;
           const type = typeof block.type === "string" ? block.type : "content";
           const isVideoSource = type === "video" || type === "transcript" || type === "video_transcript";
+          const isAssessment = /(quiz|choice|checkpoint|drag|exercise|assessment|exam|ai_evaluation)/i.test(type);
           const title = textFor(block.title as Localized, language) || chapterTitle;
-          const baseText = safeBlockText(block, language);
+          const derivedCriteria = getVisibleAssessmentCriteria(block, language).map((criterion) => compactText(criterion, 320));
+          const hasExplicitCriteria = (Array.isArray(block.learnerCriteria) && block.learnerCriteria.length > 0) || (Array.isArray(block.rubricCriteria) && block.rubricCriteria.length > 0);
+          const typedBlock = type === "ai_evaluation" && blockId.includes("_prompting") ? { ...block, submissionMode: "prompt" } : block;
+          const guidanceBlock = derivedCriteria.length && !hasExplicitCriteria
+            ? { ...typedBlock, learnerCriteria: [textFor(block.prompt as Localized, language), textFor(block.rubric as Localized, language)].filter(Boolean) }
+            : typedBlock;
+          const submissionGuidance = isAssessment ? getAssessmentSubmissionGuidance(guidanceBlock, language) : null;
+          const baseText = compactText([
+            safeBlockText(block, language),
+            submissionGuidance?.title,
+            submissionGuidance?.introduction,
+            submissionGuidance?.instruction,
+          ].filter(Boolean).join("\n"));
           if (baseText) {
             sources.push({
               id: sourceId(courseId, lessonIndex, chapterIndex, blockId, "base"),
@@ -197,10 +227,11 @@ function buildSources(training: TekTekTraining, language = "fr") {
               chapterIndex,
               blockId,
               kind: isVideoSource ? "video" : "activity",
-              assessment: /(quiz|choice|checkpoint|drag|exercise|assessment|exam)/i.test(type),
+              assessment: isAssessment,
               title,
               text: baseText,
               timeSeconds: null,
+              submissionGuidance: submissionGuidance ? { ...submissionGuidance, criteria: derivedCriteria } : undefined,
             });
           }
 

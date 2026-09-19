@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, ChevronRight, Compass, GraduationCap, Target } from "lucide-react";
+import { Bot, CheckCircle2, ChevronRight, Compass, GraduationCap, Loader2, Sparkles, Target, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { canAddOrientationGoal, MAX_ORIENTATION_GOALS, toggleOrientationGoal, type OrientationGoal } from "@/lib/orientationGoalSelection";
+import { trpc } from "@/lib/trpc";
 
 type Goal = OrientationGoal;
 
@@ -17,12 +18,63 @@ function titleOf(value: any, fallback = "Compétence") {
   return value?.fr || value?.en || fallback;
 }
 
+function localizedTitle(value: any, lang: string, fallback = "") {
+  if (typeof value === "string") return value;
+  return value?.[lang] || value?.fr || value?.en || fallback;
+}
+
+const TEKTEK_ORIENTATION_COPY = {
+  fr: {
+    eyebrow: "Configurer avec TekTek",
+    title: "Transformez votre objectif en brouillon de parcours",
+    description: "Décrivez ce que vous voulez atteindre. TekTek proposera des familles métier, des compétences et des formations du catalogue. Rien ne sera enregistré sans votre validation.",
+    generate: "Créer mon brouillon",
+    generating: "TekTek prépare le brouillon…",
+    apply: "Utiliser ce brouillon dans le formulaire",
+    applied: "Brouillon copié ci-dessous : vous pouvez encore tout modifier avant l’enregistrement.",
+    suggestions: "Formations pressenties",
+    error: "TekTek n’a pas pu préparer le brouillon. Réessayez dans quelques instants.",
+    placeholder: "Ex. Je suis médecin généraliste et je veux analyser la littérature clinique, structurer mes données de recherche et automatiser ma veille sans exposer de données patients.",
+    remove: "Retirer",
+    targets: { bronze: "Bronze", silver: "Argent", gold: "Or" },
+  },
+  en: {
+    eyebrow: "Configure with TekTek",
+    title: "Turn your objective into a pathway draft",
+    description: "Describe what you want to achieve. TekTek will suggest career families, skills, and catalogue training. Nothing is saved without your approval.",
+    generate: "Create my draft",
+    generating: "TekTek is preparing the draft…",
+    apply: "Use this draft in the form",
+    applied: "Draft copied below: you can still edit everything before saving.",
+    suggestions: "Suggested training",
+    error: "TekTek could not prepare the draft. Please try again shortly.",
+    placeholder: "E.g. I am a general practitioner and want to analyse clinical literature, structure my research data, and automate monitoring without exposing patient data.",
+    remove: "Remove",
+    targets: { bronze: "Bronze", silver: "Silver", gold: "Gold" },
+  },
+  ar: {
+    eyebrow: "الإعداد بمساعدة TekTek",
+    title: "حوّل هدفك إلى مسودة مسار",
+    description: "صف ما تريد تحقيقه. سيقترح TekTek عائلات مهنية ومهارات ودورات من الكتالوج. لن يتم حفظ أي شيء دون موافقتك.",
+    generate: "إنشاء مسودتي",
+    generating: "يقوم TekTek بإعداد المسودة…",
+    apply: "استخدام هذه المسودة في النموذج",
+    applied: "تم نسخ المسودة أدناه: يمكنك تعديل كل شيء قبل الحفظ.",
+    suggestions: "الدورات المقترحة",
+    error: "تعذر على TekTek إعداد المسودة. حاول مرة أخرى بعد قليل.",
+    placeholder: "مثال: أنا طبيب عام وأريد تحليل الأدبيات السريرية وتنظيم بيانات البحث وأتمتة المتابعة دون كشف بيانات المرضى.",
+    remove: "إزالة",
+    targets: { bronze: "برونزي", silver: "فضي", gold: "ذهبي" },
+  },
+} as const;
+
 export function OrientationPanel({
   orientation,
   certifications,
   onSaveGoals,
   onCompleteDiagnostic,
   onRespondToProposal,
+  lang = "fr",
   savingGoals,
   completing,
   respondingToProposal,
@@ -32,6 +84,7 @@ export function OrientationPanel({
   onSaveGoals: (input: { goals: Goal[]; careerFamilyIds: string[]; aspiration: string; wantsOfficialCertification: boolean; officialCertificationIds: string[]; certificationTargetDates: Record<string, string> }) => void;
   onCompleteDiagnostic: (answers: Array<{ questionId: string; choiceId: string }>) => void;
   onRespondToProposal: (input: { proposalId: number; accept: boolean }) => void;
+  lang?: string;
   savingGoals?: boolean;
   completing?: boolean;
   respondingToProposal?: boolean;
@@ -45,6 +98,11 @@ export function OrientationPanel({
   const [certificationTargetDates, setCertificationTargetDates] = useState<Record<string, string>>(profile?.certificationTargetDates || {});
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [editingGoals, setEditingGoals] = useState(false);
+  const [tektekDraft, setTektekDraft] = useState<Awaited<ReturnType<ReturnType<typeof trpc.tektek.planOrientation.useMutation>["mutateAsync"]>> | null>(null);
+  const [draftApplied, setDraftApplied] = useState(false);
+  const planOrientationMutation = trpc.tektek.planOrientation.useMutation();
+  const tektekLanguage = lang === "ar" ? "ar" : lang === "en" ? "en" : "fr";
+  const tektekCopy = TEKTEK_ORIENTATION_COPY[tektekLanguage];
 
   useEffect(() => {
     setGoals(profile?.goals || []);
@@ -55,6 +113,8 @@ export function OrientationPanel({
     setCertificationTargetDates(profile?.certificationTargetDates || {});
     setAnswers({});
     setEditingGoals(false);
+    setTektekDraft(null);
+    setDraftApplied(false);
   }, [profile?.updatedAt]);
 
   const stage = editingGoals || profile?.status === "not_started" ? "goals" : profile?.status === "completed" ? "recommendations" : "diagnostic";
@@ -83,6 +143,23 @@ export function OrientationPanel({
   };
 
   const saveGoals = () => onSaveGoals({ goals, careerFamilyIds, aspiration, wantsOfficialCertification: wantsOfficial, officialCertificationIds: certificationIds, certificationTargetDates });
+  const generateTekTekDraft = async () => {
+    setDraftApplied(false);
+    const draft = await planOrientationMutation.mutateAsync({ objective: aspiration.trim(), language: tektekLanguage });
+    setTektekDraft(draft);
+  };
+  const applyTekTekDraft = () => {
+    if (!tektekDraft) return;
+    setCareerFamilyIds(tektekDraft.careerFamilyIds.slice(0, 4));
+    setGoals(tektekDraft.goals.slice(0, MAX_ORIENTATION_GOALS).map((goal) => ({ competencyId: goal.competencyId, targetLevel: goal.targetLevel })));
+    setWantsOfficial(tektekDraft.wantsOfficialCertification);
+    setCertificationIds(tektekDraft.officialCertificationIds);
+    setCertificationTargetDates((dates) => Object.fromEntries(Object.entries(dates).filter(([id]) => tektekDraft.officialCertificationIds.includes(id))));
+    setDraftApplied(true);
+  };
+  const removeDraftFamily = (familyId: string) => setTektekDraft((current) => current ? { ...current, careerFamilyIds: current.careerFamilyIds.filter((id) => id !== familyId) } : current);
+  const removeDraftGoal = (competencyId: string) => setTektekDraft((current) => current ? { ...current, goals: current.goals.filter((goal) => goal.competencyId !== competencyId) } : current);
+  const updateDraftTarget = (competencyId: string, targetLevel: Goal["targetLevel"]) => setTektekDraft((current) => current ? { ...current, goals: current.goals.map((goal) => goal.competencyId === competencyId ? { ...goal, targetLevel } : goal) } : current);
 
   if (!orientation) {
     return <div className="rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground">Chargement de votre orientation personnalisée…</div>;
@@ -122,6 +199,62 @@ export function OrientationPanel({
 
       {stage === "goals" && (
         <div className="space-y-6 rounded-2xl border border-border bg-card p-5 md:p-7">
+          <div className="overflow-hidden rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-amber-50/70 dark:to-amber-950/20">
+            <div className="p-5 md:p-6">
+              <div className="flex items-start gap-3">
+                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+                  <Bot className="h-5 w-5" aria-hidden="true" />
+                  <Sparkles className="absolute -right-1.5 -top-1.5 h-4 w-4 text-amber-500" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">{tektekCopy.eyebrow}</p>
+                  <h3 className="mt-1 text-lg font-bold text-foreground">{tektekCopy.title}</h3>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{tektekCopy.description}</p>
+                </div>
+              </div>
+              <textarea
+                value={aspiration}
+                maxLength={2000}
+                onChange={(event) => { setAspiration(event.target.value); setDraftApplied(false); }}
+                rows={4}
+                placeholder={tektekCopy.placeholder}
+                className="mt-4 w-full resize-y rounded-xl border border-input bg-background px-4 py-3 text-sm font-normal text-foreground placeholder:text-muted-foreground"
+                aria-label={tektekCopy.title}
+              />
+              <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+                <span className="text-xs text-muted-foreground">{aspiration.length} / 2 000</span>
+                <Button type="button" onClick={() => void generateTekTekDraft()} disabled={aspiration.trim().length < 20 || planOrientationMutation.isPending} className="gap-2">
+                  {planOrientationMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Bot className="h-4 w-4" aria-hidden="true" />}
+                  {planOrientationMutation.isPending ? tektekCopy.generating : tektekCopy.generate}
+                </Button>
+              </div>
+              {planOrientationMutation.error && <p className="mt-3 text-sm font-medium text-destructive" role="alert">{planOrientationMutation.error.message || tektekCopy.error}</p>}
+            </div>
+
+            {tektekDraft && (
+              <div className="border-t border-primary/15 bg-background/80 p-5 md:p-6" aria-live="polite">
+                <p className="text-sm leading-6 text-foreground">{tektekDraft.summary}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {tektekDraft.careerFamilyIds.map((familyId) => {
+                    const family = (orientation.careerFamilies || []).find((entry: any) => entry.id === familyId);
+                    return <span key={familyId} className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">{localizedTitle(family?.title, tektekLanguage, familyId)}<button type="button" onClick={() => removeDraftFamily(familyId)} className="rounded-full p-0.5 hover:bg-primary/10" aria-label={`${tektekCopy.remove} ${localizedTitle(family?.title, tektekLanguage, familyId)}`}><X className="h-3 w-3" /></button></span>;
+                  })}
+                </div>
+                <div className="mt-4 space-y-2">
+                  {tektekDraft.goals.map((goal) => {
+                    const competency = (orientation.competencies || []).find((entry: any) => entry.id === goal.competencyId);
+                    return <div key={goal.competencyId} className="rounded-xl border border-border bg-card p-3"><div className="flex flex-col gap-3 sm:flex-row sm:items-start"><div className="min-w-0 flex-1"><p className="text-sm font-semibold text-foreground">{localizedTitle(competency?.title, tektekLanguage, goal.competencyId)}</p><p className="mt-1 text-xs leading-5 text-muted-foreground">{goal.why}</p></div><div className="flex items-center gap-2"><select value={goal.targetLevel} onChange={(event) => updateDraftTarget(goal.competencyId, event.target.value as Goal["targetLevel"])} className="rounded-lg border border-input bg-background px-2 py-1.5 text-xs text-foreground">{TARGETS.map((target) => <option key={target.id} value={target.id}>{tektekCopy.targets[target.id]}</option>)}</select><button type="button" onClick={() => removeDraftGoal(goal.competencyId)} className="rounded-lg border border-border p-1.5 text-muted-foreground hover:text-destructive" aria-label={`${tektekCopy.remove} ${localizedTitle(competency?.title, tektekLanguage, goal.competencyId)}`}><X className="h-4 w-4" /></button></div></div></div>;
+                  })}
+                </div>
+                {tektekDraft.suggestedCertifications.length > 0 && <div className="mt-4"><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{tektekCopy.suggestions}</p><ul className="mt-2 grid gap-2 md:grid-cols-2">{tektekDraft.suggestedCertifications.map((suggestion) => { const certification = certifications.find((entry) => entry.id === suggestion.id); return <li key={suggestion.id} className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground"><GraduationCap className="h-4 w-4 shrink-0 text-primary" />{localizedTitle(certification?.title, tektekLanguage, suggestion.title)}</li>; })}</ul></div>}
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                  {draftApplied ? <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300"><CheckCircle2 className="mr-1 inline h-4 w-4" />{tektekCopy.applied}</p> : <span />}
+                  <Button type="button" variant="secondary" onClick={applyTekTekDraft} disabled={!tektekDraft.careerFamilyIds.length || !tektekDraft.goals.length}>{tektekCopy.apply}<ChevronRight className="ml-2 h-4 w-4" /></Button>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div>
             <h3 className="text-lg font-bold text-foreground">1. Votre projet professionnel</h3>
             <p className="mt-1 text-sm text-muted-foreground">Choisissez jusqu’à quatre familles métier. Les parcours seront aussi recalculés à partir de votre candidature et de l’objectif libre ci-dessous.</p>
@@ -132,7 +265,6 @@ export function OrientationPanel({
                 return <label key={family.id} className={`flex items-start gap-3 rounded-xl border p-4 ${selected ? "border-primary bg-primary/5" : "border-border"} ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}><input type="checkbox" checked={selected} disabled={disabled} onChange={() => setCareerFamilyIds((current) => selected ? current.filter((id) => id !== family.id) : [...current, family.id])} className="mt-1 h-4 w-4 accent-primary" /><span><span className="block font-semibold text-foreground">{titleOf(family.title)}</span><span className="mt-1 block text-xs leading-5 text-muted-foreground">{titleOf(family.description, "")}</span></span></label>;
               })}
             </div>
-            <label className="mt-4 block text-sm font-semibold text-foreground">Ce que je veux atteindre librement<textarea value={aspiration} maxLength={2000} onChange={(event) => setAspiration(event.target.value)} rows={4} placeholder="Ex. Je suis médecin généraliste et je veux apprendre à analyser la littérature clinique, structurer mes données de recherche et automatiser ma veille sans exposer de données patients." className="mt-2 w-full resize-y rounded-xl border border-input bg-background px-4 py-3 text-sm font-normal text-foreground placeholder:text-muted-foreground" /><span className="mt-1 block text-right text-xs font-normal text-muted-foreground">{aspiration.length} / 2 000</span></label>
             {profile?.inferredCareerFamilyIds?.length ? <p className="mt-3 text-xs text-muted-foreground">Votre candidature et votre objectif sont également rapprochés automatiquement des familles pertinentes ; vous pouvez toujours corriger la sélection.</p> : null}
           </div>
 

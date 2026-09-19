@@ -5,7 +5,8 @@ import { protectedProcedure, router } from "./_core/trpc";
 import { userCanAccessCourse } from "./db";
 import { appendTekTekMessage, getOrCreateTekTekConversation, getTekTekRequestsInLastHour, getTekTekUsageOverview, listTekTekBudgetSettings, listTekTekMessages, upsertTekTekBudgetSetting } from "./tektekDb";
 import { getTekTekBlockContext, getTekTekTrainingSources, isTekTekExplorationQuestion, searchTekTekSources } from "./tektekIndex";
-import { TEKTEK_HOURLY_REQUEST_LIMIT, TEKTEK_MAX_QUESTION_LENGTH, TEKTEK_MAX_RESPONSE_LENGTH, TEKTEK_MAX_SOURCES, isLikelyAssessmentQuestion, normalizeTekTekLanguage, tektekLabel, type TekTekCitation, type TekTekSource } from "../shared/tektek";
+import { planOrientationWithTekTek } from "./tektekOrientationService";
+import { TEKTEK_HOURLY_REQUEST_LIMIT, TEKTEK_MAX_QUESTION_LENGTH, TEKTEK_MAX_RESPONSE_LENGTH, TEKTEK_MAX_SOURCES, isLikelyAssessmentQuestion, isLikelySubmissionClarificationQuestion, normalizeTekTekLanguage, tektekLabel, type TekTekCitation, type TekTekSource } from "../shared/tektek";
 import { isAdministrativeRole } from "../shared/roles";
 
 const askInput = z.object({
@@ -20,6 +21,10 @@ const askInput = z.object({
 });
 
 const contextInput = askInput.omit({ question: true });
+const orientationPlanInput = z.object({
+  objective: z.string().trim().min(20).max(2_000),
+  language: z.enum(["fr", "en", "ar"]).default("fr"),
+});
 
 const adminUsageInput = z.object({
   dimension: z.enum(["training", "course", "user"]).default("training"),
@@ -56,7 +61,7 @@ function textFromContent(content: unknown) {
 }
 
 function citationFromSource(source: TekTekSource): TekTekCitation {
-  const { text: _text, score: _score, assessment: _assessment, ...citation } = source;
+  const { text: _text, score: _score, assessment: _assessment, submissionGuidance: _submissionGuidance, ...citation } = source;
   return citation;
 }
 
@@ -132,6 +137,55 @@ function sourceExcerptReply(language: ReturnType<typeof normalizeTekTekLanguage>
   return `${intro}\n\n${selected.map((source, index) => `${index + 1}. **${source.title}**\n${truncateForPrompt(source.text, 540)}`).join("\n\n")}`;
 }
 
+function submissionClarificationReply(language: ReturnType<typeof normalizeTekTekLanguage>, source: TekTekSource) {
+  const guidance = source.submissionGuidance;
+  if (!guidance) return null;
+  const formatTitle = language === "en" ? "Expected format" : language === "ar" ? "التنسيق المطلوب" : "Format attendu";
+  const emptyTitle = language === "en" ? "Empty structure" : language === "ar" ? "هيكل فارغ" : "Structure vide";
+  const checklistTitle = language === "en" ? "Checklist" : language === "ar" ? "قائمة التحقق" : "Checklist";
+  const criteria = guidance.criteria.length
+    ? guidance.criteria.map((criterion) => `- [ ] ${criterion}`)
+    : [language === "en" ? "- [ ] My evidence matches every visible criterion." : language === "ar" ? "- [ ] دليلي يطابق كل معيار ظاهر." : "- [ ] Ma preuve correspond à chaque critère visible."];
+  const emptyStructure = guidance.placeholder.split("\n").map((line) => line.trim()).filter(Boolean).map((line) => `- ${line}`).join("\n");
+  return [
+    `**${formatTitle}**`,
+    guidance.instruction,
+    `**${emptyTitle}**`,
+    emptyStructure || (language === "en" ? "- Evidence: [complete]" : language === "ar" ? "- الدليل: [أكمل]" : "- Preuve : [à compléter]"),
+    `**${checklistTitle}**`,
+    ...criteria,
+  ].join("\n\n");
+}
+
+function submissionClarificationForSources(language: ReturnType<typeof normalizeTekTekLanguage>, sources: TekTekSource[]) {
+  const unique = Array.from(new Map(sources
+    .filter((source) => source.assessment && source.submissionGuidance)
+    .map((source) => [source.blockId || source.id, source])).values());
+  if (!unique.length) return null;
+  if (unique.length === 1) return { answer: submissionClarificationReply(language, unique[0])!, sources: unique };
+  const intro = language === "en"
+    ? "This screen contains several assessed activities. Use the section that matches the activity title shown above your field."
+    : language === "ar"
+      ? "تحتوي هذه الشاشة على عدة أنشطة مُقيّمة. استخدم القسم المطابق لعنوان النشاط الظاهر فوق حقلك."
+      : "Cet écran contient plusieurs activités évaluées. Utilisez la section correspondant au titre affiché au-dessus de votre champ.";
+  if (unique.length > 3) {
+    const modeLabels = language === "en"
+      ? { prompt: "exact prompt(s) used", artifact: "requested deliverable or faithful transcription", mixed: "prompt(s) plus resulting deliverable", evidence: "verifiable evidence for each criterion" }
+      : language === "ar"
+        ? { prompt: "الموجّه أو الموجّهات الدقيقة المستخدمة", artifact: "التسليم المطلوب أو نسخة نصية أمينة", mixed: "الموجّهات مع التسليم الناتج", evidence: "دليل قابل للتحقق لكل معيار" }
+        : { prompt: "invite(s) exacte(s) utilisée(s)", artifact: "livrable demandé ou transcription fidèle", mixed: "invite(s) et livrable obtenu", evidence: "preuve vérifiable pour chaque critère" };
+    const criteriaLabel = language === "en" ? "Criteria" : language === "ar" ? "المعايير" : "Critères";
+    const sections = unique.map((source, index) => {
+      const guidance = source.submissionGuidance!;
+      const criteria = guidance.criteria.map((criterion) => truncateForPrompt(criterion, 100)).join("; ");
+      return `${index + 1}. **${source.title}** — ${modeLabels[guidance.mode]}.${criteria ? ` ${criteriaLabel}: ${criteria}.` : ""}`;
+    });
+    return { answer: [intro, ...sections].join("\n\n"), sources: unique };
+  }
+  const sections = unique.map((source) => `### ${source.title}\n${submissionClarificationReply(language, source)}`);
+  return { answer: [intro, ...sections].join("\n\n"), sources: unique };
+}
+
 async function resolveAccessibleTrainingCourses(userId: number, certificationId: string, activeCourseId: string, language: string) {
   const indexed = getTekTekTrainingSources(certificationId, language);
   if (!indexed || !indexed.courseIds.has(activeCourseId)) {
@@ -159,7 +213,7 @@ function buildTekTekMessages(input: { question: string; language: string; source
         "If SOURCES do not support the answer, say so plainly and explain only what the supplied material establishes.",
         "The supplied SOURCES have already been selected from the learner's current screen and authorised training context.",
         "When the learner says this screen, this page, this activity, this lesson, or an equivalent expression, explain the supplied current-screen sources directly. Never ask which screen they mean and never ask for a screenshot.",
-        "Do not provide a ready-to-submit answer for an assessment. Give an explanation and point to source passages instead.",
+        "Do not provide a ready-to-submit answer for an assessment. You must still answer legitimate process questions about an assessment: explain exactly what the learner must submit, the expected format, which visible criteria it must cover, and how to structure the evidence. You may provide an empty outline or checklist, but never fill it with the substantive answer on the learner's behalf.",
         "Write the learner-facing answer as concise, practical prose under 260 words. Do not output JSON.",
       ].join(" "),
     },
@@ -210,6 +264,13 @@ export const tektekRouter = router({
       return upsertTekTekBudgetSetting({ ...input, updatedBy: ctx.user.id });
     }),
   }),
+  planOrientation: protectedProcedure.input(orientationPlanInput).mutation(async ({ ctx, input }) => {
+    const requestsInLastHour = await getTekTekRequestsInLastHour(ctx.user.id);
+    if (!isAdministrativeRole(ctx.user.role) && requestsInLastHour >= TEKTEK_HOURLY_REQUEST_LIMIT) {
+      throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "TekTek a atteint la limite temporaire de demandes pour cette heure. Réessayez un peu plus tard." });
+    }
+    return planOrientationWithTekTek({ userId: ctx.user.id, objective: input.objective, language: input.language });
+  }),
   getHistory: protectedProcedure.input(z.object({ certificationId: z.string().trim().min(2).max(200), courseId: z.string().trim().min(2).max(200), language: z.enum(["fr", "en", "ar"]).optional() })).query(async ({ ctx, input }) => {
     const language = normalizeTekTekLanguage(input.language);
     const { allowedCourseIds } = await resolveAccessibleTrainingCourses(ctx.user.id, input.certificationId, input.courseId, language);
@@ -230,13 +291,28 @@ export const tektekRouter = router({
 
     const activeSources = getTekTekBlockContext({ ...input, language });
     const contextText = priorHistory.slice(-4).map((message) => message.content).join(" ");
-    const sources = searchTekTekSources({ ...input, activeCourseId: input.courseId, language, allowedCourseIds, contextText, limit: TEKTEK_MAX_SOURCES });
+    const searchedSources = searchTekTekSources({ ...input, activeCourseId: input.courseId, language, allowedCourseIds, contextText, limit: TEKTEK_MAX_SOURCES });
+    const submissionClarification = isLikelySubmissionClarificationQuestion(input.question);
+    const sources = submissionClarification && activeSources.length
+      ? (() => {
+          const assessmentSources = activeSources.filter((source) => source.assessment && source.submissionGuidance);
+          return assessmentSources.length ? assessmentSources : [...activeSources].sort((a, b) => Number(b.assessment) - Number(a.assessment)).slice(0, TEKTEK_MAX_SOURCES);
+        })()
+      : searchedSources;
     const isAssessment = activeSources.some((source) => source.assessment);
     if (isAssessment && isLikelyAssessmentQuestion(input.question)) {
       const answer = tektekLabel(language, "assessment");
       const citations = sources.slice(0, 3).map(citationFromSource);
       const id = await appendTekTekMessage({ conversationId: conversation.id, courseId: input.courseId, role: "assistant", content: answer, citations, model: null });
       return { id, answer, citations, followUp: null, inScope: true, sourceCount: citations.length };
+    }
+    if (submissionClarification) {
+      const clarification = submissionClarificationForSources(language, sources);
+      if (clarification) {
+        const citations = clarification.sources.map(citationFromSource);
+        const id = await appendTekTekMessage({ conversationId: conversation.id, courseId: input.courseId, role: "assistant", content: clarification.answer, citations, model: null });
+        return { id, answer: clarification.answer, citations, followUp: null, inScope: true, sourceCount: citations.length };
+      }
     }
     if (!sources.length) {
       const answer = noSourceReply(language);

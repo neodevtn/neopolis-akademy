@@ -45,6 +45,7 @@ import { isAdministrativeRole } from "@shared/roles";
 import { trackEventOnce } from "@/lib/analytics";
 import { getRequiredMatchingInteractionIds } from "./matchingGate";
 import { extractExplicitScreenHeading, localizedBlockText } from "./screenContentHeading";
+import { TekTekCourseCta } from "@/components/TekTekCourseCta";
 
 export default function LessonViewer({
   lesson,
@@ -1266,14 +1267,17 @@ export default function LessonViewer({
                         : `${displayedDurationMinutes} min ${t({ en: 'read', fr: 'de lecture' })}`}
                     </span>
                   )}
-                  {canEditCurrentChapter && (
-                    <Button asChild size="sm" variant="outline" className="ml-auto h-8 gap-1.5 border-primary/30 bg-primary/5 text-xs font-semibold text-primary hover:bg-primary/10 hover:text-primary">
-                      <a href={currentChapterEditHref} target="_blank" rel="noopener noreferrer" title={t({ en: 'Open this chapter in the content editor', fr: 'Ouvrir ce chapitre dans l’éditeur de contenu' })}>
-                        <Pencil className="h-3.5 w-3.5" />
-                        {t({ en: 'Edit this screen', fr: 'Modifier cet écran' })}
-                      </a>
-                    </Button>
-                  )}
+                  <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
+                    <TekTekCourseCta lang={lang} placement="header" />
+                    {canEditCurrentChapter && (
+                      <Button asChild size="sm" variant="outline" className="h-8 gap-1.5 border-primary/30 bg-primary/5 text-xs font-semibold text-primary hover:bg-primary/10 hover:text-primary">
+                        <a href={currentChapterEditHref} target="_blank" rel="noopener noreferrer" title={t({ en: 'Open this chapter in the content editor', fr: 'Ouvrir ce chapitre dans l’éditeur de contenu' })}>
+                          <Pencil className="h-3.5 w-3.5" />
+                          {t({ en: 'Edit this screen', fr: 'Modifier cet écran' })}
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 {/* Screen title - large serif */}
                 <h2 className="text-2xl md:text-[28px] font-semibold text-foreground leading-tight" style={{ fontFamily: 'Lora, Georgia, serif' }}>
@@ -1290,6 +1294,10 @@ export default function LessonViewer({
               </div>
             );
           })()}
+
+          {lessonIndex === 0 && currentChapter === 0 && (
+            <TekTekCourseCta lang={lang} placement="introduction" className="mb-8" />
+          )}
 
           {/* Render all blocks in the current chapter */}
           {/* Exercise navigation bar (top) - visible when in checkpoint/exercise chapters */}
@@ -1423,7 +1431,11 @@ export default function LessonViewer({
             <VideoRecommendations lesson={lesson} lang={lang} t={t} lessonId={`${courseId}__${lessonIndex}`} certId={certId} />
           )}
 
-                    {/* Chapter navigation */}
+          <div className="mt-8 flex justify-center">
+            <TekTekCourseCta lang={lang} placement="footer" />
+          </div>
+
+          {/* Chapter navigation */}
           <div className="mt-8 w-full min-w-0 max-w-full border-t border-[#e8e5e0] pt-5 dark:border-slate-700">
             {/* Progress bar */}
             <div className="mb-4 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:gap-3">

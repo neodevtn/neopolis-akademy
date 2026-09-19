@@ -65,4 +65,27 @@ describe("Cloud exercise learner criteria", () => {
     expect(shouldRecordClientCompetency({ serverGradedAssessment: "n8n_foundations_workflow_json" }, { rubricEvaluated: true })).toBe(false);
     expect(shouldRecordClientCompetency({}, { rubricEvaluated: true })).toBe(true);
   });
+
+  it("explains the exact evidence expected by a prompt-based AI evaluation", () => {
+    const html = renderToStaticMarkup(React.createElement(CloudExerciseBlock, {
+      block: {
+        id: "dc_1_act_02_tp",
+        title: "Votre première conversation avec l’assistant IA choisi",
+        assignment: "Explorez les usages de l’IA générative en conseil.",
+        rubricCriteria: [{ id: "criterion_1", label: "Cas d’usage", description: "The prompt needs to mention use-cases of generative AI in consultancy." }],
+        maxScore: 1,
+        passingScore: 1,
+      },
+      lang: "fr",
+      t: (value: { en: string; fr: string }) => value.fr,
+      blockIdx: 0,
+      evaluationContext: { certificationId: "datacamp_ai_for_consulting", courseId: "ai_for_consulting__01", lessonIndex: 0, chapterIndex: 1 },
+      onEvaluate: async () => ({ score: 1, feedback: "OK", strengths: [], improvements: [], passed: true }),
+    }));
+
+    expect(html).toContain("Ce que vous devez remettre");
+    expect(html).toContain("invite exacte");
+    expect(html).not.toMatch(/workflow JSON/i);
+    expect(html).toContain("au moins 40 caractères");
+  });
 });

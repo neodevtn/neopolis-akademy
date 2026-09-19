@@ -3,6 +3,7 @@ import { Timer, CheckCircle2, ChevronDown, Download, FileUp, FileJson, X } from 
 import PageContent, { renderInlineFormatting } from "@/pages/training/PageContent";
 import { Streamdown } from "streamdown";
 import { hasRequiredAnswerLength, resolveLocalizedBlockText, resolveMinimumAnswerLength, resolvePostRevealReflectionOptions } from "./blocks/cloudExerciseValidation";
+import { getAssessmentSubmissionGuidance, resolveAssessmentMinimumLength } from "./blocks/assessmentSubmissionGuidance";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -115,14 +116,15 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
   const localizedLearnerCriteria = learnerCriteria.map((criterion: unknown) => resolveLocalizedBlockText(criterion, lang)).filter(Boolean);
   const usesServerGradedAssessment = typeof block.serverGradedAssessment === "string" && block.serverGradedAssessment.length > 0;
   const requiresWorkflowUpload = Boolean(block.workflowUploadRequired);
-  const minimumAnswerLength = resolveMinimumAnswerLength(block.minimumAnswerLength);
+  const usesTrackedRubric = (rubricCriteria.length > 0 || usesServerGradedAssessment) && Boolean(evaluationContext);
+  const minimumAnswerLength = resolveMinimumAnswerLength(resolveAssessmentMinimumLength(block, usesTrackedRubric));
   const submittedAnswer = requiresWorkflowUpload ? workflowJson : answer;
   const hasMinimumAnswer = hasRequiredAnswerLength(submittedAnswer, minimumAnswerLength);
+  const submissionGuidance = getAssessmentSubmissionGuidance(block, lang);
   const reflectionOptions = resolvePostRevealReflectionOptions(block.postRevealReflectionOptions, lang);
   const reflectionIsRequired = Boolean(block.requirePostRevealReflection) && reflectionOptions.length > 0;
   const reflectionTitle = resolveLocalizedBlockText(block.postRevealReflectionTitle, lang);
   const selectedReflection = reflectionOptions.find((option) => option.id === reflectionChoiceId) ?? null;
-  const usesTrackedRubric = (rubricCriteria.length > 0 || usesServerGradedAssessment) && Boolean(evaluationContext);
   const maxScore = Number(block.maxScore) || rubricCriteria.length || 1;
   const passingScore = Number(block.passingScore) || maxScore;
   const tpNonDl = getUnavailableExerciseResourceNames(block);
@@ -347,7 +349,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
           <p className="font-semibold text-sm text-foreground mb-2">
             {requiresWorkflowUpload
               ? t({ en: "Submit your completed workflow", fr: "Remettez votre workflow terminé" })
-              : t({ en: 'Your answer / Proof of completion', fr: 'Votre réponse / Preuve de réalisation' })}
+              : submissionGuidance.title}
           </p>
           {requiresWorkflowUpload ? (
             <>
@@ -368,13 +370,22 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
               {workflowUploadError && <p className="mt-2 text-xs font-medium text-destructive">{workflowUploadError}</p>}
             </>
           ) : (
-            <textarea
-              className="w-full min-h-[100px] p-3 rounded-lg border border-border bg-background text-sm text-foreground resize-y placeholder:text-muted-foreground"
-              placeholder={t({ en: 'Describe what you did, paste your workflow JSON, or note the result...', fr: 'Décrivez ce que vous avez fait, collez votre workflow JSON, ou notez le résultat...' })}
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              disabled={submitted || isEvaluating}
-            />
+            <>
+              {usesTrackedRubric && (
+                <div className="mb-3 rounded-lg border border-blue-200 bg-blue-50/70 p-3 text-sm text-blue-950">
+                  <p>{submissionGuidance.introduction}</p>
+                  <p className="mt-2 font-medium">{submissionGuidance.instruction}</p>
+                </div>
+              )}
+              <textarea
+                aria-label={submissionGuidance.title}
+                className="w-full min-h-[140px] p-3 rounded-lg border border-border bg-background text-sm text-foreground resize-y placeholder:text-muted-foreground"
+                placeholder={usesTrackedRubric ? submissionGuidance.placeholder : t({ en: "Write your answer here…", fr: "Rédigez votre réponse ici…" })}
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                disabled={submitted || isEvaluating}
+              />
+            </>
           )}
           {!submitted && minimumAnswerLength > 1 && !hasMinimumAnswer && (
             <p className="mt-2 text-xs text-muted-foreground">

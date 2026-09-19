@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { Streamdown } from "streamdown";
+import { getAssessmentSubmissionGuidance, getVisibleAssessmentCriteria } from "./assessmentSubmissionGuidance";
 
 interface AiEvaluationBlockProps {
   block: any;
@@ -18,12 +19,19 @@ export function AiEvaluationBlock({ block, lang, t, onComplete, blockIdx, evalua
   const title = typeof block.title === "object" ? (block.title[lang] || block.title.en || "") : (block.title || "");
   const prompt = typeof block.prompt === "object" ? (block.prompt[lang] || block.prompt.en || "") : (block.prompt || "");
   const sampleAnswer = typeof block.sampleAnswer === "object" ? (block.sampleAnswer[lang] || block.sampleAnswer.en || "") : (block.sampleAnswer || "");
-  const rubric = block.rubric || "";
+  const rubric = typeof block.rubric === "object" ? (block.rubric[lang] || block.rubric.en || block.rubric.fr || "") : (block.rubric || "");
   const maxScore = block.maxScore || 10;
   const minWords = block.minWords || 50;
   const passingScore = block.passingScore ?? maxScore * 0.7;
   const rubricCriteria = Array.isArray(block.rubricCriteria) ? block.rubricCriteria : [];
   const usesTrackedRubric = rubricCriteria.length > 0 && Boolean(evaluationContext);
+  const legacyGuidanceBlock = {
+    ...block,
+    learnerCriteria: [prompt, rubric].filter(Boolean),
+    submissionMode: String(block.id || "").includes("_prompting") ? "prompt" : block.submissionMode,
+  };
+  const submissionGuidance = getAssessmentSubmissionGuidance(rubricCriteria.length ? block : legacyGuidanceBlock, lang);
+  const visibleCriteria = getVisibleAssessmentCriteria(block, lang);
   const resolvedRubricCriteria = rubricCriteria.map((criterion: any) => ({
     ...criterion,
     label: typeof criterion.label === "object" ? (criterion.label[lang] || criterion.label.en || criterion.label.fr || "") : criterion.label,
@@ -102,22 +110,30 @@ export function AiEvaluationBlock({ block, lang, t, onComplete, blockIdx, evalua
       <div className="p-4 space-y-4">
         {/* Prompt */}
         <div className="text-sm leading-relaxed text-foreground"><Streamdown>{prompt}</Streamdown></div>
-        {usesTrackedRubric && (
-          <div className="rounded-lg border border-fuchsia-200 bg-fuchsia-50/50 p-3 text-sm text-foreground dark:border-fuchsia-800 dark:bg-fuchsia-950/10">
-            <p className="font-medium">{t({ en: "What your response must show", fr: "Ce que votre réponse doit montrer" })}</p>
-            <ul className="mt-2 list-disc space-y-1 pl-5">
-              {rubricCriteria.map((criterion: any) => <li key={criterion.id}>{typeof criterion.label === "object" ? (criterion.label[lang] || criterion.label.en) : criterion.label}</li>)}
-            </ul>
-            <p className="mt-2 text-xs text-muted-foreground">{t({ en: `Passing threshold: ${passingScore}/${maxScore}.`, fr: `Seuil de réussite : ${passingScore}/${maxScore}.` })}</p>
+        <div className="space-y-3">
+          <div className="rounded-lg border border-blue-200 bg-blue-50/70 p-3 text-sm text-blue-950 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-100">
+            <p className="font-semibold">{submissionGuidance.title}</p>
+            <p className="mt-1">{submissionGuidance.introduction}</p>
+            <p className="mt-2 font-medium">{submissionGuidance.instruction}</p>
           </div>
-        )}
+          {visibleCriteria.length > 0 && (
+            <div className="rounded-lg border border-fuchsia-200 bg-fuchsia-50/50 p-3 text-sm text-foreground dark:border-fuchsia-800 dark:bg-fuchsia-950/10">
+              <p className="font-medium">{t({ en: "What your response must show", fr: "Ce que votre réponse doit montrer" })}</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                {visibleCriteria.map((criterion, index) => <li key={`${index}-${criterion}`}>{criterion}</li>)}
+              </ul>
+              {usesTrackedRubric && <p className="mt-2 text-xs text-muted-foreground">{t({ en: `Passing threshold: ${passingScore}/${maxScore}.`, fr: `Seuil de réussite : ${passingScore}/${maxScore}.` })}</p>}
+            </div>
+          )}
+        </div>
 
         {/* Answer textarea */}
         <div>
           <Textarea
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            placeholder={t({ en: "Write your answer here...", fr: "Écrivez votre réponse ici..." })}
+            aria-label={submissionGuidance.title}
+            placeholder={submissionGuidance.placeholder}
             rows={8}
             className="resize-y"
             disabled={isEvaluating}

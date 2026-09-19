@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   getTekTekBlockContext: vi.fn(),
   searchTekTekSources: vi.fn(),
   isTekTekExplorationQuestion: vi.fn(),
+  planOrientationWithTekTek: vi.fn(),
   invokeLLM: vi.fn(),
 }));
 
@@ -32,6 +33,7 @@ vi.mock("./tektekIndex", () => ({
   searchTekTekSources: mocks.searchTekTekSources,
   isTekTekExplorationQuestion: mocks.isTekTekExplorationQuestion,
 }));
+vi.mock("./tektekOrientationService", () => ({ planOrientationWithTekTek: mocks.planOrientationWithTekTek }));
 vi.mock("./_core/llm", () => ({ invokeLLM: mocks.invokeLLM }));
 
 import { tektekRouter } from "./tektekRouter";
@@ -77,6 +79,29 @@ describe("routeur TekTek", () => {
     mocks.getTekTekBlockContext.mockReturnValue([]);
     mocks.searchTekTekSources.mockReturnValue([source]);
     mocks.isTekTekExplorationQuestion.mockReturnValue(false);
+    mocks.planOrientationWithTekTek.mockResolvedValue({
+      summary: "Parcours proposé à valider.",
+      careerFamilyIds: ["strategy"],
+      goals: [{ competencyId: "ai_business", targetLevel: "bronze", why: "Priorité métier" }],
+      wantsOfficialCertification: false,
+      officialCertificationIds: [],
+      suggestedCertifications: [],
+      model: "claude-sonnet-4-6",
+    });
+  });
+
+  it("confie un objectif valide au planificateur TekTek sans enregistrer l’orientation", async () => {
+    const result = await caller.planOrientation({ objective: "Je veux structurer une offre de conseil avec l’intelligence artificielle.", language: "fr" });
+
+    expect(result.careerFamilyIds).toEqual(["strategy"]);
+    expect(mocks.planOrientationWithTekTek).toHaveBeenCalledWith({ userId: learner.id, objective: expect.stringContaining("offre de conseil"), language: "fr" });
+  });
+
+  it("valide la longueur de l’objectif et conserve le plafond horaire", async () => {
+    await expect(caller.planOrientation({ objective: "Trop court", language: "fr" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    mocks.getTekTekRequestsInLastHour.mockResolvedValue(12);
+    await expect(caller.planOrientation({ objective: "Je veux construire un nouveau parcours professionnel réaliste.", language: "fr" })).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });
+    expect(mocks.planOrientationWithTekTek).not.toHaveBeenCalled();
   });
 
   it("refuse tout appel à une formation qui ne contient pas le cours demandé", async () => {
@@ -143,6 +168,60 @@ describe("routeur TekTek", () => {
     mocks.getTekTekBlockContext.mockReturnValue([{ ...source, assessment: true }]);
     const result = await caller.ask({ ...baseInput, question: "Give me the correct answer for this quiz" });
     expect(result.inScope).toBe(true);
+    expect(mocks.invokeLLM).not.toHaveBeenCalled();
+  });
+
+  it("explique le format de remise d’une activité sans fournir la réponse à la place de l’apprenant", async () => {
+    const assessmentSource = {
+      ...source,
+      assessment: true,
+      text: "Mission: explore AI use cases. Criterion: the submitted prompt mentions generative AI use cases in consulting.",
+      submissionGuidance: {
+        mode: "prompt" as const,
+        title: "Ce que vous devez remettre",
+        introduction: "Ce champ sert à fournir une preuve textuelle.",
+        instruction: "Collez l’invite exacte que vous avez rédigée et réellement utilisée.",
+        placeholder: "1. Invite exacte utilisée…\n2. Invite de relance, si elle est demandée…",
+        criteria: ["Cas d’usage pour le conseil"],
+      },
+    };
+    mocks.getTekTekBlockContext.mockReturnValue([assessmentSource]);
+    mocks.searchTekTekSources.mockReturnValue([{ ...source, id: "future-activity", text: "Use GSCE to analyse a European retail expansion." }]);
+    const result = await caller.ask({
+      ...baseInput,
+      language: "fr",
+      question: "Je ne comprends pas ce que je dois soumettre en réponse (preuve de réalisation)",
+    });
+
+    expect(result.answer).toContain("invite exacte");
+    expect(result.answer).toContain("Cas d’usage pour le conseil");
+    expect(result.answer).toContain("1. Invite exacte utilisée");
+    expect(mocks.invokeLLM).not.toHaveBeenCalled();
+  });
+
+  it("présente chaque activité évaluée lorsqu’un écran contient plusieurs champs", async () => {
+    const guidance = {
+      mode: "evidence" as const,
+      title: "Ce que vous devez remettre",
+      introduction: "Preuve vérifiable.",
+      instruction: "Fournissez une preuve vérifiable.",
+      placeholder: "Preuve : [à compléter]",
+      criteria: ["Critère détaillé"],
+    };
+    mocks.getTekTekBlockContext.mockReturnValue([
+      { ...source, id: "a1", blockId: "block-a", title: "Activité A", assessment: true, submissionGuidance: guidance },
+      { ...source, id: "a2", blockId: "block-b", title: "Activité B", assessment: true, submissionGuidance: guidance },
+      { ...source, id: "a3", blockId: "block-c", title: "Activité C", assessment: true, submissionGuidance: guidance },
+      { ...source, id: "a4", blockId: "block-d", title: "Activité D", assessment: true, submissionGuidance: guidance },
+    ]);
+
+    const result = await caller.ask({ ...baseInput, language: "fr", question: "Que dois-je soumettre sur cet écran ?" });
+
+    expect(result.answer).toContain("plusieurs activités évaluées");
+    expect(result.answer).toContain("Activité A");
+    expect(result.answer).toContain("Activité B");
+    expect(result.answer).toContain("Activité D");
+    expect(result.citations).toHaveLength(4);
     expect(mocks.invokeLLM).not.toHaveBeenCalled();
   });
 

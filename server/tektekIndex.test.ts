@@ -104,4 +104,28 @@ describe("index TekTek", () => {
     expect(results.length).toBeGreaterThan(0);
     expect(results.some((source) => /4d|delegation|description|discernment|diligence/i.test(`${source.title} ${source.text}`))).toBe(true);
   });
+
+  it("indexe la mission et les critères visibles d’une activité évaluée pour expliquer sa remise", () => {
+    const indexed = getTekTekTrainingSources("datacamp_ai_for_consulting", "fr");
+    const source = indexed?.sources.find((candidate) => candidate.courseId === "ai_for_consulting__01" && candidate.blockId === "dc_1_act_02_tp");
+
+    expect(source?.assessment).toBe(true);
+    expect(source?.text).toContain("Meridian Advisory");
+    expect(source?.text).toMatch(/prompt needs to mention use-cases/i);
+    expect(source?.text).toContain("Collez l’invite exacte que vous avez rédigée et réellement utilisée");
+    expect(source?.text).not.toMatch(/workflow JSON/i);
+    expect(source?.submissionGuidance?.mode).toBe("prompt");
+    expect(source?.submissionGuidance?.criteria[0]).toContain("Cas d’usage pour le conseil");
+    expect(source?.submissionGuidance?.criteria[0]).toContain("prompt needs to mention use-cases");
+  });
+
+  it("traite les blocs ai_evaluation hérités comme des évaluations avec une remise explicite", () => {
+    const indexed = getTekTekTrainingSources("datacamp_ai_assisted_coding_for_developers", "fr");
+    const source = indexed?.sources.find((candidate) => candidate.blockId === "dc_1_act_05_prompting");
+
+    expect(source?.assessment).toBe(true);
+    expect(source?.submissionGuidance?.mode).toBe("prompt");
+    expect(source?.submissionGuidance?.instruction).toContain("invite exacte");
+    expect(source?.submissionGuidance?.criteria.join(" ")).toContain("cas d’usage de tarification dynamique");
+  });
 });
