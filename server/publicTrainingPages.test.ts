@@ -64,10 +64,14 @@ describe("pages publiques de formations IA", () => {
   it("expose le même menu principal et le même footer public dans le HTML des formations", () => {
     const html = renderPublicTrainingIndex();
 
-    expect(html).toContain('class="public-chrome-nav-link" href="/#formule">La Formule</a>');
+    expect(html).toContain('class="public-chrome-nav-link" href="/">Programme</a>');
+    expect(html).toContain('class="public-chrome-menu-link" href="/#formule">La Formule</a>');
+    expect(html).toContain('class="public-chrome-nav-link" href="/formations-ia" aria-current="page">Formations IA</a>');
+    expect(html).toContain('class="public-chrome-menu-link" href="/formations-ia/comptabilite-finance">Comptabilité &amp; Finance</a>');
+    expect(html).toContain('class="public-chrome-menu-link" href="/formations-ia/informatique-developpement">Informatique &amp; Développement</a>');
     expect(html).toContain('class="public-chrome-nav-link" href="/ai-news">AI News</a>');
     expect(html).toContain('class="public-chrome-nav-link" href="/formations-ia/golden-jobs">Golden Jobs</a>');
-    expect(html).toContain('class="public-chrome-signin" href="/login">Se connecter</a>');
+    expect(html).toContain('class="public-chrome-apply" href="/training"><span>Mon espace</span></a>');
     expect(html).toContain('role="search" action="/formations-ia/catalogue" method="get"');
     expect(html).toContain('class="public-chrome-apply" href="/apply"><span>Postuler</span>');
     expect(html).toContain('<details class="public-chrome-mobile"><summary aria-label="Programme"><span aria-hidden="true">☰</span></summary>');

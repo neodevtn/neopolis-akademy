@@ -18,6 +18,11 @@ describe("chrome public et recherche de formations", () => {
     expect(html).toContain('name="q"');
     expect(html).toContain('placeholder="Métier, compétence ou formation…"');
     expect(html).toContain('id="public-training-search"');
+    expect(html).toContain('href="/formations-ia"');
+    expect(html).toContain('href="/formations-ia/comptabilite-finance"');
+    expect(html).toContain('href="/formations-ia/informatique-developpement"');
+    expect(html).toContain('Catalogue des formations');
+    expect(html).toContain('Formations par domaine');
     expect(html).toContain('href="/formations-ia/golden-jobs"');
     expect(html).toContain('>Golden Jobs<');
     expect(html).toContain('src="/api/assets/neopolis-akademy-header-user-supplied-240x84_61aeceeb.png"');
@@ -25,10 +30,12 @@ describe("chrome public et recherche de formations", () => {
     expect(html).toContain('height="42"');
   });
 
-  it("uses the compact navigation before a desktop header can overflow", () => {
-    expect(PUBLIC_CHROME_STYLES).toContain("@media (min-width: 1537px)");
-    expect(PUBLIC_CHROME_STYLES).toContain("@media (max-width: 1536px) and (min-width: 640px)");
-    expect(PUBLIC_CHROME_STYLES).toContain(".public-chrome-mobile { display: block; }");
+  it("uses a grouped desktop navigation at a realistic width and preserves compact navigation below it", () => {
+    expect(PUBLIC_CHROME_STYLES).toContain("@media (min-width: 1100px)");
+    expect(PUBLIC_CHROME_STYLES).toContain("@media (max-width: 1099px) and (min-width: 640px)");
+    expect(PUBLIC_CHROME_STYLES).toContain(".public-chrome-mobile { position: relative; display: block; }");
     expect(PUBLIC_CHROME_STYLES).toContain("flex-wrap: nowrap");
+    expect(PUBLIC_CHROME_STYLES).toContain(".public-chrome-menu-panel");
+    expect(PUBLIC_CHROME_STYLES).toContain(".public-chrome-domain-grid");
   });
 });

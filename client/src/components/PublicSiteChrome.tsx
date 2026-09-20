@@ -1,19 +1,51 @@
-import { useState } from "react";
-import { ChevronRight, Menu, Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronDown, ChevronRight, LayoutDashboard, LogOut, Menu, Search, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import DeferredHomeAuth from "@/components/DeferredHomeAuth";
 import { type Language, useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { isAdministrativeRole } from "@shared/roles";
 import { trackEvent } from "@/lib/analytics";
 import { publicGoldenJobsPath, publicTrainingCataloguePath, publicTrainingPath } from "@shared/publicTrainingLocale";
+import { PUBLIC_TRAINING_DOMAIN_NAVIGATION } from "@shared/publicNavigation";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 import { navigateToHomePublicAnchor } from "@/lib/homePublicAnchors";
 import { HeaderBrandLogo, OFFICIAL_NEOPOLIS_AKADEMY_LOGO } from "@/components/BrandLogo";
 
 type PublicPage = "home" | "training" | "goldenJobs" | "news" | "apply" | "legal" | "referral";
-
 type LocalizedText = { fr: string; en: string; ar: string };
 
-const labels = {
+type HeaderLabels = {
+  formula: LocalizedText;
+  why: LocalizedText;
+  partners: LocalizedText;
+  training: LocalizedText;
+  goldenJobs: LocalizedText;
+  news: LocalizedText;
+  faq: LocalizedText;
+  signIn: LocalizedText;
+  signingIn: LocalizedText;
+  signOut: LocalizedText;
+  mySpace: LocalizedText;
+  admin: LocalizedText;
+  apply: LocalizedText;
+  program: LocalizedText;
+  explore: LocalizedText;
+  contact: LocalizedText;
+  legal: LocalizedText;
+  allRights: LocalizedText;
+  footerLead: LocalizedText;
+  menu: LocalizedText;
+  languages: LocalizedText;
+  searchTraining: LocalizedText;
+  searchPlaceholder: LocalizedText;
+  trainingDomains: LocalizedText;
+  allDomains: LocalizedText;
+  catalogue: LocalizedText;
+  openProgramme: LocalizedText;
+  openTraining: LocalizedText;
+};
+
+const labels: HeaderLabels = {
   formula: { fr: "La Formule", en: "The Formula", ar: "الصيغة" },
   why: { fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" },
   partners: { fr: "Partenaires", en: "Partners", ar: "الشركاء" },
@@ -22,6 +54,10 @@ const labels = {
   news: { fr: "AI News", en: "AI News", ar: "أخبار الذكاء الاصطناعي" },
   faq: { fr: "FAQ", en: "FAQ", ar: "الأسئلة الشائعة" },
   signIn: { fr: "Se connecter", en: "Sign in", ar: "تسجيل الدخول" },
+  signingIn: { fr: "Vérification…", en: "Checking…", ar: "جارٍ التحقق…" },
+  signOut: { fr: "Déconnexion", en: "Logout", ar: "تسجيل الخروج" },
+  mySpace: { fr: "Mon espace", en: "My learning", ar: "مساحتي" },
+  admin: { fr: "Admin", en: "Admin", ar: "الإدارة" },
   apply: { fr: "Postuler", en: "Apply", ar: "تقدّم" },
   program: { fr: "Programme", en: "Program", ar: "البرنامج" },
   explore: { fr: "Explorer", en: "Explore", ar: "استكشاف" },
@@ -33,7 +69,12 @@ const labels = {
   languages: { fr: "Langues", en: "Languages", ar: "اللغات" },
   searchTraining: { fr: "Rechercher une formation", en: "Search training", ar: "ابحث عن تدريب" },
   searchPlaceholder: { fr: "Métier, compétence ou formation…", en: "Profession, skill or training…", ar: "مهنة أو مهارة أو تدريب…" },
-} satisfies Record<string, LocalizedText>;
+  trainingDomains: { fr: "Formations par domaine", en: "Training by domain", ar: "التدريب حسب المجال" },
+  allDomains: { fr: "Tous les domaines", en: "All domains", ar: "كل المجالات" },
+  catalogue: { fr: "Catalogue des formations", en: "Training catalogue", ar: "كتالوج التدريبات" },
+  openProgramme: { fr: "Ouvrir le sous-menu Programme", en: "Open Program submenu", ar: "فتح القائمة الفرعية للبرنامج" },
+  openTraining: { fr: "Ouvrir le sous-menu Formations IA", en: "Open AI Training submenu", ar: "فتح القائمة الفرعية لتدريبات الذكاء الاصطناعي" },
+};
 
 function localizedPath(location: string, locale: Language) {
   const normalized = location.split("?")[0] || "/";
@@ -70,59 +111,84 @@ function LocaleLinks({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-function publicLinks(lang: Language, page: PublicPage) {
-  const homeAnchor = (anchor: string) => page === "home" ? anchor : `/${anchor}`;
-  return [
-    { href: homeAnchor("#formule"), label: labels.formula, active: page === "home" && false },
-    { href: homeAnchor("#pourquoi"), label: labels.why, active: false },
-    { href: homeAnchor("#partenaires"), label: labels.partners, active: false },
-    { href: publicTrainingPath(lang), label: labels.training, active: page === "training" },
-    { href: publicGoldenJobsPath(lang), label: labels.goldenJobs, active: page === "goldenJobs" },
-    { href: "/ai-news", label: labels.news, active: page === "news" },
-    { href: homeAnchor("#faq"), label: labels.faq, active: false },
-  ];
+function HomeAnchorLink({ anchor, label, page, onNavigate }: { anchor: string; label: LocalizedText; page: PublicPage; onNavigate?: () => void }) {
+  const { t } = useLanguage();
+  const href = page === "home" ? anchor : `/${anchor}`;
+  return (
+    <a
+      href={href}
+      onClick={(event) => {
+        event.preventDefault();
+        onNavigate?.();
+        const go = () => navigateToHomePublicAnchor(anchor);
+        if (onNavigate) {
+          window.setTimeout(go, 120);
+          window.setTimeout(go, 700);
+        } else {
+          go();
+          window.setTimeout(go, 500);
+        }
+      }}
+      className="public-chrome-menu-link"
+    >
+      {t(label)}
+    </a>
+  );
 }
 
-function NavigationLinks({ page, onNavigate }: { page: PublicPage; onNavigate?: () => void }) {
+function ProgrammeMenu({ page, onNavigate }: { page: PublicPage; onNavigate?: () => void }) {
+  const { t } = useLanguage();
+  return (
+    <div className="public-chrome-menu-group">
+      <Link href="/" onClick={onNavigate} className="public-chrome-nav-link">{t(labels.program)}</Link>
+      <details className="public-chrome-menu-details">
+        <summary aria-label={t(labels.openProgramme)} className="public-chrome-menu-trigger"><ChevronDown size={14} aria-hidden="true" /></summary>
+        <div className="public-chrome-menu-panel">
+          <HomeAnchorLink anchor="#formule" label={labels.formula} page={page} onNavigate={onNavigate} />
+          <HomeAnchorLink anchor="#pourquoi" label={labels.why} page={page} onNavigate={onNavigate} />
+          <HomeAnchorLink anchor="#partenaires" label={labels.partners} page={page} onNavigate={onNavigate} />
+          <HomeAnchorLink anchor="#faq" label={labels.faq} page={page} onNavigate={onNavigate} />
+        </div>
+      </details>
+    </div>
+  );
+}
+
+function TrainingMenu({ page, onNavigate }: { page: PublicPage; onNavigate?: () => void }) {
+  const { lang, t } = useLanguage();
+  const isActive = page === "training";
+  return (
+    <div className="public-chrome-menu-group">
+      <Link href={publicTrainingPath(lang)} onClick={onNavigate} aria-current={isActive ? "page" : undefined} className="public-chrome-nav-link">{t(labels.training)}</Link>
+      <details className="public-chrome-menu-details">
+        <summary aria-label={t(labels.openTraining)} className="public-chrome-menu-trigger"><ChevronDown size={14} aria-hidden="true" /></summary>
+        <div className="public-chrome-menu-panel public-chrome-training-panel">
+          <Link href={publicTrainingCataloguePath(lang)} onClick={onNavigate} className="public-chrome-menu-link public-chrome-menu-link-emphasis">{t(labels.catalogue)}</Link>
+          <Link href={publicTrainingPath(lang)} onClick={onNavigate} className="public-chrome-menu-link">{t(labels.allDomains)}</Link>
+          <p className="public-chrome-menu-heading">{t(labels.trainingDomains)}</p>
+          <div className="public-chrome-domain-grid">
+            {PUBLIC_TRAINING_DOMAIN_NAVIGATION.map((domain) => (
+              <Link key={domain.slug} href={publicTrainingPath(lang, domain.slug)} onClick={onNavigate} className="public-chrome-menu-link">
+                {domain.label[lang]}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </details>
+    </div>
+  );
+}
+
+function PrimaryNavigation({ page, mobile = false, onNavigate }: { page: PublicPage; mobile?: boolean; onNavigate?: () => void }) {
   const { lang, t } = useLanguage();
   return (
-    <>
-      {publicLinks(lang, page).map((item) => {
-        if (page === "home" && item.href.startsWith("#")) {
-          return (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={(event) => {
-                event.preventDefault();
-                onNavigate?.();
-                if (onNavigate) {
-                  window.setTimeout(() => navigateToHomePublicAnchor(item.href), 120);
-                  window.setTimeout(() => navigateToHomePublicAnchor(item.href), 700);
-                } else {
-                  navigateToHomePublicAnchor(item.href);
-                  window.setTimeout(() => navigateToHomePublicAnchor(item.href), 500);
-                }
-              }}
-              className="public-chrome-nav-link"
-            >
-              {t(item.label)}
-            </a>
-          );
-        }
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={onNavigate}
-            aria-current={item.active ? "page" : undefined}
-            className="public-chrome-nav-link"
-          >
-            {t(item.label)}
-          </Link>
-        );
-      })}
-    </>
+    <nav className={`public-chrome-nav${mobile ? " public-chrome-nav-mobile" : ""}`} aria-label={t(labels.menu)}>
+      <ProgrammeMenu page={page} onNavigate={onNavigate} />
+      <TrainingMenu page={page} onNavigate={onNavigate} />
+      <Link href={publicGoldenJobsPath(lang)} onClick={onNavigate} aria-current={page === "goldenJobs" ? "page" : undefined} className="public-chrome-nav-link">{t(labels.goldenJobs)}</Link>
+      <Link href="/ai-news" onClick={onNavigate} aria-current={page === "news" ? "page" : undefined} className="public-chrome-nav-link">{t(labels.news)}</Link>
+      {!mobile && <PublicTrainingSearch />}
+    </nav>
   );
 }
 
@@ -139,30 +205,62 @@ function PublicTrainingSearch({ mobile = false, onNavigate }: { mobile?: boolean
   );
 }
 
+/** Resolves the auth query only in the browser; SSR stays cache-free and static. */
+function ResolvedPublicSessionActions({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
+  const { t } = useLanguage();
+  const { isAuthenticated, loading, logout, user } = useAuth();
+  const canAccessAdmin = isAdministrativeRole(user?.role);
+
+  if (loading) {
+    return <span className={`public-chrome-session-pending${mobile ? " public-chrome-session-pending-mobile" : ""}`} role="status">{t(labels.signingIn)}</span>;
+  }
+
+  if (!isAuthenticated) {
+    return <Link href="/login" onClick={onNavigate} className="public-chrome-signin">{t(labels.signIn)}</Link>;
+  }
+
+  return (
+    <div className={`public-chrome-session-actions${mobile ? " public-chrome-session-actions-mobile" : ""}`}>
+      {canAccessAdmin && <Link href="/admin" onClick={onNavigate} className="public-chrome-admin-link">{t(labels.admin)}</Link>}
+      <Link href="/training" onClick={onNavigate} aria-label={t({ fr: "Mon espace apprenant", en: "My learning space", ar: "مساحة التعلّم الخاصة بي" })} className="public-chrome-apply">
+        <LayoutDashboard size={14} /> <span>{t(labels.mySpace)}</span>
+      </Link>
+      <button type="button" onClick={() => { onNavigate?.(); void logout(); }} className="public-chrome-signout" title={t({ fr: `Déconnexion (${user?.name || ""})`, en: `Logout (${user?.name || ""})`, ar: `تسجيل الخروج (${user?.name || ""})` })}>
+        <LogOut size={13} aria-hidden="true" /><span>{t(labels.signOut)}</span>
+      </button>
+    </div>
+  );
+}
+
+/** A neutral learner-space fallback prevents an anonymous sign-in flash. */
+function PublicSessionActions({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
+  const { t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <Link href="/training" onClick={onNavigate} className="public-chrome-apply"><LayoutDashboard size={14} /><span>{t(labels.mySpace)}</span></Link>;
+  }
+
+  return <ResolvedPublicSessionActions mobile={mobile} onNavigate={onNavigate} />;
+}
+
 function MobilePublicMenu({ page }: { page: PublicPage }) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
   return (
     <div className="public-chrome-mobile">
-      <button
-        type="button"
-        onClick={() => setOpen((current) => !current)}
-        aria-expanded={open}
-        aria-controls="public-mobile-navigation"
-        aria-label={t(labels.menu)}
-        className="public-chrome-mobile-trigger"
-      >
+      <button type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-controls="public-mobile-navigation" aria-label={t(labels.menu)} className="public-chrome-mobile-trigger">
         {open ? <X size={19} /> : <Menu size={19} />}
       </button>
       {open && (
         <div id="public-mobile-navigation" className="public-chrome-mobile-panel">
-          <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
-            <NavigationLinks page={page} onNavigate={() => setOpen(false)} />
-            <PublicTrainingSearch mobile onNavigate={() => setOpen(false)} />
-            <Link href="/login" onClick={() => setOpen(false)} className="public-chrome-signin">{t(labels.signIn)}</Link>
-            <Link href="/apply" onClick={() => { trackEvent("cta_click", { content_type: "public_navigation", content_id: "apply_mobile_menu" }); setOpen(false); }} className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>
-            <LocaleLinks onNavigate={() => setOpen(false)} />
-          </nav>
+          <PrimaryNavigation page={page} mobile onNavigate={close} />
+          <PublicTrainingSearch mobile onNavigate={close} />
+          <PublicSessionActions mobile onNavigate={close} />
+          <Link href="/apply" onClick={() => { trackEvent("cta_click", { content_type: "public_navigation", content_id: "apply_mobile_menu" }); close(); }} className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>
+          <LocaleLinks onNavigate={close} />
         </div>
       )}
     </div>
@@ -175,19 +273,15 @@ export function PublicSiteHeader({ active = "home" }: { active?: PublicPage }) {
     <>
       <style>{PUBLIC_CHROME_STYLES}</style>
       <header className="public-chrome-header">
-      <div className="public-chrome-shell">
-        <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><HeaderBrandLogo className="public-chrome-logo" /></Link>
-        <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
-          <NavigationLinks page={active} />
-          <PublicTrainingSearch />
-        </nav>
-        <div className="public-chrome-actions">
-          <div className="public-chrome-locale-desktop"><LocaleLinks /></div>
-          <div className="hidden lg:block"><DeferredHomeAuth slot="logout" /></div>
-          <div className="hidden lg:block"><DeferredHomeAuth slot="header-primary" fallback={<Link href="/apply" onClick={() => trackEvent("cta_click", { content_type: "public_navigation", content_id: "apply_header" })} className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>} /></div>
-          <MobilePublicMenu page={active} />
+        <div className="public-chrome-shell">
+          <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><HeaderBrandLogo className="public-chrome-logo" /></Link>
+          <PrimaryNavigation page={active} />
+          <div className="public-chrome-actions">
+            <div className="public-chrome-locale-desktop"><LocaleLinks /></div>
+            <PublicSessionActions />
+            <MobilePublicMenu page={active} />
+          </div>
         </div>
-      </div>
       </header>
     </>
   );
@@ -210,7 +304,7 @@ export function PublicSiteFooter() {
           </div>
           <div>
             <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-white">{t(labels.explore)}</h2>
-            <ul className="mt-3 space-y-2 text-sm"><li><Link href={publicTrainingPath(lang)} className="hover:text-white hover:underline">{t(labels.training)}</Link></li><li><Link href={publicGoldenJobsPath(lang)} className="hover:text-white hover:underline">{t(labels.goldenJobs)}</Link></li><li><Link href="/ai-news" className="hover:text-white hover:underline">{t(labels.news)}</Link></li><li><Link href={publicTrainingCataloguePath(lang)} className="hover:text-white hover:underline">{t({ fr: "Catalogue", en: "Catalogue", ar: "الكتالوج" })}</Link></li><li><Link href="/apply" className="hover:text-white hover:underline">{t(labels.apply)}</Link></li></ul>
+            <ul className="mt-3 space-y-2 text-sm"><li><Link href={publicTrainingPath(lang)} className="hover:text-white hover:underline">{t(labels.training)}</Link></li><li><Link href={publicGoldenJobsPath(lang)} className="hover:text-white hover:underline">{t(labels.goldenJobs)}</Link></li><li><Link href="/ai-news" className="hover:text-white hover:underline">{t(labels.news)}</Link></li><li><Link href={publicTrainingCataloguePath(lang)} className="hover:text-white hover:underline">{t(labels.catalogue)}</Link></li><li><Link href="/apply" className="hover:text-white hover:underline">{t(labels.apply)}</Link></li></ul>
           </div>
           <div>
             <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-white">{t(labels.contact)}</h2>

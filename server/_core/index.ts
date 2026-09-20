@@ -26,6 +26,8 @@ import { registerPrivateMessagingWebSocket } from "../privateMessagingRealtime";
 import { registerCourseDataRoute } from "../courseDataRoute";
 import { mayUseAlternatePort, registerDeploymentHealthRoute, resolveHostingPort } from "../deploymentHealth";
 import { startIndexNowAutomation } from "../indexNowAutomation";
+import { canonicalHostRedirect } from "../canonicalHost";
+import { privateApiResponseHeaders } from "../sessionResponseHeaders";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -54,7 +56,12 @@ async function startServer() {
   // Trust proxy (required for rate limiting behind Cloud Run/reverse proxy)
   app.set("trust proxy", 1);
 
-  // Security middlewares (F-001, F-002, F-003)
+  // Ensure browser navigation starts on the canonical host before a host-only
+  // session cookie is read or created. This prevents split learner/admin
+  // sessions between the managed and custom public domains.
+  app.use(canonicalHostRedirect);
+
+  // Security middlewares (F-001, F-002)
   app.disable("x-powered-by");
   app.use(securityHeaders);
   app.use(globalRateLimit);
@@ -67,6 +74,10 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  // Auth and tRPC responses can be user-specific, including auth.me. They
+  // must never be stored by a browser cache or an intermediary cache.
+  app.use("/api/auth", privateApiResponseHeaders);
+  app.use("/api/oauth", privateApiResponseHeaders);
   registerStorageProxy(app);
   registerAssetProxy(app);
   registerOAuthRoutes(app);
@@ -96,6 +107,7 @@ async function startServer() {
   // passerelle publique, mais retourne l’asset JSON brut avec no-store.
   registerCourseDataRoute(app);
   // tRPC API with batch limit (F-011)
+  app.use("/api/trpc", privateApiResponseHeaders);
   app.use("/api/trpc", tRPCBatchLimit);
   app.use(
     "/api/trpc",
