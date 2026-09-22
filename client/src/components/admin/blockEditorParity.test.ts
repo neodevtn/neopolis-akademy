@@ -31,6 +31,29 @@ describe("block editor parity", () => {
     expect(hydrated.sourceUrl).toBe("/api/assets/video.mp4");
   });
 
+  it("hydrates and preserves localized legacy YouTube URLs for the active editor language", () => {
+    const localizedVideo = {
+      type: "video",
+      title: { en: "English video", fr: "Vidéo française" },
+      videoId: { en: "englishID1", fr: "frenchID2" },
+      watchUrl: {
+        en: "https://www.youtube.com/watch?v=englishID1",
+        fr: "https://www.youtube.com/watch?v=frenchID2",
+      },
+    };
+    const hydrated = hydrateBlockForEditor(localizedVideo);
+    expect(hydrated.sourceType).toBe("youtube");
+    expect(hydrated.sourceUrl).toEqual({
+      en: "https://www.youtube.com/watch?v=englishID1",
+      fr: "https://www.youtube.com/watch?v=frenchID2",
+    });
+
+    const saved = prepareBlockForSave(hydrated);
+    expect(saved.watchUrl).toEqual(hydrated.sourceUrl);
+    expect(saved.videoId).toEqual({ en: "englishID1", fr: "frenchID2" });
+    expect(saved.mp4Url).toBe("");
+  });
+
   it("serializes the canonical source back to the learner renderer fields", () => {
     expect(prepareBlockForSave({ type: "video", sourceType: "youtube", sourceUrl: "https://www.youtube.com/watch?v=AbC123_XyZ" })).toMatchObject({ url: "https://www.youtube.com/watch?v=AbC123_XyZ", watchUrl: "https://www.youtube.com/watch?v=AbC123_XyZ", videoId: "AbC123_XyZ", mp4Url: "", audioUrl: "" });
     expect(prepareBlockForSave({ type: "video", sourceType: "hls", sourceUrl: "https://media.example.test/stream.m3u8" })).toMatchObject({ mp4Url: "", hlsUrl: "https://media.example.test/stream.m3u8", videoId: "" });
@@ -61,5 +84,10 @@ describe("block editor parity", () => {
     expect(isMediaEditorField("subtitleUrlFr")).toBe(true);
     expect(isMediaEditorField("projectorSlides")).toBe(true);
     expect(isMediaEditorField("transcript")).toBe(false);
+  });
+
+  it("declares the canonical video source as a localized editable URL", () => {
+    const sourceUrl = BLOCK_REGISTRY.find((definition) => definition.type === "video")?.schema.find((field) => field.key === "sourceUrl");
+    expect(sourceUrl?.type).toBe("i18n_text");
   });
 });

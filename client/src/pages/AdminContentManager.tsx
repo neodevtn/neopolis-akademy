@@ -600,7 +600,18 @@ export default function AdminContentManager() {
                 }
                 if (!mediaTarget) return;
                 const blocks = [...(chapter.blocks || [])];
-                blocks[mediaTarget.blockIndex] = { ...blocks[mediaTarget.blockIndex], [mediaTarget.fieldKey]: toBlockMediaUrl(asset.url, asset.kind, mediaTarget.fieldKey) };
+                const [fieldKey, locale] = mediaTarget.fieldKey.split(":");
+                const selectedUrl = toBlockMediaUrl(asset.url, asset.kind, fieldKey);
+                const targetBlock = blocks[mediaTarget.blockIndex];
+                if ((locale === "en" || locale === "fr") && fieldKey === "sourceUrl") {
+                  const current = targetBlock?.[fieldKey];
+                  const localized = current && typeof current === "object" && !Array.isArray(current)
+                    ? current
+                    : { en: typeof current === "string" ? current : "", fr: typeof current === "string" ? current : "" };
+                  blocks[mediaTarget.blockIndex] = { ...targetBlock, [fieldKey]: { ...localized, [locale]: selectedUrl } };
+                } else {
+                  blocks[mediaTarget.blockIndex] = { ...targetBlock, [fieldKey]: selectedUrl };
+                }
                 updateDraftBlocks(blocks);
                 setMediaTarget(null);
               }}

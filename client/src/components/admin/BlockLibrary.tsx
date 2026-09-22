@@ -377,6 +377,13 @@ function renderFieldEditor(
       <p className="text-[11px] text-muted-foreground">Sélectionnez un média existant ou ouvrez la gestion globale pour ajouter, remplacer ou retirer une ressource.</p>
     </div>
   );
+  const renderLocalizedMediaInput = () => (
+    <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-3 space-y-2">
+      <Input value={getI18nValue(field.key, lang)} onChange={(e) => updateI18nField(field.key, lang, e.target.value)} placeholder={field.placeholder || "https://…"} />
+      {onRequestMedia && <Button type="button" variant="outline" className="w-full justify-start bg-background" onClick={() => onRequestMedia(`${field.key}:${lang}`)}><ImagePlus className="mr-2 h-4 w-4" />Choisir ou ajouter un média depuis la bibliothèque</Button>}
+      <p className="text-[11px] text-muted-foreground">L’URL affichée est celle de l’onglet de langue actif. Pour une vidéo YouTube bilingue, renseignez ou sélectionnez l’URL de chaque langue.</p>
+    </div>
+  );
   switch (field.type) {
     case "text":
       return isMediaField ? renderMediaInput() : renderTextInput();
@@ -405,7 +412,7 @@ function renderFieldEditor(
         </Select>
       );
     case "i18n_text":
-      return <Input value={getI18nValue(field.key, lang)} onChange={(e) => updateI18nField(field.key, lang, e.target.value)} placeholder={field.placeholder} />;
+      return isMediaField ? renderLocalizedMediaInput() : <Input value={getI18nValue(field.key, lang)} onChange={(e) => updateI18nField(field.key, lang, e.target.value)} placeholder={field.placeholder} />;
     case "i18n_textarea":
       return <Textarea value={getI18nValue(field.key, lang)} onChange={(e) => updateI18nField(field.key, lang, e.target.value)} rows={field.type === "i18n_richtext" ? 8 : 4} placeholder={field.placeholder} />;
     case "i18n_richtext":

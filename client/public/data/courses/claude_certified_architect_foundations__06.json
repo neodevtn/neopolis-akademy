@@ -610,8 +610,8 @@
             {
               "type": "content",
               "body": {
-                "en": "Model output control methods:\n\nPre-filling assistant messages = manually adding assistant message at end of message list to steer response direction. Claude continues from where pre-filled text ends, not from beginning. Must concatenate pre-filled text with returned response for complete output.\n\nStop sequences = strings that force Claude to stop generation immediately when encountered. Provided as parameter to converse function. Can specify multiple sequences. Stopping sequence itself is excluded from final response.\n\nKey mechanics:\n- Pre-filling: Claude sees partial assistant response, assumes already authored, continues from exact endpoint\n- Stop sequences: Generation halts at first matching string, partial response returned\n- Both techniques strongly influence output beyond prompt modification alone\n\nImplementation: Add stop_sequences parameter to chat function, pass to inference_config. Pre-filling requires manual message list construction with assistant role.",
-                "fr": "Méthodes de contrôle de la sortie du modèle :\n\n- Pré-remplissage des messages de l'assistant : ajout manuel d'un message d'assistant à la fin de la liste des messages pour orienter la direction de la réponse. Claude continue à partir du point où se termine le texte pré-rempli, et non pas au début. Il faut concaténer le texte pré-rempli avec la réponse retournée pour obtenir une sortie complète.\n\n- Séquences d'arrêt : chaînes qui obligent Claude à arrêter la génération immédiatement lorsqu'elles sont rencontrées. Fournies en paramètre à la fonction de conversation. Vous pouvez spécifier plusieurs séquences. La séquence d'arrêt elle-même est exclue de la réponse finale.\n\nMécanismes clés :\n- Pré-remplissage : Claude voit une réponse partielle de l'assistant, suppose qu'elle a déjà été rédigée, et continue à partir du point final exact.\n- Séquences d'arrêt : La génération s'arrête dès la première chaîne correspondante ; une réponse partielle est renvoyée.\n- Les deux techniques influencent fortement la sortie au-delà de la simple modification du prompt.\n\nImplémentation : Ajouter le paramètre stop_sequences à la fonction chat, le passer à inference_config. Le pré-remplissage nécessite la construction manuelle de la liste des messages avec le rôle assistant."
+                "en": "Model output control methods:\n\n- Pre-filling assistant messages: manually adding an assistant message to the end of the message list to steer the direction of the response. Claude continues from where the pre-filled text ends, rather than from the beginning. The pre-filled text must be concatenated with the returned response to obtain a complete output.\n\n- Stop sequences: strings that force Claude to stop generation immediately when they are encountered. Provided as a parameter to the conversation function. You can specify multiple sequences. The stop sequence itself is excluded from the final response.\n\nKey mechanisms:\n- Pre-filling: Claude sees a partial assistant response, assumes it has already been written, and continues from the exact endpoint.\n- Stop sequences: Generation stops at the first matching string; a partial response is returned.\n- Both techniques strongly influence the output beyond simply modifying the prompt.\n\nImplementation: Add the `stop_sequences` parameter to the `chat` function, and pass it to `inference_config`. Pre-filling requires manually constructing the message list with the `assistant` role.",
+                "fr": "Méthodes de contrôle de la sortie du modèle :\n\n- Pré-remplissage des messages de l’assistant : ajout manuel d’un message d’assistant à la fin de la liste des messages afin d’orienter la direction de la réponse. Claude continue là où le texte pré-rempli se termine, plutôt que depuis le début. Le texte pré-rempli doit être concaténé avec la réponse retournée pour obtenir une sortie complète.\n\n- Séquences d’arrêt : chaînes qui forcent Claude à arrêter immédiatement la génération lorsqu’elles sont rencontrées. Elles sont fournies comme paramètre à la fonction de conversation. Vous pouvez spécifier plusieurs séquences. La séquence d’arrêt elle-même est exclue de la réponse finale.\n\nMécanismes clés :\n- Pré-remplissage : Claude voit une réponse partielle de l’assistant, suppose qu’elle a déjà été écrite et continue à partir du point de fin exact.\n- Séquences d’arrêt : la génération s’arrête à la première chaîne correspondante ; une réponse partielle est renvoyée.\n- Les deux techniques influencent fortement la sortie, au-delà de la simple modification du prompt.\n\nImplémentation : ajoutez le paramètre `stop_sequences` à la fonction `chat`, et transmettez-le à `inference_config`. Le pré-remplissage nécessite de construire manuellement la liste des messages avec le rôle `assistant`."
               }
             },
             {
@@ -921,11 +921,11 @@
                 },
                 {
                   "front": {
-                    "en": "Grading = score each response using grader system",
+                    "en": "Grading = assigning a score to each response using a grading system.",
                     "fr": "Notation = attribuer un score à chaque réponse à l'aide d'un système de notation."
                   },
                   "back": {
-                    "en": "(typically 1-10 scale where 10 = perfect, lower scores indicate improvement needed)",
+                    "en": "(typically on a scale of 1 to 10, where 10 = perfect; lower scores indicate that improvement is needed)",
                     "fr": "(généralement sur une échelle de 1 à 10, où 10 = parfait ; des scores plus faibles indiquent qu'une amélioration est nécessaire)"
                   }
                 },
@@ -1045,7 +1045,7 @@
                 },
                 {
                   "front": {
-                    "en": "Generate test dataset using Haiku model",
+                    "en": "Generate a test dataset using the Haiku model",
                     "fr": "Générer un jeu de données de test en utilisant le modèle Haiku"
                   },
                   "back": {
@@ -3163,7 +3163,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Text Chunking Strategies = process of dividing documents into smaller text segments for RAG pipelines\n\nCharacter-based chunking = most reliable default despite suboptimal results because it works across document types.",
+                "en": "Text Chunking Strategies = the process of dividing documents into smaller text segments for RAG pipelines\n\n**Core problem**: Poor chunking creates context errors. Example: medical text containing \"bug\" is retrieved for software engineering questions because of word overlap without appropriate context.\n\n**Three main strategies**:\n\n1. **Size-based chunking** = dividing the document into strings of equal length\n - Pros: easiest to implement, most common in production\n - Cons: cuts words in the middle of a sentence, lacks context\n - Solution: overlap strategy = include characters from neighboring chunks to add context\n - Trade-off: creates text duplication but improves meaning\n\n2. **Structure-based chunking** = dividing according to document structure (headings, paragraphs, sections)\n - Example: splitting on Markdown headings (##)\n - Pros: creates well-formed, contextual sections\n - Cons: requires structured documents, does not work with simple PDFs / unformatted text\n\n3. **Semantic-based chunking** = using NLP to group related sentences/sections\n - Most advanced technique\n - Groups consecutive sentences based on semantic similarity\n - There are infinitely many possible chunking variations\n\n**Strategy selection**:\n- Structured documents with format guarantees = structure-based chunking\n- Unstructured documents = sentence-based chunking\n- Code or complex formats = character-based chunking (the most reliable fallback)\n\n**Key parameters**:\n- Chunk size\n- Overlap amount\n- Splitting criteria (characters, sentences, sections)\n\nCharacter-based chunking = the most reliable default fallback despite suboptimal results, because it works across all document types.",
                 "fr": "Stratégies de découpage de texte = processus de division des documents en segments de texte plus petits pour les pipelines RAG\n\n**Problème central**: Le mauvais découpage génère des erreurs de contexte. Exemple : un texte médical contenant « bug » est récupéré pour des questions en ingénierie logicielle en raison d’un chevauchement de mots sans contexte approprié.\n\n**Trois stratégies principales**:\n\n1. **Size-based chunking** = diviser le document en chaînes de longueur égale\n - Avantages : plus facile à mettre en œuvre, le plus courant en production\n - Inconvénients : coupe les mots en plein milieu de la phrase, manque de contexte\n - Solution : overlap strategy = inclure des caractères des morceaux voisins pour ajouter du contexte\n - Compromis : crée des duplications de texte mais améliore le sens\n\n2. **Structure-based chunking** = diviser selon la structure du document (en-têtes, paragraphes, sections)\n - Exemple : diviser sur les en-têtes Markdown (##)\n - Avantages : crée des sections bien formées et contextuelles\n - Inconvénients : nécessite des documents structurés, ne fonctionne pas avec des PDFs simples / texte non formaté\n\n3. **Semantic-based chunking** = utiliser le NLP pour regrouper des phrases/sections liées\n - Technique la plus avancée\n - Regroupe des phrases consécutives selon la similarité sémantique\n - Il existe une infinité de variations possibles de découpage\n\n**Sélection de la stratégie**:\n- Documents structurés avec garanties de format = structure-based chunking\n- Documents non structurés = sentence-based chunking\n- Code ou formats complexes = character-based chunking (le recours de repli le plus fiable)\n\n**Paramètres clés**:\n- Chunk size\n- Overlap amount\n- Critères de division (caractères, phrases, sections)\n\nCharacter-based chunking = le recours par défaut le plus fiable malgré des résultats sous-optimaux, car il fonctionne sur tous les types de documents."
               }
             },
@@ -5653,7 +5653,7 @@
               "cards": [
                 {
                   "front": {
-                    "en": "Download project zip, extract, open in editor",
+                    "en": "Download the project ZIP archive, extract it, and open the project in your editor.",
                     "fr": "Téléchargez l'archive ZIP du projet, décompressez‑la et ouvrez le projet dans votre éditeur."
                   },
                   "back": {
@@ -5667,7 +5667,7 @@
                     "fr": "Exécutez la commande `init` - Claude analyse la base de code,"
                   },
                   "back": {
-                    "en": "creates claude.md file with project architecture/coding style notes",
+                    "en": "creates a claude.md file containing notes on the project architecture and coding style",
                     "fr": "crée un fichier claude.md contenant des notes sur l'architecture du projet et le style de codage"
                   }
                 },
@@ -7475,7 +7475,7 @@
             {
               "type": "content",
               "body": {
-                "en": "- Integration: Commits fixes and creates PRs automatically\nExample case: Production app failing silently (worked locally) → AI found \"invalid model identifier\" error in logs → identified typo in model ID → corrected configuration → submitted fix via PR.\nBenefits: Catches production-only issues, redu",
+                "en": "- Integration: commits fixes and automatically creates PRs\n- Example: The production application fails silently (it worked locally) → the AI found the \"invalid model identifier\" error in the logs → identified a typo in the model ID → corrected configuration → fix submitted via PR\n- Benefits: Detects production-specific issues, reduces costs and risks",
                 "fr": "- Intégration : commits de correctifs et création automatique de PRs\n- Exemple : L'application en production échoue silencieusement (fonctionnait localement) → l'IA a trouvé l'erreur \"invalid model identifier\" dans les logs → a identifié une faute de frappe dans l'ID du modèle → configuration corrigée → correctif soumis via PR\n- Avantages : Détecte les problèmes propres à la production, réduit les coûts et les risques"
               }
             },
@@ -7802,7 +7802,7 @@
       "position": "after_content",
       "interactionType": "free_text",
       "prompt": {
-        "en": "- Integration: Commits fixes and creates PRs automatically\nExample case: Production app failing silently (worked locally) → AI found \"invalid model identifier\" error in logs → identified typo in model ID → corrected configuration → submitted fix via PR.\nBenefits: Catches production-only issues, reduces manual log hunting, provides explained fixes with context, maintains code review process through PRs.\nImplementation: Requires CI/CD pipeline, log access (CloudWatch/similar), AI coding assistant integration, version control automation.\nLimitation: Still requires human review of proposed fixes before merging.",
+        "en": "- Integration: fix commits and automatic PR creation\n- Example case: the production application fails silently (worked locally) → the AI found an \"invalid model identifier\" error in the logs → identified a typo in the model ID → corrected configuration → fix submitted via PR.\n- Benefits: Detects production-specific issues, reduces manual log searching, provides explained fixes with context, maintains the code review process through PRs.\n- Implementation: requires a CI/CD pipeline, access to logs (CloudWatch or equivalent), integration of an AI coding assistant, version control automation.\n- Limitation: still requires human review of proposed fixes before merging.",
         "fr": "- Intégration : commits de correctifs et création automatique de PRs\n- Cas d'exemple : l'application en production échoue silencieusement (fonctionnait localement) → l'IA a trouvé une erreur \"invalid model identifier\" dans les logs → a identifié une faute de frappe dans l'ID du modèle → configuration corrigée → correctif soumis via PR.\n- Avantages : Détecte les problèmes propres à la production, réduit la recherche manuelle dans les logs, fournit des correctifs expliqués avec le contexte, maintient le processus de revue de code via les PRs.\n- Implémentation : nécessite une pipeline CI/CD, accès aux logs (CloudWatch ou équivalent), intégration d'un assistant de codage IA, automatisation du contrôle de version.\n- Limitation : nécessite toujours une revue humaine des correctifs proposés avant fusion."
       },
       "instructions": {
