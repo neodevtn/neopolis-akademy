@@ -5,6 +5,7 @@ import { BLOCK_REGISTRY } from "../shared/blockRegistry";
 import { getEditorFields } from "../client/src/components/admin/blockEditorParity";
 
 const internalKeys = new Set(["type", "id", "label", "source_page", "order", "mediaUnavailable", "optionalMediaUnavailable"]);
+const canonicalVideoAliases = new Set(["url", "videoId", "watchUrl", "embedUrl", "mp4Url", "hlsUrl", "audioUrl"]);
 
 function visit(value: unknown, output: Record<string, unknown>[]) {
   if (Array.isArray(value)) return value.forEach((item) => visit(item, output));
@@ -26,6 +27,11 @@ describe("course block editor parity", () => {
       const declared = BLOCK_REGISTRY.find((definition) => definition.type === block.type)?.schema || [];
       const exposed = new Set(getEditorFields(block, declared).map((field) => field.key));
       for (const [key, value] of Object.entries(block)) {
+        if (block.type === "video" && canonicalVideoAliases.has(key) && value !== undefined && value !== null && value !== "") {
+          expect(exposed.has("sourceType")).toBe(true);
+          expect(exposed.has("sourceUrl")).toBe(true);
+          continue;
+        }
         if (!internalKeys.has(key) && value !== undefined && value !== null && value !== "") expect(exposed).toContain(key);
       }
     }

@@ -26,6 +26,8 @@ export interface BlockFieldSchema {
   arrayItemSchema?: BlockFieldSchema[]; // for array type
   defaultValue?: any;
   helpText?: { en: string; fr: string };
+  /** Keeps secondary technical fields out of the primary learner-content form. */
+  editorGroup?: "advanced" | "media_details";
 }
 
 export interface BlockTypeDefinition {
@@ -70,23 +72,24 @@ const videoBlock: BlockTypeDefinition = {
   color: "bg-red-100 text-red-700",
   schema: [
     { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
-    { key: "url", label: { en: "YouTube URL", fr: "URL YouTube" }, type: "text", placeholder: "https://www.youtube.com/watch?v=..." },
-    { key: "videoId", label: { en: "YouTube video ID", fr: "Identifiant vidéo YouTube" }, type: "text" },
-    { key: "watchUrl", label: { en: "Watch URL", fr: "URL de consultation" }, type: "text" },
-    { key: "embedUrl", label: { en: "Embed URL", fr: "URL intégrée" }, type: "text" },
-    { key: "mp4Url", label: { en: "MP4 URL (alternative)", fr: "URL MP4 (alternative)" }, type: "text" },
-    { key: "hlsUrl", label: { en: "HLS stream URL", fr: "URL du flux HLS" }, type: "text" },
-    { key: "audioUrl", label: { en: "Audio URL", fr: "URL audio" }, type: "text" },
-    { key: "slidesPdf", label: { en: "Slides PDF", fr: "PDF des slides" }, type: "text" },
-    { key: "subtitleUrlFr", label: { en: "French subtitles URL", fr: "URL des sous-titres français" }, type: "text" },
-    { key: "subtitleUrlEn", label: { en: "English subtitles URL", fr: "URL des sous-titres anglais" }, type: "text" },
-    { key: "transcript", label: { en: "Transcript", fr: "Transcription" }, type: "textarea" },
-    { key: "transcriptSegments", label: { en: "Transcript segments", fr: "Segments de transcription" }, type: "json" },
-    { key: "projectorSlides", label: { en: "Projector slides", fr: "Slides Projector" }, type: "json" },
-    { key: "projectorTimings", label: { en: "Slide timings", fr: "Synchronisation des slides" }, type: "json" },
-    { key: "projectorDuration", label: { en: "Projector duration", fr: "Durée Projector" }, type: "number" },
+    { key: "sourceType", label: { en: "Source type", fr: "Type de source" }, type: "select", required: true, defaultValue: "youtube", options: [{ value: "youtube", label: "YouTube" }, { value: "video", label: "MP4 / vidéo hébergée" }, { value: "hls", label: "Flux HLS" }, { value: "audio", label: "Audio / Projector" }], helpText: { en: "Choose the single source that the learner will play.", fr: "Choisissez la source unique que l’apprenant lira." } },
+    { key: "sourceUrl", label: { en: "Source URL", fr: "URL de la source" }, type: "text", required: true, placeholder: "https://…", helpText: { en: "YouTube, media-library or managed provider URL. Legacy playback fields are updated automatically.", fr: "URL YouTube, médiathèque ou fournisseur géré. Les champs techniques historiques sont mis à jour automatiquement." } },
+    { key: "videoLanguage", label: { en: "Video language", fr: "Langue de la vidéo" }, type: "select", options: [{ value: "fr", label: "Français" }, { value: "en", label: "English" }, { value: "ar", label: "العربية" }, { value: "multi", label: "Multilingue" }], editorGroup: "media_details" },
+    { key: "durationSeconds", label: { en: "Duration (seconds)", fr: "Durée (secondes)" }, type: "number", editorGroup: "media_details" },
+    { key: "objectiveBefore", label: { en: "Objective before playback", fr: "Objectif avant lecture" }, type: "i18n_textarea", editorGroup: "media_details" },
+    { key: "questionsAfter", label: { en: "Questions after playback", fr: "Questions après lecture" }, type: "json", editorGroup: "media_details" },
+    { key: "alternativeTextFr", label: { en: "French text alternative", fr: "Alternative textuelle française" }, type: "textarea", editorGroup: "media_details" },
+    { key: "slidesPdf", label: { en: "Slides PDF", fr: "PDF des slides" }, type: "text", editorGroup: "media_details" },
+    { key: "subtitleUrlFr", label: { en: "French subtitles URL", fr: "URL des sous-titres français" }, type: "text", editorGroup: "media_details" },
+    { key: "subtitleUrlEn", label: { en: "English subtitles URL", fr: "URL des sous-titres anglais" }, type: "text", editorGroup: "media_details" },
+    { key: "transcript", label: { en: "Transcript", fr: "Transcription" }, type: "textarea", editorGroup: "media_details" },
+    { key: "transcriptSegments", label: { en: "Transcript segments", fr: "Segments de transcription" }, type: "json", editorGroup: "media_details" },
+    { key: "projectorSlides", label: { en: "Projector slides", fr: "Slides Projector" }, type: "json", editorGroup: "media_details" },
+    { key: "projectorTimings", label: { en: "Slide timings", fr: "Synchronisation des slides" }, type: "json", editorGroup: "media_details" },
+    { key: "projectorDuration", label: { en: "Projector duration", fr: "Durée Projector" }, type: "number", editorGroup: "media_details" },
+    { key: "mediaMeta", label: { en: "Media provenance", fr: "Provenance du média" }, type: "json", editorGroup: "media_details", helpText: { en: "Source and attribution metadata displayed to learners.", fr: "Métadonnées de source et d’attribution affichées aux apprenants." } },
   ],
-  defaultData: { type: "video", title: { en: "", fr: "" }, url: "" },
+  defaultData: { type: "video", title: { en: "", fr: "" }, sourceType: "youtube", sourceUrl: "" },
 };
 
 const transcriptBlock: BlockTypeDefinition = {
@@ -178,6 +181,10 @@ const bucketSortBlock: BlockTypeDefinition = {
       { key: "text", label: { en: "Text", fr: "Texte" }, type: "i18n_text", required: true },
       { key: "correctBucket", label: { en: "Correct bucket ID", fr: "ID catégorie correcte" }, type: "text", required: true },
     ]},
+    { key: "hint", label: { en: "Hint", fr: "Indice" }, type: "i18n_textarea" },
+    { key: "feedback", label: { en: "Feedback", fr: "Feedback" }, type: "i18n_textarea" },
+    { key: "successMessage", label: { en: "Success message", fr: "Message de réussite" }, type: "i18n_text" },
+    { key: "correction", label: { en: "Legacy correction metadata", fr: "Métadonnées de correction historique" }, type: "json", editorGroup: "advanced" },
   ],
   defaultData: { type: "bucket_sort", title: { en: "", fr: "" }, buckets: [{ id: "a", label: { en: "Category A", fr: "Catégorie A" } }], cards: [] },
 };
@@ -636,7 +643,7 @@ const genericLearningBlocks: BlockTypeDefinition[] = [
   },
   {
     type: "annotated_screenshot", label: { en: "Annotated documentation image", fr: "Capture documentaire annotée" }, description: { en: "Attributable documentation image with accessible reading guide, zoom and full screen", fr: "Image documentaire attribuée avec guide accessible, zoom et plein écran" }, category: "media", icon: "Image", color: "bg-sky-100 text-sky-700", since: "4.1",
-    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true }, { key: "imageUrl", label: { en: "Managed image URL", fr: "URL d’image gérée" }, type: "text", required: true }, { key: "alt", label: { en: "Alternative text", fr: "Texte alternatif" }, type: "i18n_text", required: true }, { key: "caption", label: { en: "Caption", fr: "Légende" }, type: "i18n_textarea" }, { key: "guidedZones", label: { en: "Annotated zones", fr: "Zones annotées" }, type: "json" }, { key: "sourceRefs", label: { en: "Source references", fr: "Références sources" }, type: "json", required: true }], defaultData: { type: "annotated_screenshot", title: { en: "", fr: "" }, imageUrl: "", alt: { en: "", fr: "" }, guidedZones: [], sourceRefs: [] },
+    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true }, { key: "imageUrl", label: { en: "Managed image URL", fr: "URL d’image gérée" }, type: "text", required: true }, { key: "alt", label: { en: "Alternative text", fr: "Texte alternatif" }, type: "i18n_text", required: true }, { key: "caption", label: { en: "Caption", fr: "Légende" }, type: "i18n_textarea" }, { key: "guidedZones", label: { en: "Annotated zones", fr: "Zones annotées" }, type: "json" }, { key: "sourceRefs", label: { en: "Source references", fr: "Références sources" }, type: "json", required: true }, { key: "displayPolicy", label: { en: "Display policy", fr: "Politique d’affichage" }, type: "select", options: [{ value: "default", label: "Par défaut" }, { value: "always", label: "Toujours visible" }, { value: "on_demand", label: "À la demande" }], editorGroup: "media_details" }], defaultData: { type: "annotated_screenshot", title: { en: "", fr: "" }, imageUrl: "", alt: { en: "", fr: "" }, guidedZones: [], sourceRefs: [] },
   },
   {
     type: "source_references", label: { en: "Source references", fr: "Références sources" }, description: { en: "Compact attributable links supporting a teaching assertion", fr: "Liens attribuables appuyant une affirmation pédagogique" }, category: "content", icon: "Landmark", color: "bg-slate-100 text-slate-700", since: "4.1",

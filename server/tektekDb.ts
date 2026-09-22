@@ -65,6 +65,19 @@ export async function getTekTekRequestsInLastHour(userId: number) {
   return Number(row?.total ?? 0);
 }
 
+export type TekTekConversationReviewInput = {
+  period: TekTekUsagePeriod;
+  page: number;
+  pageSize: number;
+  search?: string;
+};
+
+export type TekTekConversationTranscriptInput = {
+  conversationId: number;
+  page: number;
+  pageSize: number;
+};
+
 export type TekTekUsageDimension = "training" | "course" | "user";
 export type TekTekUsagePeriod = "7d" | "30d" | "month" | "all";
 
@@ -83,6 +96,139 @@ function usageSince(period: TekTekUsagePeriod) {
   const now = new Date();
   if (period === "month") return new Date(now.getFullYear(), now.getMonth(), 1);
   return new Date(Date.now() - (period === "7d" ? 7 : 30) * 24 * 60 * 60 * 1000);
+}
+
+/**
+ * Administrative conversation index. Message bodies are intentionally omitted
+ * here: transcript content is only returned after an administrator explicitly
+ * selects one conversation.
+ */
+export async function listTekTekConversationsForReview(input: TekTekConversationReviewInput) {
+  const db = await requireDb();
+  const page = Math.max(1, input.page);
+  const pageSize = Math.min(Math.max(input.pageSize, 5), 100);
+  const since = usageSince(input.period);
+  const search = input.search?.trim().slice(0, 160);
+  const where = and(
+    since ? gte(tektekConversations.updatedAt, since) : undefined,
+    search ? or(
+      like(users.name, `%${search}%`),
+      like(users.email, `%${search}%`),
+      like(tektekConversations.certificationId, `%${search}%`),
+      like(tektekConversations.activeCourseId, `%${search}%`),
+    ) : undefined,
+  );
+  const [totalRow] = await db.select({ total: count() })
+    .from(tektekConversations)
+    .innerJoin(users, eq(users.id, tektekConversations.userId))
+    .where(where);
+  const rows = await db.select({
+      id: tektekConversations.id,
+      userId: tektekConversations.userId,
+      learnerName: users.name,
+      learnerEmail: users.email,
+      certificationId: tektekConversations.certificationId,
+      activeCourseId: tektekConversations.activeCourseId,
+      language: tektekConversations.language,
+      createdAt: tektekConversations.createdAt,
+      updatedAt: tektekConversations.updatedAt,
+      messageCount: count(tektekMessages.id),
+      questionCount: sql<number>`COALESCE(SUM(CASE WHEN ${tektekMessages.role} = 'user' THEN 1 ELSE 0 END), 0)`,
+      totalTokens: sql<number>`COALESCE(SUM(COALESCE(${tektekMessages.promptTokens}, 0) + COALESCE(${tektekMessages.completionTokens}, 0)), 0)`,
+    })
+    .from(tektekConversations)
+    .innerJoin(users, eq(users.id, tektekConversations.userId))
+    .leftJoin(tektekMessages, eq(tektekMessages.conversationId, tektekConversations.id))
+    .where(where)
+    .groupBy(
+      tektekConversations.id,
+      tektekConversations.userId,
+      users.name,
+      users.email,
+      tektekConversations.certificationId,
+      tektekConversations.activeCourseId,
+      tektekConversations.language,
+      tektekConversations.createdAt,
+      tektekConversations.updatedAt,
+    )
+    .orderBy(desc(tektekConversations.updatedAt), desc(tektekConversations.id))
+    .limit(pageSize)
+    .offset((page - 1) * pageSize);
+
+  return {
+    period: input.period,
+    page,
+    pageSize,
+    total: asNumber(totalRow?.total),
+    rows: rows.map((row) => ({
+      ...row,
+      learnerName: row.learnerName || "Apprenant sans nom",
+      learnerEmail: row.learnerEmail || null,
+      messageCount: asNumber(row.messageCount),
+      questionCount: asNumber(row.questionCount),
+      totalTokens: asNumber(row.totalTokens),
+    })),
+  };
+}
+
+/** Returns the latest transcript page in chronological order. */
+export async function getTekTekConversationForReview(input: TekTekConversationTranscriptInput) {
+  const db = await requireDb();
+  const page = Math.max(1, input.page);
+  const pageSize = Math.min(Math.max(input.pageSize, 10), 100);
+  const [conversation] = await db.select({
+      id: tektekConversations.id,
+      userId: tektekConversations.userId,
+      learnerName: users.name,
+      learnerEmail: users.email,
+      certificationId: tektekConversations.certificationId,
+      activeCourseId: tektekConversations.activeCourseId,
+      language: tektekConversations.language,
+      createdAt: tektekConversations.createdAt,
+      updatedAt: tektekConversations.updatedAt,
+    })
+    .from(tektekConversations)
+    .innerJoin(users, eq(users.id, tektekConversations.userId))
+    .where(eq(tektekConversations.id, input.conversationId))
+    .limit(1);
+  if (!conversation) return null;
+
+  const [totalRow] = await db.select({ total: count() }).from(tektekMessages)
+    .where(eq(tektekMessages.conversationId, input.conversationId));
+  const total = asNumber(totalRow?.total);
+  const offset = Math.max(0, total - page * pageSize);
+  const rows = await db.select({
+      id: tektekMessages.id,
+      role: tektekMessages.role,
+      content: tektekMessages.content,
+      courseId: tektekMessages.courseId,
+      model: tektekMessages.model,
+      promptTokens: tektekMessages.promptTokens,
+      completionTokens: tektekMessages.completionTokens,
+      createdAt: tektekMessages.createdAt,
+    })
+    .from(tektekMessages)
+    .where(eq(tektekMessages.conversationId, input.conversationId))
+    .orderBy(tektekMessages.createdAt, tektekMessages.id)
+    .limit(pageSize)
+    .offset(offset);
+
+  return {
+    conversation: {
+      ...conversation,
+      learnerName: conversation.learnerName || "Apprenant sans nom",
+      learnerEmail: conversation.learnerEmail || null,
+    },
+    page,
+    pageSize,
+    total,
+    hasOlderMessages: offset > 0,
+    messages: rows.map((row) => ({
+      ...row,
+      promptTokens: row.promptTokens === null ? null : asNumber(row.promptTokens),
+      completionTokens: row.completionTokens === null ? null : asNumber(row.completionTokens),
+    })),
+  };
 }
 
 const tokenTotalExpression = sql<number>`COALESCE(SUM(COALESCE(${tektekMessages.promptTokens}, 0) + COALESCE(${tektekMessages.completionTokens}, 0)), 0)`;

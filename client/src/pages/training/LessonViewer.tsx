@@ -296,7 +296,7 @@ export default function LessonViewer({
         if (ch && !isReviewMode) {
           const blocks = ch.blocks || [];
           // Video gate
-          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { if (b.mp4Url || b.audioUrl) return b.id || ''; let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
+          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { if (b.mp4Url || b.hlsUrl || b.audioUrl) return b.id || ''; let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
           if (!hasOptionalSupplementaryVideos(ch) && videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
           // Flip cards gate
           const hasFlips = blocks.some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
@@ -544,8 +544,8 @@ export default function LessonViewer({
         );
       }
       case "video": {
-        // Check if this is a local MP4 video (DataCamp n8n course)
-        if (block.mp4Url) {
+        // Check if this is a managed MP4 or HLS video source.
+        if (block.mp4Url || block.hlsUrl) {
           const mp4Title = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || block.title?.fr || 'Video') : (block.title || 'Video');
           const mp4Key = block.id || `mp4_${blockIdx}`;
           const isMp4Complete = completedVideos.has(mp4Key);

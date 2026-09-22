@@ -3,11 +3,12 @@ import { z } from "zod";
 import { invokeLLM } from "./_core/llm";
 import { protectedProcedure, router } from "./_core/trpc";
 import { userCanAccessCourse } from "./db";
-import { appendTekTekMessage, getOrCreateTekTekConversation, getTekTekRequestsInLastHour, getTekTekUsageOverview, listTekTekBudgetSettings, listTekTekMessages, upsertTekTekBudgetSetting } from "./tektekDb";
+import { appendTekTekMessage, getOrCreateTekTekConversation, getTekTekConversationForReview, getTekTekRequestsInLastHour, getTekTekUsageOverview, listTekTekBudgetSettings, listTekTekConversationsForReview, listTekTekMessages, upsertTekTekBudgetSetting } from "./tektekDb";
 import { getTekTekBlockContext, getTekTekTrainingSources, isTekTekExplorationQuestion, searchTekTekSources } from "./tektekIndex";
 import { planOrientationWithTekTek } from "./tektekOrientationService";
 import { TEKTEK_HOURLY_REQUEST_LIMIT, TEKTEK_MAX_QUESTION_LENGTH, TEKTEK_MAX_RESPONSE_LENGTH, TEKTEK_MAX_SOURCES, isLikelyAssessmentQuestion, isLikelySubmissionClarificationQuestion, normalizeTekTekLanguage, tektekLabel, type TekTekCitation, type TekTekSource } from "../shared/tektek";
 import { isAdministrativeRole } from "../shared/roles";
+import { logAdminActivity } from "./adminDb";
 
 const askInput = z.object({
   certificationId: z.string().trim().min(2).max(200),
@@ -32,6 +33,19 @@ const adminUsageInput = z.object({
   page: z.number().int().min(1).max(10_000).default(1),
   pageSize: z.number().int().min(5).max(100).default(20),
   search: z.string().trim().max(160).optional(),
+});
+
+const adminConversationListInput = z.object({
+  period: z.enum(["7d", "30d", "month", "all"]).default("30d"),
+  page: z.number().int().min(1).max(10_000).default(1),
+  pageSize: z.number().int().min(5).max(100).default(20),
+  search: z.string().trim().max(160).optional(),
+});
+
+const adminConversationTranscriptInput = z.object({
+  conversationId: z.number().int().positive(),
+  page: z.number().int().min(1).max(10_000).default(1),
+  pageSize: z.number().int().min(10).max(100).default(60),
 });
 
 const budgetSettingInput = z.object({
@@ -262,6 +276,23 @@ export const tektekRouter = router({
     saveBudget: protectedProcedure.input(budgetSettingInput).mutation(async ({ ctx, input }) => {
       if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return upsertTekTekBudgetSetting({ ...input, updatedBy: ctx.user.id });
+    }),
+    listConversations: protectedProcedure.input(adminConversationListInput.optional()).query(async ({ ctx, input }) => {
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
+      return listTekTekConversationsForReview(input ?? { period: "30d", page: 1, pageSize: 20 });
+    }),
+    getConversation: protectedProcedure.input(adminConversationTranscriptInput).query(async ({ ctx, input }) => {
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
+      const transcript = await getTekTekConversationForReview(input);
+      if (!transcript) throw new TRPCError({ code: "NOT_FOUND", message: "Conversation TekTek introuvable." });
+      await logAdminActivity({
+        adminId: ctx.user.id,
+        action: "review_tektek_conversation",
+        targetType: "tektek_conversation",
+        targetId: input.conversationId,
+        details: { messagePage: transcript.page, messageCount: transcript.messages.length },
+      });
+      return transcript;
     }),
   }),
   planOrientation: protectedProcedure.input(orientationPlanInput).mutation(async ({ ctx, input }) => {

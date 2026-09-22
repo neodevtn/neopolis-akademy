@@ -5,6 +5,8 @@ const mocks = vi.hoisted(() => ({
   getOrCreateTekTekConversation: vi.fn(),
   getTekTekRequestsInLastHour: vi.fn(),
   getTekTekUsageOverview: vi.fn(),
+  listTekTekConversationsForReview: vi.fn(),
+  getTekTekConversationForReview: vi.fn(),
   listTekTekBudgetSettings: vi.fn(),
   listTekTekMessages: vi.fn(),
   upsertTekTekBudgetSetting: vi.fn(),
@@ -15,6 +17,7 @@ const mocks = vi.hoisted(() => ({
   isTekTekExplorationQuestion: vi.fn(),
   planOrientationWithTekTek: vi.fn(),
   invokeLLM: vi.fn(),
+  logAdminActivity: vi.fn(),
 }));
 
 vi.mock("./db", () => ({ userCanAccessCourse: mocks.userCanAccessCourse }));
@@ -22,6 +25,8 @@ vi.mock("./tektekDb", () => ({
   getOrCreateTekTekConversation: mocks.getOrCreateTekTekConversation,
   getTekTekRequestsInLastHour: mocks.getTekTekRequestsInLastHour,
   getTekTekUsageOverview: mocks.getTekTekUsageOverview,
+  listTekTekConversationsForReview: mocks.listTekTekConversationsForReview,
+  getTekTekConversationForReview: mocks.getTekTekConversationForReview,
   listTekTekBudgetSettings: mocks.listTekTekBudgetSettings,
   listTekTekMessages: mocks.listTekTekMessages,
   upsertTekTekBudgetSetting: mocks.upsertTekTekBudgetSetting,
@@ -35,6 +40,7 @@ vi.mock("./tektekIndex", () => ({
 }));
 vi.mock("./tektekOrientationService", () => ({ planOrientationWithTekTek: mocks.planOrientationWithTekTek }));
 vi.mock("./_core/llm", () => ({ invokeLLM: mocks.invokeLLM }));
+vi.mock("./adminDb", () => ({ logAdminActivity: mocks.logAdminActivity }));
 
 import { tektekRouter } from "./tektekRouter";
 
@@ -71,6 +77,8 @@ describe("routeur TekTek", () => {
     mocks.getTekTekTrainingSources.mockReturnValue({ courseIds: new Set(["course-1"]), sources: [source] });
     mocks.getTekTekRequestsInLastHour.mockResolvedValue(0);
     mocks.getTekTekUsageOverview.mockResolvedValue({ dimension: "training", period: "month", page: 1, pageSize: 20, total: 0, totals: { requests: 0, responses: 0, meteredResponses: 0, promptTokens: 0, completionTokens: 0, totalTokens: 0 }, rows: [] });
+    mocks.listTekTekConversationsForReview.mockResolvedValue({ period: "30d", page: 1, pageSize: 20, total: 1, rows: [{ id: 44, learnerName: "Learner", learnerEmail: "learner@example.test", certificationId: "training-1", activeCourseId: "course-1", questionCount: 1, messageCount: 2, totalTokens: 33, updatedAt: new Date() }] });
+    mocks.getTekTekConversationForReview.mockResolvedValue({ conversation: { id: 44, learnerName: "Learner", learnerEmail: "learner@example.test", certificationId: "training-1", activeCourseId: "course-1", language: "en", createdAt: new Date(), updatedAt: new Date() }, page: 1, pageSize: 60, total: 2, hasOlderMessages: false, messages: [{ id: 1, role: "user", content: "Question", courseId: "course-1", model: null, promptTokens: null, completionTokens: null, createdAt: new Date() }] });
     mocks.listTekTekBudgetSettings.mockResolvedValue([]);
     mocks.upsertTekTekBudgetSetting.mockResolvedValue({ id: 1, scope: "global", scopeKey: "global", monthlyTokenBudget: 1000, alertThresholdPercent: 80 });
     mocks.getOrCreateTekTekConversation.mockResolvedValue({ id: 44 });
@@ -146,6 +154,27 @@ describe("routeur TekTek", () => {
     expect(overview.dimension).toBe("training");
     expect(mocks.getTekTekUsageOverview).toHaveBeenCalledWith(expect.objectContaining({ dimension: "course" }));
     expect(mocks.upsertTekTekBudgetSetting).toHaveBeenCalledWith(expect.objectContaining({ scope: "global", scopeKey: "global", updatedBy: learner.id }));
+  });
+
+  it("réserve la consultation des conversations aux administrateurs et journalise l’ouverture", async () => {
+    await expect(caller.adminUsage.listConversations()).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(caller.adminUsage.getConversation({ conversationId: 44 })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const adminCaller = tektekRouter.createCaller({ user: { ...learner, role: "admin" }, req: {} as any, res: {} as any });
+
+    const list = await adminCaller.adminUsage.listConversations({ period: "30d", page: 1, pageSize: 20, search: "Learner" });
+    const transcript = await adminCaller.adminUsage.getConversation({ conversationId: 44, page: 1, pageSize: 60 });
+
+    expect(list.rows[0]?.id).toBe(44);
+    expect(mocks.listTekTekConversationsForReview).toHaveBeenCalledWith(expect.objectContaining({ search: "Learner" }));
+    expect(transcript.messages[0]?.content).toBe("Question");
+    expect(mocks.logAdminActivity).toHaveBeenCalledWith(expect.objectContaining({ adminId: learner.id, action: "review_tektek_conversation", targetId: 44 }));
+  });
+
+  it("retourne une erreur explicite si une conversation demandée n’existe plus", async () => {
+    mocks.getTekTekConversationForReview.mockResolvedValue(null);
+    const adminCaller = tektekRouter.createCaller({ user: { ...learner, role: "admin" }, req: {} as any, res: {} as any });
+    await expect(adminCaller.adminUsage.getConversation({ conversationId: 999 })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(mocks.logAdminActivity).not.toHaveBeenCalled();
   });
 
   it("masque dans l’historique toute citation vers un cours qui n’est plus autorisé", async () => {

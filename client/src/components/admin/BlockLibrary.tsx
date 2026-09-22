@@ -11,7 +11,7 @@ import { ImagePlus, Plus, Search, GripVertical, Trash2, Copy, ChevronUp, Chevron
 import { toast } from "sonner";
 import { WysiwygMarkdownEditor } from "./WysiwygMarkdownEditor";
 import { BucketSortBlockEditor, CheckpointBlockEditor, ChoiceQuestionEditor, FillBlankBlockEditor } from "./SpecializedBlockEditors";
-import { getEditorFields, hydrateBlockForEditor, isMediaEditorField } from "./blockEditorParity";
+import { getEditorFields, hydrateBlockForEditor, isMediaEditorField, prepareBlockForSave } from "./blockEditorParity";
 
 interface BlockLibraryProps {
   blocks: any[];
@@ -176,8 +176,8 @@ export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: Bloc
                           onClick={() => addBlock(bt)}
                           className="flex min-w-0 items-start gap-3 rounded-lg border border-border p-4 text-left transition-colors hover:border-primary/50 hover:bg-primary/5"
                         >
-                          <Badge variant="secondary" className={`mt-0.5 max-w-40 shrink-0 truncate px-1.5 py-0 text-[10px] ${bt.color}`} title={bt.type}>
-                            {bt.type}
+                          <Badge variant="secondary" className={`mt-0.5 max-w-40 shrink-0 truncate px-1.5 py-0 text-[10px] ${bt.color}`} title={lang === "fr" ? bt.label.fr : bt.label.en}>
+                            {lang === "fr" ? CATEGORY_LABELS[bt.category].fr : CATEGORY_LABELS[bt.category].en}
                           </Badge>
                           <div className="min-w-0 flex-1">
                             <p className="break-words text-sm font-medium leading-5 text-foreground">{lang === "fr" ? bt.label.fr : bt.label.en}</p>
@@ -202,7 +202,7 @@ export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: Bloc
           onLangChange={setEditLang}
           t={t}
           onSave={(data) => {
-            updateBlock(editingIdx, data);
+            updateBlock(editingIdx, prepareBlockForSave(data));
             setEditingIdx(null);
             toast.success(t({ en: "Block updated", fr: "Bloc mis à jour" }));
           }}
@@ -290,8 +290,9 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
 
   const editorFields = getEditorFields(editData, blockDef.schema);
   const advancedFieldKeys = new Set(["styleTone", "styleVariant", "styleAccent", "styleDensity", "styleLayout", "overrideMode", "customHtml", "customCss"]);
-  const contentFields = editorFields.filter((field) => !advancedFieldKeys.has(field.key));
-  const advancedFields = editorFields.filter((field) => advancedFieldKeys.has(field.key));
+  const mediaDetailFields = editorFields.filter((field) => field.editorGroup === "media_details");
+  const advancedFields = editorFields.filter((field) => field.editorGroup === "advanced" || advancedFieldKeys.has(field.key));
+  const contentFields = editorFields.filter((field) => field.editorGroup !== "media_details" && field.editorGroup !== "advanced" && !advancedFieldKeys.has(field.key));
   const renderEditorField = (field: any) => (
     <div key={field.key}>
       <label className="mb-1 block text-xs font-medium text-muted-foreground">
@@ -310,7 +311,7 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
       <DialogContent className="w-[calc(100vw-2rem)] max-w-3xl max-h-[80vh] overflow-x-hidden overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Badge className={blockDef.color}>{blockDef.type}</Badge>
+            <Badge className={blockDef.color}>{lang === "fr" ? CATEGORY_LABELS[blockDef.category].fr : CATEGORY_LABELS[blockDef.category].en}</Badge>
             {lang === "fr" ? blockDef.label.fr : blockDef.label.en}
           </DialogTitle>
         </DialogHeader>
@@ -321,6 +322,13 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
           </TabsList>
           <TabsContent value={lang} className="space-y-4">
             {contentFields.map(renderEditorField)}
+            {mediaDetailFields.length > 0 && (
+              <details className="rounded-xl border border-border bg-sky-50/40 p-3">
+                <summary className="cursor-pointer text-sm font-semibold text-foreground">{t({ en: "Associated media and accessibility", fr: "Médias associés et accessibilité" })}</summary>
+                <p className="mt-1 text-xs text-muted-foreground">{t({ en: "Optional subtitles, transcript, learning prompts and provenance attached to the selected source.", fr: "Sous-titres, transcription, consignes pédagogiques et provenance associés à la source sélectionnée." })}</p>
+                <div className="mt-4 space-y-4">{mediaDetailFields.map(renderEditorField)}</div>
+              </details>
+            )}
             {advancedFields.length > 0 && (
               <details className="rounded-xl border border-border bg-muted/20 p-3">
                 <summary className="cursor-pointer text-sm font-semibold text-foreground">{t({ en: "Appearance & advanced overrides", fr: "Apparence et overrides avancés" })}</summary>
@@ -449,14 +457,11 @@ function ArrayFieldEditor({ field, data, onChange, lang }: { field: any; data: a
               const val = isI18n
                 ? (typeof item[subField.key] === "object" ? (item[subField.key]?.[lang] || "") : (item[subField.key] || ""))
                 : (item[subField.key] || "");
+              const setValue = (value: any) => isI18n ? updateI18nItem(idx, subField.key, lang, value) : updateItem(idx, subField.key, value);
               return (
                 <div key={subField.key}>
                   <label className="text-[10px] text-muted-foreground">{lang === "fr" ? subField.label.fr : subField.label.en}</label>
-                  <Input
-                    value={val}
-                    onChange={(e) => isI18n ? updateI18nItem(idx, subField.key, lang, e.target.value) : updateItem(idx, subField.key, e.target.value)}
-                    className="h-7 text-xs"
-                  />
+                  {subField.type === "select" ? <Select value={String(val || "")} onValueChange={setValue}><SelectTrigger className="h-7 text-xs"><SelectValue /></SelectTrigger><SelectContent>{(subField.options || []).map((option: any) => <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>)}</SelectContent></Select> : subField.type === "boolean" ? <label className="mt-1 flex items-center gap-2 text-xs"><input type="checkbox" checked={Boolean(val)} onChange={(event) => setValue(event.target.checked)} /> {Boolean(val) ? (lang === "fr" ? "Oui" : "Yes") : (lang === "fr" ? "Non" : "No")}</label> : /textarea|richtext/.test(subField.type) ? <Textarea value={val} onChange={(event) => setValue(event.target.value)} rows={3} className="mt-1 text-xs" /> : <Input value={val} onChange={(event) => setValue(event.target.value)} className="h-7 text-xs" />}
                 </div>
               );
             })}
