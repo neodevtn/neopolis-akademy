@@ -14,6 +14,7 @@ import {
   renderPublicTrainingIndex,
   renderPublicTrainingNotFound,
   renderPublicTrainingSitemap,
+  renderPublicTrainingTextSitemap,
   renderPublicTrainingTheme,
 } from "./publicTrainingPages";
 import { getPublicCatalogueTrainings, getPublicCatalogueSitemapEntries } from "@shared/publicTrainingCatalog";
@@ -293,6 +294,21 @@ describe("pages publiques de formations IA", () => {
     expect(allLocations.some((url) => /\/(training|admin|login|account|api)(?:\/|$)/.test(new URL(url).pathname))).toBe(false);
   });
 
+  it("fournit un sitemap texte UTF-8 équivalent à une soumission URL par URL", () => {
+    const xmlLocations = getPublicTrainingSitemapFiles().flatMap((file) =>
+      Array.from(file.xml.matchAll(/<url><loc>([^<]+)<\/loc>/g), (match) => match[1])
+    );
+    const textSitemap = renderPublicTrainingTextSitemap();
+    const textLocations = textSitemap.trimEnd().split("\n");
+
+    expect(textSitemap.endsWith("\n")).toBe(true);
+    expect(textSitemap).not.toContain("<urlset");
+    expect(textLocations).toEqual(xmlLocations);
+    expect(new Set(textLocations).size).toBe(textLocations.length);
+    expect(textLocations.every((url) => url.startsWith("https://akademy.neodev.click/"))).toBe(true);
+    expect(Buffer.byteLength(textSitemap, "utf8")).toBeLessThan(50 * 1024 * 1024);
+  });
+
   it("sert l’index et chaque lot sans session pour Googlebot desktop et smartphone", async () => {
     const app = express();
     registerPublicTrainingPages(app);
@@ -333,7 +349,24 @@ describe("pages publiques de formations IA", () => {
       }
       const robotsResponse = await fetch(`${baseUrl}/robots.txt`, { redirect: "manual" });
       expect(robotsResponse.status).toBe(200);
-      expect(await robotsResponse.text()).toContain("Sitemap: https://akademy.neodev.click/sitemap-index.xml");
+      const robotsBody = await robotsResponse.text();
+      expect(robotsBody).toContain("Sitemap: https://raw.githubusercontent.com/neodevtn/neopolis-akademy-sitemap/main/sitemap.txt");
+      expect(robotsBody).toContain("Sitemap: https://akademy.neodev.click/sitemap.txt");
+      expect(robotsBody).toContain("Sitemap: https://akademy.neodev.click/sitemap-index.xml");
+
+      const textSitemapResponse = await fetch(`${baseUrl}/sitemap.txt`, {
+        redirect: "manual",
+        headers: { "user-agent": "Python-urllib/3.12" },
+      });
+      const textSitemapBody = await textSitemapResponse.text();
+      expect(textSitemapResponse.status).toBe(200);
+      expect(textSitemapResponse.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+      expect(textSitemapResponse.headers.get("location")).toBeNull();
+      expect(textSitemapResponse.headers.get("set-cookie")).toBeNull();
+      expect(textSitemapResponse.headers.get("x-robots-tag")).toBeNull();
+      expect(textSitemapResponse.headers.get("x-neopolis-sitemap-version")).toBe("2026-09-26-text-fallback-v1");
+      expect(Number(textSitemapResponse.headers.get("content-length"))).toBe(Buffer.byteLength(textSitemapBody, "utf8"));
+      expect(textSitemapBody.split("\n")[0]).toBe("https://akademy.neodev.click/");
 
       const historicalIndexResponse = await fetch(`${baseUrl}/sitemap.xml`, { redirect: "manual", headers: { "user-agent": userAgents[0] } });
       expect(historicalIndexResponse.status).toBe(200);

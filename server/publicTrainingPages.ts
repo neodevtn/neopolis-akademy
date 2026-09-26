@@ -646,6 +646,21 @@ export function renderPublicTrainingSitemapFile(pathname: string) {
   return getPublicTrainingSitemapFiles().find((file) => file.path === pathname) || null;
 }
 
+export function getPublicTrainingCanonicalUrls() {
+  return getPublicTrainingSitemapFiles().flatMap((file) =>
+    Array.from(file.xml.matchAll(/<url><loc>([^<]+)<\/loc>/g), (match) => match[1]!)
+  );
+}
+
+/**
+ * Google accepts a UTF-8 text sitemap containing one absolute canonical URL
+ * per line. This deliberately avoids XML/index parsing and gives crawlers a
+ * single small discovery document equivalent to submitting every URL by hand.
+ */
+export function renderPublicTrainingTextSitemap() {
+  return `${getPublicTrainingCanonicalUrls().join("\n")}\n`;
+}
+
 export function renderAiNewsRss(feed: AiNewsFeed) {
   const items = feed.articles.slice(0, 50).map((article) => {
     const publishedAt = article.publishedAt ? new Date(article.publishedAt).toUTCString() : "";
@@ -666,9 +681,20 @@ export function registerPublicTrainingPages(app: Express) {
       "X-Neopolis-Sitemap-Version": "2026-09-08-small-batches-v1",
     }).end(payload);
   };
+  const sendTextSitemap = (res: Response, text: string) => {
+    const payload = Buffer.from(text, "utf8");
+    return res.status(200).set({
+      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400, no-transform",
+      "Content-Type": "text/plain; charset=utf-8",
+      "Content-Length": String(payload.byteLength),
+      "X-Content-Type-Options": "nosniff",
+      "X-Neopolis-Sitemap-Version": "2026-09-26-text-fallback-v1",
+    }).end(payload);
+  };
   const sitemapFiles = getPublicTrainingSitemapFiles();
   const sitemapByPath = new Map(sitemapFiles.map((file) => [file.path, file]));
   const sitemapIndexXml = renderPublicTrainingSitemap();
+  const textSitemap = renderPublicTrainingTextSitemap();
   for (const document of getAgenticDiscoveryDocuments()) {
     app.get(document.path, (_req: Request, res: Response) => {
       const payload = Buffer.from(document.body, "utf8");
@@ -725,6 +751,7 @@ export function registerPublicTrainingPages(app: Express) {
   // tout en gardant l’ancienne URL disponible pour les soumissions passées.
   app.get("/sitemap-index.xml", (_req: Request, res: Response) => sendXml(res, sitemapIndexXml));
   app.get("/sitemap.xml", (_req: Request, res: Response) => sendXml(res, sitemapIndexXml));
+  app.get("/sitemap.txt", (_req: Request, res: Response) => sendTextSitemap(res, textSitemap));
   app.get("/sitemaps/:sitemapFile", (req: Request, res: Response) => {
     const sitemap = sitemapByPath.get(`/sitemaps/${req.params.sitemapFile}`);
     return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");

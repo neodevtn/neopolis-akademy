@@ -11,6 +11,7 @@ import { getPublicTrainingCatalogMetrics, getPublicTrainingThemes } from "./publ
 
 export const AGENTIC_DISCOVERY_ORIGIN = "https://akademy.neodev.click";
 export const AGENTIC_DISCOVERY_UPDATED_AT = "2026-09-19";
+export const PUBLIC_SITEMAP_MIRROR_URL = "https://raw.githubusercontent.com/neodevtn/neopolis-akademy-sitemap/main/sitemap.txt";
 export const INDEXNOW_KEY = "0c74880479c29ce5486d1407718052659628ecfeb597909a185141b10b35c2f7";
 export const INDEXNOW_KEY_PATH = `/${INDEXNOW_KEY}.txt`;
 
@@ -39,6 +40,8 @@ export function renderRobotsTxt() {
     "Disallow: /diagnostic",
     "Disallow: /diagnostic-avance",
     "",
+    `Sitemap: ${PUBLIC_SITEMAP_MIRROR_URL}`,
+    `Sitemap: ${absolute("/sitemap.txt")}`,
     `Sitemap: ${absolute("/sitemap-index.xml")}`,
     `Host: ${new URL(AGENTIC_DISCOVERY_ORIGIN).host}`,
     "",
