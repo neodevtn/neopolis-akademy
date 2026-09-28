@@ -15,6 +15,12 @@ import { announceAchievement } from "@/components/AchievementCelebration";
 import { BrandLogo } from "@/components/BrandLogo";
 import { canRestoreExamSession, getExamSessionRemainingSeconds } from "@shared/examSession";
 import { trackEvent } from "@/lib/analytics";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
+import {
+  hasExpectedAnswerCount,
+  resolveExpectedAnswerCount,
+  toggleExpectedSelection,
+} from "@shared/expectedAnswerCount";
 
 type ExamState = "intro" | "active" | "review" | "locked";
 
@@ -207,13 +213,10 @@ export default function MockExam() {
   }, [answers]);
 
   const toggleSelection = useCallback((choiceId: string) => {
-    setSelectedForCurrent((prev) => {
-      if (prev.includes(choiceId)) {
-        return prev.filter((id) => id !== choiceId);
-      }
-      return [...prev, choiceId];
-    });
-  }, []);
+    const question = examQuestions[currentIndex];
+    const expected = resolveExpectedAnswerCount({ requiredSelections: question?.requiredSelections });
+    setSelectedForCurrent((current) => toggleExpectedSelection(current, choiceId, expected));
+  }, [currentIndex, examQuestions]);
 
   // La réussite effective et le certificat dépendent exclusivement de cette
   // soumission : le serveur contrôle la session et son horodatage d’expiration.
@@ -436,9 +439,9 @@ export default function MockExam() {
       return null;
     }
     const isLowTime = timeRemaining < 300;
-    const hasSelection = selectedForCurrent.length > 0;
     const isLastQuestion = currentIndex === examQuestions.length - 1;
-    const requiredSelections = Number.isInteger(currentQ.requiredSelections) ? Math.max(1, currentQ.requiredSelections) : 1;
+    const requiredSelections = resolveExpectedAnswerCount({ requiredSelections: currentQ.requiredSelections });
+    const hasRequiredSelectionCount = hasExpectedAnswerCount(selectedForCurrent.length, requiredSelections);
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -487,19 +490,22 @@ export default function MockExam() {
               {typeof currentQ.question === "object" ? t(currentQ.question) : currentQ.question}
             </p>
 
-            {requiredSelections > 1 && (
-              <p className="text-xs text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg mb-4 inline-block">
-                {t({ en: `Select ${requiredSelections} answers`, fr: `Sélectionnez ${requiredSelections} réponses` })}
-              </p>
-            )}
+            <ExpectedAnswerCount
+              count={requiredSelections}
+              lang={lang}
+              selected={selectedForCurrent.length}
+              className="mb-4"
+            />
 
-            <div className="space-y-3">
+            <div className="space-y-3" role={requiredSelections === 1 ? "radiogroup" : "group"}>
               {currentQ.choices.map((choice: any) => {
                 const isSelected = selectedForCurrent.includes(choice.id);
                 return (
                   <button
                     key={choice.id}
                     onClick={() => toggleSelection(choice.id)}
+                    role={requiredSelections === 1 ? "radio" : "checkbox"}
+                    aria-checked={isSelected}
                     className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
                       isSelected
                         ? "border-emerald-400 bg-emerald-50"
@@ -529,9 +535,9 @@ export default function MockExam() {
             </p>
             <button
               onClick={confirmAnswer}
-              disabled={!hasSelection}
+              disabled={!hasRequiredSelectionCount}
               className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all ${
-                hasSelection
+                hasRequiredSelectionCount
                   ? isLastQuestion
                     ? "bg-amber-600 hover:bg-amber-700 text-white"
                     : "bg-emerald-600 hover:bg-emerald-700 text-white"

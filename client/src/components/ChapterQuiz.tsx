@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { CheckCircle2, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { normalizeQuestionBank, type QuestionSelectionSettings } from "@shared/questionBank";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
 
 // Helper to resolve {en, fr} objects or plain strings
 function resolveI18n(val: any, lang: string): string {
@@ -177,6 +178,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
       <p className="text-base font-medium mb-5 text-gray-900" style={{ fontFamily: 'Lora, Georgia, serif' }}>
         {resolveI18n(q.question, lang)}
       </p>
+      <ExpectedAnswerCount count={1} lang={lang} className="mb-5" />
 
       {/* Choices - Skilljar style: A/B/C letter in orange */}
       <div className="space-y-3 mb-5">

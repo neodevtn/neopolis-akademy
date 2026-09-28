@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link2, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
 
 interface MatchingBlockProps {
   block: any;
@@ -80,6 +81,7 @@ export function MatchingBlock({ block, lang, t, onComplete, blockIdx }: Matching
         <span className="font-semibold text-foreground">{title || t({ en: "Match the pairs", fr: "Associer les paires" })}</span>
       </div>
       {instructions && <p className="px-4 pt-3 text-sm text-muted-foreground">{instructions}</p>}
+      <div className="px-4 pt-3"><ExpectedAnswerCount count={pairs.length || 1} lang={lang} selected={Object.keys(matches).length} /></div>
       <div className="p-4 grid grid-cols-2 gap-4">
         {/* Left column */}
         <div className="space-y-2">

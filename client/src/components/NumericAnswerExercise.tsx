@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
 
 interface Question {
   id: string;
@@ -161,6 +162,7 @@ export default function NumericAnswerExercise({
                 <p className="text-sm font-medium text-foreground mb-2">
                   {q.text[lang]}
                 </p>
+                <ExpectedAnswerCount count={1} lang={lang} className="mb-3" />
                 <div className="flex items-center gap-2">
                   <Input
                     type="text"

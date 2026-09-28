@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { ExpectedAnswerCount } from '@/components/ExpectedAnswerCount';
 import {
   CheckCircle2,
   XCircle,
@@ -10,6 +11,7 @@ import {
 interface LocalizedText {
   en: string;
   fr: string;
+  ar?: string;
 }
 
 interface BucketSortExercise {
@@ -23,7 +25,7 @@ interface BucketSortExercise {
 
 interface MatchingExerciseProps {
   exercise: BucketSortExercise;
-  lang: 'en' | 'fr';
+  lang: 'en' | 'fr' | 'ar';
   onComplete?: () => void;
 }
 
@@ -36,7 +38,7 @@ export function isPlacementCorrect(cards: BucketSortExercise['cards'], placement
 }
 
 export function shouldShowDetailedCorrection(submitted: boolean, correction?: LocalizedText) {
-  return submitted && Boolean(correction && (correction.en?.trim() || correction.fr?.trim()));
+  return submitted && Boolean(correction && (correction.en?.trim() || correction.fr?.trim() || correction.ar?.trim()));
 }
 
 // Bucket colors (Skilljar style - colored dashed borders)
@@ -84,6 +86,7 @@ function clearAttempt(exerciseId: string) {
 const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
 
 export function MatchingExercise({ exercise, lang, onComplete }: MatchingExerciseProps) {
+  const copy = (en: string, fr: string, ar: string) => lang === 'ar' ? ar : lang === 'fr' ? fr : en;
   const getText = (text?: LocalizedText | string) => {
     if (!text) return '';
     if (typeof text === 'string') return text;
@@ -230,11 +233,15 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
 
       {!submitted && (
         <p className="text-xs text-muted-foreground">
-          {lang === 'fr'
-            ? 'Cliquez sur une carte pour la sélectionner, puis cliquez sur une catégorie pour la placer.'
-            : 'Click a card to select it, then click a bucket to place it.'}
+          {copy(
+            'Click a card to select it, then click a bucket to place it.',
+            'Cliquez sur une carte pour la sélectionner, puis cliquez sur une catégorie pour la placer.',
+            'انقر على بطاقة لتحديدها، ثم انقر على فئة لوضعها فيها.',
+          )}
         </p>
       )}
+
+      <ExpectedAnswerCount count={totalCards || 1} lang={lang} selected={Object.keys(placements).length} />
 
       {/* Cards pool - grid 2 columns like Skilljar */}
       {!submitted && unplacedCards.length > 0 && (
@@ -306,7 +313,11 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
               role="button"
               tabIndex={submitted ? -1 : 0}
               data-bucket-id={bucket.id}
-              aria-label={lang === 'fr' ? `Catégorie ${getText(bucket.label)}. ${isTarget ? 'Appuyez sur Entrée pour placer la carte sélectionnée.' : 'Sélectionnez une carte ou faites-la glisser ici.'}` : `Bucket ${getText(bucket.label)}. ${isTarget ? 'Press Enter to place the selected card.' : 'Select a card or drag it here.'}`}
+              aria-label={copy(
+                `Bucket ${getText(bucket.label)}. ${isTarget ? 'Press Enter to place the selected card.' : 'Select a card or drag it here.'}`,
+                `Catégorie ${getText(bucket.label)}. ${isTarget ? 'Appuyez sur Entrée pour placer la carte sélectionnée.' : 'Sélectionnez une carte ou faites-la glisser ici.'}`,
+                `الفئة ${getText(bucket.label)}. ${isTarget ? 'اضغط على مفتاح الإدخال لوضع البطاقة المحددة.' : 'حدد بطاقة أو اسحبها إلى هنا.'}`,
+              )}
               aria-disabled={submitted}
               className="rounded-lg p-4 min-h-[100px]"
               style={{
@@ -334,8 +345,8 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                     style={{ borderColor: color.border, color: color.text, backgroundColor: color.bg }}
                   >
                     {selectedCard
-                      ? (lang === 'fr' ? 'Placer la carte sélectionnée ici' : 'Place selected card here')
-                      : (lang === 'fr' ? 'Sélectionnez une carte à placer' : 'Select a card to place')}
+                      ? copy('Place selected card here', 'Placer la carte sélectionnée ici', 'ضع البطاقة المحددة هنا')
+                      : copy('Select a card to place', 'Sélectionnez une carte à placer', 'حدد بطاقة لوضعها')}
                   </button>
                 )}
                 <div className="flex flex-wrap gap-2">
@@ -376,9 +387,11 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                       {decodeText(card.text)}
                       {result === 'incorrect' && (
                         <span className="sr-only">
-                          {lang === 'fr'
-                            ? ` Réponse attendue : ${getText(exercise.buckets.find((bucket) => bucket.id === card.correctBucket)?.label)}.`
-                            : ` Expected bucket: ${getText(exercise.buckets.find((bucket) => bucket.id === card.correctBucket)?.label)}.`}
+                          {copy(
+                            ` Expected bucket: ${getText(exercise.buckets.find((bucket) => bucket.id === card.correctBucket)?.label)}.`,
+                            ` Réponse attendue : ${getText(exercise.buckets.find((bucket) => bucket.id === card.correctBucket)?.label)}.`,
+                            ` الفئة المتوقعة: ${getText(exercise.buckets.find((bucket) => bucket.id === card.correctBucket)?.label)}.`,
+                          )}
                         </span>
                       )}
                     </button>
@@ -394,8 +407,8 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                     }}
                   >
                     {isTarget
-                      ? (lang === 'fr' ? 'Cliquez pour placer ici' : 'Click to place here')
-                      : (lang === 'fr' ? 'Sélectionnez une carte ou glissez-la ici' : 'Select a card or drag it here')}
+                      ? copy('Click to place here', 'Cliquez pour placer ici', 'انقر للوضع هنا')
+                      : copy('Select a card or drag it here', 'Sélectionnez une carte ou glissez-la ici', 'حدد بطاقة أو اسحبها إلى هنا')}
                   </span>
                 )}
               </div>
@@ -425,13 +438,13 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
             <div>
               <p className={`text-sm font-semibold ${isAllCorrect ? 'text-green-700 dark:text-green-400' : 'text-amber-700 dark:text-amber-400'}`}>
                 {correctCount}/{totalCards} {isAllCorrect
-                  ? (lang === 'fr' ? '· Parfait !' : '· Perfect!')
-                  : (lang === 'fr' ? '· Réessayez' : '· TRY AGAIN')}
+                  ? copy('· Perfect!', '· Parfait !', '· ممتاز!')
+                  : copy('· Try again', '· Réessayez', '· حاول مرة أخرى')}
               </p>
               {shouldShowDetailedCorrection(submitted, exercise.correction) && (
                 <div className="mt-1.5 text-xs text-muted-foreground">
                   <span className="font-medium text-foreground">
-                    {lang === 'fr' ? 'Correction : ' : 'Correction: '}
+                    {copy('Correction: ', 'Correction : ', 'التصحيح: ')}
                   </span>
                   {getText(exercise.correction)}
                 </div>
@@ -447,7 +460,7 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
               style={{ transition: `transform 160ms ${EASE_OUT}` }}
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              {lang === 'fr' ? 'Réessayer' : 'Try Again'}
+              {copy('Try again', 'Réessayer', 'حاول مرة أخرى')}
             </Button>
           )}
         </div>
@@ -463,7 +476,7 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
             className="gap-1.5 bg-[#c75b3a] hover:bg-[#a84a2e] text-white"
             style={{ transition: `transform 160ms ${EASE_OUT}` }}
           >
-            {lang === 'fr' ? 'Soumettre' : 'Submit'}
+            {copy('Submit', 'Soumettre', 'إرسال')}
           </Button>
           {Object.keys(placements).length > 0 && (
             <Button
@@ -473,7 +486,7 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
               className="gap-1.5 text-muted-foreground"
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              {lang === 'fr' ? 'Réinitialiser' : 'Reset'}
+              {copy('Reset', 'Réinitialiser', 'إعادة تعيين')}
             </Button>
           )}
         </div>

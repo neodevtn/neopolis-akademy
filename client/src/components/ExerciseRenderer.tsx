@@ -101,6 +101,12 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { hasExactCorrectChoiceSet } from './exerciseCompletion';
+import { ExpectedAnswerCount } from './ExpectedAnswerCount';
+import {
+  hasExpectedAnswerCount,
+  resolveExpectedAnswerCount,
+  toggleExpectedSelection,
+} from '@shared/expectedAnswerCount';
 import {
   CheckCircle2,
   XCircle,
@@ -318,6 +324,14 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, hasServerS
 
   const interactionType = exercise.interactionType || 'free_text';
   const TypeIcon = TYPE_ICONS[interactionType] || FileText;
+  const expectedSelectionCount = interactionType === 'single_choice'
+    ? 1
+    : resolveExpectedAnswerCount({
+        requiredSelections: exercise.requiredSelections,
+        correctChoiceIds: exercise.correctChoiceIds,
+        correctAnswers: exercise.correctAnswers,
+        options: exercise.options,
+      });
 
   // Shuffle options on retry to prevent memorization
   const [shuffledOptions, setShuffledOptions] = useState<ExerciseOption[]>(
@@ -584,14 +598,14 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, hasServerS
       case 'code':
         return userAnswer.trim().length > 10;
       case 'single_choice':
-        return selectedOptions.size === 1;
       case 'multi_choice':
+        return hasExpectedAnswerCount(selectedOptions.size, expectedSelectionCount);
       case 'checklist':
         return selectedOptions.size > 0;
       default:
         return userAnswer.trim().length > 0;
     }
-  }, [submitted, exercise, wordCount, userAnswer, selectedOptions, interactionType]);
+  }, [submitted, exercise, wordCount, userAnswer, selectedOptions, interactionType, expectedSelectionCount]);
 
   const handleSubmit = async () => {
     const answer = interactionType === 'single_choice' || interactionType === 'multi_choice' || interactionType === 'checklist'
@@ -648,18 +662,14 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, hasServerS
 
   const toggleOption = (optionId: string) => {
     if (submitted) return;
-    const newSet = new Set(selectedOptions);
-    if (interactionType === 'single_choice') {
-      newSet.clear();
-      newSet.add(optionId);
-    } else {
-      if (newSet.has(optionId)) {
-        newSet.delete(optionId);
-      } else {
-        newSet.add(optionId);
-      }
+    if (interactionType === 'single_choice' || interactionType === 'multi_choice') {
+      setSelectedOptions(new Set(toggleExpectedSelection(Array.from(selectedOptions), optionId, expectedSelectionCount)));
+      return;
     }
-    setSelectedOptions(newSet);
+    const next = new Set(selectedOptions);
+    if (next.has(optionId)) next.delete(optionId);
+    else next.add(optionId);
+    setSelectedOptions(next);
   };
 
   const getOptionResult = (option: ExerciseOption) => {
@@ -930,11 +940,14 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete, hasServerS
 
             {/* Single/Multi Choice */}
             {(interactionType === 'single_choice' || interactionType === 'multi_choice') && shuffledOptions.length > 0 && (
-              <div className="space-y-2">
+              <div className="space-y-2" role={interactionType === 'single_choice' ? 'radiogroup' : 'group'}>
+                <ExpectedAnswerCount count={expectedSelectionCount} lang={lang} selected={selectedOptions.size} className="mb-3" />
                 {shuffledOptions.map((option) => (
                   <button
                     key={option.id}
                     onClick={() => toggleOption(option.id)}
+                    role={interactionType === 'single_choice' ? 'radio' : 'checkbox'}
+                    aria-checked={selectedOptions.has(option.id)}
                     className={`w-full text-left px-3 py-2 rounded-md border text-sm transition-colors ${
                       selectedOptions.has(option.id)
                         ? 'border-primary bg-primary/10 text-primary'

@@ -962,7 +962,7 @@ export default function LessonViewer({
                 cards: block.cards,
                 correction: block.correction,
               }}
-              lang={lang as "en" | "fr"}
+              lang={lang as "en" | "fr" | "ar"}
               onComplete={() => { trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${matchingId}`, { ...analyticsParams, content_id: matchingId, status: "completed" }); setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(matchingId); return next; }); }}
             />
           </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CheckCircle2, XCircle, RotateCcw, HelpCircle } from "lucide-react";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
 
 interface Option {
   id: string;
@@ -13,7 +14,7 @@ interface SingleChoiceExerciseProps {
   correctAnswer?: string;
   explanation?: string;
   hint?: string;
-  lang?: 'en' | 'fr';
+  lang?: 'en' | 'fr' | 'ar';
   onCorrect?: (id: string) => void;
   onEvaluate?: (selectedId: string) => Promise<{ correct: boolean; explanation?: string }>;
   questionNumber?: number;
@@ -103,6 +104,7 @@ export function SingleChoiceExercise({
           <p className="text-base font-semibold text-foreground leading-relaxed" style={{ fontFamily: 'Lora, Georgia, serif' }}>
             {question}
           </p>
+          <ExpectedAnswerCount count={1} lang={lang} className="mt-3" />
         </div>
       </div>
 

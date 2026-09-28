@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { CheckSquare, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
+import { hasExpectedAnswerCount, toggleExpectedSelection } from "@shared/expectedAnswerCount";
 
 interface MultiChoiceBlockProps {
   block: any;
@@ -31,10 +33,7 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
 
   const toggleOption = (id: string) => {
     if (submitted) return;
-    const next = new Set(selected);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    setSelected(next);
+    setSelected(new Set(toggleExpectedSelection(Array.from(selected), id, correctAnswers.length || 1)));
   };
 
   const handleSubmit = () => {
@@ -79,7 +78,8 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
           </figure>
         )}
         <p className="text-sm font-medium text-foreground">{question}</p>
-        <div className="space-y-2">
+        <ExpectedAnswerCount count={correctAnswers.length || 1} lang={lang} selected={selected.size} />
+        <div className="space-y-2" role="group">
           {options.map((opt) => {
             const isSelected = selected.has(opt.id);
             const isCorrectAnswer = correctAnswers.includes(opt.id);
@@ -90,6 +90,8 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
                 key={opt.id}
                 onClick={() => toggleOption(opt.id)}
                 disabled={submitted}
+                role="checkbox"
+                aria-checked={isSelected}
                 className={`w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
                   showCorrect ? "border-green-400 bg-green-50 dark:bg-green-950/30" :
                   showWrong ? "border-red-400 bg-red-50 dark:bg-red-950/30" :
@@ -122,7 +124,7 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
         )}
         <div className="flex items-center gap-3">
           {!submitted ? (
-            <Button onClick={handleSubmit} disabled={selected.size === 0} className="bg-green-600 hover:bg-green-700">
+            <Button onClick={handleSubmit} disabled={!hasExpectedAnswerCount(selected.size, correctAnswers.length || 1)} className="bg-green-600 hover:bg-green-700">
               {t({ en: "Check answers", fr: "Vérifier" })}
             </Button>
           ) : (

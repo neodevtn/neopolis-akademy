@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { ListOrdered, CheckCircle2, XCircle, RotateCcw, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
 
 interface OrderingBlockProps {
   block: any;
@@ -92,6 +93,7 @@ export function OrderingBlock({ block, lang, t, onComplete, blockIdx }: Ordering
         <span className="font-semibold text-foreground">{title || t({ en: "Put in order", fr: "Remettez dans l'ordre" })}</span>
       </div>
       {instructions && <p className="px-4 pt-3 text-sm text-muted-foreground">{instructions}</p>}
+      <div className="px-4 pt-3"><ExpectedAnswerCount count={items.length || 1} lang={lang} /></div>
       <div className="p-4 space-y-2">
         {items.map((item, idx) => {
           const isCorrect = submitted && results[idx];

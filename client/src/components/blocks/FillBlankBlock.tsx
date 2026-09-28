@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { TextCursorInput, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
 
 interface FillBlankBlockProps {
   block: any;
@@ -89,6 +90,7 @@ export function FillBlankBlock({ block, lang, t, onComplete, blockIdx }: FillBla
         <span className="font-semibold text-foreground">{t({ en: "Fill in the Blanks", fr: "Texte à trous" })}</span>
       </div>
       {instructions && <p className="px-4 pt-3 text-sm text-muted-foreground">{instructions}</p>}
+      <div className="px-4 pt-3"><ExpectedAnswerCount count={blanks.length || 1} lang={lang} /></div>
       <div className="p-4">
         <pre className="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed">
           {segments.map((seg, i) => {
@@ -152,4 +154,3 @@ export function FillBlankBlock({ block, lang, t, onComplete, blockIdx }: FillBla
     </div>
   );
 }
-

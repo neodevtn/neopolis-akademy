@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NovasavoLearningBlock } from "@/components/blocks/NovasavoLearningBlocks";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
 
 const text = (value: unknown, lang: string) => typeof value === "string" ? value : value && typeof value === "object" ? String((value as Record<string, unknown>)[lang] || (value as Record<string, unknown>).fr || (value as Record<string, unknown>).en || "") : "";
 
@@ -58,6 +59,7 @@ export function KnowledgeCheckBlock({ block, lang, onComplete }: { block: any; l
   return <section className={`w-full min-w-0 max-w-full rounded-2xl p-5 text-white sm:p-7 ${mode === "scenario" ? "bg-slate-950" : "bg-gradient-to-br from-[var(--course-primary)] to-[var(--course-secondary)]"}`}>
     <p className="text-xs font-bold uppercase tracking-wider text-white/75">{mode === "scenario" ? "Scénario" : mode === "myth_reality" ? "Mythe ou réalité" : "Vérification des acquis"} · {block.competencyPoints || 1} point{(block.competencyPoints || 1) > 1 ? "s" : ""} de compétences</p>
     <h2 className="mt-3 break-words text-xl font-bold leading-relaxed">{prompt}</h2>
+    <ExpectedAnswerCount count={1} lang={lang} className="mt-4 border-white/30 bg-white/10 text-white dark:text-white" />
     <div className={mode === "myth_reality" ? "mt-5 grid grid-cols-2 gap-3" : "mt-5 space-y-3"}>{options.map((option: any) => <button type="button" key={option.id} onClick={() => select(option.id)} className={`w-full max-w-full break-words rounded-xl border p-3 text-left text-sm font-medium leading-relaxed sm:p-4 ${answer === option.id ? "border-white bg-white/20" : "border-white/20 bg-white/5 hover:bg-white/10"}`}><span className="mr-3 text-white/70">{mode !== "myth_reality" && `${String(option.id).toUpperCase()}.`}</span>{option.label}</button>)}</div>
     {answer && <div className={`mt-5 break-words rounded-xl p-4 text-sm ${correct ? "bg-emerald-500/20 text-emerald-50" : "bg-amber-300/15 text-amber-50"}`}><strong>{correct ? "Bonne réponse." : "Réponse incorrecte."}</strong> {text(block.explanation, lang)}{!correct && <span> Relisez l’explication puis réessayez si nécessaire.</span>}<Button variant="link" size="sm" className="ml-1 h-auto max-w-full whitespace-normal px-1 text-left text-current" onClick={() => setAnswer(null)}>Réessayer</Button></div>}
   </section>;

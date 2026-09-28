@@ -7,6 +7,7 @@ import { resolveI18n } from "./contentDetectors";
 import { Link } from "wouter";
 import trainingIndex from "@/data/trainingIndex.json";
 import { trpc } from "@/lib/trpc";
+import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
 
 export default function LessonQuiz({
   certId,
@@ -512,6 +513,7 @@ export default function LessonQuiz({
       <p className="text-base font-medium mb-5 text-gray-900 dark:text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
         {resolveI18n(q.question, lang)}
       </p>
+      <ExpectedAnswerCount count={1} lang={lang} className="mb-5" />
 
       {/* Choices - Skilljar style: A/B/C letter in coral */}
       <div className="space-y-3 mb-5">
