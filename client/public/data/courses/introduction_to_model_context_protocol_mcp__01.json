@@ -3113,7 +3113,7 @@
           "requiredBeforeAdvance": true,
           "blocks": [
             {
-              "type": "bucket_sort",
+              "type": "ordering",
               "id": "dc_2_act_10_bucket_sort",
               "title": {
                 "en": "Le workflow d'appel d'outils",
@@ -3123,57 +3123,6 @@
                 "en": "Arrange the steps of the tool-calling workflow from first (top) to last (bottom).",
                 "fr": "Classez les étapes du workflow d'appel d'outils de la première (en haut) à la dernière (en bas)."
               },
-              "buckets": [
-                {
-                  "id": "data_science_process",
-                  "label": {
-                    "en": "Workflow d'appel d'outils",
-                    "fr": "Workflow d'appel d'outils"
-                  }
-                }
-              ],
-              "cards": [
-                {
-                  "id": "question",
-                  "text": {
-                    "en": "Create a request with tool definitions and the user message",
-                    "fr": "Créer une requête avec les définitions d'outils et le message utilisateur"
-                  },
-                  "correctBucket": "data_science_process"
-                },
-                {
-                  "id": "data",
-                  "text": {
-                    "en": "Récupérer les appels d'outils et leurs arguments",
-                    "fr": "Récupérer les appels d'outils et leurs arguments"
-                  },
-                  "correctBucket": "data_science_process"
-                },
-                {
-                  "id": "explore",
-                  "text": {
-                    "en": "Execute the tool function with the extracted arguments",
-                    "fr": "Exécuter la fonction de l'outil avec les arguments extraits"
-                  },
-                  "correctBucket": "data_science_process"
-                },
-                {
-                  "id": "model",
-                  "text": {
-                    "en": "Send the tool output to the model",
-                    "fr": "Envoyer la sortie de l'outil au modèle"
-                  },
-                  "correctBucket": "data_science_process"
-                },
-                {
-                  "id": "communicate",
-                  "text": {
-                    "en": "Receive a natural-language response to the user's message",
-                    "fr": "Récupérer une réponse en langage naturel au message de l'utilisateur"
-                  },
-                  "correctBucket": "data_science_process"
-                }
-              ],
               "feedback": {
                 "en": "Well done! This five-step workflow is essential for enabling LLMs to use tools and go beyond their usual capabilities. Now let's create a function so an LLM can use the tools of MCP servers.",
                 "fr": "Bien joué ! Ce workflow en cinq étapes est essentiel pour permettre aux LLM d'utiliser des outils et d'aller au-delà de leurs capacités habituelles. Passons maintenant à la création d'une fonction pour qu'un LLM puisse utiliser les outils des serveurs MCP."
@@ -3181,7 +3130,44 @@
               "hint": {
                 "en": "The LLM must first know the user's request and the available tools to determine which ones, if any, should be called.\n\nTo answer questions beyond its knowledge, an LLM must be able to call a tool and then review its results.",
                 "fr": "Le LLM doit d'abord connaître la requête de l'utilisateur et les outils disponibles pour déterminer lesquels (le cas échéant) doivent être appelés.\n\nPour répondre à des questions au-delà de ses connaissances, un LLM doit pouvoir appeler un outil, puis consulter ses résultats."
-              }
+              },
+              "items": [
+                {
+                  "id": "question",
+                  "text": {
+                    "en": "Create a request with tool definitions and the user message",
+                    "fr": "Créer une requête avec les définitions d'outils et le message utilisateur"
+                  }
+                },
+                {
+                  "id": "data",
+                  "text": {
+                    "en": "Récupérer les appels d'outils et leurs arguments",
+                    "fr": "Récupérer les appels d'outils et leurs arguments"
+                  }
+                },
+                {
+                  "id": "explore",
+                  "text": {
+                    "en": "Execute the tool function with the extracted arguments",
+                    "fr": "Exécuter la fonction de l'outil avec les arguments extraits"
+                  }
+                },
+                {
+                  "id": "model",
+                  "text": {
+                    "en": "Send the tool output to the model",
+                    "fr": "Envoyer la sortie de l'outil au modèle"
+                  }
+                },
+                {
+                  "id": "communicate",
+                  "text": {
+                    "en": "Receive a natural-language response to the user's message",
+                    "fr": "Récupérer une réponse en langage naturel au message de l'utilisateur"
+                  }
+                }
+              ]
             }
           ]
         },

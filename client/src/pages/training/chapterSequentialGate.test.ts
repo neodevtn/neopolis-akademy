@@ -11,6 +11,7 @@ describe("verrouillage séquentiel de la navigation compacte", () => {
       { block: { type: "cloud_exercise", id: "proof" }, completed: { exercises: empty(), cloud: empty(), matching: empty(), inline: empty() } },
       { block: { type: "single_choice_exercise", id: "quiz" }, completed: { exercises: empty(), cloud: empty(), matching: empty(), inline: empty() } },
       { block: { type: "bucket_sort", id: "sort" }, completed: { exercises: empty(), cloud: empty(), matching: empty(), inline: empty() } },
+      { block: { type: "ordering", id: "sequence" }, completed: { exercises: empty(), cloud: empty(), matching: empty(), inline: empty() } },
       { block: { type: "knowledge_check", id: "knowledge" }, completed: { exercises: empty(), cloud: empty(), matching: empty(), inline: empty() } },
       { block: { type: "course_final_quiz", id: "final" }, completed: { exercises: empty(), cloud: empty(), matching: empty(), inline: empty() } },
       { block: { type: "reflection", id: "reflection" }, completed: { exercises: empty(), cloud: empty(), matching: empty(), inline: empty() } },
@@ -25,6 +26,7 @@ describe("verrouillage séquentiel de la navigation compacte", () => {
     expect(isSequentialActivityNavigationLocked({ blocks: [{ type: "course_final_quiz", id: "final" }], completedExercises: empty(), completedCloudExercises: empty(), completedCourseFinalQuizzes: new Set(["final"]), completedMatching: empty(), completedInlineInteractions: empty() })).toBe(false);
     expect(isSequentialActivityNavigationLocked({ blocks: [{ type: "reflection", id: "reflection" }], completedExercises: empty(), completedCloudExercises: empty(), completedReflections: new Set(["reflection"]), completedMatching: empty(), completedInlineInteractions: empty() })).toBe(false);
     expect(isSequentialActivityNavigationLocked({ blocks: [{ type: "guided_action", id: "action" }], completedExercises: empty(), completedCloudExercises: empty(), completedGuidedActions: new Set(["action"]), completedMatching: empty(), completedInlineInteractions: empty() })).toBe(false);
+    expect(isSequentialActivityNavigationLocked({ blocks: [{ type: "ordering", id: "sequence" }], completedExercises: empty(), completedCloudExercises: empty(), completedMatching: new Set(["sequence"]), completedInlineInteractions: empty() })).toBe(false);
   });
 
   it("garde le checkpoint Associate 2 verrouillé tant que sa réponse correcte n’a pas été enregistrée", () => {

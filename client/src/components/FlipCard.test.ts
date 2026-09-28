@@ -6,9 +6,9 @@ const source = readFileSync(resolve(process.cwd(), 'client/src/components/FlipCa
 
 describe('FlipCard localisation and accessibility contract', () => {
   it('provides translated labels for English, French, and Arabic', () => {
-    expect(source).toContain("fr: { card: 'Carte', flip: 'Retourner' }");
-    expect(source).toContain("ar: { card: 'بطاقة', flip: 'اقلب' }");
-    expect(source).toContain("en: { card: 'Card', flip: 'Flip' }");
+    expect(source).toContain("fr: { card: 'Carte', flip: 'Retourner', progress: 'cartes consultées' }");
+    expect(source).toContain("ar: { card: 'بطاقة', flip: 'اقلب', progress: 'بطاقات تمت مراجعتها' }");
+    expect(source).toContain("en: { card: 'Card', flip: 'Flip', progress: 'cards reviewed' }");
   });
 
   it('keeps keyboard activation and an exposed button semantic', () => {
@@ -26,5 +26,12 @@ describe('FlipCard localisation and accessibility contract', () => {
     expect(source).toContain('grid-cols-1 sm:grid-cols-2');
     expect(source).not.toContain('truncate');
     expect(source).not.toContain('line-clamp');
+  });
+
+  it('shows reviewed-card progress and resets state when the activity or language changes', () => {
+    expect(source).toContain('{seenCards.size}/{cards.length} {labels.progress}');
+    expect(source).toContain('setSeenCards(new Set());');
+    expect(source).toContain('allFlippedRef.current = false;');
+    expect(source).toContain('}, [cards, lang]);');
   });
 });

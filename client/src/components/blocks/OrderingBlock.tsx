@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ListOrdered, CheckCircle2, XCircle, RotateCcw, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
@@ -11,31 +11,43 @@ interface OrderingBlockProps {
   blockIdx: number;
 }
 
+type OrderingItem = { id: string; text: string };
+
+function shuffledCopy<T>(values: T[]): T[] {
+  const shuffled = [...values];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const destination = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[destination]] = [shuffled[destination], shuffled[index]];
+  }
+  return shuffled;
+}
+
 export function OrderingBlock({ block, lang, t, onComplete, blockIdx }: OrderingBlockProps) {
+  const ui = (copy: { en: string; fr: string; ar: string }) => lang === "ar" ? copy.ar : t(copy);
   const title = typeof block.title === "object" ? (block.title[lang] || block.title.en || "") : (block.title || "");
   const instructions = typeof block.instructions === "object" ? (block.instructions[lang] || block.instructions.en || "") : (block.instructions || "");
   const feedback = typeof block.feedback === "object" ? (block.feedback[lang] || block.feedback.en || "") : (block.feedback || "");
 
-  const correctOrder = useMemo(() => {
+  const correctOrder = useMemo<OrderingItem[]>(() => {
     return (block.items || []).map((item: any) => ({
-      id: item.id,
+      id: String(item.id),
       text: typeof item.text === "object" ? (item.text[lang] || item.text.en || "") : (item.text || ""),
     }));
   }, [block.items, lang]);
 
   // Shuffle items initially
-  const [items, setItems] = useState(() => {
-    const shuffled = [...correctOrder];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  });
+  const [items, setItems] = useState<OrderingItem[]>(() => shuffledCopy(correctOrder));
 
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [results, setResults] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    setItems(shuffledCopy(correctOrder));
+    setDragIdx(null);
+    setSubmitted(false);
+    setResults([]);
+  }, [correctOrder]);
 
   const handleDragStart = (idx: number) => {
     setDragIdx(idx);
@@ -74,12 +86,7 @@ export function OrderingBlock({ block, lang, t, onComplete, blockIdx }: Ordering
   };
 
   const handleReset = () => {
-    const shuffled = [...correctOrder];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    setItems(shuffled);
+    setItems(shuffledCopy(correctOrder));
     setSubmitted(false);
     setResults([]);
   };
@@ -90,11 +97,11 @@ export function OrderingBlock({ block, lang, t, onComplete, blockIdx }: Ordering
     <div className="my-6 rounded-xl border border-border overflow-hidden bg-card">
       <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-lime-50 dark:bg-lime-950/20">
         <ListOrdered className="w-5 h-5 text-lime-600" />
-        <span className="font-semibold text-foreground">{title || t({ en: "Put in order", fr: "Remettez dans l'ordre" })}</span>
+        <span className="font-semibold text-foreground">{title || ui({ en: "Put in order", fr: "Remettez dans l'ordre", ar: "رتّب العناصر" })}</span>
       </div>
       {instructions && <p className="px-4 pt-3 text-sm text-muted-foreground">{instructions}</p>}
       <div className="px-4 pt-3"><ExpectedAnswerCount count={items.length || 1} lang={lang} /></div>
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-2" role="list" aria-label={ui({ en: "Items to reorder", fr: "Éléments à réordonner", ar: "العناصر المطلوب ترتيبها" })}>
         {items.map((item, idx) => {
           const isCorrect = submitted && results[idx];
           const isWrong = submitted && !results[idx];
@@ -105,6 +112,7 @@ export function OrderingBlock({ block, lang, t, onComplete, blockIdx }: Ordering
               onDragStart={() => handleDragStart(idx)}
               onDragOver={(e) => handleDragOver(e, idx)}
               onDragEnd={handleDragEnd}
+              role="listitem"
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all ${
                 isCorrect ? "border-green-400 bg-green-50 dark:bg-green-950/30" :
                 isWrong ? "border-red-400 bg-red-50 dark:bg-red-950/30" :
@@ -112,12 +120,12 @@ export function OrderingBlock({ block, lang, t, onComplete, blockIdx }: Ordering
                 "border-border hover:border-lime-300 cursor-grab active:cursor-grabbing"
               }`}
             >
-              <GripVertical className="w-4 h-4 text-muted-foreground shrink-0" />
+              <GripVertical aria-hidden="true" className="w-4 h-4 text-muted-foreground shrink-0" />
               <span className="flex-1 text-sm font-medium">{item.text}</span>
               {!submitted && (
                 <div className="flex flex-col gap-0.5">
-                  <button onClick={() => moveItem(idx, "up")} disabled={idx === 0} className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-30">▲</button>
-                  <button onClick={() => moveItem(idx, "down")} disabled={idx === items.length - 1} className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-30">▼</button>
+                  <button type="button" aria-label={ui({ en: `Move ${item.text} up`, fr: `Monter ${item.text}`, ar: `حرّك ${item.text} إلى الأعلى` })} onClick={() => moveItem(idx, "up")} disabled={idx === 0} className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-30">▲</button>
+                  <button type="button" aria-label={ui({ en: `Move ${item.text} down`, fr: `Descendre ${item.text}`, ar: `حرّك ${item.text} إلى الأسفل` })} onClick={() => moveItem(idx, "down")} disabled={idx === items.length - 1} className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-30">▼</button>
                 </div>
               )}
               {isCorrect && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
@@ -129,20 +137,20 @@ export function OrderingBlock({ block, lang, t, onComplete, blockIdx }: Ordering
       <div className="px-4 pb-4 flex items-center gap-3">
         {!submitted ? (
           <Button onClick={handleSubmit} className="bg-lime-600 hover:bg-lime-700">
-            {t({ en: "Check order", fr: "Vérifier l'ordre" })}
+            {ui({ en: "Check order", fr: "Vérifier l'ordre", ar: "تحقق من الترتيب" })}
           </Button>
         ) : (
           <Button onClick={handleReset} variant="outline" className="gap-1">
             <RotateCcw className="w-3.5 h-3.5" />
-            {t({ en: "Try again", fr: "Réessayer" })}
+            {ui({ en: "Try again", fr: "Réessayer", ar: "حاول مرة أخرى" })}
           </Button>
         )}
         {submitted && (
           <div className={`flex items-center gap-2 text-sm font-medium ${allCorrect ? "text-green-600" : "text-red-600"}`}>
             {allCorrect ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
             {allCorrect
-              ? t({ en: "Perfect order!", fr: "Ordre parfait !" })
-              : t({ en: `${results.filter(Boolean).length}/${items.length} in correct position`, fr: `${results.filter(Boolean).length}/${items.length} bien placé(s)` })}
+              ? ui({ en: "Perfect order!", fr: "Ordre parfait !", ar: "ترتيب صحيح بالكامل!" })
+              : ui({ en: `${results.filter(Boolean).length}/${items.length} in correct position`, fr: `${results.filter(Boolean).length}/${items.length} bien placé(s)`, ar: `${results.filter(Boolean).length}/${items.length} في الموضع الصحيح` })}
           </div>
         )}
       </div>

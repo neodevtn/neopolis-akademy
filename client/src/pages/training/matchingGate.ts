@@ -10,8 +10,10 @@ export type MatchingGateBlock = {
  */
 export function getRequiredMatchingInteractionIds(blocks: MatchingGateBlock[] = []): string[] {
   return blocks.flatMap((block, blockIndex) => {
-    if (block?.type !== "bucket_sort" && block?.type !== "matching") return [];
+    if (!['bucket_sort', 'matching', 'ordering'].includes(block?.type || '')) return [];
     if (typeof block.id === "string" && block.id.trim()) return [block.id];
-    return [block.type === "matching" ? `matching_${blockIndex}` : `bucket_${blockIndex}`];
+    if (block.type === "matching") return [`matching_${blockIndex}`];
+    if (block.type === "ordering") return [`ordering_${blockIndex}`];
+    return [`bucket_${blockIndex}`];
   });
 }

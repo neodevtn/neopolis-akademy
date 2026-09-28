@@ -22,7 +22,8 @@ describe("cours DataCamp Introduction au Model Context Protocol", () => {
     expect(labs).toHaveLength(14);
     expect(labs.every((block: any) => block.environmentGuide && !JSON.stringify(block).includes("<exercise_objective>"))).toBe(true);
     expect(labs.every((block: any) => Array.isArray(block.learnerCriteria) && block.learnerCriteria.length > 0)).toBe(true);
-    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(3);
+    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(2);
+    expect(blocks.filter((block: any) => block.type === "ordering")).toHaveLength(1);
     expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
   });
 

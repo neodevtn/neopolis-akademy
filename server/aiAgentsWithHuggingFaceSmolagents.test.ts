@@ -8,7 +8,8 @@ describe("cours DataCamp Agents IA avec Hugging Face smolagents", () => {
     expect(activities).toHaveLength(30);
     expect(blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length)).toHaveLength(10);
     expect(blocks.filter((block: any) => block.type === "cloud_exercise")).toHaveLength(14);
-    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(1);
+    expect(blocks.filter((block: any) => block.type === "ordering")).toHaveLength(1);
+    expect(blocks.filter((block: any) => block.type === "bucket_sort" && block.buckets?.length < 2)).toHaveLength(0);
     expect(blocks.filter((block: any) => /choice_exercise/.test(block.type))).toHaveLength(4);
     expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
     expect(JSON.stringify(course)).not.toMatch(/https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com|\/manus-storage\//i);

@@ -85,8 +85,9 @@ export function isSequentialActivityNavigationLocked({
   const completionKey = (block: GatedBlock, index: number) => block.exerciseId || block.id || (
     block.type === "checkpoint" ? `checkpoint_${index}`
       : block.type === "resource_review" ? `resource_review_${index}`
-        : block.type === "cloud_exercise" ? `cloud_exercise_${index}`
-          : block.type === "bucket_sort" ? `bucket_${index}`
+          : block.type === "cloud_exercise" ? `cloud_exercise_${index}`
+            : block.type === "bucket_sort" ? `bucket_${index}`
+              : block.type === "ordering" ? `ordering_${index}`
             : block.type === "knowledge_check" || block.type?.startsWith("inline_") ? `novasavo_${index}`
               : `quiz_${index}`
   );
@@ -97,7 +98,7 @@ export function isSequentialActivityNavigationLocked({
     if (block.type === "course_final_quiz") return !completedCourseFinalQuizzes.has(key);
     if (block.type === "reflection") return !completedReflections.has(key);
     if (block.type === "guided_action") return !completedGuidedActions.has(key);
-    if (block.type === "bucket_sort") return !completedMatching.has(key);
+    if (block.type === "bucket_sort" || block.type === "matching" || block.type === "ordering") return !completedMatching.has(key);
     if (["knowledge_check", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type || "")) return !completedInlineInteractions.has(key);
     return false;
   });

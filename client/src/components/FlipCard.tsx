@@ -11,9 +11,9 @@ interface FlipCardProps {
 }
 
 const localizedLabels = {
-  ar: { card: 'بطاقة', flip: 'اقلب' },
-  fr: { card: 'Carte', flip: 'Retourner' },
-  en: { card: 'Card', flip: 'Flip' },
+  ar: { card: 'بطاقة', flip: 'اقلب', progress: 'بطاقات تمت مراجعتها' },
+  fr: { card: 'Carte', flip: 'Retourner', progress: 'cartes consultées' },
+  en: { card: 'Card', flip: 'Flip', progress: 'cards reviewed' },
 } as const;
 
 export function FlipCard({ front, back, lang, index, isFlipped, onFlip, isLastFlipped }: FlipCardProps) {
@@ -128,6 +128,14 @@ export function FlipCardsGrid({ cards, lang, onAllFlipped }: FlipCardsGridProps)
   const [seenCards, setSeenCards] = useState<Set<number>>(new Set());
   const [lastFlipped, setLastFlipped] = useState<number | null>(null);
   const allFlippedRef = useRef(false);
+  const labels = localizedLabels[lang as keyof typeof localizedLabels] ?? localizedLabels.en;
+
+  useEffect(() => {
+    setFlippedCards(new Set());
+    setSeenCards(new Set());
+    setLastFlipped(null);
+    allFlippedRef.current = false;
+  }, [cards, lang]);
 
   const handleFlip = (idx: number) => {
     setFlippedCards((prev) => {
@@ -156,7 +164,7 @@ export function FlipCardsGrid({ cards, lang, onAllFlipped }: FlipCardsGridProps)
   const resolveLang = (val: any): string => {
     if (!val) return '';
     if (typeof val === 'string') return val;
-    return lang === 'fr' ? (val.fr || val.en || '') : (val.en || val.fr || '');
+    return val[lang] || val.en || val.fr || val.ar || '';
   };
 
   // Use 3 columns for 5 cards (3+2), 2 columns for 4 cards (2+2), etc.
@@ -165,19 +173,27 @@ export function FlipCardsGrid({ cards, lang, onAllFlipped }: FlipCardsGridProps)
                    'grid-cols-1 sm:grid-cols-2';
 
   return (
-    <div className={`grid ${gridCols} gap-4 my-6`}>
-      {cards.map((card, idx) => (
-        <FlipCard
-          key={idx}
-          index={idx}
-          lang={lang}
-          front={resolveLang(card.front)}
-          back={resolveLang(card.back)}
-          isFlipped={flippedCards.has(idx)}
-          onFlip={() => handleFlip(idx)}
-          isLastFlipped={lastFlipped === idx && !flippedCards.has(idx)}
-        />
-      ))}
+    <div className="my-6 space-y-3">
+      <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground" aria-live="polite">
+        <span>{seenCards.size}/{cards.length} {labels.progress}</span>
+        <div className="h-1.5 min-w-24 flex-1 max-w-48 overflow-hidden rounded-full bg-muted">
+          <div className="h-full rounded-full bg-[#4a90d9] transition-[width] duration-200" style={{ width: `${cards.length ? (seenCards.size / cards.length) * 100 : 0}%` }} />
+        </div>
+      </div>
+      <div className={`grid ${gridCols} gap-4`}>
+        {cards.map((card, idx) => (
+          <FlipCard
+            key={`${resolveLang(card.front)}-${idx}`}
+            index={idx}
+            lang={lang}
+            front={resolveLang(card.front)}
+            back={resolveLang(card.back)}
+            isFlipped={flippedCards.has(idx)}
+            onFlip={() => handleFlip(idx)}
+            isLastFlipped={lastFlipped === idx && !flippedCards.has(idx)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

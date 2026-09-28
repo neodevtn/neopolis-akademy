@@ -82,8 +82,13 @@ export async function readCourseDataAsset(courseId: string, directories = getCou
   return null;
 }
 
+export const COURSE_DATA_ROUTE_PATHS = [
+  "/api/trpc/course-data/:courseId",
+  "/data/courses/:courseId.json",
+] as const;
+
 export function registerCourseDataRoute(app: Express): void {
-  app.get("/api/trpc/course-data/:courseId", async (req: Request, res: Response) => {
+  const serveCourseData = async (req: Request, res: Response) => {
     const courseId = String(req.params.courseId || "");
     const content = await readCourseDataAsset(courseId);
     if (!content) {
@@ -100,5 +105,7 @@ export function registerCourseDataRoute(app: Express): void {
       "Content-Type": "application/json; charset=utf-8",
       "X-Content-Type-Options": "nosniff",
     }).send(sanitizeCourseDataForLearner(content));
-  });
+  };
+
+  for (const routePath of COURSE_DATA_ROUTE_PATHS) app.get(routePath, serveCourseData);
 }

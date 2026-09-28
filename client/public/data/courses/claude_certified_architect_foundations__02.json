@@ -512,12 +512,12 @@
               "cards": [
                 {
                   "front": {
-                    "en": "Install packages = pip install anthropic",
-                    "fr": "Installer les packages : pip install anthropic"
+                    "en": "Install packages in a Jupyter notebook",
+                    "fr": "Installer des packages dans un notebook Jupyter"
                   },
                   "back": {
-                    "en": "python-dotenv in Jupyter notebook",
-                    "fr": "python-dotenv dans un notebook Jupyter"
+                    "en": "In a Jupyter notebook, install the `anthropic` and `python-dotenv` packages with `pip install anthropic python-dotenv`.",
+                    "fr": "Dans un notebook Jupyter, installez les packages `anthropic` et `python-dotenv` avec `pip install anthropic python-dotenv`."
                   }
                 },
                 {
@@ -532,12 +532,12 @@
                 },
                 {
                   "front": {
-                    "en": "Load environment variable = Use python-dotenv to",
-                    "fr": "Charger une variable d'environnement = Utiliser python-dotenv pour"
+                    "en": "Load the API key from an environment variable",
+                    "fr": "Charger la clé API depuis une variable d’environnement"
                   },
                   "back": {
-                    "en": "securely load API key",
-                    "fr": "Charger la clé API en toute sécurité"
+                    "en": "Use `python-dotenv` to securely load the API key from an environment variable.",
+                    "fr": "Utilisez `python-dotenv` pour charger la clé API de manière sécurisée depuis une variable d’environnement."
                   }
                 },
                 {
@@ -546,8 +546,8 @@
                     "fr": "Créer le client = Initialiser le client Anthropic et"
                   },
                   "back": {
-                    "en": "define model variable (claude-3-sonnet)\n\nAPI Request Structure:\n- Function = client.messages.create()\n- Required arguments = model, max_tokens, messages\n- Model = Name of Claude model to use\n- Max_tokens = Safety limit for generation length (not target length)\n- Messages = List containing conversati",
-                    "fr": "définir la variable model (claude-3-sonnet)\n\nStructure de la requête API :\n- Function = client.messages.create()\n- Arguments requis = model, max_tokens, messages\n- Model = Nom du modèle Claude à utiliser\n- Max_tokens = Limite de sécurité pour la longueur de génération (pas la longueur cible)\n- Messages = Liste contenant la conversation"
+                    "en": "Create the client by initializing the Anthropic client and defining the `model` variable (`claude-3-sonnet`). API requests use `client.messages.create()` and require `model`, `max_tokens`, and `messages`. `model` is the name of the Claude model to use; `max_tokens` is a safety limit for generation length, not a target length; and `messages` is a list containing the conversation.",
+                    "fr": "Créez le client en initialisant le client Anthropic et en définissant la variable `model` (`claude-3-sonnet`). Les requêtes API utilisent `client.messages.create()` et nécessitent `model`, `max_tokens` et `messages`. `model` correspond au nom du modèle Claude à utiliser ; `max_tokens` est une limite de sécurité pour la longueur de génération, et non une longueur cible ; `messages` est une liste contenant la conversation."
                   }
                 }
               ]
@@ -2695,22 +2695,22 @@
                 },
                 {
                   "front": {
-                    "en": "LLM generates brief context explaining chunk's",
-                    "fr": "LLM génère un bref contexte expliquant le contenu du chunk"
+                    "en": "Contextualizing a chunk",
+                    "fr": "Contextualiser un chunk"
                   },
                   "back": {
-                    "en": "relationship to larger document",
-                    "fr": "Relation avec le document parent"
+                    "en": "The LLM generates brief context explaining a chunk’s relationship to the larger document.",
+                    "fr": "Le LLM génère un bref contexte expliquant la relation d’un chunk avec le document parent."
                   }
                 },
                 {
                   "front": {
-                    "en": "Join generated context with original chunk =",
-                    "fr": "Joindre le contexte généré au chunk original ="
+                    "en": "Contextualized chunk",
+                    "fr": "Bloc contextualisé"
                   },
                   "back": {
-                    "en": "\"contextualized chunk\"",
-                    "fr": "bloc contextualisé"
+                    "en": "Combine the generated context with the original chunk before indexing it.",
+                    "fr": "Combinez le contexte généré avec le bloc original avant son indexation."
                   }
                 },
                 {
@@ -2719,8 +2719,8 @@
                     "fr": "Utiliser un chunk contextualisé comme entrée pour vector/BM25"
                   },
                   "back": {
-                    "en": "indexes\n\nLarge Document Handling: If source document too large for single prompt, use selective context strategy:\n- Include starter chunks (1-3) from document beginning for summary/abstract\n- Include chunks immediately before target chunk for local context\n- Skip middle chunks that provide less rele",
-                    "fr": "indices\n\nGestion des documents volumineux : si le document source est trop volumineux pour un seul prompt, utilisez une stratégie de contexte sélectif :\n- Inclure les chunks initiaux (1-3) du début du document pour le résumé/abstract\n- Inclure les chunks immédiatement avant le chunk cible pour le contexte local\n- Ignorer les chunks du milieu qui apportent moins de rele"
+                    "en": "Use a contextualized chunk as input to vector/BM25 indexes. If a source document is too large for a single prompt, use a selective-context strategy: include 1–3 starter chunks from the beginning for the summary/abstract, include chunks immediately before the target chunk for local context, and skip middle chunks that provide less relevance.",
+                    "fr": "Utilisez un chunk contextualisé comme entrée pour des indices vectoriels/BM25. Si le document source est trop volumineux pour un seul prompt, utilisez une stratégie de contexte sélectif : incluez 1 à 3 chunks initiaux du début pour le résumé/abstract, incluez les chunks immédiatement avant le chunk cible pour le contexte local, et ignorez les chunks du milieu qui apportent moins de pertinence."
                   }
                 }
               ]
@@ -8304,12 +8304,12 @@
                 },
                 {
                   "front": {
-                    "en": "Extract JSON from tool use block (no tool result",
-                    "fr": "Extraire le JSON du bloc d'utilisation d'un outil (sans résultat d'outil)"
+                    "en": "Force tool calling and extract JSON",
+                    "fr": "Forcer l’appel d’outil et extraire le JSON"
                   },
                   "back": {
-                    "en": "needed)\n\nCritical requirement = Force tool calling using tool_choice parameter:\n- tool_choice = {\"type\": \"tool\", \"name\": \"your_tool_name\"}\n- Ensures Claude always calls specified tool\n\nImplementation steps:",
-                    "fr": "nécessaire)\n\nExigence critique = Forcer l'appel d'outil en utilisant le paramètre tool_choice :\n- tool_choice = {\"type\": \"tool\", \"name\": \"your_tool_name\"}\n- Garantit que Claude appelle toujours l'outil spécifié\n\nÉtapes d'implémentation :"
+                    "en": "Extract JSON from the tool use block; no tool result is needed. Critical requirement: force tool calling using the `tool_choice` parameter: `tool_choice = {\"type\": \"tool\", \"name\": \"your_tool_name\"}`. This ensures Claude always calls the specified tool. Implementation steps:",
+                    "fr": "Extrayez le JSON du bloc d’utilisation d’un outil ; aucun résultat d’outil n’est nécessaire. Exigence critique : forcez l’appel d’outil à l’aide du paramètre `tool_choice` : `tool_choice = {\"type\": \"tool\", \"name\": \"your_tool_name\"}`. Cela garantit que Claude appelle toujours l’outil spécifié. Étapes d’implémentation :"
                   }
                 },
                 {

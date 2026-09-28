@@ -8,7 +8,9 @@ describe("getRequiredMatchingInteractionIds", () => {
       { type: "bucket_sort", id: "permission_gate" },
       { type: "matching" },
       { type: "matching", id: "mcp_scope_gate" },
-    ])).toEqual(["permission_gate", "matching_2", "mcp_scope_gate"]);
+      { type: "ordering" },
+      { type: "ordering", id: "deployment_sequence" },
+    ])).toEqual(["permission_gate", "matching_2", "mcp_scope_gate", "ordering_4", "deployment_sequence"]);
   });
 
   it("ignore les blocs non interactifs", () => {

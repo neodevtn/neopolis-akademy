@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset, sanitizeCourseDataForLearner } from "./courseDataRoute";
+import { COURSE_DATA_ROUTE_PATHS, getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset, sanitizeCourseDataForLearner } from "./courseDataRoute";
 import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
 
 const temporaryDirectories: string[] = [];
@@ -32,6 +32,13 @@ describe("course data route", () => {
   it("resolves the development and production roots used by the build", () => {
     expect(getCourseDataDirectory("development")).toContain(path.join("client", "public", "data", "courses"));
     expect(getCourseDataDirectories("production", "/application")).toContain(path.join("/application", "dist", "public", "data", "courses"));
+  });
+
+  it("intercepts both the API URL and the legacy public asset URL before static serving", () => {
+    expect(COURSE_DATA_ROUTE_PATHS).toEqual([
+      "/api/trpc/course-data/:courseId",
+      "/data/courses/:courseId.json",
+    ]);
   });
 
   it("uses a subsequent build directory when the first candidate is unavailable", async () => {

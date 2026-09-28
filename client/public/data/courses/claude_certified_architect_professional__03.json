@@ -176,22 +176,22 @@
                 },
                 {
                   "front": {
-                    "en": "Token-budget exhaustion on large knowledge-base",
-                    "fr": "Épuisement du budget de tokens d'une grande base de connaissances"
+                    "en": "Token-budget exhaustion on large knowledge-base documents",
+                    "fr": "Épuisement du budget de tokens sur de grands documents de base de connaissances"
                   },
                   "back": {
-                    "en": "documents. Mitigation is chunking and input limits plus budget monitoring so a large document cannot truncate the work silently.",
-                    "fr": "documents. Les mesures d'atténuation comprennent le chunking, des limites d'entrée et le suivi du budget, pour éviter qu'un document volumineux ne tronque silencieusement le travail."
+                    "en": "Large knowledge-base documents can exhaust the token budget. Mitigation is chunking and input limits plus budget monitoring so a large document cannot truncate the work silently.",
+                    "fr": "Les documents volumineux d’une base de connaissances peuvent épuiser le budget de tokens. Les mesures d’atténuation comprennent le chunking, des limites d’entrée et le suivi du budget, afin qu’un document volumineux ne tronque pas silencieusement le travail."
                   }
                 },
                 {
                   "front": {
-                    "en": "Data exposure in the request log. Mitigation is",
-                    "fr": "Exposition de données dans le journal des requêtes. L'atténuation est"
+                    "en": "Data exposure in the request log",
+                    "fr": "Exposition de données dans le journal des requêtes"
                   },
                   "back": {
-                    "en": "server-side redaction of sensitive fields before anything is logged.",
-                    "fr": "masquage côté serveur des champs sensibles avant toute journalisation."
+                    "en": "Data can be exposed in the request log. Mitigation is server-side redaction of sensitive fields before anything is logged.",
+                    "fr": "Des données peuvent être exposées dans le journal des requêtes. La mesure d’atténuation consiste à masquer côté serveur les champs sensibles avant toute journalisation."
                   }
                 }
               ]
@@ -264,8 +264,8 @@
                     "fr": "Hook d'initialisation"
                   },
                   "back": {
-                    "en": "Output filtering is a clear control you can point to; it shows up as a clean box on the architecture diagram, it fires where a reviewer can watch it work, and it sits at the end of the path where the risk feels most concrete, right before the user sees a response. So, if you add one classifier on th",
-                    "fr": "Le filtrage des sorties est un contrôle clair auquel vous pouvez vous référer ; il apparaît comme une boîte nette sur le diagramme d'architecture, il se déclenche là où un réviseur peut le voir fonctionner, et il se situe à la fin du parcours où le risque paraît le plus concret, juste avant que l'utilisateur ne voie une réponse. Donc, si vous ajoutez un classificateur sur th"
+                    "en": "Output filtering is a clear control you can point to: it appears as a clean box on the architecture diagram, fires where a reviewer can watch it work, and sits at the end of the path, right before the user sees a response.",
+                    "fr": "Le filtrage des sorties est un contrôle clair auquel vous pouvez vous référer : il apparaît comme une boîte nette sur le diagramme d'architecture, se déclenche là où un réviseur peut le voir fonctionner et se situe à la fin du parcours, juste avant que l'utilisateur ne voie une réponse."
                   }
                 },
                 {
@@ -274,8 +274,8 @@
                     "fr": "Pourquoi ça a planté"
                   },
                   "back": {
-                    "en": "A control was placed at one point but was treated as covering three points. Output screening judges text, not actions. A side-effecting tool needs authorization before it runs, and an unscreened input has no gate. One filter at the end is not a guarded path, you should be adding all three filters wh",
-                    "fr": "Un contrôle a été placé en un seul point mais a été traité comme couvrant trois points. Le filtrage de sortie juge le texte, pas les actions. Un outil provoquant des effets de bord doit être autorisé avant d'être exécuté, et une entrée non filtrée n'a pas de mécanisme de contrôle. Un seul filtre à la fin ne constitue pas un chemin protégé, vous devriez ajouter les trois filtres wh"
+                    "en": "A control was placed at one point but was treated as covering three points. Output screening judges text, not actions. A side-effecting tool needs authorization before it runs, and an unscreened input has no gate. One filter at the end is not a guarded path; add all three filters.",
+                    "fr": "Un contrôle a été placé en un seul point mais a été traité comme couvrant trois points. Le filtrage de sortie juge le texte, pas les actions. Un outil provoquant des effets de bord doit être autorisé avant d'être exécuté, et une entrée non filtrée n'a pas de mécanisme de contrôle. Un seul filtre à la fin ne constitue pas un chemin protégé ; ajoutez les trois filtres."
                   }
                 }
               ]
@@ -322,8 +322,8 @@
                     "fr": "Hook d'initialisation"
                   },
                   "back": {
-                    "en": "Fairness may seem like a property of the model. The model provider trained it, ran the bias evaluations, and published the results, so it feels reasonable to treat fairness as something handled upstream before the model reaches your architecture. That framing holds up until your system pairs the mod",
-                    "fr": "L'équité peut sembler être une propriété du modèle. Le fournisseur du modèle l'a entraîné, a réalisé les évaluations des biais et publié les résultats, il semble donc raisonnable de considérer l'équité comme quelque chose traité en amont avant que le modèle n'arrive dans votre architecture. Cette vision tient jusqu'à ce que votre système associe le mod"
+                    "en": "Fairness may seem like a property of the model. The model provider trained it, ran bias evaluations, and published the results, so it can seem reasonable to treat fairness as something handled upstream before the model reaches your architecture.",
+                    "fr": "L’équité peut sembler être une propriété du modèle. Le fournisseur du modèle l’a entraîné, a réalisé des évaluations des biais et publié les résultats ; il peut donc sembler raisonnable de considérer l’équité comme traitée en amont, avant que le modèle n’arrive dans votre architecture."
                   }
                 },
                 {
@@ -332,8 +332,8 @@
                     "fr": "Pourquoi ça a planté"
                   },
                   "back": {
-                    "en": "Fairness was treated as a model property the vendor owns. Unequal outcomes enter at points the architect controls, and the retrieval corpus is one of them. Without decision logging at those points, the team could not explain the harm or disprove its source. Fairness and explainability are architectu",
-                    "fr": "L'équité était considérée comme une propriété du modèle appartenant au fournisseur. Les résultats inégaux se manifestent à des points que l'architecte contrôle, et le corpus de récupération en est un. Sans journalisation des décisions à ces points, l'équipe ne pouvait ni expliquer le préjudice ni infirmer son origine. L'équité et l'explicabilité sont architectu"
+                    "en": "Fairness was treated as a model property owned by the vendor. Unequal outcomes enter at points the architect controls, including the retrieval corpus. Without decision logging at those points, the team could not explain the harm or disprove its source.",
+                    "fr": "L’équité était considérée comme une propriété du modèle appartenant au fournisseur. Des résultats inégaux apparaissent à des points que l’architecte contrôle, notamment dans le corpus de récupération. Sans journalisation des décisions à ces points, l’équipe ne pouvait ni expliquer le préjudice ni en infirmer l’origine."
                   }
                 }
               ]
@@ -370,14 +370,14 @@
                     "fr": "Critiquez la conception de la journalisation des décisions"
                   },
                   "back": {
-                    "en": "Try it now. You are looking at a system sketch for a decision-support flow. Click the components where transparency is missing or insufficient, such as a routing step that is never logged or a decision that cannot be reconstructed. Each click reveals what that gap means for an affected user or a reg",
-                    "fr": "Essayez-le maintenant. Vous regardez un croquis du système pour un flux d'aide à la décision. Cliquez sur les composants où la transparence fait défaut ou est insuffisante, comme une étape de routage qui n'est jamais consignée ou une décision qui ne peut pas être reconstituée. Chaque clic révèle ce que cette lacune signifie pour un utilisateur concerné ou un reg"
+                    "en": "Identify components where transparency is missing or insufficient, such as a routing step that is never logged or a decision that cannot be reconstructed.",
+                    "fr": "Identifiez les composants où la transparence fait défaut ou est insuffisante, comme une étape de routage qui n’est jamais consignée ou une décision qui ne peut pas être reconstituée."
                   }
                 },
                 {
                   "front": {
-                    "en": "✓",
-                    "fr": "✓"
+                    "en": "Transparency gap 1",
+                    "fr": "Lacune de transparence 1"
                   },
                   "back": {
                     "en": "Gap\nA routing step that sends some cases down a different path with no log entry.",
@@ -386,8 +386,8 @@
                 },
                 {
                   "front": {
-                    "en": "✓",
-                    "fr": "✓"
+                    "en": "Transparency gap 2",
+                    "fr": "Lacune de transparence 2"
                   },
                   "back": {
                     "en": "Gap\nA model output stored without the inputs that produced it.",
@@ -396,8 +396,8 @@
                 },
                 {
                   "front": {
-                    "en": "✓",
-                    "fr": "✓"
+                    "en": "Adequate control 1",
+                    "fr": "Contrôle adéquat 1"
                   },
                   "back": {
                     "en": "Adequate\nInputs, outputs, and routing are all logged and tied to a session ID.",
@@ -406,8 +406,8 @@
                 },
                 {
                   "front": {
-                    "en": "✓",
-                    "fr": "✓"
+                    "en": "Adequate control 2",
+                    "fr": "Contrôle adéquat 2"
                   },
                   "back": {
                     "en": "Adequate\nThe log is queryable per decision and retained for 90 days.",
@@ -416,8 +416,8 @@
                 },
                 {
                   "front": {
-                    "en": "✓",
-                    "fr": "✓"
+                    "en": "Transparency gap 3",
+                    "fr": "Lacune de transparence 3"
                   },
                   "back": {
                     "en": "Gap\nAn aggregate accuracy dashboard with no per-subgroup breakdown.",
@@ -473,8 +473,8 @@
                     "fr": "Hook d'initialisation"
                   },
                   "back": {
-                    "en": "Deciding which decisions count as high stakes takes judgment, and sending everything to review removes that crucial step. It might feel like the conservative default: it is easy to defend to a compliance reviewer or an auditor, and it requires no call about where the stakes sit. Routing everything f",
-                    "fr": "Décider quelles décisions comptent comme à forts enjeux requiert du jugement, et tout envoyer en revue supprime cette étape cruciale. Cela peut sembler le choix conservateur par défaut : il est facile de le justifier auprès d'un réviseur de conformité ou d'un auditeur, et cela n'implique aucune décision sur le niveau des enjeux. Acheminer tout f"
+                    "en": "Deciding which decisions count as high stakes takes judgment, and sending everything to review removes that crucial step. It might feel like the conservative default: it is easy to defend to a compliance reviewer or an auditor, and it requires no call about where the stakes sit.",
+                    "fr": "Décider quelles décisions comptent comme étant à forts enjeux requiert du jugement, et tout envoyer en revue supprime cette étape cruciale. Cela peut sembler être le choix conservateur par défaut : il est facile à justifier auprès d’un réviseur de conformité ou d’un auditeur, et ne nécessite aucune décision sur le niveau des enjeux."
                   }
                 },
                 {
@@ -569,8 +569,8 @@
                     "fr": "Hook d'initialisation"
                   },
                   "back": {
-                    "en": "Passing the constraint pre-filter and being able to prove compliance are two different things. The pre-filter gives you a clean signal. Choosing a delivery route that survives HIPAA, GDPR, or FedRAMP produces an immediate, visible result: the route is allowed, the entry point is cleared, the design ",
-                    "fr": "Passer le pré-filtre des contraintes et être capable de prouver la conformité sont deux choses différentes. Le pré-filtre vous donne un signal clair. Choisir une voie de livraison qui résiste à HIPAA, GDPR ou FedRAMP produit un résultat immédiat et visible : la voie est autorisée, le point d'entrée est dégagé, la conception"
+                    "en": "Passing the constraint pre-filter and being able to prove compliance are two different things. The pre-filter gives you a clean signal. Choosing a delivery route that survives HIPAA, GDPR, or FedRAMP produces an immediate, visible result: the route is allowed and the entry point is cleared.",
+                    "fr": "Passer le pré-filtre des contraintes et être capable de prouver la conformité sont deux choses différentes. Le pré-filtre vous donne un signal clair. Choisir une voie de livraison qui résiste à HIPAA, GDPR ou FedRAMP produit un résultat immédiat et visible : la voie est autorisée et le point d’entrée est dégagé."
                   }
                 },
                 {
@@ -579,8 +579,8 @@
                     "fr": "Pourquoi cela a échoué"
                   },
                   "back": {
-                    "en": "Surviving the pre-filter was mistaken for establishing compliance. A compliant route is a prerequisite, not proof. Each obligation needs a control, a named owner, and a living evidence artifact that is revalidated as the deployment changes. The residency control in this story was real at design time",
-                    "fr": "Le fait d'avoir franchi le pré-filtre a été pris pour l'établissement de la conformité. Un parcours conforme est un prérequis, pas une preuve. Chaque obligation nécessite un contrôle, un propriétaire nommé, et un artefact de preuve vivant qui est revalidé au fur et à mesure que le déploiement évolue. Le contrôle de résidence dans cette histoire était réel au moment de la conception."
+                    "en": "Surviving the pre-filter was mistaken for establishing compliance. A compliant route is a prerequisite, not proof. Each obligation needs a control, a named owner, and a living evidence artifact that is revalidated as the deployment changes. The residency control in this story was real at design time.",
+                    "fr": "Le fait d’avoir franchi le pré-filtre a été pris pour l’établissement de la conformité. Un parcours conforme est un prérequis, pas une preuve. Chaque obligation nécessite un contrôle, un propriétaire nommé et un artefact de preuve vivant, revalidé à mesure que le déploiement évolue. Le contrôle de résidence dans cette histoire était réel au moment de la conception."
                   }
                 }
               ]
@@ -613,42 +613,22 @@
               "cards": [
                 {
                   "front": {
-                    "en": "Place the runtime controls.",
-                    "fr": "Placez les contrôles d'exécution."
+                    "en": "Boundary between trained behavior and the application layer",
+                    "fr": "Limite entre le comportement entraîné et la couche applicative"
                   },
                   "back": {
-                    "en": "3. Specify the fairness and transparency controls.",
-                    "fr": "3. Spécifiez les contrôles relatifs à l'équité et à la transparence."
+                    "en": "Trained behavior refuses broad harm classes but never saw this program's eligibility rules, so those rules belong to the application layer. If they are left in trained behavior, no downstream control can reach them.",
+                    "fr": "Le comportement entraîné refuse de larges classes de préjudices, mais n'a jamais vu les règles d'éligibilité de ce programme ; ces règles relèvent donc de la couche applicative. Si elles sont laissées dans le comportement entraîné, aucun contrôle en aval ne peut les atteindre."
                   }
                 },
                 {
                   "front": {
-                    "en": "Define the human-review routing.",
-                    "fr": "Définir l'acheminement pour la révision humaine."
+                    "en": "Runtime control placement and failure direction",
+                    "fr": "Placement des contrôles d'exécution et sens de la défaillance"
                   },
                   "back": {
-                    "en": "5. Build the control register.\n\nReveal model answer\nSkip for now\n\nModel answer",
-                    "fr": "5. Construire le registre de contrôle.\n\nAfficher la réponse du modèle\nPasser pour l'instant\n\nRéponse du modèle"
-                  }
-                },
-                {
-                  "front": {
-                    "en": "Set the boundary between trained behavior and your",
-                    "fr": "Définissez la limite entre le comportement entraîné et le vôtre"
-                  },
-                  "back": {
-                    "en": "application layer. Trained behavior refuses broad harm classes but never saw this program's eligibility rules, so those belong to the application layer. Leave them in trained behavior and no control downstream can reach them.",
-                    "fr": "Le comportement entraîné refuse de larges classes de préjudice mais n'a jamais vu les règles d'éligibilité de ce programme, donc celles-ci relèvent de la couche applicative. Laissez-les dans le comportement entraîné et aucun contrôle en aval ne pourra y accéder."
-                  }
-                },
-                {
-                  "front": {
-                    "en": "Place the runtime controls. Position input",
-                    "fr": "Placez les contrôles d'exécution. Entrée de position"
-                  },
-                  "back": {
-                    "en": "screening, output screening, and tool-call authorization, choose model-based or deterministic at each, and set the failure direction. Fail closed, because a screen that fails open lets an unscreened denial reach an applicant.",
-                    "fr": "Pour le filtrage, le filtrage des sorties et l'autorisation d'appel d'outil, choisissez pour chacun une approche basée sur un modèle ou déterministe, et définissez le sens de la défaillance. Optez pour une défaillance en position fermée, car un filtre qui défaillit en position ouverte laisse passer un refus non filtré jusqu'à un demandeur."
+                    "en": "Place runtime controls for input screening, output screening, and tool-call authorization. Choose a model-based or deterministic approach for each control, and set the failure direction. Fail closed, because a screen that fails open lets an unscreened denial reach an applicant.",
+                    "fr": "Placez les contrôles d'exécution pour le filtrage des entrées, le filtrage des sorties et l'autorisation d'appel d'outil. Choisissez, pour chaque contrôle, une approche basée sur un modèle ou déterministe, et définissez le sens de la défaillance. Optez pour une défaillance en position fermée, car un filtre qui défaillit en position ouverte laisse passer un refus non filtré jusqu'à un demandeur."
                   }
                 },
                 {
@@ -663,12 +643,12 @@
                 },
                 {
                   "front": {
-                    "en": "Define the human-review routing. Route by",
-                    "fr": "Définissez le routage pour la révision humaine. Routage par"
+                    "en": "Human-review routing",
+                    "fr": "Routage pour la révision humaine"
                   },
                   "back": {
-                    "en": "confidence, reversibility, and cost of a wrong answer, and pick a placement: pre-action approval, post-action audit, or sampled review. Send a low-confidence, hard-to-reverse denial to pre-action approval. Key the rule to stakes, not volume, or a quiet queue waves a high-stakes denial through.",
-                    "fr": "Évaluez le niveau de confiance, la réversibilité et le coût d'une mauvaise réponse, puis choisissez un emplacement : approbation préalable, audit a posteriori ou revue par échantillonnage. Dirigez un refus à faible confiance et difficile à inverser vers l'approbation préalable. Associez la règle aux enjeux, pas au volume, sinon une file peu active laissera passer un refus aux enjeux élevés."
+                    "en": "Route human review by confidence, reversibility, and the cost of a wrong answer, then choose a placement: pre-action approval, post-action audit, or sampled review. Send a low-confidence, hard-to-reverse denial to pre-action approval. Key the rule to stakes, not volume, or a quiet queue waves a high-stakes denial through.",
+                    "fr": "Acheminez la révision humaine selon le niveau de confiance, la réversibilité et le coût d'une mauvaise réponse, puis choisissez un emplacement : approbation préalable, audit a posteriori ou revue par échantillonnage. Dirigez un refus à faible confiance et difficile à inverser vers l'approbation préalable. Associez la règle aux enjeux, et non au volume, sinon une file peu active laissera passer un refus aux enjeux élevés."
                   }
                 },
                 {
@@ -677,8 +657,8 @@
                     "fr": "Construisez le registre des contrôles. Cartographiez chaque FedRAMP"
                   },
                   "back": {
-                    "en": "obligation to a control, an owner, and the evidence a reviewer accepts. A control with no evidence artifact is a claim you cannot prove operated.\n\nStrong answers are specific: they name which injection points, name the failure direction, name the routing rule variables, and name the evidence artifac",
-                    "fr": "obligation envers un contrôle, un propriétaire et l'élément de preuve qu'un examinateur accepte. Un contrôle sans artefact de preuve est une affirmation que vous ne pouvez pas prouver comme ayant été exécutée.\n\nLes réponses solides sont spécifiques : elles indiquent quels points d'injection, précisent la direction de la défaillance, nomment les variables de la règle de routage et désignent l'artefact de preuve."
+                    "en": "Map each FedRAMP obligation to a control, an owner, and the evidence a reviewer accepts. A control with no evidence artifact is a claim you cannot prove operated. Strong answers name the injection points, failure direction, routing-rule variables, and evidence artifact.",
+                    "fr": "Cartographiez chaque obligation FedRAMP vers un contrôle, un propriétaire et l’élément de preuve qu’un examinateur accepte. Un contrôle sans artefact de preuve est une affirmation dont vous ne pouvez pas prouver l’exécution. Les réponses solides indiquent les points d’injection, la direction de la défaillance, les variables de la règle de routage et l’artefact de preuve."
                   }
                 }
               ]

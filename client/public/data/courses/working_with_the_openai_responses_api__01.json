@@ -512,7 +512,7 @@
           "requiredBeforeAdvance": true,
           "blocks": [
             {
-              "type": "bucket_sort",
+              "type": "ordering",
               "id": "dc_1_act_10_bucket_sort",
               "title": {
                 "en": "Activer les conversations de type chat",
@@ -522,49 +522,6 @@
                 "en": "Rearrange the code blocks in the correct order, including the indentation.",
                 "fr": "Réorganisez les blocs de code dans le bon ordre, en incluant l’indentation."
               },
-              "buckets": [
-                {
-                  "id": "a",
-                  "label": {
-                    "en": "Conversation",
-                    "fr": "Conversation"
-                  }
-                }
-              ],
-              "cards": [
-                {
-                  "id": "item_a898f865aec14681846cfb1eedadd303",
-                  "text": {
-                    "en": "sys_prompt = \"...\"\nlatest_response_id = None \n\nwhile True:",
-                    "fr": "sys_prompt = \"...\"\nlatest_response_id = None \n\nwhile True:"
-                  },
-                  "correctBucket": "a"
-                },
-                {
-                  "id": "id_0",
-                  "text": {
-                    "en": "user_input = input(\"You: \").strip()\nif user_input.lower() == \"exit\":\n    break",
-                    "fr": "user_input = input(\"You: \").strip()\nif user_input.lower() == \"exit\":\n    break"
-                  },
-                  "correctBucket": "a"
-                },
-                {
-                  "id": "id_1",
-                  "text": {
-                    "en": "response = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    instructions=sys_prompt,\n    input=user_input,\n    previous_response_id=latest_response_id\n)",
-                    "fr": "response = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    instructions=sys_prompt,\n    input=user_input,\n    previous_response_id=latest_response_id\n)"
-                  },
-                  "correctBucket": "a"
-                },
-                {
-                  "id": "id_2",
-                  "text": {
-                    "en": "print(f\"\\nAssistant: {response.output_text}\\n\")\nlatest_response_id = response.id",
-                    "fr": "print(f\"\\nAssistant: {response.output_text}\\n\")\nlatest_response_id = response.id"
-                  },
-                  "correctBucket": "a"
-                }
-              ],
               "feedback": {
                 "en": "That's it! Congratulations on finishing Chapter 1! In Chapter 2, we'll see how to provide LLMs with tools such as web search, including how to define your own tools. Stay tuned!",
                 "fr": "C’est tout bon ! Félicitations pour la fin du chapitre 1 ! Dans le chapitre 2, nous verrons comment fournir des outils comme la recherche web aux LLM, y compris comment définir vos propres outils. Restez avec nous !"
@@ -572,7 +529,37 @@
               "hint": {
                 "en": "Start with the while loop, and everything below it must be indented by one level.\n\nThe user_input variable must be defined before calling the Responses API.",
                 "fr": "Commencez par la boucle while, et tout ce qui se trouve en dessous doit être indenté d’un niveau.\n\nLa variable user_input doit être définie avant d’appeler la Responses API."
-              }
+              },
+              "items": [
+                {
+                  "id": "item_a898f865aec14681846cfb1eedadd303",
+                  "text": {
+                    "en": "sys_prompt = \"...\"\nlatest_response_id = None \n\nwhile True:",
+                    "fr": "sys_prompt = \"...\"\nlatest_response_id = None \n\nwhile True:"
+                  }
+                },
+                {
+                  "id": "id_0",
+                  "text": {
+                    "en": "user_input = input(\"You: \").strip()\nif user_input.lower() == \"exit\":\n    break",
+                    "fr": "user_input = input(\"You: \").strip()\nif user_input.lower() == \"exit\":\n    break"
+                  }
+                },
+                {
+                  "id": "id_1",
+                  "text": {
+                    "en": "response = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    instructions=sys_prompt,\n    input=user_input,\n    previous_response_id=latest_response_id\n)",
+                    "fr": "response = client.responses.create(\n    model=\"gpt-5.4-mini\",\n    instructions=sys_prompt,\n    input=user_input,\n    previous_response_id=latest_response_id\n)"
+                  }
+                },
+                {
+                  "id": "id_2",
+                  "text": {
+                    "en": "print(f\"\\nAssistant: {response.output_text}\\n\")\nlatest_response_id = response.id",
+                    "fr": "print(f\"\\nAssistant: {response.output_text}\\n\")\nlatest_response_id = response.id"
+                  }
+                }
+              ]
             }
           ]
         }
@@ -1035,7 +1022,7 @@
           "requiredBeforeAdvance": true,
           "blocks": [
             {
-              "type": "bucket_sort",
+              "type": "ordering",
               "id": "dc_2_act_08_bucket_sort",
               "title": {
                 "en": "The workflow of a function-calling tool",
@@ -1045,57 +1032,6 @@
                 "en": "Arrange the steps of a function-calling tool workflow from first (top) to last (bottom).",
                 "fr": "Classez les étapes du workflow d’un outil avec appel de fonction de la première (haut) à la dernière (bas)."
               },
-              "buckets": [
-                {
-                  "id": "data_science_process",
-                  "label": {
-                    "en": "Function-calling tool workflow",
-                    "fr": "Workflow d’un outil avec appel de fonction"
-                  }
-                }
-              ],
-              "cards": [
-                {
-                  "id": "question",
-                  "text": {
-                    "en": "Create a request with the tool definitions and the user’s message",
-                    "fr": "Créer une requête avec les définitions d’outils et le message de l’utilisateur"
-                  },
-                  "correctBucket": "data_science_process"
-                },
-                {
-                  "id": "data",
-                  "text": {
-                    "en": "Récupérer les appels d’outils et leurs arguments",
-                    "fr": "Récupérer les appels d’outils et leurs arguments"
-                  },
-                  "correctBucket": "data_science_process"
-                },
-                {
-                  "id": "explore",
-                  "text": {
-                    "en": "Execute the tool arguments through the function",
-                    "fr": "Exécuter les arguments de l’outil via la fonction"
-                  },
-                  "correctBucket": "data_science_process"
-                },
-                {
-                  "id": "model",
-                  "text": {
-                    "en": "Send the function output to the model",
-                    "fr": "Envoyer la sortie de la fonction au modèle"
-                  },
-                  "correctBucket": "data_science_process"
-                },
-                {
-                  "id": "communicate",
-                  "text": {
-                    "en": "Retrieve a natural-language response to the user’s message",
-                    "fr": "Récupérer une réponse en langage naturel au message de l’utilisateur"
-                  },
-                  "correctBucket": "data_science_process"
-                }
-              ],
               "feedback": {
                 "en": "Well done! This two-step workflow is essential for enabling LLMs to use tools and go beyond their usual capabilities. Now let’s create a function that we will use later in this workflow!",
                 "fr": "Bravo ! Ce workflow en deux étapes est essentiel pour permettre aux LLM d’utiliser des outils et dépasser leurs capacités habituelles. Passons maintenant à la création d’une fonction que nous utiliserons ensuite dans ce workflow !"
@@ -1103,7 +1039,44 @@
               "hint": {
                 "en": "To answer questions beyond its knowledge, an LLM must first be able to call a tool, then review its results.",
                 "fr": "Pour répondre à des questions au-delà de ses connaissances, un LLM doit d’abord pouvoir appeler un outil, puis consulter ses résultats."
-              }
+              },
+              "items": [
+                {
+                  "id": "question",
+                  "text": {
+                    "en": "Create a request with the tool definitions and the user’s message",
+                    "fr": "Créer une requête avec les définitions d’outils et le message de l’utilisateur"
+                  }
+                },
+                {
+                  "id": "data",
+                  "text": {
+                    "en": "Récupérer les appels d’outils et leurs arguments",
+                    "fr": "Récupérer les appels d’outils et leurs arguments"
+                  }
+                },
+                {
+                  "id": "explore",
+                  "text": {
+                    "en": "Execute the tool arguments through the function",
+                    "fr": "Exécuter les arguments de l’outil via la fonction"
+                  }
+                },
+                {
+                  "id": "model",
+                  "text": {
+                    "en": "Send the function output to the model",
+                    "fr": "Envoyer la sortie de la fonction au modèle"
+                  }
+                },
+                {
+                  "id": "communicate",
+                  "text": {
+                    "en": "Retrieve a natural-language response to the user’s message",
+                    "fr": "Récupérer une réponse en langage naturel au message de l’utilisateur"
+                  }
+                }
+              ]
             }
           ]
         },

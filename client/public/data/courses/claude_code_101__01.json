@@ -295,7 +295,7 @@
           "requiredBeforeAdvance": true,
           "blocks": [
             {
-              "type": "bucket_sort",
+              "type": "ordering",
               "id": "dc_1_act_06_bucket_sort",
               "title": {
                 "en": "The Agentic Loop",
@@ -305,57 +305,6 @@
                 "en": "Put the five steps of the agentic loop in the correct order, from first (top) to last (bottom).",
                 "fr": "Placez les cinq étapes de la boucle agentive dans l'ordre correct, de la première (en haut) à la dernière (en bas)."
               },
-              "buckets": [
-                {
-                  "id": "agentic_loop",
-                  "label": {
-                    "en": "Agentic loop",
-                    "fr": "Agentic loop"
-                  }
-                }
-              ],
-              "cards": [
-                {
-                  "id": "prompt",
-                  "text": {
-                    "en": "🎯 You submit a prompt that defines your goal",
-                    "fr": "🎯 Vous soumettez une invite qui définit votre objectif"
-                  },
-                  "correctBucket": "agentic_loop"
-                },
-                {
-                  "id": "query",
-                  "text": {
-                    "en": "⚙️ Claude queries the model, which returns text or a tool call",
-                    "fr": "⚙️ Claude interroge le modèle, qui renvoie du texte ou un appel d'outil"
-                  },
-                  "correctBucket": "agentic_loop"
-                },
-                {
-                  "id": "action",
-                  "text": {
-                    "en": "🚀 Claude executes the action like editing a file or running a command",
-                    "fr": "🚀 Claude exécute l'action, par exemple en modifiant un fichier ou en exécutant une commande"
-                  },
-                  "correctBucket": "agentic_loop"
-                },
-                {
-                  "id": "verify",
-                  "text": {
-                    "en": "👀 Claude verifies whether the results meet your original goal",
-                    "fr": "👀 Claude vérifie si les résultats répondent à votre objectif initial"
-                  },
-                  "correctBucket": "agentic_loop"
-                },
-                {
-                  "id": "loop",
-                  "text": {
-                    "en": "🔁 Claude finishes and waits, or loops back and tries again",
-                    "fr": "🔁 Claude termine et attend, ou revient en arrière et réessaie"
-                  },
-                  "correctBucket": "agentic_loop"
-                }
-              ],
               "feedback": {
                 "en": "Amazing work! Prompt → query the model → act → verify → finish or retry. This loop is what makes **Claude Code** an agent rather than a chat tool — it keeps going until the job is done!",
                 "fr": "Excellent travail ! Prompt → interroger le modèle → agir → vérifier → terminer ou réessayer. Cette boucle est ce qui fait de **Claude Code** un agent plutôt qu'un outil de chat — elle continue jusqu'à ce que la tâche soit accomplie !"
@@ -363,7 +312,44 @@
               "hint": {
                 "en": "The loop always starts with your prompt and ends when Claude confirms the goal is met.\n\nBefore taking action, Claude must know what action to take, the model decides that.",
                 "fr": "La boucle commence toujours par votre invite et se termine lorsque Claude confirme que l'objectif est atteint.\n\nAvant d'agir, Claude doit savoir quelle action entreprendre ; c'est le modèle qui en décide."
-              }
+              },
+              "items": [
+                {
+                  "id": "prompt",
+                  "text": {
+                    "en": "🎯 You submit a prompt that defines your goal",
+                    "fr": "🎯 Vous soumettez une invite qui définit votre objectif"
+                  }
+                },
+                {
+                  "id": "query",
+                  "text": {
+                    "en": "⚙️ Claude queries the model, which returns text or a tool call",
+                    "fr": "⚙️ Claude interroge le modèle, qui renvoie du texte ou un appel d'outil"
+                  }
+                },
+                {
+                  "id": "action",
+                  "text": {
+                    "en": "🚀 Claude executes the action like editing a file or running a command",
+                    "fr": "🚀 Claude exécute l'action, par exemple en modifiant un fichier ou en exécutant une commande"
+                  }
+                },
+                {
+                  "id": "verify",
+                  "text": {
+                    "en": "👀 Claude verifies whether the results meet your original goal",
+                    "fr": "👀 Claude vérifie si les résultats répondent à votre objectif initial"
+                  }
+                },
+                {
+                  "id": "loop",
+                  "text": {
+                    "en": "🔁 Claude finishes and waits, or loops back and tries again",
+                    "fr": "🔁 Claude termine et attend, ou revient en arrière et réessaie"
+                  }
+                }
+              ]
             }
           ]
         }

@@ -1495,12 +1495,12 @@
                 },
                 {
                   "front": {
-                    "en": "Long-lived SSE connection = for server-initiated communications",
-                    "fr": "Connexion SSE longue durée = pour les communications initiées par le serveur"
+                    "en": "Long-lived SSE connection",
+                    "fr": "Connexion SSE longue durée"
                   },
                   "back": {
-                    "en": "requests (sampling, notifications)",
-                    "fr": "requêtes (échantillonnage, notifications)"
+                    "en": "A long-lived SSE connection is for server-initiated communications requests, including sampling and notifications.",
+                    "fr": "Une connexion SSE longue durée est destinée aux requêtes de communications initiées par le serveur, notamment l’échantillonnage et les notifications."
                   }
                 },
                 {
@@ -1509,8 +1509,8 @@
                     "fr": "Connexion SSE éphémère = Pour un outil spécifique"
                   },
                   "back": {
-                    "en": "call responses, automatically closed after result\n\nMessage Routing:\n- Progress notifications → Long-lived SSE connection\n- Logging messages + tool results → Short-lived SSE connection tied to specific request\n\nKey Limitation: Setting certain flags to true breaks the workaround, making StreamableHTTP",
-                    "fr": "réponses aux appels, fermées automatiquement après obtention du résultat\n\nRoutage des messages :\n- Notifications de progression → connexion SSE de longue durée\n- Messages de journalisation + résultats des outils → connexion SSE de courte durée liée à une requête spécifique\n\nLimitation clé : le fait de définir certains flags sur true casse la solution de contournement, rendant StreamableHTTP"
+                    "en": "A short-lived SSE connection is used for specific tool-call responses and closes automatically after the result. Route progress notifications to the long-lived SSE connection, and route logging messages and tool results to a short-lived SSE connection tied to the specific request. Setting certain flags to true breaks the workaround, making StreamableHTTP unavailable.",
+                    "fr": "Une connexion SSE de courte durée est utilisée pour les réponses à des appels d’outils spécifiques et se ferme automatiquement après le résultat. Acheminez les notifications de progression vers la connexion SSE de longue durée, et les messages de journalisation ainsi que les résultats d’outils vers une connexion SSE de courte durée liée à la requête spécifique. Définir certains flags sur true casse la solution de contournement, rendant StreamableHTTP indisponible."
                   }
                 }
               ]

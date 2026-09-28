@@ -46,6 +46,12 @@ import { trackEventOnce } from "@/lib/analytics";
 import { getRequiredMatchingInteractionIds } from "./matchingGate";
 import { extractExplicitScreenHeading, localizedBlockText } from "./screenContentHeading";
 import { TekTekCourseCta } from "@/components/TekTekCourseCta";
+import {
+  currentScopedCompletions,
+  isScopedInteractionComplete,
+  requiredFlipCardCompletionKeys,
+  scopedInteractionKey,
+} from "./interactionCompletion";
 
 export default function LessonViewer({
   lesson,
@@ -141,8 +147,8 @@ export default function LessonViewer({
   const [chapterQuizPassed, setChapterQuizPassed] = useState<Set<number>>(new Set());
   // Track completed exercises in quiz/checkpoint chapters (exerciseId -> true)
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
-  // Track chapters where all flip cards have been seen
-  const [flipCardsCompleted, setFlipCardsCompleted] = useState<Set<number>>(new Set());
+  // Track each completed flip-card block (not only its chapter).
+  const [flipCardsCompleted, setFlipCardsCompleted] = useState<Set<string>>(new Set());
   // Track chapters where matching/bucket exercises have been completed
   const [matchingCompleted, setMatchingCompleted] = useState<Set<string>>(new Set());
   // Track completed cloud exercises (TP)
@@ -299,14 +305,14 @@ export default function LessonViewer({
           const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { if (b.mp4Url || b.hlsUrl || b.audioUrl) return b.id || ''; let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
           if (!hasOptionalSupplementaryVideos(ch) && videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
           // Flip cards gate
-          const hasFlips = blocks.some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
-          if (hasFlips && !flipCardsCompleted.has(currentChapter)) return;
+          const flipKeys = requiredFlipCardCompletionKeys(blocks, lessonIndex, currentChapter);
+          if (flipKeys.length > 0 && !flipKeys.every((key) => flipCardsCompleted.has(key))) return;
           // Matching gate
           const matchIds = getRequiredMatchingInteractionIds(blocks);
-          if (matchIds.length > 0 && !matchIds.every((id: string) => matchingCompleted.has(id))) return;
+          if (matchIds.length > 0 && !matchIds.every((id: string) => isScopedInteractionComplete(matchingCompleted, lessonIndex, currentChapter, id))) return;
           // Single choice exercise gate
           const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review').map((b: any, i: number) => b.id || `quiz_${i}`);
-          if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
+          if (scIds.length > 0 && !scIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true }))) return;
           const cloudIds = blocks.filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
           if (cloudIds.length > 0 && !cloudIds.every((id: string) => completedCloudExercises.has(id))) return;
           const finalQuizIds = blocks.filter((b: any) => b.type === 'course_final_quiz').map((b: any, i: number) => b.id || `course_final_quiz_${i}`);
@@ -316,7 +322,7 @@ export default function LessonViewer({
           const guidedActionIds = blocks.filter((b: any) => b.type === 'guided_action').map((b: any, i: number) => b.id || `guided_action_${i}`);
           if (guidedActionIds.length > 0 && !guidedActionIds.every((id: string) => completedGuidedActions.has(id))) return;
           const novasavoIds = blocks.filter((b: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(b.type)).map((b: any, i: number) => b.id || `novasavo_${i}`);
-          if (novasavoIds.length > 0 && !novasavoIds.every((id: string) => completedNovasavoInteractions.has(id))) return;
+          if (novasavoIds.length > 0 && !novasavoIds.every((id: string) => isScopedInteractionComplete(completedNovasavoInteractions, lessonIndex, currentChapter, id))) return;
         }
         setCurrentChapter(p => p + 1);
       } else if (e.key === 'ArrowLeft' && currentChapter > 0) {
@@ -353,17 +359,17 @@ export default function LessonViewer({
   const novasavoInteractionIds = (chapter?.blocks || [])
     .filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(block.type))
     .map((block: any, index: number) => block.id || `novasavo_${index}`);
-  const isGatedByNovasavoInteraction = !isReviewMode && novasavoInteractionIds.length > 0 && !novasavoInteractionIds.every((id: string) => completedNovasavoInteractions.has(id));
+  const isGatedByNovasavoInteraction = !isReviewMode && novasavoInteractionIds.length > 0 && !novasavoInteractionIds.every((id: string) => isScopedInteractionComplete(completedNovasavoInteractions, lessonIndex, currentChapter, id));
   const isTopActivityNavigationLocked = isSequentialActivityNavigationLocked({
     blocks: chapter?.blocks || [],
     reviewMode: isReviewMode,
-    completedExercises,
+    completedExercises: currentScopedCompletions(completedExercises, lessonIndex, currentChapter, { includeUnscopedServerIds: true }),
     completedCloudExercises,
     completedCourseFinalQuizzes,
     completedReflections,
     completedGuidedActions,
-    completedMatching: matchingCompleted,
-    completedInlineInteractions: completedNovasavoInteractions,
+    completedMatching: currentScopedCompletions(matchingCompleted, lessonIndex, currentChapter),
+    completedInlineInteractions: currentScopedCompletions(completedNovasavoInteractions, lessonIndex, currentChapter),
   } as Parameters<typeof isSequentialActivityNavigationLocked>[0] & {
     completedCourseFinalQuizzes: Set<string>;
     completedReflections: Set<string>;
@@ -427,7 +433,7 @@ export default function LessonViewer({
       case "xp_progress_hud":
       case "course_completion_next_unit_panel":
         return <div key={blockIdx} className="novasavo-learning-block w-full min-w-0 max-w-full"><NovasavoLearningBlock block={block} lang={lang} courseId={courseId} lessonTitle={resolveI18n(lesson.title, lang)} screenTitle={resolveI18n(chapter?.title, lang)} onComplete={(id, isCorrect) => {
-          setCompletedNovasavoInteractions((current) => new Set(current).add(id));
+          setCompletedNovasavoInteractions((current) => new Set(current).add(scopedInteractionKey(lessonIndex, currentChapter, id)));
           trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: isCorrect ? "passed" : "completed" });
           if (isCorrect) recordCompetencyOutcome.mutate({
             sourceType: "checkpoint_passed",
@@ -465,7 +471,7 @@ export default function LessonViewer({
         return <AnnotatedScreenshotBlock key={blockIdx} block={block} lang={lang} />;
       case "course_final_quiz":
         return <CourseFinalQuizBlock key={blockIdx} block={block} courseId={courseId} lang={lang} onComplete={(id) => {
-          setCompletedExercises((previous) => new Set(previous).add(id));
+          setCompletedExercises((previous) => new Set(previous).add(scopedInteractionKey(lessonIndex, currentChapter, id)));
           setCompletedCourseFinalQuizzes((previous) => new Set(previous).add(id));
           trackEventOnce("quiz_complete", `course-final-quiz:${courseId}:${id}`, { ...analyticsParams, content_id: id, passed: true });
         }} />;
@@ -477,7 +483,7 @@ export default function LessonViewer({
           : Promise.resolve()} onComplete={(id) => setCompletedReflections((previous) => new Set(Array.from(previous).concat(id)))} />;
       case "knowledge_check":
         return <KnowledgeCheckBlock key={blockIdx} block={block} lang={lang} onComplete={(id, isCorrect) => {
-          setCompletedNovasavoInteractions((current) => new Set(current).add(id));
+          setCompletedNovasavoInteractions((current) => new Set(current).add(scopedInteractionKey(lessonIndex, currentChapter, id)));
           trackEventOnce("quiz_complete", `quiz-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, score_band: isCorrect ? "75_100" : "0_49", passed: Boolean(isCorrect) });
           if (isCorrect) recordCompetencyOutcome.mutate({ sourceType: "checkpoint_passed", sourceKey: courseId, eventKey: `knowledge-check:${courseId}:${lessonIndex}:${currentChapter}:${id}`, score: 100, certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter });
         }} />;
@@ -906,12 +912,12 @@ export default function LessonViewer({
                   else await architectFoundationsCheckpointStatus.refetch();
                   if (result.passed) {
                     trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: "completed" });
-                    setCompletedExercises((prev) => new Set(Array.from(prev).concat(id)));
+                    setCompletedExercises((prev) => new Set(Array.from(prev).concat(scopedInteractionKey(lessonIndex, currentChapter, id))));
                   }
                   return result;
                 }
                 trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: "completed" });
-                setCompletedExercises((prev) => new Set(Array.from(prev).concat(id)));
+                setCompletedExercises((prev) => new Set(Array.from(prev).concat(scopedInteractionKey(lessonIndex, currentChapter, id))));
               }}
             />
           </div>
@@ -922,7 +928,7 @@ export default function LessonViewer({
         if (!cards.length) return null;
         return (
           <div key={blockIdx}>
-            <FlipCardsGrid cards={cards} lang={lang} onAllFlipped={() => setFlipCardsCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(currentChapter); return next; })} />
+            <FlipCardsGrid cards={cards} lang={lang} onAllFlipped={() => setFlipCardsCompleted((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, String(block.id || `flip_cards_${blockIdx}`))))} />
           </div>
         );
       }
@@ -963,7 +969,7 @@ export default function LessonViewer({
                 correction: block.correction,
               }}
               lang={lang as "en" | "fr" | "ar"}
-              onComplete={() => { trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${matchingId}`, { ...analyticsParams, content_id: matchingId, status: "completed" }); setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(matchingId); return next; }); }}
+              onComplete={() => { trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${matchingId}`, { ...analyticsParams, content_id: matchingId, status: "completed" }); setMatchingCompleted((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, matchingId))); }}
             />
           </div>
         );
@@ -994,7 +1000,7 @@ export default function LessonViewer({
             lang={lang as 'en' | 'fr'}
             onEvaluate={block.serverValidated ? async (selectedId) => validateServerChoice.mutateAsync({ courseId, exerciseId, selectedId, lang: lang === 'fr' ? 'fr' : 'en' }) : undefined}
             questionNumber={quizBlocksBefore + 1}
-            onCorrect={(id) => { trackEventOnce("quiz_complete", `quiz-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, score_band: "75_100", passed: true }); setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; }); }}
+            onCorrect={(id) => { trackEventOnce("quiz_complete", `quiz-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, score_band: "75_100", passed: true }); setCompletedExercises((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, id))); }}
           />
         );
       }
@@ -1065,7 +1071,7 @@ export default function LessonViewer({
         const reviewInstructions = typeof block.instructions === 'object' ? (block.instructions[lang] || block.instructions.en || '') : (block.instructions || '');
         const reviewLabel = typeof block.resourceLabel === 'object' ? (block.resourceLabel[lang] || block.resourceLabel.en || '') : (block.resourceLabel || t({ en: 'Open local resource', fr: 'Ouvrir la ressource locale' }));
         const reviewUrl = block.resourceUrl || block.url || '';
-        const reviewComplete = completedExercises.has(reviewId);
+        const reviewComplete = isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, reviewId, { allowUnscopedServerId: true });
         return (
           <div key={blockIdx} className="my-6 rounded-xl border border-violet-200 bg-violet-50/40 p-5">
             <div className="flex items-start gap-3">
@@ -1077,7 +1083,7 @@ export default function LessonViewer({
                   <a href={reviewUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-violet-300 bg-white px-3 py-2 text-sm font-medium text-violet-800 hover:bg-violet-100">
                     <FileText className="h-4 w-4" />{reviewLabel}
                   </a>
-                  <Button size="sm" variant={reviewComplete ? 'outline' : 'default'} disabled={reviewComplete} onClick={() => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(reviewId); return next; })}>
+                  <Button size="sm" variant={reviewComplete ? 'outline' : 'default'} disabled={reviewComplete} onClick={() => setCompletedExercises((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, reviewId)))}>
                     {reviewComplete ? t({ en: 'Resource reviewed', fr: 'Ressource consultée' }) : t({ en: 'I have reviewed this resource', fr: 'J’ai consulté cette ressource' })}
                   </Button>
                 </div>
@@ -1164,25 +1170,25 @@ export default function LessonViewer({
         return <CalloutBlock key={blockIdx} block={block} lang={lang} />;
       }
       case "matching": {
-        return <MatchingBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <MatchingBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setMatchingCompleted((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, id)))} />;
       }
       case "fill_blank": {
-        return <FillBlankBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <FillBlankBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, id)))} />;
       }
       case "terminal_sim": {
-        return <TerminalSimBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <TerminalSimBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, id)))} />;
       }
       case "code_repl": {
-        return <CodeReplBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <CodeReplBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, id)))} />;
       }
       case "ordering": {
-        return <OrderingBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <OrderingBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setMatchingCompleted((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, id)))} />;
       }
       case "ai_evaluation": {
-        return <AiEvaluationBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} evaluationContext={{ certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter }} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <AiEvaluationBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} evaluationContext={{ certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter }} onComplete={(id) => setCompletedExercises((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, id)))} />;
       }
       case "multi_choice_exercise": {
-        return <MultiChoiceBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <MultiChoiceBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => new Set(prev).add(scopedInteractionKey(lessonIndex, currentChapter, id)))} />;
       }
       default:
         return null;
@@ -1487,11 +1493,11 @@ export default function LessonViewer({
                 const lastChapterCloudIds = (chapter?.blocks || []).filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
                 const lastAllCloudDone = lastChapterCloudIds.length === 0 || lastChapterCloudIds.every((id: string) => completedCloudExercises.has(id));
                 const lastChapterMatchingIds = getRequiredMatchingInteractionIds(chapter?.blocks || []);
-                const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => matchingCompleted.has(id));
+                const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => isScopedInteractionComplete(matchingCompleted, lessonIndex, currentChapter, id));
               const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review').map((b: any, i: number) => b.id || `quiz_${i}`);
-              const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
+              const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true }));
                 const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
-                const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
+                const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true }));
                 const lastCourseFinalQuizIds = (chapter?.blocks || []).filter((b: any) => b.type === 'course_final_quiz').map((b: any, i: number) => b.id || `course_final_quiz_${i}`);
                 const lastAllCourseFinalQuizzesDone = lastCourseFinalQuizIds.length === 0 || lastCourseFinalQuizIds.every((id: string) => completedCourseFinalQuizzes.has(id));
                 const lastReflectionIds = (chapter?.blocks || []).filter((b: any) => b.type === 'reflection').map((b: any, i: number) => b.id || `reflection_${i}`);
@@ -1499,8 +1505,10 @@ export default function LessonViewer({
                 const lastGuidedActionIds = (chapter?.blocks || []).filter((b: any) => b.type === 'guided_action').map((b: any, i: number) => b.id || `guided_action_${i}`);
                 const lastAllGuidedActionsDone = lastGuidedActionIds.length === 0 || lastGuidedActionIds.every((id: string) => completedGuidedActions.has(id));
                 const lastNovasavoIds = (chapter?.blocks || []).filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type)).map((block: any, index: number) => block.id || `novasavo_${index}`);
-                const lastAllNovasavoDone = lastNovasavoIds.length === 0 || lastNovasavoIds.every((id: string) => completedNovasavoInteractions.has(id));
-                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone || !lastAllCourseFinalQuizzesDone || !lastAllReflectionsDone || !lastAllGuidedActionsDone || !lastAllNovasavoDone;
+                const lastAllNovasavoDone = lastNovasavoIds.length === 0 || lastNovasavoIds.every((id: string) => isScopedInteractionComplete(completedNovasavoInteractions, lessonIndex, currentChapter, id));
+                const lastFlipKeys = requiredFlipCardCompletionKeys(chapter?.blocks || [], lessonIndex, currentChapter);
+                const lastAllFlipCardsDone = lastFlipKeys.length === 0 || lastFlipKeys.every((key) => flipCardsCompleted.has(key));
+                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone || !lastAllCourseFinalQuizzesDone || !lastAllReflectionsDone || !lastAllGuidedActionsDone || !lastAllNovasavoDone || !lastAllFlipCardsDone;
                 return (
                   <Button
                     size="sm"
@@ -1531,7 +1539,7 @@ export default function LessonViewer({
               const validationRequired = chapter?.requiredBeforeAdvance !== false;
               const checkpointGateState = getCheckpointGateState({
                 blocks: chapter?.blocks || [],
-                completedExercises,
+                completedExercises: currentScopedCompletions(completedExercises, lessonIndex, currentChapter, { includeUnscopedServerIds: true }),
                 configuredThreshold: chapter?.passThreshold,
                 required: validationRequired,
                 reviewMode: isReviewMode,
@@ -1541,7 +1549,7 @@ export default function LessonViewer({
                   ? checkpointGateState.checkpointIds
                   : (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`)
                 : [];
-              const completedChapterExercises = chapterExerciseIds.filter((id: string) => completedExercises.has(id)).length;
+              const completedChapterExercises = chapterExerciseIds.filter((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true })).length;
               const requiredChapterSuccesses = requiredCorrectAnswers(chapterExerciseIds.length, chapter?.passThreshold);
               const isGatedByExercises = isQuizOrCheckpointChapter && (chapter?.type === 'checkpoint'
                 ? checkpointGateState.locked
@@ -1559,23 +1567,23 @@ export default function LessonViewer({
               const allVideosWatched = chapterVideoKeys.length === 0 || chapterVideoKeys.every((k: string) => completedVideos.has(k));
               const isGatedByVideo = chapterVideoKeys.length > 0 && !allVideosWatched && !hasOptionalSupplementaryVideos(chapter) && !isReviewMode;
               // Flip cards gate: block if chapter has flip_cards and not all have been flipped
-              const chapterHasFlipCards = (chapter?.blocks || []).some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
-              const isGatedByFlipCards = chapterHasFlipCards && !flipCardsCompleted.has(currentChapter) && !isReviewMode;
+              const chapterFlipCardKeys = requiredFlipCardCompletionKeys(chapter?.blocks || [], lessonIndex, currentChapter);
+              const isGatedByFlipCards = chapterFlipCardKeys.length > 0 && !chapterFlipCardKeys.every((key) => flipCardsCompleted.has(key)) && !isReviewMode;
               // Matching/bucket sort gate: block if chapter has bucket_sort exercises not completed
               const chapterMatchingIds = getRequiredMatchingInteractionIds(chapter?.blocks || []);
-              const allMatchingCompleted = chapterMatchingIds.length === 0 || chapterMatchingIds.every((id: string) => matchingCompleted.has(id));
+              const allMatchingCompleted = chapterMatchingIds.length === 0 || chapterMatchingIds.every((id: string) => isScopedInteractionComplete(matchingCompleted, lessonIndex, currentChapter, id));
               const isGatedByMatching = chapterMatchingIds.length > 0 && !allMatchingCompleted && !isReviewMode;
               // Single choice exercise gate for ALL chapters (not just quiz/checkpoint)
               const chapterSingleChoiceIds = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise')
                 .map((b: any, i: number) => b.id || `quiz_${i}`);
-              const completedSingleChoice = chapterSingleChoiceIds.filter((id: string) => completedExercises.has(id)).length;
+              const completedSingleChoice = chapterSingleChoiceIds.filter((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true })).length;
               const requiredSingleChoice = isQuizOrCheckpointChapter ? requiredChapterSuccesses : chapterSingleChoiceIds.length;
               const isGatedBySingleChoice = isEvaluationGateLocked({ totalQuestions: chapterSingleChoiceIds.length, completedCorrectAnswers: completedSingleChoice, configuredThreshold: isQuizOrCheckpointChapter ? requiredSingleChoice : chapterSingleChoiceIds.length, required: validationRequired, reviewMode: isReviewMode });
               const chapterResourceReviewIds = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'resource_review')
                 .map((b: any, i: number) => b.id || `resource_review_${i}`);
-              const isGatedByResourceReview = chapterResourceReviewIds.length > 0 && !chapterResourceReviewIds.every((id: string) => completedExercises.has(id)) && !isReviewMode;
+              const isGatedByResourceReview = chapterResourceReviewIds.length > 0 && !chapterResourceReviewIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true })) && !isReviewMode;
               // Cloud exercise (TP) gate: block if chapter has cloud_exercise blocks not completed
               const chapterCloudExerciseIds = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'cloud_exercise')

@@ -18,7 +18,8 @@ describe("cours DataCamp Développement logiciel avec GitHub Copilot", () => {
     expect(activities).toHaveLength(40);
     expect(projectorVideos).toHaveLength(13);
     expect(projectorVideos.every((block: any) => block.mp4Url && block.slidesPdf && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
-    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(13);
+    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(7);
+    expect(blocks.filter((block: any) => block.type === "ordering")).toHaveLength(6);
     expect(blocks.filter((block: any) => block.type === "single_choice_exercise" || block.type === "multi_choice_exercise")).toHaveLength(14);
     expect(activities.filter((activity: any) => activity.sourceActivityType === "VisualExercise")).toHaveLength(6);
     expect(activities.filter((activity: any) => activity.sourceActivityType === "VisualExercise").every((activity: any) => activity.blocks[0]?.visualAssetUrl?.startsWith("/api/assets/"))).toBe(true);

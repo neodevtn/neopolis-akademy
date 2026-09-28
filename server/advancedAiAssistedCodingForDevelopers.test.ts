@@ -32,7 +32,8 @@ describe("cours DataCamp Programmation assistée par IA avancée pour les dével
     expect(activities).toHaveLength(32);
     expect(projectorVideos).toHaveLength(10);
     expect(projectorVideos.every((block: any) => block.audioUrl && block.slidesPdf && (block.subtitleUrlFr || block.subtitleUrlEn) && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
-    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(8);
+    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(5);
+    expect(blocks.filter((block: any) => block.type === "ordering")).toHaveLength(3);
     expect(blocks.filter((block: any) => block.type === "multi_choice_exercise")).toHaveLength(9);
     expect(blocks.filter((block: any) => block.type === "single_choice_exercise")).toHaveLength(5);
     expect(activities.filter((activity: any) => activity.sourceActivityType === "DragAndDropExercise")).toHaveLength(8);

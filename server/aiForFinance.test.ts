@@ -22,7 +22,8 @@ describe("cours DataCamp L’IA pour la finance", () => {
     expect(projector.every((block: any) => block.audioUrl && block.slidesPdf && block.transcriptSegments?.length)).toBe(true);
     expect(cloudExercises).toHaveLength(9);
     expect(cloudExercises.every((block: any) => block.environmentGuide && !JSON.stringify(block).includes("<exercise_objective>"))).toBe(true);
-    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(6);
+    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(3);
+    expect(blocks.filter((block: any) => block.type === "ordering")).toHaveLength(3);
     expect(blocks.filter((block: any) => ["single_choice_exercise", "multi_choice_exercise"].includes(block.type))).toHaveLength(3);
     expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
   });
