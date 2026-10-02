@@ -11,7 +11,7 @@ import { applyCatalogMetrics } from "../shared/catalogMetrics";
 import { eq } from "drizzle-orm";
 import { courseLifecycleStates } from "../drizzle/schema";
 import { getCourseCatalogKpis, getDb } from "./db";
-import { addExamQuestion, deleteExamConfiguration, deleteExamQuestion, disableExamConfiguration, getExamDefinition, getExamDefinitions, getMockExamQuestions, getQuestionsForCertification, saveExamConfiguration, updateExamQuestion } from "./examDefinition";
+import { addExamQuestion, deleteExamConfiguration, deleteExamQuestion, disableExamConfiguration, getExamDefinition, getExamDefinitions, getMockExamQuestions, getQuestionsForCertification, saveExamConfiguration, selectExamQuestions, updateExamQuestion } from "./examDefinition";
 import { normalizeExamConfiguration } from "../shared/examConfiguration";
 import { enqueuePublicContentUpdate, getIndexNowAutomationStatus, processPendingIndexNowSubmissions } from "./indexNowAutomation";
 
@@ -310,6 +310,25 @@ export const adminContentRouter = router({
     return getMockExamQuestions();
   }),
 
+  getMockExamQuestionPage: adminProcedure
+    .input(z.object({ certificationId: z.string().min(2).max(200), offset: z.number().int().min(0), limit: z.number().int().min(1).max(100) }))
+    .query(async ({ input }) => {
+      const questions = await getQuestionsForCertification(input.certificationId);
+      return { total: questions.length, questions: questions.slice(input.offset, input.offset + input.limit) };
+    }),
+
+  getMockExamSample: adminProcedure
+    .input(z.object({ certificationId: z.string().min(2).max(200) }))
+    .query(async ({ input }) => {
+      const [questions, configuration] = await Promise.all([
+        getQuestionsForCertification(input.certificationId), getExamDefinition(input.certificationId),
+      ]);
+      return {
+        availableQuestions: questions.length,
+        questions: configuration ? selectExamQuestions(questions, configuration) : [],
+      };
+    }),
+
   // Tableau de bord léger : aucune clé de réponse, explication ou énoncé n’est transféré.
   getMockExamQuestionSummary: adminProcedure.query(async () => {
     const questions = await getMockExamQuestions();
@@ -398,6 +417,7 @@ export const adminContentRouter = router({
         choices: z.array(z.object({
           id: z.string(),
           text: z.union([z.string(), z.record(z.string(), z.string())]),
+          rationale: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
         })),
         correctChoiceIds: z.array(z.string()),
         explanation: z.union([z.string(), z.record(z.string(), z.string())]),
@@ -418,6 +438,7 @@ export const adminContentRouter = router({
       choices: z.array(z.object({
         id: z.string(),
         text: z.union([z.string(), z.record(z.string(), z.string())]),
+        rationale: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
       })),
       correctChoiceIds: z.array(z.string()),
       explanation: z.union([z.string(), z.record(z.string(), z.string())]),

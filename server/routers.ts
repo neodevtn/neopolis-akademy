@@ -623,6 +623,7 @@ export const appRouter = router({
       .input(z.object({ certificationId: z.string().min(2).max(200), questionCount: z.number().int().min(1).max(5).default(3) }))
       .query(async ({ input }) => {
         const questions = (await getQuestionsForCertification(input.certificationId))
+          .filter((question) => question.correctChoiceIds.length === 1)
           .sort(() => Math.random() - 0.5)
           .slice(0, input.questionCount)
           .map((question) => ({ ...question, choices: [...question.choices].sort(() => Math.random() - 0.5) }));
@@ -633,7 +634,7 @@ export const appRouter = router({
       .input(z.object({ certificationId: z.string().min(2).max(200), questionId: z.string().min(1).max(240), selectedId: z.string().min(1).max(80) }))
       .mutation(async ({ input }) => {
         const question = (await getQuestionsForCertification(input.certificationId)).find((candidate) => candidate.id === input.questionId);
-        if (!question) throw new TRPCError({ code: "NOT_FOUND", message: "Question de quiz introuvable." });
+        if (!question || question.correctChoiceIds.length !== 1) throw new TRPCError({ code: "NOT_FOUND", message: "Question de quiz introuvable." });
         if (!question.choices.some((choice) => choice.id === input.selectedId)) throw new TRPCError({ code: "BAD_REQUEST", message: "Choix de réponse invalide." });
         return {
           correct: question.correctChoiceIds.includes(input.selectedId),

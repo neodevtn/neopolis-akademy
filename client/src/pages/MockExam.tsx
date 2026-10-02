@@ -396,8 +396,12 @@ export default function MockExam() {
                 <div className="text-sm text-amber-800">
                   <p>
                     {t({
-                      en: "This is a practice exam generated from course material. Questions are not from the official Anthropic exam bank.",
-                      fr: "Ceci est un examen blanc généré à partir du matériel de cours. Les questions ne proviennent pas de la banque officielle Anthropic.",
+                      en: certId?.startsWith("claude_certified_")
+                        ? "This practice exam combines CertSafari partner questions and original Neopolis questions based on the training content. They are not official Anthropic exam questions."
+                        : "This is a practice exam generated from course material. Questions are not from an official exam bank.",
+                      fr: certId?.startsWith("claude_certified_")
+                        ? "Cet examen blanc associe des questions du partenaire CertSafari à des questions originales Neopolis fondées sur les cours. Ce ne sont pas des questions officielles Anthropic."
+                        : "Ceci est un examen blanc généré à partir du matériel de cours. Les questions ne proviennent pas d’une banque d’examen officielle.",
                     })}
                   </p>
                 </div>

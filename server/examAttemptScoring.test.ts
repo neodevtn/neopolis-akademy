@@ -54,4 +54,17 @@ describe("notation d’examen certifiant contrôlée par le serveur", () => {
     expect(result.correct).toBe(1);
     expect(result.passed).toBe(false);
   });
+
+  it("corrige les réponses multiples avec correspondance exacte, sans crédit pour un choix partiel ou supplémentaire", () => {
+    const [first] = questions;
+    const multi = { ...first, correctChoiceIds: ["a", "c"], choices: [
+      { id: "a", text: "A" }, { id: "b", text: "B" }, { id: "c", text: "C" }, { id: "d", text: "D" },
+    ] };
+    const grade = (selectedIds: string[]) => scoreStoredExamSession([multi], [{ questionId: "q1", selectedIds }], configuration, false).correct;
+    expect(grade(["c", "a"])).toBe(1);
+    expect(grade(["a"])).toBe(0);
+    expect(grade(["a", "b"])).toBe(0);
+    expect(grade(["a", "c", "d"])).toBe(0);
+    expect(grade(["a", "a"])).toBe(0);
+  });
 });

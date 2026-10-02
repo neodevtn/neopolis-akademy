@@ -29,7 +29,16 @@ describe("CCAR-F scenario selection", () => {
     expect(new Set(attempt.map((question) => question.id)).size).toBe(60);
     expect(families.size).toBe(4);
     expect(scenarioQuestions).toHaveLength(12);
-    expect(scenarioQuestions.every((question) => question.version === "neopolis-original-2026-09-16")).toBe(true);
+    expect(scenarioQuestions.every((question) => question.version === "neopolis-original-2026-10-02")).toBe(true);
+  });
+
+  it("laisse effectivement accessibles les six familles selon le tirage aléatoire", () => {
+    const seen = new Set<string>();
+    for (let index = 0; index < 30; index += 1) {
+      const attempt = selectExamQuestions(questions, configuration);
+      for (const question of attempt) if (question.scenarioFamily) seen.add(question.scenarioFamily);
+    }
+    expect(seen.size).toBe(6);
   });
 
   it("maintains the target blueprint distribution when the scenario questions are included", () => {

@@ -24,6 +24,9 @@ export type ExamQuestion = {
   difficulty?: "foundational" | "intermediate" | "advanced";
   competency?: string[];
   sourcePedagogique?: string;
+  sourceType?: string;
+  sourceQuestionId?: number;
+  sourceVariantGroup?: string;
   version?: string;
   question: string | { fr?: string; en?: string };
   choices: ExamChoice[];
@@ -143,6 +146,21 @@ export async function getQuestionsForCertification(certificationId: string): Pro
   return questions.filter((question) => question.certificationId === certificationId);
 }
 
+/** Validation d'édition administrateur : aucune question Anthropic sans corrigé complet. */
+export function validateAnthropicExamQuestion(question: ExamQuestion): void {
+  if (!question.certificationId.startsWith("claude_certified_")) return;
+  const bilingual = (value: ExamQuestion["question"] | ExamChoice["rationale"]) =>
+    typeof value === "object" && Boolean(value?.en?.trim()) && Boolean(value?.fr?.trim());
+  const keys = question.choices.map((choice) => choice.id);
+  const answers = question.correctChoiceIds;
+  if (!bilingual(question.question) || question.choices.length < 4 || question.choices.length > 8
+    || new Set(keys).size !== keys.length || answers.length < 1 || new Set(answers).size !== answers.length
+    || !answers.every((answer) => keys.includes(answer))
+    || question.choices.some((choice) => !bilingual(choice.text) || !bilingual(choice.rationale))) {
+    throw new Error("Question Anthropic incomplète : énoncé, choix, réponses exactes et explications bilingues requis.");
+  }
+}
+
 export async function updateExamQuestion(questionId: string, data: Omit<ExamQuestion, "id" | "certificationId">): Promise<boolean> {
   const questions = await getMockExamQuestions();
   const existing = questions.find((question) => question.id === questionId);
@@ -155,6 +173,19 @@ export async function updateExamQuestion(questionId: string, data: Omit<ExamQues
       ...choice,
     })),
   };
+  if (existing.sourceType === "certsafari-partner-practice" && (
+    JSON.stringify(updatedQuestion.question) !== JSON.stringify(existing.question)
+    || JSON.stringify(updatedQuestion.correctChoiceIds) !== JSON.stringify(existing.correctChoiceIds)
+    || JSON.stringify(updatedQuestion.choices.map(({ id, text, rationale }) => ({ id, text, rationale })))
+      !== JSON.stringify(existing.choices.map(({ id, text, rationale }) => ({ id, text, rationale })))
+  )) {
+    updatedQuestion.sourceType = "admin-revised-partner-practice";
+    updatedQuestion.version = `admin-revised-${new Date().toISOString().slice(0, 10)}`;
+    updatedQuestion.choices = updatedQuestion.choices.map((choice) => ({
+      ...choice, rationaleProvenance: { method: "administrator-revision" },
+    }));
+  }
+  validateAnthropicExamQuestion(updatedQuestion);
   const certificationQuestions = questions.filter((question) => question.certificationId === existing.certificationId).map((question) => question.id === questionId ? updatedQuestion : question);
   const configuration = await getExamDefinition(existing.certificationId);
   if (!configuration) throw new Error("Configuration d’examen introuvable");
@@ -166,6 +197,7 @@ export async function addExamQuestion(data: Omit<ExamQuestion, "id">): Promise<s
   if (!certificationExists(data.certificationId)) throw new Error("Formation inconnue pour cette question");
   const existing = await getQuestionsForCertification(data.certificationId);
   const id = `exam_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+  validateAnthropicExamQuestion({ ...data, id });
   const configuration = await getExamDefinition(data.certificationId) || normalizeExamConfiguration({}, existing.length + 1);
   await persistExam(data.certificationId, configuration, [...existing, { ...data, id }]);
   return id;
@@ -215,9 +247,19 @@ function domainTargets(configuration: ExamConfiguration): Map<string, number> {
 }
 
 export function selectExamQuestions(questions: ExamQuestion[], configuration: ExamConfiguration): ExamQuestion[] {
+  // Les éditions partenaire d'un même énoncé restent dans la banque, mais une
+  // tentative ne doit jamais confronter l'apprenant deux fois au même cas.
+  const seenStems = new Set<string>();
+  const uniqueStems = shuffled(questions, configuration.shuffleQuestions).filter((question) => {
+    const en = typeof question.question === "string" ? question.question : question.question.en || question.question.fr || "";
+    const stem = en.toLocaleLowerCase("en").replace(/\s+/g, " ").trim();
+    if (!stem || seenStems.has(stem)) return false;
+    seenStems.add(stem);
+    return true;
+  });
   const scenarioPolicy = configuration.scenarioSelection;
   const scenarios = new Map<string, ExamQuestion[]>();
-  for (const question of questions) {
+  for (const question of uniqueStems) {
     if (!question.scenarioFamily) continue;
     scenarios.set(question.scenarioFamily, [...(scenarios.get(question.scenarioFamily) || []), question]);
   }
@@ -229,7 +271,7 @@ export function selectExamQuestions(questions: ExamQuestion[], configuration: Ex
   const selectedScenarioQuestions = scenarioFamilies.flatMap(([, entries]) => shuffled(entries, configuration.shuffleQuestions).slice(0, scenarioPolicy?.questionsPerFamily || 0));
   const selectedIds = new Set(selectedScenarioQuestions.map((question) => question.id));
   const unselectedScenarioFamilies = new Set(Array.from(scenarios.keys()).filter((family) => !scenarioFamilies.some(([selectedFamily]) => selectedFamily === family)));
-  const regularPool = questions.filter((question) => !selectedIds.has(question.id) && !question.scenarioFamily && !unselectedScenarioFamilies.has(question.scenarioFamily || ""));
+  const regularPool = uniqueStems.filter((question) => !selectedIds.has(question.id) && !question.scenarioFamily && !unselectedScenarioFamilies.has(question.scenarioFamily || ""));
   const selected = [...selectedScenarioQuestions];
   const targets = domainTargets(configuration);
 

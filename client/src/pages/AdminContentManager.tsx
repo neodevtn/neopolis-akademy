@@ -91,12 +91,17 @@ export default function AdminContentManager() {
   const [recommendationMediaLessonIdx, setRecommendationMediaLessonIdx] = useState<number | null>(null);
   const [sourceEditorOpen, setSourceEditorOpen] = useState(false);
   const [quizSimState, setQuizSimState] = useState<{ currentQ: number; answers: Record<number, string>; showResults: boolean }>({ currentQ: 0, answers: {}, showResults: false });
+  const [examSimulationAnswers, setExamSimulationAnswers] = useState<Record<number, string[]>>({});
+  useEffect(() => setExamSimulationAnswers({}), [selectedCertId]);
+  useEffect(() => { if (viewMode === "exam-simulate") setExamSimulationAnswers({}); }, [viewMode]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<{ lessonIdx: number; chapterIdx: number; blockIdx: number; content: string } | null>(null);
   const [editingQuiz, setEditingQuiz] = useState<any>(null);
   const [editingExamQ, setEditingExamQ] = useState<any>(null);
   const [editingLegacyExercise, setEditingLegacyExercise] = useState<any>(null);
   const [editLang, setEditLang] = useState<"en" | "fr">("en");
+  const [examPage, setExamPage] = useState(0);
+  useEffect(() => setExamPage(0), [selectedCertId]);
 
   // Helpers for bilingual editing
   const getI18n = (field: any, l: "en" | "fr"): string => {
@@ -170,8 +175,11 @@ export default function AdminContentManager() {
   const quizzesQuery = trpc.adminContent.getQuizzes.useQuery(undefined, {
     enabled: isAuthenticated && isAdmin && (viewMode === "quiz-simulate" || viewMode === "edit-quiz" || viewMode === "edit-course"),
   });
-  const examQuestionsQuery = trpc.adminContent.getMockExamQuestions.useQuery(undefined, {
-    enabled: isAuthenticated && isAdmin && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
+  const examQuestionsQuery = trpc.adminContent.getMockExamQuestionPage.useQuery({ certificationId: selectedCertId || "none", offset: examPage * 100, limit: 100 }, {
+    enabled: isAuthenticated && isAdmin && viewMode === "edit-exam" && Boolean(selectedCertId),
+  });
+  const examSampleQuery = trpc.adminContent.getMockExamSample.useQuery({ certificationId: selectedCertId || "none" }, {
+    enabled: isAuthenticated && isAdmin && viewMode === "exam-simulate" && Boolean(selectedCertId),
   });
   const examQuestionSummaryQuery = trpc.adminContent.getMockExamQuestionSummary.useQuery(undefined, {
     enabled: isAuthenticated && isAdmin && (viewMode === "question-banks" || viewMode === "exam-configurations"),
@@ -208,7 +216,7 @@ export default function AdminContentManager() {
     onError: (e) => toast.error(e.message),
   });
   const updateExamConfigurationMut = trpc.adminContent.updateExamConfiguration.useMutation({
-    onSuccess: () => { toast.success("Examen sauvegardé"); examConfigurationsQuery.refetch(); setExamQuestions([]); },
+    onSuccess: () => { toast.success("Examen sauvegardé"); examConfigurationsQuery.refetch(); examSampleQuery.refetch(); setExamQuestions([]); setExamSimulationAnswers({}); },
     onError: (e) => toast.error(e.message),
   });
   const disableExamConfigurationMut = trpc.adminContent.disableExamConfiguration.useMutation({
@@ -737,11 +745,12 @@ export default function AdminContentManager() {
 
   // ─── EXAM SIMULATION ───
   const renderExamSimulate = () => {
-    const allQuestions = examQuestionsQuery.data as any[] | undefined;
+    const allQuestions = examSampleQuery.data?.questions as any[] | undefined;
     if (!allQuestions) return <div className="text-center py-8 text-gray-500">Chargement...</div>;
 
     const certQuestions = allQuestions.filter((q: any) => q.certificationId === selectedCertId);
-    const storedConfig = normalizeExamConfiguration((examConfigurationsQuery.data as Record<string, Partial<ExamConfiguration>> | undefined)?.[selectedCertId], certQuestions.length);
+    const availableQuestions = examSampleQuery.data?.availableQuestions || 0;
+    const storedConfig = normalizeExamConfiguration((examConfigurationsQuery.data as Record<string, Partial<ExamConfiguration>> | undefined)?.[selectedCertId], availableQuestions);
     const examConfig = examConfigDrafts[selectedCertId] || storedConfig;
     // Select the configured subset once per simulation attempt.
     const activeExamQuestions = examQuestions.length > 0 ? examQuestions : (() => {
@@ -759,7 +768,7 @@ export default function AdminContentManager() {
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <Badge variant="outline">{certQuestions.length} questions disponibles</Badge>
+          <Badge variant="outline">{availableQuestions} questions disponibles</Badge>
           <Badge>{activeExamQuestions.length} questions sélectionnées</Badge>
           <Badge variant="secondary">Seuil : {examConfig.passingScore}/1000</Badge>
           <Badge variant="secondary">Durée : {examConfig.timeLimit} min</Badge>
@@ -774,11 +783,18 @@ export default function AdminContentManager() {
               </div>
               <p className="font-medium mb-4">{typeof activeExamQuestions[quizSimState.currentQ]?.question === "object" ? t(activeExamQuestions[quizSimState.currentQ]?.question) : activeExamQuestions[quizSimState.currentQ]?.question}</p>
               <div className="space-y-2">
+                <p className="mb-3 text-xs text-slate-600">{t({ en: "Answers expected", fr: "Réponses attendues" })} : {activeExamQuestions[quizSimState.currentQ]?.correctChoiceIds?.length || 1}</p>
                 {activeExamQuestions[quizSimState.currentQ]?.choices?.map((choice: any) => (
                   <button
                     key={choice.id}
-                    className={`w-full text-left p-3 rounded border transition-colors ${quizSimState.answers[quizSimState.currentQ] === choice.id ? "border-emerald-500 bg-emerald-50" : "border-gray-200 hover:border-gray-300"}`}
-                    onClick={() => setQuizSimState(prev => ({ ...prev, answers: { ...prev.answers, [prev.currentQ]: choice.id } }))}
+                    className={`w-full text-left p-3 rounded border transition-colors ${(examSimulationAnswers[quizSimState.currentQ] || []).includes(choice.id) ? "border-emerald-500 bg-emerald-50" : "border-gray-200 hover:border-gray-300"}`}
+                    aria-pressed={(examSimulationAnswers[quizSimState.currentQ] || []).includes(choice.id)}
+                    onClick={() => setExamSimulationAnswers((previous) => {
+                      const current = previous[quizSimState.currentQ] || [];
+                      const expected = activeExamQuestions[quizSimState.currentQ]?.correctChoiceIds?.length || 1;
+                      const selected = expected === 1 ? [choice.id] : current.includes(choice.id) ? current.filter((id) => id !== choice.id) : current.length < expected ? [...current, choice.id] : current;
+                      return { ...previous, [quizSimState.currentQ]: selected };
+                    })}
                   >
                     {typeof choice.text === "object" ? t(choice.text) : choice.text}
                   </button>
@@ -810,17 +826,19 @@ export default function AdminContentManager() {
                 <Badge className="bg-emerald-100 text-emerald-800 text-lg px-3 py-1">
                   {activeExamQuestions.filter((q: any, i: number) => {
                     const correct = q.correctChoiceIds || [q.correctId];
-                    return correct.includes(quizSimState.answers[i]);
+                    const selected = examSimulationAnswers[i] || [];
+                    return correct.length === selected.length && correct.every((id: string) => selected.includes(id));
                   }).length}/{activeExamQuestions.length}
                 </Badge>
-                <Button variant="outline" size="sm" onClick={() => setQuizSimState({ currentQ: 0, answers: {}, showResults: false })}>
+                <Button variant="outline" size="sm" onClick={() => { setQuizSimState({ currentQ: 0, answers: {}, showResults: false }); setExamSimulationAnswers({}); }}>
                   <RefreshCw className="w-3 h-3 mr-1" /> Recommencer
                 </Button>
               </div>
               <div className="max-h-96 overflow-y-auto space-y-2">
                 {activeExamQuestions.map((q: any, idx: number) => {
                   const correct = q.correctChoiceIds || [q.correctId];
-                  const isCorrect = correct.includes(quizSimState.answers[idx]);
+                  const selected = examSimulationAnswers[idx] || [];
+                  const isCorrect = correct.length === selected.length && correct.every((id: string) => selected.includes(id));
                   return (
                     <div key={idx} className={`p-2 rounded text-sm ${isCorrect ? "bg-green-50" : "bg-red-50"}`}>
                       <span className="font-medium">{idx + 1}.</span> {(typeof q.question === "object" ? t(q.question) : q.question).substring(0, 80)}...
@@ -838,13 +856,14 @@ export default function AdminContentManager() {
 
   // ─── EDIT EXAM QUESTIONS ───
   const renderEditExam = () => {
-    const allQuestions = examQuestionsQuery.data as any[] | undefined;
-    if (!allQuestions) return <div className="text-center py-8 text-gray-500">Chargement...</div>;
     if (!selectedCertId) return <div className="rounded-xl border border-dashed p-8 text-center"><p className="font-semibold">Sélectionnez une formation depuis le catalogue.</p><Button className="mt-4" variant="outline" onClick={() => navigateContent("catalog")}>Ouvrir le catalogue</Button></div>;
+    const allQuestions = examQuestionsQuery.data?.questions as any[] | undefined;
+    if (!allQuestions) return <div className="text-center py-8 text-gray-500">Chargement...</div>;
 
     const certQuestions = allQuestions.filter((q: any) => q.certificationId === selectedCertId);
     const domains = Array.from(new Set(certQuestions.map((q: any) => typeof q.domain === "object" ? (q.domain.fr || q.domain.en || "") : q.domain)));
-    const storedConfig = normalizeExamConfiguration((examConfigurationsQuery.data as Record<string, Partial<ExamConfiguration>> | undefined)?.[selectedCertId], certQuestions.length);
+    const availableQuestions = examQuestionsQuery.data?.total || 0;
+    const storedConfig = normalizeExamConfiguration((examConfigurationsQuery.data as Record<string, Partial<ExamConfiguration>> | undefined)?.[selectedCertId], availableQuestions);
     const examConfig = examConfigDrafts[selectedCertId] || storedConfig;
     const certification = trainingIndex.certifications.find((item) => item.id === selectedCertId);
     const certificationTitle = certification ? t(certification.title) : "Formation";
@@ -853,7 +872,7 @@ export default function AdminContentManager() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Badge variant="outline">{certQuestions.length} questions</Badge>
+            <Badge variant="outline">{availableQuestions} questions</Badge>
             <Badge variant="secondary">{domains.length} domaines</Badge>
           </div>
           <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
@@ -874,10 +893,10 @@ export default function AdminContentManager() {
 
         <ExamBankSettings
           configuration={examConfig}
-          availableQuestions={certQuestions.length}
+          availableQuestions={availableQuestions}
           isSaving={updateExamConfigurationMut.isPending || disableExamConfigurationMut.isPending || deleteExamConfigurationMut.isPending}
           onChange={(configuration) => setExamConfigDrafts((current) => ({ ...current, [selectedCertId]: configuration }))}
-          onSave={() => updateExamConfigurationMut.mutate({ certificationId: selectedCertId, configuration: normalizeExamConfiguration(examConfig, certQuestions.length) })}
+          onSave={() => updateExamConfigurationMut.mutate({ certificationId: selectedCertId, configuration: normalizeExamConfiguration(examConfig, availableQuestions) })}
           onPreview={() => setExamPreviewOpen(true)}
           onDisable={() => {
             if (confirm("Dépublier cet examen ? Les questions seront conservées, mais les apprenants ne pourront plus le démarrer.")) disableExamConfigurationMut.mutate({ certificationId: selectedCertId });
@@ -893,7 +912,7 @@ export default function AdminContentManager() {
               <DialogTitle>Prévisualisation apprenant</DialogTitle>
               <DialogDescription>Cette prévisualisation utilise le brouillon actuellement affiché. Elle ne sauvegarde rien, ne crée aucune session et ne modifie aucune tentative.</DialogDescription>
             </DialogHeader>
-            <ExamLearnerPreview certificationTitle={certificationTitle} certificationIcon={certification?.icon} configuration={examConfig} availableQuestions={certQuestions.length} />
+            <ExamLearnerPreview certificationTitle={certificationTitle} certificationIcon={certification?.icon} configuration={examConfig} availableQuestions={availableQuestions} />
           </DialogContent>
         </Dialog>
 
@@ -908,9 +927,9 @@ export default function AdminContentManager() {
               </tr>
             </thead>
             <tbody>
-              {certQuestions.slice(0, 100).map((q: any, idx: number) => (
+              {certQuestions.map((q: any, idx: number) => (
                 <tr key={q.id} className="border-b hover:bg-gray-50">
-                  <td className="px-3 py-2 text-gray-400">{idx + 1}</td>
+                  <td className="px-3 py-2 text-gray-400">{examPage * 100 + idx + 1}</td>
                   <td className="px-3 py-2 truncate max-w-md">{typeof q.question === "object" ? t(q.question) : q.question}</td>
                   <td className="px-3 py-2"><Badge variant="secondary" className="text-xs">{typeof q.domain === "object" ? t(q.domain) : q.domain}</Badge></td>
                   <td className="px-3 py-2 text-right">
@@ -932,6 +951,11 @@ export default function AdminContentManager() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <Button size="sm" variant="outline" disabled={examPage === 0 || examQuestionsQuery.isFetching} onClick={() => setExamPage((current) => Math.max(0, current - 1))}>{t({ en: "Previous", fr: "Précédent" })}</Button>
+          <span className="text-sm text-muted-foreground">{t({ en: "Page", fr: "Page" })} {examPage + 1} / {Math.max(1, Math.ceil(availableQuestions / 100))}</span>
+          <Button size="sm" variant="outline" disabled={(examPage + 1) * 100 >= availableQuestions || examQuestionsQuery.isFetching} onClick={() => setExamPage((current) => current + 1)}>{t({ en: "Next", fr: "Suivant" })}</Button>
         </div>
       </div>
     );
@@ -1206,30 +1230,56 @@ export default function AdminContentManager() {
                 <div>
                   <label className="text-xs font-medium text-gray-600">Choix ({editLang.toUpperCase()})</label>
                   {editingExamQ.choices?.map((c: any, ci: number) => (
-                    <div key={ci} className="flex items-center gap-2 mb-1">
-                      <input
-                        type="checkbox"
-                        checked={(editingExamQ.correctChoiceIds || []).includes(c.id)}
-                        onChange={(e) => {
-                          const ids = [...(editingExamQ.correctChoiceIds || [])];
-                          if (e.target.checked) ids.push(c.id);
-                          else ids.splice(ids.indexOf(c.id), 1);
-                          setEditingExamQ({ ...editingExamQ, correctChoiceIds: ids });
-                        }}
-                        className="w-4 h-4"
-                      />
-                      <Input
-                        value={getI18n(c.text, editLang)}
+                    <div key={c.id} className="mb-3 space-y-1 rounded-md border border-gray-200 p-2">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          aria-label={`Bonne réponse ${c.id.toUpperCase()}`}
+                          checked={(editingExamQ.correctChoiceIds || []).includes(c.id)}
+                          onChange={(e) => {
+                            const ids = [...(editingExamQ.correctChoiceIds || [])];
+                            if (e.target.checked) ids.push(c.id);
+                            else ids.splice(ids.indexOf(c.id), 1);
+                            setEditingExamQ({ ...editingExamQ, correctChoiceIds: ids });
+                          }}
+                          className="h-4 w-4"
+                        />
+                        <span className="w-5 text-sm font-medium">{c.id.toUpperCase()}</span>
+                        <Input
+                          value={getI18n(c.text, editLang)}
+                          onChange={(e) => {
+                            const choices = [...editingExamQ.choices];
+                            choices[ci] = { ...choices[ci], text: setI18n(c.text, editLang, e.target.value) };
+                            setEditingExamQ({ ...editingExamQ, choices });
+                          }}
+                          className="flex-1"
+                          placeholder={`Choix ${c.id.toUpperCase()}`}
+                        />
+                      </div>
+                      <label className="block text-xs text-gray-600" htmlFor={`exam-rationale-${ci}`}>{t({ en: "Explanation for choice", fr: "Explication du choix" })} {c.id.toUpperCase()} ({editLang.toUpperCase()})</label>
+                      <Textarea
+                        id={`exam-rationale-${ci}`}
+                        value={getI18n(c.rationale || "", editLang)}
                         onChange={(e) => {
                           const choices = [...editingExamQ.choices];
-                          choices[ci] = { ...choices[ci], text: setI18n(c.text, editLang, e.target.value) };
+                          choices[ci] = { ...choices[ci], rationale: setI18n(c.rationale || "", editLang, e.target.value) };
                           setEditingExamQ({ ...editingExamQ, choices });
                         }}
-                        className="flex-1"
-                        placeholder={`Choix ${c.id}`}
+                        rows={2}
+                        placeholder={t({ en: "Why this option is correct or incorrect", fr: "Pourquoi cette proposition est correcte ou non" })}
                       />
                     </div>
                   ))}
+                  <div className="flex items-center gap-2">
+                    <Button type="button" size="sm" variant="outline" disabled={editingExamQ.choices.length >= 8} onClick={() => {
+                      const id = String.fromCharCode(97 + editingExamQ.choices.length);
+                      setEditingExamQ({ ...editingExamQ, choices: [...editingExamQ.choices, { id, text: { en: "", fr: "" }, rationale: { en: "", fr: "" } }] });
+                    }}>{t({ en: "Add an option", fr: "Ajouter un choix" })}</Button>
+                    <Button type="button" size="sm" variant="outline" disabled={editingExamQ.choices.length <= 4} onClick={() => {
+                      const removed = editingExamQ.choices[editingExamQ.choices.length - 1].id;
+                      setEditingExamQ({ ...editingExamQ, choices: editingExamQ.choices.slice(0, -1), correctChoiceIds: (editingExamQ.correctChoiceIds || []).filter((id: string) => id !== removed) });
+                    }}>{t({ en: "Remove last option", fr: "Retirer le dernier" })}</Button>
+                  </div>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-gray-600">Explication ({editLang.toUpperCase()})</label>
@@ -1239,9 +1289,21 @@ export default function AdminContentManager() {
             </Tabs>
             <DialogFooter>
               <Button variant="outline" onClick={() => { setEditDialogOpen(false); setEditingExamQ(null); }}>Annuler</Button>
-              <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
-                if (editingExamQ.isNew) {
-                  addExamQMut.mutate({
+                <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
+                  if (editingExamQ.certificationId?.startsWith("claude_certified_")) {
+                    const invalid = !getI18n(editingExamQ.question, "en").trim()
+                      || !getI18n(editingExamQ.question, "fr").trim()
+                      || !(editingExamQ.correctChoiceIds || []).length
+                      || editingExamQ.choices.length < 4 || editingExamQ.choices.length > 8
+                      || editingExamQ.choices.some((choice: any) => ["en", "fr"].some((locale) =>
+                        !getI18n(choice.text, locale as "en" | "fr").trim() || !getI18n(choice.rationale, locale as "en" | "fr").trim()));
+                    if (invalid) {
+                      toast.error(t({ en: "Complete the question, every option and its explanation in English and French, then select the correct answers.", fr: "Complétez la question, chaque choix et son explication en français et en anglais, puis sélectionnez les réponses correctes." }));
+                      return;
+                    }
+                  }
+                  if (editingExamQ.isNew) {
+                    addExamQMut.mutate({
                     certificationId: editingExamQ.certificationId,
                     domain: editingExamQ.domain,
                     question: editingExamQ.question,
