@@ -52,7 +52,7 @@
     {
       "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
       "match": ["cache", "optimization", "token", "cost", "context"],
-      "summary": "Place stable content before changing content; cache breakpoints cover exact prefixes. The default cache TTL is five minutes; one-hour TTL is explicit and has separate pricing."
+      "summary": "Prompt caching caches exact request-input prefixes for cost and latency, NOT generated responses. Changing a block at or before the breakpoint invalidates that prefix; an unchanged prefix can be reused and its five-minute lifetime refreshed on hits. TTL expiry is NOT an immediate purge or a guarantee of rollback. Place stable content before changing content; one-hour TTL is explicit and separately priced. Rollback of application behavior requires an application-level version or flag."
     },
     {
       "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows",

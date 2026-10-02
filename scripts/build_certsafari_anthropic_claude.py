@@ -62,7 +62,7 @@ def api_call(messages, output_format, max_tokens=12000, retries=3, model_overrid
             'messages': messages, 'response_format': output_format}
     if provider == 'manus':
         body['max_completion_tokens'] = max_tokens
-        body['reasoning'] = {'effort': 'low' if chosen_model == 'gpt-5' else 'minimal'}
+        body['reasoning'] = {'effort': 'medium' if chosen_model == 'gpt-5.5' else 'low' if chosen_model == 'gpt-5' else 'minimal'}
     else:
         body['max_tokens'] = max_tokens
         if provider == 'webdev': body['thinking'] = {'type': 'enabled', 'budget_tokens': 768}
@@ -176,8 +176,8 @@ def validate_authored(items, count, multiple):
         raise ValueError(f'Expected {multiple} multi-select items, got {sum(len(x["correct_answers"])>1 for x in items)}')
 
 
-def review_official_batch(items, references):
-    """Reject ambiguous, generic or technically false Manus items before caching."""
+def review_official_batch(items, references, course_context=''):
+    """Review originals against the SAME exam-style bar as CertSafari, including course evidence."""
     allowed = {ref['url'] for ref in references}
     for item in items:
         if item['source_ref'] not in allowed: raise ValueError('Unverified source_ref')
@@ -187,14 +187,14 @@ def review_official_batch(items, references):
                 raise ValueError('Claude Code rules use .md files with YAML frontmatter, not .yaml files')
     properties={'verdict':{'type':'string','enum':['pass','revise']},'issue':{'type':'string'}}
     result=api_call([
-        {'role':'system','content':('You are an independent STRICT technical reviewer, not the author. Use the supplied Anthropic references as the authority. For EACH question first reconstruct EVERY hard requirement in the stem, then ask whether the keyed option satisfies ALL of them simultaneously and whether another choice also does. If NO option can satisfy every requirement, REJECT the question instead of pretending one answer is correct. Check every distractor rationale and make sure the source_ref truly supports each product behavior. CRITICAL: a user-defined function executes as a CLIENT tool on application infrastructure, NOT as an Anthropic-hosted server tool; sensitive private processing cannot magically be moved into a server tool. Claude Code subagents inherit parent/managed permissions: a narrower definition cannot grant an operation blocked by inherited policy. CLAUDE.md is not a permission control; .claude/rules requires .md with YAML frontmatter; local modes cannot override managed denies. If ANY claim is unsupported, a keyed answer violates a hard condition, more than one answer is viable, a distractor is trivial, or cases repeat, verdict=revise with item index and the precise conflict. Demand multiple interacting constraints and genuine product-specific decisions. Return exactly ONE verdict item for the WHOLE batch in items, not one per question. JSON only.')},
-        {'role':'system','content':'IMPORTANT independent feasibility check: PreToolUse denial blocks one tool call, NOT the entire agent session; Claude may continue to try another action. An application-level stop and explicit rollback are needed when the stem requires a hard halt. Per-tool timeouts do NOT guarantee a complete sub-second Claude model answer. If a proposed best option relies on either false guarantee, return revise and quote the offending answer.'},
-        {'role':'user','content':json.dumps({'references':references,'questions':items},ensure_ascii=False)},
-    ],schema({'verdict':properties['verdict'],'issue':properties['issue']}),max_tokens=3600,model_override='gpt-5')
+        {'role':'system','content':('You independently review NEW Neopolis practice questions modeled on CertSafari examples. Apply the SAME editorial acceptance standard to generated and partner items: scenario-level reasoning, plausible options, unambiguous keyed answer set and useful option-specific rationales. Anthropic courses are the pedagogical reference, including conclusions stated INDIRECTLY; verified documentation supports them when available. A cited page is a provenance aid, NOT an exclusive proof obligation for every implementation detail in the scenario. Do not reject merely because the public docs do not state an application design verbatim, because a course implies the reasoning, because a topic spans product features, or because an application-side control is discussed as an architecture choice. Never demand stricter product citations or terminology than CertSafari items provide. REJECT only substantive errors: genuinely contradictory choices/explanations, demonstrably false product behavior, copied or generic definition questions, impossibility that changes the keyed answer, more than one equally correct answer, or empty rationales. Focus on scenario difficulty and quality. Return exactly ONE overall verdict for the WHOLE batch and a specific reason when revising; JSON only.')},
+        {'role':'system','content':'Two factual distinctions still matter if EXPLICITLY contradicted: prompt caching reuses input prefixes, not saved output answers; a PreToolUse deny blocks a tool call, not automatically the whole agent session. Evaluate wording in its actual scenario: do NOT infer an unsupported promise from an ambiguous/ordinary rollback or fallback discussion, and accept app-controlled actions if the course supports that implication.'},
+        {'role':'user','content':json.dumps({'references':references,'anthropic_course_excerpt':course_context[:4200],'questions':items},ensure_ascii=False)},
+    ],schema({'verdict':properties['verdict'],'issue':properties['issue']}),max_tokens=4100,model_override='gpt-5')
     # schema() wraps a list of items; one reviewer verdict is expected.
     if len(result['items'])!=1: raise ValueError('Reviewer verdict shape invalid')
     verdict=result['items'][0]
-    if verdict['verdict']!='pass':raise ValueError('Independent Anthropic-content review: '+verdict['issue'][:260])
+    if verdict['verdict']!='pass':raise ValueError('Independent Anthropic-content review: '+verdict['issue'][:1000])
 
 
 def author_one(job):
@@ -204,7 +204,7 @@ def author_one(job):
         existing = json.loads(target.read_text()); validate_authored(existing['items'], count, multiple)
         if os.environ.get('CERTSAFARI_LLM_PROVIDER')=='manus' and (
             existing.get('model')!='gpt-5' or
-            existing.get('editorialReview',{}).get('standard')!='anthropic-hard-constraints-v3'
+            existing.get('editorialReview',{}).get('standard') not in ('anthropic-hard-constraints-v4','certsafari-parity-v5')
         ):
             raise ValueError(f'Legacy or weakly-reviewed authoring cache must be quarantined: {target}')
         return key, 'cached', count
@@ -213,10 +213,10 @@ def author_one(job):
               'correct_answers': {'type':'array','items': {'type':'string'}},
               'rationales_en': {'type':'array','items': {'type':'string'}},
               'source_ref': {'type':'string','enum':[ref['url'] for ref in references]}}
-    settings = ['a migration with a strict rollback condition', 'a latency budget and failure fallback',
-                'a scoped credential and untrusted user input', 'a staging-to-production release with audit logs',
-                'a multi-team deployment with conflicting constraints', 'a long conversation with noisy tool results',
-                'a partner integration with version drift', 'an evidence-based quality review']
+    settings = ['a small pilot with measurable acceptance criteria', 'two collaborating teams with contrasting needs',
+                'a regression detected in a realistic test cohort', 'a staged rollout with explicit app-controlled reversal',
+                'a user-provided document or tool result of uncertain quality', 'a long-running project with changing instructions',
+                'a limited budget requiring a comparative evaluation', 'a risk review involving human judgment']
     guidance = {
         'certification': CODE + ' — non-official practice questions',
         'domain': domain, 'subdomain': subdomain, 'count': count,
@@ -224,24 +224,26 @@ def author_one(job):
         'distinct_scenario_settings_in_order': [settings[(offset + i) % len(settings)] for i in range(count)],
         'reference_scenarios_for_difficulty_and_style_ONLY': examples,
         'verified_Anthropic_references_FOR_PRODUCT_FACTS': references,
-        'mandatory_feasibility_checks': 'Before writing each item, ensure at least one answer satisfies EVERY hard constraint in the scenario. Never make a correct answer override managed denies using local settings or subagent configuration. Custom customer functions execute as client tools on application-controlled infrastructure, not automatically as Anthropic-hosted server tools. A hook that denies ONE tool call does not halt the entire Claude Agent SDK run or automatically roll back: stopping and rollback need explicit application logic. Tool timeouts do not guarantee a sub-second complete Claude model response. If constraints leave no feasible answer, change the scenario instead of inventing a capability.',
+        'source_grounding_rule': 'For EACH item, first pick ONE supplied Anthropic source_ref and design a decision whose correct option and rejected product-capability claims are verifiable from THAT reference summary. Do not combine several product features from different pages into a single correct answer. Application-side orchestration may be used, but label it as application code rather than a built-in Claude feature. If the primary source is silent about a behavior, do not assert it as a fact.',
+        'scenario_difficulty_rule': 'Difficulty must come from realistic tradeoffs and closely plausible distractors, not impossible hard constraints or invented product behaviors. Do NOT require an absolute 300ms/700ms/2s complete Claude response; no documented feature guarantees this. Do not require cache purge or stale model-output prevention from prompt caching; prompt caching stores inputs, not model outputs. A rollback flag is an APPLICATION feature and must be described as such. Prefer qualitative reliability and measurable evaluations over arbitrary impossible guarantees.',
+        'mandatory_feasibility_checks': 'Before writing each item, ensure at least one answer satisfies EVERY hard constraint in the scenario. Never make a correct answer override managed denies using local settings or subagent configuration. Custom customer functions execute as client tools on application-controlled infrastructure, not automatically as Anthropic-hosted server tools. A hook that denies ONE tool call does not halt the entire Claude Agent SDK run or automatically roll back: stopping and rollback need explicit application logic. Tool timeouts do not guarantee a sub-second complete Claude model response. Prompt caching stores INPUT prefixes and not generated responses; five-minute TTL can refresh on cache hits, so it cannot purge stale generated answers or guarantee a safe rollback. Rollback needs an application-level release flag or versioned prompt. If constraints leave no feasible answer, change the scenario instead of inventing a capability.',
         'official_certification_expectation': OFFICIAL['certificationPage']['summary'] if CODE=='CCAR-F' else OFFICIAL['programme']['summary'],
         'course_content_primary_reference': course_excerpt(domain, subdomain),
     }
     messages = [
-        {'role':'system','content': ('You are an expert author of difficult, ORIGINAL practice assessments for the ANTHROPIC CLAUDE certification identified in the input. EVERY question stem must explicitly NAME an Anthropic product or technology (Claude, Claude Code, Claude API, MCP, Messages API, Agent SDK, or a named Claude model) and its choices must require a real product-specific decision, NOT generic AI theory with a decorative product mention. Use the verified Anthropic references as the authority for product facts; the course excerpt supplies learning context, and the official documentation prevails if they differ. Cite EXACTLY ONE of the supplied reference URLs in source_ref for each item. Do not assume an undocumented permission, hook, model, SDK or API behavior; avoid version-dependent claims when the reference is silent. Match the complexity of the CertSafari scenarios: require 2-3 interacting constraints, a concrete failure signal, a tradeoff between plausible implementations, and a defensible best option or exact multi-select set. Do not copy, closely paraphrase, or reuse actors, facts, wording, choices or answers from the partner samples. Use a DIFFERENT decision type and the distinct setting assigned to each of the four items; avoid repeated SLA/latency situations. No definition-recall, slogans, or trivially implausible distractors. Every wrong choice needs its own specific technical explanation; explain every correct option as well. First select correct_answers as UPPERCASE OPTION LETTERS like ["A"] or ["A","C"], then write rationales_en in EXACT options_en order: EACH correct option rationale MUST start with "Correct:" and EACH other one MUST start with "Incorrect:". Double-check every answer letter against its corresponding option and rationale before responding. These are NOT official Anthropic exam questions. Return JSON only.')},
+        {'role':'system','content': ('You are an expert author of difficult, ORIGINAL practice assessments for the ANTHROPIC CLAUDE certification identified in the input. EVERY question stem must explicitly NAME an Anthropic product or technology (Claude, Claude Code, Claude API, MCP, Messages API, Agent SDK, or a named Claude model) and its choices must require a real product-specific decision, NOT generic AI theory with a decorative product mention. Use verified Anthropic references as authority for product facts; the course excerpt supplies learning context, and official documentation prevails if they differ. Cite EXACTLY ONE supplied reference URL in source_ref per item and keep product-behavior claims within what that page supports; if a second feature requires a different page, REMOVE it from the scenario. Application-level controls must be explicitly identified as such. No unsupported strong promises (instant full-run stopping, exact end-to-end latency, purge via TTL, automated rollback). Match CertSafari complexity through a real decision and 2-3 COMPATIBLE interacting constraints, not an impossible conjunction; include a concrete failure signal and a defensible best option or exact multi-select set. Do not copy, closely paraphrase, or reuse actors, facts, wording, choices or answers from the partner samples. Use different decision types in the four items. No definition-recall, slogans, or trivially implausible distractors. Every wrong choice needs its own specific technical explanation; explain every correct option as well. First select correct_answers as UPPERCASE OPTION LETTERS like ["A"] or ["A","C"], then write rationales_en in EXACT options_en order: EACH correct option rationale MUST start with "Correct:" and EACH other one MUST start with "Incorrect:". Double-check every answer letter against its corresponding option and rationale before responding. These are NOT official Anthropic exam questions. Return JSON only.')},
         {'role':'user','content': json.dumps(guidance, ensure_ascii=False)},
     ]
     last_error = None
-    for revision in range(3):
+    for revision in range(5):
         try:
             result = api_call(messages, schema(fields), max_tokens=11500)
             validate_authored(result['items'], count, multiple)
             if any(item['source_ref'] not in {ref['url'] for ref in references} for item in result['items']):
                 raise ValueError('Source reference does not match the supplied Anthropic references')
             if os.environ.get('CERTSAFARI_LLM_PROVIDER')=='manus':
-                review_official_batch(result['items'],references)
-                result['editorialReview']={'model':'gpt-5','standard':'anthropic-hard-constraints-v3','passed':True}
+                review_official_batch(result['items'],references,course_excerpt(domain,subdomain))
+                result['editorialReview']={'model':'gpt-5','standard':'certsafari-parity-v5','passed':True}
             result['model'] = MODEL
             target.parent.mkdir(parents=True, exist_ok=True)
             temp = target.with_suffix('.tmp')
@@ -249,7 +251,7 @@ def author_one(job):
             return key, 'created', count
         except Exception as error:
             last_error = error
-            messages.append({'role':'user','content': f'Failed validation: {str(error)[:200]}. Regenerate exactly {count} complete original scenarios: {count-multiple} single-answer and {multiple} multi-answer. Answer letters only.'})
+            messages.append({'role':'user','content': f'Failed validation: {str(error)[:920]}. Regenerate exactly {count} complete original scenarios: {count-multiple} single-answer and {multiple} multi-answer. Use only documented product facts; change impossible stems instead of forcing a false answer. Answer letters only.'})
     raise RuntimeError(f'{key}: {last_error}')
 
 

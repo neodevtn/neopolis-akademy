@@ -295,7 +295,9 @@ export function selectExamQuestions(questions: ExamQuestion[], configuration: Ex
 
   return shuffled(selected, configuration.shuffleQuestions).slice(0, configuration.totalQuestions).map((question) => ({
     ...question,
-    choices: configuration.shuffleChoices ? [...question.choices].sort(() => Math.random() - 0.5) : question.choices,
+    // Fisher–Yates évite le biais du tri avec comparateur aléatoire ; les ids
+    // des choix restent stables pour la correction côté serveur.
+    choices: shuffled(question.choices, configuration.shuffleChoices),
   }));
 }
 

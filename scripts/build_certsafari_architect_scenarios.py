@@ -32,7 +32,7 @@ def run_one(family,plan):
     if target.exists():
         cached=json.loads(target.read_text())
         gen.validate_authored(cached['items'],6,0)
-        if cached.get('model')!='gpt-5' or cached.get('editorialReview',{}).get('standard')!='anthropic-hard-constraints-v3' or not all(item.get('source_ref') in gen.OFFICIAL_URLS for item in cached['items']):
+        if cached.get('model')!='gpt-5' or cached.get('editorialReview',{}).get('standard') not in ('anthropic-hard-constraints-v4','certsafari-parity-v5') or not all(item.get('source_ref') in gen.OFFICIAL_URLS for item in cached['items']):
             raise ValueError('Unsourced legacy scenario cache must be quarantined before reuse')
         return family,'cached'
     records=[q for q in gen.SOURCE if q['domain']==domain]
@@ -49,21 +49,21 @@ def run_one(family,plan):
     guidance={'family':family,'common_scenario':settings[family],'domain':domain,
               'count':6,'distribution':'6 single-answer, 0 multi-answer',
               'verified_Anthropic_product_references':references,
-              'mandatory_feasibility_checks':'At least one answer MUST satisfy every explicit constraint. A managed deny cannot be lifted by a subagent or local mode; a custom customer tool remains a client tool executed by the application, not an Anthropic server tool. If requirements conflict with every option, revise the scenario.',
+              'mandatory_feasibility_checks':'At least one answer MUST satisfy every explicit constraint. A managed deny cannot be lifted by a subagent or local mode; a custom customer tool remains a client tool executed by the application, not an Anthropic server tool. Prompt caching stores input prefixes, not generated responses, and TTL expiry is not an application rollback mechanism. If requirements conflict with every option, revise the scenario.',
               'official_CCArF_focus':gen.OFFICIAL['certificationPage']['summary'],
               'course_content_primary_reference':gen.course_excerpt(domain,subdomain),
               'partner_question_choice_explanation_examples_FOR_COMPLEXITY_NOT_COPYING':examples}
     messages=[
-      {'role':'system','content':('Author six ORIGINAL, CHALLENGING, NON-OFFICIAL CCAR-F practice items centered on a coherent ANTHROPIC CLAUDE product deployment. Every question stem MUST explicitly name Claude, Claude Code, the Claude API, the Agent SDK, or MCP and be self-contained because three can appear independently in random order. Cite exactly one supplied verified Anthropic URL in source_ref for each item. Assess SIX DIFFERENT DECISIONS across architecture, implementation, tool safety, measurable evaluation, recovery and governance; each requires at least two interacting constraints and a plausible tradeoff. Partner Q/R demonstrate complexity and rationale style only: do not copy or lightly paraphrase their text, facts, choices or answer. Do not invent product capabilities or conflicting interpretations of permissions; official Anthropic product facts prevail over course text. Four credible options, EXACTLY one uppercase letter in correct_answers per item. rationales_en follow option order: each correct option MUST start "Correct:" and each other option "Incorrect:", followed by a specific technical explanation. Check each key and explanation are aligned. Return JSON only.')},
+      {'role':'system','content':('Author six ORIGINAL, CHALLENGING, NON-OFFICIAL CCAR-F practice items centered on a coherent ANTHROPIC CLAUDE product deployment. Every question stem MUST explicitly name Claude, Claude Code, the Claude API, the Agent SDK, or MCP and be self-contained because items can appear independently in random order. Cite exactly one supplied verified Anthropic URL in source_ref per item; only state product behaviors supported by THAT page. Application-enforced controls are allowed if explicitly labeled as application code; do not imply Anthropic provides a built-in feature from another page. Assess six DIFFERENT decisions across architecture, implementation, tool safety, measurable evaluation, recovery and governance; each requires compatible constraints and a plausible tradeoff, not impossible SLA promises. Partner Q/R demonstrate complexity and rationale style only: do not copy or lightly paraphrase text, facts, choices or answers. Do not invent product capabilities or conflicting interpretations of permissions. Four credible options, EXACTLY one uppercase letter in correct_answers per item. rationales_en follow option order: each correct option starts "Correct:" and each other option "Incorrect:", followed by a specific technical explanation. Check each key and explanation align. Return JSON only.')},
       {'role':'user','content':json.dumps(guidance,ensure_ascii=False)}]
     error=None
-    for _ in range(3):
+    for _ in range(5):
         try:
             content=gen.api_call(messages,gen.schema(fields),max_tokens=19000)
             gen.validate_authored(content['items'],6,0)
             if os.environ.get('CERTSAFARI_LLM_PROVIDER')=='manus':
-                gen.review_official_batch(content['items'],references)
-                content['editorialReview']={'model':'gpt-5','standard':'anthropic-hard-constraints-v3','passed':True}
+                gen.review_official_batch(content['items'],references,gen.course_excerpt(domain,subdomain))
+                content['editorialReview']={'model':'gpt-5','standard':'certsafari-parity-v5','passed':True}
             content['model']=gen.MODEL
             target.parent.mkdir(parents=True,exist_ok=True)
             temp=target.with_suffix('.tmp')
@@ -72,7 +72,7 @@ def run_one(family,plan):
             return family,'created'
         except Exception as exc:
             error=exc
-            messages.append({'role':'user','content':f'Validation failure: {str(exc)[:220]}. Regenerate exactly SIX independent Anthropic-specific single-answer scenarios.'})
+            messages.append({'role':'user','content':f'Validation failure: {str(exc)[:920]}. Regenerate exactly SIX independent Anthropic-specific single-answer scenarios with realistic, documented constraints.'})
     raise RuntimeError(f'{family}: {error}')
 
 

@@ -25,7 +25,7 @@ def stage_generated(name):
         file=gen.WORK/'generated-batches'/f'{key}.json'
         if not file.exists():raise FileNotFoundError(str(file))
         batch=json.loads(file.read_text());items=batch['items'];gen.validate_authored(items,count,multiple)
-        if batch.get('model')=='gpt-5' and batch.get('editorialReview',{}).get('standard')!='anthropic-hard-constraints-v3':
+        if batch.get('model')=='gpt-5' and batch.get('editorialReview',{}).get('standard') not in ('anthropic-hard-constraints-v4','certsafari-parity-v5'):
             raise ValueError(f'Unreviewed Anthropic complement batch: {file}')
         for index,item in enumerate(items):
             output.append(make_generated(name,cert,code,key,domain,subdomain,index,item,batch.get('model','claude-sonnet-4-6')))
@@ -35,7 +35,7 @@ def stage_generated(name):
             file=gen.WORK/'scenario-batches'/f'{family}.json'
             if not file.exists():raise FileNotFoundError(str(file))
             scenario=json.loads(file.read_text());items=scenario['items'];gen.validate_authored(items,6,0)
-            if scenario.get('model')=='gpt-5' and scenario.get('editorialReview',{}).get('standard')!='anthropic-hard-constraints-v3':
+            if scenario.get('model')=='gpt-5' and scenario.get('editorialReview',{}).get('standard') not in ('anthropic-hard-constraints-v4','certsafari-parity-v5'):
                 raise ValueError(f'Unreviewed CCAR-F scenario family: {file}')
             for index,item in enumerate(items):
                 q=make_generated(name,cert,code,f'scenario-{family}',plan['domain'],family.replace('_',' '),index,item,scenario.get('model','claude-sonnet-4-6'))
