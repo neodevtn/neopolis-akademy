@@ -1,0 +1,98 @@
+{
+  "reviewedAt": "2026-10-02",
+  "programme": {
+    "url": "https://www.pearsonvue.com/us/en/anthropic.html",
+    "summary": "The Claude Certification Program validates practitioners, architects and developers on real-world Claude solutions, not trivia."
+  },
+  "certificationPage": {
+    "url": "https://anthropic.skilljar.com/claude-certified-architect-foundations-access-request",
+    "summary": "The CCAR-F certification focuses on informed tradeoffs implementing production-grade solutions with Claude Code, the Claude Agent SDK, the Claude API and MCP."
+  },
+  "references": [
+    {
+      "url": "https://code.claude.com/docs/en/permission-modes",
+      "match": ["claude code", "developer productivity", "permission"],
+      "summary": "Claude Code permission modes vary in approval behavior; managed settings outrank local settings and auto mode may depend on availability. Enterprise deny rules cannot be weakened into human approval by a local mode or allow rule. Compare modes and human gates in actual workflows."
+    },
+    {
+      "url": "https://code.claude.com/docs/en/hooks",
+      "match": ["claude code", "hook", "security"],
+      "summary": "PreToolUse hooks can deny calls; exit code 2 blocks and communicates a reason. Do not confuse hooks with contextual instructions."
+    },
+    {
+      "url": "https://code.claude.com/docs/en/memory",
+      "match": ["claude code", "CLAUDE.md", "project rules", "developer productivity"],
+      "summary": "CLAUDE.md loads project instructions; path-scoped .claude/rules/*.md MARKDOWN files use YAML frontmatter with a paths field and load when matching files are read. A .yaml file in .claude/rules is NOT loaded as a rule. Instructions are not permission controls."
+    },
+    {
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "match": ["claude code", "subagent", "orchestration", "developer productivity"],
+      "summary": "Subagents isolate context and inherit the parent conversation's permissions, usually with restricted tools. Restricting a subagent cannot grant a read or write prohibited by an inherited/managed deny. There is no documented magic directory-access grant via subagent creation; an authorized policy change or a genuinely already-permitted path is needed."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
+      "match": ["agent", "tool", "mcp", "integration", "solution design", "workflow"],
+      "summary": "User-defined CLIENT tools run in your application's infrastructure: the model returns tool_use, your application executes the tool and sends tool_result. SERVER tools described here are Anthropic-provided and run on Anthropic infrastructure; a custom PII enrichment function does not become an Anthropic server tool merely by declaring it. Do not route restricted private processing onto a provider-hosted server tool if it must run on customer-controlled infrastructure."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector",
+      "match": ["mcp", "tool design", "integration"],
+      "summary": "The Claude Messages API can connect to remote HTTP MCP servers, with per-tool allowlists and deny rules; the connector does not directly run local STDIO MCP servers."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs",
+      "match": ["structured", "output", "validation", "prompt"],
+      "summary": "Structured outputs constrain JSON format, but some JSON Schema constraints such as minLength and maxLength require separate application-side validation."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+      "match": ["prompt", "context", "task execution", "knowledge"],
+      "summary": "Specific instructions, relevant diverse examples, and clear context improve Claude responses; avoid claiming an API behavior solely from prompting."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+      "match": ["cache", "optimization", "token", "cost", "context"],
+      "summary": "Place stable content before changing content; cache breakpoints cover exact prefixes. The default cache TTL is five minutes; one-hour TTL is explicit and has separate pricing."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows",
+      "match": ["context", "long conversation", "reliability"],
+      "summary": "Context includes system instructions, messages, tool definitions and responses; compaction addresses long-running interactions. A large window alone does not prevent context degradation."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests",
+      "match": ["eval", "testing", "quality", "validation", "troubleshooting", "optimization"],
+      "summary": "Define measurable success criteria and evaluate realistic edge cases with task-specific grading; use the results to revise the Claude application rather than relying on definitions or impressions."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations",
+      "match": ["evaluation", "risk", "governance", "responsible", "reliability"],
+      "summary": "When evidence is insufficient, allow uncertainty, ground claims in source quotes and verify with citations instead of fabricating certainty."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks",
+      "match": ["security", "safety", "governance", "risk", "trust"],
+      "summary": "Treat external tool results as untrusted input, enforce prompt-injection boundaries and least privilege, and test them; prompt text alone is not an authorization control."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "match": ["model", "product selection"],
+      "summary": "Model capabilities and limits must be checked against the current Models API and per-model documentation; do not invent undocumented model behavior."
+    },
+    {
+      "url": "https://support.anthropic.com/en/articles/9517075-what-are-projects",
+      "match": ["project", "configuration", "knowledge"],
+      "summary": "Claude Projects are focused workspaces with chats, project instructions and a knowledge base of uploaded files; the Claude Code CLAUDE.md mechanism is separate. Project details such as the project name are not automatically supplied as model context."
+    },
+    {
+      "url": "https://support.anthropic.com/en/articles/11473015-retrieval-augmented-generation-rag-for-projects",
+      "match": ["project knowledge", "knowledge", "retrieval", "RAG"],
+      "summary": "On paid Claude plans, a project approaching context limits can automatically enable RAG, retrieving relevant uploaded documents with a project knowledge search tool instead of placing everything in context."
+    },
+    {
+      "url": "https://code.claude.com/docs/en/agent-sdk/agent-loop",
+      "match": ["agent", "orchestration", "workflow", "agentic architecture"],
+      "summary": "The Claude Agent SDK loops through Claude decisions, tool execution and tool results until a final answer. Allowed and disallowed tools, approval modes and PreToolUse hooks are separate controls. A denied tool call prevents THAT call, but the agent may try another approach; denial does not automatically terminate the entire run or perform application rollback. Read-only tools may run concurrently; state-changing tools run sequentially. Overall Claude response latency cannot be guaranteed at a sub-second budget by tool timeouts alone."
+    }
+  ]
+}

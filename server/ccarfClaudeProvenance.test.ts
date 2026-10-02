@@ -10,14 +10,14 @@ const allowedMethods = new Set([
   "original-question-authoring",
 ]);
 
-describe("provenance Claude du lot Architect Foundations", () => {
-  it("distingue la correction fournie par le partenaire des explications originales Claude Sonnet", () => {
+describe("provenance des questions Architect Foundations", () => {
+  it("distingue les corrections partenaire des explications originales générées avec Manus ou Claude", () => {
     const questions = (allQuestions as Array<{ certificationId: string; id: string; sourceType?: string; choices: Array<{ id: string; rationaleProvenance?: { model?: string; method?: string }; translationProvenance?: { model?: string } }> }>)
       .filter((question) => question.certificationId === certificationId);
     const invalid = questions.flatMap((question) => question.choices
       .filter((choice) => !allowedMethods.has(choice.rationaleProvenance?.method || "")
-        || choice.translationProvenance?.model !== "claude-sonnet-4-6"
-        || (question.sourceType === "claude-sonnet-original" && choice.rationaleProvenance?.model !== "claude-sonnet-4-6")
+        || !["claude-sonnet-4-6", "gpt-5-mini"].includes(choice.translationProvenance?.model || "")
+        || (question.sourceType === "neopolis-original" && !["claude-sonnet-4-6", "gpt-5"].includes(choice.rationaleProvenance?.model || ""))
         || (question.sourceType === "certsafari-partner-practice" && Boolean(choice.rationaleProvenance?.model)))
       .map((choice) => `${question.id}:${choice.id}`));
 

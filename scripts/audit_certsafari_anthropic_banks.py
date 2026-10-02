@@ -19,7 +19,7 @@ SOURCE_PATHS={
 EXPECTED_HASHES={
  'claude_certified_associate_foundations':'ce766fbccb82950225b2a4583aba613710a8706bd8f21ccee9b0a73c0005ff74',
  'claude_certified_architect_foundations':'76db780cb3dfa0c4d6dbc707dd8c6360c2923d25582f99b21b4a8fcd5645663a',
- 'claude_certified_architect_professional':'5d326a7d56f0775c11e0f91f6a86d84c3a32bf369940516950d3f8fc4668ff84',
+ 'claude_certified_architect_professional':'a320e531f890ab098e29e2c88f51d7b92f5befb84c4d25875430b3d633cb61b4',
  'claude_certified_developer_foundations':'c86f816e6b6ce758355d2ee74179d899570c1e399619d162fa0ae506d6d7a842',
 }
 
@@ -42,7 +42,7 @@ def main():
    for item in [parent,*(parent.get('variants') or [])]:ref[item['id']]=(parent['question'],item)
   scoped=[q for q in bank if q['certificationId']==cert]
   licensed=[q for q in scoped if q.get('sourceType')=='certsafari-partner-practice']
-  authored=[q for q in scoped if q.get('sourceType')=='claude-sonnet-original']
+  authored=[q for q in scoped if q.get('sourceType')=='neopolis-original']
   if len(licensed)!=len(ref):errors.append(f'{cert}: partner count {len(licensed)} versus {len(ref)}')
   checked=0
   for q in licensed:
@@ -75,7 +75,7 @@ def main():
    if re.search(r'official exam question|leaked exam question|real exam question',q['question']['en'],re.I):
     errors.append(f'{cert}: prohibited official claim {q["id"]}')
   report[cert]={'sourceSha256':digest,'partnerQuestions':len(licensed),'verbatimPartnerItemsVerified':checked,
-                'originalClaudeItems':len(authored),'multiAnswerItems':sum(len(q['correctChoiceIds'])>1 for q in scoped),
+                'originalNeopolisItems':len(authored),'multiAnswerItems':sum(len(q['correctChoiceIds'])>1 for q in scoped),
                 'choices':dict(collections.Counter(str(len(q['choices'])) for q in scoped))}
  output={'certifications':report,'highSimilarityPairs':similar[:150],'highSimilarityCount':len(similar),'errors':errors[:200]}
  file=BASE/'bank-audit.json';file.write_text(json.dumps(output,ensure_ascii=False,indent=2)+'\n')

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Author and translate four separate CertSafari-informed Anthropic practice banks with Claude.
+"""Author and translate four separate CertSafari-informed Anthropic practice banks.
 
-Credentials remain in the server-side WebDev environment. Progress files stay outside
-this repository until validation. No answer key enters the frontend bundle.
+Credentials remain server-side. Progress files stay outside this repository until
+validation. No answer key enters the frontend bundle. Existing Claude caches are kept.
 """
 import argparse
 import collections
@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = Path('/home/ubuntu/anthropic-mock-exam-work')
 COURSES = ROOT / 'client/public/data/courses'
 PLAN = json.loads((ROOT / 'scripts/data/anthropicMockExamGenerationPlan.json').read_text())
+OFFICIAL = json.loads((ROOT / 'scripts/data/anthropicOfficialMockExamReferences.json').read_text())
+OFFICIAL_URLS = {item['url'] for item in OFFICIAL['references']}
 CERTS = {
     'developer_foundations': ('claude_certified_developer_foundations', 'CCDV-F'),
     'associate_foundations': ('claude_certified_associate_foundations', 'CCAO-F'),
@@ -45,15 +47,25 @@ def schema(properties):
                            'properties': properties, 'required': list(properties)}}}, 'required': ['items']}}}
 
 
-def api_call(messages, output_format, max_tokens=12000, retries=3):
-    via_openrouter = os.environ.get('CERTSAFARI_LLM_PROVIDER') == 'openrouter'
-    url = ('https://openrouter.ai/api/v1/chat/completions' if via_openrouter
+def api_call(messages, output_format, max_tokens=12000, retries=3, model_override=None):
+    provider = os.environ.get('CERTSAFARI_LLM_PROVIDER', 'webdev')
+    if provider not in ('manus', 'openrouter', 'webdev'): raise ValueError('Unsupported model provider')
+    url = ('https://openrouter.ai/api/v1/chat/completions' if provider == 'openrouter'
+           else os.environ['OPENAI_API_BASE'].rstrip('/') + '/chat/completions' if provider == 'manus'
            else os.environ['BUILT_IN_FORGE_API_URL'].rstrip('/') + '/v1/chat/completions')
-    key = os.environ['OPENROUTER_API_KEY'] if via_openrouter else os.environ['BUILT_IN_FORGE_API_KEY']
+    key = (os.environ['OPENROUTER_API_KEY'] if provider == 'openrouter'
+           else os.environ['OPENAI_API_KEY'] if provider == 'manus'
+           else os.environ['BUILT_IN_FORGE_API_KEY'])
     headers = {'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'}
-    body = {'model': 'anthropic/claude-sonnet-4.6' if via_openrouter else MODEL,
-            'messages': messages, 'response_format': output_format, 'max_tokens': max_tokens}
-    if not via_openrouter: body['thinking'] = {'type': 'enabled', 'budget_tokens': 768}
+    chosen_model=model_override or MODEL
+    body = {'model': 'anthropic/claude-sonnet-4.6' if provider == 'openrouter' else chosen_model,
+            'messages': messages, 'response_format': output_format}
+    if provider == 'manus':
+        body['max_completion_tokens'] = max_tokens
+        body['reasoning'] = {'effort': 'low' if chosen_model == 'gpt-5' else 'minimal'}
+    else:
+        body['max_tokens'] = max_tokens
+        if provider == 'webdev': body['thinking'] = {'type': 'enabled', 'budget_tokens': 768}
     for attempt in range(retries):
         try:
             response = requests.post(url, headers=headers, json=body, timeout=210)
@@ -66,7 +78,7 @@ def api_call(messages, output_format, max_tokens=12000, retries=3):
             return json.loads(content)
         except (requests.RequestException, ValueError, KeyError, RuntimeError) as error:
             if attempt == retries - 1:
-                raise RuntimeError(f'Claude request failed after {retries} tries: {str(error)[:300]}') from error
+                raise RuntimeError(f'Model request failed after {retries} tries: {str(error)[:300]}') from error
             time.sleep(min(30, 2 ** attempt * 3))
 
 
@@ -89,6 +101,21 @@ def course_excerpt(domain, subdomain):
     return '\n\n'.join(f'{course_id} — {title}: {text[:1400]}' for _, course_id, title, text in chunks[:3])[:4200]
 
 
+def official_references(domain, subdomain):
+    """Keep only sources that actually match this exam objective; avoid generic AI citations."""
+    matches = []
+    for index, item in enumerate(OFFICIAL['references']):
+        score = sum(3 if re.search(r'\b' + re.escape(term) + r'\b', subdomain, re.I)
+                    else 1 if re.search(r'\b' + re.escape(term) + r'\b', domain, re.I)
+                    else 0 for term in item['match'])
+        if score: matches.append((-score,index,item))
+    matches.sort()
+    selected = [item for _,_,item in matches[:3]]
+    if not selected:
+        selected = [OFFICIAL['references'][index] for index in (4,10)]
+    return [{'url': item['url'], 'verified_summary': item['summary']} for item in selected]
+
+
 def prepare_batches():
     by_subdomain = collections.defaultdict(list)
     for q in SOURCE: by_subdomain[(q['domain'], q['subdomain'])].append(q)
@@ -100,7 +127,15 @@ def prepare_batches():
             n = min(4, target - offset)
             multiple = round((offset + n) * multiple_ratio) - round(offset * multiple_ratio)
             fingerprint = safe_name(domain)[:22] + '-' + safe_name(subdomain)[:48] + '-' + str(offset // 4 + 1).zfill(2)
-            samples = [records[(offset * 3 + ix) % target]['question']['en'] for ix in range(min(2, target))]
+            samples = []
+            for ix in range(min(2,target)):
+                sample=records[(offset * 3 + ix) % target]
+                samples.append({
+                    'scenario':sample['question']['en'],
+                    'options':[choice['text']['en'] for choice in sample['choices']],
+                    'correct_answers':sample['correctChoiceIds'],
+                    'option_specific_explanations':[choice['rationale']['en'] for choice in sample['choices']],
+                })
             jobs.append((fingerprint, domain, subdomain, n, multiple, samples, offset))
     if sum(job[3] for job in jobs) != len(SOURCE): raise ValueError('Generated count must equal partner count')
     return jobs
@@ -116,9 +151,14 @@ def validate_authored(items, count, multiple):
         prompt = item['question_en'].strip()
         options = item['options_en']; answers = item['correct_answers']; rationales = item['rationales_en']
         if len(prompt) < 165 or len(prompt) > 1600: raise ValueError('Scenario length out of range')
+        if item.get('source_ref') and not re.search(r'\b(?:Claude|Anthropic|MCP|Messages API|Agent SDK|Sonnet|Haiku|Opus)\b',prompt,re.I):
+            raise ValueError('Scenario must explicitly assess an Anthropic Claude product in its stem')
         if not (4 <= len(options) <= 6) or len(rationales) != len(options): raise ValueError('Option/rationale count invalid')
-        if len(set(normalize(x) for x in options)) != len(options) or any(len(x.strip()) < 17 for x in options): raise ValueError('Duplicate or trivial option')
+        distinct=[re.sub(r'\s+', ' ', text.strip()).casefold() for text in options]
+        if len(set(distinct)) != len(options) or any(not text for text in distinct):
+            raise ValueError(f'Duplicate or empty authored option in question: {prompt[:90]}')
         if any(len(text.strip()) < 42 for text in rationales): raise ValueError('Generic or missing rationale')
+        if item.get('source_ref') and item['source_ref'] not in OFFICIAL_URLS: raise ValueError('Unverified Anthropic source URL')
         letters = [chr(65 + index) for index in range(len(options))]
         cleaned = []
         for answer in answers:
@@ -127,8 +167,34 @@ def validate_authored(items, count, multiple):
         item['correct_answers'] = cleaned
         if not cleaned or len(set(cleaned)) != len(cleaned) or any(a not in letters for a in cleaned): raise ValueError(f'Incorrect answer index: {cleaned!r} for {letters!r}')
         if len(cleaned) > 1 and not (2 <= len(cleaned) <= len(options)-1 and len(options) >= 5): raise ValueError('Multiple-answer contract')
+        if item.get('source_ref'):
+            for index,rationale in enumerate(rationales):
+                expected='correct:' if letters[index] in cleaned else 'incorrect:'
+                if not rationale.strip().casefold().startswith(expected):
+                    raise ValueError(f'Option {letters[index]} must begin {expected} to match the answer key, not {rationale[:30]!r}')
     if sum(len(item['correct_answers']) > 1 for item in items) != multiple:
         raise ValueError(f'Expected {multiple} multi-select items, got {sum(len(x["correct_answers"])>1 for x in items)}')
+
+
+def review_official_batch(items, references):
+    """Reject ambiguous, generic or technically false Manus items before caching."""
+    allowed = {ref['url'] for ref in references}
+    for item in items:
+        if item['source_ref'] not in allowed: raise ValueError('Unverified source_ref')
+        for answer in item['correct_answers']:
+            text = item['options_en'][ord(answer)-65]
+            if '.claude/rules/' in text and '.yaml' in text:
+                raise ValueError('Claude Code rules use .md files with YAML frontmatter, not .yaml files')
+    properties={'verdict':{'type':'string','enum':['pass','revise']},'issue':{'type':'string'}}
+    result=api_call([
+        {'role':'system','content':('You are an independent STRICT technical reviewer, not the author. Use the supplied Anthropic references as the authority. For EACH question first reconstruct EVERY hard requirement in the stem, then ask whether the keyed option satisfies ALL of them simultaneously and whether another choice also does. If NO option can satisfy every requirement, REJECT the question instead of pretending one answer is correct. Check every distractor rationale and make sure the source_ref truly supports each product behavior. CRITICAL: a user-defined function executes as a CLIENT tool on application infrastructure, NOT as an Anthropic-hosted server tool; sensitive private processing cannot magically be moved into a server tool. Claude Code subagents inherit parent/managed permissions: a narrower definition cannot grant an operation blocked by inherited policy. CLAUDE.md is not a permission control; .claude/rules requires .md with YAML frontmatter; local modes cannot override managed denies. If ANY claim is unsupported, a keyed answer violates a hard condition, more than one answer is viable, a distractor is trivial, or cases repeat, verdict=revise with item index and the precise conflict. Demand multiple interacting constraints and genuine product-specific decisions. Return exactly ONE verdict item for the WHOLE batch in items, not one per question. JSON only.')},
+        {'role':'system','content':'IMPORTANT independent feasibility check: PreToolUse denial blocks one tool call, NOT the entire agent session; Claude may continue to try another action. An application-level stop and explicit rollback are needed when the stem requires a hard halt. Per-tool timeouts do NOT guarantee a complete sub-second Claude model answer. If a proposed best option relies on either false guarantee, return revise and quote the offending answer.'},
+        {'role':'user','content':json.dumps({'references':references,'questions':items},ensure_ascii=False)},
+    ],schema({'verdict':properties['verdict'],'issue':properties['issue']}),max_tokens=3600,model_override='gpt-5')
+    # schema() wraps a list of items; one reviewer verdict is expected.
+    if len(result['items'])!=1: raise ValueError('Reviewer verdict shape invalid')
+    verdict=result['items'][0]
+    if verdict['verdict']!='pass':raise ValueError('Independent Anthropic-content review: '+verdict['issue'][:260])
 
 
 def author_one(job):
@@ -136,10 +202,17 @@ def author_one(job):
     target = WORK / 'generated-batches' / f'{key}.json'
     if target.exists():
         existing = json.loads(target.read_text()); validate_authored(existing['items'], count, multiple)
+        if os.environ.get('CERTSAFARI_LLM_PROVIDER')=='manus' and (
+            existing.get('model')!='gpt-5' or
+            existing.get('editorialReview',{}).get('standard')!='anthropic-hard-constraints-v3'
+        ):
+            raise ValueError(f'Legacy or weakly-reviewed authoring cache must be quarantined: {target}')
         return key, 'cached', count
+    references=official_references(domain,subdomain)
     fields = {'question_en': {'type':'string'}, 'options_en': {'type':'array','items': {'type':'string'}},
               'correct_answers': {'type':'array','items': {'type':'string'}},
-              'rationales_en': {'type':'array','items': {'type':'string'}}}
+              'rationales_en': {'type':'array','items': {'type':'string'}},
+              'source_ref': {'type':'string','enum':[ref['url'] for ref in references]}}
     settings = ['a migration with a strict rollback condition', 'a latency budget and failure fallback',
                 'a scoped credential and untrusted user input', 'a staging-to-production release with audit logs',
                 'a multi-team deployment with conflicting constraints', 'a long conversation with noisy tool results',
@@ -148,12 +221,15 @@ def author_one(job):
         'certification': CODE + ' — non-official practice questions',
         'domain': domain, 'subdomain': subdomain, 'count': count,
         'distribution': f'EXACTLY {count-multiple} single-answer and {multiple} multiple-answer questions. Multi-answer questions need 5-6 options and 2-3 correct answers. For other questions use 4 options.',
-        'new_scenario_setting_to_distinguish_this_batch': settings[(offset//4) % len(settings)],
+        'distinct_scenario_settings_in_order': [settings[(offset + i) % len(settings)] for i in range(count)],
         'reference_scenarios_for_difficulty_and_style_ONLY': examples,
+        'verified_Anthropic_references_FOR_PRODUCT_FACTS': references,
+        'mandatory_feasibility_checks': 'Before writing each item, ensure at least one answer satisfies EVERY hard constraint in the scenario. Never make a correct answer override managed denies using local settings or subagent configuration. Custom customer functions execute as client tools on application-controlled infrastructure, not automatically as Anthropic-hosted server tools. A hook that denies ONE tool call does not halt the entire Claude Agent SDK run or automatically roll back: stopping and rollback need explicit application logic. Tool timeouts do not guarantee a sub-second complete Claude model response. If constraints leave no feasible answer, change the scenario instead of inventing a capability.',
+        'official_certification_expectation': OFFICIAL['certificationPage']['summary'] if CODE=='CCAR-F' else OFFICIAL['programme']['summary'],
         'course_content_primary_reference': course_excerpt(domain, subdomain),
     }
     messages = [
-        {'role':'system','content': ('You are an expert assessment author specializing in Anthropic Claude applications. Write ORIGINAL, challenging, decision-based English practice questions grounded in the course excerpt and specified subdomain. Partner examples show difficulty and style ONLY: never lightly paraphrase their actors, constraints, options, facts, wording or answer. No definition-recall items. Each question has an unambiguous correct answer set and technically plausible distractors. Include one SPECIFIC 1-3 sentence explanation per option, with no invented API/SDK capabilities. correct_answers MUST contain only UPPERCASE OPTION LETTERS like ["A"] or ["A","C"] (never texts, numbers or lowercase). rationales_en must follow options_en order. These are NOT official Anthropic exam questions. Return JSON only.')},
+        {'role':'system','content': ('You are an expert author of difficult, ORIGINAL practice assessments for the ANTHROPIC CLAUDE certification identified in the input. EVERY question stem must explicitly NAME an Anthropic product or technology (Claude, Claude Code, Claude API, MCP, Messages API, Agent SDK, or a named Claude model) and its choices must require a real product-specific decision, NOT generic AI theory with a decorative product mention. Use the verified Anthropic references as the authority for product facts; the course excerpt supplies learning context, and the official documentation prevails if they differ. Cite EXACTLY ONE of the supplied reference URLs in source_ref for each item. Do not assume an undocumented permission, hook, model, SDK or API behavior; avoid version-dependent claims when the reference is silent. Match the complexity of the CertSafari scenarios: require 2-3 interacting constraints, a concrete failure signal, a tradeoff between plausible implementations, and a defensible best option or exact multi-select set. Do not copy, closely paraphrase, or reuse actors, facts, wording, choices or answers from the partner samples. Use a DIFFERENT decision type and the distinct setting assigned to each of the four items; avoid repeated SLA/latency situations. No definition-recall, slogans, or trivially implausible distractors. Every wrong choice needs its own specific technical explanation; explain every correct option as well. First select correct_answers as UPPERCASE OPTION LETTERS like ["A"] or ["A","C"], then write rationales_en in EXACT options_en order: EACH correct option rationale MUST start with "Correct:" and EACH other one MUST start with "Incorrect:". Double-check every answer letter against its corresponding option and rationale before responding. These are NOT official Anthropic exam questions. Return JSON only.')},
         {'role':'user','content': json.dumps(guidance, ensure_ascii=False)},
     ]
     last_error = None
@@ -161,6 +237,12 @@ def author_one(job):
         try:
             result = api_call(messages, schema(fields), max_tokens=11500)
             validate_authored(result['items'], count, multiple)
+            if any(item['source_ref'] not in {ref['url'] for ref in references} for item in result['items']):
+                raise ValueError('Source reference does not match the supplied Anthropic references')
+            if os.environ.get('CERTSAFARI_LLM_PROVIDER')=='manus':
+                review_official_batch(result['items'],references)
+                result['editorialReview']={'model':'gpt-5','standard':'anthropic-hard-constraints-v3','passed':True}
+            result['model'] = MODEL
             target.parent.mkdir(parents=True, exist_ok=True)
             temp = target.with_suffix('.tmp')
             temp.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n'); temp.replace(target)
@@ -179,7 +261,10 @@ def validate_translation(originals, translations):
         if len(translated['question_fr'].strip())<25: raise ValueError('Question translation missing')
         if any(not text.strip() for text in translated['options_fr']): raise ValueError('Option translation missing')
         if any(len(text.strip())<25 for text in translated['rationales_fr']): raise ValueError('Rationale translation missing')
-        if len(set(normalize(text) for text in translated['options_fr']))<n: raise ValueError('Duplicate translated option')
+        # Regex/code punctuation can be the *entire* difference between two
+        # answers (e.g. ^mcp__ versus mcp__*). Do not erase it here.
+        distinct=[re.sub(r'\s+', ' ', text.strip()).casefold() for text in translated['options_fr']]
+        if len(set(distinct))<n: raise ValueError('Duplicate translated option')
 
 
 def translate_one(job):
@@ -202,6 +287,7 @@ def translate_one(job):
         try:
             result=api_call(messages,schema(fields),max_tokens=17000)
             validate_translation(batch,result['items'])
+            result['model'] = MODEL
             target.parent.mkdir(parents=True,exist_ok=True)
             temp=target.with_suffix('.tmp');temp.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n');temp.replace(target)
             return index,'created',len(batch)
@@ -213,7 +299,7 @@ def translate_one(job):
 
 def run_jobs(jobs, runner, workers, limit):
     if limit: jobs=jobs[:limit]
-    print(f'START {CERT} {len(jobs)} batches with {workers} Claude workers',flush=True)
+    print(f'START {CERT} {len(jobs)} batches with {workers} {MODEL} workers',flush=True)
     errors=[];done=0
     with futures.ThreadPoolExecutor(max_workers=workers) as executor:
         tasks={executor.submit(runner,job):job for job in jobs}
@@ -227,12 +313,14 @@ def run_jobs(jobs, runner, workers, limit):
 
 
 def main():
-    global CERT, CODE, SOURCE, WORK, SOURCE_KIND
+    global CERT, CODE, SOURCE, WORK, SOURCE_KIND, MODEL
     parser=argparse.ArgumentParser();parser.add_argument('mode',choices=('generate','translate'))
     parser.add_argument('--cert',choices=CERTS,required=True)
     parser.add_argument('--source',choices=('partner','generated'),default='partner')
     parser.add_argument('--workers',type=int,default=4);parser.add_argument('--limit-batches',type=int,default=0)
     args=parser.parse_args(); CERT,CODE=CERTS[args.cert]; WORK=BASE/args.cert; SOURCE_KIND=args.source
+    if os.environ.get('CERTSAFARI_LLM_PROVIDER') == 'manus':
+        MODEL = 'gpt-5' if args.mode == 'generate' else 'gpt-5-mini'
     if args.mode == 'generate' and args.source != 'partner': parser.error('Generation is always grounded in the partner source')
     source_path = BASE/f'partner-{args.cert}.json' if args.source == 'partner' else WORK/'generated-questions.json'
     SOURCE=json.loads(source_path.read_text())

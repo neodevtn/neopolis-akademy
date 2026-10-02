@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 
-// Usage: node scripts/import_certsafari_developer_bank.mjs <partner.json> [output.json]
+// Usage: node scripts/import_certsafari_anthropic_bank.mjs <partner.json> [private-output.json]
 // Exécuter séparément pour chaque certification ; aucune banque privée dans client/public.
 const input = path.resolve(process.argv[2] || "/home/ubuntu/upload/certsafari_questions.json");
 const raw = await fs.readFile(input);
