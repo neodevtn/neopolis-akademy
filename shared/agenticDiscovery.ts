@@ -10,7 +10,7 @@ import {
 import { getPublicTrainingCatalogMetrics, getPublicTrainingThemes } from "./publicTrainingThemes";
 
 export const AGENTIC_DISCOVERY_ORIGIN = "https://akademy.neodev.click";
-export const AGENTIC_DISCOVERY_UPDATED_AT = "2026-09-19";
+export const AGENTIC_DISCOVERY_UPDATED_AT = "2026-10-06";
 export const PUBLIC_SITEMAP_MIRROR_URL = "https://raw.githubusercontent.com/neodevtn/neopolis-akademy-sitemap/main/sitemap.txt";
 export const INDEXNOW_KEY = "0c74880479c29ce5486d1407718052659628ecfeb597909a185141b10b35c2f7";
 export const INDEXNOW_KEY_PATH = `/${INDEXNOW_KEY}.txt`;
@@ -72,6 +72,8 @@ export function renderLlmsTxt() {
     `- [Home](${absolute("/")}): programme overview and public FAQ.`,
     `- [AI News](${absolute("/ai-news")}): curated links to public AI news sources.`,
     `- [AI News RSS](${absolute("/ai-news/rss.xml")}): machine-readable feed of the latest curated source links.`,
+    `- [Training programmes RSS — French](${absolute("/formations-ia/rss.xml")}): public catalogue with descriptions and permanent training images; includes courses.`,
+    `- [Training programmes RSS — English](${absolute("/en/ai-training/rss.xml")}): English public catalogue with descriptions and permanent training images.`,
     `- [Sitemap index](${absolute("/sitemap-index.xml")}): exhaustive public canonical URL inventory.`,
     `- [Machine-readable catalogue](${absolute("/ai-index.json")}): structured JSON summary of public programmes, courses, topics and career pathways.`,
     `- [Extended LLM context](${absolute("/llms-full.txt")}): detailed public catalogue in Markdown.`,
@@ -91,7 +93,7 @@ export function renderLlmsTxt() {
 
 function renderTrainingDetails(locale: PublicTrainingLocale) {
   return getPublicCatalogueTrainings(locale).map((training) => {
-    const courses = training.courses.map((course) => `  - [${inline(course.title)}](${absolute(publicTrainingCataloguePath(locale, training.slug, course.slug))}): ${course.metrics.totalActivities} activities; ${course.metrics.exerciseCount} exercises; ${course.metrics.videoCount} videos.`).join("\n");
+    const courses = training.courses.map((course) => `  - [${inline(course.title)}](${absolute(publicTrainingCataloguePath(locale, training.slug, course.slug))}): ${inline(course.description)} ${course.metrics.totalActivities} activities; ${course.metrics.exerciseCount} exercises; ${course.metrics.videoCount} videos.`).join("\n");
     return [
       `### [${inline(training.title)}](${absolute(publicTrainingCataloguePath(locale, training.slug))})`,
       "",
@@ -180,6 +182,7 @@ export function buildAgenticIndex() {
     })),
     discovery: {
       sitemap: absolute("/sitemap-index.xml"),
+      trainingRss: { fr: absolute("/formations-ia/rss.xml"), en: absolute("/en/ai-training/rss.xml") },
       llms: absolute("/llms.txt"),
       llmsFull: absolute("/llms-full.txt"),
       self: absolute("/ai-index.json"),

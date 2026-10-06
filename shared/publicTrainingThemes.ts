@@ -3,6 +3,7 @@ import { getCourseCatalogMetrics } from "../client/src/lib/catalogMetrics";
 import { extractTargetJobRoles, resolveTrainingFormat } from "../client/src/lib/trainingCatalogTaxonomy";
 import { localizePublicTrainingText, type PublicTrainingLocale } from "./publicTrainingLocale";
 import { compareCataloguePriority } from "./cataloguePriority";
+import { getPublicCatalogueEditorial } from "./publicCatalogueEditorial";
 
 export type LocalizedText = { fr: string; en: string; ar?: string };
 type LocalizedValue = string | LocalizedText;
@@ -264,7 +265,7 @@ function createTheme(definition: ThemeDefinition, locale: PublicTrainingLocale):
       return {
         id: certification.id,
         title: localizePublicTrainingText(certification.title, locale, "AI training"),
-        description: localizePublicTrainingText(certification.description, locale, ""),
+        description: getPublicCatalogueEditorial("programmes", certification.id, locale)?.summary || localizePublicTrainingText(certification.description, locale, ""),
         level: localizePublicTrainingText(certification.level, locale, ""),
         icon: certification.icon || "◈",
         trainingFormat: formatLabel(certification, locale),

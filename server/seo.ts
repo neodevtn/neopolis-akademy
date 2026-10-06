@@ -395,6 +395,8 @@ export function renderSeoHead(requestUrl: string) {
     `<link rel="alternate" type="text/plain" title="LLM context" href="${CANONICAL_ORIGIN}/llms.txt" />`,
     `<link rel="alternate" type="application/json" title="Machine-readable public catalogue" href="${CANONICAL_ORIGIN}/ai-index.json" />`,
     `<link rel="alternate" type="application/rss+xml" title="Neopolis Akademy AI News" href="${CANONICAL_ORIGIN}/ai-news/rss.xml" />`,
+    `<link rel="alternate" type="application/rss+xml" title="Neopolis Akademy — Formations IA" href="${CANONICAL_ORIGIN}/formations-ia/rss.xml" />`,
+    `<link rel="alternate" type="application/rss+xml" title="Neopolis Akademy — AI Training" href="${CANONICAL_ORIGIN}/en/ai-training/rss.xml" />`,
     `<meta name="author" content="${SITE_NAME}" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="${SITE_NAME}" />`,

@@ -218,8 +218,8 @@ describe("pages publiques de formations IA", () => {
     expect(urlsets).toContain("comptabilite-finance");
     expect(urlsets).toContain("/formations-ia/catalogue/");
     expect(urlsets).not.toContain("/training/");
-    expect(urlsets).toContain("<lastmod>2026-09-19</lastmod>");
-    expect(index).toContain("<lastmod>2026-09-19</lastmod>");
+    expect(urlsets).toContain("<lastmod>2026-10-06</lastmod>");
+    expect(index).toContain("<lastmod>2026-10-06</lastmod>");
     expect(sitemapFiles.reduce((total, file) => total + file.urlCount, 0)).toBeGreaterThan(getPublicCatalogueSitemapEntries().length);
   });
 

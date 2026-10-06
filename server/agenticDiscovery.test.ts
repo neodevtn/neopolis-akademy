@@ -55,6 +55,11 @@ describe("SEO and agentic-search discovery", () => {
     expect(renderLlmsTxt()).toContain("## Français");
     expect(renderLlmsTxt()).toContain("## English");
     expect(renderLlmsTxt()).toContain("## العربية");
+    expect(renderLlmsTxt()).toContain("/formations-ia/rss.xml");
+    expect(buildAgenticIndex().discovery.trainingRss).toEqual({
+      fr: "https://akademy.neodev.click/formations-ia/rss.xml",
+      en: "https://akademy.neodev.click/en/ai-training/rss.xml",
+    });
     expect(documents.find((document) => document.path === "/llms-full.txt")!.body.length).toBeGreaterThan(100_000);
     expect(JSON.parse(renderIndexNowManifest())).toMatchObject({
       revision: getIndexNowContentRevision(),
@@ -73,7 +78,7 @@ describe("SEO and agentic-search discovery", () => {
     const html = renderPublicCatalogueTraining(training, "fr");
     expect(html).toContain('"@type":"WebSite"');
     expect(html).toContain('"@type":"Course"');
-    expect(html).toContain('"dateModified":"2026-09-19"');
+    expect(html).toContain('"dateModified":"2026-10-06"');
   });
 
   it("builds a canonical IndexNow payload without private URLs", () => {

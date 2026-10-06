@@ -5,6 +5,7 @@ import { getPublicTrainingThemes } from "./publicTrainingThemes";
 import { localizePublicTrainingText, type PublicTrainingLocale } from "./publicTrainingLocale";
 import { resolveTrainingVisualAsset, type TrainingVisualAsset, type TrainingVisualOverride } from "./trainingVisualAssets";
 import { compareCataloguePriority } from "./cataloguePriority";
+import { getPublicCatalogueEditorial } from "./publicCatalogueEditorial";
 
 type LocalizedText = { fr?: string; en?: string; ar?: string };
 type CatalogCourse = {
@@ -80,6 +81,7 @@ export type PublicCatalogueCourse = {
   slug: string;
   title: string;
   description: string;
+  overview: string[];
   level: string;
   metrics: ReturnType<typeof getCourseCatalogMetrics>;
   skills: string[];
@@ -90,6 +92,7 @@ export type PublicCatalogueTraining = {
   slug: string;
   title: string;
   description: string;
+  overview: string[];
   level: string;
   icon: string;
   format: string;
@@ -122,12 +125,14 @@ function relatedDomains(certificationId: string, locale: PublicTrainingLocale) {
 
 function trainingFromCertification(certification: CatalogCertification, locale: PublicTrainingLocale): PublicCatalogueTraining {
   const certificationCourses = source.courses.filter((course) => course.certId === certification.id);
+  const editorial = getPublicCatalogueEditorial("programmes", certification.id, locale);
   const skills = Array.from(new Set(certificationCourses.flatMap((course) => course.acquiredSkills || []).map((skill) => localize(skill, locale)).filter(Boolean))).slice(0, 16);
   const roles = extractTargetJobRoles(certificationCourses).map((role) => localize(role, locale, role)).filter(Boolean).slice(0, 14);
   return {
     slug: certificationSlugs.get(certification.id) || "formation-ia",
     title: localize(certification.title, locale, "Formation IA"),
-    description: publicDescription(certification.description, locale),
+    description: editorial?.summary || publicDescription(certification.description, locale),
+    overview: editorial?.overview || [],
     level: localize(certification.level, locale),
     icon: certification.icon || "◈",
     format: formatLabel(certification, locale),
@@ -139,7 +144,8 @@ function trainingFromCertification(certification: CatalogCertification, locale: 
     courses: certificationCourses.map((course) => ({
       slug: courseSlugs.get(course.id) || "cours-ia",
       title: localize(course.title, locale, "Cours IA"),
-      description: publicDescription(course.description, locale),
+      description: getPublicCatalogueEditorial("courses", course.id, locale)?.summary || publicDescription(course.description, locale),
+      overview: getPublicCatalogueEditorial("courses", course.id, locale)?.overview || [],
       level: localize(course.level, locale),
       metrics: getCourseCatalogMetrics(course),
       skills: (course.acquiredSkills || []).map((skill) => localize(skill, locale, skill)).filter(Boolean).slice(0, 10),
