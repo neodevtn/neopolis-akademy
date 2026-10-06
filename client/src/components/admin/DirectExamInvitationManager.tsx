@@ -9,9 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import trainingIndex from "@/data/trainingIndex.json";
 
-export function DirectExamInvitationManager({ publishedCertificationIds }: { publishedCertificationIds: string[] }) {
+export function DirectExamInvitationManager() {
   const { t, lang } = useLanguage();
   const label = (fr: string, en: string) => t({ fr, en });
+  const configurations = trpc.adminContent.getExamConfigurations.useQuery();
+  const publishedCertificationIds = Object.entries(configurations.data || {}).filter(([, exam]) => exam.isPublished).map(([id]) => id);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [certificationId, setCertificationId] = useState("");
@@ -39,10 +41,12 @@ export function DirectExamInvitationManager({ publishedCertificationIds }: { pub
       <p className="text-sm text-muted-foreground">{label("Pour un apprenant existant ou un nouvel invité. L’examen s’ouvre sans parcourir les cours ; le compte invité est créé comme apprenant avec un profil complet. L’invitation n’expire pas, mais reste révocable.", "For an existing learner or a new guest. The exam opens without course completion; guests create a learner account and complete their profile. The invitation does not expire but can be revoked.")}</p>
     </CardHeader>
     <CardContent className="space-y-6">
+      {configurations.isError && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{label("Impossible de charger les examens publiés. Réessayez plus tard.", "Could not load published exams. Please try again later.")}</p>}
+      {!configurations.isLoading && !configurations.isError && !publishedCertificationIds.length && <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">{label("Aucun examen n’est publié. Publiez d’abord un examen dans Pédagogie > Examens de certification.", "No exam is published. Publish an exam under Learning > Certification exams first.")}</p>}
       <form className="grid gap-3 md:grid-cols-[1fr_1fr_1.3fr_auto] md:items-end" onSubmit={(event) => { event.preventDefault(); setManualLink(""); create.mutate({ email: email.trim(), name: name.trim() || undefined, certificationId, origin: window.location.origin, language: lang === "en" ? "en" : "fr" }); }}>
         <div className="space-y-1"><Label htmlFor="direct-exam-email">{label("E-mail du destinataire", "Recipient email")}</Label><Input id="direct-exam-email" type="email" autoComplete="off" required maxLength={320} value={email} onChange={(event) => setEmail(event.target.value)} /></div>
         <div className="space-y-1"><Label htmlFor="direct-exam-name">{label("Nom (facultatif)", "Name (optional)")}</Label><Input id="direct-exam-name" maxLength={200} value={name} onChange={(event) => setName(event.target.value)} /></div>
-        <div className="space-y-1"><Label htmlFor="direct-exam-cert">{label("Examen publié", "Published exam")}</Label><Select value={certificationId} onValueChange={setCertificationId}><SelectTrigger id="direct-exam-cert"><SelectValue placeholder={label("Choisir un examen", "Choose an exam")} /></SelectTrigger><SelectContent>{trainingIndex.certifications.filter((cert) => publishedCertificationIds.includes(cert.id)).map((cert) => <SelectItem key={cert.id} value={cert.id}>{t(cert.title)}</SelectItem>)}</SelectContent></Select></div>
+        <div className="space-y-1"><Label htmlFor="direct-exam-cert">{label("Examen publié", "Published exam")}</Label><Select value={certificationId} onValueChange={setCertificationId} disabled={configurations.isLoading || !publishedCertificationIds.length}><SelectTrigger id="direct-exam-cert"><SelectValue placeholder={configurations.isLoading ? label("Chargement des examens…", "Loading exams…") : label("Choisir un examen", "Choose an exam")} /></SelectTrigger><SelectContent>{trainingIndex.certifications.filter((cert) => publishedCertificationIds.includes(cert.id)).map((cert) => <SelectItem key={cert.id} value={cert.id}>{t(cert.title)}</SelectItem>)}</SelectContent></Select></div>
         <Button disabled={create.isPending || !certificationId || !email.trim()} type="submit">{create.isPending ? label("Création…", "Creating…") : label("Envoyer l’invitation", "Send invitation")}</Button>
       </form>
       {manualLink && <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950"><p>{label("Courriel non livré : transmettez ce lien uniquement au destinataire nommé.", "Email not delivered: share this link only with the named recipient.")}</p><Button className="mt-2" size="sm" variant="outline" onClick={async () => { try { await navigator.clipboard.writeText(manualLink); toast.success(label("Lien copié.", "Link copied.")); } catch { toast.error(label("Impossible de copier. Vérifiez les permissions du navigateur.", "Could not copy; check browser permissions.")); } }}>{label("Copier le lien privé", "Copy private link")}</Button></div>}

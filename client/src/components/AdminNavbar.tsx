@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { HeaderBrandLogo } from "@/components/BrandLogo";
+import { ADMIN_INVITATIONS_PATH } from "@/lib/adminInvitationNavigation";
 import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, BriefcaseBusiness, CheckCircle2, ChevronDown, ClipboardCheck, FileImage, Gift, Layers, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
 
 type AdminPage = "candidatures" | "training" | "talent" | "content" | "media" | "errors";
@@ -12,7 +13,6 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     items: [
       { label: "Candidatures", href: "/admin", icon: LayoutDashboard, page: "candidatures", description: "Évaluer et décider" },
       { label: "Évaluation", href: "/admin?tab=analytics", icon: BarChart3, page: "candidatures", description: "Analyser les candidatures" },
-      { label: "Invitations de candidature", href: "/admin?tab=invitations", icon: UserPlus, page: "candidatures", description: "Relancer les candidats" },
       { label: "Candidats sélectionnés", href: "/admin/training?tab=selected", icon: UserCheck, page: "training", description: "Activer les comptes" },
       { label: "Parrainage", href: "/admin?tab=referrals", icon: Gift, page: "candidatures", description: "Origines et récompenses" },
     ],
@@ -24,7 +24,7 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
       { label: "Suivi des apprenants", href: "/admin/training?tab=learners", icon: Users, page: "training", description: "Progression et engagement" },
       { label: "Suivi des examens", href: "/admin/training?tab=exams", icon: ClipboardCheck, page: "training", description: "Résultats et durées" },
       { label: "Groupes d’apprenants", href: "/admin/training?tab=groups", icon: Layers, page: "training", description: "Accès aux formations" },
-      { label: "Invitations directes", href: "/admin/training?tab=invitations", icon: UserPlus, page: "training", description: "Inviter et annuler" },
+      { label: "Invitations", href: ADMIN_INVITATIONS_PATH, icon: UserPlus, page: "training", description: "Plateforme ou examen" },
       { label: "Reporting", href: "/admin/training?tab=analytics", icon: BarChart3, page: "training", description: "Performance et tendances" },
       { label: "Feedback formations", href: "/admin/training?tab=feedback", icon: MessageSquare, page: "training", description: "Avis et suggestions" },
       { label: "Communications", href: "/admin?tab=communications", icon: MessageSquare, page: "candidatures", description: "Informer les publics" },

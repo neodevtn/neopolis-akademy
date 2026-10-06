@@ -5,6 +5,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, useRoute } from "wouter";
 import { useEffect } from "react";
 import { trackPageView } from "./lib/analytics";
+import { legacyAdminInvitationTarget } from "./lib/adminInvitationNavigation";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -54,6 +55,14 @@ function TrainingDashboardRoute() { return <TrainingProgressArea><TrainingDashbo
 function TrainingCertificationRoute() { return <TrainingProgressArea><TrainingCertification /></TrainingProgressArea>; }
 function TrainingCourseRoute() { return <TrainingProgressArea><TrainingCourse /></TrainingProgressArea>; }
 function MockExamRoute() { return <TrainingProgressArea><MockExam /></TrainingProgressArea>; }
+function AdminDashboardRoute() {
+  const [, navigate] = useLocation();
+  const invitationTarget = typeof window === "undefined" ? null : legacyAdminInvitationTarget(window.location.pathname, window.location.search);
+  useEffect(() => {
+    if (invitationTarget) navigate(invitationTarget, { replace: true });
+  }, [invitationTarget, navigate]);
+  return invitationTarget ? <PageLoader /> : <AdminDashboard />;
+}
 function LocalizedPublicTrainingRedirect({ locale }: { locale: "en" | "ar" }) {
   const [, params] = useRoute(locale === "en" ? "/en/ai-training/:themeSlug" : "/ar/ai-training/:themeSlug");
   useEffect(() => {
@@ -79,7 +88,7 @@ function Router() {
         <Route path={"/ar/ai-training/:themeSlug"} component={() => <LocalizedPublicTrainingRedirect locale="ar" />} />
         <Route path={"/refer"} component={ReferralLanding} />
         <Route path={"/apply"} component={Apply} />
-        <Route path={"/admin"} component={AdminDashboard} />
+        <Route path={"/admin"} component={AdminDashboardRoute} />
         <Route path={"/admin/training"} component={AdminTraining} />
         <Route path={"/admin/content"} component={AdminContentManager} />
         <Route path={"/admin/media"} component={AdminMediaLibrary} />

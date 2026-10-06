@@ -32,7 +32,6 @@ import { QuestionBankPanel } from "@/components/admin/QuestionBankPanel";
 import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
 import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
 import { ExamLearnerPreview } from "@/components/admin/ExamLearnerPreview";
-import { DirectExamInvitationManager } from "@/components/admin/DirectExamInvitationManager";
 import { LessonRecommendationEditor, normalizeYouTubeId } from "@/components/admin/LessonRecommendationEditor";
 import { LegacyExerciseEditor } from "@/components/admin/LegacyExerciseEditor";
 import { LessonManager } from "@/components/admin/LessonManager";
@@ -47,6 +46,7 @@ import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/exam
 import { toBlockMediaUrl } from "@/lib/mediaUrl";
 import { moveItem } from "@shared/lessonManagement";
 import { buildNavigationUrl } from "@shared/navigationUrls";
+import { adminInvitationHref } from "@/lib/adminInvitationNavigation";
 import { isAdministrativeRole } from "@shared/roles";
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
@@ -1490,7 +1490,13 @@ export default function AdminContentManager() {
           {viewMode === "exam-simulate" && renderExamSimulate()}
           {viewMode === "edit-exam" && renderEditExam()}
           {viewMode === "question-banks" && renderQuestionBanks()}
-          {viewMode === "exam-configurations" && <><DirectExamInvitationManager publishedCertificationIds={Object.entries(examConfigurationsQuery.data || {}).filter(([, definition]) => definition.isPublished).map(([certificationId]) => certificationId)} />{renderExamConfigurations()}</>}
+          {viewMode === "exam-configurations" && <>
+            <div className="mb-6 flex flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950 sm:flex-row sm:items-center sm:justify-between">
+              <p><strong>{t({ fr: "Invitations aux examens :", en: "Exam invitations:" })}</strong> {t({ fr: "invitez un apprenant ou un nouvel invité à passer un examen publié sans suivre les cours.", en: "invite an existing learner or a new guest to take a published exam without completing the courses." })}</p>
+              <Button className="shrink-0" onClick={() => navigate(adminInvitationHref("exam"))}>{t({ fr: "Inviter à passer un examen", en: "Invite to an exam" })}</Button>
+            </div>
+            {renderExamConfigurations()}
+          </>}
           {viewMode === "quiz-banks" && renderQuizBanks()}
         </motion.div>
       </main>

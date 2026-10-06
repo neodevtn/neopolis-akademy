@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { AdminNavbar } from "@/components/AdminNavbar";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
 import { Button } from "@/components/ui/button";
@@ -33,8 +34,10 @@ import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard";
 import { AdminFeedbackDashboard } from "@/components/AdminFeedbackDashboard";
 import { ExamMonitoringPanel } from "@/components/admin/ExamMonitoringPanel";
+import { DirectExamInvitationManager } from "@/components/admin/DirectExamInvitationManager";
 import { PrivateMessagingAdminPanel } from "@/components/PrivateMessagingAdminPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
+import { adminInvitationHref, getAdminInvitationKind } from "@/lib/adminInvitationNavigation";
 import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
 import { buildRecentDailyActivity, summarizeLearningActivity } from "./admin/learningActivityAudit";
 import { resolveLocalizedText } from "@shared/localizedText";
@@ -71,10 +74,13 @@ function AuditStat({ label, value, detail }: { label: string; value: number; det
 
 export default function AdminTraining() {
   const { user, loading, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
+  const invitationLabel = (fr: string, en: string) => t({ fr, en });
   const isAdmin = isAdministrativeRole(user?.role);
   const canManageRoles = isSuperAdmin(user?.role);
   const [, navigate] = useLocation();
   const urlSearch = useSearch();
+  const invitationKind = getAdminInvitationKind(urlSearch);
   const [activeTab, setActiveTab] = useState(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search).get("tab") || "learners");
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -113,7 +119,7 @@ export default function AdminTraining() {
   const pageSize = 15;
   const activeSection = ({
     learners: { title: "Suivi des apprenants", description: "Progression, engagement et accompagnement des comptes actifs" },
-    invitations: { title: "Invitations directes", description: "Inviter, suivre ou annuler les invitations hors candidature" },
+    invitations: { title: invitationLabel("Invitations", "Invitations"), description: invitationLabel("Choisir entre un accès à la plateforme et un accès direct à un examen", "Choose between platform access and direct access to an exam") },
     selected: { title: "Candidats sélectionnés", description: "Vérifier l’activation des comptes et relancer les candidats retenus" },
     analytics: { title: "Reporting d’apprentissage", description: "Analyser la performance, l’implication et l’évolution des apprenants" },
     exams: { title: "Suivi des examens", description: "Analyser les passages, résultats, scores et durées des évaluations certifiantes" },
@@ -125,6 +131,9 @@ export default function AdminTraining() {
     const params = new URLSearchParams({ tab });
     if (learnerId) params.set("learner", String(learnerId));
     navigate(buildNavigationUrl("/admin/training", { tab, learner: learnerId }));
+  };
+  const navigateInvitationKind = (kind: "exam" | "platform") => {
+    navigate(adminInvitationHref(kind));
   };
 
   const directInvitationTable = useMemo(() => {
@@ -236,15 +245,15 @@ export default function AdminTraining() {
 
   const invitationsQuery = trpc.admin.getInvitations.useQuery(
     { page: 1, pageSize: 50 },
-    { enabled: isAuthenticated && isAdmin && activeTab === "invitations" }
+    { enabled: isAuthenticated && isAdmin && activeTab === "invitations" && invitationKind === "platform" }
   );
 
   const directInvitationsQuery = trpc.admin.getDirectInvitations.useQuery(
     { page: directInvitationTable.page, pageSize: 10, search: directInvitationTable.search || undefined, sortBy: directInvitationTable.sortBy, sortDirection: directInvitationTable.sortDirection },
-    { enabled: isAuthenticated && isAdmin && activeTab === "invitations" }
+    { enabled: isAuthenticated && isAdmin && activeTab === "invitations" && invitationKind === "platform" }
   );
   const learnerGroupsQuery = trpc.admin.listLearnerGroups.useQuery(undefined, {
-    enabled: isAuthenticated && isAdmin && ["groups", "invitations", "selected"].includes(activeTab),
+    enabled: isAuthenticated && isAdmin && (activeTab === "groups" || activeTab === "selected" || (activeTab === "invitations" && invitationKind === "platform")),
   });
   const groupLearnersQuery = trpc.admin.getLearners.useQuery(
     { page: 1, pageSize: 200, sortBy: "name", sortDirection: "asc" },
@@ -1022,7 +1031,7 @@ export default function AdminTraining() {
               <p className="text-sm text-muted-foreground mt-1">{activeSection.description}</p>
             </div>
             <div className="flex items-center gap-2">
-              {activeTab !== "feedback" && <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigateTraining("feedback")}>
+              {activeTab !== "feedback" && activeTab !== "invitations" && <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigateTraining("feedback")}>
                 <MessageSquareText className="w-4 h-4" /> Feedback formations
               </Button>}
               {activeTab === "learners" && <Button variant="outline" size="sm" className="gap-1.5" onClick={handleExportCSV}>
@@ -1031,10 +1040,10 @@ export default function AdminTraining() {
               {activeTab === "learners" && <Button variant="outline" size="sm" className="gap-1.5" onClick={() => orientationReminderMutation.mutate()} disabled={orientationReminderMutation.isPending}>
                 <Send className="w-4 h-4" /> {orientationReminderMutation.isPending ? "Préparation…" : "Préparer rappel orientation"}
               </Button>}
-              {activeTab === "invitations" && <Dialog open={inviteOpen} onOpenChange={(open) => open ? setInviteOpen(true) : resetInviteDialog()}>
+              {activeTab === "invitations" && invitationKind === "platform" && <Dialog open={inviteOpen} onOpenChange={(open) => open ? setInviteOpen(true) : resetInviteDialog()}>
                 <DialogTrigger asChild>
                   <Button size="sm" className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground">
-                    <UserPlus className="w-4 h-4" /> Inviter
+                    <UserPlus className="w-4 h-4" /> {invitationLabel("Inviter sur la plateforme", "Invite to the platform")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -1342,8 +1351,17 @@ export default function AdminTraining() {
             </TabsContent>
 
             <TabsContent value="invitations">
-              <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl text-sm text-blue-700 dark:text-blue-300">
-                Cet onglet affiche uniquement les <strong>invitations directes</strong> (envoyées sans passer par une candidature). Les invitations liées à une candidature sont visibles dans l'onglet <strong>Candidats sélectionnés</strong>.
+              <nav className="mb-6 flex flex-col gap-2 rounded-xl border border-border bg-card p-2 sm:flex-row" aria-label={invitationLabel("Type d’invitation", "Invitation type")}>
+                <Button type="button" className="sm:flex-1" variant={invitationKind === "exam" ? "default" : "ghost"} aria-current={invitationKind === "exam" ? "page" : undefined} onClick={() => navigateInvitationKind("exam")}>
+                  <GraduationCap className="mr-2 h-4 w-4" /> {invitationLabel("Inviter à un examen", "Invite to an exam")}
+                </Button>
+                <Button type="button" className="sm:flex-1" variant={invitationKind === "platform" ? "default" : "ghost"} aria-current={invitationKind === "platform" ? "page" : undefined} onClick={() => navigateInvitationKind("platform")}>
+                  <UserPlus className="mr-2 h-4 w-4" /> {invitationLabel("Inviter sur la plateforme", "Invite to the platform")}
+                </Button>
+              </nav>
+              {invitationKind === "exam" ? <DirectExamInvitationManager /> : <>
+              <div className="mb-4 rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
+                {invitationLabel("Ici, l’invitation donne accès à la plateforme et aux formations, pas à un examen sans prérequis. Les invitations liées à une candidature restent dans", "Here, an invitation grants platform and course access, not an exam bypass. Application-related invitations remain under")} <Link href="/admin/training?tab=selected" className="font-semibold underline">{invitationLabel("Candidats sélectionnés", "Selected candidates")}</Link>.
               </div>
               <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="relative w-full sm:max-w-sm">
@@ -1427,6 +1445,7 @@ export default function AdminTraining() {
                   return <div className="flex flex-col gap-3 border-t border-border px-5 py-4 text-sm sm:flex-row sm:items-center sm:justify-between"><span className="text-muted-foreground">{directInvitationsQuery.data.total} invitation{directInvitationsQuery.data.total > 1 ? "s" : ""} · page {directInvitationTable.page}/{totalPages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={directInvitationTable.page <= 1 || directInvitationsQuery.isFetching} onClick={() => updateDirectInvitationTable({ page: directInvitationTable.page - 1 })}><ChevronLeft className="mr-1 h-4 w-4" /> Précédent</Button><Button variant="outline" size="sm" disabled={directInvitationTable.page >= totalPages || directInvitationsQuery.isFetching} onClick={() => updateDirectInvitationTable({ page: directInvitationTable.page + 1 })}>Suivant <ChevronRight className="ml-1 h-4 w-4" /></Button></div></div>;
                 })()}
               </div>
+              </>}
             </TabsContent>
 
                         {/* TAB: Selected Candidates */}
