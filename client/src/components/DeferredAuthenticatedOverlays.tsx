@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLocation } from "wouter";
 
 const SentryUserSync = lazy(() => import("./SentryUserSync").then((module) => ({ default: module.SentryUserSync })));
 const PlatformUpdateNotice = lazy(() => import("./PlatformUpdateNotice").then((module) => ({ default: module.PlatformUpdateNotice })));
@@ -14,6 +15,8 @@ const PrivateMessagingOverlay = lazy(() => import("./PrivateMessagingOverlay").t
  */
 export function DeferredAuthenticatedOverlays() {
   const { isAuthenticated } = useAuth();
+  const [location] = useLocation();
+  const examInProgressOrInvitation = location.startsWith("/mock-exam/") || location === "/accept-exam-invitation";
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -35,7 +38,7 @@ export function DeferredAuthenticatedOverlays() {
       <SentryUserSync />
       <PlatformUpdateNotice />
       <AchievementCelebration />
-      <ImportantCommunicationLightbox />
+      {!examInProgressOrInvitation && <ImportantCommunicationLightbox />}
       <PrivateMessagingOverlay />
     </Suspense>
   );

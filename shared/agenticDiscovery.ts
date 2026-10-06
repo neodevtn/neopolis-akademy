@@ -34,6 +34,7 @@ export function renderRobotsTxt() {
     "Disallow: /login",
     "Disallow: /demo-login",
     "Disallow: /accept-invitation",
+    "Disallow: /accept-exam-invitation",
     "Disallow: /forgot-password",
     "Disallow: /reset-password",
     "Disallow: /apply",

@@ -8,6 +8,8 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
 import { ENV } from "./_core/env";
 import { MIN_PASSWORD_LENGTH, isValidPassword } from "../shared/accountCredentials";
+import { z } from "zod";
+import { acceptDirectExamInvitation, examInvitationDestination, examInvitationTitle, getDirectExamInvitationByToken, registerDirectExamGuest } from "./directExamInvitations";
 
 export { isValidPassword } from "../shared/accountCredentials";
 
@@ -418,6 +420,58 @@ export function registerAuthRoutes(app: Express) {
     } catch (error) {
       console.error("[Auth] Claim invitation failed", error);
       return res.status(401).json({ error: "Connexion requise pour revendiquer cette invitation" });
+    }
+  });
+
+  const examGuestSchema = z.object({
+    token: z.string().regex(/^[0-9a-f]{64}$/),
+    firstName: z.string().trim().min(2).max(100),
+    lastName: z.string().trim().min(2).max(100),
+    phone: z.string().regex(/^\+[1-9]\d{6,14}$/),
+    password: z.string().min(MIN_PASSWORD_LENGTH).max(128),
+  });
+
+  app.get("/api/auth/validate-exam-invitation", invitationLimiter, async (req: Request, res: Response) => {
+    try {
+      const invitation = await getDirectExamInvitationByToken(typeof req.query.token === "string" ? req.query.token : "");
+      if (!invitation || invitation.status === "revoked") return res.status(410).json({ error: "Invitation invalide ou révoquée." });
+      const existing = await db.getUserByEmail(invitation.email);
+      return res.json({ status: invitation.status, certificationId: invitation.certificationId, examTitle: examInvitationTitle(invitation.certificationId), email: invitation.email, name: invitation.name, existingAccount: Boolean(existing), destination: examInvitationDestination(invitation.certificationId) });
+    } catch (error) {
+      console.error("[DirectExam] Invitation validation failed", error);
+      return res.status(500).json({ error: "Impossible de vérifier l’invitation." });
+    }
+  });
+
+  app.post("/api/auth/register-exam-guest", invitationLimiter, async (req: Request, res: Response) => {
+    const parsed = examGuestSchema.safeParse(req.body);
+    if (!parsed.success || !isValidPassword(parsed.data.password)) return res.status(400).json({ error: "Complétez votre profil (prénom, nom et téléphone international) et choisissez un mot de passe d’au moins 12 caractères." });
+    try {
+      const { password, ...profile } = parsed.data;
+      const account = await registerDirectExamGuest({ ...profile, passwordHash: await bcrypt.hash(password, SALT_ROUNDS) });
+      const sessionToken = await sdk.createSessionToken(account.openId, { name: account.name, expiresInMs: SESSION_DURATION_MS });
+      res.cookie(COOKIE_NAME, sessionToken, { ...getSessionCookieOptions(req), maxAge: SESSION_DURATION_MS });
+      return res.json({ success: true, destination: account.destination });
+    } catch (error) {
+      if (error instanceof Error && "code" in error && (error.code === "CONFLICT" || error.code === "NOT_FOUND")) return res.status(409).json({ error: error.message });
+      console.error("[DirectExam] Guest registration failed", error);
+      return res.status(500).json({ error: "Impossible de créer le compte invité." });
+    }
+  });
+
+  app.post("/api/auth/claim-exam-invitation", invitationLimiter, async (req: Request, res: Response) => {
+    try {
+      const token = typeof req.body?.token === "string" ? req.body.token : "";
+      if (!/^[0-9a-f]{64}$/.test(token)) return res.status(400).json({ error: "Lien d’invitation invalide." });
+      const account = await sdk.authenticateRequest(req);
+      const result = await acceptDirectExamInvitation({ token, userId: account.id });
+      return res.json({ success: true, destination: result.destination });
+    } catch (error) {
+      if (error instanceof Error && "code" in error) {
+        if (error.code === "FORBIDDEN") return res.status(403).json({ error: error.message });
+        if (error.code === "NOT_FOUND" || error.code === "CONFLICT") return res.status(409).json({ error: error.message });
+      }
+      return res.status(401).json({ error: "Connectez-vous au compte correspondant à l’invitation." });
     }
   });
 }

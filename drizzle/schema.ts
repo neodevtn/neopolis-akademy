@@ -664,6 +664,30 @@ export const userInvitations = mysqlTable("user_invitations", {
 export type UserInvitation = typeof userInvitations.$inferSelect;
 export type InsertUserInvitation = typeof userInvitations.$inferInsert;
 
+/** Accès direct à un examen publié : nominatif, sans date d'expiration, révocable par l'administration.
+ * Le jeton n'est conservé qu'empreinté et ne donne jamais accès à un corrigé ni à un autre examen.
+ */
+export const directExamInvitations = mysqlTable("direct_exam_invitations", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull(),
+  certificationId: varchar("certificationId", { length: 200 }).notNull(),
+  name: varchar("name", { length: 200 }),
+  tokenHash: varchar("tokenHash", { length: 64 }).notNull(),
+  status: mysqlEnum("status", ["pending", "accepted", "revoked"]).notNull().default("pending"),
+  acceptedUserId: int("acceptedUserId"),
+  invitedBy: int("invitedBy").notNull(),
+  acceptedAt: timestamp("acceptedAt"),
+  revokedAt: timestamp("revokedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("direct_exam_invitation_email_cert_unique").on(table.email, table.certificationId),
+  uniqueIndex("direct_exam_invitation_token_unique").on(table.tokenHash),
+  index("direct_exam_invitation_user_status_idx").on(table.acceptedUserId, table.status),
+  index("direct_exam_invitation_cert_status_idx").on(table.certificationId, table.status),
+]);
+export type DirectExamInvitation = typeof directExamInvitations.$inferSelect;
+
 /** Groupes choisis lors de l’invitation, à appliquer lorsque le compte est créé ou activé. */
 export const invitationGroups = mysqlTable("invitation_groups", {
   id: int("id").autoincrement().primaryKey(),

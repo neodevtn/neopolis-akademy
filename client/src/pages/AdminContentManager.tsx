@@ -32,6 +32,7 @@ import { QuestionBankPanel } from "@/components/admin/QuestionBankPanel";
 import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
 import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
 import { ExamLearnerPreview } from "@/components/admin/ExamLearnerPreview";
+import { DirectExamInvitationManager } from "@/components/admin/DirectExamInvitationManager";
 import { LessonRecommendationEditor, normalizeYouTubeId } from "@/components/admin/LessonRecommendationEditor";
 import { LegacyExerciseEditor } from "@/components/admin/LegacyExerciseEditor";
 import { LessonManager } from "@/components/admin/LessonManager";
@@ -1489,7 +1490,7 @@ export default function AdminContentManager() {
           {viewMode === "exam-simulate" && renderExamSimulate()}
           {viewMode === "edit-exam" && renderEditExam()}
           {viewMode === "question-banks" && renderQuestionBanks()}
-          {viewMode === "exam-configurations" && renderExamConfigurations()}
+          {viewMode === "exam-configurations" && <><DirectExamInvitationManager publishedCertificationIds={Object.entries(examConfigurationsQuery.data || {}).filter(([, definition]) => definition.isPublished).map(([certificationId]) => certificationId)} />{renderExamConfigurations()}</>}
           {viewMode === "quiz-banks" && renderQuizBanks()}
         </motion.div>
       </main>

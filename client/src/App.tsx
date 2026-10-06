@@ -31,6 +31,7 @@ const TrainingCourse = lazy(() => import("./pages/TrainingCourse"));
 const MockExam = lazy(() => import("./pages/MockExam"));
 const Login = lazy(() => import("./pages/Login"));
 const AcceptInvitation = lazy(() => import("./pages/AcceptInvitation"));
+const AcceptExamInvitation = lazy(() => import("./pages/AcceptExamInvitation"));
 const DiagnosticIA = lazy(() => import("./pages/DiagnosticIA"));
 const AdvancedDiagnosticIA = lazy(() => import("./pages/AdvancedDiagnosticIA"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
@@ -90,6 +91,7 @@ function Router() {
         <Route path={"/training/:certId/:courseId"} component={TrainingCourseRoute} />
         <Route path={"/mock-exam/:certId"} component={MockExamRoute} />
         <Route path={"/accept-invitation"} component={AcceptInvitation} />
+        <Route path={"/accept-exam-invitation"} component={AcceptExamInvitation} />
         <Route path={"/login"} component={Login} />
         <Route path={"/demo-login"} component={Login} />
         <Route path={"/forgot-password"} component={ForgotPassword} />

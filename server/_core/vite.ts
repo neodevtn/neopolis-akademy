@@ -18,8 +18,12 @@ export const SPA_DOCUMENT_NO_CACHE_HEADERS = {
 
 export const VERSIONED_ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable";
 
-export function applySpaDocumentNoCacheHeaders(res: { set: (headers: Record<string, string>) => unknown }) {
-  res.set(SPA_DOCUMENT_NO_CACHE_HEADERS);
+export function applySpaDocumentNoCacheHeaders(res: { set: (headers: Record<string, string>) => unknown; getHeader?: (name: string) => string | number | string[] | undefined }) {
+  // Le document d'invitation comporte initialement un jeton dans son URL :
+  // ne pas écraser le no-store défini par examInvitationSecurityHeaders.
+  res.set(res.getHeader?.("X-Robots-Tag") === "noindex, nofollow"
+    ? { ...SPA_DOCUMENT_NO_CACHE_HEADERS, "Cache-Control": "private, no-store, max-age=0" }
+    : SPA_DOCUMENT_NO_CACHE_HEADERS);
 }
 
 export async function setupVite(app: Express, server: Server) {

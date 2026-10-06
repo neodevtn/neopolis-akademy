@@ -52,6 +52,7 @@ import { completeGuidedAction, getGuidedActionStatus } from "./guidedActionServi
 import { getN8nFoundationsActivityStatus, submitN8nFoundationsWorkflow } from "./n8nFoundationsAssessmentService";
 import { getArchitectFoundationsCheckpointCorrection, getArchitectFoundationsCheckpointStatus, submitArchitectFoundationsCheckpoint } from "./architectFoundationsCheckpointService";
 import { getDeveloperFoundationsCheckpointCorrection, getDeveloperFoundationsCheckpointStatus, submitDeveloperFoundationsCheckpoint } from "./developerFoundationsCheckpointService";
+import { directExamRouter, getDirectExamAccess } from "./directExamRouter";
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
   targetLevel: z.enum(["bronze", "silver", "gold"]),
@@ -59,6 +60,7 @@ const orientationGoalsSchema = z.array(z.object({
 
 export const appRouter = router({
   system: systemRouter,
+  directExams: directExamRouter,
   privateMessaging: privateMessagingRouter,
   tektek: tektekRouter,
   talent: talentLearnerRouter,
@@ -646,11 +648,12 @@ export const appRouter = router({
     startExamSession: protectedProcedure
       .input(z.object({ certificationId: z.string().min(2).max(200) }))
       .mutation(async ({ ctx, input }) => {
+        if (ctx.user.blocked === 1) throw new TRPCError({ code: "FORBIDDEN", message: "Compte désactivé." });
         await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         const definition = await getExamDefinition(input.certificationId);
         if (!definition?.isPublished) throw new TRPCError({ code: "NOT_FOUND", message: "Cet examen blanc n’est pas disponible." });
-        const lessonCounts = getCertificationLessonCounts(input.certificationId);
-        if (!Object.keys(lessonCounts).length || !await isCertificationComplete(ctx.user.id, input.certificationId, lessonCounts)) {
+        const access = await getDirectExamAccess(ctx.user.id, input.certificationId);
+        if (!access.allowed) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Terminez tous les cours de cette formation avant de démarrer l’examen." });
         }
         const questions = selectExamQuestions(await getQuestionsForCertification(input.certificationId), definition);
@@ -668,6 +671,7 @@ export const appRouter = router({
         integrityMarker: z.string().max(120).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
+        if (ctx.user.blocked === 1) throw new TRPCError({ code: "FORBIDDEN", message: "Compte désactivé." });
         if (input.integrityMarker?.trim()) {
           await flagExamHoneypotTrigger(ctx.user.id);
           throw new TRPCError({ code: "FORBIDDEN", message: "La soumission nécessite une vérification par l’équipe pédagogique avant toute reprise de l’examen." });
@@ -677,6 +681,7 @@ export const appRouter = router({
         if (!session) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Aucune session d’examen active à soumettre." });
         const definition = await getExamDefinition(input.certificationId);
         if (!definition?.isPublished) throw new TRPCError({ code: "NOT_FOUND", message: "Cet examen blanc n’est plus disponible." });
+        if (!(await getDirectExamAccess(ctx.user.id, input.certificationId)).allowed) throw new TRPCError({ code: "FORBIDDEN", message: "L’accès à cet examen a été révoqué." });
         const questions = Array.isArray(session.questions) ? session.questions as ExamQuestion[] : [];
         if (!questions.length) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "La session d’examen est invalide." });
         const result = scoreStoredExamSession(questions, input.answers as StoredExamAnswer[], definition, new Date() >= new Date(session.expiresAt));
@@ -693,6 +698,8 @@ export const appRouter = router({
       }),
 
     getExamSession: protectedProcedure.input(z.object({ certificationId: z.string() })).query(async ({ ctx, input }) => {
+      if (ctx.user.blocked === 1) return null;
+      if (!(await getDirectExamAccess(ctx.user.id, input.certificationId)).allowed) return null;
       const session = await getExamSession(ctx.user.id, input.certificationId);
       if (!session) return null;
       const questions = Array.isArray(session.questions) ? session.questions as ExamQuestion[] : [];
@@ -701,7 +708,11 @@ export const appRouter = router({
 
     saveExamSession: protectedProcedure.input(z.object({
       certificationId: z.string(), answers: z.array(z.any()), currentIndex: z.number().int().min(0), selectedIds: z.array(z.string()),
-    })).mutation(async ({ ctx, input }) => updateExamSessionState({ ...input, userId: ctx.user.id })),
+    })).mutation(async ({ ctx, input }) => {
+      if (ctx.user.blocked === 1) throw new TRPCError({ code: "FORBIDDEN", message: "Compte désactivé." });
+      if (!(await getDirectExamAccess(ctx.user.id, input.certificationId)).allowed) throw new TRPCError({ code: "FORBIDDEN" });
+      return updateExamSessionState({ ...input, userId: ctx.user.id });
+    }),
 
     clearExamSession: protectedProcedure.input(z.object({ certificationId: z.string() })).mutation(async ({ ctx, input }) =>
       clearExamSession(ctx.user.id, input.certificationId)),

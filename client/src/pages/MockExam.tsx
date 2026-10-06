@@ -2,11 +2,10 @@ import { Link, useParams, useLocation } from "wouter";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import trainingIndex from "@/data/trainingIndex.json";
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import confetti from "canvas-confetti";
 import { ArrowLeft, Clock, CheckCircle2, XCircle, AlertTriangle, ChevronRight, Lock, LogIn, Shield } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -34,7 +33,6 @@ export default function MockExam() {
   const { lang, t } = useLanguage();
   const [, navigate] = useLocation();
   const { isAuthenticated, loading: authLoading, user } = useAuth();
-  const { isCertComplete } = useTrainingProgress();
 
   // Le serveur est la source de vérité : la configuration publiée peut évoluer
   // depuis l’administration sans permettre au navigateur de la falsifier.
@@ -44,35 +42,11 @@ export default function MockExam() {
   );
   const examConfig = examDefinitionQuery.data;
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
-  const courses = trainingIndex.courses.filter((c) => c.certId === certId);
-
-  // Load lesson counts to check certification completion
-  const [totalLessonsMap, setTotalLessonsMap] = useState<Record<string, number>>({});
-  const [lessonsLoaded, setLessonsLoaded] = useState(false);
-
-  useEffect(() => {
-    const loadCounts = async () => {
-      const map: Record<string, number> = {};
-      for (const course of courses) {
-        try {
-          const res = await fetch(`/data/courses/${course.id}.json`);
-          const data = await res.json();
-          map[course.id] = (data.lessons || []).length;
-        } catch {
-          map[course.id] = 0;
-        }
-      }
-      setTotalLessonsMap(map);
-      setLessonsLoaded(true);
-    };
-    loadCounts();
-  }, [certId]);
-
-  const courseIds = courses.map((c) => c.id);
-  const certComplete = useMemo(() => {
-    if (!lessonsLoaded || Object.keys(totalLessonsMap).length === 0) return false;
-    return isCertComplete(certId || "", courseIds, totalLessonsMap);
-  }, [lessonsLoaded, totalLessonsMap, certId, courseIds, isCertComplete]);
+  // Même autorisation que start/submit côté serveur ; aucun bypass basé sur l’état du navigateur.
+  const examAccessQuery = trpc.directExams.getAccess.useQuery(
+    { certificationId: certId || "" },
+    { enabled: Boolean(isAuthenticated && certId) },
+  );
 
   // Exam state
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
@@ -277,7 +251,7 @@ export default function MockExam() {
     );
   }
 
-  if (!cert || examDefinitionQuery.isLoading) {
+  if (!cert || examDefinitionQuery.isLoading || examAccessQuery.isLoading) {
     return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100"><p className="text-sm text-slate-500">{t({ en: "Loading exam…", fr: "Chargement de l’examen…" })}</p></div>;
   }
 
@@ -292,9 +266,8 @@ export default function MockExam() {
     );
   }
 
-  // Certification completion gate (bypass for demo account)
-  const isDemoUser = user?.openId === "demo_learner_001";
-  if (lessonsLoaded && !certComplete && !isDemoUser) {
+  // Les cours restent verrouillés ; seule une invitation d’examen acceptée peut ouvrir cet examen directement.
+  if (!examAccessQuery.data?.allowed) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
@@ -311,7 +284,7 @@ export default function MockExam() {
               {t({ en: "Exam Locked", fr: "Examen verrouillé" })}
             </h2>
             <p className="text-sm text-slate-500 mb-6">
-              {t({ en: "You must complete all courses in this certification before taking the mock exam.", fr: "Vous devez terminer tous les cours de cette certification avant de passer l'examen blanc." })}
+              {examAccessQuery.isError ? t({ en: "Unable to verify exam access. Try again in a moment.", fr: "Impossible de vérifier l’accès à l’examen. Réessayez dans un instant." }) : t({ en: "Complete all courses in this certification or accept a direct exam invitation from an administrator.", fr: "Terminez tous les cours de cette certification ou acceptez une invitation directe à l’examen envoyée par un administrateur." })}
             </p>
             <Button onClick={() => navigate(`/training/${certId}`)} variant="outline">
               {t({ en: "Back to courses", fr: "Retour aux cours" })}

@@ -28,6 +28,7 @@ import { mayUseAlternatePort, registerDeploymentHealthRoute, resolveHostingPort 
 import { startIndexNowAutomation } from "../indexNowAutomation";
 import { canonicalHostRedirect } from "../canonicalHost";
 import { privateApiResponseHeaders } from "../sessionResponseHeaders";
+import { examInvitationSecurityHeaders } from "../examInvitationSecurityHeaders";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -64,6 +65,7 @@ async function startServer() {
   // Security middlewares (F-001, F-002)
   app.disable("x-powered-by");
   app.use(securityHeaders);
+  app.use(examInvitationSecurityHeaders);
   app.use(globalRateLimit);
   registerDeploymentHealthRoute(app);
 

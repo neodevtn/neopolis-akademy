@@ -126,6 +126,7 @@ export default function TrainingDashboard() {
   const navigateTrainingDashboard = (tab: LearnerDashboardTab) => navigate(buildNavigationUrl("/training", { tab: tab === "journey" ? null : tab }));
   const openJourneySection = (section: LearnerJourneySection) => { setJourneySection(section); navigateTrainingDashboard("journey"); };
   const achievementsQuery = trpc.training.getAchievements.useQuery(undefined, { enabled: isAuthenticated });
+  const directExamsQuery = trpc.directExams.getMy.useQuery(undefined, { enabled: isAuthenticated });
   const competenciesQuery = trpc.competencies.getMine.useQuery(undefined, { enabled: isAuthenticated });
   const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
   const [communicationInboxFilters, setCommunicationInboxFilters] = useState({ page: 1, pageSize: 20, search: "", readState: "all" as "all" | "unread" | "read", importance: "all" as "all" | "important" });
@@ -378,6 +379,12 @@ export default function TrainingDashboard() {
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
             <p>{t({ en: "Integrity reminder: complete activities yourself and use learning support responsibly. Unusual activity may trigger a short presence verification or a temporary review of validations and exams; access to course content and previously earned progress remain available.", fr: "Rappel d’intégrité : réalisez les activités vous-même et utilisez les outils d’aide de manière responsable. Une activité inhabituelle peut déclencher une courte vérification de présence ou une revue temporaire des validations et examens ; l’accès aux cours et les progrès déjà acquis restent disponibles." })}</p>
           </div>
+
+          {Boolean(directExamsQuery.data?.length) && <section className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/20" aria-label={t({ fr: "Mes invitations à un examen", en: "My exam invitations" })}>
+            <h2 className="mb-2 flex items-center gap-2 font-semibold text-blue-950 dark:text-blue-200"><GraduationCap className="h-5 w-5" />{t({ fr: "Examens accessibles sur invitation", en: "Exams available by invitation" })}</h2>
+            <p className="mb-3 text-sm text-blue-900 dark:text-blue-300">{t({ fr: "Vous pouvez passer ces examens sans avoir terminé les cours. Votre progression normale et les contrôles d’intégrité restent inchangés.", en: "You can take these exams without completing the courses. Your normal progress and integrity checks remain unchanged." })}</p>
+            <div className="flex flex-wrap gap-2">{directExamsQuery.data?.map((invite) => <Link key={invite.certificationId} href={invite.destination} className="inline-flex items-center gap-2 rounded-lg border border-blue-300 bg-white px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-100 dark:bg-background dark:text-blue-200">{t(invite.title)} <ArrowRight className="h-4 w-4" /></Link>)}</div>
+          </section>}
 
           {orientationAccess.showReminder && (
             <div className="mb-6 flex flex-col gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/20 md:flex-row md:items-center md:justify-between" role="status" aria-live="polite">
