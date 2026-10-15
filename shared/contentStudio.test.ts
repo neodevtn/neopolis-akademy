@@ -36,4 +36,21 @@ describe("content studio model", () => {
     expect(result.errors.some((issue) => issue.message.includes("dupliqué"))).toBe(true);
     expect(result.warnings.some((issue) => issue.message.includes("legacy_block"))).toBe(true);
   });
+
+  it("rejects an educational screen containing more than one video", () => {
+    const result = validateStructuredCourse({
+      ...course,
+      lessons: [{
+        chapters: [{
+          id: "chapter_multi_video",
+          blocks: [
+            { type: "video", videoId: "firstVideo" },
+            { type: "video", videoId: "secondVideo" },
+          ],
+        }],
+      }],
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors.some((issue) => issue.message.includes("qu’une seule vidéo"))).toBe(true);
+  });
 });

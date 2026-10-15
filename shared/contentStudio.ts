@@ -153,6 +153,10 @@ export function validateStructuredCourse(course: any): ContentValidationResult {
         errors.push({ severity: "error", path: `${chapterPath}.blocks`, message: "Les blocs du chapitre doivent être un tableau." });
         return;
       }
+      const videoBlocks = (chapter?.blocks || []).filter((block: any) => block?.type === "video");
+      if (videoBlocks.length > 1) {
+        errors.push({ severity: "error", path: `${chapterPath}.blocks`, message: "Un écran ne peut contenir qu’une seule vidéo." });
+      }
       (chapter?.blocks || []).forEach((block: any, blockIndex: number) => {
         const blockPath = `${chapterPath}.blocks[${blockIndex}]`;
         if (!block?.type || typeof block.type !== "string") {

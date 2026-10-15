@@ -11,8 +11,9 @@
  *   3. Skilljar navigation artifacts in text fields
  *   4. Missing required fields (id, title, lessons)
  *   5. Empty chapter blocks arrays
- *   6. Quiz: duplicate or near-duplicate options (Levenshtein < 5)
- *   7. Quiz: correctId/correctChoiceIds pointing to non-existent option
+ *   6. One video maximum per chapter/screen
+ *   7. Quiz: duplicate or near-duplicate options (Levenshtein < 5)
+ *   8. Quiz: correctId/correctChoiceIds pointing to non-existent option
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -335,6 +336,12 @@ for (const fname of files) {
           totalErrors++;
         } else {
           chapterIds.set(cid, ci);
+        }
+
+        const videoCount = (ch.blocks || []).filter((block) => block?.type === 'video').length;
+        if (videoCount > 1) {
+          fileIssues.push({ level: 'error', type: 'multiple_videos_per_screen', msg: `Lesson "${lid}", chapter "${cid}": a screen may contain only one video (found ${videoCount})` });
+          totalErrors++;
         }
 
         // ── Generic learning blocks: preserve interactive contracts ──────────

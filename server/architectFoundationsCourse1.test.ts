@@ -10,9 +10,9 @@ const chapters = course.lessons.flatMap((lesson: any) => lesson.chapters || []);
 const blocks = chapters.flatMap((chapter: any) => chapter.blocks || []);
 
 describe("Architect Foundations course 1 reconstruction", () => {
-  it("keeps the 15 official lesson milestones and the 34 short Neopolis screens", () => {
+  it("keeps the 15 official lesson milestones and the 39 short Neopolis screens", () => {
     expect(course.lessons).toHaveLength(15);
-    expect(chapters).toHaveLength(34);
+    expect(chapters).toHaveLength(39);
     expect(course.lessons.map((lesson: any) => lesson.title.en)).toContain("Certificate of completion");
     expect(course.lessons.at(-2)).toMatchObject({
       id: "lesson_ai_fluency_certificate",
