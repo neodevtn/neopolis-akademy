@@ -1,0 +1,1583 @@
+{
+  "formation_id": "initiation_automatisation_workflows_n8n",
+  "courses": [
+    {
+      "course_id": "initiation_automatisation_workflows_n8n__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "ch01_act01",
+          "title": "L’art de l’automatisation et n8n",
+          "score_100": 84,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "ch01_act02",
+          "title": "Explorez votre premier workflow n8n !",
+          "score_100": 58,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 2,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 1,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 1,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective du compte n8n et de la ressource gérée : non testée ; la ressource est déclarée dans le registre applicatif, elle n’est donc pas considérée absente."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch01-ex02-starter-validation-block",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch01_act02",
+              "content_id": "ch01_ex02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P0",
+              "category": "verrouillage",
+              "description": "Le TP demande d’importer, d’exécuter et d’inspecter le workflow fourni, sans demander de le modifier. Or la seule voie de complétion exige l’envoi d’un export JSON et le validateur rejette explicitement le fichier de départ inchangé. Un apprenant qui suit l’énoncé à la lettre ne peut donc pas valider ni déverrouiller la suite.",
+              "current_content": "Énoncé : « Importez le workflow, exécutez-le, puis inspectez chaque nœud ». Le bloc impose workflowUploadRequired: true et serverGradedAssessment: n8n_foundations_workflow_json. Le service rejette le hash canonique de currency_exchange.json avec « Le workflow de départ n’a pas été modifié ».",
+              "proposed_content": "Mettre la règle de validation en cohérence avec l’objectif exploratoire : soit accepter ce workflow exécuté via une preuve de consultation/exécution adaptée, soit ajouter à l’énoncé une modification pédagogique précise, observable et évaluée, puis fournir une correction distincte du fichier de départ.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[0].chapters[1].blocks[id=ch01_ex02_tp] (assignment, workflowUploadRequired, serverGradedAssessment) ; server/n8nFoundationsAssessmentService.ts → submitN8nFoundationsWorkflow(), contrôle canonicalHash aux lignes 163–178 ; server/n8nFoundationsWorkflowRegistry.ts → ch01_ex02_tp, où starter et correction pointent vers le même fichier/hash.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Mettre la règle de validation en cohérence avec l’objectif exploratoire : soit accepter ce workflow exécuté via une preuve de consultation/exécution adaptée, soit ajouter à l’énoncé une modification pédagogique précise, observable et évaluée, puis fournir une correction distincte du fichier de départ."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "ch01_act03",
+          "title": "Déclencher des workflows n8n",
+          "score_100": 84,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "ch01_act04",
+          "title": "Le premier domino de la chaîne !",
+          "score_100": 84,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 4,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 4,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n et de la ressource gérée : non testée ; les ressources déclarées ne sont pas considérées absentes."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "ch01_act05",
+          "title": "Capturer des inscriptions à un événement avec des Form Triggers",
+          "score_100": 84,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 4,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 4,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n et de la ressource gérée : non testée ; les ressources déclarées ne sont pas considérées absentes."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "ch01_act06",
+          "title": "Créez votre premier workflow n8n !",
+          "score_100": 85,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "ch01_act07",
+          "title": "Des contacts partenaires aux champs n8n",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 2,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 2,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, de ses intégrations et des ressources associées : non testée ; aucune ressource déclarée n’est assimilée à une absence."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch01_ex07_tp-unassessed-unlock",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch01_act07",
+              "content_id": "ch01_ex07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Ce TP obligatoire peut être terminé sans démonstration du workflow demandé : une réponse texte d’un seul caractère suffit à le soumettre, le marquer terminé et déverrouiller l’écran suivant. Ni fichier JSON, ni critère, ni évaluation n’est configuré.",
+              "current_content": "Attendu par l’activité : Construire un workflow Manual Trigger → Edit Fields et créer trois champs de contact. Le bloc ne porte ni serverGradedAssessment, ni workflowUploadRequired, ni rubricCriteria, ni minimumAnswerLength explicite ; la valeur par défaut est 1.",
+              "proposed_content": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[0].chapters[6].blocks[id=ch01_ex07_tp] ; client/src/components/CloudExerciseBlock.tsx → lignes 117–160 (sans serverGradedAssessment/rubric, submit() marque immédiatement submitted et appelle onComplete) ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 1–9 (minimum par défaut : 1 caractère) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 et 1637–1659 (onComplete retire le verrou cloud_exercise).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "ch01_act08",
+          "title": "Filtrer le superflu avec Edit Fields",
+          "score_100": 74,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 3,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 3,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, des identifiants et des ressources gérées : non testée ; ce point est distinct des défauts de validation confirmés."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch01_ex08_tp-insufficient-server-rubric",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch01_act08",
+              "content_id": "ch01_ex08_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le verrouillage présente l’activité comme validée alors que le validateur serveur ne vérifie pas l’opération qui constitue son apprentissage central. Une structure incomplète ou non fonctionnelle peut satisfaire les critères actuels et déclencher la complétion.",
+              "current_content": "Le TP demande que le dernier Edit Fields conserve uniquement contact_name et email, à partir du workflow source. Le validateur vérifie seulement la présence, n’importe où dans le JSON, d’un Manual Trigger, d’un Set et des chaînes contact_name/email ; il ne vérifie ni le second Set, ni l’absence de company_name, ni les connexions ou la sortie finale.",
+              "proposed_content": "Vérifier la chaîne Manual Trigger → premier Set → second Set et, dans le Set final, exactement les deux champs demandés provenant de l’étape précédente. Restituer les critères échoués au lieu de valider une simple occurrence textuelle.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[0].chapters[7].blocks[id=ch01_ex08_tp] (assignment, steps, learnerCriteria, serverGradedAssessment) ; server/n8nFoundationsAssessmentService.ts → assessments.ch01_ex08_tp (critères effectivement appliqués) ; lignes 163–188 (passed déclenche la validation et la correction) ; client/src/components/CloudExerciseBlock.tsx → lignes 137–145 (onComplete après passed) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 (déverrouillage).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Vérifier la chaîne Manual Trigger → premier Set → second Set et, dans le Set final, exactement les deux champs demandés provenant de l’étape précédente. Restituer les critères échoués au lieu de valider une simple occurrence textuelle."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "ch01_act09",
+          "title": "Capturer les inscriptions à un événement et leurs horodatages",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 2,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 2,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, de ses intégrations et des ressources associées : non testée ; aucune ressource déclarée n’est assimilée à une absence."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch01_ex09_tp-unassessed-unlock",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch01_act09",
+              "content_id": "ch01_ex09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Ce TP obligatoire peut être terminé sans démonstration du workflow demandé : une réponse texte d’un seul caractère suffit à le soumettre, le marquer terminé et déverrouiller l’écran suivant. Ni fichier JSON, ni critère, ni évaluation n’est configuré.",
+              "current_content": "Attendu par l’activité : Créer un Form Trigger, conserver les champs et ajouter submitted_at avec {{ $now }}. Le bloc ne porte ni serverGradedAssessment, ni workflowUploadRequired, ni rubricCriteria, ni minimumAnswerLength explicite ; la valeur par défaut est 1.",
+              "proposed_content": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[0].chapters[8].blocks[id=ch01_ex09_tp] ; client/src/components/CloudExerciseBlock.tsx → lignes 117–160 (sans serverGradedAssessment/rubric, submit() marque immédiatement submitted et appelle onComplete) ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 1–9 (minimum par défaut : 1 caractère) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 et 1637–1659 (onComplete retire le verrou cloud_exercise).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "ch02_act01",
+          "title": "Créer des workflows plus intelligents avec une logique conditionnelle",
+          "score_100": 85,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "ch02_act02",
+          "title": "If vs. Switch",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le titre, les deux catégories et les cas à classer permettent d’inférer l’action ; l’interface affiche aussi une instruction générique de sélection/dépôt."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "L’activité suit immédiatement la vidéo qui définit les deux concepts distingués."
+            },
+            {
+              "dimension": "Complétude de l’activité",
+              "score_5": 3,
+              "evidence": "Les six cas et leurs catégories correctes sont structurés ; la consigne pédagogique propre au tri n’est toutefois pas renseignée dans les données."
+            },
+            {
+              "dimension": "Feedback et expérience utilisateur vérifiables",
+              "score_5": 2,
+              "evidence": "Le composant permet la sélection, le glisser-déposer, le compte de réponses et la nouvelle tentative, mais les explications par erreur ne sont pas rendues."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Pertinence visuelle des cartes : pas de média distinct à auditer dans ce bloc."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch02_ex02_dnd-missing-pedagogical-feedback",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch02_act02",
+              "content_id": "ch02_ex02_dnd",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après une erreur, l’activité obligatoire n’explique pas le raisonnement attendu : l’apprenant voit seulement le nombre de cartes correctes, les marques visuelles et « Réessayez ». Les explications par carte présentes dans les données ne sont pas transmises au composant ; aucune correction de synthèse n’est fournie.",
+              "current_content": "If vs. Switch : instructions et successMessage sont null ; chaque carte possède pourtant incorrectMessage. Le bloc n’a pas de correction renseignée.",
+              "proposed_content": "Transmettre et afficher l’explication incorrectMessage de chaque carte mal placée (ou une correction de synthèse équivalente) avant la nouvelle tentative ; ajouter un court message de réussite qui reformule la règle de décision déjà enseignée. Conserver l’instruction d’interface générique existante.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[1].chapters[1].blocks[id=ch02_ex02_dnd] (incorrectMessage sur chaque carte, instructions/successMessage null) ; client/src/pages/training/LessonViewer.tsx → lignes 957–974 (seuls title, instructions, buckets, cards et correction sont passés) ; client/src/components/MatchingExercise.tsx → lignes 420–466 (retour = score, Perfect/Réessayez et correction seulement si exercise.correction) ; lignes 388–395 (catégorie attendue réservée au texte sr-only).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Transmettre et afficher l’explication incorrectMessage de chaque carte mal placée (ou une correction de synthèse équivalente) avant la nouvelle tentative ; ajouter un court message de réussite qui reformule la règle de décision déjà enseignée. Conserver l’instruction d’interface générique existante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "ch02_act03",
+          "title": "Scinder les flux avec la logique If",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 2,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 2,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, de ses intégrations et des ressources associées : non testée ; aucune ressource déclarée n’est assimilée à une absence."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch02_ex03_tp-unassessed-unlock",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch02_act03",
+              "content_id": "ch02_ex03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Ce TP obligatoire peut être terminé sans démonstration du workflow demandé : une réponse texte d’un seul caractère suffit à le soumettre, le marquer terminé et déverrouiller l’écran suivant. Ni fichier JSON, ni critère, ni évaluation n’est configuré.",
+              "current_content": "Attendu par l’activité : Construire et tester les deux branches d’un nœud If pour des tickets urgents ou normaux. Le bloc ne porte ni serverGradedAssessment, ni workflowUploadRequired, ni rubricCriteria, ni minimumAnswerLength explicite ; la valeur par défaut est 1.",
+              "proposed_content": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[1].chapters[2].blocks[id=ch02_ex03_tp] ; client/src/components/CloudExerciseBlock.tsx → lignes 117–160 (sans serverGradedAssessment/rubric, submit() marque immédiatement submitted et appelle onComplete) ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 1–9 (minimum par défaut : 1 caractère) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 et 1637–1659 (onComplete retire le verrou cloud_exercise).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "ch02_act04",
+          "title": "Gérer de nombreux résultats",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 2,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 2,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, de ses intégrations et des ressources associées : non testée ; aucune ressource déclarée n’est assimilée à une absence."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch02_ex04_tp-unassessed-unlock",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch02_act04",
+              "content_id": "ch02_ex04_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Ce TP obligatoire peut être terminé sans démonstration du workflow demandé : une réponse texte d’un seul caractère suffit à le soumettre, le marquer terminé et déverrouiller l’écran suivant. Ni fichier JSON, ni critère, ni évaluation n’est configuré.",
+              "current_content": "Attendu par l’activité : Configurer un Switch à trois règles et tester le routage pending/approved/rejected. Le bloc ne porte ni serverGradedAssessment, ni workflowUploadRequired, ni rubricCriteria, ni minimumAnswerLength explicite ; la valeur par défaut est 1.",
+              "proposed_content": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[1].chapters[3].blocks[id=ch02_ex04_tp] ; client/src/components/CloudExerciseBlock.tsx → lignes 117–160 (sans serverGradedAssessment/rubric, submit() marque immédiatement submitted et appelle onComplete) ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 1–9 (minimum par défaut : 1 caractère) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 et 1637–1659 (onComplete retire le verrou cloud_exercise).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "ch02_act05",
+          "title": "Utiliser les expressions et les données dynamiques",
+          "score_100": 85,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "ch02_act06",
+          "title": "Valeurs statiques vs dynamiques",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le titre, les deux catégories et les cas à classer permettent d’inférer l’action ; l’interface affiche aussi une instruction générique de sélection/dépôt."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "L’activité suit immédiatement la vidéo qui définit les deux concepts distingués."
+            },
+            {
+              "dimension": "Complétude de l’activité",
+              "score_5": 3,
+              "evidence": "Les six cas et leurs catégories correctes sont structurés ; la consigne pédagogique propre au tri n’est toutefois pas renseignée dans les données."
+            },
+            {
+              "dimension": "Feedback et expérience utilisateur vérifiables",
+              "score_5": 2,
+              "evidence": "Le composant permet la sélection, le glisser-déposer, le compte de réponses et la nouvelle tentative, mais les explications par erreur ne sont pas rendues."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Pertinence visuelle des cartes : pas de média distinct à auditer dans ce bloc."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch02_ex06_dnd-missing-pedagogical-feedback",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch02_act06",
+              "content_id": "ch02_ex06_dnd",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après une erreur, l’activité obligatoire n’explique pas le raisonnement attendu : l’apprenant voit seulement le nombre de cartes correctes, les marques visuelles et « Réessayez ». Les explications par carte présentes dans les données ne sont pas transmises au composant ; aucune correction de synthèse n’est fournie.",
+              "current_content": "Valeurs statiques vs dynamiques : instructions et successMessage sont null ; chaque carte possède pourtant incorrectMessage. Le bloc n’a pas de correction renseignée.",
+              "proposed_content": "Transmettre et afficher l’explication incorrectMessage de chaque carte mal placée (ou une correction de synthèse équivalente) avant la nouvelle tentative ; ajouter un court message de réussite qui reformule la règle de décision déjà enseignée. Conserver l’instruction d’interface générique existante.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[1].chapters[5].blocks[id=ch02_ex06_dnd] (incorrectMessage sur chaque carte, instructions/successMessage null) ; client/src/pages/training/LessonViewer.tsx → lignes 957–974 (seuls title, instructions, buckets, cards et correction sont passés) ; client/src/components/MatchingExercise.tsx → lignes 420–466 (retour = score, Perfect/Réessayez et correction seulement si exercise.correction) ; lignes 388–395 (catégorie attendue réservée au texte sr-only).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Transmettre et afficher l’explication incorrectMessage de chaque carte mal placée (ou une correction de synthèse équivalente) avant la nouvelle tentative ; ajouter un court message de réussite qui reformule la règle de décision déjà enseignée. Conserver l’instruction d’interface générique existante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "ch02_act07",
+          "title": "Des expressions utiles",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 2,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 2,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, de ses intégrations et des ressources associées : non testée ; aucune ressource déclarée n’est assimilée à une absence."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch02_ex07_tp-unassessed-unlock",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch02_act07",
+              "content_id": "ch02_ex07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Ce TP obligatoire peut être terminé sans démonstration du workflow demandé : une réponse texte d’un seul caractère suffit à le soumettre, le marquer terminé et déverrouiller l’écran suivant. Ni fichier JSON, ni critère, ni évaluation n’est configuré.",
+              "current_content": "Attendu par l’activité : Nettoyer Name et Email avec des expressions .toLowerCase() et vérifier la sortie. Le bloc ne porte ni serverGradedAssessment, ni workflowUploadRequired, ni rubricCriteria, ni minimumAnswerLength explicite ; la valeur par défaut est 1.",
+              "proposed_content": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[1].chapters[6].blocks[id=ch02_ex07_tp] ; client/src/components/CloudExerciseBlock.tsx → lignes 117–160 (sans serverGradedAssessment/rubric, submit() marque immédiatement submitted et appelle onComplete) ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 1–9 (minimum par défaut : 1 caractère) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 et 1637–1659 (onComplete retire le verrou cloud_exercise).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "ch02_act08",
+          "title": "Aplatir des données imbriquées !",
+          "score_100": 72,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 3,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 3,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, des identifiants et des ressources gérées : non testée ; ce point est distinct des défauts de validation confirmés."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch02_ex08_tp-insufficient-server-rubric",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch02_act08",
+              "content_id": "ch02_ex08_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le verrouillage présente l’activité comme validée alors que le validateur serveur ne vérifie pas l’opération qui constitue son apprentissage central. Une structure incomplète ou non fonctionnelle peut satisfaire les critères actuels et déclencher la complétion.",
+              "current_content": "Le TP porte sur l’extraction de user.name et user.email en champs de premier niveau dans un Set connecté à Sample Data. Le validateur vérifie uniquement la présence d’un Manual Trigger, d’un Set et des chaînes name/email ; il ne vérifie ni le chemin imbriqué, ni la connexion à Sample Data, ni l’aplatissement effectif.",
+              "proposed_content": "Ajouter des critères sur la connexion au flux source et sur les expressions user.name/user.email (ou leur équivalent), ainsi que sur les champs de sortie de l’étape finale.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[1].chapters[7].blocks[id=ch02_ex08_tp] (assignment, steps, learnerCriteria, serverGradedAssessment) ; server/n8nFoundationsAssessmentService.ts → assessments.ch02_ex08_tp (critères effectivement appliqués) ; lignes 163–188 (passed déclenche la validation et la correction) ; client/src/components/CloudExerciseBlock.tsx → lignes 137–145 (onComplete après passed) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 (déverrouillage).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Ajouter des critères sur la connexion au flux source et sur les expressions user.name/user.email (ou leur équivalent), ainsi que sur les champs de sortie de l’étape finale."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "ch02_act09",
+          "title": "Combiner et structurer des données",
+          "score_100": 85,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "ch02_act10",
+          "title": "Fusionner des jeux de données en toute fluidité",
+          "score_100": 70,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 3,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 3,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, des identifiants et des ressources gérées : non testée ; ce point est distinct des défauts de validation confirmés."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch02_ex10_tp-insufficient-server-rubric",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch02_act10",
+              "content_id": "ch02_ex10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le verrouillage présente l’activité comme validée alors que le validateur serveur ne vérifie pas l’opération qui constitue son apprentissage central. Une structure incomplète ou non fonctionnelle peut satisfaire les critères actuels et déclencher la complétion.",
+              "current_content": "Le TP demande de relier les deux sources à un Merge et de régler Combine / Matching Fields / userId pour produire deux lignes enrichies. Le validateur exige seulement au moins deux nœuds Code, un nœud Merge et une occurrence textuelle de userId ; il ne vérifie ni les deux connexions, ni le mode Combine, ni Matching Fields, ni la configuration du champ.",
+              "proposed_content": "Contrôler les deux entrées du Merge, le mode Combine, l’option Matching Fields et userId dans les paramètres, conformément aux étapes affichées ; ne pas présenter le workflow comme validé si ces éléments manquent.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[1].chapters[9].blocks[id=ch02_ex10_tp] (assignment, steps, learnerCriteria, serverGradedAssessment) ; server/n8nFoundationsAssessmentService.ts → assessments.ch02_ex10_tp (critères effectivement appliqués) ; lignes 163–188 (passed déclenche la validation et la correction) ; client/src/components/CloudExerciseBlock.tsx → lignes 137–145 (onComplete après passed) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 (déverrouillage).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Contrôler les deux entrées du Merge, le mode Combine, l’option Matching Fields et userId dans les paramètres, conformément aux étapes affichées ; ne pas présenter le workflow comme validé si ces éléments manquent."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "ch02_act11",
+          "title": "Que deviennent les enregistrements sans correspondance ?",
+          "score_100": 91,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, énoncé et action attendue",
+              "score_5": 5,
+              "evidence": "La situation, la question, les quatre choix et une seule réponse attendue sont explicitement affichables."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 5,
+              "evidence": "Le QCM réemploie directement la règle ou le comportement expliqué dans la séquence précédente."
+            },
+            {
+              "dimension": "Complétude et feedback",
+              "score_5": 4,
+              "evidence": "Une explication en français est rendue après réponse, la bonne option est signalée et une nouvelle tentative est disponible."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 5,
+              "evidence": "SingleChoiceExercise présente le compteur « une réponse », la validation, l’état correct/incorrect, l’explication et Réessayer ; LessonViewer exige la réponse correcte pour avancer."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Pertinence et lisibilité réelles de l’illustration déclarée pour ch02_act11 : non vérifiées ; l’existence de son URL est distincte de son affichage."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "ch03_act01",
+          "title": "Introduction des LLM dans les workflows",
+          "score_100": 86,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "ch03_act02",
+          "title": "À base de règles ou LLM ?",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le titre, les deux catégories et les cas à classer permettent d’inférer l’action ; l’interface affiche aussi une instruction générique de sélection/dépôt."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "L’activité suit immédiatement la vidéo qui définit les deux concepts distingués."
+            },
+            {
+              "dimension": "Complétude de l’activité",
+              "score_5": 3,
+              "evidence": "Les six cas et leurs catégories correctes sont structurés ; la consigne pédagogique propre au tri n’est toutefois pas renseignée dans les données."
+            },
+            {
+              "dimension": "Feedback et expérience utilisateur vérifiables",
+              "score_5": 2,
+              "evidence": "Le composant permet la sélection, le glisser-déposer, le compte de réponses et la nouvelle tentative, mais les explications par erreur ne sont pas rendues."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Pertinence visuelle des cartes : pas de média distinct à auditer dans ce bloc."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch03_ex02_dnd-missing-pedagogical-feedback",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch03_act02",
+              "content_id": "ch03_ex02_dnd",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après une erreur, l’activité obligatoire n’explique pas le raisonnement attendu : l’apprenant voit seulement le nombre de cartes correctes, les marques visuelles et « Réessayez ». Les explications par carte présentes dans les données ne sont pas transmises au composant ; aucune correction de synthèse n’est fournie.",
+              "current_content": "À base de règles ou LLM ? : instructions et successMessage sont null ; chaque carte possède pourtant incorrectMessage. Le bloc n’a pas de correction renseignée.",
+              "proposed_content": "Transmettre et afficher l’explication incorrectMessage de chaque carte mal placée (ou une correction de synthèse équivalente) avant la nouvelle tentative ; ajouter un court message de réussite qui reformule la règle de décision déjà enseignée. Conserver l’instruction d’interface générique existante.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[2].chapters[1].blocks[id=ch03_ex02_dnd] (incorrectMessage sur chaque carte, instructions/successMessage null) ; client/src/pages/training/LessonViewer.tsx → lignes 957–974 (seuls title, instructions, buckets, cards et correction sont passés) ; client/src/components/MatchingExercise.tsx → lignes 420–466 (retour = score, Perfect/Réessayez et correction seulement si exercise.correction) ; lignes 388–395 (catégorie attendue réservée au texte sr-only).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Transmettre et afficher l’explication incorrectMessage de chaque carte mal placée (ou une correction de synthèse équivalente) avant la nouvelle tentative ; ajouter un court message de réussite qui reformule la règle de décision déjà enseignée. Conserver l’instruction d’interface générique existante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "ch03_act03",
+          "title": "Créez votre premier workflow avec un Agent",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 2,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 2,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, de ses intégrations et des ressources associées : non testée ; aucune ressource déclarée n’est assimilée à une absence."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch03_ex03_tp-unassessed-unlock",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch03_act03",
+              "content_id": "ch03_ex03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Ce TP obligatoire peut être terminé sans démonstration du workflow demandé : une réponse texte d’un seul caractère suffit à le soumettre, le marquer terminé et déverrouiller l’écran suivant. Ni fichier JSON, ni critère, ni évaluation n’est configuré.",
+              "current_content": "Attendu par l’activité : Brancher un Agent et un OpenAI Chat Model afin de produire un résumé en une phrase. Le bloc ne porte ni serverGradedAssessment, ni workflowUploadRequired, ni rubricCriteria, ni minimumAnswerLength explicite ; la valeur par défaut est 1.",
+              "proposed_content": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[2].chapters[2].blocks[id=ch03_ex03_tp] ; client/src/components/CloudExerciseBlock.tsx → lignes 117–160 (sans serverGradedAssessment/rubric, submit() marque immédiatement submitted et appelle onComplete) ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 1–9 (minimum par défaut : 1 caractère) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 et 1637–1659 (onComplete retire le verrou cloud_exercise).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "ch03_act04",
+          "title": "Réutiliser la sortie de l’Agent en aval",
+          "score_100": 72,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 3,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 3,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, des identifiants et des ressources gérées : non testée ; ce point est distinct des défauts de validation confirmés."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch03_ex04_tp-insufficient-server-rubric",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch03_act04",
+              "content_id": "ch03_ex04_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le verrouillage présente l’activité comme validée alors que le validateur serveur ne vérifie pas l’opération qui constitue son apprentissage central. Une structure incomplète ou non fonctionnelle peut satisfaire les critères actuels et déclencher la complétion.",
+              "current_content": "Le TP veut démontrer la réutilisation en aval de la sortie de l’Agent : un champ report en expression doit combiner feedback initial et résumé IA. Le validateur contrôle un Agent, un modèle relié et un Set après l’Agent avec une chaîne report ; il ne contrôle pas le mode expression ni la référence au feedback et à la sortie de l’Agent. Un report statique est donc validable.",
+              "proposed_content": "Vérifier que report est une expression utilisant la sortie de l’Agent et la donnée initiale, avec une connexion effective Agent → Set final ; adapter le feedback aux références manquantes.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[2].chapters[3].blocks[id=ch03_ex04_tp] (assignment, steps, learnerCriteria, serverGradedAssessment) ; server/n8nFoundationsAssessmentService.ts → assessments.ch03_ex04_tp (critères effectivement appliqués) ; lignes 163–188 (passed déclenche la validation et la correction) ; client/src/components/CloudExerciseBlock.tsx → lignes 137–145 (onComplete après passed) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 (déverrouillage).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Vérifier que report est une expression utilisant la sortie de l’Agent et la donnée initiale, avec une connexion effective Agent → Set final ; adapter le feedback aux références manquantes."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "ch03_act05",
+          "title": "Personnaliser et catégoriser avec des LLM",
+          "score_100": 86,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "ch03_act06",
+          "title": "Classifier et acheminer les retours clients",
+          "score_100": 70,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 3,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 3,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, des identifiants et des ressources gérées : non testée ; ce point est distinct des défauts de validation confirmés."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch03_ex06_tp-insufficient-server-rubric",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch03_act06",
+              "content_id": "ch03_ex06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le verrouillage présente l’activité comme validée alors que le validateur serveur ne vérifie pas l’opération qui constitue son apprentissage central. Une structure incomplète ou non fonctionnelle peut satisfaire les critères actuels et déclencher la complétion.",
+              "current_content": "Le TP demande de remplacer le prompt de résumé par une classification à sortie unique puis de créer au moins deux règles Switch basées sur cette sortie. Le validateur vérifie seulement la présence d’un Agent, d’un modèle de chat et d’un Switch relié à l’Agent ; il ne vérifie ni le changement de prompt, ni les libellés positive/negative/neutral, ni les règles Switch.",
+              "proposed_content": "Ajouter des critères déterministes pour le prompt de classification, la référence au feedback, les règles Switch et leurs valeurs prévues ; formuler le feedback à partir de l’élément absent.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[2].chapters[5].blocks[id=ch03_ex06_tp] (assignment, steps, learnerCriteria, serverGradedAssessment) ; server/n8nFoundationsAssessmentService.ts → assessments.ch03_ex06_tp (critères effectivement appliqués) ; lignes 163–188 (passed déclenche la validation et la correction) ; client/src/components/CloudExerciseBlock.tsx → lignes 137–145 (onComplete après passed) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 (déverrouillage).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Ajouter des critères déterministes pour le prompt de classification, la référence au feedback, les règles Switch et leurs valeurs prévues ; formuler le feedback à partir de l’élément absent."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "ch03_act07",
+          "title": "Rédiger une réponse personnalisée",
+          "score_100": 70,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 3,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 3,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, des identifiants et des ressources gérées : non testée ; ce point est distinct des défauts de validation confirmés."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch03_ex07_tp-insufficient-server-rubric",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch03_act07",
+              "content_id": "ch03_ex07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le verrouillage présente l’activité comme validée alors que le validateur serveur ne vérifie pas l’opération qui constitue son apprentissage central. Une structure incomplète ou non fonctionnelle peut satisfaire les critères actuels et déclencher la complétion.",
+              "current_content": "Le TP demande un Edit Fields avec instruction sur la branche negative, puis un Agent de réponse connecté, avec prompt exploitant instruction et feedback. Le validateur contrôle seulement un Switch, deux Agents dont un nom contient draft/response, et deux modèles OpenAI ; il ne vérifie ni la branche negative, ni le champ instruction, ni les connexions, ni le prompt demandé.",
+              "proposed_content": "Vérifier la chaîne Switch (branche negative) → Edit Fields[instruction] → Agent de réponse, le modèle associé et les références du prompt, qui sont toutes explicitées dans les étapes.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[2].chapters[6].blocks[id=ch03_ex07_tp] (assignment, steps, learnerCriteria, serverGradedAssessment) ; server/n8nFoundationsAssessmentService.ts → assessments.ch03_ex07_tp (critères effectivement appliqués) ; lignes 163–188 (passed déclenche la validation et la correction) ; client/src/components/CloudExerciseBlock.tsx → lignes 137–145 (onComplete après passed) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 (déverrouillage).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Vérifier la chaîne Switch (branche negative) → Edit Fields[instruction] → Agent de réponse, le modèle associé et les références du prompt, qui sont toutes explicitées dans les étapes."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "ch03_act08",
+          "title": "Créer un workflow automatisé complet",
+          "score_100": 87,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "ch03_act09",
+          "title": "Faut-il automatiser ce processus ?",
+          "score_100": 91,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, énoncé et action attendue",
+              "score_5": 5,
+              "evidence": "La situation, la question, les quatre choix et une seule réponse attendue sont explicitement affichables."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 5,
+              "evidence": "Le QCM réemploie directement la règle ou le comportement expliqué dans la séquence précédente."
+            },
+            {
+              "dimension": "Complétude et feedback",
+              "score_5": 4,
+              "evidence": "Une explication en français est rendue après réponse, la bonne option est signalée et une nouvelle tentative est disponible."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 5,
+              "evidence": "SingleChoiceExercise présente le compteur « une réponse », la validation, l’état correct/incorrect, l’explication et Réessayer ; LessonViewer exige la réponse correcte pour avancer."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Média : aucun média requis par le QCM ; dimension non applicable à la notation."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "ch03_act10",
+          "title": "Créer le pipeline d'onboarding",
+          "score_100": 66,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 2,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 2,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, de ses intégrations et des ressources associées : non testée ; aucune ressource déclarée n’est assimilée à une absence."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch03_ex10_tp-unassessed-unlock",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch03_act10",
+              "content_id": "ch03_ex10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Ce TP obligatoire peut être terminé sans démonstration du workflow demandé : une réponse texte d’un seul caractère suffit à le soumettre, le marquer terminé et déverrouiller l’écran suivant. Ni fichier JSON, ni critère, ni évaluation n’est configuré.",
+              "current_content": "Attendu par l’activité : Construire le pipeline Form Trigger → Edit Fields → Agent → Switch et l’exécuter. Le bloc ne porte ni serverGradedAssessment, ni workflowUploadRequired, ni rubricCriteria, ni minimumAnswerLength explicite ; la valeur par défaut est 1.",
+              "proposed_content": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[2].chapters[9].blocks[id=ch03_ex10_tp] ; client/src/components/CloudExerciseBlock.tsx → lignes 117–160 (sans serverGradedAssessment/rubric, submit() marque immédiatement submitted et appelle onComplete) ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 1–9 (minimum par défaut : 1 caractère) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 et 1637–1659 (onComplete retire le verrou cloud_exercise).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Remplacer la validation déclarative par une preuve proportionnée à l’exercice, fondée sur les exigences déjà écrites : export JSON n8n avec validation déterministe lorsque la structure est vérifiable, ou grille/attestation structurée avec critères et seuil si une preuve de sortie est nécessaire. Ne déverrouiller qu’après satisfaction de ces critères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 10,
+          "chapter_id": "ch03_act11",
+          "title": "Personnaliser et peaufiner le pipeline",
+          "score_100": 70,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif, action attendue et énoncé",
+              "score_5": 3,
+              "evidence": "Le scénario, l’action demandée, les étapes numérotées, l’indice et le résultat attendu sont exposés dans le bloc TP."
+            },
+            {
+              "dimension": "Prérequis et progression",
+              "score_5": 4,
+              "evidence": "Le TP suit la vidéo ou l’exercice préparatoire correspondant et réemploie ses nœuds et son vocabulaire."
+            },
+            {
+              "dimension": "Complétude et guidage",
+              "score_5": 4,
+              "evidence": "La carte TP rend les étapes, le guide d’environnement, les ressources déclarées et les critères visibles à l’apprenant."
+            },
+            {
+              "dimension": "Évaluation, feedback et cohérence du verrouillage",
+              "score_5": 3,
+              "evidence": "La soumission, le retour et le déverrouillage ont été vérifiés dans CloudExerciseBlock, LessonViewer et, le cas échéant, le validateur n8n."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 3,
+              "evidence": "Le composant affiche titre, objectif, étapes, critères, indice, remise et état de validation ; les limites de l’évaluation sont signalées par les constats associés."
+            }
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Disponibilité effective de l’espace n8n, des identifiants et des ressources gérées : non testée ; ce point est distinct des défauts de validation confirmés."
+          ],
+          "issues": [
+            {
+              "issue_id": "111-n8n-ch03_ex11_tp-insufficient-server-rubric",
+              "course_id": "initiation_automatisation_workflows_n8n__01",
+              "chapter_id": "ch03_act11",
+              "content_id": "ch03_ex11_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le verrouillage présente l’activité comme validée alors que le validateur serveur ne vérifie pas l’opération qui constitue son apprentissage central. Une structure incomplète ou non fonctionnelle peut satisfaire les critères actuels et déclencher la complétion.",
+              "current_content": "Le TP doit prolonger la branche enterprise par un Set instruction puis un Agent produisant le message d’accueil personnalisé. Le validateur contrôle seulement Form Trigger + Agent, un Switch avec une occurrence enterprise/tier, deux Agents/modèles et les chaînes instruction/dedicated account manager ; aucune connexion de branche, de Set ni de prompt n’est vérifiée.",
+              "proposed_content": "Contrôler la continuité du pipeline et la branche enterprise : Switch → Set Enterprise Instruction → Draft Welcome → Chat Model, avec instruction et références client dans le prompt. Conserver la tolérance de rédaction, mais pas l’absence de structure.",
+              "evidence": "client/public/data/courses/initiation_automatisation_workflows_n8n__01.json → lessons[2].chapters[10].blocks[id=ch03_ex11_tp] (assignment, steps, learnerCriteria, serverGradedAssessment) ; server/n8nFoundationsAssessmentService.ts → assessments.ch03_ex11_tp (critères effectivement appliqués) ; lignes 163–188 (passed déclenche la validation et la correction) ; client/src/components/CloudExerciseBlock.tsx → lignes 137–145 (onComplete après passed) ; client/src/pages/training/LessonViewer.tsx → lignes 1587–1592 (déverrouillage).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Contrôler la continuité du pipeline et la branche enterprise : Switch → Set Enterprise Instruction → Draft Welcome → Chat Model, avec instruction et références client dans le prompt. Conserver la tolérance de rédaction, mais pas l’absence de structure."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 11,
+          "chapter_id": "ch03_act12",
+          "title": "Félicitations !",
+          "score_100": 88,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectif et clarté des explications",
+              "score_5": 4,
+              "evidence": "Le titre, l’introduction de la transcription et les exemples définissent les notions avant la pratique."
+            },
+            {
+              "dimension": "Cohérence et progression",
+              "score_5": 4,
+              "evidence": "La vidéo réactive les acquis précédents puis annonce explicitement la pratique suivante."
+            },
+            {
+              "dimension": "Complétude",
+              "score_5": 4,
+              "evidence": "La transcription structurée décrit définitions, exemples et transition."
+            },
+            {
+              "dimension": "Pertinence et contextualisation du média",
+              "score_5": 4,
+              "evidence": "Le média est titré, accompagné d’une transcription et de segments ; les vidéos Projector déclarent aussi des slides synchronisées lorsqu’elles sont fournies."
+            },
+            {
+              "dimension": "Expérience utilisateur vérifiable dans le code",
+              "score_5": 4,
+              "evidence": "LessonViewer affiche le titre, le lecteur, une transcription dépliable et une action explicite « Marquer comme vue/écoutée » ; le passage est bloqué tant que la vidéo officielle n’est pas complétée."
+            }
+          ],
+          "unverified_dimensions": [
+            "Clarté des activités : aucune activité propre à cet écran ; dimension non applicable à la notation.",
+            "Rendu navigateur authentifié, manipulation réelle de n8n et disponibilité réseau non exécutés dans cet audit ; ils ne sont pas notés.",
+            "Qualité visuelle détaillée, accessibilité des images/slides et lecture réelle du média : ressources déclarées mais non visionnées/téléchargées dans cet audit."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "Audit qualitatif sans modification du cours unique référencé par le manifest.",
+    "coverage": {
+      "courses": 1,
+      "lessons": 3,
+      "chapters": 32,
+      "activities": 22,
+      "cloud_exercises": 17,
+      "bucket_sort_activities": 3,
+      "single_choice_activities": 2,
+      "video_or_audio_chapters": 10
+    },
+    "priority_counts": {
+      "P0": 1,
+      "P1": 14,
+      "P2": 3,
+      "P3": 0
+    },
+    "confirmed_findings": [
+      "La progression des contenus est cohérente dans son intention : vidéos puis mises en pratique, avec réemploi progressif des déclencheurs, transformations, conditions, expressions, fusion et Agents.",
+      "Les 10 séquences média disposent d’une transcription ; LessonViewer rend une action explicite de complétion et une transcription dépliable.",
+      "Les 17 TP comportent un contexte, des étapes et un indice ; les données de ressources gérées sont bien déclarées. Les signaux statiques « activité sans explication dans le même écran » ne sont donc pas confirmés automatiquement.",
+      "Les trois tris ne sont pas dépourvus de mode opératoire : MatchingExercise affiche la phrase générique indiquant de sélectionner une carte puis une catégorie. Les signaux statiques d’absence totale de consigne sont donc écartés ; le défaut confirmé est l’absence de feedback pédagogique rendu après erreur.",
+      "La priorité est l’intégrité de la validation : un TP est bloqué par une règle contradictoire, sept TP se déverrouillent avec une saisie d’un caractère, et sept validateurs serveur n’éprouvent pas l’apprentissage central annoncé."
+    ],
+    "scores_note": "Les scores renormalisent les dimensions observables. Les dimensions non applicables ou non exécutées sont explicitement listées et ne reçoivent aucune note implicite."
+  },
+  "limits": [
+    "Revue menée sur le JSON de cours, le registre des blocs, LessonViewer, CloudExerciseBlock, MatchingExercise, SingleChoiceExercise, chapterProgress et les services de validation n8n ; aucun contenu, code, base ou ressource n’a été modifié.",
+    "Aucune session navigateur authentifiée ni instance n8n n’a été exécutée : le rendu réel, l’accessibilité finale, la disponibilité réseau des médias/ressources et les intégrations/identifiants n8n restent non vérifiés.",
+    "Les URL /api/assets non présentes dans le répertoire public local ne sont pas considérées absentes : les workflows de départ/corrections sont déclarés dans server/n8nFoundationsWorkflowRegistry.ts et les autres médias restent des ressources gérées non testées.",
+    "La qualité factuelle et visuelle des vidéos, slides, images et fichiers distants n’a pas été inférée depuis leur simple URL ; seules leurs métadonnées, transcriptions et leur traitement par les composants ont été examinés.",
+    "Les propositions de contenu restent limitées aux éléments déterminables depuis les énoncés, étapes et critères existants ; aucune réponse métier ou comportement d’intégration n8n non fourni n’a été inventé."
+  ]
+}

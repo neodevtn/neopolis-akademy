@@ -1,0 +1,687 @@
+{
+  "formation_id": "datacamp_introduction_to_agent_skills",
+  "courses": [
+    {
+      "course_id": "introduction_to_agent_skills__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Video: What are skills",
+          "score_100": 68,
+          "verified_dimensions": [
+            "Introduction de leçon et préparation matérielle explicites : environnement local, Claude Code, dossier jetable et règle de progression sont rendus avant la première activité.",
+            "La vidéo est contextualisée par le titre et la description de leçon ; une transcription textuelle complète est présente et rendue dans un panneau repliable.",
+            "La séquence ouvre logiquement sur la définition des skills avant le QCM puis la mise en pratique.",
+            "Score renormalisé sur les dimensions observables dans le JSON et les renderers : explication/contextualisation, progression, média textuel et UX de navigation."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique distinct et mesurable au niveau de cet écran : seule une promesse de leçon est fournie.",
+            "Qualité factuelle, lisibilité visuelle et lecture effective du MP4 : le média référencé via /api/assets n’a pas été visionné dans un navigateur.",
+            "Accessibilité effective des sous-titres et de la piste vidéo au runtime."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-001",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "média",
+              "description": "Dans le parcours déclaré fr-FR, la vidéo obligatoire ne propose qu’une transcription et une piste de sous-titres anglaises. Un apprenant ayant choisi le français peut ouvrir la transcription affichée par LessonViewer, mais elle reste en anglais ; ce soutien textuel ne remplit donc pas son rôle d’alternative française.",
+              "current_content": "`transcript` commence par « Every time you explain your team's coding standards… » ; `subtitleUrlEn` est renseigné ; `subtitleUrlFr` est absent.",
+              "proposed_content": "Ajouter une transcription française fidèle et une piste `subtitleUrlFr` française, ou expliciter de façon visible que la ressource n’est disponible qu’en anglais avant le lancement. Conserver le média existant.",
+              "evidence": "client/public/data/courses/introduction_to_agent_skills__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] ; LessonViewer.tsx:670-686 rend directement `block.transcript` et 652-653 ne déclare une piste française que si `subtitleUrlFr` existe.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Prioriser une alternative française accessible pour cette vidéo requise, puis vérifier son affichage dans le lecteur réel."
+            },
+            {
+              "issue_id": "ped-044-002",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "LessonViewer.videoCompletionKey",
+              "content_type": "renderer_logic",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le bouton principal « Suivant » ne verrouille pas les six vidéos locales requises de ce cours. Le lecteur marque une vidéo complétée avec son `block.id`, alors que le calcul du verrouillage de pied de page cherche `videoId`, puis `url`, puis seulement un `id` de 8 à 15 caractères. Les six ids locaux ont 17 caractères et n’ont ni `videoId` ni `url` : la liste des vidéos à valider devient vide et le passage est autorisé sans visionnage ni marquage manuel.",
+              "current_content": "Les vidéos utilisent par exemple `id: dc_1_act_01_video`, `mp4Url: /api/assets/...`, sans `videoId` ni `url`; `requiredBeforeAdvance` vaut `true` sur les écrans concernés.",
+              "proposed_content": "Dans tous les calculs de verrouillage vidéo, utiliser la même clé que le renderer local : `block.id || fallback`. Ajouter un test couvrant un MP4 avec un id long et sans `videoId`/`url`.",
+              "evidence": "JSON source : dc_1_act_01_video, dc_1_act_04_video, dc_2_act_01_video, dc_2_act_04_video, dc_3_act_01_video et dc_3_act_04_video ont tous un id de 17 caractères sans `videoId` ni `url`. LessonViewer.tsx:556-557 utilise `block.id` pour la complétion locale ; 1558-1568 calcule la clé de passage avec `videoId`/`url`/id 8-15 caractères ; 1637-1662 applique ce résultat au bouton principal.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Corriger la clé de complétion avant toute modification pédagogique : le verrouillage annoncé doit correspondre à l’action réellement demandée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "What are skills",
+          "score_100": 82,
+          "verified_dimensions": [
+            "QCM cohérent avec la vidéo précédente : il vérifie le chargement différé du contenu des skills.",
+            "L’énoncé, quatre options, la réponse correcte, un indice et une explication sont présents.",
+            "MultiChoiceBlock affiche l’énoncé, exige le nombre attendu de réponses, montre l’état correct/incorrect, l’explication puis une action de nouvelle tentative.",
+            "Score renormalisé sur contenu d’activité, feedback et renderer observables."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite propre à ce QCM.",
+            "Compréhension effective par un apprenant francophone ne maîtrisant pas l’anglais."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-003",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "Les champs français affichés au choix de langue français sont identiques aux champs anglais, y compris l’énoncé, les options, l’indice et le feedback. L’activité est donc réellement proposée en anglais dans une formation importée en fr-FR.",
+              "current_content": "`question.fr`, chaque `options[].text.fr`, `hint.fr` et `explanation.fr` reprennent les textes anglais, par exemple « How does Claude Code handle skill content…? ».",
+              "proposed_content": "Traduire l’énoncé, les quatre options, l’indice et l’explication dans les champs `fr`, sans modifier la réponse correcte `b` ni la logique du QCM.",
+              "evidence": "client/public/data/courses/introduction_to_agent_skills__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple] ; MultiChoiceBlock.tsx:16-24 sélectionne `block.question[lang]`, `block.explanation[lang]`, `block.hint[lang]` et `opt.text[lang]`.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Localiser ce QCM avant sa diffusion auprès d’un public francophone."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Activating skills",
+          "score_100": 25,
+          "verified_dimensions": [
+            "La consigne source décrit une progression d’action intelligible : lancer Claude Code, lister les skills, demander un diagramme, identifier le skill activé et quitter.",
+            "Un indice contextualise précisément le mot déclencheur « diagram » et fournit des formulations de secours.",
+            "Le scénario fait suite à la définition et au QCM sur le chargement à la demande.",
+            "Score renormalisé sur les éléments visibles et la logique effective du bloc de code."
+          ],
+          "unverified_dimensions": [
+            "Exécution de Claude Code et accès au répertoire d’exercice dans un navigateur réel.",
+            "Objectif formulé explicitement pour l’activité."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-004",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité_et_validation",
+              "description": "L’activité demande de piloter Claude Code dans un terminal, mais le composant présenté est un simple éditeur de texte Python : il n’exécute ni le code de départ ni les commandes `claude`. « Vérifier le code » ne contrôle que l’égalité exacte entre le texte de l’éditeur et le champ `solutionCode`, lequel contient des commentaires et des commandes shell de préparation/validation. L’apprenant ne peut donc pas faire évaluer l’action demandée ; il peut seulement reproduire la solution interne affichée.",
+              "current_content": "Instructions : « Start Claude Code with claude… » ; `language: python` ; `solutionCode` contient notamment « mkdir -p ~/.claude && cp ~/solutions/1_1/history.jsonl ~/.claude/. ».",
+              "proposed_content": "Remplacer ce bloc par une simulation de terminal ou un environnement de terminal réellement exécutable qui valide les traces attendues (lancement de Claude, demande avec « diagram », identification du skill). À défaut, transformer explicitement l’activité en analyse de transcript à réponses vérifiables ; ne pas présenter un éditeur Python comme un terminal fonctionnel.",
+              "evidence": "client/public/data/courses/introduction_to_agent_skills__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_code] ; CodeReplBlock.tsx:28-40 appelle uniquement `matchesCanonicalSolution(code, solutionCode)` ; shared/codeReplValidation.ts:10-13 exige une égalité textuelle normalisée.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Bloquer la publication de cette activité sous sa forme actuelle et choisir un renderer compatible avec la tâche terminale annoncée."
+            },
+            {
+              "issue_id": "ped-044-005",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "LessonViewer.codeReplGate",
+              "content_type": "renderer_logic",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le passage à l’écran suivant n’est pas conditionné par la validation des blocs `code_repl`, alors que cette activité est marquée `requiredBeforeAdvance: true`. Le renderer enregistre bien une complétion si une égalité de texte est obtenue, mais aucune des listes de conditions de passage ne traite le type `code_repl`. Le même défaut affecte les cinq activités `code_repl` de ce cours.",
+              "current_content": "Activités concernées : `dc_1_act_03_code`, `dc_1_act_06_code`, `dc_2_act_03_code`, `dc_3_act_03_code`, `dc_3_act_06_code`; leurs chapitres ont `requiredBeforeAdvance: true`.",
+              "proposed_content": "Ajouter `code_repl` aux activités requises de `isSequentialActivityNavigationLocked` et aux calculs de verrouillage de pied de page, avec la même clé scoped que celle écrite par `CodeReplBlock`; ajouter des tests de navigation pour ces cinq chapitres.",
+              "evidence": "LessonViewer.tsx:1181-1183 écrit la complétion de `code_repl`; chapterProgress.ts:94-103 et LessonViewer.tsx:1537-1625 ne listent pas ce type parmi les blocages. Une recherche de `code_repl` dans ces règles ne trouve que l’analytics et le renderer.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Corriger la cohérence de verrouillage en même temps que le mécanisme de validation de l’exercice."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Video: Creating your first skill",
+          "score_100": 68,
+          "verified_dimensions": [
+            "La vidéo poursuit logiquement la première mise en pratique et traite structure de SKILL.md, chargement et priorités.",
+            "Une transcription complète est disponible dans les données et le renderer l’expose à la demande.",
+            "Le QCM suivant porte bien sur la hiérarchie de priorité expliquée par la vidéo.",
+            "Score renormalisé sur contenu textuel, progression et rendu observables."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable au niveau de cet écran.",
+            "Qualité visuelle/factuelle du MP4 et disponibilité runtime de son URL."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-006",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "média",
+              "description": "La vidéo obligatoire ne comporte ni sous-titres français ni transcription française, alors que la formation est déclarée `sourceLanguage: fr-FR`. Le transcript rendu reste anglais.",
+              "current_content": "`subtitleUrlEn` est renseigné, `subtitleUrlFr` est absent et `transcript` commence par « So, let's create a skill. ».",
+              "proposed_content": "Fournir une piste de sous-titres et une transcription françaises, ou annoncer clairement la disponibilité uniquement anglaise avant la lecture.",
+              "evidence": "JSON → lessons[0].chapters[3].blocks[id=dc_1_act_04_video] ; LessonViewer.tsx:652-653 et 670-686.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Créer et valider l’alternative française sans supposer que l’URL locale est absente."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Creating your first skill",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Le QCM vérifie directement la règle de priorité entreprise/personnel/projet/plugins introduite par la vidéo précédente.",
+            "Question à choix unique dans les faits, options plausibles, indice discriminant, explication et possibilité de réessai sont rendus.",
+            "Score renormalisé sur contenu et interaction vérifiés."
+          ],
+          "unverified_dimensions": [
+            "Objectif explicite d’écran.",
+            "Compréhension autonome pour un apprenant francophone ne lisant pas l’anglais."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-007",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "La question, les options, l’indice et l’explication affichés via les valeurs `fr` sont en anglais, ce qui rompt la continuité avec les descriptions françaises du parcours.",
+              "current_content": "Exemple : `question.fr` = « A personal skill and a project skill both have the name code-review… ».",
+              "proposed_content": "Renseigner les versions françaises des champs visibles sans changer les quatre options ni `correctAnswers: b`.",
+              "evidence": "JSON → lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple] ; MultiChoiceBlock.tsx:16-24.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Localiser ensemble consigne, distracteurs, indice et explication pour conserver leur cohérence pédagogique."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Saving your PR format as a personal skill",
+          "score_100": 25,
+          "verified_dimensions": [
+            "L’action attendue est détaillée : emplacement, frontmatter, commande git, sections de sortie, vérification et redémarrage futur.",
+            "L’indice cible correctement la casse de `SKILL.md` et les éléments à conserver.",
+            "L’exercice met en pratique la vidéo et le QCM précédents.",
+            "Score renormalisé sur contenu et interaction effective observables."
+          ],
+          "unverified_dimensions": [
+            "Création effective du fichier et disponibilité de Claude Code dans l’environnement final.",
+            "Objectif explicite d’écran."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-008",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité_et_validation",
+              "description": "La consigne demande une interaction terminale et la création d’un fichier SKILL.md, mais le renderer ne lance aucune commande et ne vérifie que la copie textuelle exacte de `solutionCode`. Le pseudo-code de solution contient des commandes shell de seed, non une réponse Python exécutable dans l’éditeur affiché.",
+              "current_content": "`language: python`; instruction « Démarrez Claude Code avec `claude` » ; `solutionCode` contient « cp ~/solutions/1_2/SKILL.md ~/.claude/skills/pr-description/SKILL.md ».",
+              "proposed_content": "Utiliser un terminal/sandbox qui vérifie le fichier créé, son frontmatter et les sections demandées, puis retourne un feedback sur ces critères. Ne conserver le bloc code_repl actuel que pour une véritable réponse textuelle/codée comparable.",
+              "evidence": "JSON → lessons[0].chapters[5].blocks[id=dc_1_act_06_code] ; CodeReplBlock.tsx:28-40 ; shared/codeReplValidation.ts:10-13.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Reconcevoir la modalité de réalisation et la validation avant de considérer cette activité comme obligatoire."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Video: Configuration and multi-file skills",
+          "score_100": 68,
+          "verified_dimensions": [
+            "La leçon fait progresser des bases vers `allowed-tools`, les métadonnées et la divulgation progressive.",
+            "La transcription couvre les concepts réutilisés par le QCM et l’exercice suivants.",
+            "Score renormalisé sur contexte de leçon, progression et support textuel du média."
+          ],
+          "unverified_dimensions": [
+            "Objectif distinct de cet écran.",
+            "Qualité visuelle/factuelle de la vidéo, lecture et sous-titrage au runtime."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-009",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "média",
+              "description": "La vidéo requise n’offre qu’une transcription anglaise et `subtitleUrlEn`; aucun équivalent français n’est renseigné pour le parcours fr-FR.",
+              "current_content": "`transcript` est en anglais (« A basic skill works with just a name and description… »), `subtitleUrlFr` est absent.",
+              "proposed_content": "Ajouter transcription et sous-titres français, ou signaler explicitement et avant lecture que le média est anglais uniquement.",
+              "evidence": "JSON → lessons[1].chapters[0].blocks[id=dc_2_act_01_video] ; LessonViewer.tsx:652-653, 670-686.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Prévoir une alternative française accessible sans qualifier la ressource référencée d’absente."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Configuration and multi-file skills",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Question ciblée sur l’avantage de contexte d’un script exécuté, exactement traité dans la vidéo précédente.",
+            "Options, bonne réponse, indice, explication et réessai sont définis et rendus.",
+            "Score renormalisé sur les dimensions vérifiables de l’activité."
+          ],
+          "unverified_dimensions": [
+            "Objectif explicite propre à l’écran.",
+            "Compréhension effective sans maîtrise de l’anglais."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-010",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "L’énoncé, les options et l’explication sont identiques en français et en anglais. L’indice est traduit, ce qui crée une activité bilingue incomplète plutôt qu’une activité française cohérente.",
+              "current_content": "`question.fr` est « What is the main efficiency advantage… » et `explanation.fr` est « Correct! A 200-line script… ».",
+              "proposed_content": "Traduire la question, les quatre options et l’explication dans les clés `fr`; conserver l’indice français déjà présent et la réponse correcte.",
+              "evidence": "JSON → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple] ; MultiChoiceBlock.tsx:16-24, 80, 114-123.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Finaliser la localisation avant de présenter ce contrôle dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Tightening the codebase-onboarding skill",
+          "score_100": 25,
+          "verified_dimensions": [
+            "La tâche attendue est précise : diagnostiquer SKILL.md, ajouter `allowed-tools`, déplacer une référence et créer un lien.",
+            "L’indice fournit la valeur attendue et distingue les outils à exclure, ce qui réduit l’ambiguïté.",
+            "L’activité applique les deux notions précédemment expliquées : restriction d’outils et divulgation progressive.",
+            "Score renormalisé sur contenu et renderer effectif."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des modifications dans l’environnement d’exercice.",
+            "Objectif pédagogique explicite de l’écran."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-011",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité_et_validation",
+              "description": "L’exercice pratique est rendu dans un éditeur Python sans exécution. Sa validation ne vérifie ni le champ `allowed-tools`, ni le déplacement de `Architecture Reference`, ni le lien créé : elle compare seulement le texte saisi au `solutionCode` interne contenant des commandes shell de seed.",
+              "current_content": "La consigne demande de modifier `~/.claude/skills/codebase-onboarding/SKILL.md`; `solutionCode` crée des dossiers et copie `~/solutions/1_3/...`.",
+              "proposed_content": "Proposer un terminal réel ou simulé avec contrôles explicites des deux critères de conception et feedback par critère; à défaut, recadrer l’exercice comme revue de fichier avec réponses vérifiables.",
+              "evidence": "JSON → lessons[1].chapters[2].blocks[id=dc_2_act_03_code] ; CodeReplBlock.tsx:28-40 ; shared/codeReplValidation.ts:10-13.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Remplacer la validation par égalité de texte par une validation compatible avec l’action annoncée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Video: Skills vs. other Claude Code features",
+          "score_100": 68,
+          "verified_dimensions": [
+            "La ressource compare skills, CLAUDE.md, sous-agents, hooks et MCP, puis prépare le QCM et le tri suivants.",
+            "Une transcription exploitable est fournie et rendue à l’apprenant.",
+            "Score renormalisé sur contenu textuel et progression observables."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre à l’écran.",
+            "Qualité visuelle/factuelle du média et accessibilité effective de son URL au runtime."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-012",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "média",
+              "description": "La vidéo obligatoire et son alternative textuelle sont uniquement en anglais; seule une piste de sous-titres anglais est déclarée dans un cours importé fr-FR.",
+              "current_content": "`transcript`: « Claude Code offers several customization options… » ; `subtitleUrlEn` présent, `subtitleUrlFr` absent.",
+              "proposed_content": "Ajouter sous-titres et transcription françaises ou signaler explicitement la limite linguistique avant la lecture.",
+              "evidence": "JSON → lessons[1].chapters[3].blocks[id=dc_2_act_04_video] ; LessonViewer.tsx:652-653, 670-686.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Rendre le média et son alternative accessibles dans la langue du parcours."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Skills vs. other Claude Code features",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Le scénario « lancer un linter à chaque sauvegarde » permet de distinguer un hook événementiel d’un skill piloté par demande.",
+            "L’indice, l’explication et les états de correction/reprise sont disponibles dans le renderer.",
+            "Score renormalisé sur l’activité et son feedback vérifiés."
+          ],
+          "unverified_dimensions": [
+            "Objectif explicite de chapitre.",
+            "Compréhension autonome de l’énoncé pour un apprenant ne lisant pas l’anglais."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-013",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "L’énoncé, les options et l’indice restent en anglais dans leurs champs français. Seule l’explication est localisée, ce qui laisse l’action attendue non localisée dans l’interface française.",
+              "current_content": "`question.fr`: « Your team wants Claude to automatically run a linter… »; `hint.fr`: « Ask yourself: should this fire… ».",
+              "proposed_content": "Renseigner les traductions françaises de la question, des options et de l’indice en préservant la distinction skills/hooks et la réponse correcte.",
+              "evidence": "JSON → lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple] ; MultiChoiceBlock.tsx:16-24, 80, 114-123.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Localiser l’énoncé avant l’explication afin que l’apprenant comprenne quoi sélectionner."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Picking the right tool",
+          "score_100": 58,
+          "verified_dimensions": [
+            "Le tri demande une action claire et l’interface explique aussi l’alternative accessible au glisser-déposer : sélectionner une carte puis une catégorie.",
+            "Les quatre cartes et les deux catégories correspondent à la distinction CLAUDE.md/skill expliquée juste avant.",
+            "Le renderer bloque le passage tant que le tri n’est pas complété correctement et permet une réinitialisation après erreur.",
+            "Score renormalisé sur action, progression, feedback et renderer observables."
+          ],
+          "unverified_dimensions": [
+            "Objectif explicite de chapitre.",
+            "Compréhension effective des textes anglais par le public francophone."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-014",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P1",
+              "category": "feedback",
+              "description": "Le feedback pédagogique rédigé dans le JSON n’est jamais transmis au renderer. LessonViewer passe seulement `correction`, qui vaut `null`; MatchingExercise n’affiche un commentaire détaillé qu’à partir de cette propriété. Après une erreur, l’apprenant obtient surtout un score « X/4 · Réessayez » et des marques correct/incorrect, sans explication visible de la règle CLAUDE.md versus skill pourtant fournie dans `feedback`.",
+              "current_content": "`feedback` : « Correct! CLAUDE.md is for always-on project standards… » ; `correction: null`; `successMessage: null`.",
+              "proposed_content": "Transmettre `feedback` au composant de tri et l’afficher comme explication après soumission, y compris après une erreur; ou renseigner `correction` avec une version qui explique la règle et les placements attendus. Prévoir une version française avec cette correction.",
+              "evidence": "JSON → lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort] ; LessonViewer.tsx:957-973 passe `correction: block.correction` mais pas `feedback`; MatchingExercise.tsx:40-42 et 444-450 n’affiche le détail que pour `exercise.correction`.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Rétablir un feedback explicatif visible avant de considérer le tri comme une évaluation formative suffisante."
+            },
+            {
+              "issue_id": "ped-044-015",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "Les instructions, l’indice, le feedback et les quatre cartes affichent la même formulation anglaise pour `fr` et `en`. Les libellés de catégories sont identiques par nature, mais l’action et les situations à classer restent en anglais pour l’interface française.",
+              "current_content": "`instructions.fr`: « Drag each item into the correct bucket: CLAUDE.md or Skill. » ; les cartes `item_1` à `item_4` ont des `text.fr` anglais.",
+              "proposed_content": "Traduire les instructions, l’indice, le feedback et les cartes dans les champs `fr`, sans modifier les ids ni `correctBucket`.",
+              "evidence": "JSON → lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort] ; MatchingExercise.tsx:88-94, 227-240, 280 et 333 affichent les valeurs pour la langue active.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Localiser l’activité de tri au même niveau que le reste de l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Video: Sharing skills",
+          "score_100": 68,
+          "verified_dimensions": [
+            "La leçon prolonge la configuration par les modes de partage et prépare le conflit de priorité évalué ensuite.",
+            "La transcription est fournie et rendue comme alternative textuelle déroulable.",
+            "Score renormalisé sur les dimensions de média textuel et progression vérifiables."
+          ],
+          "unverified_dimensions": [
+            "Objectif d’écran mesurable.",
+            "Qualité du MP4 et accessibilité runtime de la piste audio/vidéo."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-016",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "média",
+              "description": "La ressource obligatoire ne met à disposition que le support anglais : transcription anglaise et sous-titres anglais, sans piste ni alternative française renseignée.",
+              "current_content": "`transcript` commence par « Skills become more valuable when shared. »; `subtitleUrlEn` présent; `subtitleUrlFr` absent.",
+              "proposed_content": "Ajouter une transcription et des sous-titres français, ou annoncer distinctement la contrainte de langue avant l’activité.",
+              "evidence": "JSON → lessons[2].chapters[0].blocks[id=dc_3_act_01_video] ; LessonViewer.tsx:652-653, 670-686.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Fournir une alternative textuelle française pour le média requis."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Sharing skills",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Le scénario d’une skill personnelle et d’une skill entreprise de même nom évalue de façon pertinente la priorité introduite plus tôt.",
+            "Question, options, bonne réponse, explication et réessai sont définis et rendus.",
+            "Score renormalisé sur activité et feedback observables."
+          ],
+          "unverified_dimensions": [
+            "Objectif explicite au niveau de l’écran.",
+            "Compréhension intégrale de l’indice par un apprenant francophone, car il reste anglais."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-017",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch03_act02",
+              "content_id": "dc_3_act_02_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "L’énoncé et l’explication sont localisés, mais l’indice affiché au besoin est identique en anglais dans les deux langues. Cela réduit l’utilité de l’aide précisément au moment où l’apprenant hésite.",
+              "current_content": "`hint.fr`: « Recall the four-level priority hierarchy: Enterprise, Personal, Project, Plugins. ».",
+              "proposed_content": "Traduire l’indice français en conservant la hiérarchie Enterprise → Personal → Project → Plugins et la précision qu’il n’y a pas de fusion des skills homonymes.",
+              "evidence": "JSON → lessons[2].chapters[1].blocks[id=dc_3_act_02_qcm_multiple] ; MultiChoiceBlock.tsx:17-18 et 114-118.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Localiser l’aide afin que le dispositif de remédiation soit réellement utilisable dans la langue sélectionnée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Wire skills into the frontend reviewer",
+          "score_100": 25,
+          "verified_dimensions": [
+            "Les étapes explicitent le déplacement de deux skills, la lecture du sous-agent, l’ajout de `skills:` et la justification demandée.",
+            "L’indice fournit la valeur exacte attendue et distingue sous-agents personnalisés et agents intégrés.",
+            "La tâche mobilise logiquement la leçon sur le partage et l’orchestration.",
+            "Score renormalisé sur consigne et mécanisme effectivement rendu."
+          ],
+          "unverified_dimensions": [
+            "Manipulation réelle des fichiers dans le dépôt fourni.",
+            "Objectif pédagogique explicite."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-018",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch03_act03",
+              "content_id": "dc_3_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité_et_validation",
+              "description": "La tâche demande des opérations terminales et une explication à Claude, mais le bloc `code_repl` affiche un éditeur Python sans terminal et valide uniquement une égalité textuelle avec une solution interne de commandes shell. Les compétences déplacées, le frontmatter du sous-agent et l’explication sur les agents intégrés ne sont donc pas réellement évalués.",
+              "current_content": "Instruction : déplacer les deux répertoires et ajouter `skills: accessibility-audit, performance-check`; `solutionCode` copie des fichiers depuis `~/solutions/2_2/`.",
+              "proposed_content": "Utiliser une simulation de terminal avec fichiers inspectables et validations distinctes (deux déplacements, champ de frontmatter, réponse de compréhension), avec feedback par critère. Ne pas utiliser la comparaison textuelle du code pour cette tâche.",
+              "evidence": "JSON → lessons[2].chapters[2].blocks[id=dc_3_act_03_code] ; CodeReplBlock.tsx:28-40 ; shared/codeReplValidation.ts:10-13.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Rebâtir l’activité autour de l’environnement annoncé avant de la rendre certificative ou bloquante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Video: Troubleshooting skills",
+          "score_100": 68,
+          "verified_dimensions": [
+            "La ressource introduit les échecs de chargement, de déclenchement, de conflits et de runtime avant l’évaluation diagnostique suivante.",
+            "La transcription complète est disponible dans le bloc et exposée par LessonViewer.",
+            "Score renormalisé sur le texte du média et la progression vérifiés."
+          ],
+          "unverified_dimensions": [
+            "Objectif explicite d’écran.",
+            "Qualité visuelle/factuelle de la vidéo et accessibilité runtime."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-019",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "média",
+              "description": "Le support obligatoire est disponible avec transcription et sous-titres anglais uniquement; aucune alternative française n’est déclarée malgré le contexte fr-FR.",
+              "current_content": "`transcript`: « When skills don't work, the problem usually falls into… »; `subtitleUrlEn` renseigné; `subtitleUrlFr` absent.",
+              "proposed_content": "Ajouter une transcription française et une piste de sous-titres française, ou contextualiser explicitement l’anglais comme prérequis avant lecture.",
+              "evidence": "JSON → lessons[2].chapters[3].blocks[id=dc_3_act_04_video] ; LessonViewer.tsx:652-653, 670-686.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Rendre l’alternative textuelle du média utilisable pour le public français."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Troubleshooting skills",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Le diagnostic demandé est directement relié au cas présenté dans la vidéo : skill chargée mais non déclenchée par le vocabulaire employé.",
+            "Les quatre options, l’indice, l’explication et la possibilité de réessai sont définis et rendus.",
+            "Score renormalisé sur les dimensions de QCM observables."
+          ],
+          "unverified_dimensions": [
+            "Objectif explicite d’écran.",
+            "Compréhension autonome de l’énoncé et des options pour un apprenant qui ne lit pas l’anglais."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-020",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "L’énoncé et les quatre propositions sont identiques dans les versions française et anglaise, tandis que l’indice et l’explication ont été traduits. L’apprenant français reçoit donc une aide en français après avoir dû interpréter une question de diagnostic en anglais.",
+              "current_content": "`question.fr`: « A skill appears in the available skills list, but Claude never uses it… » ; les valeurs `options[].text.fr` sont également anglaises.",
+              "proposed_content": "Traduire l’énoncé et les quatre options dans les clés `fr`, sans changer le distracteur correct `b`, l’indice ni l’explication déjà localisés.",
+              "evidence": "JSON → lessons[2].chapters[4].blocks[id=dc_3_act_05_qcm_multiple] ; MultiChoiceBlock.tsx:16-24 et 80-123.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Compléter la localisation de la partie à résoudre, pas seulement celle de la remédiation."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Why isn't my skill triggering?",
+          "score_100": 25,
+          "verified_dimensions": [
+            "Les instructions et l’indice formulent clairement le diagnostic attendu : lire le SKILL.md, comparer le vocabulaire au langage naturel et enrichir la description avec des déclencheurs.",
+            "La mise en pratique est cohérente avec le QCM immédiatement précédent.",
+            "Score renormalisé sur consigne et renderer effectivement analysables."
+          ],
+          "unverified_dimensions": [
+            "Réécriture effective de la description par Claude Code et comportement réel de déclenchement.",
+            "Objectif explicite de chapitre."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-044-021",
+              "course_id": "introduction_to_agent_skills__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité_et_validation",
+              "description": "L’interface proposée ne permet pas de réaliser ni d’évaluer le dépannage demandé dans Claude Code. Elle présente un éditeur Python et compare son contenu à une solution textuelle interne contenant des copies de fichiers; elle n’exécute ni `claude`, ni la lecture/réécriture de SKILL.md, ni un test de déclenchement sémantique.",
+              "current_content": "Consigne : lire `slow-code-finder/SKILL.md`, expliquer l’écart de vocabulaire et réécrire la description; `solutionCode` copie `~/solutions/2_3/slow-code-finder/SKILL.md`.",
+              "proposed_content": "Fournir un terminal/sandbox où l’apprenant peut observer la description initiale, la modifier et soumettre un test de demande; valider la présence de formulations de déclenchement et expliquer le résultat. Si ce runtime n’est pas disponible, convertir l’activité en exercice d’édition de frontmatter avec critères explicites.",
+              "evidence": "JSON → lessons[2].chapters[5].blocks[id=dc_3_act_06_code] ; CodeReplBlock.tsx:28-40 ; shared/codeReplValidation.ts:10-13.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Traiter comme bloquant de conception : l’action annoncée et l’action validée doivent être les mêmes."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": "Audit exhaustif de 1 cours, 3 leçons, 18 chapitres et 18 activités/blocs principaux (6 vidéos, 6 QCM, 5 exercices code_repl, 1 tri). La progression conceptuelle vidéo → QCM → mise en pratique est cohérente et les QCM disposent d’indices, explications et tentatives. Vingt-et-un constats étayés ont été confirmés : P0=5 (les cinq activités de terminal sont rendues par un éditeur Python à comparaison textuelle, non compatible avec l’action demandée), P1=9 (verrouillage vidéo incohérent, verrouillage absent des code_repl, six médias requis sans alternative française, feedback de tri non rendu) et P2=7 (localisations françaises incomplètes). La priorité est de réaligner renderer, validation et verrouillage des activités pratiques ; puis de fournir des alternatives françaises et des feedbacks visibles.",
+  "limits": [
+    "Audit qualitatif limité à la formation datacamp_introduction_to_agent_skills et à son unique fichier source, conformément au manifest.",
+    "Les MP4, VTT et URLs /api/assets ont été identifiés mais non visionnés dans un navigateur ; ils ne sont donc pas considérés comme absents. La qualité visuelle, audio et factuelle des vidéos est non vérifiée.",
+    "Les constats de rendu et de verrouillage sont vérifiés par lecture de LessonViewer.tsx, chapterProgress.ts et des composants concernés ; aucun test de navigation interactif authentifié n’a été exécuté.",
+    "Les objectifs pédagogiques formalisés au niveau de chaque chapitre ne sont généralement pas fournis dans les JSON ; cette absence est déclarée comme dimension non vérifiable, pas comme défaut automatique.",
+    "Aucun contenu, média, code ou donnée source n’a été modifié ; seul ce rapport d’audit a été créé."
+  ]
+}

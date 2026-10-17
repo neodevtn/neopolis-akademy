@@ -1,0 +1,728 @@
+{
+  "formation_id": "ia_pour_les_nuls",
+  "courses": [
+    {
+      "course_id": "ia_pour_les_nuls__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01_1",
+          "title": "Introduction vidéo — Vidéo 1/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 1/5 : la seule amorce textuelle est confirmée non rendue (issue 001).",
+            "UX et navigation — 4/5 : titre de vidéo, contrôle de lecture, récupération vers la vidéo officielle et confirmation explicite en cas d'échec du fournisseur sont prévus; le passage exige la vidéo."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif au niveau formation, leçon ou chapitre.",
+            "Clarté et exactitude des explications internes : vidéo non visionnée et sans transcription/alternative dans les données.",
+            "Progression conceptuelle à l'intérieur du média : non vérifiable sans consulter la vidéo."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_001_legacy_intro_not_rendered",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1",
+              "content_id": "chapter_01_1:block_0",
+              "content_type": "text",
+              "severity": "P2",
+              "category": "rendu",
+              "description": "Le seul texte d'introduction déclaré avant la vidéo est de type hérité `text` avec le champ `content`. Après normalisation, ce bloc est conservé tel quel, mais `LessonViewer.renderBlock` ne possède aucun cas `text` et son `default` renvoie `null`. L'apprenant ne voit donc pas la mise en contexte prévue avant cette vidéo obligatoire.",
+              "current_content": "« Regardez ces courtes vidéos pour une introduction visuelle aux concepts abordés dans cette leçon. » ; bloc `{type: text, content: …}` avant la vidéo « C'est quoi l'intelligence artificielle ? ».",
+              "proposed_content": "Un bloc rendu avant la vidéo, par exemple : « Avant de regarder, cette vidéo introduit C'est quoi l'intelligence artificielle ?. Repérez un exemple concret et notez l'idée principale. »",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[0].chapters[0].blocks[0]; normalisation conservatrice dans shared/courseBlockNormalization.ts:6-37; client/src/pages/training/LessonViewer.tsx:417-1195 ne traite pas `text` et renvoie `null` par défaut.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Migrer ce bloc hérité vers `content` (ou prendre en charge `text` dans le lecteur), puis conserver une consigne spécifique au sujet de la vidéo avant le lecteur média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "chapter_01_1_video_2",
+          "title": "Introduction vidéo — Vidéo 2/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 0/5 : écran limité à une vidéo sans objectif, question post-lecture ni alternative (issue 006).",
+            "UX et navigation — 4/5 : lecteur et voie de reprise fournisseur identifiés; vidéo obligatoire hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Clarté, exactitude et progression du contenu vidéo : non vérifiables sans visionnage ou transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_006_video_without_context",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_video_2",
+              "content_id": "youtube:0nIOLeaBtiw",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Cette seconde vidéo d'introduction constitue à elle seule l'écran. Aucun objectif avant lecture, question après lecture, transcription ni alternative textuelle n'est déclaré ; le lecteur ne peut donc afficher ni intention de visionnage ni réinvestissement. La vidéo est en outre une condition de passage, sauf en mode révision.",
+              "current_content": "Vidéo « C'est quoi l'IA ? Explication simple et éducative » ; seuls `videoId`, `title` et `watchUrl` sont renseignés. `objectiveBefore`, `questionsAfter`, `alternativeTextFr` et `transcript` sont absents.",
+              "proposed_content": "Avant la vidéo : « Cette vidéo complète l'introduction à la leçon. Pendant le visionnage, repérez l'explication ou l'exemple qui éclaire “C'est quoi l'IA ? Explication simple et éducative”. » Après la vidéo, ajouter une question de réinvestissement et une alternative textuelle lorsque disponible.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[0].chapters[1].blocks[0]; client/src/pages/training/LessonViewer.tsx:834-869 transmet ces champs au lecteur; client/src/components/YouTubePlayer.tsx:258 et 365 ne rendent les zones de contexte et d'alternative que si les champs existent; client/src/pages/training/LessonViewer.tsx:1557-1568 applique le verrou vidéo.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Ajouter au minimum `objectiveBefore` et une question post-visionnage contextualisés ; ajouter une alternative textuelle ou transcription si elle est disponible auprès de la ressource. Ne pas conclure que la vidéo est indisponible : sa miniature a été accessible lors de la revue."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "chapter_01",
+          "title": "L'IA dans votre quotidien",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : définition simple et exemples quotidiens accessibles.",
+            "Progression et complétude — 4/5 : les exemples précèdent et concrétisent la définition.",
+            "Activité — 3/5 : les quatre cartes reprennent les exemples; l'action de retourner et la progression de consultation sont visibles.",
+            "UX — 4/5 : cartes utilisables au clic ou au clavier, compteur visible."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Média : aucun média déclaré dans ce chapitre."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "chapter_02",
+          "title": "Une brève histoire de l'IA",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : frise chronologique textuelle et définitions accessibles.",
+            "Progression et complétude — 4/5 : déroulé chronologique puis synthèse explicite.",
+            "UX — 5/5 : contenu textuel rendu directement, sans interaction opaque."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Activité : aucune activité déclarée.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "chapter_03",
+          "title": "Les différents types d'IA",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : distinction IA faible/forte/super-intelligence avec exemples.",
+            "Progression — 4/5 : les catégories sont introduites avant la question de réinvestissement.",
+            "Activité — 3/5 : énoncé, action à choix unique et correction sont rendus; validation de progression insuffisante (issue 011).",
+            "UX — 4/5 : composant de choix, correction et reprise disponibles."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_011_checkpoint_validation_bypassed",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_03",
+              "content_id": "ex_ia_pour_les_nuls__01_001",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint est bien rendu avec son énoncé, mais son verrouillage ne vérifie pas l'atteinte de l'objectif pédagogique. Une option incorrecte suffit à faire passer le checkpoint, alors que l'exercice est annoncé comme une validation à choix unique.",
+              "current_content": "Exercice requis « Comprendre les types d'IA » (`interactionType: single_choice`, `completionRequiresCorrectAnswer: null`, `serverCorrectionRequired: null`).",
+              "proposed_content": "Sélectionner une réponse incorrecte, afficher le résultat et permettre une nouvelle tentative ; ne marquer `completedExercises` qu'après la réponse correcte.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → exercises[id=ex_ia_pour_les_nuls__01_001] et checkpoint correspondant; client/src/pages/training/LessonViewer.tsx:895-923 résout cet `exerciseId` et ajoute l'exercice soumis à `completedExercises`; client/src/components/ExerciseRenderer.tsx:592-638 calcule `localShouldComplete = !completionRequiresCorrectAnswer || selectedAnswersAreCorrect`, donc `null` autorise la complétion; client/src/pages/training/LessonViewer.tsx:1493-1511 termine la leçon dès que le checkpoint est dans les complétions. Pour les réponses libres, client/src/components/ExerciseRenderer.tsx:592-607 applique par défaut 5 mots si `inputSchema.minWords` est absent. Pour la checklist, client/src/components/ExerciseRenderer.tsx:964-980 et 1061-1077 ne comparent pas la sélection aux champs `correct`.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Paramétrer et tester une condition de réussite réellement alignée sur chaque énoncé avant de conserver le verrou bloquant. Le feedback et la reprise doivent rester accessibles après un échec."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01_1_lesson_2_2",
+          "title": "Introduction vidéo — Vidéo 1/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 1/5 : amorce textuelle non rendue (issue 002).",
+            "UX et navigation — 4/5 : lecteur et récupération fournisseur prévus, avec verrou vidéo hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Explications et progression internes au média : non vérifiables sans visionnage/transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_002_legacy_intro_not_rendered",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_lesson_2_2",
+              "content_id": "chapter_01_1_lesson_2_2:block_0",
+              "content_type": "text",
+              "severity": "P2",
+              "category": "rendu",
+              "description": "Le seul texte d'introduction déclaré avant la vidéo est de type hérité `text` avec le champ `content`. Après normalisation, ce bloc est conservé tel quel, mais `LessonViewer.renderBlock` ne possède aucun cas `text` et son `default` renvoie `null`. L'apprenant ne voit donc pas la mise en contexte prévue avant cette vidéo obligatoire.",
+              "current_content": "« Regardez ces courtes vidéos pour une introduction visuelle aux concepts abordés dans cette leçon. » ; bloc `{type: text, content: …}` avant la vidéo « C'est quoi le Machine Learning ? Expliqué simplement ».",
+              "proposed_content": "Un bloc rendu avant la vidéo, par exemple : « Avant de regarder, cette vidéo introduit C'est quoi le Machine Learning ? Expliqué simplement. Repérez un exemple concret et notez l'idée principale. »",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[1].chapters[0].blocks[0]; normalisation conservatrice dans shared/courseBlockNormalization.ts:6-37; client/src/pages/training/LessonViewer.tsx:417-1195 ne traite pas `text` et renvoie `null` par défaut.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Migrer ce bloc hérité vers `content` (ou prendre en charge `text` dans le lecteur), puis conserver une consigne spécifique au sujet de la vidéo avant le lecteur média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "chapter_01_1_video_2_lesson_2_2",
+          "title": "Introduction vidéo — Vidéo 2/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 0/5 : écran vidéo non contextualisé (issue 007).",
+            "UX et navigation — 4/5 : lecteur et voie de reprise identifiés; vidéo obligatoire hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Explications et progression internes au média : non vérifiables sans visionnage/transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_007_video_without_context",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_video_2_lesson_2_2",
+              "content_id": "youtube:qgImjYWY9OQ",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Cette seconde vidéo d'introduction constitue à elle seule l'écran. Aucun objectif avant lecture, question après lecture, transcription ni alternative textuelle n'est déclaré ; le lecteur ne peut donc afficher ni intention de visionnage ni réinvestissement. La vidéo est en outre une condition de passage, sauf en mode révision.",
+              "current_content": "Vidéo « Le Machine Learning expliqué simplement » ; seuls `videoId`, `title` et `watchUrl` sont renseignés. `objectiveBefore`, `questionsAfter`, `alternativeTextFr` et `transcript` sont absents.",
+              "proposed_content": "Avant la vidéo : « Cette vidéo complète l'introduction à la leçon. Pendant le visionnage, repérez l'explication ou l'exemple qui éclaire “Le Machine Learning expliqué simplement”. » Après la vidéo, ajouter une question de réinvestissement et une alternative textuelle lorsque disponible.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[1].chapters[1].blocks[0]; client/src/pages/training/LessonViewer.tsx:834-869 transmet ces champs au lecteur; client/src/components/YouTubePlayer.tsx:258 et 365 ne rendent les zones de contexte et d'alternative que si les champs existent; client/src/pages/training/LessonViewer.tsx:1557-1568 applique le verrou vidéo.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Ajouter au minimum `objectiveBefore` et une question post-visionnage contextualisés ; ajouter une alternative textuelle ou transcription si elle est disponible auprès de la ressource. Ne pas conclure que la vidéo est indisponible : sa miniature a été accessible lors de la revue."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "chapter_01_lesson_2_2",
+          "title": "Apprendre à partir d'exemples",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clarté des explications — 5/5 : analogie du tri de fruits, étapes et exemple anti-spam.",
+            "Progression et complétude — 4/5 : de l'analogie au mécanisme puis aux limites de compréhension.",
+            "UX — 4/5 : texte structuré et exemples directement lisibles."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Activité : aucune activité déclarée.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "chapter_02_lesson_2_2",
+          "title": "Les 3 types d'apprentissage",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : chaque type est défini et illustré.",
+            "Progression et complétude — 4/5 : synthèse analogique après les trois définitions.",
+            "Activité — 3/5 : les cartes reprennent les concepts; action de retournement et compteur rendus.",
+            "UX — 4/5 : interaction clavier/clic et progression de cartes visibles."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "chapter_03_lesson_2_2",
+          "title": "Ce que l'IA peut et ne peut PAS faire",
+          "score_100": 73,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : capacités, limites, erreurs et règle d'or sont explicites.",
+            "Progression — 4/5 : les limites nécessaires au QCM sont enseignées avant l'activité.",
+            "Activité — 3/5 : consigne à choix multiple, réponses et correction sont claires; succès non exigé pour progresser (issue 012).",
+            "UX — 4/5 : résultat des choix et reprise sont disponibles."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_012_checkpoint_validation_bypassed",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_03_lesson_2_2",
+              "content_id": "ex_ia_pour_les_nuls__01_002",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint est bien rendu avec son énoncé, mais son verrouillage ne vérifie pas l'atteinte de l'objectif pédagogique. Une combinaison comportant des réponses incorrectes peut valider le checkpoint, bien que l'énoncé demande toutes les réponses correctes.",
+              "current_content": "Exercice requis « Les limites de l'IA » (`interactionType: multi_choice`, `completionRequiresCorrectAnswer: null`, `serverCorrectionRequired: null`).",
+              "proposed_content": "Exiger l'ensemble exact des réponses correctes avant de déverrouiller ; sinon afficher le feedback et proposer de recommencer.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → exercises[id=ex_ia_pour_les_nuls__01_002] et checkpoint correspondant; client/src/pages/training/LessonViewer.tsx:895-923 résout cet `exerciseId` et ajoute l'exercice soumis à `completedExercises`; client/src/components/ExerciseRenderer.tsx:592-638 calcule `localShouldComplete = !completionRequiresCorrectAnswer || selectedAnswersAreCorrect`, donc `null` autorise la complétion; client/src/pages/training/LessonViewer.tsx:1493-1511 termine la leçon dès que le checkpoint est dans les complétions. Pour les réponses libres, client/src/components/ExerciseRenderer.tsx:592-607 applique par défaut 5 mots si `inputSchema.minWords` est absent. Pour la checklist, client/src/components/ExerciseRenderer.tsx:964-980 et 1061-1077 ne comparent pas la sélection aux champs `correct`.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Paramétrer et tester une condition de réussite réellement alignée sur chaque énoncé avant de conserver le verrou bloquant. Le feedback et la reprise doivent rester accessibles après un échec."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01_1_lesson_3_2",
+          "title": "Introduction vidéo — Vidéo 1/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 1/5 : amorce textuelle non rendue (issue 003).",
+            "UX et navigation — 4/5 : lecteur et récupération fournisseur prévus, avec verrou vidéo hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Explications et progression internes au média : non vérifiables sans visionnage/transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_003_legacy_intro_not_rendered",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_lesson_3_2",
+              "content_id": "chapter_01_1_lesson_3_2:block_0",
+              "content_type": "text",
+              "severity": "P2",
+              "category": "rendu",
+              "description": "Le seul texte d'introduction déclaré avant la vidéo est de type hérité `text` avec le champ `content`. Après normalisation, ce bloc est conservé tel quel, mais `LessonViewer.renderBlock` ne possède aucun cas `text` et son `default` renvoie `null`. L'apprenant ne voit donc pas la mise en contexte prévue avant cette vidéo obligatoire.",
+              "current_content": "« Regardez ces courtes vidéos pour une introduction visuelle aux concepts abordés dans cette leçon. » ; bloc `{type: text, content: …}` avant la vidéo « 7min pour savoir comment fonctionne ChatGPT ».",
+              "proposed_content": "Un bloc rendu avant la vidéo, par exemple : « Avant de regarder, cette vidéo introduit 7min pour savoir comment fonctionne ChatGPT. Repérez un exemple concret et notez l'idée principale. »",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[2].chapters[0].blocks[0]; normalisation conservatrice dans shared/courseBlockNormalization.ts:6-37; client/src/pages/training/LessonViewer.tsx:417-1195 ne traite pas `text` et renvoie `null` par défaut.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Migrer ce bloc hérité vers `content` (ou prendre en charge `text` dans le lecteur), puis conserver une consigne spécifique au sujet de la vidéo avant le lecteur média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "chapter_01_1_video_2_lesson_3_2",
+          "title": "Introduction vidéo — Vidéo 2/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 0/5 : écran vidéo non contextualisé (issue 008).",
+            "UX et navigation — 4/5 : lecteur et voie de reprise identifiés; vidéo obligatoire hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Explications et progression internes au média : non vérifiables sans visionnage/transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_008_video_without_context",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_video_2_lesson_3_2",
+              "content_id": "youtube:oeli5xkFZJo",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Cette seconde vidéo d'introduction constitue à elle seule l'écran. Aucun objectif avant lecture, question après lecture, transcription ni alternative textuelle n'est déclaré ; le lecteur ne peut donc afficher ni intention de visionnage ni réinvestissement. La vidéo est en outre une condition de passage, sauf en mode révision.",
+              "current_content": "Vidéo « Comment bien utiliser ChatGPT ? Tuto express » ; seuls `videoId`, `title` et `watchUrl` sont renseignés. `objectiveBefore`, `questionsAfter`, `alternativeTextFr` et `transcript` sont absents.",
+              "proposed_content": "Avant la vidéo : « Cette vidéo complète l'introduction à la leçon. Pendant le visionnage, repérez l'explication ou l'exemple qui éclaire “Comment bien utiliser ChatGPT ? Tuto express”. » Après la vidéo, ajouter une question de réinvestissement et une alternative textuelle lorsque disponible.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[2].chapters[1].blocks[0]; client/src/pages/training/LessonViewer.tsx:834-869 transmet ces champs au lecteur; client/src/components/YouTubePlayer.tsx:258 et 365 ne rendent les zones de contexte et d'alternative que si les champs existent; client/src/pages/training/LessonViewer.tsx:1557-1568 applique le verrou vidéo.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Ajouter au minimum `objectiveBefore` et une question post-visionnage contextualisés ; ajouter une alternative textuelle ou transcription si elle est disponible auprès de la ressource. Ne pas conclure que la vidéo est indisponible : sa miniature a été accessible lors de la revue."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "chapter_01_lesson_3_2",
+          "title": "Qu'est-ce que l'IA générative ?",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : distinction IA classique/générative, exemples de modalités et analogie.",
+            "Progression et complétude — 4/5 : mécanisme simplifié suivi d'une limite explicite (prédiction statistique).",
+            "UX — 4/5 : structure et titres Markdown rendent la lecture repérable."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Activité : aucune activité déclarée.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "chapter_02_lesson_3_2",
+          "title": "Les principaux outils d'IA",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : outils regroupés par usage avec une recommandation de démarrage.",
+            "Progression — 4/5 : les outils viennent après l'explication de l'IA générative.",
+            "Activité — 3/5 : cartes de mémorisation cohérentes avec les outils cités; action et compteur visibles.",
+            "UX — 4/5 : cartes accessibles au clic et au clavier."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "chapter_03_lesson_3_2",
+          "title": "Écrire de bons prompts (instructions)",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Clarté des explications — 5/5 : définition, cinq règles et exemples contre-exemples.",
+            "Progression — 4/5 : l'exercice mobilise les règles immédiatement enseignées.",
+            "Activité — 3/5 : scénario, action attendue, quatre critères et correction réutilisable sont explicites; le verrou ne les contrôle pas (issue 013).",
+            "UX — 4/5 : zone de réponse, sauvegarde brouillon, correction et reprise sont prévues."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_013_checkpoint_validation_bypassed",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_03_lesson_3_2",
+              "content_id": "ex_ia_pour_les_nuls__01_003",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint est bien rendu avec son énoncé, mais son verrouillage ne vérifie pas l'atteinte de l'objectif pédagogique. Une réponse libre de cinq mots peut déverrouiller le checkpoint, malgré les 3–4 phrases et les quatre éléments explicitement demandés.",
+              "current_content": "Exercice requis « Rédiger un bon prompt » (`interactionType: free_text`, `completionRequiresCorrectAnswer: null`, `serverCorrectionRequired: null`).",
+              "proposed_content": "Configurer une validation adaptée : longueur minimale cohérente avec la consigne et critères contrôlables (rôle, contexte, tâche, format), avec retour permettant de compléter avant déverrouillage.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → exercises[id=ex_ia_pour_les_nuls__01_003] et checkpoint correspondant; client/src/pages/training/LessonViewer.tsx:895-923 résout cet `exerciseId` et ajoute l'exercice soumis à `completedExercises`; client/src/components/ExerciseRenderer.tsx:592-638 calcule `localShouldComplete = !completionRequiresCorrectAnswer || selectedAnswersAreCorrect`, donc `null` autorise la complétion; client/src/pages/training/LessonViewer.tsx:1493-1511 termine la leçon dès que le checkpoint est dans les complétions. Pour les réponses libres, client/src/components/ExerciseRenderer.tsx:592-607 applique par défaut 5 mots si `inputSchema.minWords` est absent. Pour la checklist, client/src/components/ExerciseRenderer.tsx:964-980 et 1061-1077 ne comparent pas la sélection aux champs `correct`.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Paramétrer et tester une condition de réussite réellement alignée sur chaque énoncé avant de conserver le verrou bloquant. Le feedback et la reprise doivent rester accessibles après un échec."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01_1_lesson_4_2",
+          "title": "Introduction vidéo — Vidéo 1/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 1/5 : amorce textuelle non rendue (issue 004).",
+            "UX et navigation — 4/5 : lecteur et récupération fournisseur prévus, avec verrou vidéo hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Explications et progression internes au média : non vérifiables sans visionnage/transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_004_legacy_intro_not_rendered",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_lesson_4_2",
+              "content_id": "chapter_01_1_lesson_4_2:block_0",
+              "content_type": "text",
+              "severity": "P2",
+              "category": "rendu",
+              "description": "Le seul texte d'introduction déclaré avant la vidéo est de type hérité `text` avec le champ `content`. Après normalisation, ce bloc est conservé tel quel, mais `LessonViewer.renderBlock` ne possède aucun cas `text` et son `default` renvoie `null`. L'apprenant ne voit donc pas la mise en contexte prévue avant cette vidéo obligatoire.",
+              "current_content": "« Regardez ces courtes vidéos pour une introduction visuelle aux concepts abordés dans cette leçon. » ; bloc `{type: text, content: …}` avant la vidéo « Comment bien utiliser l'IA en 2026 : la méthode complète ».",
+              "proposed_content": "Un bloc rendu avant la vidéo, par exemple : « Avant de regarder, cette vidéo introduit Comment bien utiliser l'IA en 2026 : la méthode complète. Repérez un exemple concret et notez l'idée principale. »",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[3].chapters[0].blocks[0]; normalisation conservatrice dans shared/courseBlockNormalization.ts:6-37; client/src/pages/training/LessonViewer.tsx:417-1195 ne traite pas `text` et renvoie `null` par défaut.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Migrer ce bloc hérité vers `content` (ou prendre en charge `text` dans le lecteur), puis conserver une consigne spécifique au sujet de la vidéo avant le lecteur média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "chapter_01_1_video_2_lesson_4_2",
+          "title": "Introduction vidéo — Vidéo 2/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 0/5 : écran vidéo non contextualisé (issue 009).",
+            "UX et navigation — 4/5 : lecteur et voie de reprise identifiés; vidéo obligatoire hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Explications et progression internes au média : non vérifiables sans visionnage/transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_009_video_without_context",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_video_2_lesson_4_2",
+              "content_id": "youtube:mFTNLy2_Gl8",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Cette seconde vidéo d'introduction constitue à elle seule l'écran. Aucun objectif avant lecture, question après lecture, transcription ni alternative textuelle n'est déclaré ; le lecteur ne peut donc afficher ni intention de visionnage ni réinvestissement. La vidéo est en outre une condition de passage, sauf en mode révision.",
+              "current_content": "Vidéo « Formation IA gratuite : 1h pour devenir expert » ; seuls `videoId`, `title` et `watchUrl` sont renseignés. `objectiveBefore`, `questionsAfter`, `alternativeTextFr` et `transcript` sont absents.",
+              "proposed_content": "Avant la vidéo : « Cette vidéo complète l'introduction à la leçon. Pendant le visionnage, repérez l'explication ou l'exemple qui éclaire “Formation IA gratuite : 1h pour devenir expert”. » Après la vidéo, ajouter une question de réinvestissement et une alternative textuelle lorsque disponible.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[3].chapters[1].blocks[0]; client/src/pages/training/LessonViewer.tsx:834-869 transmet ces champs au lecteur; client/src/components/YouTubePlayer.tsx:258 et 365 ne rendent les zones de contexte et d'alternative que si les champs existent; client/src/pages/training/LessonViewer.tsx:1557-1568 applique le verrou vidéo.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Ajouter au minimum `objectiveBefore` et une question post-visionnage contextualisés ; ajouter une alternative textuelle ou transcription si elle est disponible auprès de la ressource. Ne pas conclure que la vidéo est indisponible : sa miniature a été accessible lors de la revue."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "chapter_01_lesson_4_2",
+          "title": "L'IA pour les tâches administratives",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : cas d'usage et prompts concrets pour des tâches identifiables.",
+            "Progression et complétude — 4/5 : application professionnelle après les fondamentaux et prompts.",
+            "UX — 4/5 : textes, exemples et listes directement rendus."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Activité : aucune activité déclarée.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "chapter_02_lesson_4_2",
+          "title": "L'IA pour la vente et le marketing",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : usages organisés par activité et exemple final.",
+            "Progression et complétude — 4/5 : suite logique des applications par domaine.",
+            "UX — 4/5 : listes et exemple final améliorent le repérage."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Activité : aucune activité déclarée.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "chapter_03_lesson_4_2",
+          "title": "L'IA pour chaque métier",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : exemples par métiers variés et action de réflexion adaptée à un débutant.",
+            "Progression — 4/5 : les chapitres précédents apportent des usages réinvestissables.",
+            "Activité — 3/5 : énoncé demande trois tâches et détails, avec correction illustrative; le verrou accepte une réponse insuffisante (issue 014).",
+            "UX — 4/5 : réponse libre, correction et reprise visibles."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_014_checkpoint_validation_bypassed",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_03_lesson_4_2",
+              "content_id": "ex_ia_pour_les_nuls__01_004",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint est bien rendu avec son énoncé, mais son verrouillage ne vérifie pas l'atteinte de l'objectif pédagogique. Une réponse libre de cinq mots peut déverrouiller le checkpoint, malgré la demande de trois tâches et de trois précisions pour chacune.",
+              "current_content": "Exercice requis « Cas d'usage IA pour votre métier » (`interactionType: scenario`, `completionRequiresCorrectAnswer: null`, `serverCorrectionRequired: null`).",
+              "proposed_content": "Exiger une réponse qui couvre les trois tâches et les éléments annoncés, ou rendre le checkpoint déclaratif/non bloquant ; donner un retour explicite avant le déverrouillage.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → exercises[id=ex_ia_pour_les_nuls__01_004] et checkpoint correspondant; client/src/pages/training/LessonViewer.tsx:895-923 résout cet `exerciseId` et ajoute l'exercice soumis à `completedExercises`; client/src/components/ExerciseRenderer.tsx:592-638 calcule `localShouldComplete = !completionRequiresCorrectAnswer || selectedAnswersAreCorrect`, donc `null` autorise la complétion; client/src/pages/training/LessonViewer.tsx:1493-1511 termine la leçon dès que le checkpoint est dans les complétions. Pour les réponses libres, client/src/components/ExerciseRenderer.tsx:592-607 applique par défaut 5 mots si `inputSchema.minWords` est absent. Pour la checklist, client/src/components/ExerciseRenderer.tsx:964-980 et 1061-1077 ne comparent pas la sélection aux champs `correct`.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Paramétrer et tester une condition de réussite réellement alignée sur chaque énoncé avant de conserver le verrou bloquant. Le feedback et la reprise doivent rester accessibles après un échec."
+            }
+          ]
+        },
+        {
+          "lesson_index": 4,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01_1_lesson_5_2",
+          "title": "Introduction vidéo — Vidéo 1/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 1/5 : amorce textuelle non rendue (issue 005).",
+            "UX et navigation — 4/5 : lecteur et récupération fournisseur prévus, avec verrou vidéo hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Explications et progression internes au média : non vérifiables sans visionnage/transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_005_legacy_intro_not_rendered",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_lesson_5_2",
+              "content_id": "chapter_01_1_lesson_5_2:block_0",
+              "content_type": "text",
+              "severity": "P2",
+              "category": "rendu",
+              "description": "Le seul texte d'introduction déclaré avant la vidéo est de type hérité `text` avec le champ `content`. Après normalisation, ce bloc est conservé tel quel, mais `LessonViewer.renderBlock` ne possède aucun cas `text` et son `default` renvoie `null`. L'apprenant ne voit donc pas la mise en contexte prévue avant cette vidéo obligatoire.",
+              "current_content": "« Regardez ces courtes vidéos pour une introduction visuelle aux concepts abordés dans cette leçon. » ; bloc `{type: text, content: …}` avant la vidéo « Pourquoi l'intelligence artificielle a besoin d'éthique ».",
+              "proposed_content": "Un bloc rendu avant la vidéo, par exemple : « Avant de regarder, cette vidéo introduit Pourquoi l'intelligence artificielle a besoin d'éthique. Repérez un exemple concret et notez l'idée principale. »",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[4].chapters[0].blocks[0]; normalisation conservatrice dans shared/courseBlockNormalization.ts:6-37; client/src/pages/training/LessonViewer.tsx:417-1195 ne traite pas `text` et renvoie `null` par défaut.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Migrer ce bloc hérité vers `content` (ou prendre en charge `text` dans le lecteur), puis conserver une consigne spécifique au sujet de la vidéo avant le lecteur média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 4,
+          "chapter_index": 1,
+          "chapter_id": "chapter_01_1_video_2_lesson_5_2",
+          "title": "Introduction vidéo — Vidéo 2/2",
+          "score_100": 50,
+          "verified_dimensions": [
+            "Média/contextualisation — 0/5 : écran vidéo non contextualisé (issue 010).",
+            "UX et navigation — 4/5 : lecteur et voie de reprise identifiés; vidéo obligatoire hors révision."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Explications et progression internes au média : non vérifiables sans visionnage/transcription."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_010_video_without_context",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_01_1_video_2_lesson_5_2",
+              "content_id": "youtube:QuzKlwtEdrk",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Cette seconde vidéo d'introduction constitue à elle seule l'écran. Aucun objectif avant lecture, question après lecture, transcription ni alternative textuelle n'est déclaré ; le lecteur ne peut donc afficher ni intention de visionnage ni réinvestissement. La vidéo est en outre une condition de passage, sauf en mode révision.",
+              "current_content": "Vidéo « Qu'est-ce qu'un biais algorithmique ? » ; seuls `videoId`, `title` et `watchUrl` sont renseignés. `objectiveBefore`, `questionsAfter`, `alternativeTextFr` et `transcript` sont absents.",
+              "proposed_content": "Avant la vidéo : « Cette vidéo complète l'introduction à la leçon. Pendant le visionnage, repérez l'explication ou l'exemple qui éclaire “Qu'est-ce qu'un biais algorithmique ?”. » Après la vidéo, ajouter une question de réinvestissement et une alternative textuelle lorsque disponible.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → lessons[4].chapters[1].blocks[0]; client/src/pages/training/LessonViewer.tsx:834-869 transmet ces champs au lecteur; client/src/components/YouTubePlayer.tsx:258 et 365 ne rendent les zones de contexte et d'alternative que si les champs existent; client/src/pages/training/LessonViewer.tsx:1557-1568 applique le verrou vidéo.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Ajouter au minimum `objectiveBefore` et une question post-visionnage contextualisés ; ajouter une alternative textuelle ou transcription si elle est disponible auprès de la ressource. Ne pas conclure que la vidéo est indisponible : sa miniature a été accessible lors de la revue."
+            }
+          ]
+        },
+        {
+          "lesson_index": 4,
+          "chapter_index": 2,
+          "chapter_id": "chapter_01_lesson_5_2",
+          "title": "Les enjeux éthiques",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : cinq enjeux expliqués avec questions et exemple.",
+            "Progression et complétude — 4/5 : introduit les risques nécessaires aux conseils de sécurité suivants.",
+            "UX — 4/5 : sections numérotées et principe final structurent la lecture."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Activité : aucune activité déclarée.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 4,
+          "chapter_index": 3,
+          "chapter_id": "chapter_02_lesson_5_2",
+          "title": "Se protéger face à l'IA",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clarté des explications — 5/5 : règles actionnables, liste d'informations à ne pas partager et explication d'hallucination.",
+            "Progression et complétude — 4/5 : transforme les enjeux éthiques précédents en pratiques applicables.",
+            "UX — 4/5 : hiérarchie des règles et listes lisibles."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Activité : aucune activité déclarée.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 4,
+          "chapter_index": 4,
+          "chapter_id": "chapter_03_lesson_5_2",
+          "title": "L'avenir de l'IA et comment s'y préparer",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Clarté des explications — 4/5 : tendances, conseils et synthèse finale cohérents avec l'initiation.",
+            "Progression — 4/5 : le réinvestissement de sécurité est préparé par le chapitre précédent.",
+            "Activité — 3/5 : checklist et correction portent sur les bonnes pratiques enseignées; la sélection juste n'est pas requise et le rendu masque l'erreur (issue 015).",
+            "UX — 4/5 : interface de checklist et reprise disponibles."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique explicite : aucun champ objectif.",
+            "Média : aucun média déclaré."
+          ],
+          "issues": [
+            {
+              "issue_id": "ia_nuls_015_checkpoint_validation_bypassed",
+              "course_id": "ia_pour_les_nuls__01",
+              "chapter_id": "chapter_03_lesson_5_2",
+              "content_id": "ex_ia_pour_les_nuls__01_005",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint est bien rendu avec son énoncé, mais son verrouillage ne vérifie pas l'atteinte de l'objectif pédagogique. Cocher n'importe quelle seule proposition, y compris une mauvaise pratique, déverrouille le checkpoint. Après soumission, les choix cochés sont affichés en vert sans indicateur de justesse ; la correction détaillée reste facultative.",
+              "current_content": "Exercice requis « Checklist de sécurité IA » (`interactionType: checklist`, `completionRequiresCorrectAnswer: null`, `serverCorrectionRequired: null`).",
+              "proposed_content": "Évaluer la sélection par rapport aux choix corrects et n'autoriser la progression qu'après sélection des bonnes pratiques demandées ; distinguer visuellement les choix corrects et incorrects et afficher le feedback utile.",
+              "evidence": "client/public/data/courses/ia_pour_les_nuls__01.json → exercises[id=ex_ia_pour_les_nuls__01_005] et checkpoint correspondant; client/src/pages/training/LessonViewer.tsx:895-923 résout cet `exerciseId` et ajoute l'exercice soumis à `completedExercises`; client/src/components/ExerciseRenderer.tsx:592-638 calcule `localShouldComplete = !completionRequiresCorrectAnswer || selectedAnswersAreCorrect`, donc `null` autorise la complétion; client/src/pages/training/LessonViewer.tsx:1493-1511 termine la leçon dès que le checkpoint est dans les complétions. Pour les réponses libres, client/src/components/ExerciseRenderer.tsx:592-607 applique par défaut 5 mots si `inputSchema.minWords` est absent. Pour la checklist, client/src/components/ExerciseRenderer.tsx:964-980 et 1061-1077 ne comparent pas la sélection aux champs `correct`.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Paramétrer et tester une condition de réussite réellement alignée sur chaque énoncé avant de conserver le verrou bloquant. Le feedback et la reprise doivent rester accessibles après un échec."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "Audit qualitatif sans modification de la seule formation ia_pour_les_nuls : 1 cours, 5 leçons, 25 chapitres, 39 blocs source et 5 activités checkpoint. Chaque chapitre et chaque activité a été examiné; les 10 vidéos ont fait l'objet d'un contrôle de métadonnées et de rendu.",
+    "method": "Lecture intégrale du JSON déclaré par le manifest, du registre de blocs, de la normalisation, du chargeur de cours, de LessonViewer, des composants vidéo/cartes/exercices et de la logique de progression. Les scores sont renormalisés sur les dimensions réellement observables; les dimensions non vérifiables sont déclarées par chapitre.",
+    "score_interpretation": "Les dix écrans vidéo reçoivent 50/100 sur les seules dimensions vérifiables (contextualisation et UX), car leur contenu interne n'a pas été visionné. Les écrans textuels obtiennent 73–86/100 : contenus généralement progressifs, concrets et adaptés à l'initiation, mais pénalisés lorsque leur checkpoint ne valide pas réellement l'apprentissage.",
+    "confirmed_issues": {
+      "total": 15,
+      "P0": 0,
+      "P1": 5,
+      "P2": 10,
+      "P3": 0
+    },
+    "pre_audit_resolution": "Les cinq signaux P0 du pré-audit (« checkpoint sans énoncé ») sont infirmés : chaque bloc checkpoint référence un exercice top-level existant, le hook transmet `data.exercises` à LessonViewer et celui-ci le rend. Le défaut confirmé est P1 : chaque checkpoint se déverrouille sans contrôle fiable de réussite.",
+    "pedagogical_strengths": [
+      "Les quinze chapitres textuels proposent des explications accessibles, des analogies et des exemples qui suivent globalement une progression de fondamentaux vers usages, puis risques.",
+      "Les trois activités de cartes sont immédiatement liées au contenu antérieur et leur action est visible, y compris au clavier.",
+      "Les cinq checkpoints ont tous un énoncé visible, une action identifiable et une correction disponible; les exercices de prompt et de cas d'usage incluent des critères et exemples réutilisables.",
+      "Le lecteur vidéo prévoit une voie de récupération lorsque l'intégration YouTube échoue; l'audit ne classe donc aucune vidéo comme absente ou inaccessible."
+    ],
+    "priority_actions": [
+      "P1 — Aligner les cinq verrouillages checkpoint sur la réussite réelle : réponse correcte pour les choix, critères/longueur adaptée ou statut non bloquant pour les réponses libres, et correction visible lors d'un échec.",
+      "P2 — Rendre les cinq amorces `text` héritées ou les migrer vers le type `content` afin de restituer l'introduction déjà présente dans le JSON.",
+      "P2 — Contextualiser les cinq secondes vidéos avec un objectif avant lecture et un réinvestissement après lecture; ajouter une alternative textuelle uniquement si elle est obtenue, sans en inventer une.",
+      "Compléter ultérieurement les objectifs pédagogiques à l'échelle de la formation, des leçons et des chapitres : leur absence est tracée comme non vérifiable, pas comme une anomalie P1 automatique."
+    ]
+  },
+  "limits": [
+    "Audit limité au cours et au fichier exacts désignés par le manifest; aucune donnée, contenu ou code pédagogique n'a été modifié.",
+    "Les dix vidéos externes ont des identifiants, URLs et miniatures accessibles, mais leur contenu, exactitude, accessibilité audiovisuelle et progression interne n'ont pas été visionnés; aucune conclusion sur ces points n'est donc formulée.",
+    "Aucun test navigateur authentifié de bout en bout n'a été effectué. Les constats de rendu et de verrouillage reposent sur le chemin de données effectif et le code du lecteur/composants lus, ainsi que sur les tests de progression disponibles.",
+    "Les objectifs explicites sont absents des données aux niveaux formation, leçon et chapitre; cela rend cette dimension non vérifiable et ne constitue pas, à lui seul, une issue P1.",
+    "Les scores ne jugent pas la qualité factuelle des ressources vidéo ni l'usage réel par des apprenants; ils sont renormalisés sur les dimensions observables et justifiés dans chaque chapitre."
+  ]
+}

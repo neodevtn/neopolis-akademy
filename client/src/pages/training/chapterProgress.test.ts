@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getDisplayedChapterProgress, getPersistedCompletionProgress, hasOptionalSupplementaryVideos, normalizeChapterProgress } from "./chapterProgress";
+import { getChapterMediaCompletionKeys, getDisplayedChapterProgress, getMediaCompletionKey, getPersistedCompletionProgress, hasOptionalSupplementaryVideos, normalizeChapterProgress } from "./chapterProgress";
 
 describe("chapter progress display", () => {
   it("clamps an invalid zero-based index so a counter can never show 7/6", () => {
@@ -36,5 +36,17 @@ describe("chapter progress display", () => {
     expect(hasOptionalSupplementaryVideos({
       blocks: [{ type: "video", title: "Official Anthropic video" }],
     })).toBe(false);
+  });
+
+  it("uses the same stable key for YouTube URLs and video IDs", () => {
+    expect(getMediaCompletionKey({ type: "video", url: "https://www.youtube.com/watch?v=abc123XYZ" }, 0)).toBe("abc123XYZ");
+    expect(getMediaCompletionKey({ type: "video", videoId: { fr: "fr-id", en: "en-id" } }, 0)).toBe("fr-id");
+  });
+
+  it("does not leave hosted MP4 or audio screens permanently locked", () => {
+    expect(getChapterMediaCompletionKeys({ blocks: [
+      { type: "video", id: "hosted-video", mp4Url: "/media/video.mp4" },
+      { type: "video", id: "hosted-audio", audioUrl: "/media/audio.mp3" },
+    ] })).toEqual(["hosted-video", "hosted-audio"]);
   });
 });

@@ -1,0 +1,885 @@
+{
+  "formation_id": "datacamp_databricks_with_the_python_sdk",
+  "courses": [
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Premiers pas avec le SDK Databricks",
+          "score_100": 70,
+          "verified_dimensions": [
+            "Objectif/sujet : titre, description et transcript analysés; le titre de chapitre est rendu par LessonViewer.",
+            "Explications et transition : slides Projector et transcription examinées; elles introduisent les notions et annoncent la pratique.",
+            "Média : audio, slides synchronisées, transcription, sous-titres FR/EN et PDF sont déclarés et les contrôles correspondants sont rendus.",
+            "UX/navigation : LessonViewer, ProjectorPlayer et les conditions de passage ont été inspectés.",
+            "Note 70/100 : contenu introductif riche et contextualisé, mais l’extrait d’authentification erroné et le verrouillage inopérant fragilisent les prérequis de la pratique suivante."
+          ],
+          "unverified_dimensions": [
+            "Lecture réseau effective, qualité sonore/visuelle des fichiers servis par /api/assets et disponibilité des PDF : ressources déclarées mais non exécutées dans un navigateur connecté.",
+            "Accessibilité réelle au lecteur (clavier, lecteur d’écran, contraste) et compréhension par des apprenants en situation."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:0:0:dc_1_act_01_video:media_gate_key",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true et le lecteur propose « Marquer comme écoutée », mais ce média audio Projector ne produit pas de clé de verrouillage. La navigation considère une vidéo comme obligatoire seulement si videoId/url existe ou si son id mesure entre 8 et 15 caractères; cet id mesure 17 caractères. L’apprenant peut donc passer à l’écran suivant sans écouter la théorie qui précède l’activité.",
+              "current_content": "Premiers pas avec le SDK Databricks — audio Projector déclaré avec id « dc_1_act_01_video » (17 caractères), sans videoId ni url YouTube, et requiredBeforeAdvance=true.",
+              "proposed_content": "Utiliser systématiquement block.id comme clé de complétion des blocs audio/vidéo (y compris Projector), puis exiger cette clé lorsque le média officiel n’est pas optional. Conserver l’option explicite « Marquer comme écoutée » comme alternative accessible.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[0].chapters[0] (requiredBeforeAdvance=true) et blocks[id=dc_1_act_01_video] (audioUrl/projectorSlides, sans videoId ni url) ; client/src/pages/training/LessonViewer.tsx:692-761 (lecteur audio Projector et marqueur de complétion), 1557-1568 (extraction de clé limitée à videoId/url/id de 8–15 caractères) et 1591-1600 (condition de navigation).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P2 — Corriger la dérivation de clé et ajouter un test de navigation sur un bloc audio Projector dont l’id dépasse 15 caractères."
+            },
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:0:0:dc_1_act_01_video:authentication_code_syntax",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "exactitude_du_contenu",
+              "description": "Le support Projector d’authentification juxtapose deux instructions os.environ par un antislash au lieu d’un saut de ligne et la transcription parle de « fonction .environ() ». Pour un public débutant, le code affiché peut être copié comme une instruction Python invalide et la nature de os.environ est mal formulée.",
+              "current_content": "Slide « Authentification par défaut » : `os.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\\os.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"`; transcription : « Nous pouvons utiliser la fonction .environ() de la bibliothèque os ».",
+              "proposed_content": "Afficher trois affectations distinctes et nommer os.environ comme le mapping des variables d’environnement :\n`os.environ['DATABRICKS_CLIENT_SECRET'] = \"Your-Client-Secret\"`\n`os.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"`\n`os.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"`\nPuis : « os.environ permet de définir ces variables pour le processus Python ».",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video].projectorSlides[number=7].content et .transcript ; client/src/components/ProjectorPlayer.tsx:301-315 (le contenu de FullSlide est rendu à l’apprenant).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Corriger le texte de la slide et de la transcription; vérifier visuellement la slide et copier-coller l’extrait dans un interpréteur Python avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Authentification par défaut",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:0:1:dc_1_act_02_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Authentification par défaut — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Opérations de base avec le SDK Python de Databricks",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectif/sujet : titre, description et transcript analysés; le titre de chapitre est rendu par LessonViewer.",
+            "Explications et transition : slides Projector et transcription examinées; elles introduisent les notions et annoncent la pratique.",
+            "Média : audio, slides synchronisées, transcription, sous-titres FR/EN et PDF sont déclarés et les contrôles correspondants sont rendus.",
+            "UX/navigation : LessonViewer, ProjectorPlayer et les conditions de passage ont été inspectés.",
+            "Note 78/100 : contenu détaillé, contextualisé et assorti d’une transition; la possibilité de contourner le média obligatoire dégrade la cohérence théorie→activité."
+          ],
+          "unverified_dimensions": [
+            "Lecture réseau effective, qualité sonore/visuelle des fichiers servis par /api/assets et disponibilité des PDF : ressources déclarées mais non exécutées dans un navigateur connecté.",
+            "Accessibilité réelle au lecteur (clavier, lecteur d’écran, contraste) et compréhension par des apprenants en situation."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:0:2:dc_1_act_03_video:media_gate_key",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true et le lecteur propose « Marquer comme écoutée », mais ce média audio Projector ne produit pas de clé de verrouillage. La navigation considère une vidéo comme obligatoire seulement si videoId/url existe ou si son id mesure entre 8 et 15 caractères; cet id mesure 17 caractères. L’apprenant peut donc passer à l’écran suivant sans écouter la théorie qui précède l’activité.",
+              "current_content": "Opérations de base avec le SDK Python de Databricks — audio Projector déclaré avec id « dc_1_act_03_video » (17 caractères), sans videoId ni url YouTube, et requiredBeforeAdvance=true.",
+              "proposed_content": "Utiliser systématiquement block.id comme clé de complétion des blocs audio/vidéo (y compris Projector), puis exiger cette clé lorsque le média officiel n’est pas optional. Conserver l’option explicite « Marquer comme écoutée » comme alternative accessible.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[0].chapters[2] (requiredBeforeAdvance=true) et blocks[id=dc_1_act_03_video] (audioUrl/projectorSlides, sans videoId ni url) ; client/src/pages/training/LessonViewer.tsx:692-761 (lecteur audio Projector et marqueur de complétion), 1557-1568 (extraction de clé limitée à videoId/url/id de 8–15 caractères) et 1591-1600 (condition de navigation).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P2 — Corriger la dérivation de clé et ajouter un test de navigation sur un bloc audio Projector dont l’id dépasse 15 caractères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Lister des jobs Databricks",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:0:3:dc_1_act_04_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Lister des jobs Databricks — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Lister les clusters Databricks",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:0:4:dc_1_act_05_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Lister les clusters Databricks — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Introduction à l'interrogation de modèles d'IA avec Databricks",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectif/sujet : titre, description et transcript analysés; le titre de chapitre est rendu par LessonViewer.",
+            "Explications et transition : slides Projector et transcription examinées; elles introduisent les notions et annoncent la pratique.",
+            "Média : audio, slides synchronisées, transcription, sous-titres FR/EN et PDF sont déclarés et les contrôles correspondants sont rendus.",
+            "UX/navigation : LessonViewer, ProjectorPlayer et les conditions de passage ont été inspectés.",
+            "Note 78/100 : contenu détaillé, contextualisé et assorti d’une transition; la possibilité de contourner le média obligatoire dégrade la cohérence théorie→activité."
+          ],
+          "unverified_dimensions": [
+            "Lecture réseau effective, qualité sonore/visuelle des fichiers servis par /api/assets et disponibilité des PDF : ressources déclarées mais non exécutées dans un navigateur connecté.",
+            "Accessibilité réelle au lecteur (clavier, lecteur d’écran, contraste) et compréhension par des apprenants en situation."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:0:dc_2_act_01_video:media_gate_key",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true et le lecteur propose « Marquer comme écoutée », mais ce média audio Projector ne produit pas de clé de verrouillage. La navigation considère une vidéo comme obligatoire seulement si videoId/url existe ou si son id mesure entre 8 et 15 caractères; cet id mesure 17 caractères. L’apprenant peut donc passer à l’écran suivant sans écouter la théorie qui précède l’activité.",
+              "current_content": "Introduction à l'interrogation de modèles d'IA avec Databricks — audio Projector déclaré avec id « dc_2_act_01_video » (17 caractères), sans videoId ni url YouTube, et requiredBeforeAdvance=true.",
+              "proposed_content": "Utiliser systématiquement block.id comme clé de complétion des blocs audio/vidéo (y compris Projector), puis exiger cette clé lorsque le média officiel n’est pas optional. Conserver l’option explicite « Marquer comme écoutée » comme alternative accessible.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[0] (requiredBeforeAdvance=true) et blocks[id=dc_2_act_01_video] (audioUrl/projectorSlides, sans videoId ni url) ; client/src/pages/training/LessonViewer.tsx:692-761 (lecteur audio Projector et marqueur de complétion), 1557-1568 (extraction de clé limitée à videoId/url/id de 8–15 caractères) et 1591-1600 (condition de navigation).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P2 — Corriger la dérivation de clé et ajouter un test de navigation sur un bloc audio Projector dont l’id dépasse 15 caractères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Rôles des messages de chat",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Énoncé, trois options, réponse correcte, indice et explication sont présents dans les données.",
+            "Le composant affiche la sélection, le résultat correct/incorrect, l’explication et « Réessayer »; la bonne réponse est requise pour poursuivre.",
+            "La question suit immédiatement la vidéo qui définit les rôles SYSTEM et USER.",
+            "Note 88/100 : activité brève, ciblée et correctement corrigée; score renormalisé sur les dimensions vérifiables."
+          ],
+          "unverified_dimensions": [
+            "Essai navigateur réel et compréhension par un échantillon d’apprenants; le rendu a été vérifié par lecture du composant, non par test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Interroger un Foundation Model",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:2:dc_2_act_03_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Interroger un Foundation Model — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Interroger un chatbot avec l'API Databricks Servings Endpoint",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:3:dc_2_act_04_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Interroger un chatbot avec l'API Databricks Servings Endpoint — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le code de départ dans un éditeur exécutable et demander deux essais identifiables (un prompt SYSTEM et un prompt USER), avec une courte réponse d’observation. À défaut d’exécution, ne pas verrouiller la progression sur une zone de texte libre : demander explicitement l’observation attendue puis afficher une grille de comparaison avec l’exemple fourni.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[3].blocks[id=dc_2_act_04_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Interroger un modèle de complétion de chat",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectif/sujet : titre, description et transcript analysés; le titre de chapitre est rendu par LessonViewer.",
+            "Explications et transition : slides Projector et transcription examinées; elles introduisent les notions et annoncent la pratique.",
+            "Média : audio, slides synchronisées, transcription, sous-titres FR/EN et PDF sont déclarés et les contrôles correspondants sont rendus.",
+            "UX/navigation : LessonViewer, ProjectorPlayer et les conditions de passage ont été inspectés.",
+            "Note 78/100 : contenu détaillé, contextualisé et assorti d’une transition; la possibilité de contourner le média obligatoire dégrade la cohérence théorie→activité."
+          ],
+          "unverified_dimensions": [
+            "Lecture réseau effective, qualité sonore/visuelle des fichiers servis par /api/assets et disponibilité des PDF : ressources déclarées mais non exécutées dans un navigateur connecté.",
+            "Accessibilité réelle au lecteur (clavier, lecteur d’écran, contraste) et compréhension par des apprenants en situation."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:4:dc_2_act_05_video:media_gate_key",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true et le lecteur propose « Marquer comme écoutée », mais ce média audio Projector ne produit pas de clé de verrouillage. La navigation considère une vidéo comme obligatoire seulement si videoId/url existe ou si son id mesure entre 8 et 15 caractères; cet id mesure 17 caractères. L’apprenant peut donc passer à l’écran suivant sans écouter la théorie qui précède l’activité.",
+              "current_content": "Interroger un modèle de complétion de chat — audio Projector déclaré avec id « dc_2_act_05_video » (17 caractères), sans videoId ni url YouTube, et requiredBeforeAdvance=true.",
+              "proposed_content": "Utiliser systématiquement block.id comme clé de complétion des blocs audio/vidéo (y compris Projector), puis exiger cette clé lorsque le média officiel n’est pas optional. Conserver l’option explicite « Marquer comme écoutée » comme alternative accessible.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[4] (requiredBeforeAdvance=true) et blocks[id=dc_2_act_05_video] (audioUrl/projectorSlides, sans videoId ni url) ; client/src/pages/training/LessonViewer.tsx:692-761 (lecteur audio Projector et marqueur de complétion), 1557-1568 (extraction de clé limitée à videoId/url/id de 8–15 caractères) et 1591-1600 (condition de navigation).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P2 — Corriger la dérivation de clé et ajouter un test de navigation sur un bloc audio Projector dont l’id dépasse 15 caractères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Résumé de texte",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:5:dc_2_act_06_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Résumé de texte — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Relire un texte",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:6:dc_2_act_07_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Relire un texte — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_07_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Interroger le catalogue Databricks avec Databricks SQL Agent",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectif/sujet : titre, description et transcript analysés; le titre de chapitre est rendu par LessonViewer.",
+            "Explications et transition : slides Projector et transcription examinées; elles introduisent les notions et annoncent la pratique.",
+            "Média : audio, slides synchronisées, transcription, sous-titres FR/EN et PDF sont déclarés et les contrôles correspondants sont rendus.",
+            "UX/navigation : LessonViewer, ProjectorPlayer et les conditions de passage ont été inspectés.",
+            "Note 78/100 : contenu détaillé, contextualisé et assorti d’une transition; la possibilité de contourner le média obligatoire dégrade la cohérence théorie→activité."
+          ],
+          "unverified_dimensions": [
+            "Lecture réseau effective, qualité sonore/visuelle des fichiers servis par /api/assets et disponibilité des PDF : ressources déclarées mais non exécutées dans un navigateur connecté.",
+            "Accessibilité réelle au lecteur (clavier, lecteur d’écran, contraste) et compréhension par des apprenants en situation."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:7:dc_2_act_08_video:media_gate_key",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true et le lecteur propose « Marquer comme écoutée », mais ce média audio Projector ne produit pas de clé de verrouillage. La navigation considère une vidéo comme obligatoire seulement si videoId/url existe ou si son id mesure entre 8 et 15 caractères; cet id mesure 17 caractères. L’apprenant peut donc passer à l’écran suivant sans écouter la théorie qui précède l’activité.",
+              "current_content": "Interroger le catalogue Databricks avec Databricks SQL Agent — audio Projector déclaré avec id « dc_2_act_08_video » (17 caractères), sans videoId ni url YouTube, et requiredBeforeAdvance=true.",
+              "proposed_content": "Utiliser systématiquement block.id comme clé de complétion des blocs audio/vidéo (y compris Projector), puis exiger cette clé lorsque le média officiel n’est pas optional. Conserver l’option explicite « Marquer comme écoutée » comme alternative accessible.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[7] (requiredBeforeAdvance=true) et blocks[id=dc_2_act_08_video] (audioUrl/projectorSlides, sans videoId ni url) ; client/src/pages/training/LessonViewer.tsx:692-761 (lecteur audio Projector et marqueur de complétion), 1557-1568 (extraction de clé limitée à videoId/url/id de 8–15 caractères) et 1591-1600 (condition de navigation).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P2 — Corriger la dérivation de clé et ajouter un test de navigation sur un bloc audio Projector dont l’id dépasse 15 caractères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Créer un agent SQL LangChain connecté à Databricks",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:8:dc_2_act_09_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act09",
+              "content_id": "dc_2_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Créer un agent SQL LangChain connecté à Databricks — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[8].blocks[id=dc_2_act_09_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": "Interroger le jeu de données NYC Taxi avec un agent SQL",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:9:dc_2_act_10_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act10",
+              "content_id": "dc_2_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Interroger le jeu de données NYC Taxi avec un agent SQL — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_10_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Interroger les ventes de la boulangerie avec un agent SQL",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:1:10:dc_2_act_11_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Interroger les ventes de la boulangerie avec un agent SQL — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[1].chapters[10].blocks[id=dc_2_act_11_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Création et gestion de clusters",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectif/sujet : titre, description et transcript analysés; le titre de chapitre est rendu par LessonViewer.",
+            "Explications et transition : slides Projector et transcription examinées; elles introduisent les notions et annoncent la pratique.",
+            "Média : audio, slides synchronisées, transcription, sous-titres FR/EN et PDF sont déclarés et les contrôles correspondants sont rendus.",
+            "UX/navigation : LessonViewer, ProjectorPlayer et les conditions de passage ont été inspectés.",
+            "Note 78/100 : contenu détaillé, contextualisé et assorti d’une transition; la possibilité de contourner le média obligatoire dégrade la cohérence théorie→activité."
+          ],
+          "unverified_dimensions": [
+            "Lecture réseau effective, qualité sonore/visuelle des fichiers servis par /api/assets et disponibilité des PDF : ressources déclarées mais non exécutées dans un navigateur connecté.",
+            "Accessibilité réelle au lecteur (clavier, lecteur d’écran, contraste) et compréhension par des apprenants en situation."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:2:0:dc_3_act_01_video:media_gate_key",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true et le lecteur propose « Marquer comme écoutée », mais ce média audio Projector ne produit pas de clé de verrouillage. La navigation considère une vidéo comme obligatoire seulement si videoId/url existe ou si son id mesure entre 8 et 15 caractères; cet id mesure 17 caractères. L’apprenant peut donc passer à l’écran suivant sans écouter la théorie qui précède l’activité.",
+              "current_content": "Création et gestion de clusters — audio Projector déclaré avec id « dc_3_act_01_video » (17 caractères), sans videoId ni url YouTube, et requiredBeforeAdvance=true.",
+              "proposed_content": "Utiliser systématiquement block.id comme clé de complétion des blocs audio/vidéo (y compris Projector), puis exiger cette clé lorsque le média officiel n’est pas optional. Conserver l’option explicite « Marquer comme écoutée » comme alternative accessible.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[2].chapters[0] (requiredBeforeAdvance=true) et blocks[id=dc_3_act_01_video] (audioUrl/projectorSlides, sans videoId ni url) ; client/src/pages/training/LessonViewer.tsx:692-761 (lecteur audio Projector et marqueur de complétion), 1557-1568 (extraction de clé limitée à videoId/url/id de 8–15 caractères) et 1591-1600 (condition de navigation).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P2 — Corriger la dérivation de clé et ajouter un test de navigation sur un bloc audio Projector dont l’id dépasse 15 caractères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Démarrer un cluster",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:2:1:dc_3_act_02_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch03_act02",
+              "content_id": "dc_3_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Démarrer un cluster — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Vérifier qu'un cluster est en cours d'exécution",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:2:2:dc_3_act_03_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch03_act03",
+              "content_id": "dc_3_act_03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Vérifier qu'un cluster est en cours d'exécution — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Création et gestion des jobs",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectif/sujet : titre, description et transcript analysés; le titre de chapitre est rendu par LessonViewer.",
+            "Explications et transition : slides Projector et transcription examinées; elles introduisent les notions et annoncent la pratique.",
+            "Média : audio, slides synchronisées, transcription, sous-titres FR/EN et PDF sont déclarés et les contrôles correspondants sont rendus.",
+            "UX/navigation : LessonViewer, ProjectorPlayer et les conditions de passage ont été inspectés.",
+            "Note 78/100 : contenu détaillé, contextualisé et assorti d’une transition; la possibilité de contourner le média obligatoire dégrade la cohérence théorie→activité."
+          ],
+          "unverified_dimensions": [
+            "Lecture réseau effective, qualité sonore/visuelle des fichiers servis par /api/assets et disponibilité des PDF : ressources déclarées mais non exécutées dans un navigateur connecté.",
+            "Accessibilité réelle au lecteur (clavier, lecteur d’écran, contraste) et compréhension par des apprenants en situation."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:2:3:dc_3_act_04_video:media_gate_key",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true et le lecteur propose « Marquer comme écoutée », mais ce média audio Projector ne produit pas de clé de verrouillage. La navigation considère une vidéo comme obligatoire seulement si videoId/url existe ou si son id mesure entre 8 et 15 caractères; cet id mesure 17 caractères. L’apprenant peut donc passer à l’écran suivant sans écouter la théorie qui précède l’activité.",
+              "current_content": "Création et gestion des jobs — audio Projector déclaré avec id « dc_3_act_04_video » (17 caractères), sans videoId ni url YouTube, et requiredBeforeAdvance=true.",
+              "proposed_content": "Utiliser systématiquement block.id comme clé de complétion des blocs audio/vidéo (y compris Projector), puis exiger cette clé lorsque le média officiel n’est pas optional. Conserver l’option explicite « Marquer comme écoutée » comme alternative accessible.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[2].chapters[3] (requiredBeforeAdvance=true) et blocks[id=dc_3_act_04_video] (audioUrl/projectorSlides, sans videoId ni url) ; client/src/pages/training/LessonViewer.tsx:692-761 (lecteur audio Projector et marqueur de complétion), 1557-1568 (extraction de clé limitée à videoId/url/id de 8–15 caractères) et 1591-1600 (condition de navigation).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P2 — Corriger la dérivation de clé et ajouter un test de navigation sur un bloc audio Projector dont l’id dépasse 15 caractères."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Créer et exécuter un job Databricks",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:2:4:dc_3_act_05_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Créer et exécuter un job Databricks — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[2].chapters[4].blocks[id=dc_3_act_05_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Planifier un job Databricks",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:2:5:dc_3_act_06_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Planifier un job Databricks — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[2].chapters[5].blocks[id=dc_3_act_06_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Supprimer un job Databricks",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Objectif et énoncé : assignment, instructions, étapes, indice et correction ont été lus pour cette activité.",
+            "Action attendue : le code de départ et les blancs ou modifications demandés sont explicites dans les données.",
+            "Rendu/feedback/verrouillage : CloudExerciseBlock et LessonViewer ont été inspectés; la correction est affichée après soumission et la complétion conditionne la navigation.",
+            "Transition : la leçon précédente expose les API ou concepts mobilisés; aucune dépendance vers un chapitre ultérieur n’a été relevée dans les données.",
+            "Note 65/100 : explications et aides sont présentes, mais la validation non discriminante retire le caractère pratique et fiable de l’activité obligatoire."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle des appels Databricks, LangChain, modèles et ressources d’un workspace personnel : aucun environnement Databricks n’a été utilisé durant cet audit.",
+            "Pertinence factuelle et comportement runtime des réponses d’IA; la plateforme auditée ne rend pas le code comme un éditeur exécutable."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:2:6:dc_3_act_07_tp:non_discriminant_validation",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est annoncée comme un TP à compléter, mais le composant la rend comme une zone de texte libre. Comme ce bloc ne porte ni critère de grille, ni évaluation serveur, ni longueur minimale explicite, une réponse non vide d’un caractère suffit à la soumission : la correction est révélée et l’activité est marquée terminée. L’apprenant ne reçoit donc pas de vérification de son code ni de feedback ciblé avant le déverrouillage.",
+              "current_content": "Supprimer un job Databricks — l’énoncé contient un code de départ et une solution, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents; successMessage est vide.",
+              "proposed_content": "Rendre le « Code de départ » dans un éditeur de code, faire compléter/exécuter l’action demandée et vérifier les éléments attendus à partir de la solution déjà fournie. La progression ne doit être validée qu’après un résultat conforme ; fournir un retour ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_07_tp] (code de départ, solution, absence de minimumAnswerLength/rubricCriteria/serverGradedAssessment) ; client/src/components/CloudExerciseBlock.tsx:119-161, 347-455 (minimum implicite de 1 caractère, soumission locale, correction révélée et onComplete) ; client/src/pages/training/LessonViewer.tsx:1144-1167 et client/src/pages/training/chapterProgress.ts:85-103 (onComplete inscrit le TP comme terminé et la navigation est verrouillée sur cet état).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P1 — Implémenter une validation adaptée à la tâche avant de conserver le verrouillage obligatoire; tester un texte arbitraire, une réponse incomplète et une réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Récapitulatif",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectif/sujet : titre, description et transcript analysés; le titre de chapitre est rendu par LessonViewer.",
+            "Explications et transition : slides Projector et transcription examinées; elles introduisent les notions et annoncent la pratique.",
+            "Média : audio, slides synchronisées, transcription, sous-titres FR/EN et PDF sont déclarés et les contrôles correspondants sont rendus.",
+            "UX/navigation : LessonViewer, ProjectorPlayer et les conditions de passage ont été inspectés.",
+            "Note 78/100 : contenu détaillé, contextualisé et assorti d’une transition; la possibilité de contourner le média obligatoire dégrade la cohérence théorie→activité."
+          ],
+          "unverified_dimensions": [
+            "Lecture réseau effective, qualité sonore/visuelle des fichiers servis par /api/assets et disponibilité des PDF : ressources déclarées mais non exécutées dans un navigateur connecté.",
+            "Accessibilité réelle au lecteur (clavier, lecteur d’écran, contraste) et compréhension par des apprenants en situation."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-030:databricks_with_the_python_sdk__01:2:7:dc_3_act_08_video:media_gate_key",
+              "course_id": "databricks_with_the_python_sdk__01",
+              "chapter_id": "dc_ch03_act08",
+              "content_id": "dc_3_act_08_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true et le lecteur propose « Marquer comme écoutée », mais ce média audio Projector ne produit pas de clé de verrouillage. La navigation considère une vidéo comme obligatoire seulement si videoId/url existe ou si son id mesure entre 8 et 15 caractères; cet id mesure 17 caractères. L’apprenant peut donc passer à l’écran suivant sans écouter la théorie qui précède l’activité.",
+              "current_content": "Récapitulatif — audio Projector déclaré avec id « dc_3_act_08_video » (17 caractères), sans videoId ni url YouTube, et requiredBeforeAdvance=true.",
+              "proposed_content": "Utiliser systématiquement block.id comme clé de complétion des blocs audio/vidéo (y compris Projector), puis exiger cette clé lorsque le média officiel n’est pas optional. Conserver l’option explicite « Marquer comme écoutée » comme alternative accessible.",
+              "evidence": "client/public/data/courses/databricks_with_the_python_sdk__01.json → lessons[2].chapters[7] (requiredBeforeAdvance=true) et blocks[id=dc_3_act_08_video] (audioUrl/projectorSlides, sans videoId ni url) ; client/src/pages/training/LessonViewer.tsx:692-761 (lecteur audio Projector et marqueur de complétion), 1557-1568 (extraction de clé limitée à videoId/url/id de 8–15 caractères) et 1591-1600 (condition de navigation).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "P2 — Corriger la dérivation de clé et ajouter un test de navigation sur un bloc audio Projector dont l’id dépasse 15 caractères."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": "Revue de 1 cours, 3 leçons, 24 chapitres, 16 activités (15 TP cloud et 1 QCM), 8 médias Projector et 3 téléchargements déclarés.",
+    "score_100": 70,
+    "score_method": "Moyenne des notes de chapitre, renormalisées sur les dimensions vérifiables; la lecture/résolution effective des médias et l’exécution dans Databricks ne sont pas assimilées à une absence de ressource.",
+    "confirmed_issues": 24,
+    "priority_summary": "P1 : 15 TP obligatoires se valident avec toute réponse non vide et 1 extrait d’authentification rendu est erroné. P2 : les 8 médias Projector officiels peuvent être contournés, ce qui fragilise toutes les transitions théorie→activité. Aucun P0 confirmé.",
+    "positive_findings": "Les 15 TP disposent tous d’un objectif, d’instructions, d’étapes, d’un indice, d’une correction et d’un lien vers les slides; le QCM dispose d’une question claire, d’un indice, d’une explication et d’une reprise; les 8 médias ont transcript, sous-titres FR/EN, slides synchronisées et PDF déclarés. Les signaux statiques « activité sans texte dans le même écran » ne sont donc pas confirmés : les prérequis sont portés par les chapitres théoriques précédents et les activités ont leurs propres consignes."
+  },
+  "limits": [
+    "Audit qualitatif en lecture seule des JSON, du registre de blocs et du rendu/contrôle de progression dans le code; aucune donnée, base ni code existant n’a été modifié.",
+    "Les URLs /api/assets sont des ressources gérées déclarées par les blocs. Elles ne figurent pas dans client/public du paquet local; elles sont classées non vérifiables en lecture/résolution réelle, et non absentes.",
+    "Aucun navigateur authentifié ni workspace Databricks personnel n’a été utilisé : la lecture effective des médias, le téléchargement réel des PDF et l’exécution des appels SDK/LangChain restent à confirmer en recette.",
+    "Les scores n’évaluent pas l’exactitude à jour de la documentation externe ni la qualité pédagogique de réponses générées par les modèles; aucune source externe n’a été consultée."
+  ]
+}

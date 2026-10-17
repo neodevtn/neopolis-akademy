@@ -1,0 +1,213 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_01",
+  "courses": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "ia_appliquee_metiers_tp__01-screen-01",
+          "title": "Objectif du TP",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Objectifs de formation visibles : le bloc learning_section affiche quatre acquis concrets, alignés avec le cas d’usage, le public cible, le niveau intermédiaire et la durée.",
+            "Le cadre pratique explicite l’usage d’un environnement de démonstration, de données fictives et d’une validation humaine des actions sensibles.",
+            "Le bloc learning_section et le callout sont rendus par LessonViewer ; le lecteur affiche aussi le titre de chapitre et le type Enseignement."
+          ],
+          "unverified_dimensions": [
+            "Aucune activité n’est présente dans ce chapitre ; la mise en pratique des objectifs est vérifiée dans les chapitres suivants.",
+            "Aucun média image, audio ou vidéo n’est déclaré dans ce chapitre ; la contextualisation de médias n’est donc pas applicable."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "ia_appliquee_metiers_tp__01-screen-02",
+          "title": "Préparer l’environnement",
+          "score_100": 83,
+          "verified_dimensions": [
+            "Les prérequis opérationnels et de sécurité sont explicités avant le TP : sandbox ou comptes de démonstration, données fictives, outils attendus, absence de secrets et contrôle humain.",
+            "La ressource source est introduite par une consigne qui précise ce qu’il faut y repérer (résultat métier, entrées, sorties, contrôles), puis l’action attendue de retour et de confirmation.",
+            "LessonViewer rend la consigne, le lien ouvrable et le bouton « J’ai consulté cette ressource » ; ce bouton est intégré au verrouillage séquentiel du chapitre."
+          ],
+          "unverified_dimensions": [
+            "Le contenu, l’accessibilité et la pertinence effective de la ressource externe n’ont pas été audités : elle est référencée par URL et aucune consultation externe n’a été réalisée.",
+            "L’objectif pédagogique propre à ce seul chapitre n’est pas déclaré dans un champ distinct ; le titre et le contenu permettent d’en inférer le thème, sans permettre de vérifier un résultat d’apprentissage formalisé.",
+            "Aucun média image, audio ou vidéo n’est déclaré dans ce chapitre."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "ia_appliquee_metiers_tp__01-screen-03",
+          "title": "Construire progressivement",
+          "score_100": 86,
+          "verified_dimensions": [
+            "La progression Cadrer → Préparer → Tester → Contrôler est rendue sous forme de timeline ; chaque étape comporte une explication lisible.",
+            "Le panneau « À faire / À éviter » contextualise les contrôles avant utilisation et prépare les enjeux de sécurité rappelés dans le checkpoint et le TP.",
+            "Les blocs sequence_visual et comparison_panel sont pris en charge par LessonViewer et affichent leurs titres, étapes et éléments de comparaison."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre formalisé séparément du titre n’est disponible.",
+            "Aucun média image, audio ou vidéo n’est déclaré ; la pertinence ou l’accessibilité de médias n’est pas applicable.",
+            "Les procédures détaillées propres aux interfaces n8n, Apify, Gemini et Google Sheets ne sont pas présentes ici ; leur couverture pratique est examinée dans le mini-projet."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "ia_appliquee_metiers_tp__01-checkpoint-01",
+          "title": "Checkpoint : environnement et sécurité",
+          "score_100": 64,
+          "verified_dimensions": [
+            "L’énoncé de la vérification des acquis est visible, contextualisé au workflow et propose une action identifiable : sélectionner une pratique avant la connexion de n8n.",
+            "Les quatre options, la bonne réponse, l’explication, le feedback d’erreur et l’action « Réessayer » sont présents et rendus par KnowledgeCheckBlock.",
+            "Le chapitre suit les contenus de préparation et interroge directement les règles de sandbox, de données fictives et de validation humaine qui viennent d’être enseignées."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif pédagogique de chapitre déclaré séparément du titre n’est disponible.",
+            "Aucun média image, audio ou vidéo n’est déclaré dans ce checkpoint."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-070-001",
+              "course_id": "ia_appliquee_metiers_tp__01",
+              "chapter_id": "ia_appliquee_metiers_tp__01-checkpoint-01",
+              "content_id": "ia_appliquee_metiers_tp__01-checkpoint-preparation",
+              "content_type": "knowledge_check",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint obligatoire (passThreshold: 1) peut être franchi après une réponse incorrecte. KnowledgeCheckBlock enregistre l’interaction comme terminée quel que soit le résultat ; LessonViewer utilise cette complétion, et non la justesse, pour lever le verrouillage des knowledge_check. En parallèle, getCheckpointGateState ne recense que les blocs de type checkpoint, alors que ce chapitre ne contient qu’un bloc knowledge_check. La validation annoncée ne garantit donc pas la maîtrise de la règle de sécurité avant le mini-projet.",
+              "current_content": "Question claire avec correctAnswer « a », explanation présente et required: true ; chapitre obligatoire avec passThreshold: 1.",
+              "proposed_content": "Conserver l’énoncé et son explication. Configurer la complétion du checkpoint pour qu’elle ne soit enregistrée qu’après la réponse correcte « a » ; après une réponse incorrecte, afficher l’explication existante et laisser l’apprenant réessayer sans déverrouiller « Suivant ».",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__01.json → lessons[0].chapters[3].passThreshold=1 et blocks[0] (knowledge_check, correctAnswer=a, required=true) ; client/src/components/blocks/GenericLearningBlocks.tsx → KnowledgeCheckBlock.select appelle onComplete(..., id === correctAnswer) pour toute sélection ; client/src/pages/training/LessonViewer.tsx → onComplete du knowledge_check ajoute systématiquement l’id à completedNovasavoInteractions et isGatedByNovasavoInteraction teste seulement cette complétion ; client/src/pages/training/checkpointGate.ts → seuls les blocks[type=checkpoint] sont comptés.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Corriger la règle de complétion/du gate afin que la progression obligatoire de ce checkpoint dépende d’une réponse correcte, puis tester le chemin réponse incorrecte → réessai → réponse correcte avant le mini-projet."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "ia_appliquee_metiers_tp__01-mini-project",
+          "title": "Mini-projet et preuve de réalisation",
+          "score_100": 47,
+          "verified_dimensions": [
+            "L’objectif du mini-projet est visible : produire 30 prospects B2B fictifs pour une niche locale, un score ICP et une feuille priorisée justifiant le score.",
+            "Les instructions de preuve demandent explicitement un scénario testé, un résultat, un contrôle effectué et l’étape restant soumise à validation humaine ; l’environnement, la ressource, l’indice et la correction sont rendus par CloudExerciseBlock.",
+            "Le chapitre est placé après l’objectif, la préparation, la démarche et le checkpoint ; sa transition macro-pédagogique est cohérente.",
+            "La correction reste masquée avant soumission et un message de succès est disponible après validation."
+          ],
+          "unverified_dimensions": [
+            "Le contenu effectif du support fictif référencé par /manus-storage/01-01-agent-de-prospection-google-maps-avec-scoring-automatique-support-fictif_1d8368f8.md n’est pas disponible dans les fichiers fournis ; il n’est pas considéré comme absent.",
+            "La capacité réelle des comptes, clés et outils de démonstration à exécuter le scénario n’a pas été testée ; aucun environnement apprenant n’a été utilisé.",
+            "Aucun média image, audio ou vidéo n’est déclaré dans ce chapitre."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-070-002",
+              "course_id": "ia_appliquee_metiers_tp__01",
+              "chapter_id": "ia_appliquee_metiers_tp__01-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__01-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "guidage",
+              "description": "Le TP de 2 h 30 ne fournit aucune étape de réalisation structurée dans le champ steps. L’apprenant voit un objectif et une liste de compétences, mais pas de séquence guidée reliant explicitement le cadrage fictif, l’extraction, le traitement/scoring, la restitution dans Sheets, le test et la preuve. CloudExerciseBlock n’affiche une section numérotée « Étapes » que si le tableau steps contient des éléments.",
+              "current_content": "assignment: « Créer un workflow qui génère 30 prospects B2B pour une niche locale, calcule un score ICP et produit une feuille priorisée avec justification du score. » ; instructions: liste de quatre compétences ; steps: absent.",
+              "proposed_content": "Étapes de réalisation (à compléter uniquement avec les procédures sourcées propres aux outils) : 1. Cadrer : choisissez une niche locale fictive ; notez les critères, les données fictives, les limites d’action et la validation humaine requise. 2. Extraire : dans l’environnement de démonstration, déclenchez l’extraction Google Maps via Apify. 3. Traiter : dédupliquez les résultats et calculez avec Gemini un score ICP accompagné de sa justification. 4. Restituer et tester : structurez la feuille Google Sheets, vérifiez un cas fictif et consignez les écarts. 5. Prouver : décrivez le scénario, le résultat obtenu, le contrôle effectué et l’action qui reste sous validation humaine.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__01.json → lessons[0].chapters[4].blocks[0] : aucun champ steps ; client/src/components/CloudExerciseBlock.tsx → la section « Étapes » n’est rendue que lorsque tpSteps.length > 0 (lignes 278-297).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Ajouter un tableau steps avec des actions observables, dans l’ordre de la démarche déjà déclarée. Ne pas inventer les clics, paramètres ou configurations n8n/Apify/Gemini/Sheets qui ne sont pas fournis par les données ou le support vérifié."
+            },
+            {
+              "issue_id": "ped-070-003",
+              "course_id": "ia_appliquee_metiers_tp__01",
+              "chapter_id": "ia_appliquee_metiers_tp__01-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__01-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "La « preuve de réalisation » obligatoire peut être validée par toute saisie non vide : aucun minimumAnswerLength, critère visible (learnerCriteria/rubricCriteria), correction serveur ou réflexion obligatoire n’est configuré. Dans ce mode, CloudExerciseBlock marque la soumission comme terminée et appelle onComplete sans évaluer le contenu. Le verrouillage du chapitre se lève donc sans vérifier que la preuve comporte les quatre éléments demandés.",
+              "current_content": "Les instructions demandent de décrire « le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine », mais le bloc ne déclare ni minimumAnswerLength, ni learnerCriteria, ni rubricCriteria, ni serverGradedAssessment.",
+              "proposed_content": "Critères de preuve à rendre visibles avant la zone de saisie : « Votre preuve doit indiquer : 1) le scénario fictif testé ; 2) le résultat obtenu ; 3) au moins un contrôle effectué ; 4) l’action qui reste soumise à validation humaine. Vérifiez également que vous ne mentionnez aucun secret, mot de passe ni donnée personnelle réelle. »",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__01.json → lessons[0].chapters[4].blocks[0] ne contient aucun minimumAnswerLength, learnerCriteria, rubricCriteria, serverGradedAssessment ni requirePostRevealReflection ; client/src/components/blocks/cloudExerciseValidation.ts → une valeur absente produit le minimum 1 ; client/src/components/CloudExerciseBlock.tsx → hors évaluation suivie, submit marque submitted puis onComplete dès que ce minimum est atteint (lignes 153-161) ; client/src/pages/training/LessonViewer.tsx → completedCloudExercises déverrouille le chapitre.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Configurer des critères apprenant visibles et un contrôle de complétude compatible avec la nature réflexive de la preuve (au minimum une longueur minimale justifiée et une auto-vérification obligatoire ; idéalement une évaluation structurée). Le déverrouillage doit intervenir après ce contrôle, pas après un seul caractère."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "ia_appliquee_metiers_tp__01-final-quiz",
+          "title": "Quiz final : valider la démarche",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Les quatre QCM ont des questions lisibles, des options cohérentes, une bonne réponse et une explication ; SingleChoiceExercise montre le résultat, l’explication et permet de réessayer.",
+            "Le tri final possède un titre, une consigne explicite, quatre catégories et quatre cartes ; MatchingExercise rend aussi les instructions d’interface pour cliquer ou glisser-déposer, le compteur de réponses, les résultats par carte et la possibilité de recommencer.",
+            "Le contenu réinvestit les thèmes traités : données fictives, contrôle humain, critères métier, traçabilité et protection des secrets.",
+            "Le verrouillage de fin est cohérent pour les activités du quiz : il requiert les quatre réponses correctes selon passThreshold: 4 et un tri correct avant de permettre la fin de leçon."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif pédagogique de chapitre formalisé séparément du titre n’est disponible.",
+            "Aucun média image, audio ou vidéo n’est déclaré dans ce chapitre."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-070-004",
+              "course_id": "ia_appliquee_metiers_tp__01",
+              "chapter_id": "ia_appliquee_metiers_tp__01-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__01-quiz-order",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "La consigne annonce que « La correction est disponible après une tentative complète », et le bloc contient un feedback pédagogique. Pourtant LessonViewer ne transmet que block.correction à MatchingExercise, pas block.feedback ; MatchingExercise n’affiche un texte de correction détaillé que si exercise.correction est renseigné. Après une tentative erronée, l’apprenant voit le score et les cartes incorrectes, mais pas le feedback explicatif fourni dans les données ni la correction annoncée.",
+              "current_content": "instructions: « Placez chaque action dans son étape. La correction est disponible après une tentative complète. » ; feedback: « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. » ; correction: absent.",
+              "proposed_content": "Correction : « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. »",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__01.json → lessons[0].chapters[5].blocks[4] contient feedback mais pas correction ; client/src/pages/training/LessonViewer.tsx → branche bucket_sort transmet correction: block.correction sans transmettre feedback ; client/src/components/MatchingExercise.tsx → le texte détaillé est affiché seulement si exercise.correction est présent (shouldShowDetailedCorrection et lignes 444-450).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_code",
+              "recommended_action": "Faire rendre le feedback existant après toute tentative complète (par exemple en le transmettant comme correction), ou renseigner le champ correction avec ce texte. Maintenir le marquage des cartes et le bouton Réessayer déjà présents."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "courses_reviewed": 1,
+    "lessons_reviewed": 1,
+    "chapters_reviewed": 6,
+    "activities_reviewed": 8,
+    "activity_coverage": "1 revue de ressource, 1 knowledge_check, 1 cloud_exercise, 4 QCM à choix unique et 1 tri par catégories ; chaque activité a été lue dans le JSON et vérifiée contre son branchement LessonViewer/composant pertinent.",
+    "score_100_renormalized": 76,
+    "scoring_method": "Appréciation qualitative renormalisée sur les dimensions vérifiables dans les JSON et le code de rendu. Les contenus de la ressource externe et du support /manus-storage non accessibles ne reçoivent pas de note.",
+    "confirmed_issues": {
+      "total": 4,
+      "P0": 0,
+      "P1": 3,
+      "P2": 1,
+      "P3": 0
+    },
+    "key_findings": [
+      "Les objectifs, le cadre de sécurité et la progression macro vers le TP sont explicites ; les signaux statiques de manque d’explication dans les chapitres checkpoint et quiz ne sont donc pas repris automatiquement.",
+      "Le checkpoint de sécurité affiche un feedback correct mais ne bloque pas sur une réponse incorrecte, contrairement au seuil annoncé.",
+      "Le mini-projet dispose d’un objectif et d’une correction, mais manque d’étapes structurées et accepte une preuve non vide sans en vérifier la complétude.",
+      "Le quiz final est globalement clair et séquentiellement verrouillé ; le feedback textuel déclaré pour le tri n’est pas rendu après erreur."
+    ]
+  },
+  "limits": [
+    "Audit qualitatif réalisé en lecture seule sur le JSON du cours, le registre des blocs et les composants de rendu/progression ; aucun contenu, code, base ou configuration n’a été modifié.",
+    "La ressource source n8n et le support fictif /manus-storage n’ont pas été ouverts ni testés dans un navigateur ou un environnement apprenant. Leur contenu, disponibilité, accessibilité et adéquation ne sont pas inférés comme absents ou défaillants.",
+    "Aucun média image, audio ou vidéo n’est déclaré dans les six chapitres ; l’évaluation de contextualisation, transcription et accessibilité des médias ne s’applique pas à ces données.",
+    "Le fonctionnement a été vérifié par lecture des branches LessonViewer, CloudExerciseBlock, KnowledgeCheckBlock, MatchingExercise et des règles de progression ; aucune exécution avec un compte apprenant, ni aucune validation d’intégrations n8n/Apify/Gemini/Google Sheets, n’a été effectuée.",
+    "Les objectifs propres à plusieurs chapitres ne sont pas formalisés dans un champ dédié. Cette absence est enregistrée comme dimension non vérifiable, jamais comme anomalie P1 automatique."
+  ]
+}

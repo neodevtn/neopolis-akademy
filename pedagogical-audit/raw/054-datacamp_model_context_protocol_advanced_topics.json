@@ -1,0 +1,860 @@
+{
+  "formation_id": "datacamp_model_context_protocol_advanced_topics",
+  "courses": [
+    {
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Video: Let's get started!",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Le texte préparatoire, rendu avant la vidéo, explicite les prérequis (Python, terminal, éditeur, notions client/serveur/outil) et les précautions de sécurité.",
+            "La vidéo d’introduction est contextualisée par ce texte et sa transcription, ses sous-titres, ses slides et son lien de téléchargement sont déclarés.",
+            "LessonViewer bloque le passage jusqu’au visionnage ou au marquage manuel de la vidéo et affiche la condition de passage."
+          ],
+          "unverified_dimensions": [
+            "La lecture effective du MP4, des VTT et du PDF, la lisibilité des slides et la qualité audiovisuelle n’ont pas été testées en navigateur ; les assets déclarés ne sont pas considérés absents."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Video: Sampling",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Le média explique le principe, les rôles client/serveur, les bénéfices et les étapes d’implémentation du sampling avant les activités associées.",
+            "La transcription, les sous-titres français et anglais et les slides sont déclarés ; LessonViewer rend une transcription repliable et le contrôle de complétion.",
+            "La séquence se poursuit par un QCM, un walkthrough puis un TP sur le même mécanisme."
+          ],
+          "unverified_dimensions": [
+            "Le contenu audiovisuel et la lisibilité des représentations visuelles n’ont pas été visionnés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Sampling",
+          "score_100": 74,
+          "verified_dimensions": [
+            "L’énoncé contextualise le problème, demande explicitement ce que permet le sampling et fournit trois options.",
+            "L’indice et l’explication sont présents ; MultiChoiceBlock affiche les options correctes/incorrectes, impose le bon choix pour compléter et offre un réessai.",
+            "L’activité suit directement la vidéo Sampling ; les prérequis sont donc disponibles dans la progression."
+          ],
+          "unverified_dimensions": [
+            "Le parcours tactile, clavier et lecteur d’écran n’a pas été exécuté en session apprenant."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-006",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après une réponse erronée, l’interface colore les choix mais affiche aussi l’explication stockée, qui commence par « Correct ! ». Le feedback textuel contredit donc le résultat de l’apprenant au lieu d’annoncer explicitement l’erreur et la réponse attendue.",
+              "current_content": "Explication affichée après toute soumission : « Correct ! Le serveur transmet un prompt au client, le client l’exécute avec son propre modèle, puis le texte généré revient — le serveur n’a donc pas besoin de sa propre clé API. »",
+              "proposed_content": "Succès : « Bonne réponse. Le serveur transmet un prompt au client, qui l’exécute avec son propre modèle ; le serveur n’a donc pas besoin de clé API. » Échec : « Réponse incorrecte. Le sampling demande au client connecté d’exécuter un prompt avec son modèle pour le compte du serveur. »",
+              "evidence": "client/public/data/courses/model_context_protocol_advanced_topics__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_qcm_multiple].explanation ; client/src/components/blocks/MultiChoiceBlock.tsx lignes 120-123 rend la même explication après toute soumission, y compris quand isAllCorrect est faux.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Rendre le texte de feedback conditionnel à la correction ; conserver l’explication conceptuelle, mais préfixer clairement l’échec et vérifier les états correct/incorrect dans le navigateur."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Sampling walkthrough",
+          "score_100": 86,
+          "verified_dimensions": [
+            "La consigne indique ce qui doit être suivi dans la ressource : demande du serveur, exécution par le client, puis retour du texte ; elle précise qu’aucune exécution n’est demandée.",
+            "Le bloc rend un lien d’ouverture et une confirmation explicite « J’ai consulté cette ressource ».",
+            "Le verrouillage est cohérent : LessonViewer empêche le passage tant que la consultation n’est pas confirmée et expose ce motif dans le message de navigation."
+          ],
+          "unverified_dimensions": [
+            "Le contenu, la navigation et la lisibilité effective du PDF local n’ont pas été inspectés ; l’asset déclaré et compté par l’import n’est pas considéré absent."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Delegate the summary with sampling",
+          "score_100": 55,
+          "verified_dimensions": [
+            "Le TP fournit un contexte métier, l’action attendue, un squelette de code avec blancs, un indice, un guide d’environnement, une ressource et une correction détaillée.",
+            "Il arrive après la vidéo, le QCM et le walkthrough Sampling : la transition théorie→pratique et les prérequis conceptuels sont cohérents.",
+            "La correction est volontairement masquée avant la soumission par CloudExerciseBlock."
+          ],
+          "unverified_dimensions": [
+            "L’exécution réelle de la session FastMCP/client et la validité runtime des imports et helpers n’ont pas été testées."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-001",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire se valide avec toute réponse non vide : aucun minimum de réponse, aucune rubrique et aucun évaluateur serveur ne sont configurés. Le composant révèle alors la correction et déverrouille la navigation sans vérifier les trois blancs ou l’exécution du code.",
+              "current_content": "Configuration : minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent, successMessage vide. La consigne demande pourtant de compléter create_message, system_prompt et result.content.text.",
+              "proposed_content": "Conserver la consigne et la correction ; remplacer la validation libre par un validateur des trois complétions/tests du code. À défaut d’exécution, afficher explicitement une auto-évaluation non bloquante, plutôt qu’une validation de compétence.",
+              "evidence": "client/public/data/courses/model_context_protocol_advanced_topics__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 122-161 applique une longueur minimale par défaut de 1 puis appelle onComplete sans évaluation quand il n’y a ni rubrique ni serveur ; LessonViewer.tsx lignes 1587-1592 déverrouille sur cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Priorité P1 : ajouter une validation exécutable ou serveur et tester qu’une réponse d’un caractère ne déverrouille plus le TP, tandis qu’une tentative validée donne accès à la correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Video: Log and progress notifications",
+          "score_100": 87,
+          "verified_dimensions": [
+            "La vidéo explique le besoin utilisateur, distingue ctx.info de ctx.report_progress et prépare le QCM puis le TP sur les notifications.",
+            "Une transcription, des slides et un sous-titre anglais sont déclarés ; le lecteur expose la transcription et le contrôle de passage.",
+            "La progression est cohérente avec le thème précédent et le TP suivant."
+          ],
+          "unverified_dimensions": [
+            "La compréhension effective du média, sa qualité audio et la disponibilité des assets n’ont pas été testées."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Log and progress notifications",
+          "score_100": 74,
+          "verified_dimensions": [
+            "L’énoncé décrit le symptôme, l’objectif et demande clairement la méthode Context qui rapporte une progression.",
+            "L’indice et l’explication sont disponibles ; le bon choix est requis avant de continuer et le réessai est possible.",
+            "Le QCM est placé après la vidéo qui distingue les deux méthodes et avant le walkthrough et le TP."
+          ],
+          "unverified_dimensions": [
+            "L’ergonomie effective sur petits écrans n’a pas été exercée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-007",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le texte de correction positif est rendu également après une mauvaise réponse, sans expliciter l’échec dans le feedback textuel.",
+              "current_content": "« Correct! ctx.report_progress(progress, total) sends a progress update… » est affiché après toute soumission.",
+              "proposed_content": "Échec : « Réponse incorrecte. ctx.report_progress(progress, total) envoie une progression numérique ; ctx.info sert aux messages de journal. » Succès : conserver l’explication actuelle avec un préfixe positif.",
+              "evidence": "JSON → lessons[0].chapters[6].blocks[id=dc_1_act_07_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 rend explanation sans distinguer isAllCorrect.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Ajouter un feedback d’échec conditionnel, nommant l’option correcte et la distinction ctx.info/ctx.report_progress."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Notifications walkthrough",
+          "score_100": 86,
+          "verified_dimensions": [
+            "La consigne précise l’objectif d’observation et le chemin à suivre dans la ressource.",
+            "Le bouton d’ouverture et la confirmation de consultation sont rendus ; ils sont alignés avec le verrouillage séquentiel.",
+            "Le walkthrough se situe avant le TP du même sujet."
+          ],
+          "unverified_dimensions": [
+            "Le contenu détaillé du PDF et son rendu visuel n’ont pas été ouverts."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Add progress and logs to a slow tool",
+          "score_100": 55,
+          "verified_dimensions": [
+            "L’activité précise le résultat attendu, les appels à placer, l’endroit de chaque appel et les arguments attendus ; le squelette, l’indice, le guide d’environnement et la correction sont présents.",
+            "Elle est précédée de la vidéo, du QCM et du walkthrough sur les notifications.",
+            "CloudExerciseBlock rend la soumission, la correction verrouillée et les ressources déclarées."
+          ],
+          "unverified_dimensions": [
+            "L’exécution réelle de run_tool, LOGS et PROGRESS n’a pas été testée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-002",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP bloque le passage mais accepte n’importe quel texte non vide et déverrouille immédiatement sa correction, sans contrôler ctx.info, ctx.report_progress ni leurs arguments.",
+              "current_content": "minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents ; la correction attend ctx.info puis ctx.report_progress(i + 1, len(numbers)).",
+              "proposed_content": "Valider les deux appels et les arguments attendus par un test de code ou une évaluation serveur. Si cette validation ne peut être fournie, rendre la soumission et la correction non bloquantes et annoncer qu’il s’agit d’une auto-vérification.",
+              "evidence": "JSON → lessons[0].chapters[8].blocks[id=dc_1_act_09_tp] ; CloudExerciseBlock.tsx lignes 153-161 valide sans évaluation une réponse de longueur minimale 1 ; LessonViewer.tsx lignes 1587-1592 fonde le verrouillage sur onComplete.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Configurer un validateur de TP et effectuer un test de non-déverrouillage avec une réponse minimale invalide."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch01_act10",
+          "title": "Video: Roots",
+          "score_100": 88,
+          "verified_dimensions": [
+            "La vidéo introduit le problème, définit les roots, illustre le contrôle de chemin et explique la responsabilité d’implémentation côté serveur.",
+            "Transcription, sous-titres bilingues et slides sont déclarés ; la vidéo est encadrée par le lecteur et son contrôle de complétion.",
+            "Le QCM, le walkthrough et les deux TPs suivants réinvestissent exactement cette notion."
+          ],
+          "unverified_dimensions": [
+            "Les démonstrations visuelles et l’accessibilité de leurs images n’ont pas été observées dans un lecteur actif."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch01_act11",
+          "title": "Roots",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Le scénario et la question définissent clairement les roots et l’option correcte est déterminée.",
+            "Un indice et une explication sont fournis ; le QCM est bloquant jusqu’à la bonne réponse et propose un réessai.",
+            "L’activité suit l’explication vidéo et précède la consultation guidée et les TPs Roots."
+          ],
+          "unverified_dimensions": [
+            "Le test manuel des interactions de sélection n’a pas été effectué."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-008",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch01_act11",
+              "content_id": "dc_1_act_11_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après une erreur, le composant affiche aussi l’explication commençant par « Correct ! », sans message textuel d’échec.",
+              "current_content": "« Correct ! Les racines définissent l’ensemble des fichiers et dossiers… »",
+              "proposed_content": "Échec : « Réponse incorrecte. Les roots délimitent les fichiers et dossiers auxquels le serveur est autorisé à accéder. » Succès : reprendre l’explication existante.",
+              "evidence": "JSON → lessons[0].chapters[10].blocks[id=dc_1_act_11_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 affiche ce champ après toute soumission.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Différencier le feedback de réussite de celui d’échec."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch01_act12",
+          "title": "Roots walkthrough",
+          "score_100": 86,
+          "verified_dimensions": [
+            "La consigne explicite l’observation : lecture des roots, contrôle des chemins et maintien dans les dossiers autorisés.",
+            "La ressource est clairement actionnable et la confirmation est nécessaire pour poursuivre.",
+            "Elle est située entre le contrôle de compréhension et le TP de mise en œuvre."
+          ],
+          "unverified_dimensions": [
+            "La qualité du PDF, ses illustrations et son contenu détaillé ne sont pas vérifiés sans ouverture de l’asset."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch01_act13",
+          "title": "Stop your tool from escaping its roots",
+          "score_100": 55,
+          "verified_dimensions": [
+            "Le TP décrit le risque de sécurité, la fonction à écrire, les racines accordées, les fichiers de test, les étapes, l’indice et la correction.",
+            "Il suit l’explication et le walkthrough Roots ; les connaissances requises sont donc explicitement introduites auparavant.",
+            "La solution est masquée jusqu’à une soumission."
+          ],
+          "unverified_dimensions": [
+            "La résolution effective des Path, des racines et du client MCP n’a pas été exécutée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-003",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch01_act13",
+              "content_id": "dc_1_act_13_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "La compétence de sécurité annoncée est verrouillée par une simple soumission textuelle non vide ; l’activité ne vérifie ni list_roots ni le retour True lorsque le chemin est dans une root.",
+              "current_content": "Aucun minimum de réponse explicite, aucune rubrique et aucun évaluateur serveur ; la correction attend ctx.session.list_roots() et return True.",
+              "proposed_content": "Exiger une soumission de code contrôlée par deux tests : chemin dans /tmp/mcp_allowed_root accepté et /tmp/mcp_outside.mp4 refusé. Présenter un feedback spécifique sur chaque cas échoué.",
+              "evidence": "JSON → lessons[0].chapters[12].blocks[id=dc_1_act_13_tp] ; CloudExerciseBlock.tsx lignes 153-161 et LessonViewer.tsx lignes 1587-1592 établissent la validation/déverrouillage sans test du code en l’absence de configuration d’évaluation.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Ajouter un test automatisé ou une évaluation serveur avant le déverrouillage et vérifier le retour de correction sur les deux chemins."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 13,
+          "chapter_id": "dc_ch01_act14",
+          "title": "Read a file only if it's inside the roots",
+          "score_100": 55,
+          "verified_dimensions": [
+            "L’activité réutilise explicitement is_path_allowed du TP précédent et énonce l’objectif de sécurité avant lecture de fichier.",
+            "Le positionnement après le TP de contrôle des roots matérialise une progression de fonction isolée vers intégration dans un outil.",
+            "Le squelette, les consignes, l’indice et la correction sont disponibles au rendu."
+          ],
+          "unverified_dimensions": [
+            "L’exécution réelle de read_file et des fichiers de test n’a pas été menée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-004",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch01_act14",
+              "content_id": "dc_1_act_14_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le dernier TP Roots est déverrouillable par tout texte non vide, alors qu’il doit vérifier une garde de sécurité avant l’accès à un fichier.",
+              "current_content": "Configuration sans minimumAnswerLength, rubrique ni serverGradedAssessment ; la correction attend une vérification préalable de is_path_allowed avant lecture.",
+              "proposed_content": "Valider l’ordre de contrôle et les comportements autorisé/refusé par test exécutable ; en cas d’échec, signaler que le chemin ne doit jamais être lu avant la vérification des roots.",
+              "evidence": "JSON → lessons[0].chapters[13].blocks[id=dc_1_act_14_tp] ; CloudExerciseBlock.tsx lignes 122-161 applique la complétion sans validation technique quand les champs d’évaluation sont absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Ajouter une évaluation de code avant le verrouillage de sortie et couvrir les chemins autorisé et refusé."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Video: JSON message types",
+          "score_100": 88,
+          "verified_dimensions": [
+            "La vidéo lance la seconde leçon en expliquant les messages JSON-RPC avant les activités de catégorisation et de construction de messages.",
+            "Transcription, sous-titres bilingues, slides et téléchargement de chapitre sont déclarés et rendus par les composants concernés.",
+            "La condition vidéo de passage est explicite dans LessonViewer."
+          ],
+          "unverified_dimensions": [
+            "La qualité pédagogique fine des animations/slides et l’ouverture effective des assets ne sont pas vérifiées."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "JSON message types",
+          "score_100": 74,
+          "verified_dimensions": [
+            "La question définit le scénario et demande le modèle de message ; les quatre options rendent l’action attendue non ambiguë.",
+            "Indice, explication, réessai et verrouillage sur bonne réponse sont disponibles au rendu.",
+            "L’activité suit la vidéo et prépare le tri request/notification."
+          ],
+          "unverified_dimensions": [
+            "Aucune session de navigation réelle n’a été exécutée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-009",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "L’explication positive est affichée après une réponse erronée comme après une réponse correcte.",
+              "current_content": "« Correct ! Une Call Tool Request est associée à un Call Tool Result… »",
+              "proposed_content": "Échec : « Réponse incorrecte. L’échange décrit est une paire requête-résultat : le client attend un Call Tool Result. » Succès : conserver l’explication existante.",
+              "evidence": "JSON → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 ne conditionne pas l’explication au succès.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Créer deux messages de feedback conditionnels."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Sort the MCP messages",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Le titre, l’instruction, les deux catégories et les six cartes rendent l’action de tri et le critère de réussite explicites.",
+            "MatchingExercise fournit l’aide clic/glisser-déposer, les indicateurs de cartes justes/fausses, le réessai et une alternative clavier ; le verrouillage attend un tri intégralement correct.",
+            "Le tri réinvestit le QCM précédent et précède le TP qui construit une requête et une notification."
+          ],
+          "unverified_dimensions": [
+            "La réactivité tactile réelle et l’usage au clavier n’ont pas été exercés dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-017",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback_et_rendu",
+              "description": "Le tri possède un feedback pédagogique utile dans le JSON, mais LessonViewer ne le transmet pas à MatchingExercise. À la réussite, seul « 6/6 · Parfait ! » est visible ; après erreur, seule la proportion correcte est affichée.",
+              "current_content": "Feedback stocké non rendu : « Exactement ! Les messages qui produisent quelque chose dont l’appelant a besoin voyagent par paires… »",
+              "proposed_content": "Après réussite, afficher le feedback existant. Après erreur, afficher : « Certaines cartes sont mal placées : repérez-les en rouge, replacez-les, puis réessayez. Une requête attend une réponse ; une notification n’en attend pas. »",
+              "evidence": "JSON → lessons[1].chapters[2].blocks[id=dc_2_act_03_bucket_sort].feedback ; LessonViewer.tsx lignes 957-974 passe block.correction mais pas block.feedback ; MatchingExercise.tsx lignes 420-466 n’affiche qu’une correction fournie dans exercise.correction.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Transmettre feedback au composant, l’afficher après réussite et ajouter un message d’erreur actionnable."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Build a request and a notification",
+          "score_100": 55,
+          "verified_dimensions": [
+            "Le TP indique les trois éléments à compléter, différencie clairement request et notification, fournit un code de départ, un indice et une correction.",
+            "Il est précédé du média, du QCM et du tri sur les catégories de messages, ce qui soutient la transition vers la pratique.",
+            "CloudExerciseBlock rend l’objectif, les instructions, les ressources et la correction après soumission."
+          ],
+          "unverified_dimensions": [
+            "Le code Python et le résultat imprimé n’ont pas été exécutés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-005",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire ne vérifie pas les trois constructions demandées (id=1, méthode notifications/initialized et clé id) ; tout texte non vide révèle la correction et ouvre la suite.",
+              "current_content": "minimumAnswerLength absent, rubricCriteria absent et serverGradedAssessment absent ; la solution précise pourtant les trois réponses attendues.",
+              "proposed_content": "Ajouter un test des trois valeurs dans le dictionnaire et de expects_reply(), avec un feedback distinct pour un id absent, une mauvaise méthode et une clé incorrecte.",
+              "evidence": "JSON → lessons[1].chapters[3].blocks[id=dc_2_act_04_tp] ; CloudExerciseBlock.tsx lignes 153-161 complète sans évaluation si aucun mécanisme suivi n’est configuré ; LessonViewer.tsx lignes 1587-1592 lie cette complétion au passage.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Mettre en place une validation de code/test avant déverrouillage et tester une soumission arbitraire contre une soumission correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Video: The STDIO transport",
+          "score_100": 88,
+          "verified_dimensions": [
+            "La vidéo définit le transport, expose la communication stdin/stdout, son initialisation et sa limite machine locale avant les contrôles associés.",
+            "Transcription, sous-titres bilingues et slides sont déclarés ; le rendu prévoit un marquage manuel possible et une transcription repliable.",
+            "Le QCM, la remise en ordre et le QCM scénarisé qui suivent réinvestissent le contenu."
+          ],
+          "unverified_dimensions": [
+            "La consultation effective de la démonstration et des assets n’a pas été réalisée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "The STDIO transport",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Le scénario rend la question et la contrainte réseau explicites ; les propositions sont discriminantes.",
+            "L’explication, le réessai et la condition de réussite sont rendus par le QCM.",
+            "L’activité suit le média STDIO et prépare la mise en ordre du handshake."
+          ],
+          "unverified_dimensions": [
+            "Le comportement du contrôle dans une session mobile réelle n’a pas été vérifié."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-010",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "L’explication affirmative est affichée également en cas de sélection erronée.",
+              "current_content": "« Correct! STDIO launches the server as a child process… »",
+              "proposed_content": "Échec : « Réponse incorrecte. STDIO relie un client à un processus serveur local via stdin/stdout ; il ne fournit pas de canal réseau. » Succès : conserver l’explication actuelle.",
+              "evidence": "JSON → lessons[1].chapters[5].blocks[id=dc_2_act_06_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 affiche ce même texte après toute soumission.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Conditionner le libellé du feedback au résultat de la réponse."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Initialize an MCP connection in the right order",
+          "score_100": 84,
+          "verified_dimensions": [
+            "La consigne demande explicitement de remettre les messages dans l’ordre, les quatre étapes sont nommées et l’action est rendue par glisser-déposer ou boutons haut/bas.",
+            "Le feedback de réussite explique le handshake ; le composant donne les positions correctes/incorrectes, le score et un réessai.",
+            "L’activité suit le média STDIO qui explicite la séquence d’initialisation et le verrouillage exige l’ordre exact."
+          ],
+          "unverified_dimensions": [
+            "L’ergonomie de réordonnancement par clavier dans un navigateur réel n’a pas été testée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Watch messages flow over stdin/stdout",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Le scénario donne les actions à mener avant la question et demande explicitement la cause d’une absence de réponse.",
+            "Les options, l’indice, l’explication et la condition de réussite sont présents ; un réessai est prévu.",
+            "La question réinvestit la vidéo STDIO et la remise en ordre antérieures."
+          ],
+          "unverified_dimensions": [
+            "Le panneau interactif évoqué par l’énoncé n’a pas été exercé visuellement dans une session navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-011",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le retour textuel utilise « Correct ! » même si l’apprenant a répondu faux.",
+              "current_content": "« Correct! The initialized notification is a one-way message… »",
+              "proposed_content": "Échec : « Réponse incorrecte. Une notification est un message à sens unique et n’attend pas de réponse. » Succès : reprendre l’explication actuelle.",
+              "evidence": "JSON → lessons[1].chapters[7].blocks[id=dc_2_act_08_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Distinguer explicitement les feedbacks de réussite et d’échec."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Video: The StreamableHTTP transport",
+          "score_100": 88,
+          "verified_dimensions": [
+            "La vidéo met en relation le transport distant, les drapeaux stateless_http/json_response et leurs effets avant les QCM StreamableHTTP.",
+            "La transcription, les slides et un sous-titre anglais sont déclarés ; le média est intégré au mécanisme de complétion du lecteur.",
+            "La séquence conduit logiquement du contraste STDIO vers StreamableHTTP."
+          ],
+          "unverified_dimensions": [
+            "Le visionnage de la démonstration et la qualité du VTT n’ont pas été testés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": "The StreamableHTTP transport",
+          "score_100": 74,
+          "verified_dimensions": [
+            "L’énoncé décrit précisément la configuration et le symptôme, puis demande la cause ; les options sont cohérentes avec les notions introduites.",
+            "Indice, explication, réessai et verrouillage sur bonne réponse sont rendus.",
+            "Le QCM suit le média qui explique les limitations du transport HTTP."
+          ],
+          "unverified_dimensions": [
+            "Les comportements réseau réels de stateless_http et json_response n’ont pas été exécutés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-012",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act10",
+              "content_id": "dc_2_act_10_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le composant affiche le texte « Correct ! » même après une réponse incorrecte.",
+              "current_content": "« Correct! Sampling, progress, and logging all rely on the server reaching out to the client… »",
+              "proposed_content": "Échec : « Réponse incorrecte. Ces fonctions nécessitent que le serveur envoie des messages au client, ce que cette configuration HTTP ne maintient pas. » Succès : conserver l’explication actuelle.",
+              "evidence": "JSON → lessons[1].chapters[9].blocks[id=dc_2_act_10_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Afficher un texte d’échec distinct avant la justification conceptuelle."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Flip the flags, predict the breakage",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Le scénario explique l’observation attendue et demande le point commun des capacités arrêtées.",
+            "Le bon choix est explicite dans la donnée ; un indice, une explication et le réessai sont disponibles.",
+            "La progression prolonge la vidéo StreamableHTTP avant le média explicatif approfondi."
+          ],
+          "unverified_dimensions": [
+            "Le panneau de simulation mentionné dans le scénario n’a pas été exécuté dans une session apprenant."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-013",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "L’explication positive est utilisée après les réponses correctes comme erronées, ce qui atténue la signalisation textuelle de l’échec.",
+              "current_content": "« Correct! Progress, logging, and sampling all depend on the server pushing messages to the client… »",
+              "proposed_content": "Échec : « Réponse incorrecte. Les fonctions en panne ont toutes besoin d’un message initié par le serveur vers le client. » Succès : conserver l’explication actuelle.",
+              "evidence": "JSON → lessons[1].chapters[10].blocks[id=dc_2_act_11_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Introduire un feedback d’échec conditionnel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch02_act12",
+          "title": "Video: StreamableHTTP in depth",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le média récapitule les limitations HTTP puis explique le contournement SSE, l’identifiant de session et la circulation des messages avant les questions de réinvestissement.",
+            "Transcription, sous-titres bilingues et slides sont déclarés ; le lecteur et la condition de passage sont traités par LessonViewer.",
+            "Le contenu prépare directement les QCM SSE et le sujet stateful/stateless."
+          ],
+          "unverified_dimensions": [
+            "Les schémas, la vidéo et les VTT n’ont pas été inspectés à l’exécution."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch02_act13",
+          "title": "StreamableHTTP in depth",
+          "score_100": 74,
+          "verified_dimensions": [
+            "L’énoncé formule le problème HTTP et demande explicitement le mécanisme StreamableHTTP ; les réponses sont distinctes.",
+            "L’indice, l’explication, le réessai et le verrouillage sont présents.",
+            "Ce QCM suit la vidéo approfondie qui fournit le concept SSE requis."
+          ],
+          "unverified_dimensions": [
+            "Le rendu effectif de l’activité dans une session apprenant n’a pas été testé."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-014",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act13",
+              "content_id": "dc_2_act_13_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "La justification commence par « Correct ! » et est affichée après une soumission incorrecte comme correcte.",
+              "current_content": "« Correct ! A long-lived SSE response is held open… »",
+              "proposed_content": "Échec : « Réponse incorrecte. StreamableHTTP garde ouverte une réponse SSE de longue durée afin que le serveur diffuse des messages au client. » Succès : conserver l’explication actuelle.",
+              "evidence": "JSON → lessons[1].chapters[12].blocks[id=dc_2_act_13_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Dissocier le feedback de réussite et le feedback d’échec."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 13,
+          "chapter_id": "dc_ch02_act14",
+          "title": "Trace the SSE message flow",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Le scénario nomme l’action, ce qui doit être observé dans les deux flux et la question finale ; l’action attendue est identifiable.",
+            "Les options, le choix correct, l’indice, l’explication et le réessai sont définis.",
+            "La question suit le cours approfondi sur les flux SSE persistants."
+          ],
+          "unverified_dimensions": [
+            "Le traceur mentionné par l’énoncé n’a pas été exécuté visuellement ; sa restitution exacte est non vérifiée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-015",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act14",
+              "content_id": "dc_2_act_14_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après une mauvaise réponse, l’apprenant reçoit le même texte débutant par « Correct ! » que dans l’état de réussite.",
+              "current_content": "« Correct ! La notification de progression était le seul message qui transitait par le flux SSE GET persistant… »",
+              "proposed_content": "Échec : « Réponse incorrecte. La notification de progression utilise le flux SSE GET persistant ; le résultat et le log suivent le flux POST de l’appel. » Succès : conserver l’explication actuelle.",
+              "evidence": "JSON → lessons[1].chapters[13].blocks[id=dc_2_act_14_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Ajouter un message d’échec explicite et contextualisé."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 14,
+          "chapter_id": "dc_ch02_act15",
+          "title": "Video: State and the StreamableHTTP transport",
+          "score_100": 89,
+          "verified_dimensions": [
+            "La vidéo explique les compromis stateful/stateless, la montée en charge, le load balancing et json_response avant les derniers contrôles.",
+            "La transcription, les sous-titres bilingues et les slides sont déclarés et le lecteur apporte une solution de repli par marquage manuel.",
+            "Le média précède le QCM sur json_response et le tri de synthèse."
+          ],
+          "unverified_dimensions": [
+            "Les démonstrations de déploiement et les assets médias n’ont pas été exécutés ou visionnés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 15,
+          "chapter_id": "dc_ch02_act16",
+          "title": "State and the StreamableHTTP transport",
+          "score_100": 74,
+          "verified_dimensions": [
+            "L’énoncé décrit l’effet observé et demande sans ambiguïté le drapeau à activer ; les options sont claires.",
+            "Explication, indice, réessai et verrouillage jusqu’à la bonne réponse sont fournis.",
+            "Le QCM suit la vidéo qui explique précisément json_response=True."
+          ],
+          "unverified_dimensions": [
+            "Le comportement d’un serveur MCP distant n’a pas été mis en œuvre dans le cadre de l’audit."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-016",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act16",
+              "content_id": "dc_2_act_16_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le texte de succès « Correct ! » est également rendu pour une réponse erronée.",
+              "current_content": "« Correct ! json_response=True disables streaming so each POST returns only the final result… »",
+              "proposed_content": "Échec : « Réponse incorrecte. json_response=True désactive le streaming de la réponse POST et renvoie seulement le résultat final JSON. » Succès : conserver l’explication actuelle.",
+              "evidence": "JSON → lessons[1].chapters[15].blocks[id=dc_2_act_16_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Rendre le feedback textuel conditionnel au succès."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 16,
+          "chapter_id": "dc_ch02_act17",
+          "title": "Stateful or stateless?",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Les deux catégories, les six capacités à classer et l’instruction rendent l’action et le résultat attendu explicites.",
+            "Le tri est placé après la vidéo stateful/stateless ; son contenu réutilise les compromis exposés dans cette vidéo.",
+            "Le composant guide l’action, affiche les cartes justes/fausses, permet de réessayer et bloque la suite jusqu’au classement exact."
+          ],
+          "unverified_dimensions": [
+            "Le test tactile et l’usage effectif de l’alternative clavier n’ont pas été réalisés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-audit-054-018",
+              "course_id": "model_context_protocol_advanced_topics__01",
+              "chapter_id": "dc_ch02_act17",
+              "content_id": "dc_2_act_17_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback_et_rendu",
+              "description": "Le feedback de synthèse sur le compromis stateless est présent dans le JSON mais ne parvient pas au composant de tri. L’apprenant ne voit donc pas l’explication de consolidation prévue après réussite.",
+              "current_content": "Feedback stocké non rendu : « Exactement ! Le mode sans état renonce à tout ce qui nécessite que le serveur contacte le client… »",
+              "proposed_content": "Afficher le feedback existant après réussite. Après erreur : « Reprenez les cartes signalées : sans session, le serveur ne peut plus adresser le client pour sampling, progression ou logs, tandis que les appels d’outils de base restent possibles. »",
+              "evidence": "JSON → lessons[1].chapters[16].blocks[id=dc_2_act_17_bucket_sort].feedback ; LessonViewer.tsx lignes 957-974 ne passe pas feedback ; MatchingExercise.tsx lignes 420-466 ne rend que correction.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Transmettre et afficher feedback pour le succès, et ajouter un retour d’erreur actionnable."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 17,
+          "chapter_id": "dc_ch02_act18",
+          "title": "Video: Wrapping up",
+          "score_100": 88,
+          "verified_dimensions": [
+            "La vidéo de clôture formule des pistes de réinvestissement et conclut logiquement après le tri de synthèse.",
+            "Transcription, sous-titres bilingues et slides sont déclarés ; LessonViewer rend le lecteur et sa complétion.",
+            "Le bouton final de leçon applique la même cohérence de complétion : il reste inactif tant que le média n’est pas complété ou marqué comme vu."
+          ],
+          "unverified_dimensions": [
+            "Le visionnage effectif et la pertinence détaillée des ressources de clôture n’ont pas été vérifiés."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": {
+      "courses": 1,
+      "lessons": 2,
+      "chapters": 32,
+      "activities_reviewed": 32,
+      "videos_reviewed": 10,
+      "multi_choice_exercises_reviewed": 11,
+      "resource_reviews_reviewed": 3,
+      "cloud_exercises_reviewed": 5,
+      "bucket_sorts_reviewed": 2,
+      "ordering_exercises_reviewed": 1
+    },
+    "score_100": 76,
+    "scoring_method": "Appréciation qualitative limitée aux dimensions vérifiables dans le JSON de production et le code de rendu/progression. Les dimensions non vérifiables sont listées chapitre par chapitre et ne sont pas notées artificiellement.",
+    "confirmed_issues_by_severity": {
+      "P0": 0,
+      "P1": 5,
+      "P2": 13,
+      "P3": 0,
+      "total": 18
+    },
+    "pedagogical_findings": "Le parcours est pédagogiquement séquencé : sampling, notifications et roots, puis messages JSON-RPC, STDIO et StreamableHTTP. Les vidéos, QCM, walkthroughs et TPs forment des chaînes théorie→vérification→consolidation→pratique ; les 27 signaux statiques de progression/guidage ne sont donc pas repris automatiquement comme défauts. Les énoncés, actions, indices et corrections de contenu sont généralement explicites. Les défauts confirmés portent sur la validité pédagogique de la validation : les cinq TPs obligatoires se déverrouillent sans contrôle du code ; les onze QCM affichent un feedback textuel positif même en erreur ; les deux tris perdent au rendu leur feedback de synthèse pourtant stocké.",
+    "priority": "P1 : mettre en place une évaluation réelle des 5 TPs avant déverrouillage. P2 : différencier les feedbacks correct/incorrect des 11 QCM et restituer le feedback des 2 tris. Aucun P0 confirmé.",
+    "static_pre_audit_disposition": "Les 27 signaux P1 statiques sont examinés individuellement. Ils concluaient à une absence d’explication sur le même écran ; après lecture des leçons dans l’ordre, des transcriptions, des consignes et du rendu, les prérequis sont disponibles dans les séquences précédentes. Ils sont donc classés comme faux positifs ou dimensions non confirmées, non comme défauts automatiques."
+  },
+  "limits": [
+    "Audit non modificatif fondé sur le seul JSON désigné par le manifest, le registre de blocs et les composants/règles de rendu et de progression. Aucun contenu, code ni base de données n’a été modifié.",
+    "Les MP4, MP3, VTT, PDF et assets sont déclarés via /api/assets. Le manifest d’import atteste 10 vidéos MP4/MP3 valides, 18 VTT valides, 2 PDF valides et 50 téléchargements référencés existants, mais aucune lecture binaire ni session authentifiée n’a été réalisée. Une ressource non ouverte n’est jamais présentée comme absente.",
+    "Le rendu, les feedbacks et les verrouillages ont été vérifiés par lecture de LessonViewer, CloudExerciseBlock, MultiChoiceBlock, MatchingExercise, OrderingBlock, chapterProgress et matchingGate. Aucun parcours navigateur réel, aucune soumission effective ou exécution Python/MCP n’a été menée ; l’ergonomie effective, le réseau et l’accessibilité perceptuelle restent à tester.",
+    "Des chaînes françaises et anglaises coexistent et une partie du contenu technique reste en anglais. Sans exigence explicite sur la langue cible du public, l’adéquation linguistique globale est laissée non vérifiée plutôt que qualifiée automatiquement de défaut."
+  ]
+}

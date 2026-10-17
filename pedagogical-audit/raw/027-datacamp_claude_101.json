@@ -1,0 +1,508 @@
+{
+  "formation_id": "datacamp_claude_101",
+  "courses": [
+    {
+      "course_id": "claude_101__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Premiers pas avec Claude !",
+          "score_100": 63,
+          "verified_dimensions": [
+            "L’énoncé de pratique est rendu, contextualisé (Verde Solutions), précise l’action attendue (demander trois noms), le résultat attendu et comporte un exemple de réponse.",
+            "Le composant d’évaluation IA rend les critères déduits des éléments mis en évidence, le minimum de cinq mots, une zone de réponse, la possibilité de réessayer et l’exemple de réponse.",
+            "Le titre, la description de chapitre et le support de diapositives sont rendus par LessonViewer."
+          ],
+          "unverified_dimensions": [
+            "Un objectif mesurable propre à ce chapitre n’est pas déclaré ; la description visible est l’objectif global de la leçon.",
+            "La qualité du jugement produit par le service d’évaluation IA n’a pas été exécutée en session authentifiée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:claude_101__01:dc_ch01_act01:dc_1_act_01_prompting:gate",
+              "course_id": "claude_101__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_prompting",
+              "content_type": "ai_evaluation",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La première pratique de prompt peut être contournée : bien que le chapitre soit déclaré requiredBeforeAdvance, la navigation ne considère pas les blocs ai_evaluation parmi les activités bloquantes. L’apprenant peut donc passer au chapitre suivant sans soumettre ni réussir sa première invite.",
+              "current_content": "Chapitre de type exercise avec requiredBeforeAdvance: true et bloc ai_evaluation dc_1_act_01_prompting.",
+              "proposed_content": "Aucun texte à réécrire. Ajouter ai_evaluation aux activités de validation de chapitre et utiliser la clé de complétion scoppée de ce bloc avant d’activer « Suivant ».",
+              "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[0] (requiredBeforeAdvance: true; bloc ai_evaluation); client/src/pages/training/LessonViewer.tsx → renderBlock ajoute la complétion, mais les calculs isTopActivityNavigationLocked et isGatedBy… ne testent jamais ai_evaluation.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Corriger la règle de verrouillage de manière générique pour les blocs ai_evaluation, puis ajouter un test de non-contournement sur ce chapitre."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "What is Claude?",
+          "score_100": 81,
+          "verified_dimensions": [
+            "La question présente un scénario, une action identifiable, quatre options, une réponse configurée, un indice et une explication après soumission.",
+            "Le rendu précise « 1 réponse attendue », affiche la bonne réponse et autorise une nouvelle tentative ; le passage est verrouillé jusqu’à la réponse correcte.",
+            "Le chapitre s’appuie sur l’introduction et la première activité de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique au chapitre non déclaré ; la description affichée est l’objectif général de la leçon.",
+            "Exactitude fonctionnelle de Claude hors du contenu fourni non auditée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Vidéo : Votre première conversation avec Claude",
+          "score_100": 55,
+          "verified_dimensions": [
+            "Le titre et la description contextualisent la vidéo ; le lecteur, un lien vers les diapositives, les sous-titres déclarés et une transcription dépliable sont rendus par LessonViewer.",
+            "La transcription traite explicitement de la première conversation, du cadre de prompt en trois parties et de l’usage de Claude ; elle prépare le QCM suivant sur ce cadre.",
+            "La source est déclarée comme MP4 locale avec sous-titres et transcription ; aucune ressource API n’a été présumée absente."
+          ],
+          "unverified_dimensions": [
+            "La lisibilité effective des images, de l’audio et des diapositives du MP4 n’a pas été contrôlée par lecture navigateur.",
+            "Objectif mesurable de ce seul écran non déclaré."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:claude_101__01:dc_ch01_act03:dc_1_act_03_video:language-access",
+              "course_id": "claude_101__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "média",
+              "description": "Dans le parcours français, la vidéo obligatoire ne propose que des sous-titres anglais et une transcription anglaise. Le contenu théorique qui introduit le cadre de prompt est donc difficilement accessible à un apprenant francophone non anglophone.",
+              "current_content": "mp4Url déclaré ; subtitleUrlEn déclaré ; transcript et transcriptSegments en anglais ; aucun subtitleUrlFr ni alternative textuelle française.",
+              "proposed_content": "Fournir un fichier VTT français et une transcription française fidèle, puis les déclarer dans subtitleUrlFr et transcript/transcriptSegments. À défaut, signaler explicitement avant lecture que le média est en anglais et donner un résumé français couvrant les trois éléments du cadre de prompt.",
+              "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[2].blocks[0] (subtitleUrlEn uniquement ; transcription commençant par « Imagine this »); client/src/pages/training/LessonViewer.tsx → le lecteur expose ces champs aux apprenants.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Priorité accessibilité : localiser les sous-titres et la transcription avant de conserver cette vidéo comme séquence requise du parcours français."
+            },
+            {
+              "issue_id": "ped:claude_101__01:dc_ch01_act03:dc_1_act_03_video:gate",
+              "course_id": "claude_101__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le bouton principal « Suivant » ne verrouille pas cette vidéo officielle : pour un MP4, il ne récupère pas l’identifiant du bloc et ignore son id parce qu’il dépasse 15 caractères. La liste des vidéos à terminer devient vide et le passage est actif sans visionnage ni marquage manuel.",
+              "current_content": "Chapitre teaching avec requiredBeforeAdvance: true ; vidéo MP4 id « dc_1_act_03_video ».",
+              "proposed_content": "Aucun texte à réécrire. Dans le calcul de chapterVideoKeys, utiliser systématiquement block.id pour mp4Url/hlsUrl/audioUrl, comme le fait déjà le raccourci clavier, sans filtre de longueur destiné aux identifiants YouTube.",
+              "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[2] (requiredBeforeAdvance: true; mp4Url et id dc_1_act_03_video); client/src/pages/training/LessonViewer.tsx → lignes de rendu vidéo utilisent block.id pour MP4, alors que la navigation basse ne l’accepte que si sa longueur est comprise entre 8 et 15 caractères.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Corriger la collecte des clés vidéo et ajouter un test de régression pour un id MP4 long ; conserver le bouton manuel « marquer comme vue » comme choix explicite, pas comme contournement silencieux."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Votre première conversation avec Claude",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Le QCM applique directement le cadre de prompt présenté dans la vidéo précédente : l’action et le résultat attendu sont explicites.",
+            "Une réponse est attendue, l’indice rappelle les trois éléments, l’explication justifie la bonne option et l’activité doit être réussie pour avancer.",
+            "La distinction quiz et le compteur de progression sont rendus."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "La compréhension de la vidéo par un apprenant francophone reste limitée par l’absence de version française confirmée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Le titre, pas le roman",
+          "score_100": 65,
+          "verified_dimensions": [
+            "L’activité de prompt est contextualisée et précise les éléments à mobiliser : rôle, contexte, destinataire, ton et limite de 150 mots.",
+            "Le composant rend les critères visibles issus de l’énoncé, la zone de remise, le minimum de mots, l’exemple et la possibilité de réessayer.",
+            "La pratique fait suite au contenu sur le cadre de prompt."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable de chapitre non déclaré.",
+            "La fiabilité, l’équité et la précision du retour généré par le service d’évaluation IA n’ont pas été testées par soumission réelle."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:claude_101__01:dc_ch01_act05:dc_1_act_05_prompting:gate",
+              "course_id": "claude_101__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_prompting",
+              "content_type": "ai_evaluation",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Cette pratique obligatoire de rédaction de prompt est contournable. Le bloc peut signaler sa complétion après évaluation, mais cette complétion n’est pas utilisée par les règles qui désactivent « Suivant » pour un chapitre de type exercise.",
+              "current_content": "requiredBeforeAdvance: true ; ai_evaluation dc_1_act_05_prompting demandant un prompt structuré pour un courriel de direction.",
+              "proposed_content": "Aucun texte à réécrire. Inclure ai_evaluation dans les conditions de passage, avec l’id dc_1_act_05_prompting et la clé de complétion de l’écran courant.",
+              "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[4]; client/src/pages/training/LessonViewer.tsx → AiEvaluationBlock appelle setCompletedExercises, mais les ensembles d’activités vérifiés pour isGated et isSequentialActivityNavigationLocked excluent ai_evaluation.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Appliquer la correction générique de verrouillage et couvrir ce cas dans les tests de navigation séquentielle."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Obtenir de meilleurs résultats",
+          "score_100": 81,
+          "verified_dimensions": [
+            "Le scénario cible clairement le discernement, compétence annoncée dans la description de leçon.",
+            "La question, les quatre options, l’indice définissant les 4D, l’explication pédagogique, le résultat attendu et la reprise sont rendus.",
+            "La bonne réponse est requise avant la poursuite."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable propre au chapitre non déclaré.",
+            "La couverture exhaustive des quatre compétences 4D hors de ce contrôle ponctuel n’est pas vérifiable à partir d’un champ objectif dédié."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Adieu la voix corporate !",
+          "score_100": 65,
+          "verified_dimensions": [
+            "L’activité donne le brouillon à utiliser, identifie précisément les défauts à corriger et demande une longueur et un ton cibles ; l’action attendue est donc réutilisable sans ambiguïté.",
+            "L’interface rend l’exemple de réponse, la remise textuelle, le retour IA et une nouvelle tentative.",
+            "La pratique prolonge le prompt structuré et le contrôle du ton travaillés dans les activités précédentes."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable de chapitre non déclaré.",
+            "Qualité effective du feedback généré par IA non exécutée dans cet audit."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:claude_101__01:dc_ch01_act07:dc_1_act_07_prompting:gate",
+              "course_id": "claude_101__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_prompting",
+              "content_type": "ai_evaluation",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "L’exercice d’itération de prompt est étiqueté obligatoire mais peut être quitté sans soumission ni réussite, car le mécanisme de passage omet le type ai_evaluation.",
+              "current_content": "requiredBeforeAdvance: true ; ai_evaluation dc_1_act_07_prompting avec consigne de réviser le brouillon sous 150 mots et dans un ton plus conversationnel.",
+              "proposed_content": "Aucun texte à réécrire. Verrouiller le passage jusqu’à la réussite de l’évaluation IA, ou modifier explicitement le statut pédagogique de l’exercice s’il doit rester facultatif.",
+              "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[6]; client/src/pages/training/LessonViewer.tsx → le callback de complétion existe, mais ai_evaluation n’apparaît dans aucune condition de isGated/isSequentialActivityNavigationLocked.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Appliquer le correctif générique de verrouillage, vérifier l’état de réussite avant progression et couvrir cette activité par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Application de bureau Claude : Chat, Cowork, Code",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Le scénario est concret, l’action attendue est explicite et les trois options correspondent aux modes mentionnés dans la description et la transcription de la leçon.",
+            "L’indice oriente vers les critères de choix et le feedback explique le rôle de Cowork ; la validation correcte verrouille la progression.",
+            "Le parcours fait une transition cohérente depuis le contenu vidéo sur les modes et usages de Claude."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable propre au chapitre non déclaré.",
+            "La compréhension de la présentation vidéo précédente par un apprenant non anglophone n’est pas entièrement vérifiable."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Vidéo : Introduction à Projects",
+          "score_100": 55,
+          "verified_dimensions": [
+            "Le titre et la description donnent le thème de la vidéo ; le lecteur rend la vidéo, les diapositives, les sous-titres déclarés et une transcription dépliable.",
+            "La transcription couvre les Projects, la base de connaissances, les instructions, les droits d’accès et fournit les prérequis aux QCM et au tri qui suivent.",
+            "La source MP4, le VTT et le PDF sont déclarés dans le JSON ; leur indisponibilité n’a pas été inférée."
+          ],
+          "unverified_dimensions": [
+            "Lisibilité effective du support vidéo et des diapositives non contrôlée par lecture navigateur.",
+            "Objectif mesurable de ce seul chapitre non déclaré."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:claude_101__01:dc_ch02_act01:dc_2_act_01_video:language-access",
+              "course_id": "claude_101__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "média",
+              "description": "La vidéo de théorie requise dans une formation affichée en français n’offre que sous-titres et transcription en anglais. Elle porte pourtant les prérequis de Projects, des droits et de la base de connaissances évalués ensuite.",
+              "current_content": "mp4Url déclaré ; subtitleUrlEn déclaré ; transcript en anglais ; aucun subtitleUrlFr, transcript français ou alternativeTextFr.",
+              "proposed_content": "Ajouter sous-titres VTT et transcription française fidèles. En attente, annoncer explicitement la langue anglaise et ajouter un résumé français couvrant Project knowledge, instructions et droits d’accès.",
+              "evidence": "client/public/data/courses/claude_101__01.json → lessons[1].chapters[0].blocks[0] (subtitleUrlEn uniquement et transcription anglaise) ; client/src/pages/training/LessonViewer.tsx rend le champ transcript et le lien de sous-titres disponibles.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Localiser l’alternative textuelle avant de conserver ce contenu théorique comme séquence obligatoire du parcours français."
+            },
+            {
+              "issue_id": "ped:claude_101__01:dc_ch02_act01:dc_2_act_01_video:gate",
+              "course_id": "claude_101__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La navigation basse permet de passer cette vidéo MP4 sans action. Son id dépasse la longueur admise par le calcul de clé vidéo, qui ne traite pas non plus mp4Url ; la condition de visionnage devient donc vide.",
+              "current_content": "Chapitre teaching requiredBeforeAdvance: true ; vidéo MP4 id « dc_2_act_01_video ».",
+              "proposed_content": "Aucun texte à réécrire. Résoudre l’identifiant de toute vidéo MP4/HLS/audio par block.id sans condition de longueur et tester le verrouillage sur cet id.",
+              "evidence": "client/public/data/courses/claude_101__01.json → lessons[1].chapters[0] ; client/src/pages/training/LessonViewer.tsx → le lecteur marque block.id comme vu, mais le calcul de chapterVideoKeys de la navigation basse ne garde block.id que pour une longueur 8–15.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Corriger la résolution des clés vidéo et ajouter un test spécifique à une vidéo MP4 dont l’id est long."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Introduction à Projects",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Le QCM demande une décision opérationnelle précise sur la base de connaissances d’un Project, avec quatre options clairement distinctes.",
+            "Indice, explication, résultat attendu, mise en évidence de la correction et nouvelle tentative sont rendus ; la réponse correcte est nécessaire à la progression.",
+            "Le concept évalué est expliqué dans la transcription de la vidéo immédiatement précédente."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "Accessibilité linguistique complète du prérequis vidéo non confirmée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Création avec Artifacts",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Le scénario de partage externe d’un artefact, l’action attendue et le critère de réussite sont clairs.",
+            "Le QCM comporte quatre options, un indice, une explication de la publication, un feedback de correction et une reprise ; il est cohérent avec les possibilités d’Artifacts annoncées dans la leçon.",
+            "Le verrouillage de la réponse correcte est confirmé dans le composant de QCM."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "La démonstration vidéo détaillée d’Artifacts n’est pas distinctement identifiable dans les données du chapitre."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Travailler avec Skills",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Le scénario présente un besoin métier et la question demande explicitement la méthode recommandée pour créer un Skill.",
+            "Les options, l’indice, le feedback explicatif et la reprise sont présents, et le passage reste verrouillé jusqu’à la bonne réponse.",
+            "L’activité prépare le tri suivant en distinguant un processus réutilisable d’une ressource de connaissance."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "La démonstration pratique de création d’un Skill dans l’outil source n’a pas été exécutée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Skills et Projects",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Le tri indique clairement l’action (« Rangez chaque élément »), les deux catégories et le principe de distinction connaissances/processus.",
+            "Les six cartes, le feedback immédiat carte par carte, la remise, la reprise et le verrouillage jusqu’au tri correct sont rendus.",
+            "L’activité synthétise de façon cohérente les notions Projects et Skills traitées dans les chapitres précédents."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "La persistance locale des tentatives n’a pas été testée dans un navigateur avec stockage réel."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:claude_101__01:dc_ch02_act06:dc_2_act_06_bucket_sort:feedback",
+              "course_id": "claude_101__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le feedback pédagogique rédigé dans les données — qui explique la complémentarité entre Projects et Skills — n’est pas transmis au composant rendu. Après réussite, l’apprenant voit « Parfait ! », mais pas la consolidation conceptuelle prévue.",
+              "current_content": "feedback: « Bravo ! Projects contiennent ce que Claude doit savoir ; Skills définissent comment Claude doit fonctionner. Les deux se complètent. »",
+              "proposed_content": "Conserver le texte existant et le transmettre au rendu de correction : « Bravo ! Projects contiennent ce que Claude doit savoir ; Skills définissent comment Claude doit fonctionner. Les deux se complètent. »",
+              "evidence": "client/public/data/courses/claude_101__01.json → lessons[1].chapters[4].blocks[0].feedback ; client/src/pages/training/LessonViewer.tsx → MatchingExercise reçoit correction: block.correction, pas block.feedback ; client/src/components/MatchingExercise.tsx → seul exercise.correction est affiché dans la bannière de résultat.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Mapper block.feedback vers la propriété rendue de correction/feedback (ou adapter MatchingExercise), puis tester la visibilité du feedback après une réussite correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Connexion de vos outils",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Le scénario traite un risque d’autorisation concret ; les options donnent des interprétations distinctes et l’action attendue est compréhensible.",
+            "Indice, correction explicitant l’accès limité, reprise et exigence de réponse correcte avant passage sont rendus.",
+            "La description de leçon annonce les connecteurs et le respect des autorisations, ce qui cadre la question."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "Le comportement réel de connecteurs externes n’a pas été testé et n’est pas déduit du seul contenu de cours."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Enterprise search",
+          "score_100": 80,
+          "verified_dimensions": [
+            "La question compare deux tâches et demande explicitement laquelle relève d’Enterprise Search.",
+            "L’indice et l’explication distinguent information interne et recherche web ; le QCM affiche la correction et permet de réessayer.",
+            "La réponse correcte est cohérente avec le thème Enterprise Search présenté par la description de leçon et exigée pour continuer."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "Exécution réelle d’Enterprise Search non auditée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Research mode pour des analyses approfondies",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Le scénario énonce sources multiples, synthèse et rapport avec citations ; l’action de sélectionner la fonctionnalité adaptée est nette.",
+            "L’indice, le feedback explicatif, la correction visuelle, la reprise et le verrouillage de réponse sont rendus.",
+            "La progression distingue clairement Research, recherche web, réflexion étendue et connecteurs."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "Qualité et disponibilité réelles du mode Research hors contenu fourni non vérifiées."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch04_act01",
+          "title": "Claude en action - cas d'utilisation par rôle",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Le scénario commercial, l’action attendue et la distinction avec les autres cas d’usage sont explicites.",
+            "L’indice et l’explication relient la réponse à la préparation d’un rendez-vous, avec correction et reprise visibles.",
+            "La question est alignée sur l’objectif de leçon d’associer rôle, tâche et cas d’usage."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "Mise en pratique dans un environnement Claude réel non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch04_act02",
+          "title": "Autres façons de travailler avec Claude",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Le problème de tableur est concret ; la question demande un choix de produit Claude clairement identifiable.",
+            "Les options, l’indice sur les environnements spécialisés, l’explication, la correction et la reprise sont rendus.",
+            "La réponse est requise pour poursuivre et s’aligne sur la compétence d’associer la tâche à la surface Claude appropriée."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "Fonctionnalités réelles de Claude for Excel non vérifiées dans cet audit de contenu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch04_act03",
+          "title": "What's next?",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Le contenu rendu félicite l’apprenant, annonce une récapitulation et une orientation vers la suite ; il fonctionne comme clôture de formation.",
+            "Aucune activité requise ne bloque indûment la terminaison de la leçon à cet écran.",
+            "Le champ optionalMediaUnavailable est explicite ; aucune ressource non accessible n’a été qualifiée d’absente."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable spécifique non déclaré.",
+            "Le média optionnel signalé indisponible et les ressources de poursuite évoquées ne sont pas détaillés dans ce JSON ; leur nature et leur accessibilité ne sont donc pas vérifiables."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "Audit qualitatif, sans modification, du seul cours claude_101__01 de la formation datacamp_claude_101.",
+    "coverage": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 4,
+      "chapters_reviewed": 19,
+      "activities_reviewed": 20,
+      "blocks_reviewed": 21,
+      "activity_types_reviewed": {
+        "ai_evaluation": 3,
+        "multi_choice_exercise": 12,
+        "video": 2,
+        "bucket_sort": 1,
+        "closing_content": 1,
+        "download": 2
+      }
+    },
+    "score_100": 76,
+    "score_method": "Notes par chapitre fondées uniquement sur les dimensions vérifiées dans le JSON et dans le rendu/les règles LessonViewer ; les dimensions non vérifiables ne reçoivent pas de note implicite.",
+    "confirmed_issues": 8,
+    "severity_counts": {
+      "P0": 0,
+      "P1": 7,
+      "P2": 1,
+      "P3": 0
+    },
+    "key_findings": [
+      "Les 12 QCM sont globalement clairs, disposent d’indices, d’explications, de correction et d’une exigence de réponse correcte ; le tri Projects/Skills est également actionnable et corrigé.",
+      "Les trois pratiques ai_evaluation sont pédagogiquement explicites, mais leur caractère obligatoire n’est pas appliqué par la navigation.",
+      "Les deux vidéos théoriques ont transcript, diapositives et sous-titres déclarés, mais les alternatives déclarées sont anglaises dans une expérience française ; elles peuvent en outre être franchies via la navigation basse sans action de visionnage.",
+      "Le pré-audit statique a signalé 19 manques de progression et trois évaluations IA sans critères structurés ; après lecture complète et vérification du rendu, ces signaux ne sont pas tous confirmés : questions, indices, exemples, critères visibles dérivés des consignes, explications et transitions pertinentes sont effectivement rendus."
+    ],
+    "priority_summary": "P1 : restaurer le verrouillage des trois pratiques IA et des deux vidéos MP4, puis rendre les deux vidéos accessibles en français. P2 : afficher le feedback conceptuel déjà rédigé pour le tri Projects/Skills."
+  },
+  "limits": [
+    "Audit limité aux données du cours, au registre de blocs et au code de rendu/progression ; aucun contenu, code, base ou asset n’a été modifié.",
+    "Les MP4, PDF et VTT sont référencés via /api/assets et le manifest indique des téléchargements réussis ; faute de lecture navigateur de ces URLs API, leur disponibilité effective, leur qualité audiovisuelle et la lisibilité de leurs diapositives restent non vérifiées et ne sont pas assimilées à une absence.",
+    "Le service d’évaluation IA et les services Claude externes n’ont pas été exécutés : qualité factuelle, cohérence des scores et comportement authentifié de leurs retours ne sont pas conclusifs.",
+    "Les objectifs explicites et mesurables ne sont pas fournis comme champs dédiés par chapitre ; les descriptions de leçon visibles ont été reconnues comme contexte, sans les traiter comme objectifs de chapitre vérifiés.",
+    "L’évaluation factuelle ou produit de Claude, Projects, Skills, connecteurs, Research et intégrations n’entre pas dans ce contrôle pédagogique interne."
+  ]
+}

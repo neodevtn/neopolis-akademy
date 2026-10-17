@@ -1,0 +1,835 @@
+{
+  "formation_id": "datacamp_ai_for_finance",
+  "courses": [
+    {
+      "course_id": "ai_for_finance__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Comment l’IA transforme la finance",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-01-01",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_1_act_01_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[0].chapters[0] (`requiredBeforeAdvance: true`, bloc audio-only `dc_1_act_01_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "La finance rencontre l’IA",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Risques et limites de l’IA",
+          "score_100": 93,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Énoncé, quatre options, indice, réponse correcte et explication sont renseignés ; le QCM indique clairement qu’une seule réponse est attendue.",
+            "Feedback et reprise : le composant met en évidence la réponse correcte, affiche l’explication, propose « Réessayer » et verrouille la suite jusqu’à une réponse correcte.",
+            "Progression : les questions vérifient un concept explicité dans la vidéo ou l’activité immédiatement précédente."
+          ],
+          "unverified_dimensions": [
+            "Compréhension et ergonomie en condition navigateur (taille d’écran, lecteur d’écran, clavier) non testées manuellement.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit du titre, de la question et du contenu précédent."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Augmentation ou automation ?",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : titre, consigne, catégories, cartes et indice sont renseignés ; le composant indique comment sélectionner puis placer une carte et suit le nombre de réponses.",
+            "Cohérence des prérequis : les catégories évaluent directement la distinction ou les bonnes pratiques expliquées juste avant.",
+            "Validation : les cartes correctes/incorrectes sont signalées, le score est visible et un nouvel essai est possible."
+          ],
+          "unverified_dimensions": [
+            "Manipulation réelle au clavier, glisser-déposer et lecture sur mobile non testées en navigateur.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit de l’activité."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-FEEDBACK-BUCKET-01-04",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le feedback pédagogique est bien fourni dans le JSON, mais il n’est jamais transmis au composant de tri. Après une réussite, l’apprenant voit seulement « Parfait ! » et le score ; après une erreur, il voit seulement le nombre de cartes justes et peut réessayer. Le retour métier prévu n’est donc pas rendu.",
+              "current_content": "Bien joué ! Aujourd’hui, la plupart des usages de l’IA en finance relèvent de l’augmentation — aider les analystes et les managers à aller plus vite — mais l’automation progresse rapidement pour les tâches récurrentes comme le reporting et l’extraction de ratios.",
+              "proposed_content": "Conserver le feedback existant et le rendre à l’issue de toute soumission : après une réussite, l’afficher comme consolidation ; après une erreur, l’afficher comme explication avant la proposition de réessai. Aucune invention de contenu n’est nécessaire.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[0].chapters[3].blocks[0].feedback contient ce texte. `client/src/pages/training/LessonViewer.tsx:957-974` transmet `correction: block.correction` à `MatchingExercise`, jamais `block.feedback`. `client/src/components/MatchingExercise.tsx:444-450` n’affiche un texte détaillé que depuis `exercise.correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Mapper explicitement `block.feedback` vers une zone de feedback de `MatchingExercise` (ou vers `correction`) et vérifier le rendu après réponse juste et fausse pour cette activité."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Explorer l’analyse financière assistée par l’IA",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-01-05",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_1_act_05_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[0].chapters[4] (`requiredBeforeAdvance: true`, bloc audio-only `dc_1_act_05_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Extrayez les messages clés en un rien de temps",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Résumer avec style",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Obtenir des résultats prévisibles grâce à des modèles de prompts",
+          "score_100": 83,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-01-08",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_1_act_09_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[0].chapters[7] (`requiredBeforeAdvance: true`, bloc audio-only `dc_1_act_09_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act10",
+          "title": "Les essentiels des modèles",
+          "score_100": 93,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Énoncé, quatre options, indice, réponse correcte et explication sont renseignés ; le QCM indique clairement qu’une seule réponse est attendue.",
+            "Feedback et reprise : le composant met en évidence la réponse correcte, affiche l’explication, propose « Réessayer » et verrouille la suite jusqu’à une réponse correcte.",
+            "Progression : les questions vérifient un concept explicité dans la vidéo ou l’activité immédiatement précédente."
+          ],
+          "unverified_dimensions": [
+            "Compréhension et ergonomie en condition navigateur (taille d’écran, lecteur d’écran, clavier) non testées manuellement.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit du titre, de la question et du contenu précédent."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Recherche financière avec l’IA",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-02-01",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_2_act_01_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[1].chapters[0] (`requiredBeforeAdvance: true`, bloc audio-only `dc_2_act_01_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Organiser une étude de marché",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : titre, consigne, éléments à ordonner et indice sont renseignés ; le composant explicite l’usage clic-déplacement et le nombre de réponses attendu.",
+            "Cohérence des prérequis : l’ordre demandé reprend le workflow expliqué par la séquence théorique précédente.",
+            "Validation : chaque position correcte ou erronée est visualisée ; l’apprenant peut remettre les éléments dans l’ordre et réessayer."
+          ],
+          "unverified_dimensions": [
+            "Manipulation réelle au clavier, glisser-déposer et lecture sur mobile non testées en navigateur.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit du scénario et des consignes."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-FEEDBACK-ORDER-02-02",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_bucket_sort",
+              "content_type": "ordering",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "En cas d’ordre incorrect, l’activité indique les positions justes et propose « Réessayer », mais masque le feedback pédagogique renseigné dans le contenu. Ce feedback n’apparaît qu’en cas d’ordre entièrement correct ; l’apprenant en difficulté ne reçoit donc pas la rationalisation métier disponible pour corriger sa démarche.",
+              "current_content": "Bravo ! Cet ordre reflète la manière dont les professionnels construisent des mises à jour de marché fiables. N’oubliez pas : partez d’une question, recherchez de façon systématique, confirmez vos faits, faites ressortir les principaux moteurs et terminez par une conclusion orientée métier !",
+              "proposed_content": "Après chaque soumission, afficher le feedback existant. En cas d’erreur, l’introduire par « Pour corriger votre ordre, retenez que : » et conserver le bouton « Réessayer ». Le texte déjà fourni suffit ; aucune réponse ou étape nouvelle n’est inventée.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[1].chapters[1].blocks[0].feedback est renseigné. `client/src/components/blocks/OrderingBlock.tsx:149-153` n’affiche, après erreur, que le nombre d’éléments bien placés ; le feedback est conditionné à `submitted && allCorrect` aux lignes 157-162.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Décorréler l’affichage du feedback de `allCorrect`, au minimum pour les tentatives incorrectes, et conserver le détail visuel des positions ainsi que la remise à zéro."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "La recherche assistée par l’IA en pratique",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Obtenir des résultats adaptés grâce à des instructions personnalisées",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-02-04",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_2_act_04_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[1].chapters[3] (`requiredBeforeAdvance: true`, bloc audio-only `dc_2_act_04_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Pourquoi les instructions personnalisées comptent",
+          "score_100": 93,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Énoncé, quatre options, indice, réponse correcte et explication sont renseignés ; le QCM indique clairement qu’une seule réponse est attendue.",
+            "Feedback et reprise : le composant met en évidence la réponse correcte, affiche l’explication, propose « Réessayer » et verrouille la suite jusqu’à une réponse correcte.",
+            "Progression : les questions vérifient un concept explicité dans la vidéo ou l’activité immédiatement précédente."
+          ],
+          "unverified_dimensions": [
+            "Compréhension et ergonomie en condition navigateur (taille d’écran, lecteur d’écran, clavier) non testées manuellement.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit du titre, de la question et du contenu précédent."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Personnaliser pour plus de cohérence",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Suivez vos invites planifiées",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-02-07",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_2_act_07_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[1].chapters[6] (`requiredBeforeAdvance: true`, bloc audio-only `dc_2_act_07_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Planifiez avec discernement",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : titre, consigne, catégories, cartes et indice sont renseignés ; le composant indique comment sélectionner puis placer une carte et suit le nombre de réponses.",
+            "Cohérence des prérequis : les catégories évaluent directement la distinction ou les bonnes pratiques expliquées juste avant.",
+            "Validation : les cartes correctes/incorrectes sont signalées, le score est visible et un nouvel essai est possible."
+          ],
+          "unverified_dimensions": [
+            "Manipulation réelle au clavier, glisser-déposer et lecture sur mobile non testées en navigateur.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit de l’activité."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-FEEDBACK-BUCKET-02-08",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le feedback pédagogique est bien fourni dans le JSON, mais il n’est jamais transmis au composant de tri. Après une réussite, l’apprenant voit seulement « Parfait ! » et le score ; après une erreur, il voit seulement le nombre de cartes justes et peut réessayer. Le retour métier prévu n’est donc pas rendu.",
+              "current_content": "Bravo ! Réviser et affiner vos invites planifiées garantit une automatisation précise, pertinente et pérenne.",
+              "proposed_content": "Conserver le feedback existant et le rendre à l’issue de toute soumission : après une réussite, l’afficher comme consolidation ; après une erreur, l’afficher comme explication avant la proposition de réessai. Aucune invention de contenu n’est nécessaire.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[1].chapters[7].blocks[0].feedback contient ce texte. `client/src/pages/training/LessonViewer.tsx:957-974` transmet `correction: block.correction` à `MatchingExercise`, jamais `block.feedback`. `client/src/components/MatchingExercise.tsx:444-450` n’affiche un texte détaillé que depuis `exercise.correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Mapper explicitement `block.feedback` vers une zone de feedback de `MatchingExercise` (ou vers `correction`) et vérifier le rendu après réponse juste et fausse pour cette activité."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Automatisez votre brief hebdomadaire",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Rationalisez les workflows financiers avec l’itération des prompts",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-03-01",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_3_act_01_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[2].chapters[0] (`requiredBeforeAdvance: true`, bloc audio-only `dc_3_act_01_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Enchaînez les invites comme un pro",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : titre, consigne, éléments à ordonner et indice sont renseignés ; le composant explicite l’usage clic-déplacement et le nombre de réponses attendu.",
+            "Cohérence des prérequis : l’ordre demandé reprend le workflow expliqué par la séquence théorique précédente.",
+            "Validation : chaque position correcte ou erronée est visualisée ; l’apprenant peut remettre les éléments dans l’ordre et réessayer."
+          ],
+          "unverified_dimensions": [
+            "Manipulation réelle au clavier, glisser-déposer et lecture sur mobile non testées en navigateur.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit du scénario et des consignes."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-FEEDBACK-ORDER-03-02",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch03_act02",
+              "content_id": "dc_3_act_02_bucket_sort",
+              "content_type": "ordering",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "En cas d’ordre incorrect, l’activité indique les positions justes et propose « Réessayer », mais masque le feedback pédagogique renseigné dans le contenu. Ce feedback n’apparaît qu’en cas d’ordre entièrement correct ; l’apprenant en difficulté ne reçoit donc pas la rationalisation métier disponible pour corriger sa démarche.",
+              "current_content": "Excellent travail ! Vous avez construit un workflow IA structuré en plusieurs étapes qui reflète la manière dont un gérant de portefeuille chez NorthPeak Asset Management préparerait des insights post-résultats cohérents. Cette séquence structurée garantit une analyse claire, répétable et directement utile pour les décisions d’investissement.",
+              "proposed_content": "Après chaque soumission, afficher le feedback existant. En cas d’erreur, l’introduire par « Pour corriger votre ordre, retenez que : » et conserver le bouton « Réessayer ». Le texte déjà fourni suffit ; aucune réponse ou étape nouvelle n’est inventée.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[2].chapters[1].blocks[0].feedback est renseigné. `client/src/components/blocks/OrderingBlock.tsx:149-153` n’affiche, après erreur, que le nombre d’éléments bien placés ; le feedback est conditionné à `submitted && allCorrect` aux lignes 157-162.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Décorréler l’affichage du feedback de `allCorrect`, au minimum pour les tentatives incorrectes, et conserver le détail visuel des positions ainsi que la remise à zéro."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Peaufinez tout en formulant vos invites",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Créer des assistants financiers sur mesure",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-03-04",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_3_act_04_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[2].chapters[3] (`requiredBeforeAdvance: true`, bloc audio-only `dc_3_act_04_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Créer un assistant financier contextuel",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Créer un assistant de prévision",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : l’objectif, les consignes de préparation, l’environnement, 4 à 7 étapes, un indice et les critères de preuve sont renseignés et rendus par CloudExerciseBlock.",
+            "Autonomie et sécurité : les TP prévoient un chemin alternatif lorsque la fonction d’outil manque et interdisent les données réelles, personnelles, confidentielles et les clés API.",
+            "Feedback et progression : le composant impose une longueur minimale, évalue côté serveur selon une rubrique dédiée, restitue feedback/forces/améliorations et ne complète le TP qu’au seuil de réussite.",
+            "Transition : chaque TP est précédé, dans la séquence, par une vidéo ou une activité qui introduit la compétence mobilisée."
+          ],
+          "unverified_dimensions": [
+            "Cohérence qualitative d’une évaluation LLM réelle, score reçu et formulation effective du feedback non vérifiables sans session apprenant et soumission.",
+            "Ouverture effective des ressources synthétiques liées par URL non testée ; elles sont présentes et contextualisées dans les données, sans être qualifiées d’absentes.",
+            "Aucun champ formel d’objectif pédagogique normalisé au niveau du chapitre ; l’objectif est vérifiable par `assignment`, mais pas par une taxonomie d’objectif dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "De l’augmentation à l’automatisation",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-03-07",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_3_act_07_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[2].chapters[6] (`requiredBeforeAdvance: true`, bloc audio-only `dc_3_act_07_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Cartographiez votre flux de travail",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : titre, consigne, éléments à ordonner et indice sont renseignés ; le composant explicite l’usage clic-déplacement et le nombre de réponses attendu.",
+            "Cohérence des prérequis : l’ordre demandé reprend le workflow expliqué par la séquence théorique précédente.",
+            "Validation : chaque position correcte ou erronée est visualisée ; l’apprenant peut remettre les éléments dans l’ordre et réessayer."
+          ],
+          "unverified_dimensions": [
+            "Manipulation réelle au clavier, glisser-déposer et lecture sur mobile non testées en navigateur.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit du scénario et des consignes."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-FEEDBACK-ORDER-03-08",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch03_act08",
+              "content_id": "dc_3_act_08_bucket_sort",
+              "content_type": "ordering",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "En cas d’ordre incorrect, l’activité indique les positions justes et propose « Réessayer », mais masque le feedback pédagogique renseigné dans le contenu. Ce feedback n’apparaît qu’en cas d’ordre entièrement correct ; l’apprenant en difficulté ne reçoit donc pas la rationalisation métier disponible pour corriger sa démarche.",
+              "current_content": "Excellent travail ! Vous avez cartographié l’ordre correct du flux d’automatisation des factures d’OrionVale assisté par l’IA. Ce processus garantit des paiements conformes et ponctuels tout en réduisant l’effort manuel et en améliorant la qualité des données financières.",
+              "proposed_content": "Après chaque soumission, afficher le feedback existant. En cas d’erreur, l’introduire par « Pour corriger votre ordre, retenez que : » et conserver le bouton « Réessayer ». Le texte déjà fourni suffit ; aucune réponse ou étape nouvelle n’est inventée.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[2].chapters[7].blocks[0].feedback est renseigné. `client/src/components/blocks/OrderingBlock.tsx:149-153` n’affiche, après erreur, que le nombre d’éléments bien placés ; le feedback est conditionné à `submitted && allCorrect` aux lignes 157-162.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Décorréler l’affichage du feedback de `allCorrect`, au minimum pour les tentatives incorrectes, et conserver le détail visuel des positions ainsi que la remise à zéro."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Automatisation responsable",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Action attendue : titre, consigne, catégories, cartes et indice sont renseignés ; le composant indique comment sélectionner puis placer une carte et suit le nombre de réponses.",
+            "Cohérence des prérequis : les catégories évaluent directement la distinction ou les bonnes pratiques expliquées juste avant.",
+            "Validation : les cartes correctes/incorrectes sont signalées, le score est visible et un nouvel essai est possible."
+          ],
+          "unverified_dimensions": [
+            "Manipulation réelle au clavier, glisser-déposer et lecture sur mobile non testées en navigateur.",
+            "Objectif pédagogique formel au niveau du chapitre non renseigné dans un champ dédié ; il est déduit de l’activité."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-FEEDBACK-BUCKET-03-09",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le feedback pédagogique est bien fourni dans le JSON, mais il n’est jamais transmis au composant de tri. Après une réussite, l’apprenant voit seulement « Parfait ! » et le score ; après une erreur, il voit seulement le nombre de cartes justes et peut réessayer. Le retour métier prévu n’est donc pas rendu.",
+              "current_content": "Excellent ! Vous avez trouvé le juste équilibre entre automatisation et supervision. L’IA prend en charge les tâches répétitives sur les données, tandis que les humains gèrent la revue, la communication et la conformité. Voilà comment une automatisation responsable rend les processus financiers à la fois efficaces et fiables. Beau travail !",
+              "proposed_content": "Conserver le feedback existant et le rendre à l’issue de toute soumission : après une réussite, l’afficher comme consolidation ; après une erreur, l’afficher comme explication avant la proposition de réessai. Aucune invention de contenu n’est nécessaire.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[2].chapters[8].blocks[0].feedback contient ce texte. `client/src/pages/training/LessonViewer.tsx:957-974` transmet `correction: block.correction` à `MatchingExercise`, jamais `block.feedback`. `client/src/components/MatchingExercise.tsx:444-450` n’affiche un texte détaillé que depuis `exercise.correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Mapper explicitement `block.feedback` vers une zone de feedback de `MatchingExercise` (ou vers `correction`) et vérifier le rendu après réponse juste et fausse pour cette activité."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Félicitations",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : le titre du chapitre et sa description de leçon sont rendus par LessonViewer ; le titre annonce le thème ou l’action attendue.",
+            "Théorie et transition : le transcript complet, les slides Projector et le message de passage à la pratique documentent les concepts avant l’activité suivante.",
+            "Média contextualisé : audio, slides, transcript, sous-titres FR/EN et PDF sont déclarés ; LessonViewer rend le Projector et rend le transcript dépliable.",
+            "Parcours : le chapitre s’insère dans une alternance théorie → pratique/quiz cohérente au niveau de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers audio, PDF, VTT et images via les URLs `/api/assets/...` non testée dans un navigateur authentifié ; les ressources sont déclarées mais leur disponibilité n’est pas inférée.",
+            "Lisibilité visuelle et pertinence fine des images/GIF des slides non vérifiables sans rendu média effectif.",
+            "Objectif vidéo avant lecture non renseigné dans `objectiveBefore`; l’objectif spécifique est donc inféré du titre et du transcript, non formalisé dans ce champ."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAF-018-LOCK-03-10",
+              "course_id": "ai_for_finance__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage (`requiredBeforeAdvance: true`), mais le bouton principal « Suivant » ne reconnaît pas ce média Projector audio comme une vidéo à compléter. L’apprenant peut donc franchir l’écran d’enseignement — et, pour le dernier écran, terminer la leçon — sans l’écouter ni cliquer « Marquer comme écoutée ».",
+              "current_content": "Média audio Projector `dc_3_act_10_video` (id de 17 caractères), avec transcript et slides ; chapitre marqué `requiredBeforeAdvance: true`.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Dans le calcul du verrou, utiliser `block.id` dès qu’un média possède `audioUrl` (comme le fait le lecteur), puis vérifier cette même clé dans `completedVideos` pour le bouton « Suivant » et le bouton de fin de leçon.",
+              "evidence": "`client/public/data/courses/ai_for_finance__01.json` → lessons[2].chapters[9] (`requiredBeforeAdvance: true`, bloc audio-only `dc_3_act_10_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais `LessonViewer.tsx:1557-1569` ne retient un id de bloc qu’entre 8 et 15 caractères (ou `videoId`/URL), donc exclut cet id de 17 caractères. Le même schéma est repris pour le dernier chapitre (`LessonViewer.tsx:1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution des clés de médias dans les deux gates de navigation, puis tester les 10 chapitres audio : « Suivant » doit être inactif tant que le média n’est ni terminé ni explicitement marqué comme écouté, conformément à la règle déclarée."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": "1 cours, 3 leçons, 28 chapitres/activités sérialisés et revus individuellement ; 10 médias Projector audio, 9 TP cloud, 3 QCM, 3 remises en ordre et 3 tris par catégories.",
+    "pedagogical_findings": "Le parcours est globalement progressif : fondamentaux du prompting, recherche/instructions personnalisées, puis workflows et automatisation responsable. Les 9 TP disposent d’un objectif, de consignes, alternatives, critères apprenant, ressources contextualisées et d’une évaluation serveur. Les QCM et activités de tri ont des énoncés et actions identifiables. Les signaux statiques signalant une absence d’explication sur le même écran ne sont pas confirmés comme défauts : les vidéos/transcripts et les consignes propres aux activités apportent les prérequis.",
+    "confirmed_issues": {
+      "total": 16,
+      "P0": 0,
+      "P1": 10,
+      "P2": 6,
+      "P3": 0,
+      "priority": "Corriger d’abord le verrouillage des 10 chapitres Projector audio : la règle de passage déclarée n’est pas respectée. Puis rendre les feedbacks déjà écrits accessibles après les tris et après une tentative erronée de remise en ordre."
+    },
+    "scoring": "Les scores sur 100 sont qualitatifs et renormalisés sur les dimensions vérifiables dans les données et le code. Les limites de rendu navigateur, de disponibilité d’assets et d’évaluation LLM sont déclarées au niveau de chaque chapitre plutôt que compensées par une note artificielle."
+  },
+  "limits": [
+    "Audit non modificatif fondé sur le JSON de production indiqué par le manifest, le registre de blocs et le code LessonViewer/composants de rendu/progression ; aucun contenu, code ou base n’a été modifié.",
+    "Les URL `/api/assets/...` (audio, VTT, PDF, images et ressources synthétiques) ne sont pas présentes localement et n’ont pas été ouvertes dans un navigateur authentifié. Elles sont donc traitées comme ressources déclarées mais non vérifiées, jamais comme ressources absentes.",
+    "Les parcours interactifs n’ont pas été exécutés en session apprenant. Le rendu, les conditions de complétion et les feedbacks ont été vérifiés par lecture du code ; l’ergonomie réelle multi-support reste non vérifiée.",
+    "Les 9 TP sont évalués par un service LLM côté serveur. Les critères, le seuil et les zones de feedback ont été inspectés, mais la stabilité/qualité d’une réponse de correction réelle n’a pas été testée.",
+    "Le manifeste d’import mentionne 30 activités extraites alors que le cours et le catalogue en exposent 28. Le test `shared/aiForFinanceAdaptation.test.ts` documente le retrait intentionnel de `dc_ch01_act08` et `dc_ch01_act11` faute de rubrique et de ressource locale exploitable ; ce différentiel n’est donc pas déclaré comme activité absente.",
+    "La pertinence factuelle des médias, la lisibilité détaillée des images et l’accessibilité perceptuelle ne peuvent pas être établies sans lecture effective des ressources dans l’interface."
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_40",
+  "courses": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "ia_appliquee_metiers_tp__40-screen-01",
+          "title": "Objectif du TP",
+          "score_100": 94,
+          "verified_dimensions": [
+            "Objectifs: le bloc learning_section affiche quatre compétences opérationnelles (classer, extraire, détecter, router), le métier cible, le niveau et la durée.",
+            "Cadrage: le callout précise que le cas est à reproduire dans un environnement de démonstration et que les contrôles métier et sécurité restent nécessaires.",
+            "Rendu: LearningSectionBlock et CalloutBlock affichent les champs renseignés; aucun champ pédagogique pertinent n'est masqué pour ce chapitre.",
+            "Médias: aucun média audiovisuel ou illustration n'est déclaré; cette dimension ne nécessite pas de contrôle de contextualisation ici."
+          ],
+          "unverified_dimensions": [
+            "Atteinte effective des compétences: elle dépend de la réalisation ultérieure du TP et ne peut pas être observée dans ce seul chapitre."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "ia_appliquee_metiers_tp__40-screen-02",
+          "title": "Préparer l’environnement",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Prérequis et sécurité: le texte impose sandbox ou comptes de démonstration, données fictives, absence de secrets et validation humaine des actions à impact.",
+            "Action attendue: resource_review demande explicitement d'ouvrir la ressource, d'identifier résultat métier, entrées, sorties et contrôles, puis de confirmer la consultation.",
+            "Rendu et verrouillage: LessonViewer affiche le titre, la consigne, le lien et le bouton de confirmation; la progression est bloquée jusqu'à cette confirmation.",
+            "Transition: le chapitre prépare explicitement l'environnement avant la démarche de construction et le mini-projet."
+          ],
+          "unverified_dimensions": [
+            "Contenu et qualité pédagogique de la ressource n8n externe: son URL est référencée et rendue, mais elle n'a pas été consultée; elle n'est donc pas considérée comme absente.",
+            "Accessibilité et disponibilité réelle de l'URL de ressource dans une session apprenant."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "ia_appliquee_metiers_tp__40-screen-03",
+          "title": "Construire progressivement",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Progression: sequence_visual présente une démarche ordonnée Cadrer, Préparer, Tester, Contrôler avant le checkpoint puis le mini-projet.",
+            "Prérequis opérationnels: les limites d'automatisation, données fictives, tests, journalisation des écarts et revue humaine sont formulés avant l'activité pratique.",
+            "Clarté et rendu: SequenceVisualBlock et ComparisonPanelBlock rendent les étapes, les descriptions et les listes À faire/À éviter renseignées.",
+            "Cohérence: le contenu est aligné avec l'objectif de classification et routage de documents juridiques, et avec les règles de sécurité énoncées au chapitre précédent."
+          ],
+          "unverified_dimensions": [
+            "Maîtrise technique détaillée de n8n, Claude Sonnet et Google Sheets: elle dépend de la ressource référencée et de la pratique dans l'environnement personnel."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "ia_appliquee_metiers_tp__40-checkpoint-01",
+          "title": "Checkpoint : environnement et sécurité",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Énoncé et action: la question précise le moment, le workflow concerné et la pratique attendue; les quatre choix sont cohérents avec les règles déjà enseignées.",
+            "Feedback: KnowledgeCheckBlock affiche la bonne ou mauvaise réponse, l'explication et une possibilité de réessayer.",
+            "Rendu: le prompt, les options, le compteur d'une réponse attendue et l'explication sont effectivement rendus par KnowledgeCheckBlock."
+          ],
+          "unverified_dimensions": [],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__40:ia_appliquee_metiers_tp__40-checkpoint-01:knowledge-check-can-unlock-on-error",
+              "course_id": "ia_appliquee_metiers_tp__40",
+              "chapter_id": "ia_appliquee_metiers_tp__40-checkpoint-01",
+              "content_id": "ia_appliquee_metiers_tp__40-checkpoint-preparation",
+              "content_type": "knowledge_check",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint obligatoire peut être quitté après une réponse incorrecte. Le composant appelle onComplete dès la sélection, quelle que soit la correction; LessonViewer marque alors l'interaction comme terminée. Le passThreshold: 1 du chapitre ne s'applique pas à ce bloc knowledge_check, car le calcul dédié ne compte que les blocs de type checkpoint. L'apprenant peut donc progresser sans avoir validé la règle de sécurité évaluée.",
+              "current_content": "Chapitre requiredBeforeAdvance: true, passThreshold: 1; bloc knowledge_check avec correctAnswer: a et required: true.",
+              "proposed_content": "Faire dépendre la complétion qui déverrouille le chapitre de isCorrect pour ce knowledge_check, ou traiter explicitement knowledge_check comme une question de checkpoint dans le calcul du seuil. Conserver le réessai et ne permettre le passage qu'après la réponse a.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__40.json → lessons[0].chapters[3] (passThreshold: 1 et correctAnswer: a); client/src/components/blocks/GenericLearningBlocks.tsx:57 appelle onComplete(block.id, id === block.correctAnswer); client/src/pages/training/LessonViewer.tsx:484-489 ajoute l'identifiant aux interactions terminées sans condition sur isCorrect; client/src/pages/training/checkpointGate.ts:12-14 ne recense que les blocs type checkpoint.",
+              "confidence": "high",
+              "verification_status": "confirmed_content_and_renderer",
+              "recommended_action": "Corriger la règle de complétion et ajouter un test couvrant une réponse incorrecte suivie d'une tentative de navigation."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "ia_appliquee_metiers_tp__40-mini-project",
+          "title": "Mini-projet et preuve de réalisation",
+          "score_100": 54,
+          "verified_dimensions": [
+            "Objectif et livrable: le TP demande de classer 20 documents fictifs et de créer une piste d'audit exportable; la preuve doit décrire le scénario, le résultat, un contrôle et l'étape soumise à validation humaine.",
+            "Préparation et ressources: l'environnement de démonstration, les données fictives, les précautions de sécurité, le support fictif et un indice sont fournis dans le rendu CloudExerciseBlock.",
+            "Feedback post-soumission: la correction, les erreurs fréquentes, l'auto-vérification et le message de succès sont visibles après soumission."
+          ],
+          "unverified_dimensions": [
+            "Contenu du support fictif servi par l'URL gérée /manus-storage: l'URL est déclarée et rendue comme ressource; le fichier n'était pas présent dans le workspace d'audit et n'est pas considéré comme absent.",
+            "Exécution réelle dans les environnements personnels n8n, Claude Sonnet et Google Sheets."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__40:ia_appliquee_metiers_tp__40-mini-project:proof-gate-accepts-trivial-answer",
+              "course_id": "ia_appliquee_metiers_tp__40",
+              "chapter_id": "ia_appliquee_metiers_tp__40-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__40-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le verrou du mini-projet ne vérifie pas la preuve demandée. Le bloc ne définit ni minimumAnswerLength, ni critères de grille, ni évaluation serveur, ni dépôt de workflow requis. Le renderer applique donc le minimum par défaut d'un caractère et appelle onComplete après toute réponse non vide: une saisie d'un seul caractère suffit à révéler la correction et à déverrouiller le quiz final, sans preuve du scénario, du résultat, du contrôle ou de la validation humaine.",
+              "current_content": "Le bloc demande une preuve décrivant « le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine », mais aucun mécanisme de validation de ces éléments n'est configuré.",
+              "proposed_content": "Configurer une validation de preuve avant déverrouillage: critères explicites couvrant (1) le classement de 20 documents fictifs, (2) les métadonnées/routage et la piste d'audit, (3) un résultat de test ou un écart, et (4) le contrôle humain d'une action sensible. Préférer une évaluation à critères ou un dépôt de workflow exporté; un minimum de longueur seul ne suffit pas.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__40.json → lessons[0].chapters[4].blocks[0] ne contient pas minimumAnswerLength, rubricCriteria, serverGradedAssessment ni workflowUploadRequired; client/src/components/blocks/cloudExerciseValidation.ts:1-4 fixe le minimum implicite à 1; client/src/components/CloudExerciseBlock.tsx:153-161 marque le TP soumis et appelle onComplete sans évaluation configurée; client/src/pages/training/LessonViewer.tsx:1587-1592 utilise cette complétion pour lever le verrou.",
+              "confidence": "high",
+              "verification_status": "confirmed_content_and_renderer",
+              "recommended_action": "Rendre la validation de la preuve significative avant de conserver requiredBeforeAdvance: true sur ce mini-projet."
+            },
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__40:ia_appliquee_metiers_tp__40-mini-project:missing-structured-steps",
+              "course_id": "ia_appliquee_metiers_tp__40",
+              "chapter_id": "ia_appliquee_metiers_tp__40-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__40-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "guidage",
+              "description": "La consigne donne le livrable et quatre capacités à couvrir, mais le tableau steps est absent. Pour un TP qui implique trois outils et un jeu de documents, l'apprenant n'a pas de séquence de réalisation vérifiable dans l'activité elle-même; la démarche générale du chapitre précédent ne précise pas l'enchaînement du mini-projet.",
+              "current_content": "Instructions: « Réalisez le mini-projet... puis décrivez dans la zone de preuve... » suivies des quatre capacités; steps est absent.",
+              "proposed_content": "Ajouter des étapes réutilisables, fondées uniquement sur les données déjà fournies: 1. Ouvrir le support fictif et définir les catégories contrats, NDA, factures et pièces diverses. 2. Configurer dans l'environnement de démonstration l'extraction de métadonnées, le routage et une piste d'audit. 3. Tester 20 documents fictifs, y compris un doublon ou document à risque, puis consigner résultat et écarts. 4. Vérifier qu'aucune action sensible n'est finale sans validation humaine et rédiger la preuve demandée.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__40.json → lessons[0].chapters[4].blocks[0]: le champ steps est absent alors que assignment, instructions, environmentGuide, ressources, hint et solution sont présents; client/src/components/CloudExerciseBlock.tsx:278-297 ne rend des étapes numérotées que lorsque tpSteps.length > 0.",
+              "confidence": "high",
+              "verification_status": "confirmed_content_and_renderer",
+              "recommended_action": "Ajouter les étapes au champ steps du cloud_exercise et conserver l'indice comme aide facultative."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "ia_appliquee_metiers_tp__40-final-quiz",
+          "title": "Quiz final : valider la démarche",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Énoncés: les quatre QCM sont explicites, leurs réponses attendues existent parmi les options et ils sont alignés sur la sécurité, la preuve et le contrôle du TP.",
+            "Feedback QCM: SingleChoiceExercise montre le bon choix, l'explication et un bouton Réessayer; les quatre QCM disposent d'une explication renseignée.",
+            "Action et progression: le tri indique de placer chaque action dans son étape, explique l'interface de sélection/dépôt et exige les quatre QCM corrects (passThreshold: 4) ainsi qu'un tri correct avant la fin de leçon.",
+            "Cohérence: les catégories Cadrer, Construire, Tester, Valider réinvestissent la démarche explicitée avant le mini-projet."
+          ],
+          "unverified_dimensions": [],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__40:ia_appliquee_metiers_tp__40-final-quiz:bucket-feedback-not-rendered",
+              "course_id": "ia_appliquee_metiers_tp__40",
+              "chapter_id": "ia_appliquee_metiers_tp__40-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__40-quiz-order",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le bloc de tri possède un feedback pédagogique renseigné, mais le lecteur ne le transmet pas au composant de tri. Après une tentative incorrecte, l'apprenant voit le score et « Réessayez »; les catégories attendues ne sont exposées qu'en texte lecteur d'écran sur les cartes erronées. Le rappel pédagogique fourni dans les données n'est donc pas visible à l'ensemble des apprenants.",
+              "current_content": "feedback: « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. »; correction est absent.",
+              "proposed_content": "Transmettre et afficher le champ feedback après toute tentative complète, ou renseigner ce même texte dans correction si le contrat du composant est maintenu. Après une erreur, afficher aussi visiblement la catégorie attendue pour chaque carte avant le réessai.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__40.json → lessons[0].chapters[5].blocks[4] contient feedback mais pas correction; client/src/pages/training/LessonViewer.tsx:957-973 transmet correction à MatchingExercise, jamais feedback; client/src/components/MatchingExercise.tsx:40-42 et 444-450 n'affiche un débrief détaillé que si correction est renseigné.",
+              "confidence": "high",
+              "verification_status": "confirmed_content_and_renderer",
+              "recommended_action": "Corriger le mapping de rendu ou compléter la donnée correction, puis tester une tentative erronée au tri."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "Audit qualitatif complet de la seule formation ia_appliquee_metiers_tp__formation_40: 1 cours, 1 leçon, 6 chapitres et 8 interactions contrôlées individuellement (1 consultation de ressource, 1 knowledge check, 1 TP cloud, 4 QCM et 1 tri).",
+    "confirmed_issues": 4,
+    "priority_summary": "2 problèmes P1 portent sur la cohérence des verrous: le checkpoint est validable après une mauvaise réponse et le mini-projet est déverrouillable avec une preuve d'un caractère. Deux P2 concernent le guidage structuré du TP et le feedback non rendu du tri final. Les quatre signaux du pré-audit ont été revus: le signal de guidage du TP est confirmé mais reclassé P2; les signaux de progression des checkpoint, TP et quiz ne sont pas retenus tels quels lorsque les contenus et le rendu montrent un énoncé, des prérequis ou une transition suffisants.",
+    "score_global_indicatif_100": 80,
+    "coverage": "Tous les chapitres, tous les blocs et toutes les activités déclarés dans le JSON du cours ont été examinés; LessonViewer, les renderers d'activité et les règles de progression associées ont été vérifiés."
+  },
+  "limits": [
+    "Audit documentaire et de code de rendu uniquement: aucune session navigateur authentifiée, exécution réelle de workflow ni test d'accessibilité assistive n'a été réalisé.",
+    "La ressource n8n externe est référencée et rendue comme lien, mais son contenu n'a pas été consulté; elle n'est pas traitée comme absente.",
+    "Le support fictif du TP est référencé par une URL gérée /manus-storage mais son fichier n'était pas disponible dans le workspace d'audit; il n'est pas traité comme absent.",
+    "La qualité factuelle des sorties produites dans n8n, Claude Sonnet et Google Sheets reste non vérifiable sans réaliser le TP dans un environnement de démonstration."
+  ]
+}

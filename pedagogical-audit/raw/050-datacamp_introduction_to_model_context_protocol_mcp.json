@@ -1,0 +1,936 @@
+{
+  "formation_id": "datacamp_introduction_to_model_context_protocol_mcp",
+  "courses": [
+    {
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "MCP : des apps d'IA aussi simples que 1, 2, 3",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Rendu de contenu : le bloc `content` est rendu par PageContent ; son texte et sa cohérence avec le titre ont été relus.",
+            "Ressource : un PDF de slides est déclaré et le viewer rend un lien de téléchargement ; son ouverture n’a pas été testée et n’est donc pas assimilée à une absence.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Découvrir MCP",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action : la consigne de classement, les catégories et l’ensemble des cartes sont explicites ; le renderer affiche aussi l’aide gestuelle (sélectionner une carte puis une catégorie).",
+            "Prérequis : les rôles MCP ou les communications client-serveur sont enseignés dans la vidéo immédiatement précédente.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_1_act_02_bucket_sort:feedback-non-rendu",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P1",
+              "category": "feedback_et_rendu",
+              "description": "Les données fournissent un indice et un feedback pédagogique, mais le rendu de l’activité de tri ne les transmet pas au composant. En cas d’erreur, l’apprenant voit seulement le nombre de cartes correctes, les cartes erronées en rouge et « Réessayez » ; il reste verrouillé jusqu’au sans-faute sans retour explicatif visible sur le classement attendu.",
+              "current_content": "instructions : Classez chaque affirmation selon qu'elle décrit le Host, le Client ou le Server de l'architecture MCP. | hint : L'hôte est l'application d'IA avec laquelle les utilisateurs interagissent directement : c'est là que la conversation a lieu.\n\nLe client fait le lien en gérant la connexion et la communication entre l'hôte et le serveur via JSON-RPC.\n\nLe serveur offre un accès adapté à l'IA à des sources de données et des outils externes, en traduisant des API complexes vers le format MCP. | feedback : Excellent travail ! Vous avez correctement identifié les rôles de chaque composant de l'architecture MCP. Comprendre ces distinctions est essentiel pour créer et déboguer des applications d'IA basées sur MCP.",
+              "proposed_content": "Afficher l’indice fourni avant la première soumission, le feedback fourni après réussite et, après une erreur, la catégorie attendue pour chaque carte erronée avec une brève justification. Conserver la possibilité de réessayer.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_bucket_sort] contient `hint` et `feedback`. LessonViewer.tsx:957-974 ne passe au MatchingExercise que id, title, instructions, buckets, cards et correction ; MatchingExercise.tsx:420-465 n’affiche après erreur que le score et « Réessayer » (aucune propriété hint/feedback reçue). La navigation est verrouillée tant que le tri n’est pas complété (LessonViewer.tsx:1572-1575).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Corriger le mapping du renderer, puis tester les deux états : erreur (retour par carte + nouvel essai) et réussite (feedback pédagogique)."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Créer votre premier serveur MCP",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Créer un serveur MCP de conversion de devises",
+          "score_100": 42,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Rendu de contenu : le bloc `content` est rendu par PageContent ; son texte et sa cohérence avec le titre ont été relus.",
+            "Transition théorie→activité : non satisfaisante sur cet écran (constat détaillé dans l’issue) ; ce n’est pas une absence de ressource, mais une activité source non représentée par un bloc interactif rendu.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_ch01_act05:activite-non-rendue",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_content",
+              "content_type": "content",
+              "severity": "P1",
+              "category": "activité_non_rendue_et_verrouillage",
+              "description": "L’activité source est de type TabExercise, mais les données ne contiennent qu’un bloc `content`. LessonViewer le rend comme texte statique ; aucun onglet, éditeur, réponse, validation ni correction n’est rendu. Malgré `requiredBeforeAdvance: true`, aucune activité rendue ne peut alimenter le verrouillage et l’apprenant peut continuer sans pratiquer.",
+              "current_content": "C'est le moment de construire votre premier serveur MCP ! Ici, vous allez définir un serveur MCP appelé 'Currency Converter' qui comporte un seul outil, convert_currency(), pour convertir des montants entre différentes devises.\n\nCet outil doit prendre les paramètres amount, from_currency et to_currency, et renvoyer une chaîne contenant le montant converti dans la devise souhaitée, ainsi que le taux de change utilisé.\n\nPar exemple : 100 EUR = 88.04 GBP (Rate: 0.8804).",
+              "proposed_content": "Ajouter un bloc de pratique compatible avec le viewer (cloud_exercise ou code_repl), un code de départ et une correction. Énoncé réutilisable à afficher : « Dans l’environnement de code, définissez un serveur MCP `Currency Converter` avec l’outil `convert_currency(amount, from_currency, to_currency)`. L’outil doit renvoyer une chaîne contenant le montant converti et le taux utilisé (ex. `100 EUR = 88.04 GBP (Rate: 0.8804)`). Validez votre réalisation puis comparez-la à la correction. »",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[3] : sourceActivityType=\"TabExercise\", requiredBeforeAdvance=true et unique bloc content `dc_1_act_05_content`. LessonViewer.tsx:498-550 rend `content` via PageContent ; les règles de navigation (LessonViewer.tsx:1572-1592) ne créent un verrou que pour les types interactifs/exercice pris en charge.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Restaurer une activité réellement interactive avec son mécanisme de validation, ou reclasser explicitement l’écran comme contenu d’enseignement non obligatoire. Ne pas laisser `requiredBeforeAdvance` suggérer une pratique inexistante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Communications client-serveur MCP",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Construire des ponts (entre le client et le serveur)",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action : la consigne de classement, les catégories et l’ensemble des cartes sont explicites ; le renderer affiche aussi l’aide gestuelle (sélectionner une carte puis une catégorie).",
+            "Prérequis : les rôles MCP ou les communications client-serveur sont enseignés dans la vidéo immédiatement précédente.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_1_act_08_bucket_sort:feedback-non-rendu",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch01_act08",
+              "content_id": "dc_1_act_08_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P1",
+              "category": "feedback_et_rendu",
+              "description": "Les données fournissent un indice et un feedback pédagogique, mais le rendu de l’activité de tri ne les transmet pas au composant. En cas d’erreur, l’apprenant voit seulement le nombre de cartes correctes, les cartes erronées en rouge et « Réessayez » ; il reste verrouillé jusqu’au sans-faute sans retour explicatif visible sur le classement attendu.",
+              "current_content": "instructions : Classez chaque affirmation comme Vrai ou Faux selon ce que vous avez appris sur les communications client-serveur MCP. | hint : N'oubliez pas que MCP utilise un format de message standardisé pour toutes les communications entre clients et serveurs.\n\nRéfléchissez au rôle du client : initier et gérer la connexion avec le serveur.\n\nPensez au fonctionnement du transport stdio lorsque le client et le serveur sont sur la même machine. | feedback : Excellent travail ! Vous avez une solide compréhension des fondamentaux de la communication client-serveur MCP. Ces notions sont la base pour créer des applications MCP efficaces. Il est temps de dialoguer avec votre serveur de conversion de devises en construisant le client correspondant !",
+              "proposed_content": "Afficher l’indice fourni avant la première soumission, le feedback fourni après réussite et, après une erreur, la catégorie attendue pour chaque carte erronée avec une brève justification. Conserver la possibilité de réessayer.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_08_bucket_sort] contient `hint` et `feedback`. LessonViewer.tsx:957-974 ne passe au MatchingExercise que id, title, instructions, buckets, cards et correction ; MatchingExercise.tsx:420-465 n’affiche après erreur que le score et « Réessayer » (aucune propriété hint/feedback reçue). La navigation est verrouillée tant que le tri n’est pas complété (LessonViewer.tsx:1572-1575).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Corriger le mapping du renderer, puis tester les deux états : erreur (retour par carte + nouvel essai) et réussite (feedback pédagogique)."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Découverte dynamique des outils",
+          "score_100": 42,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Rendu de contenu : le bloc `content` est rendu par PageContent ; son texte et sa cohérence avec le titre ont été relus.",
+            "Transition théorie→activité : non satisfaisante sur cet écran (constat détaillé dans l’issue) ; ce n’est pas une absence de ressource, mais une activité source non représentée par un bloc interactif rendu.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_ch01_act09:activite-non-rendue",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_content",
+              "content_type": "content",
+              "severity": "P1",
+              "category": "activité_non_rendue_et_verrouillage",
+              "description": "L’activité source est de type TabExercise, mais les données ne contiennent qu’un bloc `content`. LessonViewer le rend comme texte statique ; aucun onglet, éditeur, réponse, validation ni correction n’est rendu. Malgré `requiredBeforeAdvance: true`, aucune activité rendue ne peut alimenter le verrouillage et l’apprenant peut continuer sans pratiquer.",
+              "current_content": "Les serveurs MCP peuvent regrouper de nombreuses fonctionnalités sous forme d'outils distincts. Une première étape courante consiste donc à lister tous les outils disponibles pour comprendre ce qu'ils font et comment les utiliser.\n\nasyncio a déjà été importé pour vous.",
+              "proposed_content": "Remplacer le seul bloc de texte par un bloc de pratique compatible avec le viewer (cloud_exercise ou code_repl), doté d’un code de départ, d’une validation et d’une correction. Les données disponibles permettent de réutiliser l’objectif « lister les outils disponibles pour comprendre ce qu’ils font et comment les utiliser », mais ne permettent pas de reconstituer de façon fiable le code de départ ou la solution : les récupérer depuis la source avant rédaction.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[6] : sourceActivityType=\"TabExercise\", requiredBeforeAdvance=true et unique bloc content `dc_1_act_09_content`. LessonViewer.tsx:498-550 rend `content` via PageContent ; les règles de navigation (LessonViewer.tsx:1572-1592) ne créent un verrou que pour les types interactifs/exercice pris en charge.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Restaurer une activité réellement interactive avec son mécanisme de validation, ou reclasser explicitement l’écran comme contenu d’enseignement non obligatoire. Ne pas laisser `requiredBeforeAdvance` suggérer une pratique inexistante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act10",
+          "title": "Appeler des outils côté serveur",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_1_act_10_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch01_act10",
+              "content_id": "dc_1_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[7].blocks[id=dc_1_act_10_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Ressources dans les serveurs MCP",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Ressource : un PDF de slides est déclaré et le viewer rend un lien de téléchargement ; son ouverture n’a pas été testée et n’est donc pas assimilée à une absence.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Définir des ressources de serveur MCP",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_02_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Lister les ressources depuis le client",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_03_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Lire des ressources depuis le client",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_04_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[3].blocks[id=dc_2_act_04_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Prompts dans les serveurs MCP",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Définir une invite de serveur MCP",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_06_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Lister les prompts depuis le client",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_07_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_07_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Récupérer un prompt depuis le client",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_08_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[7].blocks[id=dc_2_act_08_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "MCP et LLM : Outils",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": "Le workflow d'appel d'outils",
+          "score_100": 73,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action : la consigne de remettre cinq étapes dans l’ordre est explicite ; les items correspondent au flux d’appel d’outil présenté dans la vidéo précédente.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_10_bucket_sort:feedback-correctif-insuffisant",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act10",
+              "content_id": "dc_2_act_10_bucket_sort",
+              "content_type": "ordering",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après une réponse erronée, la remise en ordre indique seulement le nombre d’éléments bien placés et colore les positions. L’indice riche du JSON n’est pas rendu, et le feedback pédagogique ne s’affiche qu’en cas de réussite. Dans une activité obligatoire, cela limite l’apprentissage par l’erreur.",
+              "current_content": "instructions : Classez les étapes du workflow d'appel d'outils de la première (en haut) à la dernière (en bas). | hint : Le LLM doit d'abord connaître la requête de l'utilisateur et les outils disponibles pour déterminer lesquels (le cas échéant) doivent être appelés.\n\nPour répondre à des questions au-delà de ses connaissances, un LLM doit pouvoir appeler un outil, puis consulter ses résultats. | feedback : Bien joué ! Ce workflow en cinq étapes est essentiel pour permettre aux LLM d'utiliser des outils et d'aller au-delà de leurs capacités habituelles. Passons maintenant à la création d'une fonction pour qu'un LLM puisse utiliser les outils des serveurs MCP.",
+              "proposed_content": "Rendre l’indice avant la soumission. Après une erreur, indiquer les étapes mal placées et leur position attendue (ou expliquer la dépendance logique), puis proposer « Réessayer ». Après réussite, conserver le feedback actuel.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_10_bucket_sort] contient `hint` et `feedback`. OrderingBlock.tsx:27-29 lit title/instructions/feedback mais pas hint ; lignes 79-92 évaluent les positions, et lignes 148-163 n’affichent le feedback que si toutes sont correctes. L’activité est soumise au verrouillage (LessonViewer.tsx:1572-1575).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Ajouter au composant une zone d’indice et un retour d’erreur actionnable. Les positions attendues sont déterminables depuis `items`, déjà stockés dans l’ordre correct."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Utilisation d'outils LLM dans des serveurs MCP",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_11_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[10].blocks[id=dc_2_act_11_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch02_act12",
+          "title": "MCP et LLM : invites et ressources",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch02_act13",
+          "title": "Récupérer une ressource et un prompt depuis MCP",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_13_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act13",
+              "content_id": "dc_2_act_13_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[12].blocks[id=dc_2_act_13_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 13,
+          "chapter_id": "dc_ch02_act14",
+          "title": "Construire le message et appeler le LLM",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_2_act_14_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch02_act14",
+              "content_id": "dc_2_act_14_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[13].blocks[id=dc_2_act_14_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Intégrations de bases de données MCP",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Ressource : un PDF de slides est déclaré et le viewer rend un lien de téléchargement ; son ouverture n’a pas été testée et n’est donc pas assimilée à une absence.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Créer des connexions à une base de données",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_3_act_02_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch03_act02",
+              "content_id": "dc_3_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Bases de données comme ressources",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_3_act_03_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch03_act03",
+              "content_id": "dc_3_act_03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Outils de recherche en base paramétrés",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_3_act_04_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[2].chapters[3].blocks[id=dc_3_act_04_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Intégrations d'API MCP",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Serveurs MCP tiers",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Rechercher un livre par titre avec l'Open Library MCP",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Énoncé/action/prérequis : le TP affiche l’objectif (`assignment`), les instructions détaillées, le code de départ, un indice, une correction verrouillée avant soumission, un guide d’environnement et un lien vers les slides. Les `steps` statiquement vides ne constituent pas un défaut confirmé : les sous-actions sont écrites dans `instructions`.",
+            "Transition : chaque TP suit soit une vidéo explicative, soit l’exercice immédiatement antérieur de la même compétence ; les appels/méthodes demandés sont nommés dans l’énoncé et l’indice.",
+            "Rendu/UX : le viewer rend les instructions et prérequis dans des panneaux repliables, la ressource locale comme lien et une zone de réponse suivie d’un bouton de validation.",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code.",
+            "Médias : aucun média vidéo/image autonome déclaré dans ce chapitre à évaluer ; les PDFs éventuellement liés aux TP sont des ressources de reproduction, non des contenus visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:introduction_to_model_context_protocol_mcp__01:dc_3_act_09_tp:validation-superficielle",
+              "course_id": "introduction_to_model_context_protocol_mcp__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+              "current_content": "minimumAnswerLength absent (résolu à 1 caractère) ; rubricCriteria absent ; serverGradedAssessment absent ; successMessage vide. L’énoncé, l’indice et la correction sont présents.",
+              "proposed_content": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+              "evidence": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_09_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité haute : paramétrer la validation des 14 TP avant de conserver leur verrouillage obligatoire. Conserver les énoncés et corrections existants ; ajouter les critères et les retours dans les données de chaque TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Félicitations !",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure : titre, description, type, ordre et `requiredBeforeAdvance` lus dans le JSON ; le score est renormalisé sur les dimensions vérifiables.",
+            "Média/contextualisation : audio Projector, titres de diapositives, transcription segmentée et slides PDF sont déclarés ; le viewer rend le Projector, les sous-titres lorsqu’ils existent et une transcription repliable.",
+            "Progression : la vidéo officielle est une condition de passage ; le viewer l’identifie explicitement et offre aussi une action manuelle « marquer comme écoutée ». La pertinence visuelle/factuelle n’a pas été visionnée.",
+            "Synthèse : la vidéo finale récapitule explicitement les acquis des trois leçons (MCP/outils, ressources/prompts/LLM, production/API/BD/tiers).",
+            "Cohérence du verrouillage : chaque chapitre porte `requiredBeforeAdvance: true`. Pour les vidéos, tris, remises en ordre et TP, le viewer applique une condition de passage correspondant au type rendu ; les écarts de type rendu sont signalés uniquement pour les deux TabExercise concernés."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel par écran : non vérifiable ; aucun champ objectif distinct n’est défini. Le titre, la description et, pour les TP, le champ assignment sont néanmoins rendus.",
+            "Exécution réelle dans un navigateur, qualité factuelle des services externes et accessibilité des fichiers audio/PDF/URLs : non vérifiées dans cet audit de données et de code."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "1 cours, 3 leçons, 30 chapitres et 30 activités/écrans examinés individuellement ; l’import signale 34 activités extraites (11 vidéos, 3 DragAndDropExercise, 18 NormalExercise, 2 TabExercise).",
+    "confirmed_issues": 19,
+    "priority_distribution": {
+      "P0": 0,
+      "P1": 18,
+      "P2": 1,
+      "P3": 0
+    },
+    "overall_score_100": 70,
+    "score_method": "Moyenne simple des 30 scores de chapitre. Chaque score est renormalisé sur les dimensions réellement vérifiables dans les JSON et le code de rendu ; il n’infère ni objectif formel absent, ni exécution navigateur, ni disponibilité externe.",
+    "key_findings": [
+      "Les 11 médias pédagogiques sont contextualisés par leurs titres, diapositives et transcriptions segmentées ; ils sont rendus par ProjectorPlayer et les ressources PDF sont déclarées. Aucune ressource non testée n’a été qualifiée d’absente.",
+      "Les 14 TP ont des objectifs, consignes, indice et correction exploitables ; les signaux statiques « steps vide » sont donc infirmés comme défaut pédagogique. En revanche, les 14 validations sont superficielles : une réponse d’un caractère suffit à révéler la correction et à déverrouiller la suite.",
+      "Deux activités importées comme TabExercise (`dc_ch01_act05`, `dc_ch01_act09`) sont réduites à un paragraphe rendu en texte : aucune interface de pratique ni validation ne subsiste, alors que `requiredBeforeAdvance` est vrai.",
+      "Les deux tris disposent de hints/feedbacks dans les données, mais LessonViewer ne les passe pas à MatchingExercise ; la remise en ordre n’affiche son feedback que si elle est correcte et ignore son hint."
+    ],
+    "coverage": "100 % des leçons, chapitres et blocs déclarés dans le seul cours du périmètre ont été lus. Les types pertinents (`video`, `content`, `download`, `bucket_sort`, `ordering`, `cloud_exercise`) et la navigation/verrouillage de LessonViewer ont été contrôlés."
+  },
+  "limits": [
+    "Audit qualitatif en lecture seule : aucun JSON de cours, composant, base ou ressource n’a été modifié.",
+    "Les médias, PDFs, URLs d’assets, environnements Python/serveurs MCP et APIs tierces n’ont pas été exécutés ou ouverts ; leur accessibilité effective, leur qualité factuelle et leur rendu navigateur restent non vérifiés.",
+    "Le score ne mesure pas l’exactitude technique des exemples MCP ni la performance réelle d’une évaluation serveur ; il évalue uniquement les données et comportements de rendu/verrouillage inspectables.",
+    "Les constats sur les TabExercise portent sur les données actuellement rendues par LessonViewer ; la représentation attendue par la source DataCamp ne peut pas être reconstituée sans un export de code/onglets absent du JSON.",
+    "Les objectifs formels par écran ne sont pas fournis dans un champ dédié ; leur absence est documentée comme dimension non vérifiable, pas comme une anomalie P1 automatique."
+  ]
+}

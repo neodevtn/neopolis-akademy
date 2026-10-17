@@ -1,0 +1,255 @@
+{
+  "formation_id": "datacamp_introduction_to_generative_ai_in_snowflake",
+  "courses": [
+    {
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Introduction à Snowflake Cortex et aux notebooks",
+          "score_100": 64,
+          "verified_dimensions": [
+            "Explications et contexte : la séquence Projector présente Cortex, les notebooks, le jeu de données Executive Resorts, la substitution de variables Python et le premier exemple de summarize() ; les scripts, slides et transcription sont fournis.",
+            "Média : le bloc dc_1_act_01_video déclare un audio, 14 slides synchronisées, des sous-titres FR/EN, une transcription et un PDF de slides ; LessonViewer rend l’audio Projector, les slides et la transcription repliable.",
+            "Prérequis : le bloc d’environnement rappelle de ne pas partager de données sensibles et la vidéo explique les notions Snowflake utilisées avant les exemples de code.",
+            "Ressource : le téléchargement dc_ch01_slides utilise le champ url, bien pris en charge par LessonViewer (dlUrl = block.download_url || block.url)."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique mesurable spécifique au chapitre : aucun champ objectives n’est fourni au niveau chapter ; la description est celle, générique, de toute la leçon.",
+            "Exécution réelle des notebooks, lecture de l’audio, rendu pixel par pixel des slides et comportement avec technologies d’assistance : non exécutés dans un navigateur.",
+            "Les 13 CloudExercise annoncés par les métadonnées d’import ne disposent pas d’objets de contenu individuels dans ce JSON ; leur énoncé, action, feedback et progression ne peuvent donc pas être audités un à un."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-048-001",
+              "course_id": "introduction_to_generative_ai_in_snowflake__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "datacampImport.expected.exercise_types.CloudExercise",
+              "content_type": "course_import_metadata",
+              "severity": "P1",
+              "category": "couverture_des_activités",
+              "description": "Le cours déclare 20 activités extraites, dont 13 CloudExercise, mais les sept chapitres effectivement rendables ne contiennent que sept blocs video, un bloc content et deux download : aucun cloud_exercise ni autre exercice interactif n’est présent. Les six vidéos d’enseignement qui précèdent la conclusion invitent explicitement à pratiquer, sans activité visible ensuite. Le parcours ne permet donc pas de pratiquer les manipulations Snowflake Cortex annoncées (notebooks, Python et SQL), ni d’obtenir un feedback sur celles-ci.",
+              "current_content": "datacampImport.expected : activities_expected_from_outline=20, activities_extracted=20, exercise_types={VideoExercise:7, CloudExercise:13}. Parcours réel : exerciseCount=0 ; les blocks de lessons[0..1].chapters[*] sont seulement content, video et download. La vidéo dc_1_act_01_video se conclut par « À vous de pratiquer maintenant ! » sans bloc pratique suivant dans le chapitre ou la leçon.",
+              "proposed_content": "Restaurer ou réimporter les 13 activités CloudExercise annoncées dans des blocs cloud_exercise rendables, puis les placer immédiatement après la vidéo qui introduit la compétence correspondante. Pour chaque activité restaurée, fournir au minimum une consigne, l’action attendue dans le notebook, les prérequis/ressources, un critère de réussite, un indice et un feedback/correction. Si ces activités ne font plus partie du périmètre, retirer les promesses de pratique et réaligner les métadonnées et l’objectif de cours sur un format uniquement démonstratif.",
+              "evidence": "client/public/data/courses/introduction_to_generative_ai_in_snowflake__01.json : datacampImport.expected (lignes 9-20) annonce 7 VideoExercise et 13 CloudExercise ; l’inventaire exhaustif des blocs des 2 lessons/7 chapters ne retourne que 7 video, 1 content et 2 download, et exerciseCount vaut 0 (ligne 2357). LessonViewer.tsx:399-405 et 417-1034 possède des rendus pour cloud_exercise et activités, mais aucun bloc de ces types n’est fourni par ce cours. Il ne s’agit pas d’une ressource inaccessible : aucun objet d’activité à rendre n’est présent dans le JSON ciblé.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_code",
+              "recommended_action": "Traiter comme une anomalie d’intégrité d’import et de conception pédagogique avant toute amélioration cosmétique : retrouver les 13 sources d’activité ou corriger explicitement le périmètre publié, puis rejouer l’audit activité par activité."
+            },
+            {
+              "issue_id": "PED-048-002",
+              "course_id": "introduction_to_generative_ai_in_snowflake__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage_progression",
+              "description": "Le verrou de navigation affiché ne reconnaît aucune des sept vidéos de ce cours. Bien que chaque chapitre soit déclaré requiredBeforeAdvance:true et que le lecteur propose « Marquer comme écoutée », la construction de chapterVideoKeys dans la navigation n’utilise block.id que pour une longueur comprise entre 8 et 15 caractères. Les sept identifiants dc_*_video font 17 caractères ; sans videoId ni url, la liste est vide et le bouton Suivant/Leçon terminée n’est pas verrouillé par le visionnage.",
+              "current_content": "Tous les chapitres ont requiredBeforeAdvance:true. Exemples d’identifiants : dc_1_act_01_video et dc_2_act_10_video (17 caractères). Les blocs ne portent ni videoId ni url ; ils portent audioUrl et id. Dans LessonViewer, chapterVideoKeys reste vide pour ces blocs dans le chemin de navigation principal.",
+              "proposed_content": "Employer le même identifiant de complétion que le lecteur audio : pour tout bloc avec audioUrl, mp4Url ou hlsUrl, utiliser block.id sans contrainte de longueur. La navigation Suivant et le bouton Leçon terminée doivent alors exiger completedVideos.has(block.id) lorsque la vidéo est requise. Conserver le marquage manuel accessible comme solution de reprise, sans laisser un identifiant non reconnu neutraliser le verrou.",
+              "evidence": "LessonViewer.tsx:692-726 définit audioKey = block.id || `audio_${blockIdx}` et appelle toggleVideoComplete(audioKey). En revanche LessonViewer.tsx:1557-1568 (et 1483-1492 pour la fin de leçon) ne prend block.id que si sa longueur est entre 8 et 15 ; les sept ids du JSON mesurent 17 caractères. chapterVideoKeys devient donc [] et allVideosWatched est true. requiredBeforeAdvance n’est pas utilisé pour rétablir cette reconnaissance de vidéo.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Corriger la fonction commune d’extraction des clés vidéo et ajouter un test de navigation couvrant un bloc audioUrl dont l’id fait plus de 15 caractères, puis vérifier les sept chapitres de ce cours."
+            },
+            {
+              "issue_id": "PED-048-003",
+              "course_id": "introduction_to_generative_ai_in_snowflake__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video_slide_10",
+              "content_type": "FullSlide",
+              "severity": "P2",
+              "category": "exactitude_de_la_consigne",
+              "description": "La consigne de configuration demande de rechercher « snowlfake-ml-python », alors que le nom Snowflake est orthographié correctement partout ailleurs dans le même chapitre. Comme l’apprenant est invité à saisir exactement ce texte dans Packages, cette coquille peut empêcher la préparation de l’environnement annoncée.",
+              "current_content": "Script de la slide 10 : « ... en tapant \"snowlfake-ml-python\", puis en cliquant sur Save. »",
+              "proposed_content": "« Pour utiliser Cortex dans des cellules Python, ouvrez Packages, recherchez `snowflake-ml-python`, puis sélectionnez Save. »",
+              "evidence": "JSON → lessons[0].chapters[0].blocks[id=dc_1_act_01_video].projectorSlides[number=10].script et transcriptSegments[heading=10. Configuration de Cortex] contiennent « snowlfake-ml-python ». Les mêmes données nomment Snowflake Cortex et snowflake.cortex dans les slides immédiatement voisines.",
+              "confidence": "high",
+              "verification_status": "verified_content",
+              "recommended_action": "Corriger la chaîne dans le script, la transcription et, si nécessaire, dans la source audio/slide associée ; vérifier ensuite la procédure dans un notebook avant republication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Génération de texte",
+          "score_100": 66,
+          "verified_dimensions": [
+            "Explications : la vidéo réactive summarize(), présente complete(), la construction d’un prompt, le choix de modèle, temperature, max_tokens et la comparaison Python/AI_COMPLETE() en SQL.",
+            "Progression : cette séquence s’appuie explicitement sur le résumé introduit dans le chapitre précédent et prépare une utilisation multi-étapes annoncée plus loin.",
+            "Média contextualisé : scénario cohérent de réponses à des avis hôteliers, exemples de code et de sortie, 14 slides, audio, sous-titres FR/EN et transcription sont déclarés.",
+            "Transition : la dernière slide annonce précisément la pratique des deux approches présentées."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable propre au chapitre : non structuré au niveau chapter ; seule la description générique de leçon est présente.",
+            "Résultat réel du code complete()/AI_COMPLETE() dans un compte Snowflake, lecture audio et rendu réel des ressources : non testés.",
+            "Activité pratique, énoncé, action attendue et feedback : non vérifiables, car aucun bloc d’exercice ne suit la transition vers la pratique ; voir PED-048-001."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Classification de texte",
+          "score_100": 67,
+          "verified_dimensions": [
+            "Explications : le média définit le problème de catégorisation d’avis libres, explique categories et classify_text(), la conversion JSON, le passage à l’échelle avec pandas, puis AI_SENTIMENT et ses cinq valeurs possibles.",
+            "Prérequis et ordre : la classification suit la découverte de Cortex et la génération ; les données Executive Resorts constituent un fil rouge cohérent.",
+            "Média : audio, 11 slides synchronisées, sous-titres FR/EN, transcription structurée et exemple de catégories métier contextualisent le contenu.",
+            "Transition théorie→pratique : la conclusion identifie explicitement l’entraînement à la classification par catégorie et sentiment."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique mesurable spécifique au chapitre : aucun champ objectives au niveau chapter.",
+            "Exactitude d’exécution des exemples Snowflake/pandas et lisibilité effective des slides : non testées dans un navigateur ou un notebook.",
+            "Énoncé, action, feedback et tentative d’exercice : non vérifiables faute de bloc activité suivant la transition ; voir PED-048-001."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Traduction",
+          "score_100": 65,
+          "verified_dimensions": [
+            "Explications : la vidéo annonce la traduction d’avis dans un contexte d’opérations multilingues, détaille les trois arguments de translate(), montre une sortie et traite explicitement les limites des traductions littérales ainsi que la relecture humaine.",
+            "Progression : le chapitre réemploie le jeu de données et les fonctions Cortex de la première leçon avant de passer à un cas métier plus avancé.",
+            "Média : le bloc contient audio, 9 slides, transcription structurée, PDF de slides et sous-titre EN déclaré ; la transcription française rend les explications consultables en texte.",
+            "Transition : la slide finale invite clairement à traduire les avis, ce qui rend l’intention d’application visible."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable de chapitre : absent comme donnée structurée ; la description réutilise l’objectif global de la leçon.",
+            "Qualité effective de la traduction, chargement de l’audio/sous-titre et maniement des slides dans un navigateur : non exécutés.",
+            "Activité pratique et feedback de traduction : non vérifiables, aucun bloc exercice n’est présent après la transition ; voir PED-048-001."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-048-004",
+              "course_id": "introduction_to_generative_ai_in_snowflake__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "accessibilite_media",
+              "description": "Le cours est en français et l’audio/transcription de cette vidéo sont en français, mais le bloc ne déclare qu’un sous-titre EN. LessonViewer affiche alors le lien générique « Sous-titres » sans préciser qu’il ouvre la version anglaise. Le même écart est présent dans les vidéos Extraction de réponses et Récapitulatif. La transcription française disponible atténue le problème, mais elle est repliée et ne remplace pas un sous-titre synchronisé pour l’apprenant qui en a besoin.",
+              "current_content": "dc_2_act_01_video : subtitleUrlEn renseigné, subtitleUrlFr absent ; transcript et transcriptSegments en français. Même configuration de sous-titres pour dc_2_act_04_video et dc_2_act_10_video.",
+              "proposed_content": "Ajouter le VTT français correspondant à chaque vidéo. À défaut, libeller explicitement le lien « Sous-titres anglais » et rendre la transcription française plus immédiatement repérable dans le bloc média.",
+              "evidence": "JSON → lessons[1].chapters[0].blocks[id=dc_2_act_01_video], lessons[1].chapters[1].blocks[id=dc_2_act_04_video] et lessons[1].chapters[3].blocks[id=dc_2_act_10_video] ont subtitleUrlEn mais aucun subtitleUrlFr, tout en ayant une transcript française. LessonViewer.tsx:735-739 choisit subtitleUrlFr || subtitleUrlEn sous le libellé non spécifié « Sous-titres ».",
+              "confidence": "high",
+              "verification_status": "verified_content_and_code",
+              "recommended_action": "Prioriser l’ajout des VTT français ; si cela dépend d’un asset non disponible, corriger au minimum le libellé et conserver la transcription comme alternative textuelle visible."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Extraction de réponses",
+          "score_100": 67,
+          "verified_dimensions": [
+            "Explications : le média motive extract_answer() par des tâches métier, précise from_text et question, interprète le score de confiance et donne un seuil de revue humaine.",
+            "Prérequis : la séquence conserve le cas Executive Resorts et prolonge logiquement l’exploitation des avis après la traduction.",
+            "Média : audio, 11 slides, transcription structurée, PDF de slides et sous-titre EN sont déclarés ; les exemples rendent visible le lien entre question, extrait et score.",
+            "Transition : la conclusion synthétise la compétence avant d’annoncer le passage aux exercices."
+          ],
+          "unverified_dimensions": [
+            "Objectif de chapitre mesurable : non fourni dans la structure chapter.",
+            "Exécution de extract_answer(), comportement réel de seuil et pertinence des résultats : non testés dans Snowflake.",
+            "Les exercices annoncés ne sont pas présents comme blocs d’activité et ne peuvent pas être contrôlés ; voir PED-048-001.",
+            "Sous-titre français synchronisé : non déclaré ; limitation détaillée dans PED-048-004."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Concevoir des workflows d’IA en plusieurs étapes",
+          "score_100": 68,
+          "verified_dimensions": [
+            "Explications : le média relie les fonctions déjà introduites dans un workflow ordonné : extraction d’avis espagnol, traduction, résumé, classification, génération de réponse puis retraduction.",
+            "Progression : les prérequis sont antérieurs et nommés ; ce chapitre fait une synthèse constructive des fonctions de la première leçon et des deux premiers chapitres de la seconde.",
+            "Média : le bloc comporte audio, 13 slides, transcription, sous-titres FR/EN et PDF ; la succession des étapes est contextualisée par un avis hôtelier multilingue.",
+            "Transition : la dernière slide annonce sans ambiguïté la construction d’un workflow IA multi-étapes."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable propre au chapitre : aucune donnée objectives au niveau chapter.",
+            "Fonctionnement effectif du workflow complet, cohérence des sorties et capacité d’un débutant à le construire dans un notebook : non testés.",
+            "La mise en pratique annoncée n’est pas auditable, car aucun bloc cloud_exercise ni activité équivalente n’est livré ; voir PED-048-001."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act10",
+          "title": "Récapitulatif",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Synthèse : la vidéo récapitule les notebooks, la substitution de variables, les fonctions Cortex et les cas d’usage sur les retours clients, en cohérence avec les contenus antérieurs.",
+            "Progression : le chapitre clôt les deux leçons par un retour explicite sur le parcours, plutôt que d’introduire un prérequis ultérieur.",
+            "Média : audio, 6 slides, transcription structurée, PDF de slides et sous-titre EN sont déclarés ; la transcription permet de retrouver la synthèse sans dépendre exclusivement de l’audio.",
+            "Navigation : le composant affiche l’avancement par écran et propose lecture, navigation de slides, transcription et état d’erreur média."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable de clôture : aucun objectif structuré de chapitre.",
+            "Rétention/apprentissage réel à la fin du cours, chargement des ressources et accessibilité effective en navigateur : non mesurés.",
+            "Une activité terminale de vérification ou de transfert n’est pas fournie ; le défaut de couverture des CloudExercise est détaillé dans PED-048-001.",
+            "Sous-titre français synchronisé : non déclaré ; limitation détaillée dans PED-048-004."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "Audit pédagogique qualitatif, sans modification, de la seule formation datacamp_introduction_to_generative_ai_in_snowflake et de son unique cours introduction_to_generative_ai_in_snowflake__01.",
+    "coverage": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 2,
+      "chapters_reviewed": 7,
+      "rendered_video_activities_reviewed": 7,
+      "rendered_interactive_or_practical_activity_blocks_reviewed": 0,
+      "download_blocks_reviewed": 2,
+      "projector_slides_reviewed": 78,
+      "import_metadata_declared_activities": 20,
+      "declared_cloud_exercises_without_renderable_content_object": 13
+    },
+    "assessment_method": "Les scores sur 100 sont qualitatifs et renormalisés sur les dimensions effectivement vérifiables dans le JSON et le code de rendu : explications, progression, complétude observable, média/contextualisation et UX/verrouillage. Les activités pratiques non présentes ne sont pas assimilées à des ressources inaccessibles : leur absence d’objet rendu est établie par l’inventaire JSON. L’absence d’un champ objectives au niveau chapter est consignée comme non vérifiable et n’est pas, à elle seule, une anomalie.",
+    "overall_score_100": 67,
+    "key_findings": [
+      "Les sept séquences Projector sont pédagogiquement cohérentes comme démonstrations : elles utilisent un fil rouge hôtelier, des scripts détaillés, des slides, une transcription et une progression allant de Cortex/notebooks vers un workflow multi-étapes puis une synthèse.",
+      "La couverture pratique est rompue : les métadonnées déclarent 13 CloudExercise parmi 20 activités extraites, mais le cours rendu ne contient aucun exercice. Les appels à pratiquer et l’objectif d’utiliser Cortex dans des notebooks ne débouchent sur aucune action ni feedback apprenant.",
+      "Le verrouillage déclaré de toutes les vidéos est contournable depuis la navigation principale, car les identifiants audio de 17 caractères ne sont pas reconnus par le calcul de clé vidéo. Les apprenants peuvent passer les vidéos et terminer les leçons sans les marquer comme écoutées.",
+      "Un texte de configuration contient l’orthographe « snowlfake-ml-python », potentiellement bloquante si elle est saisie telle quelle.",
+      "Trois vidéos françaises n’exposent qu’un lien de sous-titres anglais ; leurs transcriptions françaises constituent une alternative mais sont repliées."
+    ],
+    "issue_distribution": {
+      "confirmed_issues": 4,
+      "P0": 0,
+      "P1": 2,
+      "P2": 1,
+      "P3": 1
+    },
+    "priority_summary": "Priorité 1 : restaurer ou corriger explicitement les 13 activités CloudExercise annoncées, afin que chaque transition vers la pratique fournisse une action, une validation et un feedback. Priorité 2 : corriger la reconnaissance des ids audio dans le verrou de navigation des sept vidéos. Priorité 3 : rectifier la chaîne de package et compléter/étiqueter les sous-titres français.",
+    "static_pre_audit_disposition": {
+      "course_static_issue_count": 0,
+      "signals_confirmed": 0,
+      "additional_confirmed_findings_from_content_and_rendering_review": 4,
+      "rationale": "Le pré-audit n’a fourni aucun défaut pour ce cours. L’audit manuel a néanmoins comparé les métadonnées d’import, les blocs réellement rendables et LessonViewer/ProjectorPlayer, ce qui a établi des défauts étayés non visibles dans le pré-audit."
+    }
+  },
+  "limits": [
+    "Audit réalisé sans modifier les contenus, le code ou la base ; seul ce rapport JSON a été créé.",
+    "Le manifeste cible un unique fichier de cours, lu intégralement : 2 lessons, 7 chapters, 7 blocs vidéo, 78 slides Projector, 2 téléchargements et le bloc de préparation ont été examinés. Le registre des blocs, LessonViewer, ProjectorPlayer et chapterProgress ont été vérifiés pour le rendu et la progression.",
+    "Les 13 CloudExercise déclarés dans les métadonnées ne possèdent aucun objet de contenu dans le JSON ciblé. Ils ne peuvent donc pas être audités individuellement (énoncé, action, feedback, verrouillage) et aucune ressource inaccessible n’a été qualifiée d’absente.",
+    "La lecture audio effective, le chargement réseau des assets, la lisibilité graphique au pixel, les interactions tactiles/clavier et les technologies d’assistance n’ont pas été exécutés dans un navigateur ; ces dimensions sont marquées non vérifiables lorsque pertinentes.",
+    "L’audit ne mesure ni l’apprentissage réel, ni la rétention, ni l’exactitude factuelle externe des API Snowflake ; aucune source externe n’a été consultée."
+  ]
+}

@@ -1,0 +1,265 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_05",
+  "courses": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__05",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "ia_appliquee_metiers_tp__05-screen-01",
+          "title": "Objectif du TP",
+          "score_100": 96,
+          "verified_dimensions": [
+            "Objectifs : le bloc hero expose quatre compétences opérationnelles (planification, historisation/anti-doublons, personnalisation et limites d’envoi).",
+            "Cadrage : le métier cible, le niveau intermédiaire et la durée indicative sont visibles avant toute activité.",
+            "Responsabilité : le callout précise que la ressource source ne remplace pas les contrôles métier et de sécurité.",
+            "Rendu : LessonViewer affiche learning_section puis callout ; les informations ne sont pas masquées par le type de bloc."
+          ],
+          "unverified_dimensions": [
+            "Médias : aucun média n’est présent dans ce chapitre ; la pertinence d’un média ne s’applique pas.",
+            "Usage réel et rendu navigateur sur tous supports : non exécutés dans cette revue de code et de données."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "ia_appliquee_metiers_tp__05-screen-02",
+          "title": "Préparer l’environnement",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Prérequis : les outils, l’emploi de données fictives, l’interdiction d’exposer des secrets et la validation humaine sont explicités avant le TP.",
+            "Transition vers l’activité : la ressource source indique l’action à réaliser (ouvrir, repérer résultat/entrées/sorties/contrôles, puis confirmer).",
+            "Action attendue : resource_review est rendu avec titre, instructions, lien et bouton de confirmation dans LessonViewer.",
+            "Verrouillage : la confirmation de consultation est requise avant le passage au chapitre suivant, conformément au type resource_review."
+          ],
+          "unverified_dimensions": [
+            "Contenu, disponibilité et valeur pédagogique de la ressource source liée : non consultés ; le lien est présent dans le JSON et rendu par le composant, donc la ressource n’est pas considérée absente.",
+            "Objectif propre au chapitre : la préparation est explicite, mais aucun objectif d’apprentissage formel distinct n’est fourni.",
+            "Usage réel et rendu navigateur sur tous supports : non exécutés dans cette revue de code et de données."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "ia_appliquee_metiers_tp__05-screen-03",
+          "title": "Construire progressivement",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Progression : le visuel rend une démarche ordonnée Cadrer → Préparer → Tester → Contrôler avant les évaluations et le mini-projet.",
+            "Prérequis de sécurité : la comparaison À faire/À éviter explicite données fictives, contrôle humain, cas limites, secrets et décisions métier.",
+            "Rendu : sequence_visual et comparison_panel sont tous deux pris en charge et affichés par LessonViewer.",
+            "Transition : ce chapitre précède immédiatement le checkpoint de sécurité puis le mini-projet."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique propre au chapitre : il est inférable depuis la démarche mais non formulé explicitement.",
+            "Lisibilité visuelle effective et navigation clavier/mobile : non testées en navigateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "ia_appliquee_metiers_tp__05-checkpoint-01",
+          "title": "Checkpoint : environnement et sécurité",
+          "score_100": 70,
+          "verified_dimensions": [
+            "Énoncé et action : le knowledge_check demande clairement la pratique attendue avant connexion au workflow ; quatre choix sont disponibles.",
+            "Prérequis : la bonne réponse reprend les mesures préparées dans les deux chapitres précédents.",
+            "Feedback : KnowledgeCheckBlock affiche la correction, l’explication et une possibilité de réessai après une réponse.",
+            "Rendu : knowledge_check est reconnu par LessonViewer et son prompt/options/explication sont affichés."
+          ],
+          "unverified_dimensions": [
+            "Objectif d’apprentissage formel distinct : non fourni ; le titre et la question permettent seulement de l’inférer.",
+            "Rendu navigateur effectif sur tous supports : non exécuté."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-074-05-001",
+              "course_id": "ia_appliquee_metiers_tp__05",
+              "chapter_id": "ia_appliquee_metiers_tp__05-checkpoint-01",
+              "content_id": "ia_appliquee_metiers_tp__05-checkpoint-preparation",
+              "content_type": "knowledge_check",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint requis ne vérifie pas une réponse correcte avant de déverrouiller la suite. Une réponse erronée est enregistrée comme interaction terminée ; l’apprenant peut donc atteindre le mini-projet après avoir échoué au contrôle de sécurité.",
+              "current_content": "Le chapitre a requiredBeforeAdvance: true et passThreshold: 1. Le bloc knowledge_check a required: true, correctAnswer: « a » et une explication, mais aucune règle de réussite n’est portée par ce bloc.",
+              "proposed_content": "Conserver l’énoncé actuel et modifier la règle de passage : « Vous devez sélectionner la bonne réponse pour continuer. En cas d’erreur, l’explication s’affiche et vous pouvez réessayer. »",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__05.json → lessons[0].chapters[3] (passThreshold 1) et blocks[0] (correctAnswer « a ») ; /home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx → lignes 359-362 et 484-489 : knowledge_check ajoute son identifiant à completedNovasavoInteractions quel que soit isCorrect ; lignes 1601-1624 : le verrou ne teste que cette complétion. Le calcul de checkpoint classique ne cible que les blocs de type checkpoint (/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx → lignes 1538-1556 ; checkpointGate.ts → lignes 18-31), alors que le chapitre contient knowledge_check.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Faire dépendre la complétion déverrouillante de isCorrect pour knowledge_check (ou faire du checkpoint un bloc évalué par le mécanisme de seuil) ; tester explicitement les parcours réponse erronée puis réponse correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "ia_appliquee_metiers_tp__05-mini-project",
+          "title": "Mini-projet et preuve de réalisation",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Objectif : la campagne cible est précise (quotidienne, limitée à 15 prospects, message personnalisé, historique et statut de suivi).",
+            "Action/preuve : l’instruction indique de décrire scénario testé, résultat, contrôle effectué et étape restant sous validation humaine.",
+            "Soutien : une préparation d’environnement, une ressource fictive, un indice, une correction et un message de succès sont fournis dans les données ; CloudExerciseBlock les rend à l’apprenant.",
+            "Sécurité : le TP réitère l’usage de sandbox, données fictives et validation humaine avant les actions sensibles."
+          ],
+          "unverified_dimensions": [
+            "Contenu et disponibilité du support fictif /manus-storage/05-05-prospection-quotidienne-automatisee-avec-e-mails-personnalises-support-fictif_737b5d6e.md : non disponible dans les artefacts locaux examinés ; le lien est présent dans le JSON et le composant le rend, donc il n’est pas déclaré absent.",
+            "Faisabilité réelle dans n8n, Google Places, OpenAI et SMTP sandbox : non exécutée ; le TP demande précisément une adaptation à l’environnement personnel/de démonstration.",
+            "Rendu navigateur effectif des sections repliables, téléchargements et textarea : non exécuté."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-074-05-002",
+              "course_id": "ia_appliquee_metiers_tp__05",
+              "chapter_id": "ia_appliquee_metiers_tp__05-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__05-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "guidage",
+              "description": "Le mini-projet demande de construire un workflow de prospection avec cinq outils, mais ne fournit aucune étape de réalisation structurée. La frise antérieure reste générique et ne décompose pas l’enchaînement propre à ce livrable (plafond de 15, historique/anti-doublon, brouillon personnalisé, test et validation humaine). Un apprenant intermédiaire ne dispose donc pas d’un guidage autonome suffisant pour transformer l’objectif en workflow et en preuve.",
+              "current_content": "Le bloc cloud_exercise comporte assignment, instructions, environmentGuide, resources, hint et solution, mais aucun champ steps. Les instructions énumèrent les quatre compétences attendues sans séquence de construction vérifiable.",
+              "proposed_content": "Ajouter au champ steps : 1. « Dans un environnement de démonstration, définissez le résultat métier, des données fictives et la limite de 15 prospects par exécution. » 2. « Construisez le déclenchement récurrent et l’étape qui recherche puis écarte les entreprises déjà historisées. » 3. « Produisez un brouillon personnalisé à partir du contenu public prévu, sans envoyer de message réel. » 4. « Enregistrez l’historique et le statut de suivi, puis testez au moins un cas fictif et un cas déjà contacté. » 5. « Consignez le résultat et l’écart observé ; laissez l’envoi final en brouillon ou soumis à validation humaine. »",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__05.json → lessons[0].chapters[4].blocks[0] : absence de steps, alors que l’objectif et les compétences citées portent sur planification, historique, personnalisation et anti-doublons ; /home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx → lignes 278-297 : seules les entrées steps existantes sont rendues comme étapes numérotées. Le pré-audit signalait ce point ; la revue du contenu le confirme.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_code",
+              "recommended_action": "Renseigner les cinq étapes proposées (ou des étapes d’un niveau de détail équivalent, validées par l’équipe métier) dans steps ; conserver les informations existantes comme prérequis, indice et auto-vérification."
+            },
+            {
+              "issue_id": "PED-074-05-003",
+              "course_id": "ia_appliquee_metiers_tp__05",
+              "chapter_id": "ia_appliquee_metiers_tp__05-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__05-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "La preuve du mini-projet peut être validée avec un seul caractère non blanc et déverrouille alors le quiz final. Aucun minimum pertinent, critère visible, grille, évaluation serveur ni auto-évaluation obligatoire ne contrôle les quatre éléments demandés dans la preuve. Le verrouillage atteste donc une soumission, pas la réalisation ni la compréhension du TP.",
+              "current_content": "minimumAnswerLength, rubricCriteria, learnerCriteria, serverGradedAssessment, postRevealReflectionOptions et requirePostRevealReflection sont absents. L’instruction demande pourtant scénario testé, résultat obtenu, contrôle effectué et validation humaine.",
+              "proposed_content": "Ajouter des critères visibles et vérifiables : « 1. scénario fictif et limite de 15 ; 2. résultat observé ; 3. historique/anti-doublon ou contrôle réalisé ; 4. action maintenue sous validation humaine ». Exiger une preuve structurée couvrant ces quatre rubriques et une validation par grille (ou, a minima, une longueur minimale cohérente et une auto-évaluation obligatoire après correction).",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__05.json → lessons[0].chapters[4].blocks[0] : champs de critères/évaluation et minimumAnswerLength absents ; /home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx → lignes 119-123 et 153-161 : sans grille ni évaluation serveur, la longueur minimale vaut 1 et submit appelle onComplete dès qu’un texte non vide est envoyé ; /home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx → lignes 1587-1592 : la progression est verrouillée seulement jusqu’à completedCloudExercises.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Mettre en place une validation alignée sur les quatre éléments déjà demandés : rubricCriteria + évaluation, ou une auto-évaluation de correction réellement requise. Ne pas présenter la simple soumission comme une preuve suffisante."
+            },
+            {
+              "issue_id": "PED-074-05-004",
+              "course_id": "ia_appliquee_metiers_tp__05",
+              "chapter_id": "ia_appliquee_metiers_tp__05-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__05-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "localisation",
+              "description": "Les champs centraux du mini-projet sont des chaînes françaises non localisées. Comme le cours expose une version en anglais et CloudExerciseBlock renvoie toute chaîne telle quelle quelle que soit la langue active, un apprenant en anglais lit l’objectif, les instructions, l’indice, la correction et le message de succès en français. Cela compromet l’autonomie sur l’activité principale.",
+              "current_content": "assignment, instructions, hint, solution et successMessage sont des chaînes françaises, tandis que le titre et environmentGuide sont bilingues.",
+              "proposed_content": "Remplacer les chaînes par des objets localisés. Exemple pour assignment : {« fr »: « Créer une campagne quotidienne limitée à 15 prospects avec message personnalisé, historique des envois et statut de suivi. », « en »: « Create a daily campaign limited to 15 prospects, with a personalized message, sending history, and follow-up status. »}. Traduire de même, fidèlement, les instructions, l’indice, la correction et le succès existants.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__05.json → lessons[0].chapters[4].blocks[0] : assignment/instructions/hint/solution/successMessage sont des strings françaises ; /home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx → lignes 104-113 les lit via resolveLocalizedBlockText ; cloudExerciseValidation.ts → lignes 11-18 retourne une string directement, indépendamment de lang.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_content",
+              "recommended_action": "Localiser intégralement les cinq champs du cloud_exercise en fr/en et vérifier l’affichage du mini-projet avec lang=en avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "ia_appliquee_metiers_tp__05-final-quiz",
+          "title": "Quiz final : valider la démarche",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Activités : les quatre QCM ont chacun une question, des options, une bonne réponse et un feedback ; l’activité de tri a un titre, une consigne, quatre catégories et quatre cartes avec associations définies.",
+            "Action/interface : SingleChoiceExercise est rendu pour les QCM ; MatchingExercise explique aussi comment sélectionner puis placer une carte, affiche un compteur, corrige les placements et autorise une reprise.",
+            "Verrouillage : passThreshold: 4 exige les quatre QCM corrects ; la dernière étape exige également un tri correct avant la terminaison de la leçon.",
+            "Sécurité et transfert : les QCM réinvestissent les données fictives, le contrôle humain, la journalisation et l’exclusion des secrets."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formel propre au quiz : non formulé au-delà du titre « valider la démarche ».",
+            "Rendu navigateur effectif, persistance locale du tri et technologies d’assistance : non exécutés dans cette revue."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-074-05-005",
+              "course_id": "ia_appliquee_metiers_tp__05",
+              "chapter_id": "ia_appliquee_metiers_tp__05-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__05-quiz-order",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "progression",
+              "description": "L’activité de tri annonce « Ordonnez la démarche » mais n’emploie pas la même nomenclature que la démarche enseignée juste avant. La frise enseigne Cadrer → Préparer → Tester → Contrôler, tandis que le tri évalue Cadrer → Construire → Tester → Valider et déplace la préparation des données fictives dans « Cadrer ». Cette variation non expliquée brouille la correspondance entre théorie et activité.",
+              "current_content": "Frise : « Cadrer », « Préparer », « Tester », « Contrôler ». Tri : « 1. Cadrer », « 2. Construire », « 3. Tester », « 4. Valider ».",
+              "proposed_content": "Employer les mêmes libellés dans le tri : « 1. Cadrer », « 2. Préparer », « 3. Tester », « 4. Contrôler ». Si « Construire » et « Valider » sont intentionnels, introduire avant le tri une phrase explicite : « Dans le tri, Préparer inclut la configuration du workflow et Contrôler se traduit par la validation humaine avant usage réel. »",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__05.json → lessons[0].chapters[2].blocks[0].items[0..3] versus lessons[0].chapters[5].blocks[4].buckets et cards ; les deux ensembles sont lus dans cet ordre par LessonViewer. L’activité de tri est effectivement rendue et exigée (/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx → lignes 957-975 et 1572-1575).",
+              "confidence": "high",
+              "verification_status": "verified_content_and_code",
+              "recommended_action": "Uniformiser la terminologie entre la frise et les catégories du tri, puis revoir les cartes pour que chaque étape corresponde explicitement au contenu préparatoire."
+            },
+            {
+              "issue_id": "PED-074-05-006",
+              "course_id": "ia_appliquee_metiers_tp__05",
+              "chapter_id": "ia_appliquee_metiers_tp__05-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__05-quiz-03",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le feedback du QCM sur le contrôle d’un workflow récurrent est générique et ne justifie pas la réponse correcte. Il répète le cadre global (données fictives, contrôle humain, vérification) sans expliquer que comparer le résultat au critère métier et consigner l’écart permet d’évaluer la planification du workflow. Après une erreur, l’apprenant ne reçoit donc pas l’explication ciblée de la compétence questionnée.",
+              "current_content": "Question : « Quel contrôle aide à vérifier l’objectif “Planifier un workflow récurrent de prospection” ? » Réponse correcte : « Comparer le résultat du test au critère métier défini puis documenter l’écart. » Feedback actuel, identique aux quatre QCM : « La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle. »",
+              "proposed_content": "Remplacer le feedback de ce QCM par : « Comparer la sortie d’un test au critère métier attendu permet de vérifier que la planification produit le résultat prévu et de conserver une trace des écarts à corriger. Les autres propositions suppriment précisément les contrôles nécessaires. »",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__05.json → lessons[0].chapters[5].blocks[2] : question, réponse « a » et explication générique ; /home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx → lignes 977-1004 transmet cette explication à SingleChoiceExercise après l’évaluation. Le même texte est utilisé par les quatre QCM, malgré des objectifs de question différents.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_code",
+              "recommended_action": "Personnaliser l’explication de chaque QCM au raisonnement de sa bonne réponse et, lorsque pertinent, au motif d’erreur des distracteurs."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "formation_title": "Prospection quotidienne automatisée avec e-mails personnalisés",
+    "scope": "1 cours, 1 leçon, 6 chapitres et 8 activités examinés individuellement.",
+    "method": "Revue qualitative des données du cours, des définitions de blocs pertinentes et du rendu/progression dans LessonViewer, CloudExerciseBlock, KnowledgeCheckBlock et MatchingExercise. Les signaux du pré-audit ont été confirmés ou écartés après revue ; ils ne sont pas repris automatiquement.",
+    "scores": {
+      "chapter_scores": [
+        96,
+        90,
+        84,
+        70,
+        48,
+        78
+      ],
+      "mean_score_100": 78,
+      "scoring_note": "Scores indicatifs renormalisés sur les dimensions effectivement vérifiables dans les données et le code ; les dimensions non vérifiables sont listées chapitre par chapitre et ne reçoivent pas de note implicite."
+    },
+    "coverage": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 1,
+      "chapters_reviewed": 6,
+      "activities_reviewed": 8,
+      "confirmed_issues": 6,
+      "issues_by_severity": {
+        "P0": 0,
+        "P1": 4,
+        "P2": 2,
+        "P3": 0
+      }
+    },
+    "confirmed_strengths": [
+      "Les objectifs, le public, le niveau et les compétences attendues sont explicités au démarrage.",
+      "Les règles de sécurité (sandbox, données fictives, absence de secrets, validation humaine) sont cohérentes avant le TP et réinvesties dans les évaluations.",
+      "Les énoncés des QCM et du tri sont visibles et actionnables ; le tri comporte correction visuelle et reprise.",
+      "Le verrouillage du quiz final est cohérent avec ses activités : quatre réponses correctes et un tri correct sont nécessaires pour terminer."
+    ],
+    "priority_summary": "Priorité 1 : rendre le checkpoint réellement qualifiant et empêcher qu’une preuve vide du mini-projet déverrouille le quiz. Priorité 2 : fournir des étapes opérationnelles et une localisation anglaise complète pour le TP. Priorité 3 : aligner la nomenclature théorie→tri et contextualiser le feedback du QCM sur le contrôle de workflow.",
+    "preaudit_disposition": "Les trois signaux statiques de progression sur checkpoint, mini-projet et quiz ont été revus. Le manque d’étapes du TP est confirmé. Les signaux génériques de manque d’explication de chapitre ne sont pas retenus tels quels : les activités disposent d’énoncés et de prérequis. Deux défauts de verrouillage/évaluation et un défaut de localisation ont été confirmés par la lecture du code et des données."
+  },
+  "limits": [
+    "Audit non destructif : aucun JSON de cours, code applicatif, base de données ou ressource n’a été modifié.",
+    "La revue a porté sur le seul cours ia_appliquee_metiers_tp__05 figurant dans le manifest de la formation.",
+    "Le support fictif local référencé par le mini-projet n’était pas présent dans les artefacts locaux examinés ; son URL est néanmoins renseignée et rendue par le composant, il n’est donc pas considéré absent.",
+    "La ressource source liée est référencée et rendue, mais son contenu, sa disponibilité, sa qualité factuelle et son accessibilité n’ont pas été audités ; aucune source externe n’est citée dans ce rapport.",
+    "Le rendu a été vérifié par lecture des composants et des règles de progression, non par exécution d’un parcours authentifié dans un navigateur ; les aspects visuels réels, responsive et d’accessibilité assistive restent non vérifiés.",
+    "La faisabilité réelle de la configuration n8n, API Google Places/OpenAI, SMTP sandbox et Google Sheets n’a pas été exécutée, conformément au caractère qualitatif et non modifiant de l’audit."
+  ]
+}

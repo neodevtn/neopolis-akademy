@@ -27,6 +27,6 @@ describe("cours DataCamp Créer des workflows agentiques avec LlamaIndex", () =>
     expect(serializedCourse).toContain("découverte vidéo");
     const training = trainingIndex.certifications.find((entry: any) => entry.id === "datacamp_building_agentic_workflows_with_llamaindex");
     expect(training).toMatchObject({ totalActivities: 5, totalExercises: 0, totalVideos: 5, totalDownloads: 2 });
-    expect(training?.breakdown?.fr).toBe("2 chapitres · 5 leçons vidéo · 2 téléchargements");
+    expect(training?.breakdown?.fr).toBe("2 leçons · 5 écrans · 5 vidéos · 0 activités · 2 téléchargements");
   });
 });

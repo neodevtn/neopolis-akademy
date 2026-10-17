@@ -1,0 +1,251 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_27",
+  "courses": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "ia_appliquee_metiers_tp__27-screen-01",
+          "title": "Objectif du TP",
+          "score_100": 93,
+          "verified_dimensions": [
+            "Objectifs et public : le bloc hero rend visibles le métier cible, le niveau intermédiaire, la durée indicative et quatre résultats attendus : classer les e-mails, produire labels/résumés/brouillons, borner l'automatisation et escalader les messages sensibles.",
+            "Transition et sécurité : l'encadré « Cadre pratique » annonce l'environnement de démonstration et place les contrôles métier et de sécurité avant la réalisation du cas d'usage.",
+            "Rendu : LessonViewer rend les blocs learning_section et callout ; le contrôle visuel existant du TP 27 confirme le titre visible et l'absence de débordement à 1440×1000 et 390×844.",
+            "Médias : aucun média n'est déclaré dans ce chapitre ; cette absence ne constitue pas à elle seule une lacune pour un écran d'orientation."
+          ],
+          "unverified_dimensions": [
+            "L'adéquation de la durée annoncée de 2 h 30 avec le temps réel d'un apprenant dans son propre environnement n'a pas été chronométrée.",
+            "La compréhension effective par les trois profils métier annoncés n'a pas été testée avec des apprenants."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "ia_appliquee_metiers_tp__27-screen-02",
+          "title": "Préparer l’environnement",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Prérequis : le texte demande explicitement une sandbox ou des comptes de démonstration, des données fictives et des accès de test ; il nomme n8n, Gmail sandbox, clé API LLM, jeu d'e-mails fictifs et règles de classification.",
+            "Prévention : il interdit explicitement les secrets, mots de passe et données personnelles réelles, et impose une validation humaine pour toute action à impact.",
+            "Action attendue : resource_review rend un titre, une consigne, un lien ouvrant dans un nouvel onglet et un bouton de confirmation ; LessonViewer applique un verrou de navigation tant que cette confirmation n'a pas été donnée.",
+            "Média/ressource : la ressource YouTube est bien déclarée par une URL et contextualisée par les éléments à repérer ; elle n'est pas considérée absente."
+          ],
+          "unverified_dimensions": [
+            "Le contenu pédagogique, l'accessibilité et la disponibilité actuelle de la ressource YouTube n'ont pas été examinés ; aucune conclusion d'absence n'est tirée.",
+            "La lisibilité de l'intégralité de cet écran dans un navigateur connecté n'a pas fait l'objet d'un parcours manuel durant cet audit."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-096-27-001",
+              "course_id": "ia_appliquee_metiers_tp__27",
+              "chapter_id": "ia_appliquee_metiers_tp__27-screen-02",
+              "content_id": "ia_appliquee_metiers_tp__27-source-review",
+              "content_type": "resource_review",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La progression est présentée comme une consultation requise, mais le bouton « J’ai consulté cette ressource » est activable sans que le lien de la ressource ait été ouvert. Le verrou vérifie donc une auto-déclaration seule, et non l'action annoncée ; un apprenant peut contourner la préparation supposée précéder le TP.",
+              "current_content": "Consigne : « Ouvrez la ressource source dans un nouvel onglet… revenez ici pour confirmer votre consultation. » Le composant affiche simultanément le lien et le bouton de confirmation ; ce dernier ajoute directement l'identifiant de revue aux complétions.",
+              "proposed_content": "Rendre la séquence explicite et cohérente : après le clic sur « Ouvrir la ressource source », activer « J’ai ouvert la ressource » ; conserver ensuite une auto-déclaration libellée « J’ai repéré le résultat métier, les entrées, les sorties et les contrôles ».",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__27.json → lessons[0].chapters[1].blocks[id=ia_appliquee_metiers_tp__27-source-review] ; client/src/pages/training/LessonViewer.tsx → rendu resource_review, bouton onClick ajoutant immédiatement reviewId à completedExercises ; le même identifiant est utilisé par isGatedByResourceReview.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_code",
+              "recommended_action": "Distinguer techniquement l'ouverture du lien de l'attestation de consultation, ou assouplir le verrou et présenter honnêtement cette étape comme une auto-attestation non vérifiable."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "ia_appliquee_metiers_tp__27-screen-03",
+          "title": "Construire progressivement",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Progression : la séquence Cadrer → Préparer → Tester → Contrôler reprend les prérequis de l'écran précédent et introduit les contrôles humains avant le checkpoint puis le mini-projet.",
+            "Explications : le diagramme contextualise chaque phase par une action métier, et le panneau comparatif oppose des pratiques à adopter à des pratiques à éviter.",
+            "Cohérence avec l'activité suivante : le test avec données fictives, la journalisation des écarts et la revue humaine correspondent aux exigences de preuve du mini-projet.",
+            "Rendu : sequence_visual et comparison_panel ont chacun un rendu dédié dans LessonViewer et GenericLearningBlocks."
+          ],
+          "unverified_dimensions": [
+            "L'utilisabilité visuelle des panneaux et leur compréhension sur les petits écrans n'ont pas été observées pendant une interaction navigateur de ce chapitre.",
+            "L'écran ne fournit pas à lui seul les paramétrages détaillés du workflow ; leur suffisance dépend notamment de la ressource déclarée et du guidage ajouté dans le mini-projet."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "ia_appliquee_metiers_tp__27-checkpoint-01",
+          "title": "Checkpoint : environnement et sécurité",
+          "score_100": 60,
+          "verified_dimensions": [
+            "Énoncé et action : la question identifie le workflow Gmail, demande une pratique attendue et présente quatre options non ambiguës ; l'action de sélection est rendue par KnowledgeCheckBlock.",
+            "Feedback : après réponse, le composant affiche « Bonne réponse » ou « Réponse incorrecte », l'explication fournie dans le JSON et une possibilité de réessayer.",
+            "Prérequis : la bonne réponse reprend directement la sandbox, les données fictives et la validation humaine enseignées aux écrans 1 et 2."
+          ],
+          "unverified_dimensions": [
+            "Aucun essai navigateur authentifié n'a été exécuté pour vérifier l'annonce visuelle de déverrouillage après une réponse correcte ; la logique de données et de composant a été vérifiée.",
+            "La mémorisation et le transfert réel de la règle de sécurité n'ont pas été mesurés auprès d'apprenants."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-096-27-002",
+              "course_id": "ia_appliquee_metiers_tp__27",
+              "chapter_id": "ia_appliquee_metiers_tp__27-checkpoint-01",
+              "content_id": "ia_appliquee_metiers_tp__27-checkpoint-preparation",
+              "content_type": "knowledge_check",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint obligatoire est déverrouillé après n'importe quelle sélection, y compris une réponse fausse. Le feedback invite alors l'apprenant à relire l'explication et à réessayer, mais la navigation suivante reste disponible : le contrôle de sécurité ne valide pas la connaissance qu'il est censé contrôler.",
+              "current_content": "Le bloc est required=true, la réponse correcte est « a » et le chapitre a passThreshold=1. Pourtant KnowledgeCheckBlock appelle onComplete pour toute réponse ; dans LessonViewer, cet appel enregistre systématiquement l'interaction comme terminée, indépendamment de isCorrect.",
+              "proposed_content": "Conserver l'énoncé actuel et ajouter un comportement explicite : « Pour continuer, sélectionnez la pratique qui protège les données et les actions sensibles. En cas d'erreur, relisez l'explication puis choisissez à nouveau. » Le bouton Suivant ne doit être activé qu'après la réponse a.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__27.json → lessons[0].chapters[3] (type=checkpoint, requiredBeforeAdvance=true, passThreshold=1) ; client/src/components/blocks/GenericLearningBlocks.tsx → KnowledgeCheckBlock select(id) appelle onComplete(id, id === correctAnswer) ; client/src/pages/training/LessonViewer.tsx → callback knowledge_check ajoute l'identifiant à completedNovasavoInteractions sans condition sur isCorrect, et isGatedByNovasavoInteraction ne teste que cette complétion.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_code",
+              "recommended_action": "Enregistrer et tester l'état de réussite, pas seulement l'interaction ; utiliser cet état dans la porte du checkpoint et ajouter un test automatisé couvrant une réponse incorrecte suivie d'une tentative de navigation."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "ia_appliquee_metiers_tp__27-mini-project",
+          "title": "Mini-projet et preuve de réalisation",
+          "score_100": 45,
+          "verified_dimensions": [
+            "But et résultat : le TP demande de créer un assistant de boîte contact qui classe, résume et prépare cinq réponses en brouillon ; la zone de preuve demande un scénario, un résultat, un contrôle et une étape soumise à validation humaine.",
+            "Sécurité et prérequis : le guide d'environnement répète les données fictives, l'absence de secrets et la validation humaine ; le support fictif est explicitement déclaré comme ressource locale de cours.",
+            "Aide et correction : un indice est disponible, la correction est volontairement masquée jusqu'à la soumission, puis le composant rend la correction et le message de succès.",
+            "Rendu : cloud_exercise affiche le titre, l'objectif, les instructions, le guide, la ressource, l'indice, la saisie de preuve et la correction."
+          ],
+          "unverified_dimensions": [
+            "Le contenu, la disponibilité et l'adéquation du support fictif /manus-storage/27-27-agent-ia-qui-gere-completement-une-boite-gmail-support-fictif_bcfc64a3.md n'ont pas été vérifiés ; la ressource est déclarée mais n'est pas traitée comme absente.",
+            "La faisabilité du workflow dans les environnements n8n et Gmail sandbox propres aux apprenants n'a pas été exécutée.",
+            "La qualité d'une preuve libre réelle ne peut pas être inférée sans dispositif d'évaluation configuré."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-096-27-003",
+              "course_id": "ia_appliquee_metiers_tp__27",
+              "chapter_id": "ia_appliquee_metiers_tp__27-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__27-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "guidage",
+              "description": "Le TP central donne un objectif, quatre résultats cibles et les éléments de preuve, mais aucune étape structurée de réalisation (steps est absent). Pour un parcours intermédiaire de 2 h 30, l'apprenant ne dispose pas dans le TP d'un enchaînement opératoire reliant le support fictif, la boîte Gmail sandbox, n8n, les tests et la preuve. La ressource source reste disponible, mais les données ne permettent pas d'affirmer qu'elle comble ce guidage.",
+              "current_content": "Instructions actuelles : « Réalisez le mini-projet dans un environnement personnel de démonstration… décrivez … le scénario testé, le résultat obtenu, un contrôle effectué et l'étape qui reste soumise à validation humaine », suivies de quatre puces de résultats attendus. steps=[] / non renseigné.",
+              "proposed_content": "Étapes à réaliser : 1. Ouvrez le support fictif et préparez dans Gmail sandbox cinq e-mails de démonstration ; ne copiez ni donnée réelle ni secret. 2. Dans n8n, construisez un workflow qui attribue une classification, crée un label, produit un résumé et prépare un brouillon de réponse. 3. Définissez les actions qui restent en brouillon et une règle d'escalade pour les messages sensibles ; aucun envoi final ne doit être automatisé. 4. Exécutez les cinq cas fictifs, relisez labels, résumés et brouillons, puis consignez tout écart. 5. Dans la preuve, utilisez les rubriques « scénario », « résultat », « contrôle réalisé » et « validation humaine restante ».",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__27.json → lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__27-mini-project-proof] : instructions et assignment présents, mais aucune propriété steps ; le pré-audit signalait ce manque comme un signal à confirmer. Les écrans précédents ne donnent qu'une démarche générale Cadrer/Préparer/Tester/Contrôler.",
+              "confidence": "high",
+              "verification_status": "verified_data_with_pedagogical_review",
+              "recommended_action": "Ajouter la séquence ci-dessus ou une séquence équivalente validée contre la ressource source ; conserver le lien source comme complément, non comme unique mode d'emploi."
+            },
+            {
+              "issue_id": "PED-096-27-004",
+              "course_id": "ia_appliquee_metiers_tp__27",
+              "chapter_id": "ia_appliquee_metiers_tp__27-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__27-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "La preuve doit couvrir quatre éléments, mais aucune longueur minimale, grille, évaluation serveur ni auto-évaluation obligatoire n'est configurée. La valeur par défaut est donc une réponse non vide d'un seul caractère ; dès la soumission, le TP est marqué terminé, la correction est révélée et le chapitre suivant est déverrouillé. Le verrou n'est pas cohérent avec l'ambition d'une preuve de réalisation.",
+              "current_content": "Le bloc ne contient ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment, ni requirePostRevealReflection. Il affiche « Preuve enregistrée » alors que CloudExerciseBlock exécute la branche non évaluée qui complète l'activité dès que answer.trim().length >= 1.",
+              "proposed_content": "Critères de preuve à afficher et à vérifier : « Votre preuve comporte quatre rubriques : (1) scénario fictif testé ; (2) résultat observé pour le classement, le résumé ou le brouillon ; (3) contrôle effectué ou écart relevé ; (4) action sensible maintenue en brouillon ou soumise à validation humaine. Ne mentionnez ni secret ni donnée personnelle réelle. » Exiger ces quatre éléments par une grille de critères, une évaluation structurée ou, a minima, une longueur minimale qui ne remplace pas la vérification des rubriques.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__27.json → cloud_exercise ia_appliquee_metiers_tp__27-mini-project-proof ; client/src/components/blocks/cloudExerciseValidation.ts → valeur absente résolue à 1 et hasRequiredAnswerLength teste la longueur ; client/src/components/CloudExerciseBlock.tsx → sans rubricCriteria ni serverGradedAssessment, submit() fixe submitted, révèle la solution et appelle onComplete ; client/src/pages/training/LessonViewer.tsx → completedCloudExercises alimente isGatedByCloudExercise.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_code",
+              "recommended_action": "Configurer une grille visible fondée exclusivement sur les quatre éléments déjà demandés et faire dépendre la complétion de son atteinte ; si une correction automatique n'est pas retenue, afficher clairement que la soumission est une auto-attestation et ne pas la présenter comme une preuve validée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "ia_appliquee_metiers_tp__27-final-quiz",
+          "title": "Quiz final : valider la démarche",
+          "score_100": 73,
+          "verified_dimensions": [
+            "Énoncés et action : les quatre QCM et le tri couvrent données fictives, contrôle humain, vérification du classement et protection des secrets ; chacun indique une action de sélection ou de classement identifiable.",
+            "Cohérence : les réponses attendues reprennent l'objectif, les règles de préparation, la démarche de test et la validation humaine présentés avant le quiz.",
+            "Feedback QCM : SingleChoiceExercise montre la bonne réponse, l'explication, un état correct/incorrect et un bouton Réessayer ; LessonViewer requiert les réponses correctes pour les QCM du chapitre quiz, avec passThreshold=4.",
+            "Tri : l'interface fournit titre, consigne, catégories, cartes, compteur de cartes placées, interaction clic/clavier/glisser-déposer, résultat par carte et possibilité de réinitialiser. La porte de fin exige aussi la complétion correcte du tri.",
+            "Verrou final : le bouton de fin de leçon reste désactivé tant que les quatre QCM et le tri ne sont pas validés."
+          ],
+          "unverified_dimensions": [
+            "La capacité réelle du service côté serveur à distribuer et corriger une évaluation finale différente n'est pas applicable à ce cours, qui utilise les blocs QCM et tri locaux.",
+            "La compréhension du quiz par des utilisateurs anglophones et le rendu interactif complet en navigateur n'ont pas été testés par un utilisateur final pendant cet audit."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-096-27-005",
+              "course_id": "ia_appliquee_metiers_tp__27",
+              "chapter_id": "ia_appliquee_metiers_tp__27-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__27-quiz-order",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le contenu fournit un feedback pédagogique utile pour le tri, mais il n'est pas transmis au composant de rendu. Après une tentative, l'apprenant voit seulement le score, les couleurs des cartes et « Réessayez » ; l'explication prévue sur la logique Cadrer → Construire → Tester → Valider n'est pas rendue à l'écran.",
+              "current_content": "Le JSON renseigne feedback.fr : « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. » LessonViewer transmet uniquement correction: block.correction à MatchingExercise ; or le bloc n'a pas de propriété correction.",
+              "proposed_content": "Après toute tentative de tri, afficher : « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. Reprenez les cartes indiquées comme incorrectes et replacez-les selon cette séquence. »",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__27.json → lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__27-quiz-order].feedback ; client/src/pages/training/LessonViewer.tsx → construction de MatchingExercise avec correction: block.correction ; client/src/components/MatchingExercise.tsx → le détail n'est affiché que depuis exercise.correction. Le registre définit pourtant feedback comme champ de bucket_sort.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_code",
+              "recommended_action": "Mapper explicitement block.feedback vers le champ affiché par MatchingExercise, ou normaliser le JSON vers correction sans supprimer le message pédagogique existant ; tester une soumission erronée et une soumission correcte."
+            },
+            {
+              "issue_id": "PED-096-27-006",
+              "course_id": "ia_appliquee_metiers_tp__27",
+              "chapter_id": "ia_appliquee_metiers_tp__27-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__27-final-quiz",
+              "content_type": "quiz",
+              "severity": "P3",
+              "category": "clarté linguistique",
+              "description": "En interface anglaise, plusieurs réponses et éléments du tri restent en français. Cette alternance ne bloque pas la validation, mais dégrade la clarté d'un quiz censé être bilingue et peut faire confondre les libellés du processus.",
+              "current_content": "Exemples de champs en anglais restés français : quiz-01 option c « Une action finale déclenchée sans relecture » ; quiz-02 option b « Faux : l’automatisation dispense toujours de tout contrôle » ; quiz-04 options c et d ; tri : catégories « Cadrer / Construire / Tester / Valider » et carte « Faire relire les actions sensibles avant toute utilisation réelle. »",
+              "proposed_content": "Compléter les champs en : « A final action triggered without review. » ; « False: automation does not remove the need for oversight. » ; « The test status “to be checked”. » ; « A note stating that human approval is required. » ; catégories « 1. Scope / 2. Build / 3. Test / 4. Validate » ; carte « Have sensitive actions reviewed before any real-world use. »",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__27.json → lessons[0].chapters[5].blocks[0..4], champs options[*].text.en, buckets[*].label.en et cards[*].text.en ; LessonViewer sélectionne ces valeurs selon lang.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_code",
+              "recommended_action": "Compléter la traduction anglaise de tous les libellés visibles du quiz, puis relire le quiz en langue en pour vérifier que question, options, catégories, feedback et correction utilisent une terminologie homogène."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "Audit qualitatif en lecture seule de ia_appliquee_metiers_tp__formation_27 : un cours, une leçon, six chapitres et huit activités interactives ou obligatoires examinés individuellement (consultation de ressource, checkpoint, mini-projet, quatre QCM et tri).",
+    "coverage": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 1,
+      "chapters_reviewed": 6,
+      "activities_reviewed": 8,
+      "declared_media_blocks_reviewed": 0
+    },
+    "score_100": 73,
+    "score_method": "Les notes de chapitre sont qualitatives et renormalisées sur les dimensions vérifiables : explications, progression, complétude, clarté/feedback des activités et UX de rendu. Aucun point n'est attribué ou retiré pour la qualité intrinsèque d'une ressource externe non examinée ; aucun média n'est déclaré dans les six chapitres.",
+    "priority_summary": {
+      "P0": 0,
+      "P1": 3,
+      "P2": 2,
+      "P3": 1,
+      "main_findings": [
+        "Le parcours annonce clairement le contexte professionnel, les objectifs pratiques et les garde-fous avant l'activité ; la séquence préparation → démarche → checkpoint → mini-projet → quiz est globalement logique.",
+        "Le checkpoint de sécurité est contournable après une réponse fausse : il faut lier sa porte à la réussite, pas à la seule interaction.",
+        "Le mini-projet est l'élément le plus fragile : son guidage est trop peu séquencé et sa « preuve » est acceptée dès un caractère non vide, sans contrôler les quatre éléments explicitement demandés.",
+        "Le tri final possède une explication rédigée mais celle-ci n'est pas rendue, car le champ feedback n'est pas passé au composant qui affiche correction.",
+        "La ressource source et le support fictif sont déclarés et contextualisés ; leur contenu ou leur disponibilité n'ont pas été confondus avec une absence."
+      ]
+    }
+  },
+  "limits": [
+    "Audit effectué en lecture seule : aucun contenu, code, base de données ou paramètre de progression n'a été modifié.",
+    "Les données du cours, le registre des blocs, LessonViewer, chapterProgress, checkpointGate et les composants de rendu ont été inspectés. Les conclusions de verrouillage reposent sur la logique effectivement lue, pas sur une supposition du pré-audit statique.",
+    "Le contrôle visuel existant confirme pour le TP 27 le titre visible et l'absence de débordement desktop/mobile sur l'écran représentatif. Aucun parcours navigateur authentifié complet n'a été rejoué pour chacune des activités durant cet audit.",
+    "La ressource YouTube et le support fictif /manus-storage sont référencés dans le cours mais leurs contenus, leur accessibilité actuelle et leur qualité factuelle n'ont pas été examinés ; ils ne sont donc jamais qualifiés d'absents.",
+    "Les effets pédagogiques réels, le temps de réalisation dans les environnements personnels n8n/Gmail et l'accessibilité assistive complète nécessitent des tests utilisateurs complémentaires."
+  ]
+}

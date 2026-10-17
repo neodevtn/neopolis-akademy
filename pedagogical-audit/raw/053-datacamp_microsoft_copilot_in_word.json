@@ -1,0 +1,834 @@
+{
+  "formation_id": "datacamp_microsoft_copilot_in_word",
+  "courses": [
+    {
+      "course_id": "microsoft_copilot_in_word__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Découvrez Copilot",
+          "score_100": 89,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Structure et contextualisation de l’entrée; séquence Projector, transcription, sous-titres FR/EN, supports visuels déclarés; liaison vers le tri suivant; rendu et verrou vidéo inspectés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des fichiers média et pertinence factuelle de chaque démonstration",
+            "disponibilité réseau des actifs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-001",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_1_act_01_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_1_act_01_video` (« Découvrez Copilot »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[0].chapters[0].requiredBeforeAdvance et blocks[id=dc_1_act_01_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Créer, comprendre ou collaborer ?",
+          "score_100": 91,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Énoncé, cinq cartes, catégories, réponse attendue, indice, ordre après l’introduction; action clic/glisser et verrou de tri inspectés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Compréhension effective des gestes par des utilisateurs en situation réelle."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-011",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le tri comporte un feedback pédagogique français et anglais dans les données, mais le visualiseur ne transmet au composant de tri que `correction`, champ absent. Après une réussite, l’apprenant ne voit donc que le retour générique « 5/5 · Parfait ! », pas l’explication sur le choix entre Créer, Comprendre et Collaborer.",
+              "current_content": "Le bloc contient `feedback.fr`: « Excellent travail ! Vous avez correctement identifié la capacité… », sans champ `correction`.",
+              "proposed_content": "Passer `block.feedback` au composant comme feedback de réussite (ou le mapper explicitement vers son API de correction), afin d’afficher le rappel sur les trois capacités à la validation.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_bucket_sort].feedback; client/src/pages/training/LessonViewer.tsx:957-973 transmet `correction: block.correction`; client/src/components/MatchingExercise.tsx:420-465 n’affiche un texte détaillé que depuis `exercise.correction`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Mapper le feedback source vers une propriété effectivement rendue et vérifier sa présence après une réponse juste."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Votre première expérience avec Copilot",
+          "score_100": 89,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Démonstration contextualisée des quatre points d’entrée, transcription, sous-titres et transition vers TP; rendu Projector inspecté.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des actifs et exactitude produit en environnement Microsoft courant."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-002",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_1_act_04_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_1_act_04_video` (« Votre première expérience avec Copilot »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[0].chapters[2].requiredBeforeAdvance et blocks[id=dc_1_act_04_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Préparer une réunion client avec Copilot",
+          "score_100": 77,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Objectif, prérequis, indice détaillé, critères de réussite, ressource déclarée, zone de remise, évaluation et verrou TP inspectés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accessibilité réelle du fichier/Word ou de l’assistant externe de l’apprenant",
+            "qualité d’une évaluation distante en production."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-013",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_05_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Même question, réponse différente",
+          "score_100": 90,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Question contextualisée, choix, réponse attendue, indice, explication et nouvelle tentative; contrôle de passage inspecté.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Compréhension utilisateur en situation réelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Utiliser Copilot de manière responsable",
+          "score_100": 91,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Explications développées, exemples, synthèse de bonnes pratiques, média sous-titré et transition vers tri; rendu Projector inspecté.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des actifs média."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-003",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_1_act_07_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_1_act_07_video` (« Utiliser Copilot de manière responsable »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[0].chapters[5].requiredBeforeAdvance et blocks[id=dc_1_act_07_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Atout de l’IA ou touche humaine ?",
+          "score_100": 88,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Énoncé, catégories, cartes, indice et correspondance avec la séquence responsable précédente; action et correction visuelle inspectées.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Compréhension utilisateur du geste en situation réelle."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-012",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch01_act08",
+              "content_id": "dc_1_act_08_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le feedback pédagogique sur le partage des rôles IA/humain est renseigné mais non rendu. Après la correction, les cartes sont coloriées et un score est donné, sans le message qui explique vitesse de l’IA, jugement humain et responsabilité.",
+              "current_content": "Le bloc contient `feedback.fr`: « Excellent travail ! Vous avez compris le partenariat… », sans champ `correction`.",
+              "proposed_content": "Passer `block.feedback` au composant comme feedback de réussite (ou le mapper explicitement vers son API de correction), afin d’expliciter le principe d’usage responsable après le tri.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_08_bucket_sort].feedback; client/src/pages/training/LessonViewer.tsx:957-973 et client/src/components/MatchingExercise.tsx:420-465.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Mapper le feedback source vers une propriété effectivement rendue et vérifier sa présence après une réponse juste."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Faire confiance, mais vérifier",
+          "score_100": 79,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Scénario, action attendue, repères de vérification, critères, aide et verrou TP inspectés; continuité avec la vidéo responsable vérifiée.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accès réel au document Phoenix/Word ou à l’assistant externe",
+            "qualité de l’évaluation distante."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-014",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[0].chapters[7].blocks[id=dc_1_act_09_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Créer avec Copilot",
+          "score_100": 90,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Démonstration progressive de création, raffinement et comparaison; média sous-titré/transcrit, synthèse et transition vers pratique vérifiés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des actifs média."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-004",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_2_act_01_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_2_act_01_video` (« Créer avec Copilot »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[1].chapters[0].requiredBeforeAdvance et blocks[id=dc_2_act_01_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Annoncer une nouvelle initiative d’équipe",
+          "score_100": 78,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Scénario concret, résultat d’une page, exemple d’invite, critère de relance, préparation environnementale, remise et verrou inspectés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accès réel à Word/Copilot ou à l’assistant externe",
+            "évaluation distante en production."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-015",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Améliorer un rapport d’avancement de projet",
+          "score_100": 77,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Tâche, document/section cible, actions Copilot alternatives, indice, critères et passage verrouillé vérifiés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accès réel au document Atlas/Word",
+            "évaluation distante en production."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-016",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Comprendre avec Copilot",
+          "score_100": 90,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Cas métier, démonstration détaillée (résumé, Insights, Chat), synthèse de workflow et transition vérifiés; média sous-titré/transcrit.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des actifs média et conformité actuelle de l’interface tierce."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-005",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_2_act_04_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_2_act_04_video` (« Comprendre avec Copilot »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[1].chapters[3].requiredBeforeAdvance et blocks[id=dc_2_act_04_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Collaborer avec Copilot",
+          "score_100": 90,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Scénario de commentaires contradictoires, prompts d’exemple, séquence de résolution et synthèse; média sous-titré/transcrit vérifiés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des actifs média et conformité actuelle de l’interface tierce."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-006",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_2_act_07_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_2_act_07_video` (« Collaborer avec Copilot »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[1].chapters[4].requiredBeforeAdvance et blocks[id=dc_2_act_07_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Communiquer avec les relecteurs",
+          "score_100": 80,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Contexte, action demandée, exemple de formulation, emplacement de publication, critères et verrou TP vérifiés; transition depuis la vidéo collaboration cohérente.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accès réel au document/fil de commentaires Word et évaluation distante."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-017",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch02_act09",
+              "content_id": "dc_2_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_09_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Travailler plus efficacement avec Copilot",
+          "score_100": 81,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Cadre Objectif-Contexte-Source-Attentes, exemple et transition vers application vérifiés; transcription et contenu Projector présents.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Équivalence de la compréhension française sans sous-titre/transcription FR",
+            "lecture effective de l’audio/actifs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-007",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_3_act_01_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_3_act_01_video` (« Travailler plus efficacement avec Copilot »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[0].requiredBeforeAdvance et blocks[id=dc_3_act_01_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            },
+            {
+              "issue_id": "PA-053-022",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "accessibilité média",
+              "description": "Cette séquence Projector est audio-seule. Elle n’a ni sous-titre français ni transcription française : la transcription et les scripts embarqués sont en anglais. Dans ce cours source `fr-FR`, l’apprenant qui ne peut pas suivre l’audio anglais ne dispose pas d’alternative textuelle française complète.",
+              "current_content": "Le bloc fournit `audioUrl`, `projectorSlides` et `transcript` en anglais, mais aucun `subtitleUrlFr` ni alternative textuelle française.",
+              "proposed_content": "Fournir un sous-titre ou une transcription française fidèle et visible depuis le lecteur; garder la transcription originale en option si nécessaire.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[0].blocks[id=dc_3_act_01_video] (audioUrl + transcript/scripts anglais, absence de subtitleUrlFr); client/src/pages/training/LessonViewer.tsx:743-760 rend le transcript disponible.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Ajouter et contrôler l’alternative textuelle française de cette séquence Projector audio."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Obtenir de Copilot exactement ce dont vous avez besoin",
+          "score_100": 82,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Mise en pratique immédiatement préparée par le cadre précédent, exemple complet, quatre critères, aide, remise et verrou TP vérifiés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accès réel au rapport source/assistant externe et évaluation distante."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-018",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act02",
+              "content_id": "dc_3_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Copilot dans Word sur tous vos appareils",
+          "score_100": 88,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Contextualisation mobile, démonstrations et transition vers les deux QCM; média sous-titré/transcrit et support visuel déclarés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Lecture effective des actifs et conformité actuelle des interfaces iPad/iPhone."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-008",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_3_act_04_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_3_act_04_video` (« Copilot dans Word sur tous vos appareils »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[2].requiredBeforeAdvance et blocks[id=dc_3_act_04_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Rédiger en déplacement",
+          "score_100": 92,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Scénario iPad directement préparé par la vidéo, action attendue, choix, indice et explication vérifiés; verrou de QCM inspecté.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Compréhension effective du visuel et disponibilité actuelle de la fonction tierce."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Se préparer à une réunion sur mobile",
+          "score_100": 92,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Scénario iPhone, nombre explicite de réponses, trois réponses attendues, indice, explication et réessai vérifiés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Compréhension effective du visuel et disponibilité actuelle des fonctions tierces."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Intégrer Copilot dans nos flux de travail au quotidien",
+          "score_100": 83,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Synthèse explicite des acquis et annonce détaillée du défi final; transcription et contenu Projector présents.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Équivalence de la compréhension française sans sous-titre/transcription FR",
+            "lecture effective des actifs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-009",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_3_act_07_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_3_act_07_video` (« Intégrer Copilot dans nos flux de travail au quotidien »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[5].requiredBeforeAdvance et blocks[id=dc_3_act_07_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            },
+            {
+              "issue_id": "PA-053-023",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "accessibilité média",
+              "description": "Cette séquence Projector est audio-seule. Elle n’a ni sous-titre français ni transcription française : la transcription et les scripts embarqués sont en anglais. Dans ce cours source `fr-FR`, l’apprenant qui ne peut pas suivre l’audio anglais ne dispose pas d’alternative textuelle française complète.",
+              "current_content": "Le bloc fournit `audioUrl`, `projectorSlides` et `transcript` en anglais, mais aucun `subtitleUrlFr` ni alternative textuelle française.",
+              "proposed_content": "Fournir un sous-titre ou une transcription française fidèle et visible depuis le lecteur; garder la transcription originale en option si nécessaire.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[5].blocks[id=dc_3_act_07_video] (audioUrl + transcript/scripts anglais, absence de subtitleUrlFr); client/src/pages/training/LessonViewer.tsx:743-760 rend le transcript disponible.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Ajouter et contrôler l’alternative textuelle française de cette séquence Projector audio."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Comprendre le rapport trimestriel",
+          "score_100": 81,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Premier pas du défi final clairement ordonné, outils de compréhension explicités, exemples de questions, critères, remise et verrou vérifiés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accès réel au rapport Apex/assistant externe et évaluation distante."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-019",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act08",
+              "content_id": "dc_3_act_08_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_08_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Rédiger un résumé exécutif étayé par des sources",
+          "score_100": 82,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Prérequis immédiat explicite, trois sources et cadre de prompting, exemple, critères, remise et verrou TP vérifiés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accès réel aux trois documents, citations et évaluation distante."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-020",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[7].blocks[id=dc_3_act_09_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Gérer des retours contradictoires de parties prenantes",
+          "score_100": 80,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Tâche finale cohérente avec le scénario, contraintes, deux exemples d’invite, critères, remise et verrou vérifiés.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Accès réel au brouillon et au document stratégique",
+            "évaluation distante."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-021",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P2",
+              "category": "clarté linguistique",
+              "description": "Dans un parcours `fr-FR`, les critères visibles de réussite du TP sont uniquement en anglais. Le composant présente ces libellés dans le panneau français « Ce que votre travail doit montrer » et ne les traduit pas. L’apprenant francophone doit comprendre des critères tels que « Opened… », « Used… » ou « Goal / Context / Source / Expectations » pour savoir quoi remettre.",
+              "current_content": "Les objets `rubricCriteria` ne contiennent que `label` et `description` anglais; aucune variante `fr` n’est fournie.",
+              "proposed_content": "Ajouter des versions françaises de chaque `label` et `description` de critère, puis faire rendre la variante correspondant à la langue. Conserver les identifiants et poids existants.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[8].blocks[id=dc_3_act_10_tp].rubricCriteria; client/src/components/CloudExerciseBlock.tsx:299-321 rend `criterion.label || criterion.description` sous le libellé français.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Localiser les critères affichés de ce TP en français et vérifier le panneau de critères dans l’interface française."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch03_act11",
+          "title": "Félicitations",
+          "score_100": 77,
+          "verified_dimensions": [
+            "objectifs et contextualisation: Clôture présente, Projector audio et transcript inspectés; cohérence avec la fin du parcours vérifiée.",
+            "ordre, transition théorie→activité et prérequis: revus dans la séquence de la leçon",
+            "rendu des blocs, feedback et verrouillage: contrôlés dans LessonViewer, CloudExerciseBlock, MatchingExercise ou MultiChoiceBlock selon le type"
+          ],
+          "unverified_dimensions": [
+            "Équivalence de la compréhension française sans sous-titre/transcription FR",
+            "lecture effective de l’audio."
+          ],
+          "issues": [
+            {
+              "issue_id": "PA-053-010",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act11",
+              "content_id": "dc_3_act_11_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire avant le passage, mais le verrou de navigation principal ne construit aucune clé de complétion pour ce bloc : il ne retient `block.id` que si sa longueur est comprise entre 8 et 15 caractères. Les identifiants DataCamp concernés, tels que `dc_3_act_11_video`, sont plus longs. La condition « Regardez la vidéo pour continuer » ne peut donc pas s’activer pour cet écran.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc vidéo `dc_3_act_11_video` (« Félicitations »).",
+              "proposed_content": "Conserver la vidéo obligatoire en dérivant sa clé de complétion de `block.id` pour les médias gérés (`mp4Url`, `hlsUrl` ou `audioUrl`), exactement comme le rendu qui marque ce même identifiant comme vu/écouté.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[9].requiredBeforeAdvance et blocks[id=dc_3_act_11_video]; client/src/pages/training/LessonViewer.tsx:1557-1568 ne retient pas cet identifiant long, alors que :554-582 ou :691-719 le marque avec `block.id`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé du verrou vidéo, puis tester le bouton « Suivant » avant et après marquage de cette vidéo."
+            },
+            {
+              "issue_id": "PA-053-024",
+              "course_id": "microsoft_copilot_in_word__01",
+              "chapter_id": "dc_ch03_act11",
+              "content_id": "dc_3_act_11_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "accessibilité média",
+              "description": "Cette séquence Projector est audio-seule. Elle n’a ni sous-titre français ni transcription française : la transcription et les scripts embarqués sont en anglais. Dans ce cours source `fr-FR`, l’apprenant qui ne peut pas suivre l’audio anglais ne dispose pas d’alternative textuelle française complète.",
+              "current_content": "Le bloc fournit `audioUrl`, `projectorSlides` et `transcript` en anglais, mais aucun `subtitleUrlFr` ni alternative textuelle française.",
+              "proposed_content": "Fournir un sous-titre ou une transcription française fidèle et visible depuis le lecteur; garder la transcription originale en option si nécessaire.",
+              "evidence": "client/public/data/courses/microsoft_copilot_in_word__01.json → lessons[2].chapters[9].blocks[id=dc_3_act_11_video] (audioUrl + transcript/scripts anglais, absence de subtitleUrlFr); client/src/pages/training/LessonViewer.tsx:743-760 rend le transcript disponible.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Ajouter et contrôler l’alternative textuelle française de cette séquence Projector audio."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "Revue qualitative complète des 3 leçons et 24 chapitres/blocs d’activité effectivement rendus dans ce JSON (10 séquences média, 2 tris, 3 QCM et 9 TP cloud). La métadonnée de provenance DataCamp déclare par ailleurs 29 activités extraites, écart non qualifié comme anomalie sans le format source détaillé.",
+    "score_100": 84,
+    "method": "Les scores par chapitre sont qualitatifs et ne portent que sur les dimensions inspectables dans le JSON et les composants de rendu/progression; ils ne constituent pas une note de qualité factuelle des médias ni un test de navigateur.",
+    "confirmed_issues_by_priority": {
+      "P0": 0,
+      "P1": 0,
+      "P2": 24,
+      "P3": 0
+    },
+    "key_findings": [
+      "Les scénarios, progressions de concepts et transitions vers les activités sont généralement cohérents; les alertes statiques « absence de texte dans le même écran » n’ont pas été reprises automatiquement, car les vidéos antérieures, les énoncés, indices et rubriques apportent dans la plupart des cas les prérequis utiles.",
+      "Les 9 TP cloud ont tous un objectif, un indice, des critères, une remise et un verrou évalué. L’absence de tableau `steps`, de `solution` et de `successMessage` ne suffit pas à elle seule à établir un défaut, car le composant rend la consigne, les critères, l’aide et le feedback d’évaluation.",
+      "Le verrou de sortie des 10 vidéos déclarées obligatoires ne correspond pas à leurs clés de complétion, de sorte que la progression peut les contourner.",
+      "Les deux tris disposent de feedbacks source non affichés; les 9 TP rendent des critères de réussite anglais dans l’interface française.",
+      "Trois séquences Projector audio de la troisième leçon n’ont ni sous-titre ni transcription française, malgré une formation source fr-FR."
+    ],
+    "priority_summary": "Priorité 1 : fiabiliser la clé de verrouillage vidéo. Priorité 2 : rendre les feedbacks de tri et localiser les critères TP. Priorité 3 : fournir une alternative française aux trois médias Projector audio."
+  },
+  "limits": [
+    "Les fichiers JSON, le registre des blocs, LessonViewer, chapterProgress et les composants des activités ont été inspectés; aucun contenu, code ou base de données n’a été modifié.",
+    "Les URL de médias, PDF, sous-titres et ressources sont déclarées dans les données mais n’ont pas été lus ni testés en lecture réseau; leur disponibilité ou leur contenu effectif n’est donc pas qualifié comme absent.",
+    "Les activités pratiques demandent un assistant IA et, pour certains scénarios, un environnement Word ou des documents utilisateurs. Leur disponibilité et leur fidélité par rapport au scénario n’ont pas été exécutées; elles sont marquées non vérifiables, pas manquantes.",
+    "La réponse d’évaluation des TP dépend d’un service distant; la structure du feedback et le verrou ont été inspectés dans le code, mais la qualité d’évaluation réelle et la disponibilité de service n’ont pas été testées.",
+    "Aucune source externe n’a été consultée."
+  ]
+}

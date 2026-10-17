@@ -1,0 +1,1415 @@
+{
+  "formation_id": "datacamp_efficient_ai_model_training_with_pytorch",
+  "courses": [
+    {
+      "course_id": "efficient_ai_model_training_with_pytorch__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Préparer des modèles avec AutoModel et Accelerator",
+          "score_100": 88,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:environment-guidance:dc_ch01_act01",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "neopolis_efficient_ai_model_training_with_pytorch__01_environment_preparation",
+              "content_type": "content",
+              "severity": "P3",
+              "category": "guidage",
+              "description": "La consigne d’ouverture demande de préparer un chatbot IA autorisé, alors qu’aucune des 45 activités du cours n’utilise un chatbot : le parcours repose sur médias Projector, réponses de TP, code à compléter et un tri. Cette préparation externe non réemployée crée une attente inutile avant le premier contenu technique.",
+              "current_content": "« Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ».",
+              "proposed_content": "Supprimer cette phrase ou la remplacer par une préparation directement utile : « Les exercices se réalisent dans Neopolis. Lisez les consignes, complétez le code demandé puis validez pour afficher la correction. »",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[0].chapters[0].blocks[id=neopolis_efficient_ai_model_training_with_pytorch__01_environment_preparation]; inventaire des 45 chapitres : aucun bloc ne demande l’usage d’un chatbot.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Retirer la préparation au chatbot ou l’expliciter uniquement si une activité ultérieure l’emploie réellement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Charger et inspecter des modèles préentraînés",
+          "score_100": 58,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch01_act02",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Placement automatique sur l’appareil avec Accelerator",
+          "score_100": 60,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch01_act03",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Prétraiter les images et l’audio pour l’entraînement",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Prétraiter des jeux de données d’images",
+          "score_100": 59,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch01_act05",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Prétraiter des jeux de données audio",
+          "score_100": 59,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch01_act06",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Préparer des jeux de données pour l’entraînement distribué",
+          "score_100": 60,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch01_act07",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_07_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Prétraiter le texte pour l’entraînement",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Prétraiter du texte avec AutoTokenizer",
+          "score_100": 59,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch01_act09",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[0].chapters[8].blocks[id=dc_1_act_09_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch01_act10",
+          "title": "Enregistrer et charger l’état d’un texte prétraité",
+          "score_100": 60,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch01_act10",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch01_act10",
+              "content_id": "dc_1_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[0].chapters[9].blocks[id=dc_1_act_10_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Ajuster finement des modèles avec Trainer",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Définir des métriques d’évaluation",
+          "score_100": 60,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch02_act02",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Spécifier les TrainingArguments",
+          "score_100": 60,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch02_act03",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Configurer le Trainer",
+          "score_100": 50,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Les consignes ciblent la configuration Trainer ou optimiseur introduite dans la séquence et sont placées après l’enseignement ou une pratique connexe.",
+            "action_attendue": "Le composant rend un éditeur, le code de départ, un bouton « Vérifier le code », une réinitialisation et l’accès à la solution.",
+            "feedback_et_verrouillage": "Le comportement rendu et les conditions de passage ont été vérifiés; les lacunes confirmées sont consignées dans l’anomalie de ce chapitre."
+          },
+          "unverified_dimensions": [
+            "Exécution Python réelle et validité de solutions alternatives non testées dans un interpréteur; le composant inspecté ne les exécute pas.",
+            "Compréhension effective de la consigne par des apprenants débutants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:code-repl-feedback-lock:dc_ch02_act04",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "feedback_et_verrouillage",
+              "description": "L’exercice fournit un indice dans les données mais le REPL ne le rend pas. Sa vérification refuse toute solution qui ne reproduit pas textuellement la solution canonique (hors espaces de fin) et retourne seulement un message générique. De plus, ce type de bloc n’est dans aucune condition de verrouillage : malgré requiredBeforeAdvance=true au chapitre, l’apprenant peut poursuivre sans l’avoir réussi.",
+              "current_content": "hint présent dans le JSON; testCode et expectedOutput vides. Le composant n’affiche que instructions et compare normalizeCodeForValidation(submitted) === normalizeCodeForValidation(solutionCode). Les règles de passage ne listent pas code_repl.",
+              "proposed_content": "Afficher l’indice présent sous un volet « Indice », exécuter ou tester le code avec des critères sémantiques acceptant les solutions équivalentes, puis inclure code_repl dans les conditions de passage lorsqu’il est requis. Prévoir un feedback ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[1].chapters[3].blocks[id=dc_2_act_04_code]; CodeReplBlock.tsx:15-40,75-126; shared/codeReplValidation.ts:1-13; chapterProgress.ts:94-103; LessonViewer.tsx:1576-1624.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Rendre l’indice et remplacer la comparaison littérale par des tests; aligner le verrouillage avec le caractère obligatoire du chapitre."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Entraîner des modèles avec Accelerator",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Préparer un modèle pour l’entraînement distribué",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch02_act06",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Boucles d’entraînement avant et après Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch02_act07",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_07_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Créer une boucle d’entraînement avec Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch02_act08",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[1].chapters[7].blocks[id=dc_2_act_08_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Évaluer des modèles avec Accelerator",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": "Passer le modèle en mode évaluation",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch02_act10",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch02_act10",
+              "content_id": "dc_2_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_10_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Consigner les métriques d’évaluation",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch02_act11",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[1].chapters[10].blocks[id=dc_2_act_11_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Accumulation de gradients",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Accumulation de gradients avec Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch03_act02",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch03_act02",
+              "content_id": "dc_3_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Accumulation de gradients avec Trainer",
+          "score_100": 50,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Les consignes ciblent la configuration Trainer ou optimiseur introduite dans la séquence et sont placées après l’enseignement ou une pratique connexe.",
+            "action_attendue": "Le composant rend un éditeur, le code de départ, un bouton « Vérifier le code », une réinitialisation et l’accès à la solution.",
+            "feedback_et_verrouillage": "Le comportement rendu et les conditions de passage ont été vérifiés; les lacunes confirmées sont consignées dans l’anomalie de ce chapitre."
+          },
+          "unverified_dimensions": [
+            "Exécution Python réelle et validité de solutions alternatives non testées dans un interpréteur; le composant inspecté ne les exécute pas.",
+            "Compréhension effective de la consigne par des apprenants débutants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:code-repl-feedback-lock:dc_ch03_act03",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch03_act03",
+              "content_id": "dc_3_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "feedback_et_verrouillage",
+              "description": "L’exercice fournit un indice dans les données mais le REPL ne le rend pas. Sa vérification refuse toute solution qui ne reproduit pas textuellement la solution canonique (hors espaces de fin) et retourne seulement un message générique. De plus, ce type de bloc n’est dans aucune condition de verrouillage : malgré requiredBeforeAdvance=true au chapitre, l’apprenant peut poursuivre sans l’avoir réussi.",
+              "current_content": "hint présent dans le JSON; testCode et expectedOutput vides. Le composant n’affiche que instructions et compare normalizeCodeForValidation(submitted) === normalizeCodeForValidation(solutionCode). Les règles de passage ne listent pas code_repl.",
+              "proposed_content": "Afficher l’indice présent sous un volet « Indice », exécuter ou tester le code avec des critères sémantiques acceptant les solutions équivalentes, puis inclure code_repl dans les conditions de passage lorsqu’il est requis. Prévoir un feedback ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_code]; CodeReplBlock.tsx:15-40,75-126; shared/codeReplValidation.ts:1-13; chapterProgress.ts:94-103; LessonViewer.tsx:1576-1624.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Rendre l’indice et remplacer la comparaison littérale par des tests; aligner le verrouillage avec le caractère obligatoire du chapitre."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Gradient checkpointing et SGD locale",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Gradient checkpointing avec Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch03_act05",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[2].chapters[4].blocks[id=dc_3_act_05_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Gradient checkpointing avec Trainer",
+          "score_100": 50,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Les consignes ciblent la configuration Trainer ou optimiseur introduite dans la séquence et sont placées après l’enseignement ou une pratique connexe.",
+            "action_attendue": "Le composant rend un éditeur, le code de départ, un bouton « Vérifier le code », une réinitialisation et l’accès à la solution.",
+            "feedback_et_verrouillage": "Le comportement rendu et les conditions de passage ont été vérifiés; les lacunes confirmées sont consignées dans l’anomalie de ce chapitre."
+          },
+          "unverified_dimensions": [
+            "Exécution Python réelle et validité de solutions alternatives non testées dans un interpréteur; le composant inspecté ne les exécute pas.",
+            "Compréhension effective de la consigne par des apprenants débutants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:code-repl-feedback-lock:dc_ch03_act06",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "feedback_et_verrouillage",
+              "description": "L’exercice fournit un indice dans les données mais le REPL ne le rend pas. Sa vérification refuse toute solution qui ne reproduit pas textuellement la solution canonique (hors espaces de fin) et retourne seulement un message générique. De plus, ce type de bloc n’est dans aucune condition de verrouillage : malgré requiredBeforeAdvance=true au chapitre, l’apprenant peut poursuivre sans l’avoir réussi.",
+              "current_content": "hint présent dans le JSON; testCode et expectedOutput vides. Le composant n’affiche que instructions et compare normalizeCodeForValidation(submitted) === normalizeCodeForValidation(solutionCode). Les règles de passage ne listent pas code_repl.",
+              "proposed_content": "Afficher l’indice présent sous un volet « Indice », exécuter ou tester le code avec des critères sémantiques acceptant les solutions équivalentes, puis inclure code_repl dans les conditions de passage lorsqu’il est requis. Prévoir un feedback ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[2].chapters[5].blocks[id=dc_3_act_06_code]; CodeReplBlock.tsx:15-40,75-126; shared/codeReplValidation.ts:1-13; chapterProgress.ts:94-103; LessonViewer.tsx:1576-1624.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Rendre l’indice et remplacer la comparaison littérale par des tests; aligner le verrouillage avec le caractère obligatoire du chapitre."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Local SGD avec Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch03_act07",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_07_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Entraînement en précision mixte",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Entraînement en précision mixte avec PyTorch basique",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch03_act09",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[2].chapters[8].blocks[id=dc_3_act_09_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Entraînement en précision mixte avec Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch03_act10",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[2].chapters[9].blocks[id=dc_3_act_10_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch03_act11",
+          "title": "Entraînement en précision mixte avec Trainer",
+          "score_100": 50,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Les consignes ciblent la configuration Trainer ou optimiseur introduite dans la séquence et sont placées après l’enseignement ou une pratique connexe.",
+            "action_attendue": "Le composant rend un éditeur, le code de départ, un bouton « Vérifier le code », une réinitialisation et l’accès à la solution.",
+            "feedback_et_verrouillage": "Le comportement rendu et les conditions de passage ont été vérifiés; les lacunes confirmées sont consignées dans l’anomalie de ce chapitre."
+          },
+          "unverified_dimensions": [
+            "Exécution Python réelle et validité de solutions alternatives non testées dans un interpréteur; le composant inspecté ne les exécute pas.",
+            "Compréhension effective de la consigne par des apprenants débutants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:code-repl-feedback-lock:dc_ch03_act11",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch03_act11",
+              "content_id": "dc_3_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "feedback_et_verrouillage",
+              "description": "L’exercice fournit un indice dans les données mais le REPL ne le rend pas. Sa vérification refuse toute solution qui ne reproduit pas textuellement la solution canonique (hors espaces de fin) et retourne seulement un message générique. De plus, ce type de bloc n’est dans aucune condition de verrouillage : malgré requiredBeforeAdvance=true au chapitre, l’apprenant peut poursuivre sans l’avoir réussi.",
+              "current_content": "hint présent dans le JSON; testCode et expectedOutput vides. Le composant n’affiche que instructions et compare normalizeCodeForValidation(submitted) === normalizeCodeForValidation(solutionCode). Les règles de passage ne listent pas code_repl.",
+              "proposed_content": "Afficher l’indice présent sous un volet « Indice », exécuter ou tester le code avec des critères sémantiques acceptant les solutions équivalentes, puis inclure code_repl dans les conditions de passage lorsqu’il est requis. Prévoir un feedback ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[2].chapters[10].blocks[id=dc_3_act_11_code]; CodeReplBlock.tsx:15-40,75-126; shared/codeReplValidation.ts:1-13; chapterProgress.ts:94-103; LessonViewer.tsx:1576-1624.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Rendre l’indice et remplacer la comparaison littérale par des tests; aligner le verrouillage avec le caractère obligatoire du chapitre."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch04_act01",
+          "title": "Un entraînement équilibré avec AdamW",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch04_act02",
+          "title": "AdamW avec Trainer",
+          "score_100": 50,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Les consignes ciblent la configuration Trainer ou optimiseur introduite dans la séquence et sont placées après l’enseignement ou une pratique connexe.",
+            "action_attendue": "Le composant rend un éditeur, le code de départ, un bouton « Vérifier le code », une réinitialisation et l’accès à la solution.",
+            "feedback_et_verrouillage": "Le comportement rendu et les conditions de passage ont été vérifiés; les lacunes confirmées sont consignées dans l’anomalie de ce chapitre."
+          },
+          "unverified_dimensions": [
+            "Exécution Python réelle et validité de solutions alternatives non testées dans un interpréteur; le composant inspecté ne les exécute pas.",
+            "Compréhension effective de la consigne par des apprenants débutants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:code-repl-feedback-lock:dc_ch04_act02",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act02",
+              "content_id": "dc_4_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "feedback_et_verrouillage",
+              "description": "L’exercice fournit un indice dans les données mais le REPL ne le rend pas. Sa vérification refuse toute solution qui ne reproduit pas textuellement la solution canonique (hors espaces de fin) et retourne seulement un message générique. De plus, ce type de bloc n’est dans aucune condition de verrouillage : malgré requiredBeforeAdvance=true au chapitre, l’apprenant peut poursuivre sans l’avoir réussi.",
+              "current_content": "hint présent dans le JSON; testCode et expectedOutput vides. Le composant n’affiche que instructions et compare normalizeCodeForValidation(submitted) === normalizeCodeForValidation(solutionCode). Les règles de passage ne listent pas code_repl.",
+              "proposed_content": "Afficher l’indice présent sous un volet « Indice », exécuter ou tester le code avec des critères sémantiques acceptant les solutions équivalentes, puis inclure code_repl dans les conditions de passage lorsqu’il est requis. Prévoir un feedback ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[1].blocks[id=dc_4_act_02_code]; CodeReplBlock.tsx:15-40,75-126; shared/codeReplValidation.ts:1-13; chapterProgress.ts:94-103; LessonViewer.tsx:1576-1624.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Rendre l’indice et remplacer la comparaison littérale par des tests; aligner le verrouillage avec le caractère obligatoire du chapitre."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch04_act03",
+          "title": "AdamW avec Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch04_act03",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act03",
+              "content_id": "dc_4_act_03_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[2].blocks[id=dc_4_act_03_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch04_act04",
+          "title": "Calculer la taille de l’optimiseur",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch04_act04",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act04",
+              "content_id": "dc_4_act_04_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[3].blocks[id=dc_4_act_04_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch04_act05",
+          "title": "Entraînement économe en mémoire avec Adafactor",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch04_act06",
+          "title": "Adafactor avec Trainer",
+          "score_100": 50,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Les consignes ciblent la configuration Trainer ou optimiseur introduite dans la séquence et sont placées après l’enseignement ou une pratique connexe.",
+            "action_attendue": "Le composant rend un éditeur, le code de départ, un bouton « Vérifier le code », une réinitialisation et l’accès à la solution.",
+            "feedback_et_verrouillage": "Le comportement rendu et les conditions de passage ont été vérifiés; les lacunes confirmées sont consignées dans l’anomalie de ce chapitre."
+          },
+          "unverified_dimensions": [
+            "Exécution Python réelle et validité de solutions alternatives non testées dans un interpréteur; le composant inspecté ne les exécute pas.",
+            "Compréhension effective de la consigne par des apprenants débutants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:code-repl-feedback-lock:dc_ch04_act06",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act06",
+              "content_id": "dc_4_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "feedback_et_verrouillage",
+              "description": "L’exercice fournit un indice dans les données mais le REPL ne le rend pas. Sa vérification refuse toute solution qui ne reproduit pas textuellement la solution canonique (hors espaces de fin) et retourne seulement un message générique. De plus, ce type de bloc n’est dans aucune condition de verrouillage : malgré requiredBeforeAdvance=true au chapitre, l’apprenant peut poursuivre sans l’avoir réussi.",
+              "current_content": "hint présent dans le JSON; testCode et expectedOutput vides. Le composant n’affiche que instructions et compare normalizeCodeForValidation(submitted) === normalizeCodeForValidation(solutionCode). Les règles de passage ne listent pas code_repl.",
+              "proposed_content": "Afficher l’indice présent sous un volet « Indice », exécuter ou tester le code avec des critères sémantiques acceptant les solutions équivalentes, puis inclure code_repl dans les conditions de passage lorsqu’il est requis. Prévoir un feedback ciblé sur les éléments manquants.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[5].blocks[id=dc_4_act_06_code]; CodeReplBlock.tsx:15-40,75-126; shared/codeReplValidation.ts:1-13; chapterProgress.ts:94-103; LessonViewer.tsx:1576-1624.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Rendre l’indice et remplacer la comparaison littérale par des tests; aligner le verrouillage avec le caractère obligatoire du chapitre."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch04_act07",
+          "title": "Adafactor avec Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch04_act07",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act07",
+              "content_id": "dc_4_act_07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[6].blocks[id=dc_4_act_07_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch04_act08",
+          "title": "Entraînement en précision mixte avec Adam 8 bits",
+          "score_100": 92,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch04_act09",
+          "title": "Configurer l’optimiseur Adam en 8 bits",
+          "score_100": 59,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch04_act09",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act09",
+              "content_id": "dc_4_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[8].blocks[id=dc_4_act_09_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch04_act10",
+          "title": "Adam 8 bits avec Trainer",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch04_act10",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act10",
+              "content_id": "dc_4_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[9].blocks[id=dc_4_act_10_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch04_act11",
+          "title": "Adam 8 bits avec Accelerator",
+          "score_100": 61,
+          "verified_dimensions": {
+            "objectifs_et_prerequis": "La mise en situation, la consigne, les étapes et l’indice sont présents; les activités suivent les séquences qui introduisent les API et concepts mobilisés.",
+            "action_attendue": "Le composant rend l’objectif, les étapes numérotées, les instructions détaillées, une zone de réponse, le bouton Valider et la correction après soumission.",
+            "transition_theorie_activite": "La séquence alterne présentation explicative puis mise en pratique de la même notion ou de son application immédiate.",
+            "verrouillage": "Le passage est bloqué tant que le TP n’est pas déclaré terminé; la robustesse pédagogique de cette condition est signalée dans l’anomalie confirmée."
+          },
+          "unverified_dimensions": [
+            "Exécution réelle des snippets PyTorch/Transformers, disponibilité des dépendances et cohérence avec les versions de bibliothèques non testées.",
+            "Efficacité réelle de la correction révélée auprès d’apprenants non observée."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:cloud-validation:dc_ch04_act11",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act11",
+              "content_id": "dc_4_act_11_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "Le TP est présenté comme une activité à valider, mais sa complétion ne vérifie ni le code ni une compétence : sans grille, évaluation serveur ou longueur minimale explicitement configurée, toute réponse non vide déclenche « Validé ! », déverrouille la correction et permet le passage.",
+              "current_content": "minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; successMessage est vide. CloudExerciseBlock résout la longueur minimale à 1 caractère puis, hors évaluation suivie, marque le TP soumis et terminé.",
+              "proposed_content": "Définir un critère de réussite vérifiable pour ce TP (tests d’exécution ou validation structurée des éléments attendus). À défaut, distinguer explicitement « voir la correction » de « activité validée » et ne déverrouiller qu’après une preuve d’engagement définie pédagogiquement.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[10].blocks[id=dc_4_act_11_tp]; CloudExerciseBlock.tsx:153-161, cloudExerciseValidation.ts:1-9, LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Ajouter une validation adaptée au snippet et empêcher qu’une réponse d’un caractère valide la progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch04_act12",
+          "title": "Quel optimiseur est-ce ?",
+          "score_100": 76,
+          "verified_dimensions": {
+            "objectifs_et_progression": "L’activité de synthèse arrive après les séquences AdamW, Adafactor et Adam 8 bits et demande de distinguer leurs propriétés.",
+            "action_et_ux": "Titre, consigne, catégories, cartes, aide à l’interaction clic/glisser-déposer, compteur, soumission et réessai sont rendus.",
+            "verrouillage": "Le passage exige le placement correct de toutes les cartes; la progression reste verrouillée après une tentative erronée.",
+            "feedback_de_base": "Le composant affiche le nombre de cartes correctes/total, marque visuellement chaque carte et propose de réessayer."
+          },
+          "unverified_dimensions": [
+            "Tests utilisateurs de maniabilité tactile et de lecteurs d’écran non réalisés."
+          ],
+          "issues": [
+            {
+              "issue_id": "033:bucket-feedback-not-rendered:dc_ch04_act12",
+              "course_id": "efficient_ai_model_training_with_pytorch__01",
+              "chapter_id": "dc_ch04_act12",
+              "content_id": "dc_4_act_12_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le JSON prévoit un indice et un feedback pédagogique spécifiques, mais LessonViewer ne transmet au composant de tri que title, instructions, buckets, cards et correction. L’indice et le message « Bravo… » ne sont donc pas visibles; correction est absent. En cas d’erreur, l’apprenant n’obtient que le score et les repères visuels carte par carte.",
+              "current_content": "hint et feedback sont renseignés; correction est absent. Le rendu passe uniquement correction à MatchingExercise.",
+              "proposed_content": "Transmettre et afficher l’indice avant soumission; après réussite, afficher le feedback existant; après erreur, afficher une brève explication reliée à chaque catégorie, sans révéler la réponse avant réessai si ce choix est conservé.",
+              "evidence": "client/public/data/courses/efficient_ai_model_training_with_pytorch__01.json → lessons[3].chapters[11].blocks[id=dc_4_act_12_bucket_sort]; LessonViewer.tsx:957-975; MatchingExercise.tsx:420-465.",
+              "confidence": "high",
+              "verification_status": "confirmed_by_json_and_rendering_code_review",
+              "recommended_action": "Brancher les champs hint/feedback sur le composant et compléter une correction pédagogique si nécessaire."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch04_act13",
+          "title": "Félicitations !",
+          "score_100": 90,
+          "verified_dimensions": {
+            "objectifs_et_progression": "Le titre, la description de chapitre et le transcript situent la séquence dans la progression de la leçon.",
+            "explications_et_transition": "Le transcript disponible introduit les notions; les vidéos de cours sont suivies, lorsque pertinent, d’activités d’application.",
+            "media_et_accessibilite_documentee": "Audio, sous-titres français, transcript et Projector sont déclarés; LessonViewer rend le transcript et les sous-titres.",
+            "verrouillage_et_navigation": "LessonViewer exige la lecture ou le marquage manuel du média officiel avant de passer à l’écran suivant."
+          },
+          "unverified_dimensions": [
+            "Qualité factuelle, synchronisation audio/visuels et lisibilité effective non vérifiées dans un navigateur.",
+            "Compréhension effective par des apprenants débutants non observée."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 4,
+      "chapters_reviewed": 45,
+      "activities_reviewed": 45,
+      "activity_breakdown": {
+        "VideoExercise": 13,
+        "NormalExercise": 25,
+        "SingleProcessExercise": 6,
+        "DragAndDropExercise": 1
+      }
+    },
+    "method": "Revue qualitative du JSON de la formation, du registre de blocs, de LessonViewer, de CloudExerciseBlock, de CodeReplBlock, de MatchingExercise et de chapterProgress. Les signaux du pré-audit ont été réexaminés individuellement; ils ne sont pas repris comme défauts automatiques.",
+    "confirmed_issue_count": 33,
+    "severity_counts": {
+      "P0": 0,
+      "P1": 31,
+      "P2": 1,
+      "P3": 1
+    },
+    "positive_findings": [
+      "Les quatre leçons suivent une progression cohérente : préparation des données, entraînement distribué, optimisation de l’efficacité, puis choix d’optimiseurs.",
+      "Les 13 séquences Projector disposent dans les données d’audio, sous-titres français et transcript; LessonViewer les propose avec transcript repliable et ressources associées.",
+      "Les 25 TP comportent scénario, objectif, étapes, consigne détaillée, indice et correction; les séquences théoriques précèdent généralement la pratique correspondante.",
+      "Le tri final possède une interaction clic/glisser-déposer, une validation de toutes les cartes, des repères correct/incorrect et un réessai; il est correctement verrouillé jusqu’à réussite."
+    ],
+    "confirmed_findings": [
+      "Les 25 TP cloud peuvent être validés avec une réponse non vide et sans contrôle de compétence, tout en déverrouillant la correction et la progression.",
+      "Les 6 activités code_repl masquent leurs indices, imposent une égalité textuelle à une solution canonique et ne participent pas au verrouillage de navigation.",
+      "Le feedback et l’indice prévus pour le tri final ne sont pas transmis au composant affiché.",
+      "La préparation au chatbot affichée avant la première vidéo n’est mobilisée par aucune activité de cette formation."
+    ],
+    "preaudit_disposition": "Les 32 signaux statiques de progression « activité sans texte dans le même écran » ne sont pas confirmés comme défauts : chaque activité ciblée contient un assignment/scénario, des instructions, des étapes et un indice rendus par CloudExerciseBlock, ou une consigne rendue par CodeReplBlock. Les défauts confirmés concernent plutôt la validation, le feedback et l’alignement du verrouillage avec les blocs réellement rendus."
+  },
+  "limits": [
+    "Audit sans modification; aucune base, aucun contenu et aucun code de la formation n’ont été modifiés.",
+    "Les ressources multimédias sont déclarées et leur rendu est vérifié par lecture de code, mais les 13 audios, visuels et sous-titres n’ont pas été consommés intégralement dans un navigateur.",
+    "La qualité factuelle des explications, les performances d’exécution des snippets et l’accessibilité assistive ont été classées non vérifiables lorsqu’elles exigeraient une exécution ou des tests utilisateurs.",
+    "Les scores par chapitre renormalisent les dimensions effectivement inspectables dans les données et le rendu; ils ne mesurent pas la satisfaction ni la réussite de véritables apprenants."
+  ]
+}

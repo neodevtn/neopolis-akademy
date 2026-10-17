@@ -18,7 +18,7 @@ describe('Associate Foundations course 7 contract', () => {
     expect(lesson.chapters).toHaveLength(7);
     expect(content('chapter_01_1', 'fr')).toContain('**Durée officielle :** 30 minutes');
     expect(content('chapter_01_1', 'en')).toContain('**Official duration:** 30 minutes');
-    expect(entry).toMatchObject({ officialDurationMinutes: 30, chapterCount: 7, exerciseCount: 5, totalActivities: 5 });
+    expect(entry).toMatchObject({ officialDurationMinutes: 30, chapterCount: 7, exerciseCount: 5, totalActivities: 7 });
   });
 
   it('restores the six truncated cards in both languages and preserves product names', () => {

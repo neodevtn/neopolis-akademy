@@ -10,12 +10,12 @@ const blocks = chapters.flatMap((chapter: any) => chapter.blocks ?? []);
 describe("adaptation locale du cours DataCamp ai-for-consulting", () => {
   it("retire uniquement le TP sans rubrique ni ressources locales exploitables", () => {
     expect(chapters.some((chapter: any) => chapter.id === "dc_ch03_act09")).toBe(false);
-    expect(chapters).toHaveLength(29);
+    expect(chapters).toHaveLength(17);
   });
 
   it("conserve les TP rubricés avec des critères source et un seuil complet", () => {
     const rubricBlocks = blocks.filter((block: any) => block.type === "cloud_exercise" && Array.isArray(block.rubricCriteria) && block.rubricCriteria.length > 0);
-    expect(rubricBlocks).toHaveLength(16);
+    expect(rubricBlocks).toHaveLength(4);
     for (const block of rubricBlocks) {
       expect(block.maxScore).toBe(block.rubricCriteria.length);
       expect(block.passingScore).toBe(block.rubricCriteria.length);
@@ -32,7 +32,7 @@ describe("adaptation locale du cours DataCamp ai-for-consulting", () => {
 
   it("rend les TP réalisables avec un assistant IA accessible et non une interface Copilot imposée", () => {
     const cloudBlocks = blocks.filter((block: any) => block.type === "cloud_exercise");
-    expect(cloudBlocks).toHaveLength(16);
+    expect(cloudBlocks).toHaveLength(4);
     for (const block of cloudBlocks) {
       expect(JSON.stringify(block)).toMatch(/assistant IA génératif|assistant IA choisi/i);
       expect(JSON.stringify(block)).not.toMatch(/Microsoft Copilot|Can['’]t log in/i);

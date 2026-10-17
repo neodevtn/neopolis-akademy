@@ -1,0 +1,222 @@
+{
+  "formation_id": "datacamp_building_marketing_workflows_with_n8n",
+  "courses": [
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Créer un département marketing alimenté par l'IA",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Objectif et contexte visibles : la description annonce un système marketing multi-agents, les branches parallèles, les nœuds Merge et la synthèse direction ; LessonViewer affiche cette description avant le média.",
+            "Média rendu : vidéo MP4, pistes de sous-titres FR/EN et PDF de slides référencés ; les trois ressources répondent HTTP 200 via /api/assets/.",
+            "Cohérence de départ : les sous-titres FR présentent le scénario, les résultats attendus et les patterns abordés avant d'annoncer la construction.",
+            "Verrouillage technique vérifié : la vidéo officielle doit être lue ou marquée manuellement comme vue avant le passage à l'écran suivant ; aucune activité pratique n'est toutefois présente dans cet écran."
+          ],
+          "unverified_dimensions": [
+            "Exactitude technique et qualité visuelle intégrale de la vidéo et du PDF non évaluées image par image.",
+            "Expérience sur lecteur d'écran, mobile et conditions réseau réelles non testée.",
+            "Efficacité de l'apprentissage en situation réelle non mesurée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-025-002",
+              "course_id": "building_marketing_workflows_with_n8n__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux",
+              "description": "L'écran vidéo affiche une estimation calculée comme « 1 min de lecture », alors que les sous-titres FR vont jusqu'à 04:18. Ce libellé ne décrit ni la nature vidéo de la séquence ni sa durée minimale observable ; le même calcul est appliqué aux huit écrans, dont les sous-titres durent environ 1,1 à 4,3 minutes.",
+              "current_content": "Dans LessonViewer, l'estimation repose uniquement sur les blocs content ; ce chapitre n'en a aucun, donc le minimum d'une minute est affiché sous la forme « 1 min de lecture ».",
+              "proposed_content": "Pour un écran composé d'un média, afficher une durée vidéo approximative issue d'une métadonnée fiable (par exemple « ≈ 4 min de vidéo ») ou masquer l'estimation tant qu'aucune durée média n'est renseignée. Ne pas présenter une durée de lecture pour une vidéo seule.",
+              "evidence": "client/public/data/courses/building_marketing_workflows_with_n8n__01.json → lessons[0].chapters[0].blocks[0] (dc_1_act_01_video, sans bloc content ni durationSeconds) ; client/src/pages/training/LessonViewer.tsx:227-251 et 1268-1274 ; sous-titres FR accessibles à l'URL du bloc, dernier timecode 00:04:18.240.",
+              "confidence": "high",
+              "verification_status": "verified_render_logic_and_resource",
+              "recommended_action": "Corriger la règle d'affichage de durée pour les chapitres vidéo et renseigner une durée média lorsque disponible ; valider sur les huit écrans de ce cours."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Mise en place",
+          "score_100": 42,
+          "verified_dimensions": [
+            "Contexte de la leçon visible : la description de chapitre est rendue avant la vidéo et rappelle le but du système multi-agents.",
+            "Préparation expliquée dans les sous-titres FR : instance n8n préconfigurée, étapes d'exercice à gauche, espace n8n à droite, absence d'installation requise et ressources JSON annoncées.",
+            "La vidéo, les sous-titres FR/EN et les slides du chapitre sont référencés et les ressources média répondent HTTP 200.",
+            "Le bouton de progression est cohérent avec le type vidéo : il demande de regarder ou de marquer manuellement la vidéo comme vue."
+          ],
+          "unverified_dimensions": [
+            "Les fichiers JSON annoncés dans la vidéo comme ressources des exercices ne sont pas identifiables dans le payload de ce cours ; leur contenu et leur interface ne peuvent donc pas être audités.",
+            "Qualité visuelle intégrale du média et du PDF non évaluée image par image.",
+            "Tests mobile, lecteur d'écran et performance réseau non réalisés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-025-001",
+              "course_id": "building_marketing_workflows_with_n8n__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "course_exercise_inventory",
+              "content_type": "course_structure",
+              "severity": "P1",
+              "category": "activité_et_progression",
+              "description": "Le cours chargé ne contient que 8 blocs vidéo et 3 téléchargements, sans bloc d'exercice, quiz, TP, activité interactive ni tableau exercises. Pourtant, son propre champ d'import annonce 23 activités attendues et les sous-titres indiquent que l'apprenant doit ouvrir des exercices, suivre des étapes dans n8n, utiliser des ressources JSON et construire des workflows. Les séquences pratiques annoncées ne sont donc pas disponibles dans le contenu effectivement servi ; l'apprenant ne peut ni réaliser la pratique promise, ni recevoir de feedback ou démontrer la compétence visée.",
+              "current_content": "datacampImport.expected.activities_expected_from_outline = 23 ; lessonCount = 3 ; chapterCount = 8 ; tous les blocs présents sont de type video (8) ou download (3). La vidéo dc_1_act_02_video annonce explicitement des exercices et leur interface, mais le chapitre suivant du cours est une vidéo d'une autre leçon, sans exercice intermédiaire.",
+              "proposed_content": "Restaurer ou réimporter les 23 activités annoncées dans leur ordre source, immédiatement après les vidéos qui les préparent. Pour chaque activité, publier les consignes, le résultat attendu, les fichiers/configurations nécessaires, les critères de réussite, une aide et un feedback de correction. Si ces activités ne font plus partie du périmètre, réviser au minimum les descriptions, sous-titres, compteurs et promesse de formation afin qu'ils ne les annoncent plus. Aucun énoncé d'exercice n'est proposé ici : les données disponibles ne permettent pas de reconstituer fidèlement les 23 tâches, leurs paramètres ni leurs réponses attendues.",
+              "evidence": "client/public/data/courses/building_marketing_workflows_with_n8n__01.json → datacampImport.expected.activities_expected_from_outline (23), exerciseCount (0), lessons[*].chapters[*].blocks (8 video, 3 download seulement) ; subtitleUrlFr de dc_1_act_02_video, notamment les passages « instance n8n ... dans les exercices », « étapes de l'exercice sur la gauche », « ouvrez simplement l'exercice » et « fichiers JSON organisés par chapitre et numéro d'exercice » ; LessonViewer rend les blocs du JSON servi (server/courseDataRoute.ts:71-110).",
+              "confidence": "high",
+              "verification_status": "verified_json_render_path_and_subtitles",
+              "recommended_action": "Priorité de remédiation 1 : récupérer le paquet d'activités source ou la source d'import, en contrôler la complétude par rapport aux 23 activités attendues, puis tester chaque activité, son feedback et son verrouillage dans le lecteur."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Chaîne d'agents CRO avec boucle de rétroaction",
+          "score_100": 58,
+          "verified_dimensions": [
+            "Objectif explicite et rendu avant le média : construire un optimiseur de taux de conversion avec chaîne de trois agents, évaluation automatique et boucle de rétroaction.",
+            "Transition inter-leçon explicitée dans les sous-titres : le média rappelle le système parallèle précédent puis annonce le passage au chaînage séquentiel.",
+            "Les sous-titres détaillent les notions et étapes à venir (formulaire, récupération HTTP, chaîne d'agents, boucle), ce qui rend le média pédagogiquement contextualisé.",
+            "MP4, audio, sous-titres FR/EN et PDF de slides sont référencés et répondent HTTP 200 ; le verrouillage de la vidéo est rendu par LessonViewer."
+          ],
+          "unverified_dimensions": [
+            "Réalisation pratique annoncée dans les sous-titres non vérifiable, car aucun exercice associé n'est présent dans le JSON chargé.",
+            "Exactitude métier/technique et qualité graphique de la vidéo et des slides non évaluées intégralement.",
+            "Accessibilité en usage réel au clavier, mobile et lecteur d'écran non testée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Ensuite : la chaîne à 3 agents",
+          "score_100": 43,
+          "verified_dimensions": [
+            "Transition claire dans la vidéo : la boucle de fondation est déclarée prête, puis l'apprenant est orienté vers la construction de trois agents successifs.",
+            "Le titre, la description de chapitre et la vidéo sont affichables ; sous-titres FR/EN et médias répondent HTTP 200.",
+            "Le verrouillage officiel de la vidéo est techniquement cohérent avec le lecteur : lecture ou marquage manuel avant progression."
+          ],
+          "unverified_dimensions": [
+            "La construction annoncée « dans le prochain exercice » n'est pas vérifiable ni praticable dans le JSON chargé, qui ne contient aucun exercice.",
+            "Qualité factuelle, visuelle et d'accessibilité du média non évaluée intégralement."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Ensuite : boucler la boucle de rétroaction",
+          "score_100": 43,
+          "verified_dimensions": [
+            "Progression explicite : les sous-titres réactivent les idées notées, présentent le score final et expliquent le rôle des nœuds IF et du seuil de qualité.",
+            "Le média prépare explicitement la boucle de rétroaction et sa limite de tentatives ; l'objectif de chapitre est rendu avant lecture.",
+            "La vidéo et les sous-titres FR/EN sont accessibles via des URLs locales qui répondent HTTP 200 ; la progression vidéo est verrouillée de manière technique."
+          ],
+          "unverified_dimensions": [
+            "Les deux exercices supplémentaires annoncés dans les sous-titres ne sont ni présents ni auditables dans le payload du cours.",
+            "Évaluation de l'exactitude des démonstrations, qualité visuelle et accessibilité en navigateur réel non réalisée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Scraper de leads avec traitement par lots",
+          "score_100": 57,
+          "verified_dimensions": [
+            "Objectif visible et contextualisé : API externe, Google Maps, traitement par lots, flux parallèles et fusion des données sont annoncés dans la description rendue avant la vidéo.",
+            "Transition cohérente avec la leçon précédente dans les sous-titres : le média réactive l'optimiseur CRO puis introduit le traitement à grande échelle.",
+            "Le média décrit les prérequis et les étapes à mobiliser (API Apify, nœuds HTTP, Split In Batches, nettoyage) avant de renvoyer aux exercices.",
+            "MP4, audio, sous-titres FR/EN et PDF de slides sont référencés et répondent HTTP 200 ; verrouillage vidéo vérifié dans LessonViewer."
+          ],
+          "unverified_dimensions": [
+            "Les exercices qui devraient fournir URL, en-têtes API, code et expressions ne sont pas présents dans le cours chargé, donc leurs consignes, leurs ressources et leur feedback ne sont pas vérifiables.",
+            "Conformité opérationnelle et légale du scénario de collecte de leads non auditée dans ce périmètre pédagogique.",
+            "Qualité visuelle et accessibilité multi-support réelles non testées."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act05",
+          "title": "À suivre : traitement de données en parallèle",
+          "score_100": 43,
+          "verified_dimensions": [
+            "Transition pédagogique claire dans les sous-titres : la boucle de scraping est considérée achevée et les deux flux parallèles, leurs agrégations puis leur fusion sont annoncés.",
+            "Le titre, la description et la vidéo sont rendus ; les sous-titres FR/EN et le média répondent HTTP 200.",
+            "La consigne de progression technique reste explicite : regarder ou marquer la vidéo comme vue pour continuer."
+          ],
+          "unverified_dimensions": [
+            "Les exercices annoncé comme « exercice suivant » et « exercice final », ainsi que leur code de formatage, sont absents du JSON et ne peuvent pas être contrôlés.",
+            "Qualité technique et visuelle intégrale du média, ainsi que son accessibilité multi-support, non évaluées."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Félicitations",
+          "score_100": 58,
+          "verified_dimensions": [
+            "Synthèse explicite : les sous-titres récapitulent les trois automatisations et les patterns transférables (agents parallèles, chaîne séquentielle, boucles de feedback, API externe, lots et fusion).",
+            "La conclusion propose des pistes de réinvestissement sans introduire de prérequis ultérieurs ; le média et ses sous-titres FR/EN répondent HTTP 200.",
+            "Le bouton de fin est réellement bloqué tant que la vidéo finale n'est pas vue ou marquée manuellement comme vue ; le texte de verrouillage est explicite.",
+            "Aucun contenu interactif ou évaluation n'est présent dans l'écran final pour objectiver les acquis."
+          ],
+          "unverified_dimensions": [
+            "L'efficacité de la synthèse comme validation des acquis ne peut pas être mesurée sans évaluation ni activité finale.",
+            "Qualité visuelle intégrale, accessibilité multi-support et qualité factuelle exhaustive du média non évaluées."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 3,
+      "chapters_reviewed": 8,
+      "blocks_reviewed": 11,
+      "videos_reviewed": 8,
+      "downloads_reviewed": 3,
+      "interactive_or_practical_activities_found": 0
+    },
+    "result": "Le parcours vidéo est techniquement rendu, contextualisé par les descriptions de chapitre et soutenu par des sous-titres FR/EN accessibles. Les sous-titres confirment une progression conceptuelle cohérente et des transitions explicites entre les trois thèmes. Le défaut majeur confirmé est structurel : les 23 exercices attendus et constamment annoncés ne sont pas dans le JSON effectivement servi. La progression ne peut donc valider que le visionnage manuel/automatique de huit vidéos, sans pratique, feedback ni évaluation des compétences annoncées.",
+    "scores": {
+      "method": "Notes sur 100 fondées uniquement sur les dimensions revues. Elles intègrent la contextualisation vidéo et pénalisent la rupture confirmée entre vidéos et activités promises ; elles ne prétendent pas évaluer les dimensions non vérifiables.",
+      "chapter_scores": [74, 42, 58, 43, 43, 57, 43, 58],
+      "mean_score_100": 52.25
+    },
+    "confirmed_issues": {
+      "total": 2,
+      "P0": 0,
+      "P1": 1,
+      "P2": 0,
+      "P3": 1
+    },
+    "pre_audit_signal_disposition": "Les huit signaux statiques de manque de contextualisation média ne sont pas retenus comme anomalies : LessonViewer rend la description de chaque chapitre avant le lecteur, et les sous-titres vérifiés montrent que les vidéos présentent objectifs, notions et transitions. L'absence de champ objectiveBefore ou de transcription embarquée n'est donc pas traitée comme un défaut automatique ; les sous-titres VTT sont accessibles dans le lecteur.",
+    "priority": "P1 — restaurer/réimporter ou requalifier les activités promises avant toute amélioration cosmétique. P3 — corriger le libellé de durée des écrans vidéo."
+  },
+  "limits": [
+    "L'audit a lu le JSON effectivement servi par la route de données de cours, le registre des blocs, LessonViewer et la logique de progression ; il n'a modifié aucun contenu, code, base ou média.",
+    "Les huit MP4, huit pistes audio, seize sous-titres et trois PDF ont été vérifiés par réponses HTTP 200 via l'instance locale ; les sous-titres FR ont été lus. Les vidéos et PDF n'ont pas fait l'objet d'une revue visuelle image par image ni d'une vérification factuelle externe.",
+    "Les 23 activités attendues ne figurent pas dans le payload du cours. Leurs énoncés, interfaces, ressources, solutions, feedback et critères de réussite ne peuvent donc pas être audités ni réécrits sans inventer des informations.",
+    "Aucun test manuel complet de navigateur, d'authentification apprenant, de lecteur d'écran, de mobile, de persistance serveur ou de réseau dégradé n'a été exécuté ; les constats de rendu et verrouillage reposent sur le code applicatif et les ressources effectivement servies.",
+    "Les notes sont pédagogiques et indicatives ; les dimensions non vérifiables ont été explicitement listées plutôt que notées artificiellement."
+  ]
+}

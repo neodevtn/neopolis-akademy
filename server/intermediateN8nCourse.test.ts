@@ -48,7 +48,7 @@ describe("Intermediate Workflow Automation with n8n — source-verified opening 
     const learner = JSON.parse(sanitizeCourseDataForLearner(rawCourse));
     const learnerPracticals = learner.lessons.flatMap((lesson: any) => lesson.chapters).flatMap((chapter: any) => chapter.blocks)
       .filter((block: any) => block.practiceStatus === "source_screen_verified");
-    expect(learnerPracticals).toHaveLength(27);
+    expect(learnerPracticals).toHaveLength(22);
     for (const block of learnerPracticals) {
       expect(block).not.toHaveProperty("solution");
       expect(block).not.toHaveProperty("evaluationPrompt");
@@ -57,7 +57,7 @@ describe("Intermediate Workflow Automation with n8n — source-verified opening 
   });
 
   it("replaces copied reliability pages with source-verified personal-environment practices", () => {
-    const reliabilityIds = ["dc_4_act_02_tp", "dc_4_act_03_tp", "dc_4_act_04_tp", "dc_4_act_06_tp", "dc_4_act_07_tp", "dc_4_act_09_tp"];
+    const reliabilityIds = ["dc_4_act_02_tp", "dc_4_act_03_tp", "dc_4_act_04_tp", "dc_4_act_06_tp", "dc_4_act_07_tp"];
     for (const id of reliabilityIds) {
       const block = practical(id);
       expect(block).toMatchObject({ type: "cloud_exercise", practiceStatus: "source_screen_verified", serverGradedAssessment: "intermediate_n8n_source_verified" });
@@ -69,6 +69,6 @@ describe("Intermediate Workflow Automation with n8n — source-verified opening 
     }
     expect(practical("dc_4_act_02_tp").resources).toHaveLength(1);
     expect(practical("dc_4_act_06_tp").resources).toHaveLength(1);
-    expect(practical("dc_4_act_09_tp").resources).toEqual([]);
+    expect(course.lessons.flatMap((lesson: any) => lesson.chapters).flatMap((chapter: any) => chapter.blocks).some((block: any) => block.id === "dc_4_act_09_tp")).toBe(false);
   });
 });

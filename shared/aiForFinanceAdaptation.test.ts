@@ -28,7 +28,7 @@ describe("adaptation DataCamp AI for Finance", () => {
 
   it("n’expose aucun breakdown manuel périmé dans la carte du catalogue", () => {
     const courseEntry = catalog.courses.find((entry: { id: string }) => entry.id === "ai_for_finance__01");
-    expect(courseEntry).toMatchObject({ totalActivities: 28, exerciseCount: 18, videoCount: 10, downloadCount: 3 });
+    expect(courseEntry).toMatchObject({ totalActivities: 28, exerciseCount: 18, videoCount: 10, downloadCount: 6 });
     expect(courseEntry).not.toHaveProperty("breakdown");
     expect(courseEntry).not.toHaveProperty("exerciseLabel");
   });

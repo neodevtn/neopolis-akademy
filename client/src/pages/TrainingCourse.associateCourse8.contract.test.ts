@@ -19,7 +19,7 @@ describe('Associate Foundations course 8 contract', () => {
     expect(content('chapter_01_1', 'en')).toContain('**Official duration:** 8 minutes');
     expect(content('chapter_01_1', 'fr')).toContain('**Durée officielle :** 8 minutes');
     expect(content('chapter_01_1', 'fr')).not.toMatch(/Durée estimée|15[-–]25/);
-    expect(entry).toMatchObject({ officialDurationMinutes: 8, chapterCount: 5, exerciseCount: 1, totalActivities: 1 });
+    expect(entry).toMatchObject({ officialDurationMinutes: 8, chapterCount: 5, exerciseCount: 1, totalActivities: 5 });
   });
 
   it('keeps a concise localized synthesis without duplicated endings or generic video fallbacks', () => {

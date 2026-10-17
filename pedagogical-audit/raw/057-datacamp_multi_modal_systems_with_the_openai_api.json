@@ -1,0 +1,783 @@
+{
+  "formation_id": "datacamp_multi_modal_systems_with_the_openai_api",
+  "courses": [
+    {
+      "course_id": "multi_modal_systems_with_the_openai_api__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Speech-to-text",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Objectif et contextualisation — vérifiés : le titre, la description de leçon rendue dans l’en-tête et la transcription situent le sujet ; la transcription annonce aussi la pratique ou l’étape suivante.",
+            "Explications — vérifiées : transcription structurée fournie ; le contenu explique les notions et les appels API préparant les activités suivantes.",
+            "Média et accessibilité déclarée — vérifiés : MP4, piste audio, sous-titres FR/EN, transcription et PDF de slides sont présents dans les données ; LessonViewer rend les sous-titres et une transcription dépliable.",
+            "Cohérence de progression et verrouillage — vérifiés : le lecteur indique la vidéo comme activité à compléter et le bouton Suivant explique la condition de passage.",
+            "Score 88/100 : renormalisé sur les dimensions applicables à un écran vidéo (activité pratique directe non applicable)."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; la description affichée est celle de la leçon et non un objectif mesurable propre au chapitre.",
+            "Qualité audiovisuelle, exactitude factuelle du média, disponibilité effective des URL /api/assets et lisibilité réelle des slides : non vérifiées sans lecture navigateur des ressources."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Créer la transcription d’un podcast",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_1_act_02_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Ouvrez le fichier `openai-audio.mp3`.\n\nCréez une requête de transcription vers le point de terminaison Audio avec `audio_file`.\n\nExtrayez puis affichez le texte de la transcription à partir de la variable `response`. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[0].chapters[1].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Transcrire une langue non anglaise",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_1_act_03_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Ouvrez le fichier audio.m4a en mode read-binary.\n\nCréez une requête de transcription vers l’endpoint Audio. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[0].chapters[2].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Traduire du portugais",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_1_act_04_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Ouvrez le fichier `audio.m4a`.\n\nCréez une requête de traduction vers le point de terminaison Audio.\n\nExtrayez et affichez le texte traduit de la réponse. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[0].chapters[3].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Synthèse vocale (TTS)",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Objectif et contextualisation — vérifiés : le titre, la description de leçon rendue dans l’en-tête et la transcription situent le sujet ; la transcription annonce aussi la pratique ou l’étape suivante.",
+            "Explications — vérifiées : transcription structurée fournie ; le contenu explique les notions et les appels API préparant les activités suivantes.",
+            "Média et accessibilité déclarée — vérifiés : MP4, piste audio, sous-titres FR/EN, transcription et PDF de slides sont présents dans les données ; LessonViewer rend les sous-titres et une transcription dépliable.",
+            "Cohérence de progression et verrouillage — vérifiés : le lecteur indique la vidéo comme activité à compléter et le bouton Suivant explique la condition de passage.",
+            "Score 88/100 : renormalisé sur les dimensions applicables à un écran vidéo (activité pratique directe non applicable)."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; la description affichée est celle de la leçon et non un objectif mesurable propre au chapitre.",
+            "Qualité audiovisuelle, exactitude factuelle du média, disponibilité effective des URL /api/assets et lisibilité réelle des slides : non vérifiées sans lecture navigateur des ressources."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Text-to-speech (TTS) d’OpenAI",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_1_act_06_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Créez la requête de synthèse vocale pour \"Hi! How's your day going?\", en utilisant la voix \"ballad\".\n\nDiffusez la réponse dans un fichier `.mp3`. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[0].chapters[5].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "TTS dans d’autres langues !",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_1_act_07_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Envoyez le texte tchèque fourni au modèle gpt-4o-mini-tts en utilisant la voix \"coral\". » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[0].chapters[6].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Modération de contenu",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Objectif et contextualisation — vérifiés : le titre, la description de leçon rendue dans l’en-tête et la transcription situent le sujet ; la transcription annonce aussi la pratique ou l’étape suivante.",
+            "Explications — vérifiées : transcription structurée fournie ; le contenu explique les notions et les appels API préparant les activités suivantes.",
+            "Média et accessibilité déclarée — vérifiés : MP4, piste audio, sous-titres FR/EN, transcription et PDF de slides sont présents dans les données ; LessonViewer rend les sous-titres et une transcription dépliable.",
+            "Cohérence de progression et verrouillage — vérifiés : le lecteur indique la vidéo comme activité à compléter et le bouton Suivant explique la condition de passage.",
+            "Score 88/100 : renormalisé sur les dimensions applicables à un écran vidéo (activité pratique directe non applicable)."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; la description affichée est celle de la leçon et non un objectif mesurable propre au chapitre.",
+            "Qualité audiovisuelle, exactitude factuelle du média, disponibilité effective des URL /api/assets et lisibilité réelle des slides : non vérifiées sans lecture navigateur des ressources."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Pourquoi utiliser des modèles de modération de texte ?",
+          "score_100": 83,
+          "verified_dimensions": [
+            "Clarté de l’énoncé, action et résultat attendu — vérifiés : le titre, la consigne de classement, les trois catégories et les six cartes sont rendus ; l’interface donne aussi une instruction click/glisser-déposer.",
+            "Prérequis et transition — vérifiés : l’activité suit la vidéo de modération qui compare modèle contextuel, mots-clés et modération humaine.",
+            "Évaluation — vérifiée : les placements corrects/incorrects et le score sont calculés ; une nouvelle tentative est proposée.",
+            "Guidage/feedback — vérifié comme défaillant : l’indice et le feedback renseignés dans le JSON ne sont pas transmis au composant rendu (issue confirmée).",
+            "Score 83/100 : médias non applicables ; activité claire et cohérente, avec une baisse pour l’aide et le feedback source invisibles."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée.",
+            "Pertinence d’un média : non applicable, aucun média n’est attaché à cet écran."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-BUCKET-GUIDANCE-FEEDBACK-dc_1_act_09_bucket_sort",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "guidage_et_feedback",
+              "description": "L’activité possède un indice et un feedback pédagogique dans le JSON, mais ils ne sont pas transmis au composant MatchingExercise. L’apprenant ne reçoit donc que l’instruction générique de manipulation, les marqueurs correct/incorrect et un score ; l’aide contextuelle et le message de consolidation source ne sont jamais rendus.",
+              "current_content": "Champ hint présent : « Le modèle de modération d’OpenAI est le plus avancé, car il utilise le contexte de l’intégralité de l’entrée pour déterminer si un texte constitue une violation.\n\nSi des personnes interviennent, cela peut signifier que le contenu est évalué de manière incohérente selon les évaluateurs. » ; champ feedback présent : « Bravo ! Les modèles de modération représentent une avancée majeure dans la façon de modérer les contenus. Passez à l’Exercice suivant pour utiliser vous‑même le modèle de modération d’OpenAI ! ».",
+              "proposed_content": "Afficher l’indice source dans un panneau « Afficher l’indice » avant soumission. Après une réussite, afficher le feedback source : « Bravo ! Les modèles de modération représentent une avancée majeure dans la façon de modérer les contenus. Passez à l’exercice suivant pour utiliser vous-même le modèle de modération d’OpenAI. » En cas d’erreur, compléter le score par les catégories attendues pour chaque carte mal classée.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[0].chapters[8].blocks[0] contient hint et feedback ; client/src/pages/training/LessonViewer.tsx:957-974 transmet seulement title, instructions, buckets, cards et correction à MatchingExercise ; client/src/components/MatchingExercise.tsx:227-242,420-466 ne rend ni hint ni feedback.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Faire passer hint et feedback au contrat de MatchingExercise ; rendre l’indice avant validation, le feedback à la réussite et une correction visible pour les cartes erronées. Conserver le mécanisme actuel de nouvelle tentative."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch01_act10",
+          "title": "Demander une modération",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_1_act_10_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act10",
+              "content_id": "dc_1_act_10_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Vérifiez si \"My favorite book is To Kill a Mockingbird.\" enfreint les règles d’OpenAI en utilisant l’endpoint Moderations.\n\nAffichez les scores par catégorie pour voir les résultats. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[0].chapters[9].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch01_act11",
+          "title": "Examiner les scores des catégories de modération",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : le scénario rappelle la requête précédente, demande d’extraire category_scores puis de choisir une interprétation ; trois options et un indice sont fournis.",
+            "Prérequis et transition — vérifiés : le QCM suit immédiatement l’exercice qui construit la requête de modération et affiche les scores.",
+            "Verrouillage — vérifié : le QCM fait partie des choix uniques contrôlés par le lecteur ; la bonne réponse est nécessaire au passage hors mode révision.",
+            "Feedback — vérifié comme insuffisant : la bonne option est mise en évidence mais explanation est vide, donc aucune justification pédagogique n’est rendue (issue confirmée).",
+            "Score 82/100 : médias non applicables ; consigne, indice et progression sont solides, mais le feedback explicatif est absent."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée.",
+            "Pertinence d’un média : non applicable, aucun média n’est attaché à cet écran."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-QCM-FEEDBACK-dc_1_act_11_qcm",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act11",
+              "content_id": "dc_1_act_11_qcm",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après réponse, le composant met la bonne option en évidence et invite à réessayer, mais aucune explication n’est fournie : explanation est vide dans les deux langues et l’interface ne rend une justification que si ce champ est non vide. L’apprenant ne peut pas consolider le sens des scores faibles ni comprendre explicitement les distracteurs inversés.",
+              "current_content": "explanation: {\"en\":\"\", \"fr\":\"\"}.",
+              "proposed_content": "Feedback réutilisable (FR) : « Les scores de catégorie proches de 0 indiquent que le modèle ne détecte pas d’infraction pour cette phrase. Une valeur proche de 0 ne prouve ni violence ni discours de haine : elle signale au contraire un faible niveau de confiance dans ces catégories. »",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[0].chapters[10].blocks[0].explanation est vide ; client/src/components/SingleChoiceExercise.tsx:42-44 et 204-214 n’affiche une explication que si displayedExplanation est non vide.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Renseigner explanation en français et en anglais avec le feedback proposé (ou son équivalent validé), affiché après une réponse correcte ou incorrecte. Garder la mise en évidence et le bouton Réessayer existants."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Créer des transcriptions d’appels clients",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Objectif et contextualisation — vérifiés : le titre, la description de leçon rendue dans l’en-tête et la transcription situent le sujet ; la transcription annonce aussi la pratique ou l’étape suivante.",
+            "Explications — vérifiées : transcription structurée fournie ; le contenu explique les notions et les appels API préparant les activités suivantes.",
+            "Média et accessibilité déclarée — vérifiés : MP4, piste audio, sous-titres FR/EN, transcription et PDF de slides sont présents dans les données ; LessonViewer rend les sous-titres et une transcription dépliable.",
+            "Cohérence de progression et verrouillage — vérifiés : le lecteur indique la vidéo comme activité à compléter et le bouton Suivant explique la condition de passage.",
+            "Score 88/100 : renormalisé sur les dimensions applicables à un écran vidéo (activité pratique directe non applicable)."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; la description affichée est celle de la leçon et non un objectif mesurable propre au chapitre.",
+            "Qualité audiovisuelle, exactitude factuelle du média, disponibilité effective des URL /api/assets et lisibilité réelle des slides : non vérifiées sans lecture navigateur des ressources."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Transcrire les appels des clients",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_02_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Ouvrez l’enregistrement client stocké dans le fichier `customer_call.wav`.\n\nCréez une requête de transcription vers le point de terminaison Audio et extrayez le texte de la transcription. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[1].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Déterminer la langue du client",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_03_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Demandez à `gpt-4o-mini` d’examiner la transcription et de renvoyer le code pays de la langue utilisée, par exemple `\"en\"` pour l’anglais et `\"fr\"` pour le français.\n\nExtrayez le code pays de `response`. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[2].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Traduire la transcription en anglais",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_04_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Traduisez le texte de transcript en anglais.\n\nExtrayez le texte de la transcription depuis response. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[3].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Corriger les erreurs de traduction",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_05_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Créez une invite qui corrige les noms techniques et la terminologie dans le transcript anglais, en_transcript, en laissant le reste du transcript inchangé. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[4].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Générer une réponse au client",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Objectif et contextualisation — vérifiés : le titre, la description de leçon rendue dans l’en-tête et la transcription situent le sujet ; la transcription annonce aussi la pratique ou l’étape suivante.",
+            "Explications — vérifiées : transcription structurée fournie ; le contenu explique les notions et les appels API préparant les activités suivantes.",
+            "Média et accessibilité déclarée — vérifiés : MP4, piste audio, sous-titres FR/EN, transcription et PDF de slides sont présents dans les données ; LessonViewer rend les sous-titres et une transcription dépliable.",
+            "Cohérence de progression et verrouillage — vérifiés : le lecteur indique la vidéo comme activité à compléter et le bouton Suivant explique la condition de passage.",
+            "Score 88/100 : renormalisé sur les dimensions applicables à un écran vidéo (activité pratique directe non applicable)."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; la description affichée est celle de la leçon et non un objectif mesurable propre au chapitre.",
+            "Qualité audiovisuelle, exactitude factuelle du média, disponibilité effective des URL /api/assets et lisibilité réelle des slides : non vérifiées sans lecture navigateur des ressources."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Modérer l’appel client",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_07_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Créez une requête de modération avec corrected_text comme entrée.\n\nExtrayez les scores par catégorie de la réponse et convertissez-les en dictionnaire avec .model_dump().\n\nRécupérez le score de harcèlement depuis le dictionnaire scores et vérifiez s’il est strictement supérieur à 0.8. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[6].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Générer une réponse adaptée",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_08_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Complétez l’invite qui donne des instructions claires et inclut les documents faqs et content_overview comme contexte.\n\nUtilisez le modèle gpt-4o-mini pour générer une réponse, en envoyant instruction_prompt comme message système et corrected_text comme message utilisateur. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[7].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Modérer la réponse du modèle",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_09_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act09",
+              "content_id": "dc_2_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Envoyez une requête de modération avec chatbot_reply comme entrée.\n\nExtrayez les scores par catégorie de la réponse, convertissez-les en dictionnaire avec .model_dump(), puis vérifiez si un score dépasse 0.7. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[8].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": "Créer une réponse vocale pour les clients",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Objectif et contextualisation — vérifiés : le titre, la description de leçon rendue dans l’en-tête et la transcription situent le sujet ; la transcription annonce aussi la pratique ou l’étape suivante.",
+            "Explications — vérifiées : transcription structurée fournie ; le contenu explique les notions et les appels API préparant les activités suivantes.",
+            "Média et accessibilité déclarée — vérifiés : MP4, piste audio, sous-titres FR/EN, transcription et PDF de slides sont présents dans les données ; LessonViewer rend les sous-titres et une transcription dépliable.",
+            "Cohérence de progression et verrouillage — vérifiés : le lecteur indique la vidéo comme activité à compléter et le bouton Suivant explique la condition de passage.",
+            "Score 88/100 : renormalisé sur les dimensions applicables à un écran vidéo (activité pratique directe non applicable)."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; la description affichée est celle de la leçon et non un objectif mesurable propre au chapitre.",
+            "Qualité audiovisuelle, exactitude factuelle du média, disponibilité effective des URL /api/assets et lisibilité réelle des slides : non vérifiées sans lecture navigateur des ressources."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Traduction de la réponse",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_11_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Utilisez le modèle gpt-4o-mini pour traduire chatbot_reply dans la langue indiquée par country_code.\n\nExtrayez le texte traduit de response. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[10].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch02_act12",
+          "title": "Préparer la réponse vocale",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Clarté de l’énoncé et action attendue — vérifiées : la consigne, le squelette Python, le modèle/endpoint ciblé et un indice sont fournis en français.",
+            "Transition théorie→activité — vérifiée : chaque exercice suit une vidéo explicative ou réemploie explicitement une étape/variable de la séquence d’étude de cas précédente.",
+            "Aide et correction — vérifiées : le composant rend l’indice à la demande et la solution complète est accessible.",
+            "Verrouillage — vérifié : malgré requiredBeforeAdvance=true dans le JSON, LessonViewer ne place pas les blocs code_repl parmi les conditions de passage ; le bouton Suivant reste donc disponible.",
+            "Score 62/100 : médias non applicables ; la consigne est claire, mais la valeur formative et la cohérence de validation/progression sont fortement diminuées par le défaut confirmé ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; aucune donnée d’objectif distincte de la description de leçon n’est fournie.",
+            "Exécution réelle contre l’API, présence des fichiers et des variables de contexte dans un environnement d’exercice : non vérifiables ; le composant audité ne lance en tout état de cause aucun interpréteur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-057-CODE-VALIDATION-LOCK-dc_2_act_12_code",
+              "course_id": "multi_modal_systems_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act12",
+              "content_id": "dc_2_act_12_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation_et_verrouillage",
+              "description": "L’activité est affichée comme un exercice requis mais ne valide ni l’exécution ni des réponses équivalentes : le composant compare uniquement le texte saisi à solutionCode après normalisation des fins de ligne. En parallèle, code_repl n’est inclus dans aucune condition de verrouillage de LessonViewer ; l’apprenant peut cliquer sur « Suivant » sans vérifier son code. La pratique et la progression ne sont donc pas cohérentes avec requiredBeforeAdvance=true.",
+              "current_content": "Consigne affichée : « Utilisez le modèle gpt-4o-mini-tts avec la voix \"onyx\" pour créer une requête de synthèse vocale à partir de translated_reply.\n\nDiffusez la réponse vers un fichier .mp3. » ; code de départ à trous ; expectedOutput = \"\".",
+              "proposed_content": "Conserver la consigne existante. Associer l’exercice à une validation exécutable ou à des tests ciblés (et accepter les variantes sémantiquement valides), afficher le résultat/les écarts utiles et ne compléter l’activité qu’après une tentative valide.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_systems_with_the_openai_api__01.json → lessons[1].chapters[11].blocks[0] (type=code_repl, requiredBeforeAdvance=true) ; client/src/components/blocks/CodeReplBlock.tsx:34-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 applique une égalité de chaîne ; client/src/pages/training/chapterProgress.ts:94-103 et LessonViewer.tsx:1577-1624 n’incluent pas code_repl dans les gates.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité 1 : implémenter une évaluation de code adaptée (exécution isolée ou tests/AST), produire un retour ciblé en cas d’échec, puis ajouter code_repl aux mêmes conditions de passage que les activités requises. Ne pas présenter « Vérifier le code » comme une exécution avant cette évolution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch02_act13",
+          "title": "Félicitations !",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Objectif et contextualisation — vérifiés : le titre, la description de leçon rendue dans l’en-tête et la transcription situent le sujet ; la transcription annonce aussi la pratique ou l’étape suivante.",
+            "Explications — vérifiées : transcription structurée fournie ; le contenu explique les notions et les appels API préparant les activités suivantes.",
+            "Média et accessibilité déclarée — vérifiés : MP4, piste audio, sous-titres FR/EN, transcription et PDF de slides sont présents dans les données ; LessonViewer rend les sous-titres et une transcription dépliable.",
+            "Cohérence de progression et verrouillage — vérifiés : le lecteur indique la vidéo comme activité à compléter et le bouton Suivant explique la condition de passage.",
+            "Score 88/100 : renormalisé sur les dimensions applicables à un écran vidéo (activité pratique directe non applicable)."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique spécifique par écran : non vérifiable comme donnée dédiée ; la description affichée est celle de la leçon et non un objectif mesurable propre au chapitre.",
+            "Qualité audiovisuelle, exactitude factuelle du média, disponibilité effective des URL /api/assets et lisibilité réelle des slides : non vérifiées sans lecture navigateur des ressources."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "courses_reviewed": 1,
+    "lessons_reviewed": 2,
+    "chapters_reviewed": 24,
+    "activities_reviewed": 24,
+    "activity_types_reviewed": {
+      "video": 7,
+      "code_repl": 15,
+      "bucket_sort": 1,
+      "single_choice_exercise": 1
+    },
+    "confirmed_issues": 17,
+    "severity_counts": {
+      "P0": 0,
+      "P1": 15,
+      "P2": 2,
+      "P3": 0
+    },
+    "global_score_100": 71,
+    "score_method": "Notes de chapitre renormalisées sur les dimensions applicables et effectivement vérifiées ; les objectifs spécifiques par écran, la disponibilité effective des assets et la qualité audiovisuelle non lue ne reçoivent aucune note.",
+    "priority_summary": "Priorité 1 : rendre les 15 exercices de code réellement évaluables et cohérents avec le verrouillage annoncé. Priorité 2 : restituer l’aide/feedback déjà présent pour le tri et ajouter l’explication du QCM. Les 17 signaux statiques de progression n’ont pas été repris automatiquement : la revue confirme que les vidéos, les consignes et les indices préparent les activités ; seul le défaut de validation/verrouillage des code_repl est confirmé."
+  },
+  "limits": [
+    "Audit qualitatif fondé sur le JSON source du seul cours, le registre de blocs et les composants LessonViewer, CodeReplBlock, MatchingExercise, SingleChoiceExercise et chapterProgress ; aucune donnée, contenu ou code existant n’a été modifié.",
+    "Les 7 médias sont déclarés avec MP4, sous-titres FR/EN, transcription et/ou slides. Les URL /api/assets n’ont pas été lues dans un navigateur : leur disponibilité effective, la qualité audiovisuelle, la lisibilité des slides et l’exactitude factuelle ne sont pas affirmées.",
+    "Aucun test de session apprenant persistée ni test d’accessibilité avec technologies d’assistance n’a été réalisé. Les constats de rendu et de verrouillage proviennent de la lecture du code client et de ses tests associés.",
+    "Les objectifs spécifiques par chapitre ne sont pas modélisés comme données dédiées ; leur absence ne constitue pas seule un défaut P1 et est signalée comme dimension non vérifiable."
+  ]
+}

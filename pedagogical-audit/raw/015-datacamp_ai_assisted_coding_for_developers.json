@@ -1,0 +1,1137 @@
+{
+  "formation_id": "datacamp_ai_assisted_coding_for_developers",
+  "courses": [
+    {
+      "course_id": "ai_assisted_coding_for_developers__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Le paradigme du code assisté par l’IA",
+          "score_100": 72,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act01` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `teaching` et ses 3 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_1_act_01_video` déclare  16 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Ressource complémentaire : carte de téléchargement rendue avec son titre, sa description, son lien et le libellé localisé « Télécharger ».",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L1-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_1_act_01_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[0].blocks[1]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_1_act_01_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L1-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[0].blocks[1].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            },
+            {
+              "issue_id": "PAAC-015-I18N-L1-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_ch01_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation",
+              "description": "La carte de téléchargement est affichée dans le parcours français avec un titre et une description en anglais. Le lien reste compréhensible, mais la rupture de langue dégrade la cohérence de l’expérience.",
+              "current_content": "`title.fr`: « Chapter 1 slides » ; `description.fr`: « Official course slides provided for this course. ».",
+              "proposed_content": "`title.fr`: « Diapositives du chapitre 1 » ; `description.fr`: « Diapositives officielles fournies pour ce cours. »",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[0].blocks[2].title.fr et `.description.fr`. `client/src/pages/training/LessonViewer.tsx:1007-1010` sélectionne ces valeurs localisées lorsque `lang=\"fr\"`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Remplacer uniquement les chaînes françaises de titre et description ; ne pas modifier l’URL ni le fichier joint."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Faire correspondre les modèles d’IA aux tâches",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act02` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Classer les charges de travail liées à l’IA",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act03` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `exercise` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : titre, consigne, catégories, cartes et bonne catégorie attendue sont renseignés. Le composant explicite l’action : sélectionner une carte puis une catégorie, ou la glisser-déposer.",
+            "Validation : le tri ne peut être soumis que lorsque toutes les cartes sont placées ; l’interface affiche le nombre de placements corrects/incorrects, propose une réinitialisation et le passage est bloqué tant que le tri n’est pas entièrement correct.",
+            "Pré-requis : les catégories et cartes évaluent directement le compromis de modèles ou les types de tâches introduits dans l’écran précédent.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Manipulation effective en navigateur au clavier, au pointeur et sur mobile : les affordances sont présentes dans le composant mais le test manuel multi-support n’a pas été effectué."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-FEEDBACK-L1-C3",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le contenu prévoit un indice et un feedback pédagogique, mais le renderer ne transmet ni `hint` ni `feedback` au composant de tri. Après succès, l’apprenant ne voit que « Parfait ! » et le score ; après erreur, seulement le nombre de cartes justes et « Réessayer ». La consolidation métier disponible n’est donc pas rendue.",
+              "current_content": "`hint`: « N’oubliez pas que les modèles conçus pour être plus légers, plus rapides et plus économiques offrent généralement moins de capacités générales que leurs équivalents complets et peuvent donner de moins bons résultats, surtout sur des tâches complexes ou multilingues. » ; `feedback`: « Parfait ! Après avoir examiné l’usage des modèles d’IA par vos collègues, vous pouvez désormais sélectionner en toute confiance un modèle pour les tâches nécessitant du raisonnement, comme le débogage, et un autre pour les tâches de code générales. » ; aucune propriété `correction` renseignée.",
+              "proposed_content": "Réutiliser les textes existants sans en inventer : rendre l’indice avant soumission ; après soumission, afficher le feedback comme consolidation en cas de réussite et comme aide à la correction en cas d’erreur, avant « Réessayer ».",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[2].blocks[0]: `hint` et `feedback` sont renseignés. `client/src/pages/training/LessonViewer.tsx:957-974` ne transmet à `MatchingExercise` que `title`, `instructions`, `buckets`, `cards`, `correction`; `client/src/components/MatchingExercise.tsx:444-450` n’affiche un texte détaillé que depuis `exercise.correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Ajouter le mapping de `hint` et `feedback` vers `MatchingExercise` (ou vers une propriété de correction dédiée), puis tester un résultat juste et faux."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Notions de base du prompt engineering",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act04` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `teaching` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_1_act_04_video` déclare  10 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L1-C4",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_1_act_04_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[3].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_1_act_04_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L1-C4",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[3].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Décoder des fonctions avec les bons prompts",
+          "score_100": 72,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act05` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `exercise` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : le scénario, le code/contexte nécessaire, l’action demandée et le format attendu sont présents dans la consigne. Le composant affiche une zone de réponse, un compteur minimal de mots, l’évaluation, le feedback et une nouvelle tentative.",
+            "Le composant peut rendre les critères apprenant extraits des segments en gras de la consigne, ainsi qu’un guidage de dépôt ; le pré-signal « critères non visibles » n’est donc pas retenu.",
+            "Théorie → pratique : chaque activité suit une vidéo de la même leçon qui introduit le principe mobilisé (prompts spécifiques, contexte, raisonnement, documentation ou tests).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Qualité du score et du feedback retournés par le service d’évaluation IA : non vérifiable sans soumettre une réponse dans une session apprenant.",
+            "Rubrique structurée et seuil persisté : les blocs reposent sur une rubrique historique textuelle et ne fournissent pas `rubricCriteria`; la présence de critères visibles est confirmée par le fallback de rendu, mais l’évaluation détaillée côté service n’a pas été exécutée."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-AIEVAL-GATE-L1-C5",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_prompting",
+              "content_type": "ai_evaluation",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Cette activité est marquée obligatoire au niveau du chapitre, et son composant calcule un score avec un seuil par défaut. Pourtant, aucun des chemins de navigation ne reconnaît le type `ai_evaluation` comme condition de passage. L’apprenant peut continuer sans rédiger ni faire évaluer sa réponse : l’exercice de pratique est contournable.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc `dc_1_act_05_prompting` avec `minWords: 5`, `maxScore: 10`, sans `passingScore` explicite (le composant applique 70 % par défaut).",
+              "proposed_content": "Inclure `ai_evaluation` dans une seule règle de gate réutilisée par le bouton compact, le bouton principal, la navigation clavier et la fin de leçon. Déverrouiller seulement après le callback `onComplete`, donc après l’atteinte du seuil du composant.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[4].blocks[0]: activité `ai_evaluation` obligatoire. `client/src/pages/training/LessonViewer.tsx:1187-1189` ajoute l’id à `completedExercises` après réussite. Mais `chapterProgress.ts:94-103`, `LessonViewer.tsx:312-325`, 1493-1511 et 1577-1624 énumèrent les types verrouillants sans jamais inclure `ai_evaluation`; le bouton principal reste donc actif.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Ajouter `ai_evaluation` à la liste centralisée des activités bloquantes et tester les cinq chapitres concernés : « Suivant » doit rester indisponible avant une évaluation réussie."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Affiner les prompts pour des modifications de code",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act06` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Ajouter du contexte pour des réponses d’IA plus pertinentes",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act07` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `teaching` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_1_act_07_video` déclare  11 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L1-C7",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_1_act_07_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[6].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_1_act_07_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L1-C7",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[6].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Choisir le bon contexte pour les tâches de code",
+          "score_100": 72,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act08` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `exercise` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : le scénario, le code/contexte nécessaire, l’action demandée et le format attendu sont présents dans la consigne. Le composant affiche une zone de réponse, un compteur minimal de mots, l’évaluation, le feedback et une nouvelle tentative.",
+            "Le composant peut rendre les critères apprenant extraits des segments en gras de la consigne, ainsi qu’un guidage de dépôt ; le pré-signal « critères non visibles » n’est donc pas retenu.",
+            "Théorie → pratique : chaque activité suit une vidéo de la même leçon qui introduit le principe mobilisé (prompts spécifiques, contexte, raisonnement, documentation ou tests).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Qualité du score et du feedback retournés par le service d’évaluation IA : non vérifiable sans soumettre une réponse dans une session apprenant.",
+            "Rubrique structurée et seuil persisté : les blocs reposent sur une rubrique historique textuelle et ne fournissent pas `rubricCriteria`; la présence de critères visibles est confirmée par le fallback de rendu, mais l’évaluation détaillée côté service n’a pas été exécutée."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-AIEVAL-GATE-L1-C8",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch01_act08",
+              "content_id": "dc_1_act_08_prompting",
+              "content_type": "ai_evaluation",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Cette activité est marquée obligatoire au niveau du chapitre, et son composant calcule un score avec un seuil par défaut. Pourtant, aucun des chemins de navigation ne reconnaît le type `ai_evaluation` comme condition de passage. L’apprenant peut continuer sans rédiger ni faire évaluer sa réponse : l’exercice de pratique est contournable.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc `dc_1_act_08_prompting` avec `minWords: 5`, `maxScore: 10`, sans `passingScore` explicite (le composant applique 70 % par défaut).",
+              "proposed_content": "Inclure `ai_evaluation` dans une seule règle de gate réutilisée par le bouton compact, le bouton principal, la navigation clavier et la fin de leçon. Déverrouiller seulement après le callback `onComplete`, donc après l’atteinte du seuil du composant.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[0].chapters[7].blocks[0]: activité `ai_evaluation` obligatoire. `client/src/pages/training/LessonViewer.tsx:1187-1189` ajoute l’id à `completedExercises` après réussite. Mais `chapterProgress.ts:94-103`, `LessonViewer.tsx:312-325`, 1493-1511 et 1577-1624 énumèrent les types verrouillants sans jamais inclure `ai_evaluation`; le bouton principal reste donc actif.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Ajouter `ai_evaluation` à la liste centralisée des activités bloquantes et tester les cinq chapitres concernés : « Suivant » doit rester indisponible avant une évaluation réussie."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Améliorer le code par itérations de prompt",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch01_act09` examiné dans l’ordre de la leçon 1 (« Libérer la puissance de l’IA dans le code ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Ingénierie de prompts avancée pour l’assistance au code",
+          "score_100": 72,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act01` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `teaching` et ses 2 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_2_act_01_video` déclare  10 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Ressource complémentaire : carte de téléchargement rendue avec son titre, sa description, son lien et le libellé localisé « Télécharger ».",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L2-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_2_act_01_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[0].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_2_act_01_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L2-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[0].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            },
+            {
+              "issue_id": "PAAC-015-I18N-L2-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_ch02_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation",
+              "description": "La carte de téléchargement est affichée dans le parcours français avec un titre et une description en anglais. Le lien reste compréhensible, mais la rupture de langue dégrade la cohérence de l’expérience.",
+              "current_content": "`title.fr`: « Chapter 2 slides » ; `description.fr`: « Official course slides provided for this course. ».",
+              "proposed_content": "`title.fr`: « Diapositives du chapitre 2 » ; `description.fr`: « Diapositives officielles fournies pour ce cours. »",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[0].blocks[1].title.fr et `.description.fr`. `client/src/pages/training/LessonViewer.tsx:1007-1010` sélectionne ces valeurs localisées lorsque `lang=\"fr\"`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Remplacer uniquement les chaînes françaises de titre et description ; ne pas modifier l’URL ni le fichier joint."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Prompts pour un débogage efficace",
+          "score_100": 72,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act02` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `exercise` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : le scénario, le code/contexte nécessaire, l’action demandée et le format attendu sont présents dans la consigne. Le composant affiche une zone de réponse, un compteur minimal de mots, l’évaluation, le feedback et une nouvelle tentative.",
+            "Le composant peut rendre les critères apprenant extraits des segments en gras de la consigne, ainsi qu’un guidage de dépôt ; le pré-signal « critères non visibles » n’est donc pas retenu.",
+            "Théorie → pratique : chaque activité suit une vidéo de la même leçon qui introduit le principe mobilisé (prompts spécifiques, contexte, raisonnement, documentation ou tests).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Qualité du score et du feedback retournés par le service d’évaluation IA : non vérifiable sans soumettre une réponse dans une session apprenant.",
+            "Rubrique structurée et seuil persisté : les blocs reposent sur une rubrique historique textuelle et ne fournissent pas `rubricCriteria`; la présence de critères visibles est confirmée par le fallback de rendu, mais l’évaluation détaillée côté service n’a pas été exécutée."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-AIEVAL-GATE-L2-C2",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_prompting",
+              "content_type": "ai_evaluation",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Cette activité est marquée obligatoire au niveau du chapitre, et son composant calcule un score avec un seuil par défaut. Pourtant, aucun des chemins de navigation ne reconnaît le type `ai_evaluation` comme condition de passage. L’apprenant peut continuer sans rédiger ni faire évaluer sa réponse : l’exercice de pratique est contournable.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc `dc_2_act_02_prompting` avec `minWords: 5`, `maxScore: 10`, sans `passingScore` explicite (le composant applique 70 % par défaut).",
+              "proposed_content": "Inclure `ai_evaluation` dans une seule règle de gate réutilisée par le bouton compact, le bouton principal, la navigation clavier et la fin de leçon. Déverrouiller seulement après le callback `onComplete`, donc après l’atteinte du seuil du composant.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[1].blocks[0]: activité `ai_evaluation` obligatoire. `client/src/pages/training/LessonViewer.tsx:1187-1189` ajoute l’id à `completedExercises` après réussite. Mais `chapterProgress.ts:94-103`, `LessonViewer.tsx:312-325`, 1493-1511 et 1577-1624 énumèrent les types verrouillants sans jamais inclure `ai_evaluation`; le bouton principal reste donc actif.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Ajouter `ai_evaluation` à la liste centralisée des activités bloquantes et tester les cinq chapitres concernés : « Suivant » doit rester indisponible avant une évaluation réussie."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Définitions de rôle efficaces",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act03` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Documenter le code avec l’IA",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act04` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `teaching` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_2_act_04_video` déclare  14 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L2-C4",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_2_act_04_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[3].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_2_act_04_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L2-C4",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[3].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Optimiser les prompts pour la documentation du code",
+          "score_100": 72,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act05` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `exercise` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : le scénario, le code/contexte nécessaire, l’action demandée et le format attendu sont présents dans la consigne. Le composant affiche une zone de réponse, un compteur minimal de mots, l’évaluation, le feedback et une nouvelle tentative.",
+            "Le composant peut rendre les critères apprenant extraits des segments en gras de la consigne, ainsi qu’un guidage de dépôt ; le pré-signal « critères non visibles » n’est donc pas retenu.",
+            "Théorie → pratique : chaque activité suit une vidéo de la même leçon qui introduit le principe mobilisé (prompts spécifiques, contexte, raisonnement, documentation ou tests).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Qualité du score et du feedback retournés par le service d’évaluation IA : non vérifiable sans soumettre une réponse dans une session apprenant.",
+            "Rubrique structurée et seuil persisté : les blocs reposent sur une rubrique historique textuelle et ne fournissent pas `rubricCriteria`; la présence de critères visibles est confirmée par le fallback de rendu, mais l’évaluation détaillée côté service n’a pas été exécutée."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-AIEVAL-GATE-L2-C5",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_prompting",
+              "content_type": "ai_evaluation",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Cette activité est marquée obligatoire au niveau du chapitre, et son composant calcule un score avec un seuil par défaut. Pourtant, aucun des chemins de navigation ne reconnaît le type `ai_evaluation` comme condition de passage. L’apprenant peut continuer sans rédiger ni faire évaluer sa réponse : l’exercice de pratique est contournable.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc `dc_2_act_05_prompting` avec `minWords: 5`, `maxScore: 10`, sans `passingScore` explicite (le composant applique 70 % par défaut).",
+              "proposed_content": "Inclure `ai_evaluation` dans une seule règle de gate réutilisée par le bouton compact, le bouton principal, la navigation clavier et la fin de leçon. Déverrouiller seulement après le callback `onComplete`, donc après l’atteinte du seuil du composant.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[4].blocks[0]: activité `ai_evaluation` obligatoire. `client/src/pages/training/LessonViewer.tsx:1187-1189` ajoute l’id à `completedExercises` après réussite. Mais `chapterProgress.ts:94-103`, `LessonViewer.tsx:312-325`, 1493-1511 et 1577-1624 énumèrent les types verrouillants sans jamais inclure `ai_evaluation`; le bouton principal reste donc actif.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Ajouter `ai_evaluation` à la liste centralisée des activités bloquantes et tester les cinq chapitres concernés : « Suivant » doit rester indisponible avant une évaluation réussie."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Rédiger des messages de commit efficaces avec l’IA",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act06` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Écrire des tests et sécuriser le code avec l’IA",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act07` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `teaching` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_2_act_07_video` déclare  8 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L2-C7",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_2_act_07_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[6].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_2_act_07_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L2-C7",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[6].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Prompts pour un codage assisté par l’IA sécurisé",
+          "score_100": 72,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act08` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `exercise` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : le scénario, le code/contexte nécessaire, l’action demandée et le format attendu sont présents dans la consigne. Le composant affiche une zone de réponse, un compteur minimal de mots, l’évaluation, le feedback et une nouvelle tentative.",
+            "Théorie → pratique : chaque activité suit une vidéo de la même leçon qui introduit le principe mobilisé (prompts spécifiques, contexte, raisonnement, documentation ou tests).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Qualité du score et du feedback retournés par le service d’évaluation IA : non vérifiable sans soumettre une réponse dans une session apprenant.",
+            "Rubrique structurée et seuil persisté : les blocs reposent sur une rubrique historique textuelle et ne fournissent pas `rubricCriteria`; la présence de critères visibles est confirmée par le fallback de rendu, mais l’évaluation détaillée côté service n’a pas été exécutée."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-AIEVAL-GATE-L2-C8",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_prompting",
+              "content_type": "ai_evaluation",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Cette activité est marquée obligatoire au niveau du chapitre, et son composant calcule un score avec un seuil par défaut. Pourtant, aucun des chemins de navigation ne reconnaît le type `ai_evaluation` comme condition de passage. L’apprenant peut continuer sans rédiger ni faire évaluer sa réponse : l’exercice de pratique est contournable.",
+              "current_content": "`requiredBeforeAdvance: true`; bloc `dc_2_act_08_prompting` avec `minWords: 5`, `maxScore: 10`, sans `passingScore` explicite (le composant applique 70 % par défaut).",
+              "proposed_content": "Inclure `ai_evaluation` dans une seule règle de gate réutilisée par le bouton compact, le bouton principal, la navigation clavier et la fin de leçon. Déverrouiller seulement après le callback `onComplete`, donc après l’atteinte du seuil du composant.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[1].chapters[7].blocks[0]: activité `ai_evaluation` obligatoire. `client/src/pages/training/LessonViewer.tsx:1187-1189` ajoute l’id à `completedExercises` après réussite. Mais `chapterProgress.ts:94-103`, `LessonViewer.tsx:312-325`, 1493-1511 et 1577-1624 énumèrent les types verrouillants sans jamais inclure `ai_evaluation`; le bouton principal reste donc actif.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Ajouter `ai_evaluation` à la liste centralisée des activités bloquantes et tester les cinq chapitres concernés : « Suivant » doit rester indisponible avant une évaluation réussie."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Repérer les lacunes dans des tests générés par l’IA",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch02_act09` examiné dans l’ordre de la leçon 2 (« Prompt engineering pour des tâches de codage réelles ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Choisir le meilleur outil d’IA pour la tâche",
+          "score_100": 72,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act01` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `teaching` et ses 2 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_3_act_01_video` déclare  13 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Ressource complémentaire : carte de téléchargement rendue avec son titre, sa description, son lien et le libellé localisé « Télécharger ».",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L3-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_3_act_01_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[0].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_3_act_01_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L3-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[0].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            },
+            {
+              "issue_id": "PAAC-015-I18N-L3-C1",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_ch03_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation",
+              "description": "La carte de téléchargement est affichée dans le parcours français avec un titre et une description en anglais. Le lien reste compréhensible, mais la rupture de langue dégrade la cohérence de l’expérience.",
+              "current_content": "`title.fr`: « Chapter 3 slides » ; `description.fr`: « Official course slides provided for this course. ».",
+              "proposed_content": "`title.fr`: « Diapositives du chapitre 3 » ; `description.fr`: « Diapositives officielles fournies pour ce cours. »",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[0].blocks[1].title.fr et `.description.fr`. `client/src/pages/training/LessonViewer.tsx:1007-1010` sélectionne ces valeurs localisées lorsque `lang=\"fr\"`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Remplacer uniquement les chaînes françaises de titre et description ; ne pas modifier l’URL ni le fichier joint."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Comprendre le coût des assistants IA",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act02` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Évaluer les compromis des modèles de raisonnement",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act03` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `exercise` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : titre, consigne, catégories, cartes et bonne catégorie attendue sont renseignés. Le composant explicite l’action : sélectionner une carte puis une catégorie, ou la glisser-déposer.",
+            "Validation : le tri ne peut être soumis que lorsque toutes les cartes sont placées ; l’interface affiche le nombre de placements corrects/incorrects, propose une réinitialisation et le passage est bloqué tant que le tri n’est pas entièrement correct.",
+            "Pré-requis : les catégories et cartes évaluent directement le compromis de modèles ou les types de tâches introduits dans l’écran précédent.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Manipulation effective en navigateur au clavier, au pointeur et sur mobile : les affordances sont présentes dans le composant mais le test manuel multi-support n’a pas été effectué."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-FEEDBACK-L3-C3",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act03",
+              "content_id": "dc_3_act_03_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le contenu prévoit un indice et un feedback pédagogique, mais le renderer ne transmet ni `hint` ni `feedback` au composant de tri. Après succès, l’apprenant ne voit que « Parfait ! » et le score ; après erreur, seulement le nombre de cartes justes et « Réessayer ». La consolidation métier disponible n’est donc pas rendue.",
+              "current_content": "`hint`: « Réfléchissez à la manière dont chaque caractéristique affecte l’utilisabilité, les performances ou l’expérience développeur en production. » ; `feedback`: « Excellent ! Vous avez correctement identifié les avantages et inconvénients pratiques de l’utilisation d’un modèle d’IA de raisonnement. Comprendre ces compromis est essentiel pour prendre des décisions éclairées lors de l’intégration d’outils d’IA dans des workflows réels ! » ; aucune propriété `correction` renseignée.",
+              "proposed_content": "Réutiliser les textes existants sans en inventer : rendre l’indice avant soumission ; après soumission, afficher le feedback comme consolidation en cas de réussite et comme aide à la correction en cas d’erreur, avant « Réessayer ».",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[2].blocks[0]: `hint` et `feedback` sont renseignés. `client/src/pages/training/LessonViewer.tsx:957-974` ne transmet à `MatchingExercise` que `title`, `instructions`, `buckets`, `cards`, `correction`; `client/src/components/MatchingExercise.tsx:444-450` n’affiche un texte détaillé que depuis `exercise.correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Ajouter le mapping de `hint` et `feedback` vers `MatchingExercise` (ou vers une propriété de correction dédiée), puis tester un résultat juste et faux."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Garde-fous pour un codage IA responsable",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act04` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `teaching` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_3_act_04_video` déclare  11 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L3-C4",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_3_act_04_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[3].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_3_act_04_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L3-C4",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[3].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Garde-fous de sécurité et d’éthique pour un workflow d’IA",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act05` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Optimiser l’IA pour la vitesse, le coût et la qualité",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act07` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `teaching` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_3_act_07_video` déclare  13 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L3-C6",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_3_act_07_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[5].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_3_act_07_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L3-C6",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[5].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Stratégies efficaces pour maîtriser le coût d’un modèle",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act08` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `quiz` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : l’énoncé, les options, la bonne réponse, un indice et une explication sont renseignés ; l’action visible est de sélectionner une option puis « Vérifier la réponse ».",
+            "Feedback et reprise : `SingleChoiceExercise` met en évidence la réponse correcte, affiche l’explication, autorise « Réessayer » et enregistre seulement une réponse correcte pour le passage.",
+            "Alignement : la question mobilise le concept exposé dans la vidéo ou l’activité immédiatement précédente de la même leçon.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Équilibrer performances et coût des modèles",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act09` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `exercise` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Activité : titre, consigne, catégories, cartes et bonne catégorie attendue sont renseignés. Le composant explicite l’action : sélectionner une carte puis une catégorie, ou la glisser-déposer.",
+            "Validation : le tri ne peut être soumis que lorsque toutes les cartes sont placées ; l’interface affiche le nombre de placements corrects/incorrects, propose une réinitialisation et le passage est bloqué tant que le tri n’est pas entièrement correct.",
+            "Pré-requis : les catégories et cartes évaluent directement le compromis de modèles ou les types de tâches introduits dans l’écran précédent.",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Manipulation effective en navigateur au clavier, au pointeur et sur mobile : les affordances sont présentes dans le composant mais le test manuel multi-support n’a pas été effectué."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-FEEDBACK-L3-C8",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le contenu prévoit un indice et un feedback pédagogique, mais le renderer ne transmet ni `hint` ni `feedback` au composant de tri. Après succès, l’apprenant ne voit que « Parfait ! » et le score ; après erreur, seulement le nombre de cartes justes et « Réessayer ». La consolidation métier disponible n’est donc pas rendue.",
+              "current_content": "`hint`: « Des modèles moins coûteux peuvent produire un code de qualité pour des tâches simples. Réservez les modèles puissants aux problèmes qui exigent vraiment un raisonnement poussé ou un large contexte. » ; `feedback`: « Bravo ! Vous avez bien associé chaque tâche au bon type de modèle. Trouver le bon équilibre entre qualité et coût est essentiel pour déployer des LLM efficacement ! » ; aucune propriété `correction` renseignée.",
+              "proposed_content": "Réutiliser les textes existants sans en inventer : rendre l’indice avant soumission ; après soumission, afficher le feedback comme consolidation en cas de réussite et comme aide à la correction en cas d’erreur, avant « Réessayer ».",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[7].blocks[0]: `hint` et `feedback` sont renseignés. `client/src/pages/training/LessonViewer.tsx:957-974` ne transmet à `MatchingExercise` que `title`, `instructions`, `buckets`, `cards`, `correction`; `client/src/components/MatchingExercise.tsx:444-450` n’affiche un texte détaillé que depuis `exercise.correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Ajouter le mapping de `hint` et `feedback` vers `MatchingExercise` (ou vers une propriété de correction dédiée), puis tester un résultat juste et faux."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Félicitations !",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Périmètre : chapitre `dc_ch03_act10` examiné dans l’ordre de la leçon 3 (« Construire des workflows d’IA robustes pour le code ») ; son type `teaching` et ses 1 bloc(s) sont rendus par `LessonViewer`.",
+            "Progression : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend l’indicateur d’écran, les contrôles précédent/suivant et un message de condition de passage lorsque une règle de gate reconnue s’applique.",
+            "Média : le bloc Projector audio `dc_3_act_10_video` déclare  5 diapositives, une transcription, un PDF de slides et des VTT FR/EN. `LessonViewer` rend le lecteur Projector, le transcript repliable et les liens PDF/sous-titres.",
+            "Théorie → suite : la transcription contient une introduction au thème et une transition explicite vers la pratique ou le sujet suivant (la séquence finale fournit une récapitulation).",
+            "Objectif de leçon : la description de leçon expose le thème et les compétences visées ; `LessonViewer` peut la présenter comme description de chapitre en l’absence de titre de contenu distinct."
+          ],
+          "unverified_dimensions": [
+            "Objectif pédagogique formalisé par chapitre : aucun champ `objectives` n’est renseigné au niveau des leçons ni des chapitres. Le but immédiat est déduit du titre, de la description de leçon et du contenu ; il n’est pas traité comme une anomalie automatique.",
+            "Expérience navigateur de bout en bout (mise en page responsive, lecteur d’écran, comportement clavier et persistance authentifiée) : revue de code effectuée, mais pas de parcours manuel connecté.",
+            "Lecture effective de l’audio, ouverture des PDF/VTT et lisibilité fine des images de diapositives : les références `/api/assets/...` sont déclarées mais leur disponibilité et leur rendu effectif ne sont pas inférés.",
+            "Contexte avant lecture : `objectiveBefore` et `questionsAfter` ne sont pas renseignés ; l’objectif est accessible par le titre, les slides et le transcript mais pas formalisé dans ces champs."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAAC-015-LOCK-L3-C9",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais le verrou de navigation ne reconnaît pas ce média Projector audio. L’apprenant peut passer à l’écran suivant — et, pour le dernier écran, terminer la leçon — sans écouter ni marquer le média comme écouté, contrairement à l’intention de progression obligatoire.",
+              "current_content": "`requiredBeforeAdvance: true`; média audio-only `dc_3_act_10_video` (id de 17 caractères), `projectorDuration: 300 secondes`, sans `videoId` ni `url`.",
+              "proposed_content": "Aucune réécriture de contenu n’est requise. Utiliser `block.id` pour tout média avec `audioUrl`/`mp4Url` dans les calculs de clés du gate, exactement comme le lecteur le fait lors de « Marquer comme écoutée », puis comparer cette clé à `completedVideos`.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[8].blocks[0]: `audioUrl` et `requiredBeforeAdvance=true`. `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio avec `audioKey = block.id`; mais lignes 1557-1569 (et 1483-1511 au dernier écran) n’acceptent un `block.id` comme clé vidéo que si sa longueur est entre 8 et 15. `dc_3_act_10_video` mesure 17 caractères et est donc exclu.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Centraliser la résolution de la clé des médias et l’utiliser dans les gates principal, compact, clavier et terminal ; ajouter un test pour un `audioUrl` dont l’id fait 17 caractères."
+            },
+            {
+              "issue_id": "PAAC-015-DURATION-L3-C9",
+              "course_id": "ai_assisted_coding_for_developers__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_video",
+              "content_type": "video",
+              "severity": "P3",
+              "category": "ux_information_de_duree",
+              "description": "L’en-tête présente une estimation de « 1 min de lecture » alors que le chapitre est un média Projector de cinq minutes. Le temps affiché, calculé sur les seuls blocs `content`, sous-estime l’effort et désigne une modalité erronée.",
+              "current_content": "`projectorDuration: 300 secondes`; aucun bloc `content` significatif à lire dans ce chapitre (sauf l’introduction de cours, qui reste sous 200 mots).",
+              "proposed_content": "Afficher « Environ 5 min de vidéo/audio » lorsque le chapitre contient ce média Projector ; conserver « min de lecture » pour les écrans réellement textuels.",
+              "evidence": "client/public/data/courses/ai_assisted_coding_for_developers__01.json → lessons[2].chapters[8].blocks[0].projectorDuration = 300. `client/src/pages/training/LessonViewer.tsx:227-251` compte uniquement les mots des blocs `content` puis impose un minimum d’une minute ; lignes 1269-1274 l’affichent comme « min de lecture ».",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P3 — Faire dériver le badge de durée de `projectorDuration` pour les chapitres Projector, ou masquer le badge lorsqu’aucune durée fiable ne peut être calculée."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 3,
+      "chapters_reviewed": 27,
+      "interactive_activities_reviewed": 17,
+      "activities_reviewed_including_projector_media": 27,
+      "videos_reviewed_from_data_transcripts_and_renderer": 10,
+      "downloads_reviewed": 3
+    },
+    "method": "Revue qualitative exhaustive du JSON source de la seule formation, de ses 3 leçons et 27 chapitres, de chacun des 17 blocs interactifs, des 10 médias Projector et des 3 téléchargements. Vérification des types de blocs via `blockRegistry.ts`, du rendu dans `LessonViewer`, `ProjectorPlayer`, `SingleChoiceExercise`, `MatchingExercise` et `AiEvaluationBlock`, et de la progression via `chapterProgress.ts` et `matchingGate.ts`. Le pré-audit statique a été traité comme un signal ; ses alertes de progression n’ont pas été reprises automatiquement.",
+    "score_method": "Score /100 par chapitre, fondé sur les dimensions observables et renormalisé : explications disponibles dans les transcripts/slides, progression, clarté de l’activité, feedback, médias déclarés et UX/règles de navigation rendues. L’absence d’un champ d’objectif, l’accès non testé aux ressources et la qualité effective de la réponse IA ne sont pas pénalisés artificiellement et figurent dans les dimensions non vérifiables.",
+    "formation_score_100": 81,
+    "confirmed_issues": {
+      "total": 31,
+      "by_severity": {
+        "P0": 0,
+        "P1": 15,
+        "P2": 3,
+        "P3": 13
+      },
+      "by_category": {
+        "verrouillage": 15,
+        "ux_information_de_duree": 10,
+        "localisation": 3,
+        "feedback": 3
+      }
+    },
+    "priority_findings": {
+      "P1": "10 écrans Projector audio obligatoires sont franchissables sans écoute car leurs identifiants de 17 caractères sont exclus du gate média ; les 5 évaluations IA obligatoires sont également contournables, car leur type n’est inscrit dans aucun gate de navigation.",
+      "P2": "Les 3 activités de tri possèdent un indice et un feedback pédagogiques dans le JSON, mais `LessonViewer` ne les transmet pas au composant. L’apprenant perd l’aide disponible, surtout après une erreur.",
+      "P3": "Les 10 médias Projector de 300 secondes sont annoncés comme « 1 min de lecture » ; les 3 cartes de téléchargement de slides restent en anglais dans l’interface française."
+    },
+    "positive_controls": [
+      "Les 9 QCM à choix unique ont chacun une question, des options, une réponse correcte, un indice et une explication ; le renderer montre la correction et autorise une nouvelle tentative.",
+      "Les 3 tris ont des consignes, catégories, cartes et réponses attendues ; le composant rend une interaction clic/glisser-déposer, corrige les placements et autorise la reprise. Le problème confirmé concerne le feedback additionnel non transmis, non l’absence de correction.",
+      "Les 5 évaluations IA ont une consigne contextualisée, une action et un format attendus. Les critères visibles sont rendus depuis les éléments en gras de l’énoncé lorsque `rubricCriteria` est absent ; le signal statique sur l’absence de critères visibles est donc infirmé.",
+      "Les 10 médias Projector déclarent transcript, slides, PDF et VTT FR/EN ; le lecteur rend les slides structurées, une transcription dépliable et les liens aux alternatives. Ces ressources ne sont pas considérées absentes.",
+      "La progression conceptuelle alterne théorie, pratique/évaluation et quiz de manière cohérente ; les videos se terminent par une invitation explicite à pratiquer, sauf le dernier écran qui récapitule la formation."
+    ]
+  },
+  "limits": [
+    "Audit sans modification : aucun JSON de cours, média, base de données ni code applicatif n’a été changé.",
+    "Les URLs `/api/assets/...` (audio, images, PDF et VTT) sont déclarées dans les contenus. Elles n’ont pas été qualifiées d’absentes : leur lecture effective, leur disponibilité réseau et la lisibilité visuelle détaillée n’ont pas été testées dans une session navigateur authentifiée.",
+    "L’évaluation IA n’a pas été soumise contre le service : la qualité des scores, feedbacks et seuils effectivement retournés demeure non vérifiée. Le rendu et les chemins de complétion ont néanmoins été inspectés dans le code.",
+    "Les objectifs de leçon sont présents dans les descriptions et les contenus Projector, mais aucun champ `objectives` ne formule un objectif distinct par chapitre ; cette dimension est consignée comme non vérifiable, jamais comme défaut automatique.",
+    "Le JSON du cours n’est pas présent dans `lessonQuizzes.json`. `ChapterQuiz` s’auto-valide lorsqu’aucune banque n’est trouvée ; l’audit ne crée pas de défaut de contenu pour cette évaluation injectée, car elle n’est pas un bloc pédagogique défini dans la formation et ne masque aucune activité source."
+  ]
+}

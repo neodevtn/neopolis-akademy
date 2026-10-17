@@ -57,14 +57,14 @@ describe("catalogue DataCamp", () => {
     expect(certification).toMatchObject({
       courseCount: 1,
       totalLessons: 3,
-      totalActivities: 18,
+      totalActivities: 16,
       totalVideos: 6,
       courses: ["introduction_to_agent_skills__01"],
     });
     expect(course).toMatchObject({
       certId: "datacamp_introduction_to_agent_skills",
       lessonCount: 3,
-      totalActivities: 18,
+      totalActivities: 16,
       videoCount: 6,
     });
   });
@@ -137,7 +137,7 @@ describe("catalogue DataCamp", () => {
     expect(certification).toMatchObject({
       courseCount: 1,
       totalLessons: 2,
-      totalActivities: 12,
+      totalActivities: 9,
       totalVideos: 4,
       totalDownloads: 2,
       courses: ["introduction_to_subagents__01"],
@@ -145,7 +145,7 @@ describe("catalogue DataCamp", () => {
     expect(course).toMatchObject({
       certId: "datacamp_introduction_to_subagents",
       lessonCount: 2,
-      totalActivities: 12,
+      totalActivities: 9,
       videoCount: 4,
       downloadCount: 2,
     });

@@ -1,0 +1,325 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_14",
+  "courses": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "ia_appliquee_metiers_tp__14-screen-01",
+          "title": "Objectif du TP",
+          "score_100": 72,
+          "verified_dimensions": [
+            {
+              "dimension": "Objectifs pédagogiques",
+              "assessment": "Les quatre acquis annoncés sont observables et cohérents avec le mini-projet : indexation Supabase, réponse RAG, mémoire PostgreSQL, garde-fous et escalade humaine.",
+              "evidence": "lessons[0].chapters[0].blocks[0].items"
+            },
+            {
+              "dimension": "Cadrage et progression",
+              "assessment": "Le public, le niveau avancé, la durée indicative et le cadre de démonstration sont explicités avant toute activité.",
+              "evidence": "learning_section et callout « Cadre pratique »"
+            },
+            {
+              "dimension": "Rendu et lisibilité",
+              "assessment": "LessonViewer rend learning_section sous forme de section structurée avec titre, texte et liste numérotée ; CalloutBlock rend le cadre pratique visible.",
+              "evidence": "client/src/pages/training/LessonViewer.tsx:449-450 ; client/src/components/blocks/GenericLearningBlocks.tsx:8-16"
+            }
+          ],
+          "unverified_dimensions": [
+            "Pertinence et contextualisation des médias : non applicable ; aucun bloc vidéo, audio ou illustration n’est déclaré.",
+            "Exactitude et disponibilité de la ressource externe n8n : non vérifiées ; elle est déclarée comme ressource consultable et n’a pas été assimilée à un contenu absent."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__14:screen-01:english-localization",
+              "course_id": "ia_appliquee_metiers_tp__14",
+              "chapter_id": "ia_appliquee_metiers_tp__14-screen-01",
+              "content_id": "lessons[0].chapters[0].blocks[0]",
+              "content_type": "learning_section",
+              "severity": "P1",
+              "category": "localisation",
+              "description": "En interface anglaise, le titre, la description et les objectifs de l’écran d’ouverture restent majoritairement en français. Un apprenant anglophone ne reçoit donc pas un cadrage et des objectifs dans la langue sélectionnée avant de commencer le TP.",
+              "current_content": "course.title.en et course.description.en reprennent le français ; learning_section.title.en vaut « Agent Zendesk RAG avec base documentaire et mémoire », learning_section.body.en vaut « Métier cible : Support operations senior, architecte solution support, admin Zendesk. Niveau : Avancé. Durée indicative : 4 h. », et les quatre items .en sont également en français.",
+              "proposed_content": "Renseigner les valeurs en anglais sans changer le fond : titre « Zendesk RAG Agent with Knowledge Base and Memory » ; corps « Target roles: Senior Support Operations, Support Solution Architect, Zendesk Administrator. Level: Advanced. Indicative duration: 4 hours. » ; objectifs « Index a knowledge base in Supabase », « Build a contextualized RAG response », « Add PostgreSQL conversational memory », « Define guardrails and human escalation ». Traduire aussi course.title.en et course.description.en de manière cohérente.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:4-10 et lessons[0].chapters[0].blocks[0] (lignes 80-105) ; LearningSectionBlock affiche la valeur de la langue courante à GenericLearningBlocks.tsx:12-15.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Compléter les champs en anglais de ce cadrage avant publication ; contrôler ensuite les deux sélecteurs de langue sur le premier écran."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "ia_appliquee_metiers_tp__14-screen-02",
+          "title": "Préparer l’environnement",
+          "score_100": 88,
+          "verified_dimensions": [
+            {
+              "dimension": "Prérequis, sécurité et transition",
+              "assessment": "Le chapitre précède la construction et impose explicitement sandbox/comptes de démonstration, données fictives, absence de secrets et validation humaine des actions à impact.",
+              "evidence": "content.body"
+            },
+            {
+              "dimension": "Clarté de l’activité de consultation",
+              "assessment": "L’action est précise : ouvrir la ressource, repérer résultat métier, entrées, sorties et contrôles, puis confirmer la consultation. Le libellé d’ouverture et le bouton de confirmation sont rendus.",
+              "evidence": "resource_review.instructions, resourceLabel ; LessonViewer.tsx:1068-1093"
+            },
+            {
+              "dimension": "Cohérence du verrouillage",
+              "assessment": "La navigation est bloquée jusqu’à la confirmation de consultation et le message de passage indique cette condition. Le mécanisme n’affirme pas que la ressource serait absente.",
+              "evidence": "LessonViewer.tsx:1583-1586, 1607 et 1624-1638"
+            }
+          ],
+          "unverified_dimensions": [
+            "Contenu, disponibilité, lisibilité et pertinence de la page n8n externe : non vérifiés ; la ressource est présente dans les données avec une URL et une action explicite.",
+            "Pertinence et contextualisation des médias : non applicable ; aucun média déclaré dans ce chapitre."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "ia_appliquee_metiers_tp__14-screen-03",
+          "title": "Construire progressivement",
+          "score_100": 82,
+          "verified_dimensions": [
+            {
+              "dimension": "Progression théorie vers pratique",
+              "assessment": "La séquence Cadrer → Préparer → Tester → Contrôler prépare logiquement le checkpoint puis le mini-projet ; les contrôles humains et les tests sont repris dans le panneau À faire / À éviter.",
+              "evidence": "sequence_visual.items et comparison_panel.columns"
+            },
+            {
+              "dimension": "Rendu et contextualisation",
+              "assessment": "SequenceVisualBlock affiche tous les jalons et descriptions ; ComparisonPanelBlock rend les deux colonnes, ce qui rend la distinction entre pratiques à faire et à éviter lisible.",
+              "evidence": "GenericLearningBlocks.tsx:68-76 ; LessonViewer.tsx:490-493"
+            },
+            {
+              "dimension": "Complétude",
+              "assessment": "Le contenu donne les garde-fous transverses et ne prétend pas remplacer la ressource source ni un laboratoire hébergé.",
+              "evidence": "chapitres 1 à 3 enchaînés dans lessons[0].chapters"
+            }
+          ],
+          "unverified_dimensions": [
+            "Suffisance opérationnelle des étapes techniques propres à n8n, Zendesk, Supabase et PostgreSQL : non entièrement vérifiable sans examiner la ressource externe annoncée, qui n’est pas considérée absente.",
+            "Pertinence et contextualisation des médias : non applicable ; aucun média déclaré dans ce chapitre."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__14:screen-03:english-comparison-localization",
+              "course_id": "ia_appliquee_metiers_tp__14",
+              "chapter_id": "ia_appliquee_metiers_tp__14-screen-03",
+              "content_id": "lessons[0].chapters[2].blocks[1]",
+              "content_type": "comparison_panel",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "Les éléments des colonnes de vérification restent en français dans leur variante .en. L’écran anglais mélange ainsi explications anglaises et six consignes de sécurité en français immédiatement avant le checkpoint.",
+              "current_content": "Dans comparison_panel.columns, les items .en sont identiques aux items français : « Utiliser des données fictives. », « Définir un contrôle humain. », « Tester les cas limites. », « Exposer un secret ou une donnée personnelle. », « Déclencher une action finale sans validation. », « Déduire une décision sans vérification métier. »",
+              "proposed_content": "Renseigner les six variantes .en : « Use fictional data. », « Define a human review step. », « Test edge cases. », « Expose a secret or personal data. », « Trigger a final action without approval. », « Infer a decision without business verification. »",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:221-260 ; ComparisonPanelBlock résout et affiche column.items dans la langue courante à GenericLearningBlocks.tsx:74-76.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Traduire les items .en du panneau comparatif et vérifier visuellement le chapitre en anglais."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "ia_appliquee_metiers_tp__14-checkpoint-01",
+          "title": "Checkpoint : environnement et sécurité",
+          "score_100": 78,
+          "verified_dimensions": [
+            {
+              "dimension": "Énoncé, action et feedback",
+              "assessment": "La question, les quatre réponses, la bonne réponse et une explication sont explicites. Le composant affiche le résultat, l’explication et une action Réessayer après un mauvais choix.",
+              "evidence": "knowledge_check prompt/options/correctAnswer/explanation ; GenericLearningBlocks.tsx:50-65"
+            },
+            {
+              "dimension": "Cohérence des prérequis",
+              "assessment": "Le checkpoint porte directement sur les règles vues aux écrans de préparation et de démarche : sandbox, données fictives et contrôle humain.",
+              "evidence": "chapitres 1-2 puis knowledge_check du chapitre 3"
+            }
+          ],
+          "unverified_dimensions": [
+            "Pertinence et contextualisation des médias : non applicable ; aucun média déclaré dans ce chapitre."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__14:checkpoint-01:incorrect-answer-unlocks",
+              "course_id": "ia_appliquee_metiers_tp__14",
+              "chapter_id": "ia_appliquee_metiers_tp__14-checkpoint-01",
+              "content_id": "ia_appliquee_metiers_tp__14-checkpoint-preparation",
+              "content_type": "knowledge_check",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint annonce required: true et passThreshold: 1, mais une réponse incorrecte déclenche tout de même la complétion qui ouvre la navigation. La validation ne garantit donc pas l’acquisition que le checkpoint est censé vérifier.",
+              "current_content": "La bonne réponse configurée est « a ». KnowledgeCheckBlock appelle onComplete(id, id === correctAnswer) à chaque sélection. LessonViewer ajoute ensuite systématiquement l’identifiant au Set completedNovasavoInteractions, sans tester isCorrect ; le verrouillage vérifie uniquement que cet identifiant est présent.",
+              "proposed_content": "Conserver l’énoncé et le feedback actuels. Modifier la règle de complétion pour n’enregistrer l’activité comme validée que lorsque la réponse « a » est choisie ; après une réponse erronée, conserver l’explication actuelle et rendre obligatoire « Réessayer » avant de poursuivre.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:267-321 (passThreshold: 1, required: true, correctAnswer: a) ; GenericLearningBlocks.tsx:57-64 ; LessonViewer.tsx:484-489 et 359-377 ; chapterProgress.ts:94-103.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_code_path",
+              "recommended_action": "Faire dépendre le Set de complétion et le verrouillage de la correction de la réponse, puis ajouter un test couvrant le choix incorrect et le choix correct de ce knowledge_check."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "ia_appliquee_metiers_tp__14-mini-project",
+          "title": "Mini-projet et preuve de réalisation",
+          "score_100": 65,
+          "verified_dimensions": [
+            {
+              "dimension": "Cohérence théorie → activité",
+              "assessment": "Le mini-projet réemploie les quatre acquis déclarés et les garde-fous préparés aux écrans précédents ; les ressources, l’indice et la correction sont déclarés.",
+              "evidence": "cloud_exercise assignment/instructions/resources/hint/solution"
+            },
+            {
+              "dimension": "Action et résultat attendus en français",
+              "assessment": "La consigne demande de créer l’agent puis de décrire le scénario fictif, le résultat, un contrôle et l’étape soumise à validation humaine ; la correction donne une auto-vérification cohérente.",
+              "evidence": "cloud_exercise instructions et solution"
+            },
+            {
+              "dimension": "Rendu de l’activité",
+              "assessment": "CloudExerciseBlock rend l’objectif, les instructions, le guide d’environnement, la ressource, l’indice, la zone de preuve et la correction après soumission.",
+              "evidence": "CloudExerciseBlock.tsx:215-497 ; LessonViewer.tsx:1144-1150"
+            }
+          ],
+          "unverified_dimensions": [
+            "Contenu et accessibilité du support fictif /manus-storage/14-14-agent-zendesk-rag-avec-base-documentaire-et-memoire-support-fictif_051871fc.md : non vérifiés. Il est déclaré comme ressource téléchargeable ; aucune absence n’est inférée.",
+            "Exécution réelle d’un workflow n8n et validité technique de son résultat : hors périmètre de l’audit qualitatif sans modification ni environnement apprenant.",
+            "Pertinence et contextualisation des médias : non applicable ; aucun média déclaré dans ce chapitre."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__14:mini-project:english-instructions-missing",
+              "course_id": "ia_appliquee_metiers_tp__14",
+              "chapter_id": "ia_appliquee_metiers_tp__14-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__14-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "localisation",
+              "description": "Les champs centraux du TP sont de simples chaînes françaises, et le renderer les affiche tels quels quelle que soit la langue. En anglais, l’apprenant voit donc en français l’objectif, les instructions de preuve, l’indice, la correction et le message de réussite de l’activité essentielle.",
+              "current_content": "assignment, instructions, hint, solution et successMessage sont des chaînes françaises, par exemple assignment = « Créer un agent Zendesk qui répond à partir d'une base de connaissances et refuse les cas sensibles avec escalade. ». CloudExerciseBlock applique resolveLocalizedBlockText, qui retourne toute chaîne inchangée.",
+              "proposed_content": "Remplacer ces chaînes par objets {fr,en}. Variante en réutilisable pour assignment : « Create a Zendesk agent that answers from a knowledge base and declines sensitive cases with escalation. » Variante en pour instructions : « Complete the mini-project in your own demonstration environment. Use the provided fictional material, then describe in the evidence area: the scenario tested, the result obtained, one control performed, and the step that remains subject to human approval. Index a knowledge base in Supabase; build a contextualized RAG response; add PostgreSQL conversational memory; define guardrails and human escalation. » Traduire de la même façon l’indice, la correction et le message de réussite, sans modifier les exigences.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:334-361 ; cloudExerciseValidation.ts:11-18 ; CloudExerciseBlock.tsx:104-113 et 227-257, 323-333, 438-495.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Localiser tous les champs textuels de ce cloud_exercise et contrôler l’activité complète dans les deux langues."
+            },
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__14:mini-project:proof-not-evaluated",
+              "course_id": "ia_appliquee_metiers_tp__14",
+              "chapter_id": "ia_appliquee_metiers_tp__14-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__14-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "La preuve est présentée comme condition de passage, mais aucune grille, évaluation serveur, choix de réflexion ni longueur minimale significative n’est configuré. Toute réponse non vide est marquée « Validé », révèle la correction et déverrouille le quiz final ; elle peut donc ne contenir aucune des preuves demandées.",
+              "current_content": "Le bloc demande scénario testé, résultat obtenu, contrôle effectué et étape soumise à validation humaine, mais ne contient ni rubricCriteria, ni learnerCriteria, ni serverGradedAssessment, ni minimumAnswerLength. En l’absence de suivi par grille, CloudExerciseBlock applique une longueur minimale de 1, met submitted à true puis appelle onComplete.",
+              "proposed_content": "Ajouter des critères visibles et vérifiables, strictement tirés de la consigne : « 1. Scénario fictif testé ; 2. Workflow ou procédure réalisée ; 3. Résultat observé et contrôle effectué ; 4. Étape restant soumise à validation humaine. » Accompagner la zone de preuve de ce gabarit : « 1. Scénario fictif : …\n2. Procédure/workflow : …\n3. Résultat et contrôle : …\n4. Validation humaine restante : … ». Ne rendre la preuve complétée qu’après un contrôle structuré de ces critères, avec feedback indiquant les éléments manquants.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:340-361 ; CloudExerciseBlock.tsx:117-125, 153-161 et 390-406 ; cloudExerciseValidation.ts:1-9 ; assessmentSubmissionGuidance.ts:134-139 ; LessonViewer.tsx:1587-1592.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_code_path",
+              "recommended_action": "Configurer une évaluation structurée ou un contrôle de critères réellement bloquant, puis tester qu’une réponse d’un seul caractère ne révèle plus la correction ni ne déverrouille le chapitre suivant."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "ia_appliquee_metiers_tp__14-final-quiz",
+          "title": "Quiz final : valider la démarche",
+          "score_100": 75,
+          "verified_dimensions": [
+            {
+              "dimension": "Alignement et diversité des activités",
+              "assessment": "Les quatre QCM et le tri réinvestissent données fictives, validation humaine, contrôle/documentation et déroulé Cadrer → Construire → Tester → Valider.",
+              "evidence": "five blocks du chapitre, options, correctAnswer et cartes de tri"
+            },
+            {
+              "dimension": "Interaction et reprise",
+              "assessment": "Les QCM signalent la réponse correcte, affichent une explication et proposent Réessayer. Le tri indique le nombre de placements corrects, marque les cartes erronées et propose Réessayer ; la navigation exige les quatre QCM corrects et le tri correct avant la fin de leçon.",
+              "evidence": "SingleChoiceExercise.tsx:170-225 ; MatchingExercise.tsx:420-490 ; LessonViewer.tsx:1493-1511"
+            },
+            {
+              "dimension": "Cohérence du verrouillage",
+              "assessment": "Le seuil 4 exige les quatre bonnes réponses configurées ; le tri ne signale sa complétion au parent que si tous les placements sont corrects. Le dernier écran demeure verrouillé tant que les activités n’ont pas été validées.",
+              "evidence": "evaluationRules.ts:1-10 ; LessonViewer.tsx:1538-1556, 1572-1582 et 1511-1534 ; MatchingExercise.tsx:185-192"
+            }
+          ],
+          "unverified_dimensions": [
+            "Pertinence et contextualisation des médias : non applicable ; aucun média déclaré dans ce chapitre."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__14:final-quiz:english-options-untranslated",
+              "course_id": "ia_appliquee_metiers_tp__14",
+              "chapter_id": "ia_appliquee_metiers_tp__14-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__14-quiz-01",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "Des propositions de réponse restent en français dans le quiz affiché en anglais. Le problème est observé dans plusieurs QCM de validation, dont des distracteurs : cela dégrade la lisibilité et l’équité de l’évaluation pour un apprenant ayant choisi l’anglais.",
+              "current_content": "Exemples : quiz-01 option c .en = « Une action finale déclenchée sans relecture. » ; quiz-02 option b .en = « Faux : l’automatisation dispense toujours de tout contrôle. » ; quiz-04 option c .en = « Le statut de test « à vérifier ». » Ces valeurs sont différentes de la question, qui est bien traduite.",
+              "proposed_content": "Renseigner les valeurs .en : « A final action triggered without review. », « False: automation never removes the need for oversight. », « The test status “to be checked”. » Passer en revue les options .en de l’ensemble des quatre QCM pour garantir que chaque proposition est dans la langue sélectionnée.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:398-402, 433-438 et 513-517 ; LessonViewer.tsx:977-1004 transmet opt.text[lang] à SingleChoiceExercise.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Traduire les options identifiées et effectuer une revue exhaustive des textes .en des cinq activités du quiz final."
+            },
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__14:quiz-order:feedback-not-rendered",
+              "course_id": "ia_appliquee_metiers_tp__14",
+              "chapter_id": "ia_appliquee_metiers_tp__14-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__14-quiz-order",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le feedback pédagogique rédigé pour l’activité de tri n’est pas transmis au composant qui l’affiche. Après une réussite, l’apprenant reçoit seulement « 4/4 · Parfait ! » au lieu de la synthèse qui explicite la logique de la démarche.",
+              "current_content": "Le JSON contient feedback.fr = « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. ». LessonViewer passe seulement title, instructions, buckets, cards et correction à MatchingExercise ; il ne passe pas feedback. MatchingExercise n’affiche un texte détaillé que si exercise.correction existe, or ce champ n’est pas configuré.",
+              "proposed_content": "Afficher après soumission : « Bonne démarche : 1. Cadrer — définir le résultat métier, les données fictives et les limites d’action ; 2. Construire — configurer le workflow dans un environnement de démonstration ; 3. Tester — journaliser les sorties et relever les écarts ; 4. Valider — faire relire les actions sensibles avant toute utilisation réelle. » Cette formulation reprend exclusivement les cartes et le feedback existants.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:534-611 ; LessonViewer.tsx:957-975 ; MatchingExercise.tsx:40-42 et 420-450.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_code_path",
+              "recommended_action": "Mapper block.feedback vers le champ affiché par MatchingExercise ou étendre son interface avec un champ feedback, puis tester l’affichage après une réussite et un échec."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "formation_title": "Agent Zendesk RAG avec base documentaire et mémoire",
+    "courses_reviewed": 1,
+    "lessons_reviewed": 1,
+    "chapters_reviewed": 6,
+    "activities_reviewed": 8,
+    "score_100": 76,
+    "scoring_method": "Score qualitatif par chapitre, renormalisé sur les dimensions observables. Les médias ne sont pas notés quand aucun média n’est déclaré ; les ressources externes ou hébergées non examinées restent non vérifiées.",
+    "priority_summary": "4 P1 et 3 P2 confirmés. Priorité 1 : empêcher qu’une réponse erronée au checkpoint ou une preuve vide valide une étape obligatoire. Priorité 2 : compléter la localisation anglaise des éléments qui définissent les objectifs, le TP et le quiz. Priorité 3 : rendre le feedback pédagogique déjà écrit pour le tri.",
+    "strengths": [
+      "Les objectifs, le public, les outils, la durée et les garde-fous sont explicités avant l’activité pratique.",
+      "La progression française est logique : préparation sécurisée, démarche, checkpoint, mini-projet, quiz final.",
+      "Les QCM et le tri disposent de réponses correctes configurées, de possibilités de reprise et de garde-fous de navigation pour le quiz final.",
+      "La ressource externe et le support fictif sont déclarés avec une action explicite ; aucun n’a été qualifié d’absent."
+    ],
+    "confirmed_issue_counts": {
+      "total": 7,
+      "P0": 0,
+      "P1": 4,
+      "P2": 3,
+      "P3": 0
+    }
+  },
+  "limits": [
+    "Audit qualitatif limité à la seule formation demandée et à son unique JSON source : /home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__14.json.",
+    "Les composants LessonViewer, CloudExerciseBlock, SingleChoiceExercise, MatchingExercise, GenericLearningBlocks, chapterProgress et les règles associées ont été lus pour vérifier le rendu et les verrous ; aucun test navigateur authentifié ni aucune modification n’a été effectué.",
+    "La page n8n externe et le support fictif déclaré sous /manus-storage/ n’ont pas été ouverts ni évalués. Leur contenu, disponibilité, accessibilité et exactitude ne sont donc pas vérifiés et ne sont pas assimilés à des absences.",
+    "Aucun média vidéo, audio ou illustration n’est déclaré dans cette formation : la dimension de pertinence/contextualisation des médias est non applicable, non notée.",
+    "Les propositions de contenu se limitent aux formulations déductibles des données du cours ; aucune procédure technique, réponse attendue ou fait externe n’a été inventé."
+  ]
+}

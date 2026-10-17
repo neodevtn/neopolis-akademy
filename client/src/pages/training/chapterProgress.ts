@@ -28,7 +28,43 @@ type ChapterBlockLike = {
   type?: string;
   title?: string | { en?: string; fr?: string };
   optional?: boolean;
+  id?: string;
+  videoId?: string | { en?: string; fr?: string };
+  url?: string;
+  watchUrl?: string | { en?: string; fr?: string };
+  mp4Url?: string;
+  hlsUrl?: string;
+  audioUrl?: string;
 };
+
+/**
+ * Returns the same completion key used by LessonViewer for every supported
+ * media source. Keeping this in one place prevents a watched MP4/audio block
+ * from remaining locked because the navigation gate derived a different key.
+ */
+export function getMediaCompletionKey(block: ChapterBlockLike, index = 0): string {
+  if (block.mp4Url || block.hlsUrl || block.audioUrl) return block.id || `${block.audioUrl ? "audio" : "mp4"}_${index}`;
+  const localized = (value: unknown): string => {
+    if (typeof value === "string") return value;
+    if (!value || typeof value !== "object") return "";
+    const candidate = value as { fr?: unknown; en?: unknown };
+    return typeof candidate.fr === "string" ? candidate.fr : typeof candidate.en === "string" ? candidate.en : "";
+  };
+  let rawId = localized(block.videoId);
+  const candidateUrls = [localized(block.watchUrl), block.url].filter(Boolean) as string[];
+  for (const candidate of candidateUrls) {
+    const match = candidate.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^?&\s/]+)/i);
+    if (match) { rawId = match[1]; break; }
+  }
+  return rawId || (typeof block.id === "string" ? block.id : `video_${index}`);
+}
+
+export function getChapterMediaCompletionKeys(chapter?: { blocks?: ChapterBlockLike[] } | null): string[] {
+  return (chapter?.blocks ?? [])
+    .filter((block) => block.type === "video")
+    .map((block, index) => getMediaCompletionKey(block, index))
+    .filter(Boolean);
+}
 
 /**
  * Neopolis-selected supplementary videos remain available to learners but do

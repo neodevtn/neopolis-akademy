@@ -1,0 +1,343 @@
+{
+  "formation_id": "datacamp_building_agentic_workflows_with_llamaindex",
+  "courses": [
+    {
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Bienvenue !",
+          "score_100": 61,
+          "verified_dimensions": [
+            "Objectifs et prérequis : la vidéo annonce AgentWorkflow, l’orchestration multi-agents, Python et les API ; le bloc d’introduction précise explicitement qu’il s’agit d’un parcours vidéo sans environnement externe requis.",
+            "Média contextualisé : 12 diapositives synchronisées, une transcription structurée, des sous-titres EN, un PDF de slides et une action de téléchargement sont renseignés ; LessonViewer les rend dans ProjectorPlayer avec liens vers PDF, sous-titres et transcription.",
+            "Action attendue : l’interface rend une action explicite de lecture et « Marquer comme vue (manuel) » pour dc_1_act_01_video.",
+            "Cohérence de parcours : le chapitre d’accueil précède les définitions et expose la séquence outils → mémoire → multi-agents.",
+            "Verrouillage : le comportement réel a été vérifié dans LessonViewer et ne correspond pas à requiredBeforeAdvance=true (issue confirmée ci-dessous)."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable propre à ce chapitre : aucun champ d’objectif de chapitre distinct n’est fourni ; ce manque est consigné comme non vérifiable, pas comme une anomalie automatique.",
+            "Pratique, résultat attendu et feedback d’exercice : aucune activité interactive ou pratique n’est livrée dans ce chapitre. Les 10 activités pratiques source ont été explicitement exclues faute de rubrique vérifiable ; il serait erroné de les déclarer absentes.",
+            "Lisibilité perceptive des slides, lecture effective audio/MP4 et disponibilité réseau : les ressources /api/assets/ sont servies par le proxy de stockage géré et n’ont pas été jouées dans un navigateur durant cet audit."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-022-001",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire, mais la clé qui marque la vidéo Projector comme vue n’est pas celle que le contrôle de navigation sait dériver. L’apprenant peut donc passer au chapitre suivant sans regarder ni marquer cette vidéo.",
+              "current_content": "requiredBeforeAdvance=true ; id vidéo = « dc_1_act_01_video » (17 caractères).",
+              "proposed_content": "Aligner la clé de contrôle vidéo sur block.id pour les blocs mp4Url/hlsUrl/audioUrl ; la même clé « dc_1_act_01_video » doit être utilisée par ProjectorPlayer, le bouton manuel et le calcul de isGatedByVideo.",
+              "evidence": "client/public/data/courses/building_agentic_workflows_with_llamaindex__01.json → lessons[0].chapters[0].requiredBeforeAdvance et blocks[id=dc_1_act_01_video]. LessonViewer.tsx lignes 552-590 marque completedVideos avec block.id pour le Projector ; lignes 1558-1568 ne retiennent block.id que si sa longueur est comprise entre 8 et 15, donc cette clé de 17 caractères produit chapterVideoKeys=[] et isGatedByVideo=false. lessonQuizzes.json ne contient aucune clé pour ce cours ; ChapterQuiz.tsx lignes 75-80 passe automatiquement lorsqu’aucune question n’est trouvée.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Corriger la dérivation des clés de vidéo pour les médias Projector, puis ajouter un test de non-progression avant l’achèvement ou le marquage explicite de cette vidéo."
+            },
+            {
+              "issue_id": "ped-022-002",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Dans une formation déclarée fr-FR et présentée en français, la narration détaillée et la transcription de cette vidéo sont en anglais ; seuls des sous-titres EN sont fournis. Les points visuels français ne restituent pas toutes les explications orales.",
+              "current_content": "subtitleUrlEn est renseigné, subtitleUrlFr est absent ; transcript commence par « Hello and welcome to Building Agentic Workflows with LlamaIndex! ».",
+              "proposed_content": "Fournir un fichier VTT français et une transcription française révisée à partir du script existant ; conserver la version anglaise comme alternative. Ne pas traduire automatiquement sans relecture pédagogique.",
+              "evidence": "JSON source : datacampImport.sourceLanguage=fr-FR ; blocks[id=dc_1_act_01_video] contient subtitleUrlEn et transcript/transcriptSegments en anglais, sans subtitleUrlFr. LessonViewer.tsx lignes 597-620 affiche le lien de sous-titres disponible puis la transcription telle quelle, sans traduction.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Prioriser une alternative textuelle et des sous-titres français synchronisés pour cette vidéo d’ouverture."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Qu’est-ce qu’un agent ?",
+          "score_100": 58,
+          "verified_dimensions": [
+            "Clarté des explications : les slides opposent explicitement les limites d’un LLM à la définition d’un agent, puis donnent un exemple et des critères de choix LLM/agent.",
+            "Progression locale : la définition arrive après l’accueil et avant le chapitre sur la mémoire ; le cours part d’un agent unique et annonce une complexité croissante.",
+            "Média contextualisé : 7 diapositives, transcription structurée, sous-titres EN et PDF du chapitre sont présents et rendus par le composant Projector.",
+            "Action attendue : lecture/achèvement manuel de la vidéo sont visibles ; la cohérence du verrouillage réel est cependant en défaut (issue P1)."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable explicite de chapitre : le titre et la question introductive orientent la leçon, mais aucun objectif formalisé séparément n’est fourni.",
+            "Feedback et évaluation des acquis : aucun exercice, quiz source ou feedback d’exercice n’est livré dans ce chapitre ; la banque de questions du cours est absente, donc le ChapterQuiz injecté passe automatiquement.",
+            "Lecture réelle des médias et qualité visuelle sur terminal utilisateur : non testées en navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-022-003",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le verrouillage attendu avant le chapitre suivant est inopérant pour cette activité vidéo obligatoire : la clé d’achèvement écrite par le lecteur ne peut pas être retrouvée par la navigation.",
+              "current_content": "requiredBeforeAdvance=true ; id vidéo = « dc_1_act_03_video » (17 caractères).",
+              "proposed_content": "Utiliser block.id sans restriction de longueur pour bâtir chapterVideoKeys lorsque le bloc est un média Projector, afin d’exiger l’achèvement ou le marquage de « dc_1_act_03_video » avant Suivant.",
+              "evidence": "JSON source → lessons[0].chapters[1].blocks[id=dc_1_act_03_video]. LessonViewer.tsx lignes 556-581 enregistre block.id ; lignes 1560-1567 ignorent cet id de 17 caractères en l’absence de videoId ou d’URL YouTube. Le même mécanisme rend isGatedByVideo=false malgré requiredBeforeAdvance=true.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Corriger la clé de progression et couvrir ce cas MP4/Projector par un test de navigation séquentielle."
+            },
+            {
+              "issue_id": "ped-022-004",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La couche détaillée du média est anglaise dans un parcours fr-FR : aucune transcription ni sous-titre français n’est fournie, alors que la vidéo porte la définition centrale d’agent et la comparaison LLM/agent.",
+              "current_content": "subtitleUrlEn est renseigné, subtitleUrlFr est absent ; les segments de transcript commencent par « Before we dive into coding our agent… » et « A standard GPT model… ».",
+              "proposed_content": "Ajouter une piste de sous-titres française et une transcription française validée, notamment pour la définition, l’exemple et les critères de décision LLM versus agent.",
+              "evidence": "JSON source → blocks[id=dc_1_act_03_video] : 7 projectorSlides, transcript/transcriptSegments anglais, subtitleUrlEn uniquement. LessonViewer.tsx lignes 597-620 rend ces champs sans mécanisme de localisation du transcript.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Localiser l’alternative textuelle avant de considérer ce chapitre comme pleinement accessible à un apprenant francophone."
+            },
+            {
+              "issue_id": "ped-022-005",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video#slide-7",
+              "content_type": "ProjectorFinalSlide",
+              "severity": "P2",
+              "category": "transition théorie→activité",
+              "description": "La transition promet implicitement un passage à la pratique (« Let’s get into it »), mais l’écran suivant livré est une nouvelle vidéo conceptuelle sur la mémoire ; le parcours a explicitement exclu tous les TP externes. Cette formulation crée une attente d’activité qui n’est pas satisfaite.",
+              "current_content": "Slide finale : « Exciting, right? Let’s get into it. »",
+              "proposed_content": "« Dans la prochaine leçon, nous poursuivrons la découverte en examinant comment un agent conserve le contexte entre plusieurs exécutions. »",
+              "evidence": "JSON source → lessons[0].chapters[1].blocks[id=dc_1_act_03_video].projectorSlides[number=7].script. Le chapitre suivant dc_ch01_act05 ne contient qu’un bloc video. datacampImport.delivered indique interactiveExercises=0 et excludedSourcePracticalActivities=10 ; le bloc d’introduction avertit aussi qu’aucun TP exécutable n’est inclus.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_content_sequence",
+              "recommended_action": "Remplacer la formule de passage à la pratique par une transition fidèle vers la leçon conceptuelle suivante, ou ajouter une activité vérifiable si un futur dispositif d’évaluation source est disponible."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Les agents ont-ils de la mémoire ?",
+          "score_100": 57,
+          "verified_dimensions": [
+            "Clarté : le contraste agent sans état / contexte est illustré et le terme Context est défini comme mémoire ou bloc-notes de l’agent.",
+            "Cohérence conceptuelle : la mémoire suit logiquement la définition d’un agent et prépare le partage d’information dans des workflows.",
+            "Média : 6 diapositives, transcription structurée, sous-titres EN et support de chapitre sont renseignés ; ProjectorPlayer permet de suivre les slides et de naviguer par slide.",
+            "Action attendue : le lecteur et l’action de marquage manuel sont rendus, mais le verrouillage de la vidéo n’est pas appliqué dans la navigation.",
+            "Feedback d’activité : non applicable aux blocs livrés ; aucun exercice ne figure dans le chapitre."
+          ],
+          "unverified_dimensions": [
+            "Objectif observable propre au chapitre : aucun objectif distinct n’est déclaré dans les données.",
+            "Mise en pratique de Context/LlamaIndex, critères de réussite et feedback : les activités LocalEnvironmentExercise source ne sont pas livrées faute de rubrique vérifiable ; aucune absence n’est inférée.",
+            "Lecture effective des fichiers média gérés et accessibilité perceptive des images : non vérifiées en navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-022-006",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Cette vidéo obligatoire peut être contournée : la navigation n’utilise pas l’identifiant Projector de 17 caractères qui est pourtant celui enregistré lors de la lecture ou du marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; id vidéo = « dc_1_act_05_video » (17 caractères).",
+              "proposed_content": "Calculer la condition vidéo à partir de block.id pour tout bloc média local, y compris « dc_1_act_05_video », et conserver cette condition dans les contrôles clavier, bouton Suivant et fin de leçon.",
+              "evidence": "JSON source → lessons[0].chapters[2].blocks[id=dc_1_act_05_video]. LessonViewer.tsx lignes 556-581 utilise block.id ; lignes 305-306 et 1558-1568 n’acceptent l’id de repli qu’entre 8 et 15 caractères. Cet id est donc exclu des clés à valider.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Unifier la fonction de construction des clés de vidéo et tester explicitement ce troisième chapitre."
+            },
+            {
+              "issue_id": "ped-022-007",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Le chapitre traite un concept essentiel (état, contexte et mémoire), mais sa narration et son unique transcription sont anglaises alors que la formation est fr-FR ; aucun sous-titrage français n’est renseigné.",
+              "current_content": "subtitleUrlFr absent ; transcript : « Now that we have a working agent… », « By default, most simple agents… » et « Context » en anglais.",
+              "proposed_content": "Mettre à disposition une transcription française et des sous-titres français couvrant notamment les notions de stateless, state et Context, avec relecture terminologique LlamaIndex.",
+              "evidence": "JSON source → blocks[id=dc_1_act_05_video] : subtitleUrlEn présent, subtitleUrlFr absent, 6 transcriptSegments en anglais. LessonViewer.tsx affiche la transcription fournie ; il n’existe pas de bloc de texte français équivalent dans ce chapitre.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Ajouter l’alternative française avant de faire dépendre la progression de ce seul média."
+            },
+            {
+              "issue_id": "ped-022-008",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_video#slide-1",
+              "content_type": "ProjectorTitleSlide",
+              "severity": "P2",
+              "category": "progression",
+              "description": "L’ouverture suppose qu’un agent fonctionnel a déjà été construit (« Now that we have a working agent »), alors que les deux écrans précédents livrés sont un accueil et une définition ; aucun code, environnement, ni activité de construction n’est livré. Le prérequis implicite risque de désorienter un débutant.",
+              "current_content": "« Now that we have a working agent, a question arises: do agents remember? »",
+              "proposed_content": "« Après avoir défini ce qu’est un agent, examinons comment un agent peut conserver le contexte entre plusieurs exécutions. »",
+              "evidence": "JSON source → dc_1_act_05_video.projectorSlides[number=1].script. Les chapitres précédents dc_ch01_act01 et dc_ch01_act03 ne contiennent respectivement que content/video/download et video. datacampImport.delivered indique interactiveExercises=0 et excludedSourcePracticalActivities=10 ; le contenu d’accueil confirme l’absence de TP ou d’environnement de code intégré.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_content_sequence",
+              "recommended_action": "Corriger la phrase de transition pour qu’elle corresponde au niveau réellement atteint dans la version livrée ; ne pas prétendre qu’un agent a été construit sans activité ou exemple disponible."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Qu’est-ce qu’un système multi-agents ?",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Explications : le chapitre définit un système multi-agents, répartit les rôles recherche/rédaction/relecture, décrit les passations et indique quand augmenter le nombre d’agents.",
+            "Progression : il repart explicitement de l’agent unique, réutilise la notion de contexte puis présente AgentWorkflow et la complexité supplémentaire ; l’ordre conceptuel est cohérent.",
+            "Média : 8 slides synchronisées, transcription structurée, sous-titres EN, PDF et téléchargement de support sont déclarés et les blocs ont un rendu identifié.",
+            "Action attendue : lecture ou marquage manuel de la vidéo sont visibles ; le contrôle de progression obligatoire reste défaillant.",
+            "Téléchargement : « Support du chapitre 2 » est un bloc download avec URL, titre, description et bouton Téléchargez rendus par LessonViewer."
+          ],
+          "unverified_dimensions": [
+            "Objectif mesurable de chapitre séparé : non renseigné comme donnée dédiée.",
+            "Capacité à orchestrer effectivement plusieurs agents, feedback et correction : aucune activité pratique livrée ne permet de l’observer ; la non-livraison est explicitement documentée et n’est pas qualifiée d’absence de ressource.",
+            "Disponibilité réseau, audio et lecture effective du PDF : non testées directement ; /api/assets/ est un proxy de stockage géré.",
+            "Lisibilité réelle des images animées : les URL et textes alternatifs sont présents dans les slides, mais le rendu visuel n’a pas été inspecté en navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-022-009",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo obligatoire sur les systèmes multi-agents n’est pas réellement un passage obligé : son identifiant Projector est utilisé pour l’achèvement visuel mais filtré hors de la condition de navigation.",
+              "current_content": "requiredBeforeAdvance=true ; id vidéo = « dc_2_act_01_video » (17 caractères).",
+              "proposed_content": "Employer block.id comme clé de progression pour ce média local, sans condition de longueur héritée des identifiants YouTube, afin que « Suivant » reste désactivé tant que la vidéo n’est pas accomplie ou marquée vue.",
+              "evidence": "JSON source → lessons[1].chapters[0].blocks[id=dc_2_act_01_video]. LessonViewer.tsx lignes 556-590 marque block.id pour ProjectorPlayer ; lignes 1560-1567 ne retiennent block.id que pour 8 à 15 caractères. La clé de 17 caractères est ignorée, donc allVideosWatched vaut true sur une liste vide.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Supprimer la divergence entre clé du lecteur et clé du garde de navigation, puis ajouter une régression couvrant les identifiants DataCamp Projector."
+            },
+            {
+              "issue_id": "ped-022-010",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Les explications détaillées sur les rôles, les passations d’AgentWorkflow et la complexité multi-agents sont seulement disponibles en anglais à l’oral et dans la transcription ; la version fr-FR n’a pas de sous-titres français.",
+              "current_content": "subtitleUrlFr absent ; transcript anglais incluant « a multi-agent system is like a team of AI agents » et « The framework manages the sequence of events and passing of context ».",
+              "proposed_content": "Ajouter des sous-titres et une transcription français relus pour les notions de spécialisation, hand-off, contexte et compromis de complexité.",
+              "evidence": "JSON source → blocks[id=dc_2_act_01_video] : 8 transcriptSegments anglais, subtitleUrlEn renseigné, aucun subtitleUrlFr. LessonViewer.tsx lignes 597-620 expose la seule version textuelle déclarée.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Prévoir une version française de la narration textuelle avant tout élargissement à des publics francophones débutants."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Récapitulatif",
+          "score_100": 58,
+          "verified_dimensions": [
+            "Synthèse : la vidéo reprend agents, orchestration multi-agents, mémoire et des cas d’usage ; elle clôt clairement la séquence avec des pistes de poursuite.",
+            "Média : 5 diapositives synchronisées, transcription, sous-titres EN et PDF de support sont renseignés et rendus par le lecteur Projector.",
+            "Action et fin de parcours : le bouton de fin de leçon, la barre de progression et l’action de marquage manuel sont rendus ; la condition vidéo réelle n’est toutefois pas cohérente avec l’intention obligatoire.",
+            "Cohérence locale : le récapitulatif suit bien le chapitre multi-agents et propose des exemples de projets liés aux notions exposées."
+          ],
+          "unverified_dimensions": [
+            "Objectif de chapitre mesurable : non fourni comme champ séparé.",
+            "Évaluation et feedback de fin de formation : aucune activité interactive ni banque de questions spécifique au cours n’est disponible ; le ChapterQuiz générique auto-valide en l’absence de questions.",
+            "Application pratique des compétences de construction : non vérifiable, car les 10 activités pratiques externes ont été explicitement exclues sans création d’un exercice libre non rubricé.",
+            "Lecture effective des médias et du PDF depuis le stockage géré : non testée en navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped-022-011",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le dernier média requis ne verrouille pas la fin du cours. L’apprenant peut atteindre « Leçon terminée » sans l’avoir vu ni marqué comme vu, car la clé vidéo réelle est exclue du garde de fin de leçon.",
+              "current_content": "requiredBeforeAdvance=true ; id vidéo = « dc_2_act_08_video » (17 caractères).",
+              "proposed_content": "Réutiliser block.id pour lastChapterVideoKeys sur les médias Projector et vérifier que le bouton « Leçon terminée » reste désactivé jusqu’à l’achèvement ou au marquage explicite de « dc_2_act_08_video ».",
+              "evidence": "JSON source → lessons[1].chapters[1].blocks[id=dc_2_act_08_video]. LessonViewer.tsx lignes 1483-1492 construit lastChapterVideoKeys avec le même filtre de longueur 8–15 ; lignes 1511-1534 calculent alors lastIsGated à partir d’une liste vide et autorisent la fin. Le lecteur, lui, marque block.id aux lignes 556-590.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Corriger le garde de dernier chapitre en même temps que les gardes intermédiaires et ajouter un test de non-achèvement du cours sans cette vidéo."
+            },
+            {
+              "issue_id": "ped-022-012",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La conclusion détaillée est anglaise (audio et transcription) sans sous-titres français, alors que la formation est déclarée fr-FR. Cela réduit l’autonomie de l’apprenant francophone au moment où sont formulées les suites et recommandations.",
+              "current_content": "subtitleUrlFr absent ; transcript : « We covered a lot of ground… » puis « I encourage you to keep exploring LlamaIndex’s latest features… ».",
+              "proposed_content": "Ajouter un VTT français et une transcription française relue pour le bilan, les exemples de projets et les conseils de poursuite.",
+              "evidence": "JSON source → blocks[id=dc_2_act_08_video] : subtitleUrlEn uniquement, 5 transcriptSegments en anglais. LessonViewer.tsx rend le transcript existant sous le libellé français « Transcription vidéo » sans adaptation linguistique.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_render_logic",
+              "recommended_action": "Fournir une conclusion accessible en français, au minimum sous forme de transcript et sous-titres validés."
+            },
+            {
+              "issue_id": "ped-022-013",
+              "course_id": "building_agentic_workflows_with_llamaindex__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_video#slide-1",
+              "content_type": "ProjectorTitleSlide",
+              "severity": "P2",
+              "category": "complétude",
+              "description": "Le récapitulatif affirme que le parcours a couvert la supervision humaine et la conception de workflows personnalisés hors des réglages par défaut, alors que les cinq activités effectivement livrées portent sur l’accueil, la définition d’agent, la mémoire, les systèmes multi-agents et le récapitulatif. Ces deux thèmes ne sont pas enseignés dans les activités disponibles.",
+              "current_content": "« We covered a lot of ground … from adding memory to injecting human oversight, and even designing custom workflows outside the defaults. »",
+              "proposed_content": "« Cette version a présenté les notions d’agent, de mémoire et d’orchestration multi-agents. Les pratiques de supervision humaine et les workflows personnalisés pourront être abordés dans un module complémentaire disposant d’activités vérifiables. »",
+              "evidence": "JSON source → dc_2_act_08_video.projectorSlides[number=1].script. L’inventaire datacampImport.delivered indique 5 activités, 5 vidéos, 0 interactiveExercises et 10 LocalEnvironmentExercise exclues. Les blocs des quatre chapitres précédents sont exclusivement content/video/download ; aucune activité sur human checkpoints ou custom workflows n’y est livrée.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_content_inventory",
+              "recommended_action": "Réviser la synthèse pour qu’elle reflète uniquement les notions réellement disponibles, ou ajouter plus tard les séquences source correspondantes avec des critères d’évaluation vérifiables."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "1 cours, 2 leçons, 5 chapitres-écrans et 7 blocs examinés individuellement : 5 vidéos Projector, 1 contenu d’introduction et 2 téléchargements. Les 5 activités vidéo et les 2 ressources téléchargeables livrées ont été contrôlées ; aucune activité interactive n’est présente dans la version livrée.",
+    "coverage": "Le JSON réellement référencé par le manifest, le registre de blocs, LessonViewer, ProjectorPlayer, chapterProgress, TrainingProgressContext, ChapterQuiz et les tests dédiés au cours ont été revus. Les tests buildingAgenticWorkflowsWithLlamaindex et buildingAgenticWorkflowsLlamaindex passent (4/4).",
+    "score_100": 59,
+    "score_method": "Les scores de chapitre sont renormalisés sur les dimensions vérifiables (explications, progression, complétude, médias et UX). La dimension activité/feedback, pondérée à 30 %, est déclarée non vérifiable lorsqu’aucune activité n’est livrée ; elle ne reçoit donc ni note favorable ni défavorable artificielle.",
+    "confirmed_issue_count": 13,
+    "priority_summary": "5 P1 de verrouillage : les cinq vidéos obligatoires peuvent être contournées en raison d’une divergence de clé entre ProjectorPlayer et la navigation, aggravée par l’absence de banque de questions qui fait auto-valider le ChapterQuiz. 8 P2 : absence systématique d’alternative française détaillée pour les cinq médias, une transition qui promet une pratique non livrée, un prérequis implicite d’agent déjà construit et un récapitulatif qui revendique deux thèmes non couverts.",
+    "key_findings": [
+      "La version délivrée est explicitement et honnêtement présentée comme un parcours de découverte vidéo : les 10 TP externes sont exclus faute de rubrique source vérifiable. Ce choix n’est pas signalé comme une ressource manquante.",
+      "La progression conceptuelle vidéo est globalement cohérente : agent → mémoire → multi-agents → bilan, avec des supports PDF déclarés.",
+      "L’intention de séquentialité est documentée par requiredBeforeAdvance=true sur les cinq chapitres, mais son implémentation est contournable pour tous les identifiants Projector de 17 caractères.",
+      "Les médias et fichiers /api/assets/ relèvent d’un proxy de stockage géré avec prise en charge des plages audio/vidéo ; leur absence du dossier public local ne constitue pas une absence de ressource."
+    ]
+  },
+  "limits": [
+    "Les cinq médias et deux PDF référencés via /api/assets/ sont servis par un proxy de stockage géré (server/assetProxy.ts) ; ils n’ont pas été lus ni téléchargés dans une session navigateur pendant cet audit. Leur contenu pédagogique a été évalué à partir des slides, scripts et transcriptions effectivement présents dans le JSON, sans les déclarer absents.",
+    "La qualité factuelle des explications, la synchronisation temporelle réelle audio-slide, la lisibilité sur tous les écrans et l’accessibilité perceptive des images/GIF ne peuvent pas être confirmées sans exécution navigateur et lecture des médias.",
+    "Aucune activité pratique source non rubricée n’a été reconstruite ni assimilée à une absence : datacampImport documente explicitement l’exclusion de 10 LocalEnvironmentExercise afin de ne pas inventer de critère de réussite.",
+    "Les constats de verrouillage sont statiquement confirmés par les données et le code de rendu/navigation ; ils n’ont pas été reproduits dans une interface authentifiée de production."
+  ]
+}

@@ -277,41 +277,6 @@
               }
             }
           ]
-        },
-        {
-          "id": "dc_ch01_act06",
-          "title": {
-            "en": "Saving your PR format as a personal skill",
-            "fr": "Saving your PR format as a personal skill"
-          },
-          "description": {
-            "en": "Stop re-explaining yourself to Claude. Learn how skills work, create your first SKILL.md from scratch, and watch Claude\n  automatically apply it the moment your request matches . No slash commands, no reminders needed.",
-            "fr": "Arrêtez de vous répéter auprès de Claude. Découvrez comment fonctionnent les skills, créez votre premier SKILL.md à partir de zéro et regardez Claude l’appliquer automatiquement dès que votre demande correspond. Aucune commande slash, aucun rappel nécessaire."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_1_act_06_code",
-              "title": {
-                "en": "Saving your PR format as a personal skill",
-                "fr": "Saving your PR format as a personal skill"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with `claude`.\n\nAsk Claude to create a personal skill in `~/.claude/skills/pr-description/SKILL.md` that:\n\nHas a name: `pr-description` and a description mentioning PR descriptions\n\nHas a body that runs `git diff main...HEAD`\n\nWrites three sections: What, Why, and Changes\n\nAsk Claude to show you the file it just created.\n\nAsk Claude what you should do for this skill to be picked up the next time you open Claude Code.\n\nEnter `/exit` to exit Claude Code.",
-                "fr": "Démarrez Claude Code avec `claude`.\n\nDemandez à Claude de créer un skill personnel dans `~/.claude/skills/pr-description/SKILL.md` qui :\n\nA un nom : `pr-description` et une description mentionnant les descriptions de PR\n\nA un corps qui exécute `git diff main...HEAD`\n\nRédige trois sections : What, Why et Changes\n\nDemandez à Claude de vous montrer le fichier qu’il vient de créer.\n\nDemandez à Claude ce que vous devriez faire pour que ce skill soit pris en compte la prochaine fois que vous ouvrirez Claude Code.\n\nSaisissez `/exit` pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\nrepl.run_command('cd /home/repl/pr-workflow && rm -rf ~/.claude/skills && mkdir -p ~/.claude/skills && rm -f ~/.claude/history.jsonl && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude to create a personal skill at `~/.claude/skills/pr-description/SKILL.md` with the right frontmatter and body.\n# 3. Ask Claude to show you the file so you can verify the structure.\n# 4. Ask Claude what's needed for the skill to be picked up in a future session.\n# 5. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/1_2/history.jsonl ~/.claude/.\nmkdir -p ~/.claude/skills/pr-description\ncp ~/solutions/1_2/SKILL.md ~/.claude/skills/pr-description/SKILL.md",
-              "expectedOutput": "",
-              "hint": {
-                "en": "SKILL.md is case-sensitive: SKILL in uppercase, md in lowercase; otherwise, Claude Code will not detect it.\n\nName the sections exactly What, Why, and Changes, and explicitly ask Claude to use `git diff main...HEAD`.",
-                "fr": "SKILL.md est sensible à la casse : SKILL en majuscules, md en minuscules ; sinon, Claude Code ne le détectera pas.\n\nNommez les sections exactement What, Why et Changes, et demandez explicitement à Claude d’utiliser `git diff main...HEAD`."
-              }
-            }
-          ]
         }
       ]
     },
@@ -880,43 +845,14 @@
               }
             }
           ]
-        },
-        {
-          "id": "dc_ch03_act06",
-          "title": {
-            "en": "Why isn't my skill triggering?",
-            "fr": "Why isn't my skill triggering?"
-          },
-          "description": {
-            "en": "Skills are most powerful when shared. Distribute them through Git, plugins, or enterprise settings, wire them into custom subagents, and quickly diagnose the two failure modes every skill builder runs into: the skill that never loads and the skill that never triggers.",
-            "fr": "Les compétences sont particulièrement puissantes lorsqu’elles sont partagées. Distribuez-les via Git, des plugins ou des paramètres d’entreprise, intégrez-les à des sous-agents personnalisés et diagnostiquez rapidement les deux modes de défaillance auxquels se heurte tout créateur de compétences : la compétence qui ne se charge jamais et celle qui ne se déclenche jamais."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_3_act_06_code",
-              "title": {
-                "en": "Why isn't my skill triggering?",
-                "fr": "Why isn't my skill triggering?"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with `claude`.\n\nAsk Claude to read `~/.claude/skills/slow-code-finder/SKILL.md` and explain why the current description does not match natural performance-related phrasing.\n\nAsk Claude to rewrite the description with natural trigger phrasing.\n\nType `/exit` to exit Claude Code.",
-                "fr": "Démarrez Claude Code avec `claude`.\n\nDemandez à Claude de lire `~/.claude/skills/slow-code-finder/SKILL.md` et d’expliquer pourquoi la description actuelle ne correspond pas aux formulations naturelles liées aux performances.\n\nDemandez à Claude de réécrire la description avec des formulations de déclenchement naturelles.\n\nTapez `/exit` pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\nrepl.run_command('cd /home/repl/skills-debug && rm -rf ~/.claude/skills && mkdir -p ~/.claude/skills && cp -r .skill-seeds/personal/* ~/.claude/skills/ && rm -f ~/.claude/history.jsonl && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude to read `~/.claude/skills/slow-code-finder/SKILL.md` and explain why the description doesn't match natural performance phrasings.\n# 3. Ask Claude to rewrite the description with trigger phrases like \"slow\", \"performance\", \"profile\", \"make this faster\".\n# 4. Type `/exit` to exit Claude Code.\n\n# Seeds session history and creates the expected fixed skill file for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_3/history.jsonl ~/.claude/.\ncp ~/solutions/2_3/slow-code-finder/SKILL.md ~/.claude/skills/slow-code-finder/SKILL.md",
-              "expectedOutput": "",
-              "hint": {
-                "en": "Skill matching is semantic: if the description vocabulary doesn't overlap with how you phrase requests, the skill never fires.\n\nAsk Claude to include the words \"slow\", \"performance\", \"profile\", and \"faster\" so natural requests match.",
-                "fr": "La correspondance des compétences est sémantique : si le vocabulaire de la description ne recoupe pas la manière dont vous formulez vos demandes, la compétence ne se déclenche jamais.\n\nDemandez à Claude d’inclure les mots « lent », « performances », « profiler » et « plus rapide » afin que les demandes naturelles correspondent."
-              }
-            }
-          ]
         }
       ]
     }
-  ]
+  ],
+  "lessonCount": 3,
+  "chapterCount": 16,
+  "totalActivities": 16,
+  "exerciseCount": 10,
+  "videoCount": 6,
+  "downloadCount": 0
 }

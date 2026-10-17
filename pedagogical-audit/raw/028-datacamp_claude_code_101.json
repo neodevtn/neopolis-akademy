@@ -1,0 +1,925 @@
+{
+  "formation_id": "datacamp_claude_code_101",
+  "courses": [
+    {
+      "course_id": "claude_code_101__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Vidéo : Qu'est-ce que Claude Code ?",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Meet Claude Code",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_1_act_02_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code en tapant claude.\n\nDemandez à Claude : \"How can Claude Code help me write code?\"\n\nTapez /exit pour fermer Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[0].chapters[1].blocks[0] (type=code_repl, id=dc_1_act_02_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Qu'est-ce que Claude Code ?",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-QCM-UNLINKED-ARTICLE-dc_1_act_03_qcm_multiple",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P3",
+              "category": "énoncé",
+              "description": "Le préambule du QCM demande de poursuivre l’apprentissage « en lisant cet article », sans article ni lien dans l’écran. La question demeure répondable depuis la vidéo précédente, mais l’instruction de lecture est inexécutable et peut laisser croire qu’un prérequis manque.",
+              "current_content": "Poursuivez la consolidation de ce que vous avez appris dans la vidéo en lisant cet article sur ce qu'est Claude Code et comment l'utiliser efficacement.\n\nQuestion : Claude Code fonctionne en tant qu'agent IA. Qu'est-ce qu'un agent IA ?",
+              "proposed_content": "Énoncé réutilisable sans dépendance non fournie : « D’après la vidéo précédente, Claude Code fonctionne en tant qu’agent IA. Qu’est-ce qu’un agent IA ? » Si la lecture est pédagogiquement requise, afficher d’abord un lien géré vers la ressource.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[0].chapters[2].blocks[0].question.fr contient « en lisant cet article » ; le chapitre ne comporte qu’un bloc multi_choice_exercise sans URL/ressource. client/src/components/blocks/MultiChoiceBlock.tsx:54-139 n’affiche que question, options, indice et explication.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P3 — Retirer la référence à l’article non proposé ou ajouter la ressource avant le QCM."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Vidéo : Comment fonctionne Claude Code",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Comment fonctionne Claude Code",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "The Agentic Loop",
+          "score_100": 94,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — ordre demandé, cinq éléments et repères haut/bas sont explicites.",
+            "Préparation : vérifiée — la vidéo immédiatement précédente explique la boucle agentive.",
+            "Feedback : vérifié — correction par position, score, réessai, indice et feedback de réussite sont rendus.",
+            "Verrouillage : vérifié — la réussite de la remise en ordre est requise pour avancer."
+          ],
+          "unverified_dimensions": [
+            "Facilité effective du glisser-déposer selon les dispositifs : non vérifiable sans essai navigateur/device."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Vidéo : Installation de Claude Code",
+          "score_100": 83,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Installation de Claude Code",
+          "score_100": 52,
+          "verified_dimensions": [
+            "Transition affichée : vérifiée — le chapitre décrit le rôle de la lecture avant la pratique.",
+            "Rendu du texte : vérifié — LessonViewer affiche body.fr et la description de chapitre.",
+            "Disponibilité dans cette version : vérifiée — l’indicateur optionalMediaUnavailable est porté par le contenu mais aucune ressource n’est rendue."
+          ],
+          "unverified_dimensions": [
+            "Contenu, pertinence et accessibilité de l’article source : non vérifiables ; il n’est ni embarqué ni lié dans le cours."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-RESOURCE-UNAVAILABLE-dc_2_act_02_visual_content",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_visual_content",
+              "content_type": "content",
+              "severity": "P2",
+              "category": "ressource_et_transition",
+              "description": "Le texte enjoint de lire « l’article », mais l’écran ne contient ni URL, ni bloc de ressource, ni contenu substitutif. La donnée signale explicitement optionalMediaUnavailable=true ; le lecteur rend le texte mais n’utilise pas cet indicateur. La ressource d’origine n’est pas déclarée absente : elle est non disponible dans ce cours, sans explication utile à l’apprenant.",
+              "current_content": "Dans ce cours, vous travaillerez avec Claude Code de manière interactive depuis la plateforme de formation. Cependant, pour vos propres projets, vous devrez installer Claude Code sur votre ordinateur.\n\nLisez l'article pour découvrir comment installer Claude Code selon différentes configurations.",
+              "proposed_content": "Version réutilisable sans inventer le contenu de l’article : « Cette ressource complémentaire n’est pas disponible dans cette version du cours. Les activités suivantes se réalisent directement dans la plateforme. » Si la lecture doit rester requise, joindre une ressource locale/URL gérée et employer un bloc resource_review avec une consigne de consultation.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[1].blocks[0] : seul bloc content, body.fr demande de lire un article et optionalMediaUnavailable=true ; aucun champ URL ni bloc resource_review/download. client/src/pages/training/LessonViewer.tsx:498-550 rend seulement body pour un bloc content.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P2 — Choisir explicitement entre fournir la ressource accessible et marquer la lecture comme indisponible/non requise avec une transition autonome vers l’activité suivante ; ne pas verrouiller une ressource qui n’est pas fournie."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Explorer votre premier projet",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_2_act_03_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code en tapant claude.\n\nDemandez à Claude de décrire ce que fait le projet d'analyse climatique.\n\nTapez /exit pour fermer Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[2].blocks[0] (type=code_repl, id=dc_2_act_03_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Vidéo : Votre premier prompt",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Your first prompt",
+          "score_100": 52,
+          "verified_dimensions": [
+            "Transition affichée : vérifiée — le chapitre décrit le rôle de la lecture avant la pratique.",
+            "Rendu du texte : vérifié — LessonViewer affiche body.fr et la description de chapitre.",
+            "Disponibilité dans cette version : vérifiée — l’indicateur optionalMediaUnavailable est porté par le contenu mais aucune ressource n’est rendue."
+          ],
+          "unverified_dimensions": [
+            "Contenu, pertinence et accessibilité de l’article source : non vérifiables ; il n’est ni embarqué ni lié dans le cours."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-RESOURCE-UNAVAILABLE-dc_2_act_05_visual_content",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_visual_content",
+              "content_type": "content",
+              "severity": "P2",
+              "category": "ressource_et_transition",
+              "description": "Le texte enjoint de lire « l’article », mais l’écran ne contient ni URL, ni bloc de ressource, ni contenu substitutif. La donnée signale explicitement optionalMediaUnavailable=true ; le lecteur rend le texte mais n’utilise pas cet indicateur. La ressource d’origine n’est pas déclarée absente : elle est non disponible dans ce cours, sans explication utile à l’apprenant.",
+              "current_content": "Poursuivez ce que vous avez appris dans la vidéo en lisant cet article pour découvrir les fonctionnalités spécifiques à Claude et les bonnes pratiques qui amélioreront vos interactions.",
+              "proposed_content": "Version réutilisable sans inventer le contenu de l’article : « Cette ressource complémentaire n’est pas disponible dans cette version du cours. Les activités suivantes se réalisent directement dans la plateforme. » Si la lecture doit rester requise, joindre une ressource locale/URL gérée et employer un bloc resource_review avec une consigne de consultation.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[4].blocks[0] : seul bloc content, body.fr demande de lire un article et optionalMediaUnavailable=true ; aucun champ URL ni bloc resource_review/download. client/src/pages/training/LessonViewer.tsx:498-550 rend seulement body pour un bloc content.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P2 — Choisir explicitement entre fournir la ressource accessible et marquer la lecture comme indisponible/non requise avec une transition autonome vers l’activité suivante ; ne pas verrouiller une ressource qui n’est pas fournie."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Capacités agentiques de Claude Code",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_2_act_06_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Exécutez claude pour démarrer Claude Code.\n\nDemandez à Claude : \"What tools and actions do you have available in this project?\"\n\nTapez /exit pour fermer Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[5].blocks[0] (type=code_repl, id=dc_2_act_06_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Planifiez une modification du code avant d'écrire du code.",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_2_act_07_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Lancez Claude Code avec `claude`.\n\nPassez en mode Plan en saisissant `/plan` ou en appuyant sur `Maj+Tab` jusqu’à voir « Plan Mode ».\n\nDemandez à Claude de planifier l’ajout d’une gestion d’erreurs à `load_data.py` pour les fichiers CSV absents ou mal formés.\n\nExaminez le plan produit par Claude, puis saisissez `/exit` pour quitter Claude Code.\n\nRemarque : Claude peut vous poser des questions pour mettre le plan en œuvre. Vos choix n’ont pas d’incidence sur l’évaluation de l’exercice.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[6].blocks[0] (type=code_repl, id=dc_2_act_07_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Vidéo : Le workflow explore → plan → code → commit",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Le workflow explore → plan → code → commit",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Suivez le flux de travail Explore → Plan → Code → Commit.",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_3_act_03_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch03_act03",
+              "content_id": "dc_3_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code avec claude.\n\nDemandez à Claude quelles fonctions d'analyse mensuelle existent actuellement dans analyze.py et ce qu'elles renvoient.\n\nEntrez en mode Plan avec /plan (ou Shift+Tab) et demandez à Claude de planifier une fonction warmest_and_coldest_months() pour analyze.py.\n\nUne fois que vous approuvez le plan et que Claude l'implémente, demandez à Claude de commit les modifications.\n\nQuand vous avez fini, tapez /exit pour quitter Claude Code.\n\nRemarque : Claude peut vous poser des questions pour mettre en œuvre le plan. Vos choix n'affectent pas la notation de l'exercice.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[2].blocks[0] (type=code_repl, id=dc_3_act_03_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Vidéo : Gestion du contexte",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Context management",
+          "score_100": 93,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Vérifiez et compactez votre fenêtre de contexte",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_3_act_06_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code avec claude.\n\nDemandez à Claude d'expliquer en détail chaque fonction du fichier analyze.py (cela ajoute du contenu à la fenêtre de contexte).\n\nExécutez /context pour voir une répartition de ce qui utilise actuellement l'espace de contexte.\n\nExécutez /compact pour résumer la session et récupérer cet espace.\n\nLorsque vous avez terminé, tapez /exit pour quitter Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[5].blocks[0] (type=code_repl, id=dc_3_act_06_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Video: Code review",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage.",
+            "Alternative : vérifiée comme limitée — transcript est une chaîne vide ; les sous-titres français sont néanmoins référencés."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Code review",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Revue de code par sous-agent avant de partager",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_3_act_09_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code avec claude.\n\nDemandez à Claude d'utiliser un sous-agent pour examiner @analyze.py à la recherche de bugs et de problèmes de qualité du code avant de le partager avec l'équipe.\n\nQuand vous avez terminé, tapez /exit pour quitter Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[8].blocks[0] (type=code_repl, id=dc_3_act_09_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch04_act01",
+          "title": "Vidéo : le fichier CLAUDE.md",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch04_act02",
+          "title": "The CLAUDE.md file",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch04_act03",
+          "title": "Donnez à Claude une mémoire de projet persistante",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_4_act_03_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch04_act03",
+              "content_id": "dc_4_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code avec claude.\n\nExécutez /init pour générer un fichier CLAUDE.md à partir du projet en cours.\n\nDemandez à Claude d'ajouter la version de Python (3.11) et la commande pour exécuter les tests (pytest) dans le CLAUDE.md.\n\nUne fois terminé, tapez /exit pour quitter Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[2].blocks[0] (type=code_repl, id=dc_4_act_03_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch04_act04",
+          "title": "Video: Subagents",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch04_act05",
+          "title": "Subagents",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch04_act06",
+          "title": "Déléguer l'exploration à un sous-agent",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_4_act_06_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch04_act06",
+              "content_id": "dc_4_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code avec claude.\n\nExécutez /agents pour voir les subagents intégrés disponibles, et repérez le subagent explore près du bas de la console.\n\nAppuyez sur Esc pour revenir en arrière, puis demandez à Claude d'utiliser le subagent explore pour trouver toute la logique de validation des données dans le projet et en fournir un résumé.\n\nUne fois terminé, tapez /exit pour quitter Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[5].blocks[0] (type=code_repl, id=dc_4_act_06_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch04_act07",
+          "title": "Video: Skills",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch04_act08",
+          "title": "Skills",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch04_act09",
+          "title": "Utilisez une Skill pour générer un rapport de station",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_4_act_09_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch04_act09",
+              "content_id": "dc_4_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code avec claude.\n\nExécutez /skills pour voir les skills disponibles dans ce projet.\n\nDemandez à Claude d'utiliser la skill summarize-station sur la Pacific Coast Station.\n\nLorsque vous avez terminé, tapez /exit pour quitter Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[8].blocks[0] (type=code_repl, id=dc_4_act_09_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch04_act10",
+          "title": "Video: MCP",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch04_act11",
+          "title": "MCP",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch04_act12",
+          "title": "Connectez Claude à votre base de données Records",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_4_act_12_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch04_act12",
+              "content_id": "dc_4_act_12_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Démarrez Claude Code avec claude.\n\nExécutez /mcp pour voir les serveurs connectés et vérifier que le serveur de base de données est actif.\n\nDemandez à Claude de lister toutes les tables de la base de données connectée.\n\nLorsque vous avez terminé, tapez /exit pour quitter Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[11].blocks[0] (type=code_repl, id=dc_4_act_12_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch04_act13",
+          "title": "Video: Hooks",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Objectif/progression : vérifiés — la description de leçon affichée relie chaque vidéo à la compétence travaillée et la séquence alterne apport puis réinvestissement.",
+            "Média accessible dans les données : vérifié — MP4 et sous-titre français sont référencés ; le lecteur rend les pistes de sous-titres.",
+            "Synthèse textuelle : vérifiée pour les vidéos dont transcript est renseigné — le lecteur propose la transcription repliable.",
+            "Verrouillage : vérifié — le passage demande le visionnage ou l’action explicite « marquer comme vue », avec un message de condition de passage."
+          ],
+          "unverified_dimensions": [
+            "Qualité visuelle, synchronisation réelle des sous-titres et exactitude factuelle de la vidéo : non vérifiables sans lecture audiovisuelle."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 13,
+          "chapter_id": "dc_ch04_act14",
+          "title": "Hooks",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Énoncé et action attendue : vérifiés — question, options et nombre de réponses attendu sont rendus.",
+            "Prérequis et transition : vérifiés — chaque QCM suit directement l’apport vidéo correspondant.",
+            "Feedback : vérifié — indice avant soumission, correction visuelle, explication après réponse et possibilité de réessayer sont rendus.",
+            "Verrouillage : vérifié — la complétion est enregistrée seulement si la sélection est correcte et le passage reste conditionné par cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Effet réel des distracteurs sur un public débutant : non vérifiable sans test utilisateur."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 14,
+          "chapter_id": "dc_ch04_act15",
+          "title": "Appliquer le formatage à chaque modification de fichier",
+          "score_100": 30,
+          "verified_dimensions": [
+            "Objectif et action attendue : vérifiés — la description de chapitre affichée et les instructions numérotées indiquent une tâche Claude Code identifiable.",
+            "Aide : vérifiée — un indice opérationnel est présent dans chaque bloc.",
+            "Cohérence de séquence : vérifiée au niveau déclaratif — chaque pratique suit un écran de vidéo ou de ressource portant sur le même sujet.",
+            "Rendu : vérifié — LessonViewer délègue bien ces blocs à CodeReplBlock.",
+            "Évaluation et verrouillage : vérifiés comme défaillants — voir l’issue P0 associée."
+          ],
+          "unverified_dimensions": [
+            "Comportement de la session Claude Code réelle et exactitude fonctionnelle des scénarios : non vérifiables, car le composant rendu ne les exécute pas."
+          ],
+          "issues": [
+            {
+              "issue_id": "028-CODE-UNEXECUTABLE-dc_4_act_15_code",
+              "course_id": "claude_code_101__01",
+              "chapter_id": "dc_ch04_act15",
+              "content_id": "dc_4_act_15_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "exécution_et_verrouillage",
+              "description": "L’activité demande une session Claude Code réelle, mais le composant affiché est un champ texte sans exécution. Il valide uniquement une égalité textuelle stricte avec un script solution exposable et ne fait pas de cette activité une condition de passage. L’apprenant ne peut donc ni effectuer ni faire reconnaître la pratique demandée dans l’interface.",
+              "current_content": "Lancez Claude Code avec claude.\n\nDemandez à Claude d'ajouter un post-tool-use hook dans settings.json qui exécute black sur tout fichier Python après modification.\n\nLorsque vous avez terminé, tapez /exit pour quitter Claude Code.",
+              "proposed_content": "Remplacer ce bloc par un terminal réellement exécutable et instrumenté pour la session fournie, qui valide les actions observables attendues (commande Claude Code, invite et, lorsque requis, changement de mode/commande). À défaut d’environnement exécutable, proposer une simulation guidée qui montre les états nécessaires, vérifie chaque choix et conditionne la progression à la réussite. Ne pas présenter un éditeur Python comme si les commandes étaient exécutées.",
+              "evidence": "client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[14].blocks[0] (type=code_repl, id=dc_4_act_15_code, instructions/starterCode/solutionCode) ; client/src/components/blocks/CodeReplBlock.tsx:28-43 compare le texte soumis à solutionCode par égalité stricte sans exécution ; client/src/pages/training/LessonViewer.tsx:1537-1624 et client/src/pages/training/chapterProgress.ts:94-103 ne comprennent pas code_repl parmi les types verrouillants.",
+              "confidence": "high",
+              "verification_status": "verified_json_and_renderer",
+              "recommended_action": "P0 — Corriger le modèle d’activité et le verrouillage avant toute réutilisation : faire exécuter/valider les interactions ou convertir explicitement l’écran en démonstration non évaluée. Conserver les consignes actuelles comme scénario de pratique après validation de l’environnement."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": "1 cours, 4 leçons, 37 chapitres et 37 activités/écrans audités. Les 12 vidéos, 12 activités pratiques CodeRepl, 10 QCM à choix multiples, 1 remise en ordre et 2 écrans de ressource ont été lus dans le JSON et rapprochés du registre des blocs, de LessonViewer, de CodeReplBlock, MultiChoiceBlock, OrderingBlock et chapterProgress.",
+    "score_interpreted": "Les écrans vidéo, QCM et remise en ordre sont globalement cohérents : descriptions rendues, séquençage vidéo→réinvestissement, consignes, indices et feedback sont présents. Les 12 pratiques affichées en CodeRepl abaissent fortement la qualité de la formation : l’interface ne lance pas Claude Code et ne verrouille pas la progression sur leur réussite.",
+    "confirmed_issues": {
+      "P0": 12,
+      "P1": 0,
+      "P2": 2,
+      "P3": 1,
+      "total": 15
+    },
+    "pre_audit_resolution": "Les 24 signaux statiques ont été réexaminés. Les 23 signaux de progression liés au seul manque de texte dans le même écran ne sont pas confirmés comme défauts : LessonViewer rend la description de chapitre, et les activités ont des consignes/hints ou suivent un apport directement lié. Le signal média sur « Video: Code review » n’est pas retenu comme défaut confirmé : le transcript est vide mais les sous-titres français sont référencés et la description/quiz assurent le contexte ; la qualité audiovisuelle reste non vérifiée. Les 15 constats retenus résultent de preuves JSON et de comportement de rendu/validation.",
+    "priorities": "Priorité absolue : remplacer ou rendre réellement exécutable et verrouillant chacun des 12 CodeRepl. Ensuite, résoudre les deux injonctions de lecture vers une ressource non disponible, puis supprimer/relier la mention d’article dans le premier QCM."
+  },
+  "limits": [
+    "Audit qualitatif fondé sur le JSON de cours, le registre de blocs et le code de rendu/progression ; aucune modification de contenu, de code ou de base n’a été réalisée.",
+    "Les vidéos et les ressources externes n’ont pas été visionnées/consultées : la pertinence visuelle, la synchronisation des sous-titres, l’accessibilité réelle et la qualité factuelle audiovisuelle restent non vérifiables.",
+    "Les chemins MP4/VTT sont déclarés et le manifest d’import indique les téléchargements référencés comme existants, mais leur lecture HTTP réelle dans un navigateur authentifié n’a pas été exécutée.",
+    "Les articles évoqués par trois écrans ne sont ni liés ni embarqués dans le cours ; ils sont documentés comme indisponibles/non vérifiables dans cette version, jamais supposés absents de leur source d’origine.",
+    "L’analyse des verrouillages repose sur les chemins statiques de LessonViewer/chapterProgress ; elle ne remplace pas un test E2E avec un compte apprenant et persistance de progression."
+  ]
+}

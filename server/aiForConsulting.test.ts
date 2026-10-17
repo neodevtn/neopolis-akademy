@@ -9,9 +9,9 @@ describe("cours DataCamp L’IA pour le conseil", () => {
   it("préserve les compteurs canoniques et son rattachement au catalogue", () => {
     const certification = catalog.certifications.find((entry: any) => entry.id === "datacamp_ai_for_consulting");
     const courseIndex = catalog.courses.find((entry: any) => entry.id === "ai_for_consulting__01");
-    expect(certification).toMatchObject({ totalLessons: 3, totalActivities: 29, totalVideos: 11, totalExercises: 18, totalDownloads: 3, group: "workplace_ai_productivity" });
-    expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 29, videoCount: 11, exerciseCount: 18 });
-    expect(activities).toHaveLength(29);
+    expect(certification).toMatchObject({ totalLessons: 3, totalActivities: 17, totalVideos: 11, totalExercises: 6, totalDownloads: 3, group: "workplace_ai_productivity" });
+    expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 17, videoCount: 11, exerciseCount: 6 });
+    expect(activities).toHaveLength(17);
     expect(activities.some((activity: any) => activity.id === "dc_ch03_act09")).toBe(false);
   });
 
@@ -19,7 +19,7 @@ describe("cours DataCamp L’IA pour le conseil", () => {
     const projectorVideos = blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length);
     expect(projectorVideos).toHaveLength(11);
     expect(projectorVideos.every((block: any) => (block.audioUrl || block.mp4Url) && block.slidesPdf && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
-    expect(blocks.filter((block: any) => block.type === "cloud_exercise")).toHaveLength(16);
+    expect(blocks.filter((block: any) => block.type === "cloud_exercise")).toHaveLength(4);
     expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(0);
     expect(blocks.filter((block: any) => block.type === "single_choice_exercise")).toHaveLength(2);
     expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);

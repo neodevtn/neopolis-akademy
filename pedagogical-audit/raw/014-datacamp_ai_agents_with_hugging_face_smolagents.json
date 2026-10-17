@@ -1,0 +1,1107 @@
+{
+  "formation_id": "datacamp_ai_agents_with_hugging_face_smolagents",
+  "courses": [
+    {
+      "course_id": "ai_agents_with_hugging_face_smolagents__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": {
+            "en": "Introduction à Hugging Face smolagents",
+            "fr": "Introduction à Hugging Face smolagents"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 14 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-01-01",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_1_act_01_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[0].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            },
+            {
+              "issue_id": "PED-014-MEDIA-FR-ACCESS-01",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "Pour le parcours français, la transcription intégrée et les scripts Projector sont en anglais ; le sous-titre français existe mais le lecteur Projector ne l’applique pas comme piste de sous-titres, il ne propose qu’un lien externe.",
+              "current_content": "transcript/transcriptSegments en anglais ; subtitleUrlFr présent ; ProjectorPlayer utilise un élément <audio> caché sans <track> et affiche seulement le contenu des slides.",
+              "proposed_content": "Afficher dans le lecteur une alternative textuelle française ou des sous-titres synchronisés sélectionnables ; à défaut, libeller explicitement le lien de fichier VTT et proposer une transcription française lisible dans la page.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] (script et transcript en anglais, subtitleUrlFr déclaré) ; client/src/components/ProjectorPlayer.tsx lignes 159-175 et client/src/pages/training/LessonViewer.tsx lignes 597-620.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Rendre la version FR utilisable sans téléchargement/lecture brute d’un VTT et vérifier le rendu avec la langue de l’interface réglée sur français."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": {
+            "en": "Laissez l’agent faire les calculs : analyse de dépenses",
+            "fr": "Laissez l’agent faire les calculs : analyse de dépenses"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-01-02",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Exécutez le code fourni pour voir comment smolagents analyse vos données de dépenses. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": {
+            "en": "Attendez, vous n’avez écrit aucune fonction ?",
+            "fr": "Attendez, vous n’avez écrit aucune fonction ?"
+          },
+          "score_100": 88,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé contextualisé, options, réponse(s) correcte(s), indice et explication sont présents ; le composant affiche résultat, explication et nouvelle tentative."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur et accessibilité assistive non exécutés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": {
+            "en": "Creating an agent with tools",
+            "fr": "Créer un agent avec des outils"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 9 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-01-04",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_1_act_04_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[3].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": {
+            "en": "Écrire du code à partir de prompts : intérêts composés",
+            "fr": "Écrire du code à partir de prompts : intérêts composés"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-01-05",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Importez la classe CodeAgent depuis la bibliothèque smolagents. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": {
+            "en": "Let agents search the web",
+            "fr": "Laisser les agents chercher sur le Web"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-01-06",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Importez VisitWebpageTool depuis la bibliothèque smolagents. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": {
+            "en": "Create an agent with custom tools",
+            "fr": "Créer un agent avec des outils personnalisés"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 10 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-01-07",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_1_act_07_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[6].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": {
+            "en": "Ajoutez simplement @tool : créer un outil personnalisé",
+            "fr": "Ajoutez simplement @tool : créer un outil personnalisé"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-01-08",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act08",
+              "content_id": "dc_1_act_08_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Importez le décorateur tool depuis la bibliothèque smolagents. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[7].blocks[id=dc_1_act_08_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": {
+            "en": "L’addition, s’il vous plaît ! Donner aux agents l’accès aux données",
+            "fr": "L’addition, s’il vous plaît ! Donner aux agents l’accès aux données"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-01-09",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Utilisez table_id comme paramètre de fonction pour que l’agent sache de quelle table récupérer les commandes. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[8].blocks[id=dc_1_act_09_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch01_act10",
+          "title": {
+            "en": "Une invite, plusieurs outils",
+            "fr": "Une invite, plusieurs outils"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-01-10",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch01_act10",
+              "content_id": "dc_1_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Créez un agent de codage en utilisant vos outils lookup_orders et generate_order_id définis précédemment. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[0].chapters[9].blocks[id=dc_1_act_10_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": {
+            "en": "Rappel sur le RAG",
+            "fr": "Rappel sur le RAG"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 10 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-02-01",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_2_act_01_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[1].chapters[0].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": {
+            "en": "RAG dans l’ordre : des manuels aux réponses",
+            "fr": "RAG dans l’ordre : des manuels aux réponses"
+          },
+          "score_100": 90,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Consigne, cinq éléments, ordre attendu, indice et feedback de réussite présents ; le composant permet glisser-déposer et boutons de déplacement."
+          ],
+          "unverified_dimensions": [
+            "Manipulation tactile et rendu navigateur non exécutés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": {
+            "en": "Alors, que se passe-t-il vraiment dans RAG ?",
+            "fr": "Alors, que se passe-t-il vraiment dans RAG ?"
+          },
+          "score_100": 88,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé contextualisé, options, réponse(s) correcte(s), indice et explication sont présents ; le composant affiche résultat, explication et nouvelle tentative."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur et accessibilité assistive non exécutés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": {
+            "en": "L’étape qui ajoute du sens",
+            "fr": "L’étape qui ajoute du sens"
+          },
+          "score_100": 86,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé contextualisé, options, réponse(s) correcte(s), indice et explication sont présents ; le composant affiche résultat, explication et nouvelle tentative."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur et accessibilité assistive non exécutés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": {
+            "en": "Introduction à l’Agentic RAG",
+            "fr": "Introduction à l’Agentic RAG"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 8 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-02-05",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_2_act_05_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[1].chapters[4].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": {
+            "en": "Designed with state: create a RAG retrieval tool",
+            "fr": "Conçu avec état : créer un outil de recherche RAG"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-02-06",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Acceptez un paramètre vector_store dans la méthode __init__(). » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": {
+            "en": "Connecter l’outil, activer l’Agentic RAG",
+            "fr": "Connecter l’outil, activer l’Agentic RAG"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-02-07",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Instanciez ApplianceSearchTool en lui passant vector_store. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_07_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": {
+            "en": "Travailler avec des agents multi-étapes",
+            "fr": "Travailler avec des agents multi-étapes"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 12 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-02-08",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_2_act_08_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[1].chapters[7].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": {
+            "en": "Suivre les étapes de l’agent, surveiller l’action",
+            "fr": "Suivre les étapes de l’agent, surveiller l’action"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-02-09",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch02_act09",
+              "content_id": "dc_2_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Complétez la signature de la fonction en ajoutant le paramètre agent_step. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[1].chapters[8].blocks[id=dc_2_act_09_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": {
+            "en": "À vous de jouer : exécuter l’agent complet",
+            "fr": "À vous de jouer : exécuter l’agent complet"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-02-10",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch02_act10",
+              "content_id": "dc_2_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Importez la classe ActionStep pour pouvoir enregistrer le callback d’action. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_10_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": {
+            "en": "Introduction aux systèmes multi-agents",
+            "fr": "Introduction aux systèmes multi-agents"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 8 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-03-01",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_3_act_01_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[0].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": {
+            "en": "Diviser pour régner : créer des agents spécialistes",
+            "fr": "Diviser pour régner : créer des agents spécialistes"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-03-02",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act02",
+              "content_id": "dc_3_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Dans le premier agent, définissez le paramètre tools pour inclure WebSearchTool. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": {
+            "en": "Faites connaissance avec l’équipe : coordination d’agents",
+            "fr": "Faites connaissance avec l’équipe : coordination d’agents"
+          },
+          "score_100": 86,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé contextualisé, options, réponse(s) correcte(s), indice et explication sont présents ; le composant affiche résultat, explication et nouvelle tentative."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur et accessibilité assistive non exécutés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": {
+            "en": "Gérer la mémoire des agents",
+            "fr": "Gérer la mémoire des agents"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 10 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-03-04",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_3_act_04_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[3].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": {
+            "en": "À ne pas oublier : conserver la mémoire entre les appels",
+            "fr": "À ne pas oublier : conserver la mémoire entre les appels"
+          },
+          "score_100": 55,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Consigne, code de départ, indice et correction sont présents et rendus dans un éditeur de code."
+          ],
+          "unverified_dimensions": [
+            "Exécution d’un runtime Python/smolagents réel non disponible : le composant local contrôle une chaîne de caractères et non l’exécution du programme."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CODE-REPL-GATE-01",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est marqué requiredBeforeAdvance=true, mais code_repl n’est inclus dans aucune condition de verrouillage de navigation : l’apprenant peut passer au chapitre suivant sans tenter ni réussir le code.",
+              "current_content": "Chapitre requiredBeforeAdvance=true ; bloc code_repl dc_3_act_05_code.",
+              "proposed_content": "Ajouter code_repl aux interactions requises par les contrôles de navigation (y compris navigation clavier et bouton final) et utiliser la même clé de complétion que CodeReplBlock.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[4] ; client/src/pages/training/chapterProgress.ts lignes 94-103 ne traite pas code_repl ; client/src/pages/training/LessonViewer.tsx lignes 1181-1183 enregistre pourtant une complétion.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Rendre cohérents requiredBeforeAdvance et les règles de passage pour cet exercice de code."
+            },
+            {
+              "issue_id": "PED-014-CODE-REPL-FEEDBACK-01",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "La vérification ne teste pas le comportement Python : elle exige l’égalité textuelle complète avec la correction. Une solution Python équivalente est rejetée avec un message générique, ce qui n’aide pas à corriger l’erreur conceptuelle.",
+              "current_content": "Consigne : utiliser reset=False ; solutionCode fourni ; retour actuel : « Votre code ne correspond pas encore à la solution attendue. »",
+              "proposed_content": "Valider la présence et la valeur attendue du paramètre reset via un test ciblé/AST ou exécution contrôlée, puis indiquer précisément l’élément manquant ou incorrect.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[4].blocks[id=dc_3_act_05_code] ; shared/codeReplValidation.ts lignes 1-13 compare le texte normalisé à l’identique ; client/src/components/blocks/CodeReplBlock.tsx lignes 28-40 affiche le retour générique.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Remplacer la comparaison canonique intégrale par une validation sémantique et un feedback diagnostic."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": {
+            "en": "Tracer l’exécution du code de l’agent",
+            "fr": "Tracer l’exécution du code de l’agent"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-03-06",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Appelez la méthode .return_full_code() sur la mémoire de l’agent pour récupérer tout le code exécuté. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[5].blocks[id=dc_3_act_06_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": {
+            "en": "Validating the agent's final response",
+            "fr": "Validation de la réponse finale de l’agent"
+          },
+          "score_100": 72,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 9 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-03-07",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_3_act_07_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[6].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": {
+            "en": "More details, Agent: enforcing a minimum response length",
+            "fr": "Plus de détails, Agent : imposer une longueur minimale de réponse"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-03-08",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act08",
+              "content_id": "dc_3_act_08_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Vérifiez si final_answer fait moins de 200 caractères. Si c’est le cas, levez une exception avec un message d’erreur clair et utile. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[7].blocks[id=dc_3_act_08_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act09",
+          "title": {
+            "en": "Des agents plus futés : valider et réessayer",
+            "fr": "Des agents plus futés : valider et réessayer"
+          },
+          "score_100": 45,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Énoncé, objectif, étapes, indice, ressources et correction sont présents et rendus par CloudExerciseBlock.",
+            "Transition avec la vidéo/activité antérieure et ordre des prérequis vérifiés dans la séquence."
+          ],
+          "unverified_dimensions": [
+            "Exécution réelle dans un environnement autonome avec les variables/outils préinitialisés mentionnés (model, agent, données ou outils métier) non accessible dans ce périmètre."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-CLOUD-VALIDATION-03-09",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le TP demande de compléter/exécuter du code, mais l’interface rend une zone de réponse libre et valide n’importe quel caractère. Sans rubrique, test ou évaluation serveur, cette validation débloque la correction et la progression sans preuve que l’action demandée a été réalisée.",
+              "current_content": "Consignes : « Ajoutez check_answer_length à la liste final_answer_checks lors de la création de l’agent. » ; minimumAnswerLength absent, rubricCriteria absent, serverGradedAssessment absent ; correction fournie après validation.",
+              "proposed_content": "Fournir un éditeur/exécuteur préconfiguré avec les variables annoncées et des tests, ou exiger une remise vérifiable (code complet et sortie/preuve) évaluée par une grille explicite. Ne débloquer la progression qu’après cette vérification.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[8].blocks[id=dc_3_act_09_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 153-161 valide localement dès que la longueur minimale est atteinte et révèle la correction ; shared/assessmentSubmissionGuidance.ts lignes 134-139 et client/src/components/blocks/cloudExerciseValidation.ts lignes 1-8 ramènent l’absence de minimumAnswerLength à 1 caractère.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Aligner l’interface, la preuve attendue et le verrouillage : un simple caractère ne doit ni valider le TP ni révéler sa correction."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch03_act10",
+          "title": {
+            "en": "Félicitations !",
+            "fr": "Félicitations !"
+          },
+          "score_100": 75,
+          "verified_dimensions": [
+            "Titre, description de leçon, ordre intra-leçon et prérequis immédiats vérifiés dans le JSON.",
+            "Rendu du ou des types de blocs et règles de passage vérifiés dans LessonViewer/chapterProgress.",
+            "Ressource Projector contextualisée par 4 slides et une transcription déclarée ; sous-titres FR/EN déclarés.",
+            "Le lecteur rend les slides, les contrôles, le lien de sous-titres et une transcription dépliable."
+          ],
+          "unverified_dimensions": [
+            "Lecture effective du MP4/audio, synchronisation réelle slides-audio, lisibilité visuelle des images et qualité factuelle du média non testées dans un navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-014-VIDEO-GATE-03-10",
+              "course_id": "ai_agents_with_hugging_face_smolagents__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo est déclarée obligatoire, mais son identifiant ne produit aucune clé de verrouillage : un apprenant peut passer à l’écran suivant sans lecture ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; bloc vidéo id='dc_3_act_10_video' (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Conserver le caractère obligatoire et dériver la clé de progression des médias MP4/HLS depuis block.id (même clé que le lecteur), puis couvrir ce cas par un test de parcours.",
+              "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json → lessons[2].chapters[9].requiredBeforeAdvance et blocks[type=video].id ; client/src/pages/training/LessonViewer.tsx lignes 1557-1568 ne retient block.id que si sa longueur est comprise entre 8 et 15, alors que le lecteur utilise block.id comme mp4Key (lignes 554-581).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_logic",
+              "recommended_action": "Corriger le dérivage de clé pour les médias gérés et vérifier que « Suivant » reste désactivé jusqu’à la lecture ou au marquage explicite."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "Audit pédagogique qualitatif de la seule formation demandée ; 1 cours, 3 leçons, 30 chapitres et 30 activités source examinés.",
+    "coverage": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 3,
+      "chapters_reviewed": 30,
+      "activities_reviewed": 30,
+      "activity_types": {
+        "video": 10,
+        "cloud_exercise": 14,
+        "single_choice_exercise": 3,
+        "multi_choice_exercise": 1,
+        "ordering": 1,
+        "code_repl": 1
+      },
+      "media_reviewed": {
+        "projector_videos": 10,
+        "declared_video_transcripts": 10,
+        "declared_fr_subtitle_files": 10,
+        "download_blocks": 3
+      }
+    },
+    "confirmed_issues": 27,
+    "priority_counts": {
+      "P0": 0,
+      "P1": 25,
+      "P2": 2,
+      "P3": 0
+    },
+    "key_findings": [
+      "Les 20 signaux statiques de progression ont été revus : ils ne sont pas retenus tels quels. Les consignes et les prérequis sont dans l’ensemble présents et l’ordre conceptuel est progressif.",
+      "Les 14 TP ont des énoncés, étapes, indices et corrections explicites, mais leur mécanisme de remise ne vérifie pas la réalisation : une saisie d’un caractère révèle la correction et débloque le parcours.",
+      "Les 10 vidéos obligatoires ne sont pas effectivement verrouillantes pour ce cours, car les IDs de médias gérés ne sont pas convertis en clés de progression par LessonViewer.",
+      "Le seul code_repl est à la fois contournable dans la navigation et validé par comparaison textuelle exacte, non par le comportement du code.",
+      "Les vidéos disposent de slides, transcription et sous-titres déclarés ; la qualité de lecture et la fidélité audiovisuelle n’ont pas été testées. Le parcours FR conserve toutefois une transcription intégrée en anglais et n’embarque pas les sous-titres FR dans le lecteur Projector."
+    ],
+    "score_interpretation": "Scores sur 100 établis uniquement à partir des dimensions contrôlables dans les données et le rendu applicatif ; ils ne notent ni la lecture effective des médias ni l’exécution dans un environnement externe."
+  },
+  "limits": [
+    "Aucune modification du contenu, de la base ou du code n’a été effectuée.",
+    "Les JSON du cours cible, blockRegistry.ts, LessonViewer, chapterProgress, ProjectorPlayer et les composants d’activité ont été inspectés ; les 30 chapitres et les 30 activités source ont été couverts.",
+    "Les médias sont déclarés dans les données, avec sous-titres et/ou transcription ; l’audit ne les traite pas comme absents. La lecture réseau effective, l’audibilité, la synchronisation et la pertinence factuelle des vidéos n’ont pas été testées dans un navigateur.",
+    "Aucun environnement d’exécution smolagents préconfiguré ni données/outils de TP (par ex. model, agent, vector_store, CSV métier) n’a été fourni à l’audit ; la reproductibilité réelle hors plateforme est donc non vérifiée.",
+    "L’accessibilité réelle au clavier, lecteur d’écran et mobile n’a pas fait l’objet d’un test manuel de navigateur ; seules les implémentations des composants ont été vérifiées.",
+    "Aucune source externe n’a été utilisée ni citée."
+  ]
+}

@@ -1,0 +1,1802 @@
+{
+  "formation_id": "datacamp_introduction_to_embeddings_with_the_openai_api",
+  "courses": [
+    {
+      "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Le monde merveilleux des embeddings !",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 1/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours.",
+            "Ressource : la carte download est rendue avec l’URL référencée ; elle ne conditionne pas la progression."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act01:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. The wonderful world of embeddings! » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act01:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_1_act_01_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[0].requiredBeforeAdvance=true, bloc vidéo id=dc_1_act_01_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act01:download-localization",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_ch01_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation_accessibilite",
+              "description": "Dans l’interface française, la carte de téléchargement affiche son titre et sa description en anglais. La ressource reste utilisable, mais l’expérience linguistique est incohérente.",
+              "current_content": "title.fr=« Chapter 1 slides » ; description.fr=« Official course slides provided for this course. ».",
+              "proposed_content": "Renseigner un titre français (« Diapositives du chapitre N ») et une description française (« Diapositives officielles fournies pour ce cours. »), sans changer l’URL ni le fichier.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[0].blocks[id=dc_ch01_slides].title.fr et description.fr. client/src/pages/training/LessonViewer.tsx:1007-1011 sélectionne ces valeurs pour lang=fr.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les trois cartes de téléchargement et contrôler les deux langues dans LessonViewer."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Qu’est-ce qu’un embedding ?",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 2/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : question, options, cardinal de réponses et réponses correctes sont renseignés ; MultiChoiceBlock rend l’action de sélection, le contrôle de cardinal et Vérifier.",
+            "Feedback : l’indice est disponible avant soumission ; correction, explication et Réessayer sont rendus ensuite.",
+            "Verrouillage : le QCM obligatoire est suivi dans completedExercises et bloque le passage jusqu’à la réponse correcte."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Applications des embeddings",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 3/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne, catégories, cartes et destinations attendues sont renseignées ; MatchingExercise rend la sélection/clic ou le glisser-déposer et Soumettre.",
+            "Feedback : le rendu signale les placements corrects/incorrects, le score et Réessayer ; le bloc fournit un indice et un feedback de réussite contextualisé.",
+            "Verrouillage : le tri est enregistré dans matchingCompleted et bloque la navigation tant qu’il n’est pas réussi."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Créer des embeddings",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 4/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act04:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act04:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_1_act_04_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[3].requiredBeforeAdvance=true, bloc type=code_repl id=dc_1_act_04_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Explorer la réponse des embeddings",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 5/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Explication : le texte situe les données disponibles, définit la manipulation à venir et crée une transition vers la séquence suivante.",
+            "Aucune activité interactive ou média obligatoire dans ce chapitre : aucun contrôle d’action attendue n’est applicable."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Explorer l’espace vectoriel",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 6/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act06:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Investigating the vector space » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act06:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_1_act_06_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[5].requiredBeforeAdvance=true, bloc vidéo id=dc_1_act_06_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Créer des embeddings pour des descriptions de produits",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 7/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act07:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_07_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act07:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_1_act_07_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[6].requiredBeforeAdvance=true, bloc type=code_repl id=dc_1_act_07_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Visualiser les descriptions intégrées",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 8/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Explication : le texte situe les données disponibles, définit la manipulation à venir et crée une transition vers la séquence suivante.",
+            "Aucune activité interactive ou média obligatoire dans ce chapitre : aucun contrôle d’action attendue n’est applicable."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Similarité de texte",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 9/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act09:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Text similarity » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[8].blocks[id=dc_1_act_09_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act09:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_1_act_09_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[8].requiredBeforeAdvance=true, bloc vidéo id=dc_1_act_09_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch01_act10",
+          "title": "Calculer des distances cosinus",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 10/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Rendu : SingleChoiceExercise affiche la question, les options, l’indice, Vérifier, les états correct/incorrect et Réessayer.",
+            "Verrouillage : le QCM obligatoire est suivi dans completedExercises et bloque le passage jusqu’à la réponse correcte."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act10:vectors-missing",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act10",
+              "content_id": "dc_1_act_10_qcm",
+              "content_type": "single_choice_exercise",
+              "severity": "P0",
+              "category": "énoncé_et_données_manquantes",
+              "description": "L’énoncé affirme que quatre vecteurs A, B, C et D sont fournis et demande de calculer leur distance cosinus, mais le bloc ne contient ni valeurs vectorielles, ni visuel, ni code/données. Le renderer ne rend que la question et trois choix. Le calcul demandé est donc impossible. explanation est en outre vide : l’erreur ne peut recevoir ni raisonnement ni correction pédagogique.",
+              "current_content": "« quatre vecteurs vous sont fournis : A, B, C et D » ; options B/C/D ; correctAnswer=c ; explanation.fr='' ; aucune donnée vectorielle ni visualAssetUrl.",
+              "proposed_content": "Restaurer les valeurs de A, B, C et D (ou un code/visuel les fournissant) et une explication du calcul. À défaut, transformer l’exercice en question conceptuelle autonome : les données actuelles ne suffisent pas à rédiger fidèlement un nouvel énoncé de calcul.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[9].blocks[id=dc_1_act_10_qcm] ne contient que question/options/correctAnswer/hint/explanation ; aucune valeur de vecteur ni visualAssetUrl. LessonViewer.tsx:977-1004 rend seulement SingleChoiceExercise ; SingleChoiceExercise.tsx:104-106 et 204-213 n’affiche que question/options puis explanation si non vide.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "P0 : rétablir les données nécessaires et l’explication de correction avant de conserver ce QCM obligatoire."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch01_act11",
+          "title": "Des embeddings plus réutilisables",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 11/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act11:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act11",
+              "content_id": "dc_1_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[10].blocks[id=dc_1_act_11_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act11:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act11",
+              "content_id": "dc_1_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_1_act_11_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[10].requiredBeforeAdvance=true, bloc type=code_repl id=dc_1_act_11_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch01_act12",
+          "title": "Trouver le produit le plus similaire",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 1/3 et chapitre 12/12 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act12:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act12",
+              "content_id": "dc_1_act_12_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[11].blocks[id=dc_1_act_12_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch01_act12:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act12",
+              "content_id": "dc_1_act_12_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_1_act_12_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[0].chapters[11].requiredBeforeAdvance=true, bloc type=code_repl id=dc_1_act_12_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Recherche sémantique et embeddings enrichis",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 1/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours.",
+            "Ressource : la carte download est rendue avec l’URL référencée ; elle ne conditionne pas la progression."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act01:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Semantic search and enriched embeddings » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[0].blocks[id=dc_2_act_01_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act01:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_2_act_01_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[0].requiredBeforeAdvance=true, bloc vidéo id=dc_2_act_01_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act01:download-localization",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_ch02_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation_accessibilite",
+              "description": "Dans l’interface française, la carte de téléchargement affiche son titre et sa description en anglais. La ressource reste utilisable, mais l’expérience linguistique est incohérente.",
+              "current_content": "title.fr=« Chapter 2 slides » ; description.fr=« Official course slides provided for this course. ».",
+              "proposed_content": "Renseigner un titre français (« Diapositives du chapitre N ») et une description française (« Diapositives officielles fournies pour ce cours. »), sans changer l’URL ni le fichier.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[0].blocks[id=dc_ch02_slides].title.fr et description.fr. client/src/pages/training/LessonViewer.tsx:1007-1011 sélectionne ces valeurs pour lang=fr.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les trois cartes de téléchargement et contrôler les deux langues dans LessonViewer."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Enrichir les embeddings",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 2/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act02:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act02:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_2_act_02_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[1].requiredBeforeAdvance=true, bloc type=code_repl id=dc_2_act_02_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Trier par similarité",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 3/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act03:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act03:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_2_act_03_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[2].requiredBeforeAdvance=true, bloc type=code_repl id=dc_2_act_03_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Recherche sémantique de produits",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 4/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act04:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[3].blocks[id=dc_2_act_04_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act04:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_2_act_04_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[3].requiredBeforeAdvance=true, bloc type=code_repl id=dc_2_act_04_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Systèmes de recommandation",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 5/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act05:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Recommendation systems » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[4].blocks[id=dc_2_act_05_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act05:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_2_act_05_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[4].requiredBeforeAdvance=true, bloc vidéo id=dc_2_act_05_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Système de recommandation de produits",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 6/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act06:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act06:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_2_act_06_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[5].requiredBeforeAdvance=true, bloc type=code_repl id=dc_2_act_06_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Ajouter l’historique utilisateur au moteur de recommandation",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 7/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act07:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_07_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act07:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_2_act_07_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[6].requiredBeforeAdvance=true, bloc type=code_repl id=dc_2_act_07_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Embeddings pour les tâches de classification",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 8/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act08:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Embeddings for classification tasks » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[7].blocks[id=dc_2_act_08_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act08:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_2_act_08_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[7].requiredBeforeAdvance=true, bloc vidéo id=dc_2_act_08_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Créer des embeddings pour des avis de restaurants",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 9/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act09:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act09",
+              "content_id": "dc_2_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[8].blocks[id=dc_2_act_09_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act09:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act09",
+              "content_id": "dc_2_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_2_act_09_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[8].requiredBeforeAdvance=true, bloc type=code_repl id=dc_2_act_09_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": "Classifier le sentiment d’un avis",
+          "score_100": 58,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 10/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : objectif, consignes, amorce de code, indice, guide d’environnement, ressource et correction sont présents ; CloudExerciseBlock rend l’objectif puis les consignes/prérequis dans des panneaux dépliables.",
+            "L’absence de tableau steps n’est pas retenue automatiquement : les consignes existantes sont déjà séquencées. Le défaut confirmé concerne la valeur pédagogique du verrou, détaillée ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act10:one-character-completion",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act10",
+              "content_id": "dc_2_act_10_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Ce TP obligatoire n’a ni minimumAnswerLength, ni grille d’évaluation, ni évaluation serveur, ni réflexion bloquante. Le seuil par défaut est donc un caractère non blanc : une réponse telle que « x » révèle la correction, appelle onComplete et déverrouille le chapitre sans établir que la tâche a été réalisée.",
+              "current_content": "minimumAnswerLength absent ; rubricCriteria absent ; serverGradedAssessment absent ; requirePostRevealReflection absent ; steps=[] ; successMessage vide.",
+              "proposed_content": "Définir un critère de réussite vérifiable adapté au TP : tests de code/exigences structurées ou grille affichée et évaluée avec seuil de passage. À défaut, exiger une production minimale justifiée et une auto-évaluation non triviale avant déverrouillage, ou retirer le verrou obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_10_tp] ne contient aucun des champs de validation précités. client/src/components/blocks/cloudExerciseValidation.ts:1-8 ramène une valeur absente à 1 et accepte answer.trim().length>=1 ; CloudExerciseBlock.tsx:153-161 appelle onComplete sans évaluation ; LessonViewer.tsx:1587-1592 déverrouille selon completedCloudExercises.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Configurer une validation avant maintien du verrou et ajouter un test garantissant qu’une réponse d’un caractère ne termine plus le TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Agréger des descriptions plus détaillées",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 2/3 et chapitre 11/11 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act11:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[10].blocks[id=dc_2_act_11_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch02_act11:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_2_act_11_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[1].chapters[10].requiredBeforeAdvance=true, bloc type=code_repl id=dc_2_act_11_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Bases de données vectorielles pour les systèmes d’embeddings",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 1/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours.",
+            "Ressource : la carte download est rendue avec l’URL référencée ; elle ne conditionne pas la progression."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act01:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Vector databases for embedding systems » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[0].blocks[id=dc_3_act_01_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act01:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_3_act_01_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[0].requiredBeforeAdvance=true, bloc vidéo id=dc_3_act_01_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act01:download-localization",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_ch03_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation_accessibilite",
+              "description": "Dans l’interface française, la carte de téléchargement affiche son titre et sa description en anglais. La ressource reste utilisable, mais l’expérience linguistique est incohérente.",
+              "current_content": "title.fr=« Chapter 3 slides » ; description.fr=« Official course slides provided for this course. ».",
+              "proposed_content": "Renseigner un titre français (« Diapositives du chapitre N ») et une description française (« Diapositives officielles fournies pour ce cours. »), sans changer l’URL ni le fichier.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[0].blocks[id=dc_ch03_slides].title.fr et description.fr. client/src/pages/training/LessonViewer.tsx:1007-1011 sélectionne ces valeurs pour lang=fr.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les trois cartes de téléchargement et contrôler les deux langues dans LessonViewer."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Métadonnées ou pas métadonnées ?",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 2/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne, catégories, cartes et destinations attendues sont renseignées ; MatchingExercise rend la sélection/clic ou le glisser-déposer et Soumettre.",
+            "Feedback : le rendu signale les placements corrects/incorrects, le score et Réessayer ; le bloc fournit un indice et un feedback de réussite contextualisé.",
+            "Verrouillage : le tri est enregistré dans matchingCompleted et bloque la navigation tant qu’il n’est pas réussi."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Choisir une solution de base de données vectorielle",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 3/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : question, options, cardinal de réponses et réponses correctes sont renseignés ; MultiChoiceBlock rend l’action de sélection, le contrôle de cardinal et Vérifier.",
+            "Feedback : l’indice est disponible avant soumission ; correction, explication et Réessayer sont rendus ensuite.",
+            "Verrouillage : le QCM obligatoire est suivi dans completedExercises et bloque le passage jusqu’à la réponse correcte."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Créer des bases de données vectorielles avec ChromaDB",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 4/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act04:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Creating vector databases with ChromaDB » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[3].blocks[id=dc_3_act_04_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act04:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_3_act_04_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[3].requiredBeforeAdvance=true, bloc vidéo id=dc_3_act_04_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Premiers pas avec ChromaDB",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 5/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act05:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[4].blocks[id=dc_3_act_05_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act05:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_3_act_05_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[4].requiredBeforeAdvance=true, bloc type=code_repl id=dc_3_act_05_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Estimer les coûts d’embedding avec tiktoken",
+          "score_100": 58,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 6/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : objectif, consignes, amorce de code, indice, guide d’environnement, ressource et correction sont présents ; CloudExerciseBlock rend l’objectif puis les consignes/prérequis dans des panneaux dépliables.",
+            "L’absence de tableau steps n’est pas retenue automatiquement : les consignes existantes sont déjà séquencées. Le défaut confirmé concerne la valeur pédagogique du verrou, détaillée ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act06:one-character-completion",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Ce TP obligatoire n’a ni minimumAnswerLength, ni grille d’évaluation, ni évaluation serveur, ni réflexion bloquante. Le seuil par défaut est donc un caractère non blanc : une réponse telle que « x » révèle la correction, appelle onComplete et déverrouille le chapitre sans établir que la tâche a été réalisée.",
+              "current_content": "minimumAnswerLength absent ; rubricCriteria absent ; serverGradedAssessment absent ; requirePostRevealReflection absent ; steps=[] ; successMessage vide.",
+              "proposed_content": "Définir un critère de réussite vérifiable adapté au TP : tests de code/exigences structurées ou grille affichée et évaluée avec seuil de passage. À défaut, exiger une production minimale justifiée et une auto-évaluation non triviale avant déverrouillage, ou retirer le verrou obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[5].blocks[id=dc_3_act_06_tp] ne contient aucun des champs de validation précités. client/src/components/blocks/cloudExerciseValidation.ts:1-8 ramène une valeur absente à 1 et accepte answer.trim().length>=1 ; CloudExerciseBlock.tsx:153-161 appelle onComplete sans évaluation ; LessonViewer.tsx:1587-1592 déverrouille selon completedCloudExercises.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Configurer une validation avant maintien du verrou et ajouter un test garantissant qu’une réponse d’un caractère ne termine plus le TP."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Ajouter des données à la collection",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 7/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act07:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_07_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act07:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_3_act_07_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[6].requiredBeforeAdvance=true, bloc type=code_repl id=dc_3_act_07_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Interroger et mettre à jour la base de données",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 8/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act08:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act08",
+              "content_id": "dc_3_act_08_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Querying and updating the database » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[7].blocks[id=dc_3_act_08_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act08:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act08",
+              "content_id": "dc_3_act_08_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_3_act_08_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[7].requiredBeforeAdvance=true, bloc vidéo id=dc_3_act_08_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Interroger la collection Netflix",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 9/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act09:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[8].blocks[id=dc_3_act_09_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act09:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_3_act_09_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[8].requiredBeforeAdvance=true, bloc type=code_repl id=dc_3_act_09_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Mettre à jour et supprimer des éléments d’une collection",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 10/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act10:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[9].blocks[id=dc_3_act_10_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act10:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_3_act_10_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[9].requiredBeforeAdvance=true, bloc type=code_repl id=dc_3_act_10_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch03_act11",
+          "title": "Requêtes multiples et filtrage",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 11/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act11:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act11",
+              "content_id": "dc_3_act_11_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Multiple queries and filtering » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[10].blocks[id=dc_3_act_11_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act11:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act11",
+              "content_id": "dc_3_act_11_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_3_act_11_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[10].requiredBeforeAdvance=true, bloc vidéo id=dc_3_act_11_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch03_act12",
+          "title": "Interroger avec plusieurs textes",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 12/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act12:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act12",
+              "content_id": "dc_3_act_12_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[11].blocks[id=dc_3_act_12_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act12:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act12",
+              "content_id": "dc_3_act_12_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_3_act_12_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[11].requiredBeforeAdvance=true, bloc type=code_repl id=dc_3_act_12_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch03_act13",
+          "title": "Filtrer à l’aide des métadonnées",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 13/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Activité : consigne par étapes, code de départ, solution et indice sont présents ; les prérequis techniques sont introduits par le contenu précédent.",
+            "Rendu : l’éditeur affiche langage, consigne, zone de code, Vérifier le code, Réinitialiser et Voir la solution. Les défauts de validation et de verrouillage confirmés sont détaillés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act13:exact-text-code-validation",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act13",
+              "content_id": "dc_3_act_13_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "evaluation_feedback",
+              "description": "L’activité nommée « Code interactif » n’exécute pas le Python ni les appels OpenAI/Chroma. Elle valide seulement l’égalité du texte saisi avec solutionCode, après normalisation limitée aux retours à la ligne et espaces de fin. Une solution correcte formulée différemment est rejetée ; l’échec n’explique pas l’étape fautive et il n’y a ni testCode ni expectedOutput.",
+              "current_content": "instructions, starterCode, solutionCode et hint sont présents ; testCode est absent et expectedOutput est vide. La validation appelle matchesCanonicalSolution(code, solutionCode).",
+              "proposed_content": "Valider dans un environnement isolé avec des tests comportementaux ou une analyse syntaxique ciblant les objectifs ; afficher la sortie et les assertions échouées. Si aucune exécution n’est possible, présenter explicitement l’écran comme complétion guidée et non comme code exécutable.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[12].blocks[id=dc_3_act_13_code] : testCode absent, expectedOutput vide. client/src/components/blocks/CodeReplBlock.tsx:28-40 utilise matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité complète normalisée ; CodeReplBlock.tsx:36-39 ne fournit qu’un feedback générique.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Remplacer la comparaison littérale par une validation comportementale et ajouter un feedback diagnostique par objectif de code."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act13:code-not-gated",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act13",
+              "content_id": "dc_3_act_13_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Malgré requiredBeforeAdvance=true, cet exercice de code peut être ignoré. Sa réussite est bien enregistrée dans completedExercises, mais les conditions qui désactivent « Suivant » ne recensent jamais code_repl. L’apprenant peut donc quitter le chapitre sans tenter ni valider la pratique annoncée.",
+              "current_content": "chapter.type=exercise ; requiredBeforeAdvance=true ; bloc code_repl id=dc_3_act_13_code.",
+              "proposed_content": "Inclure les id code_repl dans le gate des chapitres obligatoires et ne déverrouiller qu’après validation réussie. Si la pratique doit être libre, rendre explicitement le bloc/chapitre facultatif au lieu de le marquer obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[12].requiredBeforeAdvance=true, bloc type=code_repl id=dc_3_act_13_code. client/src/pages/training/LessonViewer.tsx:1181-1183 enregistre sa complétion ; lignes 1577-1582 ne gèrent que les QCM, 1587-1592 les cloud_exercise, et 1624-1662 ne construisent aucun gate code_repl.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Ajouter un gate code_repl cohérent avec le caractère obligatoire et couvrir le scénario « Suivant sans toucher au code » par un test de régression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 13,
+          "chapter_id": "dc_ch03_act14",
+          "title": "Félicitations !",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Couverture exhaustive : leçon 3/3 et chapitre 14/14 lus dans l’ordre de la source ; titre, description, statut requiredBeforeAdvance et chacun des blocs ont été inspectés.",
+            "Rendu : les types de blocs du chapitre sont pris en charge par LessonViewer ; le chapitre appartient à la navigation séquentielle inspectée.",
+            "Cohérence : la description de la leçon fournit un objectif de parcours et l’ordre du chapitre a été comparé aux notions et activités qui le précèdent/suivent.",
+            "Média : titre, audio local, sous-titres FR/EN, transcription structurée et PDF de support sont référencés ; LessonViewer rend les contrôles audio, les liens de sous-titres/PDF et la transcription dépliable.",
+            "Transition : la transcription introduit le thème et annonce le sujet ou la pratique suivante ; elle a été comparée à l’activité suivante dans le parcours."
+          ],
+          "unverified_dimensions": [
+            "Objectif propre au chapitre : aucun champ d’objectif distinct n’est fourni. La description affichée reprend l’objectif générique de la leçon ; cette dimension est non vérifiable, pas une anomalie automatique.",
+            "Exactitude factuelle exhaustive des API/bibliothèques et efficacité mesurée auprès d’apprenants : non vérifiées dans cet audit de données et de rendu.",
+            "Lecture effective de l’audio et contenu réel des fichiers VTT/PDF : non vérifiés. Les références /api/assets sont présentes et ne sont pas considérées absentes."
+          ],
+          "issues": [
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act14:transcript-language",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act14",
+              "content_id": "dc_3_act_14_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation_accessibilite",
+              "description": "Dans un parcours importé en fr-FR et affiché en français, la transcription dépliable est entièrement en anglais. Les liens de sous-titres français sont présents, mais le renderer affiche directement transcript/transcriptSegments et ne les utilise pas comme transcription française.",
+              "current_content": "La transcription commence par « 1. Congratulations! » ; transcriptSegments est en anglais ; subtitleUrlFr est renseigné.",
+              "proposed_content": "Fournir transcript/transcriptSegments en français pour l’affichage français, ou introduire des variantes localisées sélectionnées selon la langue. Conserver les sous-titres et l’original anglais comme alternatives.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[13].blocks[id=dc_3_act_14_video] : transcript et transcriptSegments anglais, subtitleUrlFr présent. client/src/pages/training/LessonViewer.tsx:813-829 affiche directement transcript/transcriptSegments pour le lecteur audio.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Localiser les 11 transcriptions visibles en français puis contrôler le choix de langue dans le lecteur."
+            },
+            {
+              "issue_id": "047:introduction_to_embeddings_with_the_openai_api__01:dc_ch03_act14:audio-gate-key",
+              "course_id": "introduction_to_embeddings_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act14",
+              "content_id": "dc_3_act_14_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire mais cette activité audio ne bloque pas la navigation. Le lecteur marque l’écoute avec block.id, tandis que le gate ne retient un id de bloc que si sa longueur est comprise entre 8 et 15 ; l’id de cette activité ne satisfait pas cette condition. Aucun identifiant vidéo n’est donc ajouté au gate et « Suivant » peut être activé sans écoute ni marquage manuel.",
+              "current_content": "requiredBeforeAdvance=true ; audioUrl renseigné ; videoId et url absents ; id=dc_3_act_14_video, longueur=17.",
+              "proposed_content": "Dériver la clé de progression depuis block.id aussi pour les sources audio/MP4 lorsque videoId/url sont absents, puis exiger sa complétion. Si le média doit être facultatif, le déclarer explicitement optional=true et retirer son caractère obligatoire.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_embeddings_with_the_openai_api__01.json → lessons[2].chapters[13].requiredBeforeAdvance=true, bloc vidéo id=dc_3_act_14_video avec audioUrl. client/src/pages/training/LessonViewer.tsx:691-799 utilise block.id comme audioKey ; lignes 1558-1568 n’acceptent block.id que s’il fait 8–15 caractères, donc aucune clé pour cet id de 17 caractères ; lignes 1624-1662 calculent ensuite Suivant sans gate vidéo.",
+              "confidence": "high",
+              "verification_status": "confirmed_json_and_renderer",
+              "recommended_action": "Unifier la clé employée par le lecteur et le verrouillage, puis tester le blocage/déblocage des 11 chapitres média."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 3,
+      "chapters_reviewed": 37,
+      "activities_reviewed": 37,
+      "blocks_reviewed": 40,
+      "interactive_or_practical_activities_reviewed": 24,
+      "media_activities_reviewed": 11
+    },
+    "method": "Revue qualitative exhaustive du seul JSON indiqué dans le manifest, de ses 3 leçons, 37 chapitres/activités et 40 blocs, complétée par la lecture du registre de blocs, de LessonViewer, chapterProgress, CodeReplBlock, MatchingExercise, MultiChoiceBlock, SingleChoiceExercise et CloudExerciseBlock. Le pré-audit statique n’a servi que de signal : les alertes génériques de progression ne sont pas reprises sans confirmation.",
+    "score_method": "Score /100 par chapitre sur les dimensions observables et renormalisées : explications, progression, complétude, clarté/action/feedback des activités, médias et UX/verrouillage. L’absence d’un champ objectifs par chapitre, la lecture effective des assets et l’évaluation sur des apprenants ne sont pas pénalisées artificiellement et figurent dans les dimensions non vérifiées.",
+    "priority_findings": {
+      "P0": "Le QCM « Calculer des distances cosinus » demande un calcul sur quatre vecteurs qui ne sont fournis dans aucun champ ni écran ; l’explication de correction est vide.",
+      "P1": "Les 17 code_repl ne valident que la copie textuelle exacte de la solution et peuvent être ignorés malgré requiredBeforeAdvance=true. Les deux TP cloud se déverrouillent avec une saisie d’un caractère, sans grille ni contrôle de réalisation.",
+      "P2": "Les 11 transcriptions affichées dans le parcours français sont en anglais et les 11 chapitres audio obligatoires ne sont pas effectivement verrouillés à cause d’une clé de progression non dérivée de leurs ids.",
+      "P3": "Les trois cartes de téléchargement de supports restent rédigées en anglais dans l’interface française."
+    },
+    "confirmed_issues": {
+      "total": 62,
+      "by_severity": {
+        "P0": 1,
+        "P1": 36,
+        "P2": 22,
+        "P3": 3
+      },
+      "by_category": {
+        "localisation_accessibilite": 14,
+        "verrouillage": 30,
+        "evaluation_feedback": 17,
+        "énoncé_et_données_manquantes": 1
+      }
+    },
+    "positive_controls": [
+      "Import complet confirmé : datacampImport annonce 3 chapitres de leçon extraits sur 3, 37 activités extraites sur 37 et 11 vidéos extraites sur 11.",
+      "Les deux activités de tri ont une consigne, des catégories, des cartes, un indice et un feedback ; MatchingExercise rend une action accessible au clic/glisser-déposer, une correction par carte et Réessayer, avec gate correspondant.",
+      "Les deux QCM à choix multiples ont question, options, réponses attendues, indice, explication, feedback visuel et nouvel essai ; la progression les suit correctement.",
+      "Les 11 médias sont contextualisés par un titre et une transcription structurée et référencent audio, sous-titres FR/EN et PDF ; aucun asset inaccessible n’est déclaré absent.",
+      "La progression de contenu est cohérente : fondamentaux/similarité, puis recherche-recommandation-classification, puis stockage-interrogation-filtrage avec Chroma ; les activités mobilisent généralement les notions introduites auparavant."
+    ]
+  },
+  "limits": [
+    "Audit sans modification : aucun contenu de cours, média, base de données ou code applicatif n’a été modifié.",
+    "Les URLs /api/assets des audios, PDF et sous-titres sont référencées dans les données. Elles n’ont pas été déclarées absentes ; leur disponibilité HTTP, leur lecture effective, la qualité audiovisuelle, le contenu réel des sous-titres et le rendu multi-navigateurs n’ont pas été testés.",
+    "Les scores portent sur les données disponibles et le rendu applicatif inspecté ; ils ne mesurent ni l’apprentissage sur un panel ni l’exactitude factuelle exhaustive des bibliothèques et APIs mentionnées.",
+    "Les descriptions de leçon et les contenus expliquent les objectifs, mais aucun champ d’objectifs autonome par chapitre n’est fourni ; cette absence est documentée comme non vérifiable, jamais comme P1 automatique.",
+    "Aucune source externe n’a été utilisée ou citée."
+  ]
+}

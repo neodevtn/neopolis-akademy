@@ -61,10 +61,21 @@ const metric = (course) => {
     totalActivities: chapters,
   };
 };
-index.courses = index.courses.map((course) => ({ ...course, ...metric(byId[course.id]) }));
+const refreshBreakdown = (breakdown, metrics) => {
+  if (!breakdown || typeof breakdown !== "object") return breakdown;
+  return {
+    ...breakdown,
+    chapters: metrics.chapterCount,
+  };
+};
+index.courses = index.courses.map((course) => {
+  const metrics = metric(byId[course.id]);
+  return { ...course, ...metrics, breakdown: refreshBreakdown(course.breakdown, metrics) };
+});
 index.certifications = index.certifications.map((certification) => {
   const courses = index.courses.filter((course) => course.certId === certification.id);
-  return { ...certification, courseCount: courses.length, totalLessons: courses.reduce((sum, course) => sum + course.lessonCount, 0), totalActivities: courses.reduce((sum, course) => sum + course.totalActivities, 0), totalExercises: courses.reduce((sum, course) => sum + course.exerciseCount, 0), totalVideos: courses.reduce((sum, course) => sum + course.videoCount, 0), totalDownloads: courses.reduce((sum, course) => sum + course.downloadCount, 0) };
+  const totals = { lessonCount: courses.reduce((sum, course) => sum + course.lessonCount, 0), totalActivities: courses.reduce((sum, course) => sum + course.totalActivities, 0), exerciseCount: courses.reduce((sum, course) => sum + course.exerciseCount, 0), videoCount: courses.reduce((sum, course) => sum + course.videoCount, 0), downloadCount: courses.reduce((sum, course) => sum + course.downloadCount, 0), chapterCount: courses.reduce((sum, course) => sum + course.chapterCount, 0) };
+  return { ...certification, courseCount: courses.length, totalLessons: totals.lessonCount, totalActivities: totals.totalActivities, totalExercises: totals.exerciseCount, totalVideos: totals.videoCount, totalDownloads: totals.downloadCount, breakdown: refreshBreakdown(certification.breakdown, totals) };
 });
 await fs.writeFile(indexPath, `${JSON.stringify(index, null, 2)}\n`);
 console.log(`Synced metrics for ${index.courses.length} courses and ${index.certifications.length} certifications.`);

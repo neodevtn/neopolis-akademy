@@ -1,0 +1,363 @@
+{
+  "formation_id": "datacamp_gemini_in_google_meet",
+  "courses": [
+    {
+      "course_id": "gemini_in_google_meet__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Introduction to Gemini in Google Meet",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Repérage et objectif immédiat : LessonViewer rend le titre et la description du chapitre ; le transcript présente explicitement les quatre fonctionnalités couvertes (arrière-plan, qualité audio-visuelle, sous-titres traduits et prise de notes).",
+            "Contexte et prudence : le transcript introduit l’usage de Gemini pour l’efficacité et explicite les limites (réponses potentiellement inexactes ou inappropriées et non-substitution à un avis professionnel).",
+            "Média et alternatives : le bloc déclare une vidéo MP4, un audio, un transcript segmenté, un sous-titre EN et un PDF ; LessonViewer rend le lecteur vidéo, la transcription repliable et le lien vers le PDF.",
+            "Progression : cet écran d’introduction précède les démonstrations détaillées de chacune des fonctionnalités annoncées."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif pédagogique mesurable n’est renseigné dans un champ dédié (notamment `objectiveBefore`) ; l’objectif est donc déduit du titre et du transcript, sans être formalisé avant lecture.",
+            "La lecture effective du MP4, du VTT et du PDF via `/api/assets/...`, ainsi que la lisibilité des images de la vidéo, n’ont pas été testées en navigateur ; les ressources déclarées ne sont pas qualifiées d’absentes.",
+            "L’accessibilité réelle au clavier, au lecteur d’écran et sur mobile n’a pas fait l’objet d’un test de session apprenant."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAG-038-LOCK-01-01",
+              "course_id": "gemini_in_google_meet__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Bien que le chapitre soit requis avant passage, le bouton principal « Suivant » ne reconnaît pas ce MP4 comme un média à compléter. L’apprenant peut donc passer l’introduction sans lire la vidéo ni utiliser l’action explicite « Marquer comme vue », ce qui rend le verrouillage incohérent avec le statut obligatoire déclaré.",
+              "current_content": "`requiredBeforeAdvance: true` ; vidéo MP4 `dc_1_act_01_video` avec transcript et contrôle « Marquer comme vue (manuel) ».",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Utiliser systématiquement `block.id` comme clé de complétion dès qu’un bloc possède `mp4Url`, `hlsUrl` ou `audioUrl`, puis employer cette même clé dans les calculs du bouton « Suivant » et de fin de leçon.",
+              "evidence": "`client/public/data/courses/gemini_in_google_meet__01.json` → `lessons[0].chapters[0]` : `requiredBeforeAdvance: true`, bloc `dc_1_act_01_video` avec `mp4Url`. `client/src/pages/training/LessonViewer.tsx:552-688` complète le média sous la clé `block.id`, tandis que `LessonViewer.tsx:1557-1569` ne retient l’id de bloc qu’entre 8 et 15 caractères si `videoId` et URL sont absents. L’id `dc_1_act_01_video` est exclu ; le même schéma est utilisé par la navigation de fin (`1483-1511`).",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution de clé de média dans les deux gates de navigation et tester ce chapitre : « Suivant » doit rester indisponible jusqu’à la fin de la vidéo ou au marquage manuel explicite."
+            },
+            {
+              "issue_id": "PAG-038-I18N-01-01",
+              "course_id": "gemini_in_google_meet__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "accessibilité linguistique",
+              "description": "Le parcours déclaré en `fr-FR` n’est que partiellement localisé : les valeurs françaises de titres, descriptions, libellés de ressources, transcripts, explications et choix de réponse sont souvent identiques à l’anglais. Le français est disponible pour les énoncés de QCM et quelques indices, mais l’apprenant en interface française rencontre des titres, des options et des feedbacks anglais ; la cohérence linguistique du parcours est dégradée.",
+              "current_content": "Dans ce bloc, `title.fr` et le transcript sont en anglais et seul `subtitleUrlEn` est déclaré. La même structure se répète dans les cinq vidéos. Dans les quatre QCM, les options et les explications `fr` sont en anglais (par exemple `Rollercoaster with a globe in the background`, `Turn on Studio Look.` et `Take notes for me`).",
+              "proposed_content": "Fournir les variantes françaises réellement traduites pour les titres, descriptions, libellés, transcripts, choix et explications, et ajouter des sous-titres français lorsque le média conserve sa piste anglaise. Conserver les noms de produits ou commandes Google Meet seulement lorsqu’ils sont volontairement non traduits, en les accompagnant d’une formulation française claire.",
+              "evidence": "`client/public/data/courses/gemini_in_google_meet__01.json` : `datacampImport.sourceLanguage` vaut `fr-FR`, mais les paires `en`/`fr` de `lessons[0]`, des chapitres `0..5`, des titres de vidéo, du transcript, des instructions `resource_review`, ainsi que des options et explications des QCM `6..9` sont identiques ou demeurent en anglais. `LessonViewer.tsx:555`, `978-999` sélectionne explicitement la variante `[lang]`, donc ces valeurs anglaises sont rendues en interface française.",
+              "confidence": "high",
+              "verification_status": "confirmed_data_and_render_path_review",
+              "recommended_action": "P2 — Traiter la localisation comme une correction de parcours unique, puis effectuer une revue intégrale en mode français : aucun texte d’apprentissage, choix ou feedback ne doit rester en anglais sans justification pédagogique."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Generate a Background Image using Gemini",
+          "score_100": 81,
+          "verified_dimensions": [
+            "Démonstration contextualisée : le transcript part d’un rendez-vous client et relie la génération d’arrière-plan à une intention professionnelle précise.",
+            "Action et prérequis : les étapes nécessaires sont explicitées dans le transcript (ouvrir Meet sur ordinateur, rejoindre/créer une réunion, More options, Apply visual effects, Generate a background, saisir une invite, créer et choisir un échantillon).",
+            "Explication utile : le transcript distingue invite descriptive et style visuel, donne des exemples d’invites et nomme des styles possibles avant d’annoncer l’activité ultérieure.",
+            "Média contextualisé : vidéo, audio, transcript segmenté, sous-titre EN et lien PDF sont déclarés et ont un chemin de rendu dans LessonViewer."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif avant lecture (`objectiveBefore`) ni question post-lecture n’est fourni comme métadonnée pédagogique ; l’intention est inférée du titre et du transcript.",
+            "Le comportement effectif de la fonctionnalité Meet, des vidéos, sous-titres et PDF n’a pas été contrôlé dans une session navigateur ; leur indisponibilité n’est pas déduite de cette absence de test.",
+            "La compréhension réelle de la procédure par un apprenant débutant n’a pas été observée en test utilisateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAG-038-LOCK-01-02",
+              "course_id": "gemini_in_google_meet__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le verrou de passage annoncé par `requiredBeforeAdvance: true` est contournable : ce MP4 n’est pas inclus dans la liste de vidéos attendues par le bouton « Suivant ». L’apprenant peut atteindre l’écran suivant sans avoir parcouru la démonstration qui prépare les QCM et l’activité annoncée.",
+              "current_content": "`requiredBeforeAdvance: true` ; vidéo MP4 `dc_1_act_02_video` avec transcript, sous-titre EN et contrôle de complétion manuel.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Appliquer la correction de résolution de clé média décrite pour `dc_1_act_01_video`, afin que l’id du bloc MP4 soit la clé de complétion effectivement testée.",
+              "evidence": "`client/public/data/courses/gemini_in_google_meet__01.json` → `lessons[0].chapters[1].blocks[0]` déclare le MP4 `dc_1_act_02_video` et `requiredBeforeAdvance: true`. La divergence entre la clé utilisée par le lecteur (`LessonViewer.tsx:555-557`, `648`, `657`) et celle filtrée par la navigation (`1557-1569`, condition de longueur 8–15) s’applique également à cet id de 17 caractères.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Après correction commune du gate, vérifier que l’écran ne peut être quitté qu’après fin de la vidéo ou marquage manuel conscient."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Improve Your Video and Audio Experience",
+          "score_100": 81,
+          "verified_dimensions": [
+            "Progression : l’écran succède à la génération d’arrière-plan et introduit deux nouvelles fonctions utiles à la communication en réunion : Studio look et sous-titres traduits.",
+            "Explications et action : le transcript définit le green room, indique deux chemins d’accès à Studio look et donne la séquence de réglage des sous-titres traduits.",
+            "Contextualisation : les scénarios de faible éclairage et de collaboration avec des collègues francophones expliquent pourquoi employer chaque fonctionnalité.",
+            "Média : une vidéo avec transcript segmenté, audio, sous-titre EN et support PDF est déclarée et rendue par le chemin MP4 de LessonViewer."
+          ],
+          "unverified_dimensions": [
+            "L’objectif pédagogique n’est pas formalisé dans un champ dédié avant le média ; il est seulement déductible du titre et de la démonstration.",
+            "La disponibilité effective des médias et la fidélité visuelle des commandes Meet ne sont pas vérifiées par cet audit sans navigateur authentifié.",
+            "L’accessibilité pratique des commandes vidéo et sous-titres sur les supports réels n’est pas observable ici."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAG-038-LOCK-01-03",
+              "course_id": "gemini_in_google_meet__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La démonstration obligatoire de Studio look et des sous-titres traduits peut être sautée par le bouton « Suivant » : le gate ne reconnaît pas la clé de ce MP4, malgré `requiredBeforeAdvance: true`.",
+              "current_content": "Vidéo MP4 obligatoire `dc_1_act_03_video`, accompagnée d’un transcript et d’un contrôle « Marquer comme vue (manuel) ».",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Uniformiser la clé de média utilisée à l’affichage, à la complétion et au verrou de navigation sur `block.id` pour tous les médias locaux.",
+              "evidence": "`client/public/data/courses/gemini_in_google_meet__01.json` → `lessons[0].chapters[2]` : média MP4 et `requiredBeforeAdvance: true`. `LessonViewer.tsx:555-557`, `648` emploie `dc_1_act_03_video`, mais `LessonViewer.tsx:1557-1569` ne dérive cette clé d’un id que s’il fait 8 à 15 caractères ; l’id concerné en fait 17.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Couvrir cette vidéo dans le test de non-régression du verrou principal et du raccourci de navigation : aucune sortie sans complétion explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Take Meeting Notes with Gemini",
+          "score_100": 81,
+          "verified_dimensions": [
+            "Explication contextualisée : le transcript pose une situation crédible de prise de notes en brainstorming puis présente la fonction « Take notes for me » comme réponse à ce besoin.",
+            "Action attendue : le contenu distingue document existant et nouveau document, explique l’ajout au calendrier, l’activation pendant la réunion et le résultat attendu après réunion.",
+            "Prérequis et limites : le transcript signale la politique de conservation, l’information des participants et la contrainte de langue explicitement mentionnée ; ces éléments précèdent le QCM de vérification correspondant.",
+            "Média : vidéo, audio, transcript segmenté, sous-titre EN et PDF sont renseignés et ont un rendu prévu."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif formel avant lecture ni question de consolidation après vidéo n’est renseigné dans le bloc ; le but est déduit du transcript.",
+            "Ouverture effective des médias et exactitude du rendu visuel du produit ne sont pas vérifiées dans cette revue de données et code.",
+            "L’adéquation de cette procédure aux droits et configurations réels d’un domaine Google Workspace n’est pas testée."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAG-038-LOCK-01-04",
+              "course_id": "gemini_in_google_meet__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "L’écran est déclaré requis mais sa vidéo peut être franchie sans complétion : le gate de navigation n’ajoute pas cet id MP4 de 17 caractères à la liste des médias attendus.",
+              "current_content": "`requiredBeforeAdvance: true` et média `dc_1_act_04_video` avec contrôle de marquage manuel et transcript.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Réutiliser `block.id` sans filtre de longueur dans les gates du bouton « Suivant » et de fin de leçon.",
+              "evidence": "`client/public/data/courses/gemini_in_google_meet__01.json` → `lessons[0].chapters[3]`. Le lecteur enregistre la complétion sous `block.id` (`LessonViewer.tsx:555-557`, `648`), mais le calcul `chapterVideoKeys` (`1557-1569`) exclut l’id quand ni `videoId` ni URL YouTube ne sont renseignés et que sa longueur dépasse 15 caractères.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger ce défaut commun de gate et vérifier que ce chapitre ne débloque le suivant qu’après lecture ou marquage manuel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Activity Explained",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Transition annoncée : le transcript explicite que l’apprenant va passer à une mise en situation de représentant commercial pour Cymbal retail.",
+            "Compétences à mobiliser : la vidéo énumère de façon concise les trois actions attendues dans la suite : générer un arrière-plan, activer les sous-titres traduits et prendre des notes.",
+            "Cohérence amont : les trois fonctionnalités sont introduites dans les démonstrations précédentes, dans l’ordre arrière-plan, qualité/captions, puis notes.",
+            "Média : le bloc déclare une vidéo, un audio, un transcript, un sous-titre EN et un PDF ; le transcript est rendu repliable par LessonViewer."
+          ],
+          "unverified_dimensions": [
+            "L’objectif n’est pas structuré dans un champ formel avant lecture ; l’écran utilise un titre générique et l’objectif précis est contenu dans le transcript.",
+            "La lecture et la qualité effective de la vidéo et du PDF ne sont pas testées dans un navigateur ; les URLs déclarées ne sont pas considérées absentes.",
+            "La compréhension de la mise en situation et son caractère réalisable dans un environnement Meet réel ne sont pas observés auprès d’apprenants."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAG-038-LOCK-01-05",
+              "course_id": "gemini_in_google_meet__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le média qui prépare l’activité suivante est déclaré obligatoire mais reste franchissable sans complétion ; le verrou de navigation ignore l’id MP4 de ce bloc.",
+              "current_content": "Vidéo obligatoire `dc_1_act_05_video` ; le transcript commence par « Now it’s your turn to give it a try » et décrit l’activité suivante.",
+              "proposed_content": "Aucune réécriture pédagogique n’est requise. Corriger la résolution de clé des médias locaux afin que `dc_1_act_05_video` soit testé dans le gate et que la transition vers l’activité ne puisse pas être sautée silencieusement.",
+              "evidence": "`client/public/data/courses/gemini_in_google_meet__01.json` → `lessons[0].chapters[4]` (`requiredBeforeAdvance: true`, `mp4Url`, id `dc_1_act_05_video`). Le décalage entre la complétion du lecteur et le filtre de longueur de `LessonViewer.tsx:1557-1569` est identique aux quatre MP4 précédents.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Inclure ce média dans le scénario de test de verrouillage séquentiel, puis valider qu’il faut le terminer ou le marquer explicitement comme vu avant de poursuivre."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Collaborate with Gemini in Meet",
+          "score_100": 52,
+          "verified_dimensions": [
+            "Action visible : LessonViewer rend le titre, la consigne, un lien pour ouvrir le PDF local et un bouton explicite « J’ai consulté cette ressource ».",
+            "Cohérence de position : l’écran suit immédiatement la vidéo qui annonce une mise en situation de démonstration commerciale et les trois fonctionnalités à pratiquer.",
+            "Verrou visible : le pied de page indique qu’il faut ouvrir puis confirmer la consultation de la ressource locale requise avant de continuer."
+          ],
+          "unverified_dimensions": [
+            "Le contenu réel du PDF, sa lisibilité, son ouverture effective et sa cohérence visuelle avec la mise en situation ne sont pas contrôlables ici ; le PDF est déclaré et n’est pas traité comme absent.",
+            "Il n’existe pas de critère de réussite observable, de production attendue ni de feedback de compréhension associé à la consultation déclarative.",
+            "L’exécution réelle des trois manipulations dans Google Meet n’est pas instrumentée ni vérifiable depuis les données et le composant examinés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PAG-038-PROG-01-06",
+              "course_id": "gemini_in_google_meet__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_resource",
+              "content_type": "resource_review",
+              "severity": "P1",
+              "category": "progression",
+              "description": "La transition théorie → activité est rompue : l’écran précédent annonce que l’apprenant va jouer un rôle de commercial et pratiquer trois fonctionnalités, alors que l’activité suivante se limite à « View the PDF before continuing ». Aucun énoncé n’explique comment mettre en pratique le scénario, aucune action dans Meet n’est demandée et aucun résultat de la mise en situation n’est attendu. Le pré-audit signalait une activité sans explication dans cet écran ; la revue du transcript précédent confirme que le problème est une substitution de l’activité annoncée par une simple consultation de support.",
+              "current_content": "La vidéo `dc_1_act_05_video` annonce : rôle de représentant Cymbal retail, préparation d’une démonstration virtuelle, pratique de la génération d’arrière-plan, des sous-titres traduits et de la prise de notes. `dc_1_act_06_resource.instructions` contient seulement « View the PDF before continuing. » et pointe vers `chapter_01_slides_8dfb536c.pdf`.",
+              "proposed_content": "Conserver le PDF comme aide facultative ou support de référence et ajouter une activité guidée avant les QCM : « Préparez la démonstration virtuelle de Cymbal retail. Dans Google Meet, 1) générez puis sélectionnez un arrière-plan adapté à la démonstration ; 2) activez des sous-titres traduits pour le public visé ; 3) activez “Take notes for me”. À la fin, vérifiez que les trois fonctions sont actives ou que vous savez où les activer. » Cette formulation réemploie exclusivement le scénario et les trois actions explicitement décrits au chapitre précédent. Le mode de preuve doit être défini par l’équipe (confirmation guidée, capture ou environnement simulé), car les données ne fournissent pas de mécanisme de validation de ces actions.",
+              "evidence": "`client/public/data/courses/gemini_in_google_meet__01.json` → `lessons[0].chapters[4].blocks[0].transcript` annonce l’activité et les trois pratiques ; `lessons[0].chapters[5].blocks[0]` ne contient qu’un `resource_review` avec la consigne de consulter le PDF. `LessonViewer.tsx:1068-1093` rend précisément ce type comme un lien de ressource et un bouton de confirmation, sans étape, réponse, preuve ou feedback pédagogique.",
+              "confidence": "high",
+              "verification_status": "confirmed_data_and_render_path_review",
+              "recommended_action": "P1 — Restaurer une activité de transfert explicitement alignée sur le scénario annoncé, puis ne placer le PDF qu’en appui. Tester qu’un débutant sait quoi faire, où le faire, ce qui constitue la réussite et comment poursuivre."
+            },
+            {
+              "issue_id": "PAG-038-LOCK-01-06",
+              "course_id": "gemini_in_google_meet__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_resource",
+              "content_type": "resource_review",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Le libellé de progression affirme qu’il faut ouvrir puis confirmer la ressource, mais l’ouverture du PDF n’est pas une condition technique de la confirmation. L’apprenant peut cliquer immédiatement « J’ai consulté cette ressource » : le verrou atteste une auto-déclaration, pas la consultation demandée.",
+              "current_content": "Lien « Open the local PDF resource » distinct du bouton « I have reviewed this resource » ; l’écran est requis avant passage.",
+              "proposed_content": "Ne pas présenter la consultation comme vérifiée tant qu’elle est déclarative. Soit renommer le bouton en « Confirmer que vous avez consulté la ressource » et conserver ce statut d’auto-attestation, soit enregistrer l’ouverture du lien et n’activer la confirmation qu’après cette ouverture. Cette mesure ne garantit pas la lecture intégrale mais rend la règle affichée cohérente avec le comportement.",
+              "evidence": "`LessonViewer.tsx:1083-1088` rend un lien `<a>` sans événement de complétion, puis un bouton indépendant dont le seul clic ajoute `reviewId` à `completedExercises`. `LessonViewer.tsx:1583-1586` déverrouille la navigation dès que ce `reviewId` est complété ; le test `chapterSequentialGate.test.ts:23-25` confirme qu’un id de ressource placé dans l’ensemble des exercices suffit à lever le verrou.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P2 — Aligner le texte et la mécanique de confirmation, puis tester les deux parcours : clic sur confirmer sans ouverture et ouverture suivie de confirmation."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Quiz Question 1",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Énoncé et action : le scénario du parc d’attractions est explicite, la question demande de choisir l’invite la plus adaptée et quatre réponses sont fournies.",
+            "Préparation : la question vérifie directement la démonstration précédente sur la création d’un arrière-plan et l’importance d’une invite concrète et visuelle.",
+            "Feedback et reprise : le bloc fournit un indice et une explication ; SingleChoiceExercise affiche qu’une seule réponse est attendue, met en évidence la bonne réponse, affiche l’explication, puis propose « Réessayer ».",
+            "Verrou cohérent : ce QCM obligatoire est rendu par LessonViewer et la navigation attend une réponse correcte avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "La qualité perçue de la mise en page, le comportement exact au clavier et l’expérience sur mobile n’ont pas été testés dans un navigateur.",
+            "L’efficacité psychométrique (niveau de difficulté, distracteurs et compréhension effective) n’a pas été mesurée auprès d’apprenants.",
+            "L’objectif n’est pas déclaré dans un champ pédagogique dédié ; il est déduit de la question et de la démonstration antérieure."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Quiz Question 2",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Énoncé et action : le scénario de webcam et d’éclairage insuffisants indique clairement le problème à résoudre et demande une sélection unique parmi quatre réponses.",
+            "Cohérence des prérequis : la réponse attendue, Studio look, a été explicitée avec son objectif et son chemin d’accès dans le chapitre sur l’expérience vidéo et audio.",
+            "Feedback : indice, bonne réponse et explication sont renseignés ; le composant signale une erreur, révèle la réponse correcte, affiche l’explication et propose une nouvelle tentative.",
+            "Verrouillage : LessonViewer associe le QCM à `completedExercises` seulement quand la réponse correcte est choisie ; le bouton suivant reste conditionné à cette complétion."
+          ],
+          "unverified_dimensions": [
+            "Le test n’a pas simulé une session apprenant dans le navigateur ni une panne de validation côté serveur, ce QCM n’étant pas déclaré `serverValidated`.",
+            "La compréhension de la terminologie de l’interface Meet dans une situation réelle n’est pas évaluée par observation utilisateur.",
+            "L’objectif formel de chapitre n’est pas renseigné dans un champ spécifique."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Quiz Question 3",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Énoncé et action : le contexte de réunion en allemand rend le besoin de compréhension en temps réel explicite ; la question demande de sélectionner la fonctionnalité la plus appropriée.",
+            "Progression : les sous-titres traduits, leur différence avec les sous-titres ordinaires et leur réglage sont expliqués dans la démonstration antérieure avant cette vérification.",
+            "Feedback et reprise : un indice oriente vers la traduction intégrée ; explication, signalement visuel de correction et possibilité de réessai sont rendus par SingleChoiceExercise.",
+            "Cohérence de validation : une seule réponse correcte est définie et la navigation requiert sa validation, ce qui correspond au format annoncé par le composant."
+          ],
+          "unverified_dimensions": [
+            "Le fonctionnement réel de la traduction de sous-titres dans un appel Meet et la disponibilité selon les configurations ne sont pas vérifiés ici.",
+            "L’ergonomie effective de la réponse sur petits écrans et avec technologies d’assistance n’a pas été contrôlée en navigateur.",
+            "L’objectif pédagogique n’est pas formalisé dans une métadonnée dédiée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch01_act10",
+          "title": "Quiz Question 4",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Énoncé et action : le scénario de réunion client à décisions et actions nombreuses permet d’identifier sans ambiguïté le besoin de notes structurées ; quatre réponses et une sélection unique sont proposés.",
+            "Cohérence des prérequis : la réponse attendue, « Take notes for me », a été expliquée dans le chapitre précédent sur la prise de notes, y compris les points de discussion et actions à traiter.",
+            "Feedback : le QCM dispose d’un indice et d’une explication ; après soumission, le composant affiche le résultat, la réponse correcte, l’explication et une option de reprise.",
+            "Fin de parcours : la logique de fin de leçon ne devient disponible qu’après la complétion correcte du QCM, conformément au verrou de l’évaluation finale."
+          ],
+          "unverified_dimensions": [
+            "La finalisation effective de la leçon, l’enregistrement de progression distant et les retours éventuels du parent n’ont pas été testés avec un compte apprenant.",
+            "L’efficacité de la question comme évaluation finale de transfert n’a pas été mesurée auprès d’apprenants.",
+            "Le cours ne renseigne pas un objectif terminal mesurable dans un champ dédié ; il est inféré des quatre démonstrations et QCM."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": "Revue qualitative exhaustive du seul cours référencé par le manifest : 1 cours, 1 leçon, 10 chapitres et 10 séquences/activités extraites (5 vidéos pédagogiques, 1 consultation de ressource et 4 QCM). Les JSON du cours, le registre des blocs, LessonViewer, SingleChoiceExercise, chapterProgress et les tests de gate ont été confrontés. Les 5 signaux du pré-audit ont été confirmés comme un même défaut de verrouillage réparti sur les cinq vidéos ; aucune anomalie de clarté n’a été retenue pour les quatre QCM après revue de leur rendu et feedback.",
+    "score_global_100": 79,
+    "confirmed_issue_counts": {
+      "total": 8,
+      "P0": 0,
+      "P1": 6,
+      "P2": 2,
+      "P3": 0
+    },
+    "key_findings": [
+      "Les cinq chapitres vidéo sont déclarés obligatoires, mais le verrou de navigation principal ne reconnaît pas leurs ids MP4 locaux de 17 caractères : toutes ces démonstrations peuvent être sautées sans action de complétion.",
+      "La transition annoncée vers une mise en situation de démonstration Cymbal retail est remplacée par une simple auto-attestation de consultation du PDF ; les trois compétences annoncées ne sont pas pratiquées ni évaluées.",
+      "Les QCM sont pédagogiquement cohérents avec les démonstrations : énoncé contextualisé, action de sélection claire, indice, explication, correction visible, réessai et verrou sur réponse correcte sont tous confirmés par les données et le composant.",
+      "La localisation française est partielle malgré `sourceLanguage: fr-FR` : titres, médias, choix et feedbacks restent majoritairement en anglais, ce qui diminue l’autonomie d’un apprenant francophone.",
+      "Les ressources multimédias sont toutes déclarées avec des chemins internes et disposent de chemins de rendu ; leur disponibilité et leur rendu visuel effectifs n’ont pas été inférés ni évalués sans session navigateur."
+    ],
+    "priority_actions": [
+      "P1 — Corriger immédiatement la clé utilisée par les gates de navigation des MP4 locaux et couvrir les cinq vidéos par des tests de non-régression.",
+      "P1 — Remplacer ou compléter la consultation de PDF par une activité guidée qui réalise réellement le scénario annoncé, avec une preuve de réalisation à définir.",
+      "P2 — Clarifier la nature auto-déclarative de la consultation de ressource ou conditionner sa confirmation à l’ouverture du lien.",
+      "P2 — Achever la localisation française des contenus visibles et effectuer une revue bout en bout en français."
+    ]
+  },
+  "limits": [
+    "Audit non destructif limité aux fichiers JSON du cours ciblé, au registre de blocs et au code de rendu/progression identifié ; aucun contenu, code ou base de données n’a été modifié.",
+    "Les URLs `/api/assets/...` des MP4, audio, VTT et PDF sont présentes dans les données et disposent d’un chemin de rendu, mais leur accès, lecture, durée, qualité visuelle, sous-titrage réel et contenu du PDF n’ont pas été testés dans un navigateur authentifié ; elles ne sont donc pas considérées absentes.",
+    "L’audit de rendu est une revue statique de LessonViewer et de ses composants ; il ne remplace pas des essais utilisateur sur navigateur, mobile, clavier, lecteur d’écran ou réseau dégradé.",
+    "Les scores sont qualitatifs et renormalisés sur les dimensions observables. Les objectifs formels au niveau du chapitre, les performances de média et l’expérience apprenant réelle sont signalés comme non vérifiés lorsqu’aucune preuve suffisante n’était disponible."
+  ]
+}

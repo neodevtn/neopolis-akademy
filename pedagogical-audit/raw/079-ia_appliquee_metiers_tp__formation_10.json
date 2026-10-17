@@ -1,0 +1,264 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_10",
+  "courses": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "ia_appliquee_metiers_tp__10-screen-01",
+          "title": "Objectif du TP",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Objectifs vérifiés : le public cible, le niveau avancé, la durée et quatre compétences observables sont explicites.",
+            "Cadrage vérifié : le callout situe la ressource source et rappelle qu’elle ne remplace pas les contrôles métier et de sécurité.",
+            "Rendu/UX vérifié : LessonViewer rend learning_section via LearningSectionBlock, qui affiche le titre, le contexte et la liste numérotée des objectifs.",
+            "Transition vérifiée : l’écran suivant prépare l’environnement avant toute activité pratique."
+          ],
+          "unverified_dimensions": [
+            "Médias : aucun média pédagogique n’est déclaré dans ce chapitre ; la pertinence audiovisuelle n’est pas applicable.",
+            "Version anglaise : la lisibilité en anglais est compromise par le défaut de localisation signalé ci-dessous."
+          ],
+          "issues": [
+            {
+              "issue_id": "079-ia-appliquee-metiers-tp-10-objective-en-localization",
+              "course_id": "ia_appliquee_metiers_tp__10",
+              "chapter_id": "ia_appliquee_metiers_tp__10-screen-01",
+              "content_id": "learning_section[0]",
+              "content_type": "learning_section",
+              "severity": "P1",
+              "category": "localisation",
+              "description": "En interface anglaise, le bloc qui expose le public, le niveau, la durée et les quatre objectifs reste intégralement en français. Un apprenant qui sélectionne l’anglais ne peut donc pas lire les objectifs de la formation dans la langue demandée.",
+              "current_content": "learning_section.body.en = « Métier cible : SEO manager, consultant SEO, responsable acquisition. Niveau : Avancé. Durée indicative : 4 h. » ; les quatre entrées items[*].en reprennent également le texte français.",
+              "proposed_content": "Renseigner les variantes anglaises avec : « Target role: SEO manager, SEO consultant, acquisition manager. Level: Advanced. Indicative duration: 4 hours. » ; « Design a manager-agent architecture for multiple SEO specializations » ; « Use real SERP results as decision-making context » ; « Combine technical audit, keywords, local SEO, and content » ; « Produce a client-usable SEO report ».",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__10.json → lessons[0].chapters[0].blocks[0].body.en et items[0..3].en ; client/src/pages/training/LessonViewer.tsx → renderBlock('learning_section') transmet la variante sélectionnée à LearningSectionBlock, qui affiche text(value, lang).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_path",
+              "recommended_action": "Compléter les champs .en de ce learning_section et effectuer une relecture linguistique de l’écran anglais avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "ia_appliquee_metiers_tp__10-screen-02",
+          "title": "Préparer l’environnement",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Prérequis vérifiés : sandbox/données fictives, outils attendus, secrets à exclure et validation humaine sont explicités avant le TP.",
+            "Action attendue vérifiée : resource_review demande d’ouvrir la ressource, d’identifier résultat, entrées, sorties et contrôles, puis de confirmer la consultation.",
+            "Verrouillage cohérent vérifié : la confirmation est rendue et bloque la navigation suivante tant qu’elle n’est pas enregistrée.",
+            "Contextualisation vérifiée : la ressource est nommée et l’objectif de lecture précède son accès."
+          ],
+          "unverified_dimensions": [
+            "Le contenu pédagogique de la ressource n8n externe n’a pas été consulté ; sa présence et son rendu sont vérifiés, sans l’assimiler à une ressource absente.",
+            "La consultation effective n’est pas démontrable : le composant exige une auto-confirmation, non une preuve de lecture."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "ia_appliquee_metiers_tp__10-screen-03",
+          "title": "Construire progressivement",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Progression vérifiée : la séquence rend explicite l’ordre cadrer → préparer → tester → contrôler et place la revue humaine après les essais.",
+            "Explications vérifiées : chaque étape a une description, complétée par un panneau des pratiques à faire/à éviter.",
+            "Transition vers la pratique vérifiée : données fictives, contrôle humain et cas limites préparent le checkpoint puis le mini-projet.",
+            "Rendu/UX vérifié : sequence_visual et comparison_panel sont pris en charge par LessonViewer et affichent leurs libellés et descriptions."
+          ],
+          "unverified_dimensions": [
+            "Le détail opérationnel de la configuration multi-agents et de SerpAPI n’est pas démontrable dans cet écran seul ; il peut relever de la ressource source non inspectée."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "ia_appliquee_metiers_tp__10-checkpoint-01",
+          "title": "Checkpoint : environnement et sécurité",
+          "score_100": 60,
+          "verified_dimensions": [
+            "Énoncé et action vérifiés : le QCM nomme le contexte, pose une question précise et offre quatre choix exploitables.",
+            "Prérequis vérifiés : la bonne pratique reprend le cadre de sécurité présenté dans les écrans 2 et 3.",
+            "Feedback vérifié : KnowledgeCheckBlock affiche correct/incorrect, l’explication et un bouton Réessayer.",
+            "Rendu vérifié : knowledge_check est rendu avec les options et le compteur d’une réponse."
+          ],
+          "unverified_dimensions": [
+            "L’atteinte réelle du prérequis n’est pas garantie en raison du verrouillage contournable confirmé ci-dessous."
+          ],
+          "issues": [
+            {
+              "issue_id": "079-ia-appliquee-metiers-tp-10-checkpoint-threshold-bypass",
+              "course_id": "ia_appliquee_metiers_tp__10",
+              "chapter_id": "ia_appliquee_metiers_tp__10-checkpoint-01",
+              "content_id": "ia_appliquee_metiers_tp__10-checkpoint-preparation",
+              "content_type": "knowledge_check",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint requis annonce un seuil de réussite de 1, mais une réponse erronée déverrouille tout de même la suite. La complétion est enregistrée dès qu’une option est sélectionnée ; le seuil ne porte que sur des blocs de type checkpoint, alors que l’activité est un knowledge_check. L’apprenant peut donc atteindre le mini-projet sans avoir assimilé le cadre de sécurité pourtant présenté comme prérequis.",
+              "current_content": "Chapitre requiredBeforeAdvance: true, passThreshold: 1 ; activité knowledge_check required: true, correctAnswer: « a ». L’explication demande de réessayer après une réponse incorrecte.",
+              "proposed_content": "Conserver l’énoncé et l’explication, mais faire dépendre la complétion du checkpoint de la réponse « a ». Après une erreur, afficher : « Réponse incorrecte. Relisez l’explication puis sélectionnez à nouveau la pratique attendue ; une réponse correcte est nécessaire pour poursuivre. » sans marquer l’activité comme terminée.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__10.json → lessons[0].chapters[3].passThreshold et blocks[0] ; client/src/components/blocks/GenericLearningBlocks.tsx → KnowledgeCheckBlock.select appelle onComplete(..., id === correctAnswer) pour toute option ; client/src/pages/training/LessonViewer.tsx → lignes 484-489 ajoute l’identifiant à completedNovasavoInteractions quel que soit isCorrect ; lignes 1538-1556 délèguent le seuil de checkpoint à getCheckpointGateState ; client/src/pages/training/checkpointGate.ts → lignes 18-21 ne recense que block.type === 'checkpoint'.",
+              "confidence": "high",
+              "verification_status": "verified_render_and_progression_logic",
+              "recommended_action": "Adapter la logique de gate pour compter les knowledge_check de ce checkpoint et n’enregistrer une complétion utilisable pour la progression qu’après réponse correcte ; couvrir une réponse erronée par un test de progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "ia_appliquee_metiers_tp__10-mini-project",
+          "title": "Mini-projet et preuve de réalisation",
+          "score_100": 62,
+          "verified_dimensions": [
+            "Objectif et livrable vérifiés en français : résultat demandé, priorités, mots-clés, plan à 30 jours et quatre éléments de preuve sont nommés.",
+            "Préparation et sécurité vérifiées : guide d’environnement, ressource fictive, indice, correction et erreurs fréquentes sont rendus par CloudExerciseBlock.",
+            "Action attendue vérifiée : réaliser un cas de démonstration puis déposer une preuve textuelle ; la correction reste masquée avant soumission.",
+            "Cohérence de séquence vérifiée : ce TP suit les écrans de sécurité, la consultation de source, la démarche et le checkpoint."
+          ],
+          "unverified_dimensions": [
+            "Le support fictif est déclaré par une URL locale et rendu comme téléchargement, mais son contenu n’est pas présent dans le checkout audité : il n’est pas considéré comme absent.",
+            "Le guidage détaillé par la ressource source n’est pas vérifié ; l’absence de steps dans le bloc ne prouve pas l’absence de guidage dans la ressource explicitement demandée.",
+            "La compréhension en anglais n’est pas vérifiée car les instructions essentielles restent françaises.",
+            "La qualité effective de la preuve n’est pas garantie par la logique de validation."
+          ],
+          "issues": [
+            {
+              "issue_id": "079-ia-appliquee-metiers-tp-10-mini-project-en-localization",
+              "course_id": "ia_appliquee_metiers_tp__10",
+              "chapter_id": "ia_appliquee_metiers_tp__10-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__10-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "localisation",
+              "description": "Les éléments déterminants du mini-projet (objectif, instructions, indice et correction) sont des chaînes françaises non localisées. Le composant les affiche telles quelles quand la langue sélectionnée est l’anglais, alors que le chapitre et l’interface proposent une version anglaise.",
+              "current_content": "assignment, instructions, hint et solution sont des chaînes françaises non des objets {fr,en}. Seuls environmentGuide et resources comportent une variante en.",
+              "proposed_content": "Fournir des objets {fr,en}. Variante anglaise réutilisable : assignment: « Generate a complete SEO strategy for a demonstration website, including priorities, keywords, and a 30-day action plan. » ; instructions: « Complete the mini-project in a personal demonstration environment. Use the provided fictional resource, then describe in the evidence field: the scenario tested, the result obtained, a check performed, and the step that remains subject to human approval. » ; hint: « Start with a single fictional case and keep the final action as a draft or behind human approval. » ; traduire à l’identique la correction et ses trois erreurs fréquentes.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__10.json → lessons[0].chapters[4].blocks[0].assignment, instructions, hint et solution ; client/src/components/CloudExerciseBlock.tsx → lignes 104-112 résolvent ces champs avec resolveLocalizedBlockText ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 11-17 renvoie une chaîne inchangée quelle que soit lang.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_path",
+              "recommended_action": "Localiser les quatre champs en {fr,en}, puis vérifier les deux langues dans CloudExerciseBlock avant diffusion."
+            },
+            {
+              "issue_id": "079-ia-appliquee-metiers-tp-10-mini-project-unverifiable-submission",
+              "course_id": "ia_appliquee_metiers_tp__10",
+              "chapter_id": "ia_appliquee_metiers_tp__10-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__10-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "La consigne exige une preuve composée de quatre éléments, mais le TP ne définit ni longueur minimale, ni critères visibles, ni évaluation ou validation structurée. Toute saisie non vide valide le TP, affiche la correction et débloque le quiz final. La plateforme ne peut donc pas vérifier que la preuve contient le scénario, le résultat, le contrôle et la validation humaine demandés.",
+              "current_content": "La consigne demande de « décrire dans la zone de preuve : le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine ». Le bloc ne contient pas minimumAnswerLength, learnerCriteria, rubricCriteria, passingScore ni serverGradedAssessment.",
+              "proposed_content": "Afficher avant la zone de preuve : « Votre preuve doit comporter quatre parties : 1. scénario fictif testé ; 2. résultat obtenu ; 3. contrôle effectué ; 4. étape conservée sous validation humaine. » Enregistrer ces éléments comme learnerCriteria ou rubricCriteria et définir une règle de validation cohérente ; ne pas déverrouiller le chapitre sur une saisie non vide seule.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__10.json → lessons[0].chapters[4].blocks[0] ; client/src/components/CloudExerciseBlock.tsx → lignes 117-125 déterminent usesTrackedRubric=false et minimumAnswerLength=1 ; lignes 153-161 soumettent, révèlent la correction et appellent onComplete sans évaluation en l’absence de grille ou d’évaluation serveur ; client/src/components/blocks/cloudExerciseValidation.ts → lignes 1-9 accepte toute chaîne non vide au seuil 1.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_progression_logic",
+              "recommended_action": "Configurer des critères apprenant correspondant aux quatre éléments déjà demandés et une validation structurée (locale ou serveur) ; à défaut, présenter l’activité comme une auto-déclaration non évaluée et ne pas l’utiliser comme prérequis validant."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "ia_appliquee_metiers_tp__10-final-quiz",
+          "title": "Quiz final : valider la démarche",
+          "score_100": 67,
+          "verified_dimensions": [
+            "Énoncés et actions vérifiés : quatre QCM et un tri indiquent la sélection ou le placement attendu ; le tri donne aussi une consigne d’interface clic/glisser-déposer.",
+            "Feedback QCM vérifié : SingleChoiceExercise indique le bon choix, affiche l’explication et propose une nouvelle tentative.",
+            "Verrouillage vérifié : le passage final exige quatre QCM corrects (seuil 4) et un tri correctement terminé ; les essais peuvent être repris.",
+            "Cohérence vérifiée partiellement : données fictives, sécurité et validation humaine prolongent les écrans précédents."
+          ],
+          "unverified_dimensions": [
+            "La correction détaillée du tri n’est pas fournie au rendu malgré un feedback éditorial existant.",
+            "La couverture des compétences SEO centrales est insuffisante dans l’évaluation finale confirmée ci-dessous.",
+            "Deux options de la variante anglaise ne sont pas localisées."
+          ],
+          "issues": [
+            {
+              "issue_id": "079-ia-appliquee-metiers-tp-10-bucket-sort-feedback-not-rendered",
+              "course_id": "ia_appliquee_metiers_tp__10",
+              "chapter_id": "ia_appliquee_metiers_tp__10-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__10-quiz-order",
+              "content_type": "bucket_sort",
+              "severity": "P1",
+              "category": "feedback",
+              "description": "Le tri annonce qu’une correction sera disponible après une tentative complète et possède un champ feedback, mais ce champ n’est pas transmis au composant rendu. Le composant ne rend qu’un éventuel champ correction, absent ici. Après une erreur, l’apprenant voit le score et les cartes en rouge, sans explication textuelle de la démarche ou de l’emplacement attendu, alors que le tri reste bloquant jusqu’à réussite complète.",
+              "current_content": "instructions : « La correction est disponible après une tentative complète. » ; feedback : « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. » ; aucun champ correction.",
+              "proposed_content": "Rendre effectivement un feedback/correction après tentative : « Correction : 1. Cadrer — définir le résultat métier, les données fictives et les limites d’action. 2. Construire — configurer le workflow dans l’environnement de démonstration. 3. Tester — exécuter des cas fictifs, journaliser les sorties et relever les écarts. 4. Valider — faire relire les actions sensibles avant toute utilisation réelle. La validation humaine intervient après des tests documentés. »",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__10.json → lessons[0].chapters[5].blocks[4].instructions, feedback et absence de correction ; client/src/pages/training/LessonViewer.tsx → lignes 957-973 transmet uniquement block.correction à MatchingExercise ; client/src/components/MatchingExercise.tsx → lignes 40-42 et 444-451 n’affichent une explication que via exercise.correction ; lignes 454-464 demandent de réessayer si le tri est incorrect ; LessonViewer lignes 1572-1575 verrouille la suite tant que le bucket_sort n’est pas complété correctement.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_path",
+              "recommended_action": "Soit mapper feedback vers la propriété affichée par MatchingExercise, soit fournir une correction compatible avec le composant ; conserver le détail des quatre associations afin de soutenir une nouvelle tentative."
+            },
+            {
+              "issue_id": "079-ia-appliquee-metiers-tp-10-final-quiz-skill-coverage-gap",
+              "course_id": "ia_appliquee_metiers_tp__10",
+              "chapter_id": "ia_appliquee_metiers_tp__10-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__10-final-quiz",
+              "content_type": "quiz",
+              "severity": "P2",
+              "category": "évaluation",
+              "description": "L’évaluation finale vérifie surtout les données fictives, les secrets et la validation humaine. Elle ne vérifie pas explicitement trois compétences annoncées : exploiter des résultats SERP comme contexte de décision, assembler les volets technique/mots-clés/local/contenu, et produire un rapport SEO exploitable. Le seuil de 4/4 peut donc être atteint sans démontrer ces compétences centrales.",
+              "current_content": "Les quatre QCM portent sur la preuve fictive, le contrôle humain, un contrôle générique et les secrets ; le tri porte sur cadrer/construire/tester/valider. Les compétences annoncées figurent dans lessons[0].chapters[0].blocks[0].items.",
+              "proposed_content": "Ajouter, à partir du support fictif réellement fourni, des items ou une grille de vérification sur l’usage de résultats SERP dans une décision, la présence des quatre volets SEO (audit technique, mots-clés, local SEO, contenu) et les éléments qui rendent le rapport utilisable par un client. Les données de la formation ne donnent pas assez de résultats SERP ni de livrable type pour rédiger ici des questions factuelles et leurs distracteurs sans invention.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__10.json → lessons[0].chapters[0].blocks[0].items[1..3] ; lessons[0].chapters[5].blocks[0..4] ; lessons[0].chapters[5].passThreshold = 4 ; client/src/pages/training/LessonViewer.tsx → lignes 1547-1556 compte les single_choice_exercise pour ce seuil, tandis que le bucket_sort est exigé séparément aux lignes 1572-1575.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_progression_logic",
+              "recommended_action": "Concevoir les nouveaux items depuis le support fictif et le rapport attendu, puis aligner explicitement chaque item et la preuve du TP sur une compétence annoncée."
+            },
+            {
+              "issue_id": "079-ia-appliquee-metiers-tp-10-final-quiz-partial-en-localization",
+              "course_id": "ia_appliquee_metiers_tp__10",
+              "chapter_id": "ia_appliquee_metiers_tp__10-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__10-final-quiz",
+              "content_type": "quiz",
+              "severity": "P3",
+              "category": "localisation",
+              "description": "Deux options affichées dans la variante anglaise du quiz restent en français, ce qui rompt la cohérence linguistique au moment de l’évaluation.",
+              "current_content": "quiz-02.options[id=b].text.en = « Faux : l’automatisation dispense toujours de tout contrôle. » ; quiz-04.options[id=c].text.en = « Le statut de test « à vérifier ». ».",
+              "proposed_content": "Remplacer les deux variantes en par : « False: automation never removes the need for oversight. » et « The test status “to be verified”. ».",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__10.json → lessons[0].chapters[5].blocks[1].options[1].text.en et blocks[3].options[2].text.en ; client/src/pages/training/LessonViewer.tsx → lignes 977-1004 sélectionne opt.text[lang] pour SingleChoiceExercise.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_path",
+              "recommended_action": "Compléter ces deux variantes en et réaliser une passe de contrôle des chaînes bilingues du quiz final."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "1 cours, 1 leçon et 6 chapitres entièrement examinés dans le JSON source et les chemins de rendu/progression pertinents.",
+    "activities_reviewed": 8,
+    "activity_inventory": {
+      "resource_review": 1,
+      "knowledge_check": 1,
+      "cloud_exercise": 1,
+      "single_choice_exercise": 4,
+      "bucket_sort": 1
+    },
+    "score_100": 75,
+    "scoring_method": "Moyenne indicative des six notes de chapitre, renormalisée sur les dimensions effectivement vérifiées ; aucune dimension non inspectée n’a reçu une note par défaut.",
+    "confirmed_issues": 7,
+    "priority_summary": "5 P1 : objectifs et TP non localisés en anglais, checkpoint contournable après une réponse erronée, mini-projet validable par une saisie non vide, et correction du tri non rendue. 1 P2 : quiz final insuffisamment aligné sur trois compétences SEO annoncées. 1 P3 : deux options anglaises du quiz final restent en français.",
+    "pre_audit_disposition": "Les trois signaux statiques de manque d’explication dans checkpoint, mini-projet et quiz final ne sont pas repris automatiquement : les énoncés, consignes et prérequis sont présents. Le signal sur l’absence de steps du TP reste non conclusif parce qu’une ressource source explicitement demandée n’a pas été inspectée ; la faiblesse de validation du TP est confirmée par la logique de rendu.",
+    "strengths": [
+      "Parcours français lisible : objectifs, cadre de sécurité, préparation, démarche, checkpoint, mini-projet et évaluation finale sont ordonnés de façon cohérente.",
+      "Les huit activités déclarées ont toutes un énoncé et une action identifiable ; aucun énoncé absent ou abscons n’a été confirmé.",
+      "Les QCM offrent un feedback explicatif et une nouvelle tentative ; le mini-projet fournit une correction et des rappels de sécurité après soumission.",
+      "Le support fictif et la ressource source sont référencés et contextualisés ; ils ne sont pas déclarés absents faute d’accès local à leur contenu."
+    ]
+  },
+  "limits": [
+    "Audit qualitatif en lecture seule : aucune donnée de cours, base de données, ressource ni composant n’a été modifié.",
+    "Le contenu de la ressource n8n externe n’a pas été consulté, conformément à la consigne de ne citer aucune source externe ; sa présence et son rendu comme ressource à consulter ont été vérifiés dans les données et le code.",
+    "Le fichier local /manus-storage/10-10-agence-seo-autonome-composee-de-plusieurs-agents-support-fictif_f19feb7b.md est référencé mais n’est pas présent dans le checkout audité ; son contenu, sa disponibilité HTTP et sa pertinence ne peuvent pas être évalués ici sans le traiter comme absent.",
+    "Le rendu a été vérifié statiquement dans LessonViewer, CloudExerciseBlock, GenericLearningBlocks, SingleChoiceExercise, MatchingExercise et les règles de progression ; aucun parcours navigateur authentifié ni soumission serveur n’a été exécuté.",
+    "L’évaluation factuelle d’une stratégie SEO produite par un apprenant, de la qualité des résultats SerpAPI et du workflow n8n ne relève pas des données accessibles dans ce périmètre."
+  ]
+}

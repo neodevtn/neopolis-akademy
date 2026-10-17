@@ -1,0 +1,279 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_12",
+  "courses": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "ia_appliquee_metiers_tp__12-screen-01",
+          "title": "Objectif du TP",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Objectifs vérifiés : le hero rend explicitement le métier cible, le niveau, la durée et quatre compétences attendues ; LearningSectionBlock affiche le corps et la liste à l’apprenant.",
+            "Progression vérifiée : l’écran cadre le cas d’usage, le périmètre de démonstration et les contrôles avant la préparation puis la réalisation.",
+            "Notation vérifiée (pondérations renormalisées ; aucune activité ni média dans cet écran) : clarté des explications 5/5, cohérence/progression 4/5, complétude 4/5, UX 4/5 → 87/100.",
+            "Le pré-audit statique ne signalait aucun constat pour ce cours ; les constats ci-dessous résultent de la revue du contenu et du rendu."
+          ],
+          "unverified_dimensions": [
+            "Médias : aucun média n’est déclaré dans ce chapitre ; sa pertinence ne se note pas artificiellement.",
+            "Activité : aucun exercice propre au chapitre ; la clarté d’activité est non applicable.",
+            "Rendu navigateur sur appareils réels et compréhension effective par des apprenants : non observés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:screen-01:empty-generic-chapter-quiz-auto-pass",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-screen-01",
+              "content_id": "generic-chapter-quiz:teaching-screens-0-2",
+              "content_type": "chapter_quiz",
+              "severity": "P3",
+              "category": "ux_navigation",
+              "description": "Les trois écrans d’enseignement déclenchent le composant de quiz intermédiaire à la navigation, mais aucune banque de questions n’existe pour ce cours. Le composant charge alors brièvement puis valide et avance automatiquement. Ce détour ne mesure rien et crée une transition de navigation inutile entre les écrans 1→2, 2→3 et 3→checkpoint.",
+              "current_content": "Les chapitres screen-01, screen-02 et screen-03 sont de type teaching avec requiredBeforeAdvance=true ; aucune entrée ia_appliquee_metiers_tp__12 n’est présente dans lessonQuizzes.json.",
+              "proposed_content": "Choisir explicitement l’une des deux expériences : (1) ne pas ouvrir le quiz intermédiaire lorsqu’aucune banque n’est disponible ; ou (2) fournir une question contextualisée et une règle de réussite pour les écrans où une validation est réellement attendue. Ne pas présenter une validation vide comme une étape pédagogique.",
+              "evidence": "client/public/data/lessonQuizzes.json → clé ia_appliquee_metiers_tp__12 absente. client/src/pages/training/LessonViewer.tsx → lignes 1614-1647 : tout chapitre teaching non révisé ouvre ChapterQuiz. client/src/components/ChapterQuiz.tsx → lignes 75-80 : quand allQuestions.length===0, onPass() est appelé automatiquement ; lignes 48-59 montrent que l’absence de clé produit cette liste vide. L’effet concerne les chapitres 0, 1 et 2 du client/public/data/courses/ia_appliquee_metiers_tp__12.json.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Empêcher l’injection de ChapterQuiz en l’absence de banque de questions, ou renseigner des questions réellement alignées ; conserver le checkpoint source déjà présent pour la validation de sécurité."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "ia_appliquee_metiers_tp__12-screen-02",
+          "title": "Préparer l’environnement",
+          "score_100": 71,
+          "verified_dimensions": [
+            "Préparation vérifiée : les outils, les données fictives, l’interdiction des secrets/données réelles et la validation humaine sont explicitement formulés avant le TP.",
+            "Énoncé de l’activité resource_review vérifié : l’action attendue, les éléments à repérer et le retour vers la formation sont compréhensibles ; le bouton d’ouverture et le bouton de confirmation sont rendus.",
+            "Transition vérifiée : cet écran précède la démarche, le checkpoint de sécurité et le mini-projet ; il prépare logiquement le cadre de travail.",
+            "Notation vérifiée (pertinence intrinsèque de la vidéo non notée) : clarté 4/5, progression 4/5, complétude 4/5, activité/énoncé 3/5, UX 3/5 → 71/100."
+          ],
+          "unverified_dimensions": [
+            "Contenu, accessibilité, disponibilité, transcription et pertinence pédagogique de la vidéo YouTube : non inspectés ; la ressource déclarée n’est pas considérée absente.",
+            "Rendu navigateur sur appareils réels et compréhension effective par des apprenants : non observés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:screen-02:resource-review-declarative-gate",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-screen-02",
+              "content_id": "ia_appliquee_metiers_tp__12-source-review",
+              "content_type": "resource_review",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "La ressource source est présentée comme un prérequis de réalisation du TP, mais le verrouillage est levé par une simple déclaration de consultation : l’apprenant peut cliquer sur « J’ai consulté cette ressource » sans ouvrir le lien ni réaliser le repérage demandé. Le prérequis technique du mini-projet reste donc contournable.",
+              "current_content": "Consigne : « Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation. » La ressource est suivie d’un bouton « J’ai consulté cette ressource ».",
+              "proposed_content": "Aucune réécriture factuelle n’est nécessaire. Faire dépendre l’activation de la confirmation d’une ouverture du lien dans la session, puis conserver la confirmation explicite ; si la maîtrise du repérage est requise, ajouter après la ressource une vérification courte fondée sur les éléments déjà demandés (résultat métier, entrées, sorties, contrôles).",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__12.json → lessons[0].chapters[1].blocks[1] définit la consigne et requiredBeforeAdvance=true. client/src/pages/training/LessonViewer.tsx → renderBlock(resource_review), lignes 1068-1088 : le bouton ajoute directement reviewId à completedExercises ; aucun état d’ouverture du lien reviewUrl n’est contrôlé. client/src/pages/training/LessonViewer.tsx → lignes 1583-1586 : ce seul état déverrouille la ressource.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Renforcer le verrouillage de resource_review : enregistrer l’ouverture du lien avant d’autoriser la confirmation, et, si cette ressource est un prérequis de compétence, associer la confirmation à une vérification des acquis plutôt qu’à la seule auto-attestation."
+            },
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:screen-02:resource-review-raw-markdown",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-screen-02",
+              "content_id": "ia_appliquee_metiers_tp__12-source-review",
+              "content_type": "resource_review",
+              "severity": "P3",
+              "category": "ux_rendu",
+              "description": "La même URL est fournie par le bouton de ressource et, dans l’énoncé, sous forme de syntaxe Markdown. Or le composant resource_review rend l’énoncé dans un paragraphe brut : le lien Markdown apparaît littéralement (« [Ouvrir…](https://…) ») au lieu d’être un lien lisible. Cela duplique l’action et détériore la lisibilité de la consigne.",
+              "current_content": "La valeur instructions se termine par « [Ouvrir la ressource source](https://www.youtube.com/watch?v=cEpbSVkt_Qc) » alors que resourceLabel fournit déjà « Ouvrir la ressource source ».",
+              "proposed_content": "Supprimer de instructions la ligne Markdown redondante et conserver le bouton « Ouvrir la ressource source » ; alternativement, rendre instructions avec le moteur Markdown/PageContent afin que tout lien déclaré soit affiché comme lien.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__12.json → lessons[0].chapters[1].blocks[1].instructions contient la syntaxe Markdown et resourceLabel. client/src/pages/training/LessonViewer.tsx → lignes 1070-1087 : reviewInstructions est inséré dans <p> et le lien est rendu séparément par <a href={reviewUrl}> ; aucune interprétation Markdown n’est appliquée à reviewInstructions.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Éliminer la duplication au niveau du contenu ou utiliser un rendu riche compatible avec Markdown dans resource_review ; vérifier visuellement les deux langues après correction."
+            },
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:screen-02:empty-generic-chapter-quiz-auto-pass",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-screen-02",
+              "content_id": "generic-chapter-quiz:teaching-screens-0-2",
+              "content_type": "chapter_quiz",
+              "severity": "P3",
+              "category": "ux_navigation",
+              "description": "Les trois écrans d’enseignement déclenchent le composant de quiz intermédiaire à la navigation, mais aucune banque de questions n’existe pour ce cours. Le composant charge alors brièvement puis valide et avance automatiquement. Ce détour ne mesure rien et crée une transition de navigation inutile entre les écrans 1→2, 2→3 et 3→checkpoint.",
+              "current_content": "Les chapitres screen-01, screen-02 et screen-03 sont de type teaching avec requiredBeforeAdvance=true ; aucune entrée ia_appliquee_metiers_tp__12 n’est présente dans lessonQuizzes.json.",
+              "proposed_content": "Choisir explicitement l’une des deux expériences : (1) ne pas ouvrir le quiz intermédiaire lorsqu’aucune banque n’est disponible ; ou (2) fournir une question contextualisée et une règle de réussite pour les écrans où une validation est réellement attendue. Ne pas présenter une validation vide comme une étape pédagogique.",
+              "evidence": "client/public/data/lessonQuizzes.json → clé ia_appliquee_metiers_tp__12 absente. client/src/pages/training/LessonViewer.tsx → lignes 1614-1647 : tout chapitre teaching non révisé ouvre ChapterQuiz. client/src/components/ChapterQuiz.tsx → lignes 75-80 : quand allQuestions.length===0, onPass() est appelé automatiquement ; lignes 48-59 montrent que l’absence de clé produit cette liste vide. L’effet concerne les chapitres 0, 1 et 2 du client/public/data/courses/ia_appliquee_metiers_tp__12.json.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Empêcher l’injection de ChapterQuiz en l’absence de banque de questions, ou renseigner des questions réellement alignées ; conserver le checkpoint source déjà présent pour la validation de sécurité."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "ia_appliquee_metiers_tp__12-screen-03",
+          "title": "Construire progressivement",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Progression vérifiée : sequence_visual rend dans l’ordre Cadrer, Préparer, Tester, Contrôler ; chaque étape est décrite et le panneau comparatif précise les contrôles avant utilisation.",
+            "Prérequis de sécurité vérifiés : données fictives, contrôle humain et tests de cas limites sont introduits avant le checkpoint et le mini-projet.",
+            "Notation vérifiée (sans média ni activité propres) : clarté 4/5, progression 4/5, complétude 4/5, UX 4/5 → 80/100."
+          ],
+          "unverified_dimensions": [
+            "Médias : aucun média déclaré dans ce chapitre ; sa pertinence ne se note pas artificiellement.",
+            "Activité : aucun exercice propre au chapitre ; la clarté d’activité est non applicable.",
+            "La couverture technique détaillée de n8n, du helpdesk et du LLM dépend en partie de la ressource source non inspectée ; elle n’est pas inférée de cet écran.",
+            "Rendu navigateur sur appareils réels et compréhension effective par des apprenants : non observés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:screen-03:empty-generic-chapter-quiz-auto-pass",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-screen-03",
+              "content_id": "generic-chapter-quiz:teaching-screens-0-2",
+              "content_type": "chapter_quiz",
+              "severity": "P3",
+              "category": "ux_navigation",
+              "description": "Les trois écrans d’enseignement déclenchent le composant de quiz intermédiaire à la navigation, mais aucune banque de questions n’existe pour ce cours. Le composant charge alors brièvement puis valide et avance automatiquement. Ce détour ne mesure rien et crée une transition de navigation inutile entre les écrans 1→2, 2→3 et 3→checkpoint.",
+              "current_content": "Les chapitres screen-01, screen-02 et screen-03 sont de type teaching avec requiredBeforeAdvance=true ; aucune entrée ia_appliquee_metiers_tp__12 n’est présente dans lessonQuizzes.json.",
+              "proposed_content": "Choisir explicitement l’une des deux expériences : (1) ne pas ouvrir le quiz intermédiaire lorsqu’aucune banque n’est disponible ; ou (2) fournir une question contextualisée et une règle de réussite pour les écrans où une validation est réellement attendue. Ne pas présenter une validation vide comme une étape pédagogique.",
+              "evidence": "client/public/data/lessonQuizzes.json → clé ia_appliquee_metiers_tp__12 absente. client/src/pages/training/LessonViewer.tsx → lignes 1614-1647 : tout chapitre teaching non révisé ouvre ChapterQuiz. client/src/components/ChapterQuiz.tsx → lignes 75-80 : quand allQuestions.length===0, onPass() est appelé automatiquement ; lignes 48-59 montrent que l’absence de clé produit cette liste vide. L’effet concerne les chapitres 0, 1 et 2 du client/public/data/courses/ia_appliquee_metiers_tp__12.json.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Empêcher l’injection de ChapterQuiz en l’absence de banque de questions, ou renseigner des questions réellement alignées ; conserver le checkpoint source déjà présent pour la validation de sécurité."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "ia_appliquee_metiers_tp__12-checkpoint-01",
+          "title": "Checkpoint : environnement et sécurité",
+          "score_100": 76,
+          "verified_dimensions": [
+            "Énoncé, options, action et résultat attendu vérifiés : une réponse doit être choisie ; le composant indique une réponse correcte ou incorrecte, affiche l’explication et offre une nouvelle tentative.",
+            "Cohérence vérifiée : la bonne réponse reprend les protections introduites dans les deux écrans précédents (sandbox, données fictives, validation humaine).",
+            "Notation vérifiée (sans média déclaré) : clarté 4/5, progression 2/5, complétude 4/5, clarté de l’activité 5/5, UX/feedback 2/5 → 76/100 ; la baisse provient du verrouillage qui ne requiert pas une réussite."
+          ],
+          "unverified_dimensions": [
+            "Médias : aucun média déclaré dans ce chapitre ; sa pertinence ne se note pas artificiellement.",
+            "Rendu navigateur sur appareils réels et compréhension effective par des apprenants : non observés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:checkpoint-01:incorrect-answer-unlocks",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-checkpoint-01",
+              "content_id": "ia_appliquee_metiers_tp__12-checkpoint-preparation",
+              "content_type": "knowledge_check",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le checkpoint obligatoire est franchissable après une réponse incorrecte. L’interface affiche bien l’explication et offre de réessayer, mais enregistre la complétion quelle que soit la justesse ; la navigation ne contrôle ensuite que cette complétion. Le passThreshold=1 annoncé par le chapitre n’est donc pas appliqué à ce knowledge_check.",
+              "current_content": "Question à choix multiple avec correctAnswer « a », explanation pédagogique, required=true et chapitre checkpoint avec passThreshold=1.",
+              "proposed_content": "Conserver l’énoncé, les options et l’explication actuels. Modifier la règle de réussite pour que seule la réponse « a » valide ce checkpoint ; après une réponse incorrecte, afficher l’explication actuelle et laisser l’apprenant réessayer sans déverrouiller le chapitre suivant.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__12.json → lessons[0].chapters[3] a type=checkpoint, passThreshold=1 ; son bloc knowledge_check a correctAnswer='a' et required=true. client/src/components/blocks/GenericLearningBlocks.tsx → lignes 50-64 : select() appelle onComplete(..., id === correctAnswer) dans tous les cas. client/src/pages/training/LessonViewer.tsx → lignes 484-489 : onComplete ajoute toujours l’id à completedNovasavoInteractions ; lignes 359-377 et 1601-1624 : le verrouillage ne vérifie ensuite que cet état de complétion. client/src/pages/training/checkpointGate.ts → lignes 18-31 : le seuil ne collecte que les blocs dont type==='checkpoint', alors que le bloc réel est knowledge_check.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Aligner le mécanisme du checkpoint sur passThreshold : enregistrer une réussite séparément de la simple tentative, l’exiger avant Suivant et tester le cas « réponse b puis Suivant » pour confirmer le maintien du verrouillage."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "ia_appliquee_metiers_tp__12-mini-project",
+          "title": "Mini-projet et preuve de réalisation",
+          "score_100": 69,
+          "verified_dimensions": [
+            "Énoncé du TP vérifié : il donne un objectif métier concret (file de démonstration, questions fréquentes, trois articles FAQ), une action, les éléments de preuve attendus, un indice, une correction et un rappel de validation humaine.",
+            "Transition théorie→activité vérifiée : le TP suit le cadrage, la préparation, la démarche et le checkpoint de sécurité ; les compétences annoncées sont reprises dans les instructions.",
+            "Aide et réutilisation vérifiées : environmentGuide, ressource de support fictif, indice, correction et extension sont prévus par les données et ont des emplacements rendus dans CloudExerciseBlock.",
+            "Notation vérifiée (contenu de la ressource gérée non noté) : clarté 4/5, progression 3/5, complétude 3/5, clarté de l’activité 4/5, UX/feedback 2/5 → 69/100."
+          ],
+          "unverified_dimensions": [
+            "Contenu et disponibilité effective du fichier géré « Support fictif de TP 12 » : non inspectés ; son URL /manus-storage est déclarée et routée vers /api/assets par l’application, il n’est donc pas qualifié d’absent.",
+            "Faisabilité dans les environnements personnels n8n/helpdesk et qualité technique de la vidéo source : non testées.",
+            "Rendu navigateur sur appareils réels et compréhension effective par des apprenants : non observés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:mini-project:proof-not-meaningfully-validated",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__12-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le mini-projet central demande une preuve structurée, mais aucun minimum de contenu ni aucun critère d’évaluation n’est configuré. Dans ce cas, le composant accepte un seul caractère non blanc, déclare la preuve validée, affiche la correction et déverrouille le quiz final. Le verrouillage existe donc formellement sans garantir la production des éléments demandés.",
+              "current_content": "La consigne exige de décrire « le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine ». Le bloc ne définit ni minimumAnswerLength, ni rubricCriteria, ni learnerCriteria, ni serverGradedAssessment.",
+              "proposed_content": "Critères de preuve réutilisables : « Votre preuve doit comporter : 1. le scénario fictif testé ; 2. le workflow ou la procédure réalisée ; 3. le résultat observé ; 4. un contrôle effectué et l’écart éventuel ; 5. l’action qui reste soumise à validation humaine. Mentionnez au moins un test avec données fictives. » Ces cinq éléments reprennent la consigne et la correction existantes, sans ajouter de fait nouveau.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__12.json → lessons[0].chapters[4].blocks[0] contient les quatre éléments de preuve et la correction, mais pas les champs de critère/longueur. client/src/components/CloudExerciseBlock.tsx → lignes 117-125 et 153-161 : sans évaluation suivie, minimumAnswerLength vaut 1, submit() fixe submitted=true, révèle la solution et appelle onComplete(). client/src/components/blocks/cloudExerciseValidation.ts → hasRequiredAnswerLength accepte answer.trim().length >= minimumAnswerLength. client/src/pages/training/LessonViewer.tsx → lignes 1587-1592 : completedCloudExercises déverrouille ce TP.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Configurer un minimum de réponse cohérent et une grille de critères visible fondée sur la proposition ci-dessus, puis faire évaluer ces critères avant de compléter le bloc. À défaut d’évaluation automatisée, ne présenter la soumission que comme une auto-attestation et ne pas l’utiliser comme preuve de maîtrise."
+            },
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:mini-project:english-locale-french-core-instructions",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-mini-project",
+              "content_id": "ia_appliquee_metiers_tp__12-mini-project-proof",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "localisation",
+              "description": "Dans l’interface anglaise, les champs centraux du mini-projet restent en français : objectif, instructions, indice, correction et message de succès sont des chaînes simples. Le résolveur affiche une chaîne simple telle quelle quelle que soit la langue ; un apprenant anglophone reçoit donc l’essentiel de l’activité dans une autre langue, alors que le cours expose une version EN.",
+              "current_content": "assignment, instructions, hint, solution et successMessage sont des chaînes françaises non localisées dans le cloud_exercise, tandis que les titres, les questions finales et environmentGuide possèdent une version en.",
+              "proposed_content": "Ajouter les valeurs anglaises équivalentes. Exemple directement réutilisable pour les deux champs principaux : assignment : « Set up a demonstration support queue that handles frequently asked questions and creates three FAQ articles for review. » instructions : « Complete the mini-project in a personal demonstration environment. Use the provided fictitious support material, then describe in the evidence area: the scenario tested, the result obtained, a control performed, and the step that remains subject to human approval. » Traduire de même l’indice, la correction et le message de succès sans changer leur contenu pédagogique.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__12.json → lessons[0].chapters[4].blocks[0].assignment/instructions/hint/solution/successMessage sont des chaînes françaises, contrairement à environmentGuide qui est {fr,en}. client/src/components/blocks/cloudExerciseValidation.ts → resolveLocalizedBlockText retourne une chaîne directement. client/src/components/CloudExerciseBlock.tsx → lignes 104-112 récupèrent ces champs par ce résolveur et lignes 228-245, 323-333, 438-495 les affichent à l’apprenant.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Transformer tous les champs apprenant du mini-projet en objets i18n fr/en et effectuer un contrôle de régression dans les deux locales, y compris l’indice, la correction et le message de succès."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "ia_appliquee_metiers_tp__12-final-quiz",
+          "title": "Quiz final : valider la démarche",
+          "score_100": 84,
+          "verified_dimensions": [
+            "Les cinq activités finales ont été vérifiées individuellement : quatre single_choice_exercise avec question, options, bonne réponse et explication ; un bucket_sort avec quatre catégories, quatre cartes, instructions et action de soumission.",
+            "Action et feedback des quatre questions à choix unique vérifiés : sélection, vérification, indication de la bonne réponse, explication et bouton Réessayer sont rendus par SingleChoiceExercise.",
+            "Cohérence de la validation vérifiée : passThreshold=4 exige les quatre bonnes réponses et le tri est aussi requis avant la fin ; les questions réinvestissent données fictives, contrôle humain, traçabilité et validation présentés auparavant.",
+            "Notation vérifiée (sans média déclaré) : clarté 4/5, progression 4/5, complétude 4/5, clarté des activités 5/5, UX/feedback 3/5 → 84/100."
+          ],
+          "unverified_dimensions": [
+            "Médias : aucun média déclaré dans ce chapitre ; sa pertinence ne se note pas artificiellement.",
+            "Rendu navigateur sur appareils réels et compréhension effective par des apprenants : non observés."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ia_appliquee_metiers_tp__12:final-quiz:bucket-sort-feedback-not-rendered",
+              "course_id": "ia_appliquee_metiers_tp__12",
+              "chapter_id": "ia_appliquee_metiers_tp__12-final-quiz",
+              "content_id": "ia_appliquee_metiers_tp__12-quiz-order",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Le tri promet « La correction est disponible après une tentative complète », mais son champ feedback n’est pas transmis au composant de tri. Après une erreur, l’apprenant voyant obtient le nombre de cartes bien placées et des couleurs par carte, sans la correction annoncée ni l’emplacement attendu visible ; seule une correction distincte, absente des données, pourrait être affichée.",
+              "current_content": "instructions : « Placez chaque action dans son étape. La correction est disponible après une tentative complète. » feedback : « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. » Le bloc ne contient pas correction.",
+              "proposed_content": "Correction directement réutilisable : « Cadrer : définir le résultat métier, les données fictives et les limites d’action. Construire : configurer le workflow dans un environnement de démonstration. Tester : exécuter des cas fictifs, journaliser les sorties et relever les écarts. Valider : faire relire les actions sensibles avant toute utilisation réelle. » Afficher cette correction après chaque tentative complète, puis permettre de réessayer.",
+              "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__12.json → lessons[0].chapters[5].blocks[4] définit feedback et promet une correction, mais n’a pas correction. client/src/pages/training/LessonViewer.tsx → lignes 957-973 transmet uniquement block.correction à MatchingExercise. client/src/components/MatchingExercise.tsx → lignes 40-42 et 444-450 n’affichent un texte de correction que via exercise.correction ; lignes 420-465 ne fournissent sinon que le score, les couleurs et « Réessayez ».",
+              "confidence": "high",
+              "verification_status": "verified_content_and_render_logic",
+              "recommended_action": "Soit renseigner le champ correction avec le texte proposé, soit faire prendre en charge feedback par le renderer comme correction post-tentative ; conserver les indicateurs visuels et le bouton Réessayer existants."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": "Couverture exhaustive de la formation : 1 cours, 1 leçon, 6 chapitres et 8 activités déclarées examinés individuellement (1 consultation de ressource, 1 vérification des acquis, 1 mini-projet avec preuve, 4 questions à choix unique et 1 tri). Le parcours de contenu est globalement cohérent — objectifs et cadre de sécurité, préparation, démarche, checkpoint, mise en pratique, quiz final — et les consignes principales sont explicites. 9 constats confirmés : 0 P0, 3 P1, 2 P2, 4 P3. Priorité : rendre le checkpoint réellement conditionné par la bonne réponse, rendre la preuve du mini-projet significativement évaluable, puis localiser l’activité centrale en anglais. Le score moyen descriptif des 6 chapitres est 78/100 ; les notes sont renormalisées sur les dimensions contrôlables et ne notent pas les médias non inspectés ou absents des chapitres.",
+  "limits": [
+    "Audit qualitatif en lecture seule : aucun contenu, fichier de cours, base de données ni code n’a été modifié.",
+    "Le périmètre du manifest pour ia_appliquee_metiers_tp__formation_12 contient un seul fichier de cours (ia_appliquee_metiers_tp__12.json), une seule leçon et six chapitres ; tous ont été examinés.",
+    "La vidéo YouTube référencée et le contenu du fichier géré /manus-storage n’ont pas été visionnés ou téléchargés : leur disponibilité, leur accessibilité, leur transcription et leur qualité intrinsèque restent non vérifiées. Ils sont déclarés dans les données et ne sont pas considérés absents.",
+    "Le rendu a été vérifié par lecture des composants LessonViewer, GenericLearningBlocks, CloudExerciseBlock, MatchingExercise, SingleChoiceExercise, ChapterQuiz et des règles chapterProgress/evaluationRules ; aucune session navigateur apprenant ni test sur appareil réel n’a été exécuté.",
+    "Les tests ciblés de verrouillage existants (chapterSequentialGate.test.ts et checkpointGate.test.ts) passent, mais ils ne couvrent pas le cas particulier d’un chapitre type checkpoint contenant un bloc knowledge_check ; ce cas a été vérifié directement dans le code de rendu et de progression.",
+    "Aucune source externe n’est citée dans ce rapport."
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "formation_id": "datacamp_building_ai_agents_with_crewai",
+  "courses": [
+    {
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Bienvenue dans CrewAI !",
+          "score_100": 42,
+          "verified_dimensions": [
+            "Couverture examinée : les trois blocs sérialisés ont été revus individuellement — préparation textuelle, vidéo Projector `dc_1_act_01_video` et téléchargement des slides `dc_ch01_slides`.",
+            "Objectif et prérequis : la description de la leçon, les slides et le transcript annoncent la construction progressive agent → tâche → équipe → flux et explicitent les prérequis Python (fonctions, dictionnaires, boucles) et API.",
+            "Média contextualisé : le lecteur Projector rend les slides synchronisées, le transcript dépliable et le lien PDF ; l’introduction vidéo formule un résultat de parcours concret (pipeline de contenu multi-agents).",
+            "Rendu et accès aux consignes de sécurité : `LessonViewer` rend le bloc `content` avant le média ; son texte prépare l’usage d’un chatbot autorisé et interdit données sensibles, mots de passe et clés API.",
+            "Verrouillage vérifié : le chapitre est déclaré `requiredBeforeAdvance: true`; le lecteur rend un contrôle « Marquer comme vue (manuel) » et enregistre la complétion avec l’identifiant complet du média.",
+            "Activités : aucune activité interactive, exercice pratique ou question évaluée n’est présente dans ce chapitre ; ce constat a été vérifié sur tous ses blocs, et n’est pas une ressource inaccessible inférée comme absente."
+          ],
+          "unverified_dimensions": [
+            "Ouverture effective du MP4, du flux HLS et du PDF via `/api/assets/...` non testée dans une session navigateur ; ces ressources sont déclarées et servies par un proxy de stockage, elles ne sont donc pas qualifiées d’absentes.",
+            "Lisibilité perceptuelle des slides, images et GIF, ainsi que l’ergonomie réelle clavier/mobile, non vérifiées sans rendu navigateur.",
+            "Il n’existe pas de champ d’objectif pédagogique formel propre au chapitre ; l’objectif est vérifiable par la description, les slides et le transcript, sans taxonomie dédiée.",
+            "Clarté de l’énoncé, action attendue, feedback et reprise d’activité non vérifiables pour une activité, car aucun bloc d’activité n’est sérialisé dans ce chapitre."
+          ],
+          "issues": [
+            {
+              "issue_id": "P023-CURRICULUM-01",
+              "course_id": "building_ai_agents_with_crewai__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "course:building_ai_agents_with_crewai__01",
+              "content_type": "course_structure",
+              "severity": "P1",
+              "category": "complétude_et_progression",
+              "description": "Le parcours réellement sérialisé ne permet pas d’atteindre les compétences annoncées. Il contient seulement une vidéo d’accueil puis, dans la leçon suivante, une vidéo de félicitations. Entre les deux, aucun chapitre n’enseigne ni ne fait pratiquer la création d’un agent, l’attribution de tâches, la constitution d’une équipe, les flux, la mémoire, le routage ou l’orchestration. Le catalogue annonce pourtant « 7 activités » dont « 5 TP guidés », alors que le JSON du cours indique `exerciseCount: 0`, deux chapitres seulement et aucun bloc interactif ou d’exercice. Un apprenant est ainsi invité à terminer une formation pratique sans pouvoir réaliser la pratique annoncée.",
+              "current_content": "Source de production : 2 leçons × 1 chapitre. `dc_ch01_act01` est une introduction Projector ; `dc_ch02_act04` est une récapitulation/félicitation. Le premier transcript annonce « We’ll start small with one agent, then layer in tasks and assemble crews », mais aucun écran suivant de ces apprentissages n’est présent. L’index d’affichage déclare simultanément « 2 chapters · 7 activities · 2 Projector lessons · 5 guided practical exercises ».",
+              "proposed_content": "Restaurer ou réimporter, dans l’ordre annoncé, les chapitres d’enseignement et les activités pratiques correspondant aux compétences promises avant la récapitulation finale, puis synchroniser les compteurs du catalogue avec le parcours réellement publié. Les données disponibles ne permettent pas de rédiger de façon fiable les énoncés techniques, jeux de données, réponses attendues ou rubriques des cinq TP annoncés : aucune réécriture d’activité n’est proposée afin de ne rien inventer.",
+              "evidence": "`client/public/data/courses/building_ai_agents_with_crewai__01.json` → `exerciseCount: 0`; `lessons[0].chapters` ne contient que `dc_ch01_act01` (blocs `content`, `video`, `download`) et `lessons[1].chapters` ne contient que `dc_ch02_act04` (bloc `video`). Le transcript de `dc_1_act_01_video` promet agent, tâches, équipes et flux ; celui de `dc_2_act_04_video` les présente comme déjà accomplis. `client/src/data/trainingIndex.json` → entrée `building_ai_agents_with_crewai__01` déclare « 7 activities » et « 5 guided practical exercises ». `client/public/data/lessonQuizzes.json` ne contient aucune entrée pour ce cours. `LessonViewer.tsx:1481-1534` termine directement une leçon lorsque son unique chapitre est final, après application des gates disponibles.",
+              "confidence": "high",
+              "verification_status": "confirmed_data_and_rendering_code_review",
+              "recommended_action": "P1 — Bloquer la publication ou masquer les promesses de TP tant que les chapitres intermédiaires ne sont pas restaurés. Réimporter d’abord les séquences manquantes et leurs activités source ; ensuite, auditer chaque activité restaurée (énoncé, action, feedback et verrouillage) avant de republier."
+            },
+            {
+              "issue_id": "P023-LOCK-01",
+              "course_id": "building_ai_agents_with_crewai__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le chapitre est déclaré obligatoire avant passage, mais sa vidéo Projector n’est pas incluse dans le calcul du verrouillage de fin de leçon. L’apprenant peut donc sélectionner « Leçon terminée » sans regarder la vidéo ni utiliser « Marquer comme vue (manuel) », ce qui contredit la règle `requiredBeforeAdvance: true` et retire la seule explication de ce chapitre.",
+              "current_content": "`requiredBeforeAdvance: true`; vidéo Projector `dc_1_act_01_video`, identifiant de 17 caractères. Le composant vidéo enregistre bien la complétion avec cet identifiant complet et propose le marquage manuel.",
+              "proposed_content": "Aucune réécriture de contenu n’est nécessaire. Employer systématiquement `block.id` comme clé de complétion d’un bloc `video` possédant `mp4Url` ou `audioUrl`, sans filtre de longueur, dans le calcul du verrou de fin de leçon ; utiliser la même résolution de clé que le lecteur Projector.",
+              "evidence": "`client/public/data/courses/building_ai_agents_with_crewai__01.json` → `lessons[0].chapters[0].requiredBeforeAdvance: true`, bloc vidéo `id: dc_1_act_01_video` (17 caractères). `client/src/pages/training/LessonViewer.tsx:560-590` utilise `mp4Key = block.id` pour la complétion ; mais `LessonViewer.tsx:1483-1511` ne retient `block.id` que s’il mesure de 8 à 15 caractères. La liste des clés de vidéos est donc vide pour ce chapitre unique, et `lastIsGated` reste faux.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Corriger la résolution de clé de média dans le gate de dernier chapitre, puis tester : « Leçon terminée » doit rester désactivé avant la fin de la vidéo ou un marquage manuel explicite, et devenir actif après l’une de ces deux actions."
+            },
+            {
+              "issue_id": "P023-MEDIA-LANG-01",
+              "course_id": "building_ai_agents_with_crewai__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média_et_accessibilité",
+              "description": "Dans l’interface française, le premier média présente des titres et plusieurs contenus de slides en français, mais sa narration et l’intégralité du transcript fourni sont en anglais ; aucun sous-titre français n’est déclaré. Le changement de langue du lecteur ne transforme pas le transcript. Cette alternance non signalée gêne un apprenant francophone, notamment pour les prérequis et les objectifs oraux.",
+              "current_content": "Titre de chapitre et bloc de préparation en français ; `transcript`/`transcriptSegments` de `dc_1_act_01_video` en anglais (« Welcome to… », « We’ll start small… »). Aucun champ `subtitleUrlFr`, `subtitleUrlEn`, `alternativeTextFr` ou source localisée n’est renseigné.",
+              "proposed_content": "Ajouter une transcription française fidèle et des sous-titres français, ou annoncer explicitement avant lecture que la narration est en anglais et rendre visible une alternative française complète. La traduction exacte doit être produite à partir du média source, qui n’a pas été visionné dans cet audit.",
+              "evidence": "`client/public/data/courses/building_ai_agents_with_crewai__01.json` → `lessons[0].chapters[0].blocks[id=dc_1_act_01_video]` : slides/titres français, transcript et segments en anglais, aucun champ de sous-titrage. `client/src/pages/training/LessonViewer.tsx:604-620` affiche directement `transcriptSegments` sans sélection de langue ; `ProjectorPlayer.tsx:33-176` reçoit une seule source média.",
+              "confidence": "high",
+              "verification_status": "confirmed_data_and_rendering_code_review",
+              "recommended_action": "P2 — Fournir un VTT et/ou une transcription française reliée au média, puis vérifier dans l’interface FR que la ressource est identifiable et utilisable sans dépendre de l’anglais oral."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Félicitations !",
+          "score_100": 31,
+          "verified_dimensions": [
+            "Couverture examinée : l’unique bloc de cette leçon, la vidéo Projector `dc_2_act_04_video`, ses 16 slides, son audio déclaré, son PDF déclaré et son transcript ont été revus.",
+            "Fonction de synthèse : le transcript récapitule explicitement agent (rôle, objectif, historique, outils), tâches, équipes et flux avec décision/mémoire, et propose une ouverture vers de futurs usages CrewAI.",
+            "Rendu : `LessonViewer` affiche le lecteur Projector, les slides, le transcript dépliable, un lien vers les slides PDF et le contrôle de marquage manuel de l’écoute.",
+            "Activités : aucune activité interactive, exercice ou évaluation n’est présente dans ce chapitre ; il n’y a donc ni énoncé, ni action à accomplir, ni feedback d’activité à examiner."
+          ],
+          "unverified_dimensions": [
+            "Ouverture effective de l’audio, du MP4, du PDF et de l’image des slides via `/api/assets/...` non testée dans un navigateur ; leur déclaration ne vaut pas preuve de disponibilité ni preuve d’absence.",
+            "Pertinence fine et lisibilité perceptuelle des slides, de l’image finale et de la synchronisation audio non vérifiables sans lecture du média dans l’interface.",
+            "Aucun objectif pédagogique formel, aucune évaluation et aucun critère de réussite n’est renseigné pour ce chapitre de conclusion ; une activité ne peut donc pas être notée artificiellement.",
+            "La qualité d’usage au clavier, avec lecteur d’écran et sur mobile n’a pas été testée en condition navigateur."
+          ],
+          "issues": [
+            {
+              "issue_id": "P023-LOCK-02",
+              "course_id": "building_ai_agents_with_crewai__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le seul chapitre de la seconde leçon est obligatoire selon les données, mais le bouton de fin de leçon ne reconnaît pas sa vidéo Projector comme un média à compléter. L’apprenant peut achever cette dernière leçon sans l’écouter ou la marquer comme écoutée. Dans le parcours actuellement réduit, cela permet de terminer la formation sans consulter son seul écran de conclusion.",
+              "current_content": "`requiredBeforeAdvance: true`; média Projector audio/vidéo `dc_2_act_04_video`, identifiant de 17 caractères. Le lecteur utilise l’identifiant complet pour l’état « Écoutée » ; la navigation finale filtre cet identifiant.",
+              "proposed_content": "Aucune réécriture de contenu n’est nécessaire. Utiliser l’identifiant complet du bloc vidéo pour construire et vérifier la liste des médias requis de la dernière page, de façon identique à la clé employée par le lecteur.",
+              "evidence": "`client/public/data/courses/building_ai_agents_with_crewai__01.json` → `lessons[1].chapters[0]` est le dernier et unique chapitre ; `requiredBeforeAdvance: true`, bloc `dc_2_act_04_video` de 17 caractères. `LessonViewer.tsx:709-727` complète le média avec `audioKey = block.id`; `LessonViewer.tsx:1483-1511` ne conserve un fallback `block.id` que pour 8–15 caractères, puis décide de `lastIsGated`. L’ID est exclu et aucune autre gate n’existe dans ce chapitre.",
+              "confidence": "high",
+              "verification_status": "confirmed_code_and_data_review",
+              "recommended_action": "P1 — Appliquer le même correctif de clé média que pour `P023-LOCK-01` et ajouter un test de non-régression sur un dernier chapitre Projector MP4+audio : la formation ne doit pas pouvoir être finalisée avant complétion ou marquage explicite du média obligatoire."
+            },
+            {
+              "issue_id": "P023-MEDIA-LANG-02",
+              "course_id": "building_ai_agents_with_crewai__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média_et_accessibilité",
+              "description": "La conclusion affichée dans un parcours français est narrée et transcrite en anglais, sans sous-titres ou alternative française déclarés. Or elle récapitule les compétences revendiquées et constitue, dans ce JSON, l’unique contenu de la seconde leçon ; sa compréhension ne doit pas dépendre de l’anglais oral non annoncé.",
+              "current_content": "Titre français « Félicitations ! » et slides à titres français ; transcript/segments en anglais (« Congratulations on completing… », « We started by defining… ») ; champs de sous-titres et d’alternative française absents.",
+              "proposed_content": "Mettre à disposition une transcription et des sous-titres français fidèles pour cette conclusion, ou rendre une alternative textuelle française complète immédiatement accessible. Une réécriture mot à mot n’est pas fournie, car la qualité linguistique doit être contrôlée sur le média source.",
+              "evidence": "`client/public/data/courses/building_ai_agents_with_crewai__01.json` → `lessons[1].chapters[0].blocks[id=dc_2_act_04_video]` : transcript et tous les `transcriptSegments.text` en anglais, aucun `subtitleUrlFr`, `subtitleUrlEn` ni `alternativeTextFr`. `LessonViewer.tsx:743-760` rend ces segments tels quels dans l’interface ; `ProjectorPlayer.tsx:33-176` ne reçoit qu’une source média.",
+              "confidence": "high",
+              "verification_status": "confirmed_data_and_rendering_code_review",
+              "recommended_action": "P2 — Ajouter une alternative française contrôlée et vérifier qu’elle est facilement accessible depuis la page FR avant d’inviter l’apprenant à conclure le cours."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": "1 cours, 2 leçons, 2 chapitres et les 4 blocs sérialisés ont été examinés individuellement : 2 médias Projector, 1 bloc de préparation et 1 téléchargement. Aucune activité interactive ou évaluée n’est présente dans le JSON de production ; cette absence de blocs a été vérifiée et n’est pas déduite d’une ressource inaccessible.",
+    "pedagogical_findings": "Les deux médias disposent de slides et de transcripts, et le premier énonce correctement la promesse, les prérequis et la sécurité d’usage. Toutefois, le parcours publié se réduit à une introduction et une félicitation : il ne contient aucune séquence permettant d’apprendre ou de pratiquer les compétences que ses descriptions, ses objectifs vidéo et son catalogue promettent. Il n’y a donc pas de transition théorie → activité à valider, ni énoncé, action attendue ou feedback d’activité à évaluer. La récapitulation finale fait référence à des apprentissages absents du parcours accessible. Les deux médias sont également non localisés en français malgré l’interface française.",
+    "confirmed_issues": {
+      "total": 5,
+      "P0": 0,
+      "P1": 3,
+      "P2": 2,
+      "P3": 0,
+      "priority": "1) Restaurer/réimporter les séquences et TP intermédiaires avant de présenter ce parcours comme une formation pratique complète, puis synchroniser le catalogue. 2) Corriger immédiatement le verrouillage des deux médias Projector obligatoires. 3) Fournir une alternative française contrôlée aux deux médias."
+    },
+    "scoring": "Les scores sont qualitatifs, sur 100, et ne compensent pas par une note arbitraire les dimensions non vérifiables. Ils reflètent le contenu et le comportement rendus par les JSON exacts du manifest et par les composants de lecture/progression : contextualisation de média partiellement vérifiée, mais complétude, progression et activité pratique fortement insuffisantes dans le parcours publié."
+  },
+  "limits": [
+    "Audit strictement non modificatif fondé sur le fichier JSON de production désigné par le manifest (`client/public/data/courses/building_ai_agents_with_crewai__01.json`), le registre des blocs, LessonViewer, ProjectorPlayer, chapterProgress et les index de parcours ; aucun contenu de formation, code applicatif ou base de données n’a été modifié.",
+    "Les fichiers MP4, HLS, MP3, PDF, images et GIF référencés par `/api/assets/...` sont servis par un proxy de stockage et ne sont pas présents sur le disque de travail. Ils n’ont pas été ouverts dans un navigateur authentifié ; ils sont donc signalés comme déclarés mais non vérifiés, jamais comme absents.",
+    "Les flux lecteur, marqueurs de complétion, transcript et gates ont été vérifiés par lecture du code. Les interactions n’ont pas été exécutées en session apprenant ; la perception visuelle, l’accessibilité réelle et la disponibilité réseau restent non vérifiées.",
+    "L’analyse porte sur les seuls contenus accessibles dans le JSON exigé par le manifest. Les compteurs du catalogue indiquent cinq TP non présents dans cette source, mais aucun énoncé, ressource, réponse attendue ou rubrique correspondante n’a été inventé.",
+    "La qualité factuelle du média, la fidélité des slides au discours et la qualité d’une future traduction française exigeraient la consultation effective des assets source ; aucune source externe n’a été utilisée."
+  ]
+}

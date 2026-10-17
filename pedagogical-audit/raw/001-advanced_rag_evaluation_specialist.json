@@ -1,0 +1,2111 @@
+{
+  "formation_id": "advanced_rag_evaluation_specialist",
+  "courses": [
+    {
+      "course_id": "advanced_rag_evaluation_specialist__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__01:lesson_01:chapter_01:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__01",
+              "chapter_id": "chapter_01",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'RAG Tutorial 2025: Complete Introduction to Retrieval Augmented Generation'; label: 'Course Video'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Missing context, wrong context, stale context, conflicting context » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__01.json → lessons[0].chapters[0].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__01:lesson_01:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__01",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__01.json → lessons[0].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__01:lesson_02:chapter_02:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__01",
+              "chapter_id": "chapter_02",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Learn RAG From Scratch – Python AI Tutorial'; label: 'Recommended Viewing'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Hallucination taxonomy in grounded systems » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__01.json → lessons[1].chapters[1].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__01:lesson_02:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__01",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__01.json → lessons[1].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__01:lesson_03:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__01",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__01.json → lessons[2].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 68,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__01:lesson_03:chapter_06:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__01",
+              "chapter_id": "chapter_06",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Building Robust RAG Systems with LangChain & LlamaIndex'; label: 'Tutorial'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Retrieval vs generation diagnosis » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__01.json → lessons[2].chapters[5].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            },
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__01:lesson_03:chapter_06:video_1:completion-gate",
+              "course_id": "advanced_rag_evaluation_specialist__01",
+              "chapter_id": "chapter_06",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Une vidéo « Tutorial » est placée dans « Module Complete » sans marque optional. Le lecteur exige qu’elle soit visionnée ou marquée manuellement comme vue avant d’activer « Complete lesson ». Cette contrainte arrive après le message de fin, sans activité d’évaluation liée au média, et transforme une ressource externe d’approfondissement en condition de clôture.",
+              "current_content": "Bloc vidéo final : title 'Building Robust RAG Systems with LangChain & LlamaIndex', label 'Tutorial', sans optional: true.",
+              "proposed_content": "Marquer la vidéo comme ressource facultative (optional: true) si elle est un complément, ou déplacer la vidéo avant la conclusion avec un objectif, une consigne et une activité cohérente si son visionnage doit réellement conditionner la fin.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__01.json → lessons[2].chapters[5].blocks[1] ; chapterProgress.ts lignes 38–53 (seuls optional:true ou un libellé complément désactivent le verrou) ; LessonViewer.tsx lignes 1483–1492 et 1518–1531 (la vidéo finale conditionne la complétion).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Supprimer ce verrou de fin en déclarant la ressource facultative, sauf justification pédagogique documentée et évaluation associée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__01:lesson_04:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__01",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__01.json → lessons[3].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "course_id": "advanced_rag_evaluation_specialist__02",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__02:lesson_01:chapter_01:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__02",
+              "chapter_id": "chapter_01",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Complete RAG Crash Course With Langchain In 2 Hours'; label: 'Course Video'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Query rewriting, decomposition and HyDE » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__02.json → lessons[0].chapters[0].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__02:lesson_01:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__02",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__02.json → lessons[0].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__02:lesson_02:chapter_02:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__02",
+              "chapter_id": "chapter_02",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Production RAG with LangChain & Vector Databases'; label: 'Recommended Viewing'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Multi-query and multi-index retrieval » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__02.json → lessons[1].chapters[1].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__02:lesson_02:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__02",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__02.json → lessons[1].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__02:lesson_03:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__02",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__02.json → lessons[2].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 68,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__02:lesson_03:chapter_06:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__02",
+              "chapter_id": "chapter_06",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'RAG Tutorial 2026: Complete Introduction to RAG'; label: 'Tutorial'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Reranking and contextual compression » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__02.json → lessons[2].chapters[5].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            },
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__02:lesson_03:chapter_06:video_1:completion-gate",
+              "course_id": "advanced_rag_evaluation_specialist__02",
+              "chapter_id": "chapter_06",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Une vidéo « Tutorial » est placée dans « Module Complete » sans marque optional. Le lecteur exige qu’elle soit visionnée ou marquée manuellement comme vue avant d’activer « Complete lesson ». Cette contrainte arrive après le message de fin, sans activité d’évaluation liée au média, et transforme une ressource externe d’approfondissement en condition de clôture.",
+              "current_content": "Bloc vidéo final : title 'RAG Tutorial 2026: Complete Introduction to RAG', label 'Tutorial', sans optional: true.",
+              "proposed_content": "Marquer la vidéo comme ressource facultative (optional: true) si elle est un complément, ou déplacer la vidéo avant la conclusion avec un objectif, une consigne et une activité cohérente si son visionnage doit réellement conditionner la fin.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__02.json → lessons[2].chapters[5].blocks[1] ; chapterProgress.ts lignes 38–53 (seuls optional:true ou un libellé complément désactivent le verrou) ; LessonViewer.tsx lignes 1483–1492 et 1518–1531 (la vidéo finale conditionne la complétion).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Supprimer ce verrou de fin en déclarant la ressource facultative, sauf justification pédagogique documentée et évaluation associée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__02:lesson_04:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__02",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__02.json → lessons[3].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "course_id": "advanced_rag_evaluation_specialist__03",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "lesson_01_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation.",
+            "Média : la vidéo du bloc 0 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__03:lesson_01:chapter_01:video_0:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__03",
+              "chapter_id": "lesson_01_chapter_01",
+              "content_id": "blocks[0]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Production RAG with LangChain & Vector Databases – Full Course'; label: 'Course Video'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Synthetic Dataset Generation for RAG Evaluation » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__03.json → lessons[0].chapters[0].blocks[0]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "lesson_01_chapter_02",
+          "title": "Synthetic Dataset Generation for RAG Evaluation",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "lesson_01_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "lesson_01_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Énoncés et action attendue : chaque QCM expose une question, quatre choix et une réponse correcte.",
+            "Feedback : chaque QCM possède une explanation ; SingleChoiceExercise affiche l’explication après la réponse et permet de réessayer.",
+            "Verrouillage : les identifiants de QCM sont suivis et la navigation applique une validation des choix uniques.",
+            "Normalisation : le JSON contient simultanément le champ legacy block.type=\"checkpoint\" et trois blocs single_choice_exercise ; useCourseData applique normalizeCourseBlocks avant LessonViewer, qui ajoute à nouveau les trois questions legacy aux blocs existants."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__03:lesson_01:chapter_04:duplicated-checkpoint-questions-after-normalization",
+              "course_id": "advanced_rag_evaluation_specialist__03",
+              "chapter_id": "lesson_01_chapter_04",
+              "content_id": "block + blocks",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "progression",
+              "description": "Les trois QCM de checkpoint sont fournis à la fois dans le champ legacy block.questions et dans blocks. Avant le rendu, useCourseData applique normalizeCourseBlocks : celle-ci ajoute les trois questions legacy à la liste blocks existante. L’apprenant voit donc chaque question deux fois (six QCM au lieu de trois) ; les identifiants checkpoint_q0 à checkpoint_q2 sont eux aussi dupliqués. Cette répétition parasite la pratique et rend la progression incohérente.",
+              "current_content": "Chapitre avec block: { type: \"checkpoint\", questions: [3 questions] } et blocks: [3 single_choice_exercise id checkpoint_q0..checkpoint_q2]. La normalisation concatène les 3 blocs générés aux 3 blocs existants.",
+              "proposed_content": "Ne conserver qu’une seule représentation des questions : supprimer le champ legacy block après migration, ou laisser blocks vide et conserver le format legacy. Garder les trois QCM existants, leurs id uniques, leurs options, réponses correctes et explications ; ne pas en créer de nouveaux.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__03.json → lessons[0].chapters[3] contient block checkpoint et blocks single_choice_exercise ; client/src/hooks/useCourseData.ts lignes 75–80 applique normalizeCourseBlocks ; shared/courseBlockNormalization.ts lignes 11–22 convertit block.questions puis lignes 36–37 concatène generated à existingBlocks.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Dédupliquer les données avant publication et ajouter un test de contrat garantissant qu’un checkpoint ne peut pas être présent simultanément en legacy block et en blocks normalisés."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "lesson_01_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "lesson_01_chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "lesson_02_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "lesson_02_chapter_02",
+          "title": "Retrieval Metrics: Recall, Precision, MRR, nDCG",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon.",
+            "Média : la vidéo du bloc 0 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__03:lesson_02:chapter_02:video_0:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__03",
+              "chapter_id": "lesson_02_chapter_02",
+              "content_id": "blocks[0]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Building Robust RAG Systems with LangChain & LlamaIndex'; label: 'Recommended Viewing'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Retrieval Metrics: Recall, Precision, MRR, nDCG » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__03.json → lessons[1].chapters[1].blocks[0]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "lesson_02_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "lesson_02_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Énoncés et action attendue : chaque QCM expose une question, quatre choix et une réponse correcte.",
+            "Feedback : chaque QCM possède une explanation ; SingleChoiceExercise affiche l’explication après la réponse et permet de réessayer.",
+            "Verrouillage : les identifiants de QCM sont suivis et la navigation applique une validation des choix uniques.",
+            "Normalisation : le JSON contient simultanément le champ legacy block.type=\"checkpoint\" et trois blocs single_choice_exercise ; useCourseData applique normalizeCourseBlocks avant LessonViewer, qui ajoute à nouveau les trois questions legacy aux blocs existants."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__03:lesson_02:chapter_04:duplicated-checkpoint-questions-after-normalization",
+              "course_id": "advanced_rag_evaluation_specialist__03",
+              "chapter_id": "lesson_02_chapter_04",
+              "content_id": "block + blocks",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "progression",
+              "description": "Les trois QCM de checkpoint sont fournis à la fois dans le champ legacy block.questions et dans blocks. Avant le rendu, useCourseData applique normalizeCourseBlocks : celle-ci ajoute les trois questions legacy à la liste blocks existante. L’apprenant voit donc chaque question deux fois (six QCM au lieu de trois) ; les identifiants checkpoint_q0 à checkpoint_q2 sont eux aussi dupliqués. Cette répétition parasite la pratique et rend la progression incohérente.",
+              "current_content": "Chapitre avec block: { type: \"checkpoint\", questions: [3 questions] } et blocks: [3 single_choice_exercise id checkpoint_q0..checkpoint_q2]. La normalisation concatène les 3 blocs générés aux 3 blocs existants.",
+              "proposed_content": "Ne conserver qu’une seule représentation des questions : supprimer le champ legacy block après migration, ou laisser blocks vide et conserver le format legacy. Garder les trois QCM existants, leurs id uniques, leurs options, réponses correctes et explications ; ne pas en créer de nouveaux.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__03.json → lessons[1].chapters[3] contient block checkpoint et blocks single_choice_exercise ; client/src/hooks/useCourseData.ts lignes 75–80 applique normalizeCourseBlocks ; shared/courseBlockNormalization.ts lignes 11–22 convertit block.questions puis lignes 36–37 concatène generated à existingBlocks.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Dédupliquer les données avant publication et ajouter un test de contrat garantissant qu’un checkpoint ne peut pas être présent simultanément en legacy block et en blocks normalisés."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "lesson_02_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "lesson_02_chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "lesson_03_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "lesson_03_chapter_02",
+          "title": "Generation Metrics: Faithfulness, Helpfulness, Correctness",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "lesson_03_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "lesson_03_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Énoncés et action attendue : chaque QCM expose une question, quatre choix et une réponse correcte.",
+            "Feedback : chaque QCM possède une explanation ; SingleChoiceExercise affiche l’explication après la réponse et permet de réessayer.",
+            "Verrouillage : les identifiants de QCM sont suivis et la navigation applique une validation des choix uniques.",
+            "Normalisation : le JSON contient simultanément le champ legacy block.type=\"checkpoint\" et trois blocs single_choice_exercise ; useCourseData applique normalizeCourseBlocks avant LessonViewer, qui ajoute à nouveau les trois questions legacy aux blocs existants."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__03:lesson_03:chapter_04:duplicated-checkpoint-questions-after-normalization",
+              "course_id": "advanced_rag_evaluation_specialist__03",
+              "chapter_id": "lesson_03_chapter_04",
+              "content_id": "block + blocks",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "progression",
+              "description": "Les trois QCM de checkpoint sont fournis à la fois dans le champ legacy block.questions et dans blocks. Avant le rendu, useCourseData applique normalizeCourseBlocks : celle-ci ajoute les trois questions legacy à la liste blocks existante. L’apprenant voit donc chaque question deux fois (six QCM au lieu de trois) ; les identifiants checkpoint_q0 à checkpoint_q2 sont eux aussi dupliqués. Cette répétition parasite la pratique et rend la progression incohérente.",
+              "current_content": "Chapitre avec block: { type: \"checkpoint\", questions: [3 questions] } et blocks: [3 single_choice_exercise id checkpoint_q0..checkpoint_q2]. La normalisation concatène les 3 blocs générés aux 3 blocs existants.",
+              "proposed_content": "Ne conserver qu’une seule représentation des questions : supprimer le champ legacy block après migration, ou laisser blocks vide et conserver le format legacy. Garder les trois QCM existants, leurs id uniques, leurs options, réponses correctes et explications ; ne pas en créer de nouveaux.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__03.json → lessons[2].chapters[3] contient block checkpoint et blocks single_choice_exercise ; client/src/hooks/useCourseData.ts lignes 75–80 applique normalizeCourseBlocks ; shared/courseBlockNormalization.ts lignes 11–22 convertit block.questions puis lignes 36–37 concatène generated à existingBlocks.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Dédupliquer les données avant publication et ajouter un test de contrat garantissant qu’un checkpoint ne peut pas être présent simultanément en legacy block et en blocks normalisés."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "lesson_03_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "lesson_03_chapter_06",
+          "title": "Module Complete",
+          "score_100": 68,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique.",
+            "Média : la vidéo du bloc 0 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__03:lesson_03:chapter_06:video_0:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__03",
+              "chapter_id": "lesson_03_chapter_06",
+              "content_id": "blocks[0]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'RAG Tutorial 2025: Complete Introduction'; label: 'Tutorial'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Generation Metrics: Faithfulness, Helpfulness, Correctness » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__03.json → lessons[2].chapters[5].blocks[0]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            },
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__03:lesson_03:chapter_06:video_0:completion-gate",
+              "course_id": "advanced_rag_evaluation_specialist__03",
+              "chapter_id": "lesson_03_chapter_06",
+              "content_id": "blocks[0]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Une vidéo « Tutorial » est placée dans « Module Complete » sans marque optional. Le lecteur exige qu’elle soit visionnée ou marquée manuellement comme vue avant d’activer « Complete lesson ». Cette contrainte arrive après le message de fin, sans activité d’évaluation liée au média, et transforme une ressource externe d’approfondissement en condition de clôture.",
+              "current_content": "Bloc vidéo final : title 'RAG Tutorial 2025: Complete Introduction', label 'Tutorial', sans optional: true.",
+              "proposed_content": "Marquer la vidéo comme ressource facultative (optional: true) si elle est un complément, ou déplacer la vidéo avant la conclusion avec un objectif, une consigne et une activité cohérente si son visionnage doit réellement conditionner la fin.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__03.json → lessons[2].chapters[5].blocks[0] ; chapterProgress.ts lignes 38–53 (seuls optional:true ou un libellé complément désactivent le verrou) ; LessonViewer.tsx lignes 1483–1492 et 1518–1531 (la vidéo finale conditionne la complétion).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Supprimer ce verrou de fin en déclarant la ressource facultative, sauf justification pédagogique documentée et évaluation associée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "lesson_04_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "lesson_04_chapter_02",
+          "title": "LLM-as-Judge Calibration and Bias",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "lesson_04_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "lesson_04_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 75,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Énoncés et action attendue : chaque QCM expose une question, quatre choix et une réponse correcte.",
+            "Feedback : chaque QCM possède une explanation ; SingleChoiceExercise affiche l’explication après la réponse et permet de réessayer.",
+            "Verrouillage : les identifiants de QCM sont suivis et la navigation applique une validation des choix uniques.",
+            "Normalisation : le JSON contient simultanément le champ legacy block.type=\"checkpoint\" et trois blocs single_choice_exercise ; useCourseData applique normalizeCourseBlocks avant LessonViewer, qui ajoute à nouveau les trois questions legacy aux blocs existants."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__03:lesson_04:chapter_04:duplicated-checkpoint-questions-after-normalization",
+              "course_id": "advanced_rag_evaluation_specialist__03",
+              "chapter_id": "lesson_04_chapter_04",
+              "content_id": "block + blocks",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "progression",
+              "description": "Les trois QCM de checkpoint sont fournis à la fois dans le champ legacy block.questions et dans blocks. Avant le rendu, useCourseData applique normalizeCourseBlocks : celle-ci ajoute les trois questions legacy à la liste blocks existante. L’apprenant voit donc chaque question deux fois (six QCM au lieu de trois) ; les identifiants checkpoint_q0 à checkpoint_q2 sont eux aussi dupliqués. Cette répétition parasite la pratique et rend la progression incohérente.",
+              "current_content": "Chapitre avec block: { type: \"checkpoint\", questions: [3 questions] } et blocks: [3 single_choice_exercise id checkpoint_q0..checkpoint_q2]. La normalisation concatène les 3 blocs générés aux 3 blocs existants.",
+              "proposed_content": "Ne conserver qu’une seule représentation des questions : supprimer le champ legacy block après migration, ou laisser blocks vide et conserver le format legacy. Garder les trois QCM existants, leurs id uniques, leurs options, réponses correctes et explications ; ne pas en créer de nouveaux.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__03.json → lessons[3].chapters[3] contient block checkpoint et blocks single_choice_exercise ; client/src/hooks/useCourseData.ts lignes 75–80 applique normalizeCourseBlocks ; shared/courseBlockNormalization.ts lignes 11–22 convertit block.questions puis lignes 36–37 concatène generated à existingBlocks.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Dédupliquer les données avant publication et ajouter un test de contrat garantissant qu’un checkpoint ne peut pas être présent simultanément en legacy block et en blocks normalisés."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "lesson_04_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "lesson_04_chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "course_id": "advanced_rag_evaluation_specialist__04",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__04:lesson_01:chapter_01:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__04",
+              "chapter_id": "chapter_01",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Building Robust RAG Systems with LangChain & LlamaIndex'; label: 'Course Video'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Regression tests for RAG changes » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__04.json → lessons[0].chapters[0].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__04:lesson_01:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__04",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__04.json → lessons[0].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 78,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__04:lesson_02:chapter_02:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__04",
+              "chapter_id": "chapter_02",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Learn RAG From Scratch – Python AI Tutorial'; label: 'Recommended Viewing'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Human feedback loops and annotation workflows » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__04.json → lessons[1].chapters[1].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__04:lesson_02:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__04",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__04.json → lessons[1].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__04:lesson_03:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__04",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__04.json → lessons[2].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 68,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique.",
+            "Média : la vidéo du bloc 1 possède une URL YouTube et un titre ; le lecteur prend en charge les URLs historiques.",
+            "Contextualisation visible : aucune consigne d’écoute, objectif avant lecture, question après lecture, transcription ou alternative textuelle n’est fournie dans ce bloc."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative.",
+            "Exactitude pédagogique/factuelle des contenus vidéo externes non vérifiée : les vidéos ne sont pas considérées absentes ni défectueuses sur leur seul accès externe."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__04:lesson_03:chapter_06:video_1:uncontextualized-media",
+              "course_id": "advanced_rag_evaluation_specialist__04",
+              "chapter_id": "chapter_06",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "média",
+              "description": "La vidéo est présentée par un intitulé générique et son étiquette, sans expliciter à l’apprenant ce qu’il doit observer, le lien avec l’objectif de la leçon ou le résultat attendu après visionnage. Le lecteur affiche la vidéo mais n’ajoute pas de contextualisation pédagogique lorsque ces données sont absentes. La pertinence interne de la vidéo n’est pas présumée, car son contenu externe n’a pas été audité.",
+              "current_content": "title: 'Complete RAG Crash Course With Langchain'; label: 'Tutorial'; url présent. Aucun champ learner-facing d’objectif, de questions post-visionnage, de transcript ou d’alternative textuelle dans le bloc.",
+              "proposed_content": "Ajouter avant cette vidéo une brève mise en contexte liée à la leçon « Experiment tracking and release gates » : objectif de visionnage, notion à repérer et usage dans la suite. Ajouter au minimum un résumé/alternative textuelle ou une question de vérification ; pour une vidéo longue ou générale, indiquer la séquence ou le passage utile.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__04.json → lessons[2].chapters[5].blocks[1]; LessonViewer.tsx rend le titre/lecteur à partir de l’URL, sans générer objectiveBefore, questionsAfter, transcript ou alternative absents.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Renseigner une contextualisation spécifique à la leçon et une alternative textuelle ; valider ensuite la cohérence avec le contenu réel de la vidéo, sans déduire cette cohérence de son titre seul."
+            },
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__04:lesson_03:chapter_06:video_1:completion-gate",
+              "course_id": "advanced_rag_evaluation_specialist__04",
+              "chapter_id": "chapter_06",
+              "content_id": "blocks[1]",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "verrouillage",
+              "description": "Une vidéo « Tutorial » est placée dans « Module Complete » sans marque optional. Le lecteur exige qu’elle soit visionnée ou marquée manuellement comme vue avant d’activer « Complete lesson ». Cette contrainte arrive après le message de fin, sans activité d’évaluation liée au média, et transforme une ressource externe d’approfondissement en condition de clôture.",
+              "current_content": "Bloc vidéo final : title 'Complete RAG Crash Course With Langchain', label 'Tutorial', sans optional: true.",
+              "proposed_content": "Marquer la vidéo comme ressource facultative (optional: true) si elle est un complément, ou déplacer la vidéo avant la conclusion avec un objectif, une consigne et une activité cohérente si son visionnage doit réellement conditionner la fin.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__04.json → lessons[2].chapters[5].blocks[1] ; chapterProgress.ts lignes 38–53 (seuls optional:true ou un libellé complément désactivent le verrou) ; LessonViewer.tsx lignes 1483–1492 et 1518–1531 (la vidéo finale conditionne la complétion).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Supprimer ce verrou de fin en déclarant la ressource facultative, sauf justification pédagogique documentée et évaluation associée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Objectifs : le chapitre « What You Will Learn » énonce les acquis visés de la leçon.",
+            "Positionnement : ce chapitre ouvre la leçon avant les explications et l’évaluation."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Explications : le bloc « Core Concepts » développe les notions annoncées avec définitions, mécanismes et/ou exemples.",
+            "Progression : les concepts précèdent la synthèse puis le checkpoint de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Synthèse et transition : les « Key Concepts » récapitulent les notions à mobiliser avant le checkpoint suivant.",
+            "Cohérence : les thèmes résumés correspondent au titre et aux objectifs de la leçon."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 20,
+          "verified_dimensions": [
+            "Transition théorie → activité : le checkpoint suit le chapitre « Key Concepts » de la même leçon.",
+            "Activité : les questions, choix et explications ont été examinés dans les données lorsqu’ils sont rendables.",
+            "Rendu du type checkpoint : LessonViewer cherche un exerciseId, récupère l’exercice dans courseExercises puis retourne null s’il ne le trouve pas.",
+            "Verrouillage : ces chapitres ne portent pas type: \"checkpoint\" ; la condition standard du pied de page ne les traite donc pas comme checkpoint requis."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": [
+            {
+              "issue_id": "pedagogical:advanced_rag_evaluation_specialist__04:lesson_04:chapter_04:checkpoint-not-rendered",
+              "course_id": "advanced_rag_evaluation_specialist__04",
+              "chapter_id": "chapter_04",
+              "content_id": "blocks[0]",
+              "content_type": "checkpoint",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Les trois questions et leurs explications sont présentes dans le conteneur checkpoint, mais cette forme n’est pas rendue pour l’apprenant : le lecteur ne sait afficher un checkpoint que via exerciseId → courseExercises, or exerciseId est absent et le catalogue exercises du cours est vide. Le chapitre n’est pas typé checkpoint, donc ce contrôle ne constitue pas non plus une étape de passage standard. L’évaluation de fin de leçon disparaît du parcours effectif.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; absence de exerciseId ; exercises = [].",
+              "proposed_content": "Conserver les questions existantes et les rendre par une structure effectivement supportée : soit trois blocs single_choice_exercise avec id uniques, question, options, correctAnswer et explanation, soit étendre le rendu checkpoint pour convertir questions en activités visibles et compléter exerciseId / le mécanisme de validation. Déclarer explicitement le type de chapitre et le seuil de passage si ce checkpoint doit conditionner la suite.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/advanced_rag_evaluation_specialist__04.json → lessons[3].chapters[3].blocks[0]; LessonViewer.tsx lignes 894–897 (recherche exerciseId puis return null) et 1538–1556 (gating checkpoint conditionné par chapter.type).",
+              "confidence": "high",
+              "verification_status": "verified_data_and_render_code",
+              "recommended_action": "Corriger le modèle de checkpoint et le rendre testable dans LessonViewer, puis vérifier que les trois questions, leurs feedbacks et la règle de réussite sont visibles avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Synthèse : les points à retenir reprennent les concepts et pratiques traités dans la leçon.",
+            "Cohérence de clôture : ce chapitre prépare la conclusion de module."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Clôture : le message de fin reprend les acquis de la leçon.",
+            "Positionnement : ce chapitre termine la séquence pédagogique."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel, accessibilité multi-support et persistance de progression non testés en session applicative."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": "Revue qualitative exhaustive de 4 cours, 16 leçons, 96 chapitres, 36 activités rendues après normalisation (24 déclarations brutes : 12 checkpoints-conteneurs et 12 QCM) et 12 vidéos à partir des JSON réellement référencés par le manifest, du registre de blocs et de LessonViewer/chapterProgress.",
+    "confirmed_issue_counts": {
+      "total": 32,
+      "P0": 0,
+      "P1": 12,
+      "P2": 20,
+      "P3": 0
+    },
+    "key_findings": [
+      "Les 12 checkpoints des cours 01, 02 et 04 sont des conteneurs de questions non compatibles avec le chemin de rendu LessonViewer : ils ne sont ni visibles ni intégrés à la validation standard de chapitre.",
+      "Les QCM du cours 03 sont rendables, comprennent énoncé, choix, réponse et explication, et la navigation prévoit leur validation ; toutefois chaque checkpoint est dupliqué à l’exécution parce que les formats legacy et normalisé coexistent dans le JSON.",
+      "Les quatre checkpoints du cours 03 contiennent chacun deux représentations des mêmes trois QCM ; la normalisation client les concatène, ce qui affiche six QCM avec identifiants dupliqués au lieu de trois.",
+      "Les 12 vidéos sont des ressources externes renseignées par URL/titre/label sans objectif de visionnage, résumé, transcription ou activité post-visionnage dans les données. Leur contenu externe n’a pas été assimilé à une absence.",
+      "Dans chacun des quatre cours, une vidéo générique non facultative est placée dans un chapitre « Module Complete » et ajoute un verrou de clôture sans évaluation associée."
+    ],
+    "positive_findings": [
+      "Les leçons suivent globalement une séquence explicite : objectifs, concepts, points clés, checkpoint, synthèse, conclusion.",
+      "Les explications de base et les synthèses sont cohérentes avec les objectifs des leçons ; aucun défaut étayé de prérequis inversé n’a été retenu.",
+      "Les QCM rendables du cours 03 sont précis, contextualisés, corrigés et réessayables ; leur duplication technique doit toutefois être supprimée."
+    ],
+    "score_interpretation": "Les scores sont des appréciations qualitatives sur 100, renormalisées sur les dimensions inspectables au niveau du chapitre. Les chapitres contenant un checkpoint non rendu reçoivent un score bas car la fonction évaluative n’est pas accessible à l’apprenant ; un score ne conclut pas sur le contenu réel des vidéos non visionnées."
+  },
+  "limits": [
+    "Audit sans modification des JSON de cours, du code applicatif ni d’une base de données.",
+    "Inspection du rendu et du verrouillage par lecture de LessonViewer.tsx, chapterProgress.ts et checkpointGate.ts ; aucune session navigateur authentifiée ni test d’interface sur appareil n’a été exécuté.",
+    "Les vidéos YouTube sont renseignées et rendables par URL historique ; leur disponibilité, leur transcription effective, leur accessibilité et leur exactitude pédagogique n’ont pas été vérifiées. Elles ne sont donc jamais qualifiées d’absentes.",
+    "Aucune source externe n’a été utilisée ; la pertinence fine des vidéos n’est pas déduite de leur titre.",
+    "Les contenus fournis sont majoritairement en anglais ; l’adéquation à une promesse de traduction française n’a pas été évaluée car aucun objectif linguistique de la formation n’était fourni dans le périmètre."
+  ]
+}

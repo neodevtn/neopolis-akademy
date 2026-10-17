@@ -1,0 +1,826 @@
+{
+  "formation_id": "datacamp_prompt_engineering_with_the_openai_api",
+  "courses": [
+    {
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Introduction à l'ingénierie des prompts",
+          "score_100": 84,
+          "verified_dimensions": ["objectif et cadre de travail explicites", "progression vers les rôles de message et la fonction get_response", "média titré avec transcription, sous-titres et PDF déclaré", "verrouillage de la vidéo vérifié dans LessonViewer"],
+          "unverified_dimensions": ["lecture effective de l'audio", "qualité audiovisuelle et accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Rôles des messages de l'API OpenAI",
+          "score_100": 58,
+          "verified_dimensions": ["énoncé, action attendue et indice affichables", "prérequis immédiatement traités dans la vidéo précédente", "rendu de l'éditeur et comportement de validation vérifiés"],
+          "unverified_dimensions": ["exécution réelle du code contre une API", "pertinence fonctionnelle de toute solution alternative"],
+          "issues": [
+            {
+              "issue_id": "059-CODE-REPL-VALIDATION-01",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "Le composant de code ne lance ni ne teste le programme : il déclare la réponse correcte uniquement si le texte saisi est exactement identique à solutionCode après normalisation des fins de ligne. Le retour en cas d'échec est générique et n'indique ni erreur de syntaxe, ni exigence manquante. Le même composant rend les 37 activités code_repl du cours.",
+              "current_content": "Instruction de compléter une requête chat.completions ; solutionCode importé sous forme de fragment, et bouton « Vérifier le code ».",
+              "proposed_content": "Remplacer la comparaison littérale par une exécution isolée ou des tests ciblés sur les exigences pédagogiques ; afficher un retour par critère (appel API, rôles, prompt et appel de fonction) et accepter les solutions fonctionnellement équivalentes.",
+              "evidence": "client/src/components/blocks/CodeReplBlock.tsx lignes 28-40 appelle uniquement matchesCanonicalSolution(code, solutionCode) ; shared/codeReplValidation.ts lignes 10-13 compare les chaînes normalisées à l'identique. Revue du JSON : 37 blocs type=code_repl, dont dc_1_act_02_code.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Priorité plateforme : mettre en place une validation sémantique/exécutable et un feedback diagnostique avant de considérer les exercices de code comme évaluatifs."
+            },
+            {
+              "issue_id": "059-CODE-REPL-GATE-02",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Les chapitres sont marqués requiredBeforeAdvance:true, mais les blocs code_repl ne participent à aucune condition de passage. Un apprenant peut donc cliquer sur « Suivant » sans vérifier ni compléter le code ; l'état onComplete est enregistré mais jamais utilisé pour verrouiller la navigation. Ce comportement concerne les 37 exercices code_repl du cours.",
+              "current_content": "dc_ch01_act02 est un exercice requis ne contenant qu'un code_repl.",
+              "proposed_content": "Ajouter code_repl aux identifiants d'activités requis dans les calculs isGated, navigation clavier, navigation compacte et finalisation ; ne déverrouiller qu'après validation corrigée.",
+              "evidence": "LessonViewer.tsx lignes 1181-1183 enregistre onComplete pour code_repl ; lignes 1576-1624 et 1637-1652 calculent les verrous sans jamais inclure code_repl. chapterProgress.ts lignes 94-103 ne traite pas code_repl.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Aligner le verrouillage sur requiredBeforeAdvance après correction de la validation de code, afin d'éviter un verrouillage fondé sur une comparaison textuelle fragile."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Création de la fonction get_response()",
+          "score_100": 60,
+          "verified_dimensions": ["consigne en deux actions et indice cohérents", "enchaînement avec les rôles de message", "éditeur et retour générique rendus"],
+          "unverified_dimensions": ["exécution réelle", "validation de solutions alternatives"],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Exploration de l'ingénierie des prompts",
+          "score_100": 64,
+          "verified_dimensions": ["contexte et action de modification explicités", "prérequis get_response annoncé", "indice disponible"],
+          "unverified_dimensions": ["exécution réelle", "feedback pédagogique différencié"],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Principes fondamentaux de l'ingénierie des prompts",
+          "score_100": 85,
+          "verified_dimensions": ["principes, exemples et transition vers la pratique dans la transcription", "média contextualisé et sous-titré", "ordre logique après les premiers essais"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Ce prompt est-il efficace ?",
+          "score_100": 35,
+          "verified_dimensions": ["objectif, instructions, environnement, ressource et indice rendus", "verrouillage cloud_exercise vérifié"],
+          "unverified_dimensions": ["attendu pédagogique canonique, absent des données", "qualité de l'évaluation de la réponse libre"],
+          "issues": [
+            {
+              "issue_id": "059-CLOUD-FEEDBACK-CH01-06",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "feedback",
+              "description": "Le TP obligatoire n'a ni solution, ni message de réussite, ni grille d'évaluation, ni évaluation serveur ; steps est vide. Une réponse d'un seul caractère non blanc est acceptée, déverrouille la suite et n'affiche qu'une confirmation générique. L'apprenant ne peut ni savoir ce qui est correct ni corriger son raisonnement.",
+              "current_content": "steps: []; solution: \"\"; successMessage: \"\"; aucune rubricCriteria ni serverGradedAssessment ; minimumAnswerLength absent.",
+              "proposed_content": "Définir des critères visibles portant sur f-string, délimiteurs et appel de réponse ; imposer une remise correspondant à ces critères ; fournir une correction et un feedback de réussite/erreur. Ne pas inventer la réponse canonique avant de récupérer ou rédiger cette correction.",
+              "evidence": "JSON lessons[0].chapters[5].blocks[0] lignes 242-270. CloudExerciseBlock.tsx lignes 153-161 valide sans évaluation suivie et complète l'activité ; le minimum par défaut est résolu par le composant lorsque minimumAnswerLength est absent.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Créer une grille et une correction avant de maintenir ce TP comme condition de passage."
+            },
+            {
+              "issue_id": "059-CH01-06-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "L'objectif affiché demande de classer une liste de prompts comme efficaces ou inefficaces, mais les instructions demandent de coder un prompt f-string qui complète story et d'obtenir la réponse. La liste à classer n'est pas fournie. Les deux tâches ne peuvent pas être réalisées simultanément à partir de l'écran.",
+              "current_content": "assignment : « classer chaque prompt comme efficace ou inefficace » ; instructions : « Créez un prompt ... complète la variable story ... f-string ... trois guillemets inversés ».",
+              "proposed_content": "Conserver la tâche effectivement décrite dans les instructions et remplacer l'objectif par : « Objectif : appliquer les principes de clarté et de délimitation. Dans l'éditeur, créez un prompt f-string qui complète story en plaçant son contenu entre trois accents graves, puis obtenez la réponse. »",
+              "evidence": "JSON lessons[0].chapters[5].blocks[0], assignment ligne 248 et instructions ligne 249 ; CloudExerciseBlock.tsx lignes 227-245 affiche assignment sous « Objectif » puis instructions sous « Préparation & Instructions ».",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Réconcilier objectif, titre, consigne, indice et correction sur une seule tâche avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Utilisation de prompts délimités avec des chaînes f",
+          "score_100": 60,
+          "verified_dimensions": ["action, contraintes de longueur/style et délimiteurs explicites", "continuité avec les principes vus", "indice disponible"],
+          "unverified_dimensions": ["exécution réelle", "feedback différencié"],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Création de prompts spécifiques et précis",
+          "score_100": 62,
+          "verified_dimensions": ["scénario, action attendue et prérequis annoncés", "progression depuis l'exercice f-string", "indice sur longueur/style"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Résultats structurés et prompts conditionnels",
+          "score_100": 85,
+          "verified_dimensions": ["explications, exemples de formats et conditions", "transition explicite vers la pratique", "média titré, transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch01_act10",
+          "title": "Création d'une table",
+          "score_100": 45,
+          "verified_dimensions": ["instructions structurées et variables à produire visibles", "séquence après le cours sur les sorties structurées"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": [
+            {
+              "issue_id": "059-CH01-10-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act10",
+              "content_id": "dc_1_act_10_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "Le titre annonce la création d'une table, tandis que la consigne demande d'identifier une langue et un titre pour text puis de produire les lignes Text/Language/Title. L'indice demande au contraire nombre de livres, genre et noms de colonnes. Ces trois formulations décrivent des résultats incompatibles.",
+              "current_content": "Titre : « Création d'une table » ; instructions : langue/titre de text ; indice : « nombre de livres », « genre » et « noms des colonnes ».",
+              "proposed_content": "Renommer l'activité « Structurer l'analyse d'un texte » et conserver une unique consigne : « Créez instructions, output_format et final_prompt pour retourner le texte, sa langue et un titre, une information par ligne avec les préfixes Text:, Language: et Title:. »",
+              "evidence": "JSON lessons[0].chapters[9].blocks[0] : instructions lignes 399-402, hint lignes 406-409, titre lignes 379-397.",
+              "confidence": "high",
+              "verification_status": "verified_source",
+              "recommended_action": "Réécrire titre et indice pour qu'ils correspondent à la consigne retenue ; mettre à jour la solution canonique en conséquence."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch01_act11",
+          "title": "Personnalisation du format de sortie",
+          "score_100": 58,
+          "verified_dimensions": ["conditions et format de sortie explicités", "indice sur délimiteurs et séparation instructions/output_format", "prérequis immédiats disponibles"],
+          "unverified_dimensions": ["cohérence de toutes les étiquettes de sortie avec la solution", "exécution réelle"],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch01_act12",
+          "title": "Utilisation de prompts conditionnels",
+          "score_100": 62,
+          "verified_dimensions": ["contexte, règle conditionnelle et résultat N/A explicites", "continuité avec la vidéo précédente", "indice if/else disponible"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Prompts few-shot",
+          "score_100": 85,
+          "verified_dimensions": ["définitions zero/one/few-shot, exemples et critères de choix", "transition vers la pratique", "média contextualisé, transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Prompting zero-shot, one-shot, et few-shot",
+          "score_100": 35,
+          "verified_dimensions": ["objectif, consigne, environnement, ressource et indice affichables", "verrouillage cloud_exercise vérifié"],
+          "unverified_dimensions": ["attendu pédagogique canonique", "qualité de l'évaluation de réponse libre"],
+          "issues": [
+            {
+              "issue_id": "059-CLOUD-FEEDBACK-CH02-02",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "feedback",
+              "description": "Ce TP obligatoire reproduit le défaut de correction : steps, solution et successMessage sont vides, aucune grille ni évaluation serveur n'est fournie, et une remise minimale suffit à débloquer la suite. Le retour ne permet pas de distinguer zero-shot, one-shot et few-shot correctement.",
+              "current_content": "steps: []; solution: \"\"; successMessage: \"\"; aucune rubricCriteria ni serverGradedAssessment.",
+              "proposed_content": "Ajouter une grille de classification visible, une correction expliquant le nombre d'exemples et un seuil de remise adapté. La solution détaillée doit être fournie ou validée par l'équipe pédagogique avant publication.",
+              "evidence": "JSON lessons[1].chapters[1].blocks[0] lignes 563-591 ; CloudExerciseBlock.tsx lignes 153-161 et 430-455.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Ne pas utiliser ce TP comme validation tant que son évaluation et sa correction ne sont pas définies."
+            },
+            {
+              "issue_id": "059-CH02-02-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "L'objectif dit que l'apprenant recevra plusieurs prompts à classer en zero-shot, one-shot ou few-shot. Les instructions ne fournissent pas cette série : elles demandent seulement de créer un prompt one-shot sur des nombres impairs. L'écran rend ces deux demandes contradictoires.",
+              "current_content": "assignment : « classer ... dans l'une des trois catégories » ; instructions : « Créez un prompt one-shot ... extraire les nombres impairs ».",
+              "proposed_content": "Conserver la tâche de création et afficher : « Objectif : construire un prompt one-shot. Rédigez un prompt qui montre un exemple d'extraction des nombres impairs de {1, 3, 7, 12, 19}, puis demande la même opération pour {3, 5, 11, 12, 16}. »",
+              "evidence": "JSON lessons[1].chapters[1].blocks[0], assignment ligne 569 et instructions ligne 570 ; le renderer affiche les deux zones séparément (CloudExerciseBlock.tsx lignes 227-245).",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Supprimer la référence à une série de prompts inexistante ou l'ajouter réellement avec une activité de classification adaptée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Contrôle de la structure de sortie",
+          "score_100": 62,
+          "verified_dimensions": ["rôles user/assistant et action de classification explicités", "indice sur exemples et nouvelle question", "prérequis few-shot immédiatement précédent"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Analyse des sentiments avec un prompt few-shot",
+          "score_100": 64,
+          "verified_dimensions": ["cas d'usage, classes et exemples explicites", "action attendue et indice sur rôles", "progression few-shot cohérente"],
+          "unverified_dimensions": ["exécution réelle", "feedback spécifique au raisonnement"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Prompting multi-étapes",
+          "score_100": 85,
+          "verified_dimensions": ["définition, comparaison avec few-shot et exemples", "transition vers la pratique", "média contextualisé, transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Prompt en une seule étape pour planifier un voyage",
+          "score_100": 42,
+          "verified_dimensions": ["action décrite dans la consigne", "proximité thématique avec le cours multi-étapes"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": [
+            {
+              "issue_id": "059-CH02-06-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "Le titre annonce un prompt en une seule étape, l'instruction demande explicitement un prompt multi-étapes détaillé, et l'indice explique comment créer un prompt standard à une seule étape. L'action à produire est donc ambiguë.",
+              "current_content": "Titre : « Prompt en une seule étape ... » ; instructions : « Créez un prompt multi-étapes ... » ; indice : « prompt standard en une seule étape ».",
+              "proposed_content": "Si l'intention est l'exercice multi-étapes, renommer « Prompt multi-étapes pour planifier des vacances à la plage » et demander quatre étapes couvrant destinations, hébergements, activités et avantages/inconvénients.",
+              "evidence": "JSON lessons[1].chapters[5].blocks[0], titre lignes 700-718, instructions lignes 720-723 et hint lignes 727-730.",
+              "confidence": "high",
+              "verification_status": "verified_source",
+              "recommended_action": "Choisir une seule modalité de prompt et aligner titre, énoncé, indice et solution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Prompt multi-étapes pour planifier un voyage",
+          "score_100": 40,
+          "verified_dimensions": ["consigne sur les critères d'analyse du code visible", "séquence après le cours multi-étapes"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": [
+            {
+              "issue_id": "059-CH02-07-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "Le titre porte sur la planification de voyage, mais la consigne demande d'évaluer une fonction dans code selon trois critères ; l'indice parle de quatre étapes d'un plan de voyage. Ces éléments issus de deux activités différentes rendent l'aide trompeuse.",
+              "current_content": "Titre : planifier un voyage ; instructions : syntaxe/deux entrées/une sortie ; indice : quatre étapes d'un plan.",
+              "proposed_content": "Renommer « Évaluer une fonction avec un prompt multi-étapes » et demander : « Rédigez un prompt comportant les trois vérifications suivantes : syntaxe, deux entrées et une sortie, appliquées à code délimité. »",
+              "evidence": "JSON lessons[1].chapters[6].blocks[0], titre lignes 735-753, instructions lignes 755-758 et hint lignes 762-765.",
+              "confidence": "high",
+              "verification_status": "verified_source",
+              "recommended_action": "Réassocier l'indice et la solution au bon énoncé ou restaurer la tâche de voyage annoncée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Analyser l'exactitude de la solution",
+          "score_100": 62,
+          "verified_dimensions": ["scénario, critères d'exactitude et prérequis fournis", "indice sur insertion de code", "progression depuis l'analyse multi-étapes"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Prompts par chaîne de pensée et cohérence propre",
+          "score_100": 84,
+          "verified_dimensions": ["définitions, limites et comparaison des techniques", "transition vers les activités", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": "Raisonnement à l'aide d’un prompt par chaîne de pensée",
+          "score_100": 62,
+          "verified_dimensions": ["exemples, nouvelle question et prompt final explicités", "indice sur raisonnement étape par étape", "prérequis cohérents"],
+          "unverified_dimensions": ["exécution réelle", "qualité de la justification produite"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Prompts one-shot par chaîne de pensée",
+          "score_100": 40,
+          "verified_dimensions": ["consigne effectivement affichée", "proximité avec le cours sur chaîne de pensée/cohérence propre"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": [
+            {
+              "issue_id": "059-CH02-11-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "Le titre annonce un prompt one-shot par chaîne de pensée. La consigne demande une instruction de cohérence propre avec trois experts et vote majoritaire. L'indice parle encore d'un exemple de nombres pairs (activité précédente). L'apprenant ne sait pas quelle technique démontrer.",
+              "current_content": "Titre one-shot ; instructions self_consistency_instruction / trois experts / vote majoritaire ; hint example/s1/s2.",
+              "proposed_content": "Renommer « Prompt par cohérence propre » et conserver : « Créez self_consistency_instruction : trois experts résolvent indépendamment problem_to_solve, puis la réponse majoritaire est retournée. Créez ensuite prompt. »",
+              "evidence": "JSON lessons[1].chapters[10].blocks[0], titre lignes 874-892, instructions lignes 894-897 et hint lignes 901-904.",
+              "confidence": "high",
+              "verification_status": "verified_source",
+              "recommended_action": "Aligner la technique nommée, l'indice et la solution sur la cohérence propre, ou restaurer la tâche one-shot annoncée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch02_act12",
+          "title": "Prompts par cohérence propre",
+          "score_100": 64,
+          "verified_dimensions": ["problème, technique attendue et prérequis explicités", "indice sur structure de l'instruction", "continuité avec la vidéo"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch02_act13",
+          "title": "Ingénierie et perfectionnement itératifs des prompts",
+          "score_100": 84,
+          "verified_dimensions": ["boucle d'itération et exemples d'affinement expliqués", "transition vers la pratique", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 13,
+          "chapter_id": "dc_ch02_act14",
+          "title": "Processus itératif d'ingénierie des prompts",
+          "score_100": 45,
+          "verified_dimensions": ["objectif d'itération, instruction, environnement, ressource et indice affichables", "verrouillage cloud_exercise vérifié"],
+          "unverified_dimensions": ["attendu pédagogique canonique", "qualité de l'évaluation de réponse libre"],
+          "issues": [
+            {
+              "issue_id": "059-CLOUD-FEEDBACK-CH02-14",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act14",
+              "content_id": "dc_2_act_14_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P1",
+              "category": "feedback",
+              "description": "Le TP d'itération est bloquant mais ne fournit ni étapes structurées, ni critères, ni correction, ni feedback pédagogique ; une soumission minimale permet la complétion. L'activité ne permet donc pas de vérifier que l'apprenant a réellement observé puis raffiné un résultat.",
+              "current_content": "steps: []; solution: \"\"; successMessage: \"\"; aucune rubricCriteria ni serverGradedAssessment.",
+              "proposed_content": "Ajouter des étapes « prompt initial → observation → défaut identifié → prompt révisé → vérification du tableau » ; exiger ces éléments dans la remise et proposer une correction décrivant le résultat attendu sans prétendre valider des faits temporels non fournis.",
+              "evidence": "JSON lessons[1].chapters[13].blocks[0] lignes 991-1019 ; logique de complétion sans évaluation dans CloudExerciseBlock.tsx lignes 153-161.",
+              "confidence": "high",
+              "verification_status": "verified_source_and_renderer",
+              "recommended_action": "Définir une correction et un barème avant de conserver le verrouillage de progression."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 14,
+          "chapter_id": "dc_ch02_act15",
+          "title": "Ingénierie itérative des prompts standard",
+          "score_100": 40,
+          "verified_dimensions": ["consigne affichée et séquence après la vidéo d'itération"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": [
+            {
+              "issue_id": "059-CH02-15-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act15",
+              "content_id": "dc_2_act_15_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "La consigne demande d'affiner des exemples afin que la sortie ne contienne aucune émotion explicite, alors que l'indice demande une table à trois colonnes avec en-têtes. L'indice appartient à une tâche de tableau et n'aide pas à réaliser l'activité d'émotions.",
+              "current_content": "instructions : raffinage d'exemples / aucune émotion explicite ; hint : structure en trois colonnes avec titres.",
+              "proposed_content": "Conserver la tâche d'émotions et afficher : « Ajoutez ou améliorez un exemple few-shot explicitement classé “aucune émotion explicite”, puis vérifiez que l'exemple ciblé reçoit cette classe. »",
+              "evidence": "JSON lessons[1].chapters[14].blocks[0], instructions lignes 1043-1047 et hint lignes 1051-1054.",
+              "confidence": "high",
+              "verification_status": "verified_source",
+              "recommended_action": "Remplacer l'indice et vérifier que la solution canonique cible bien la classification d'émotion."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 15,
+          "chapter_id": "dc_ch02_act16",
+          "title": "Ingénierie itérative des prompts few-shot",
+          "score_100": 62,
+          "verified_dimensions": ["scénario, erreur observée et résultat cible explicites", "indice directement relié au few-shot", "progression cohérente"],
+          "unverified_dimensions": ["exécution réelle", "feedback de validation"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Résumé et développement de texte",
+          "score_100": 85,
+          "verified_dimensions": ["applications, exemples, limites et transition vers la pratique", "progression depuis les techniques précédentes", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Résumé du rapport d'étude de marché",
+          "score_100": 62,
+          "verified_dimensions": ["action de résumé et limite de cinq points explicites", "séquence après la vidéo de synthèse", "indice sur contraintes du prompt"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Résumé des caractéristiques du produit",
+          "score_100": 62,
+          "verified_dimensions": ["action d'expansion, longueur et contenu attendu explicites", "progression depuis synthèse/expansion", "indice affichable"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Développement de la description du produit",
+          "score_100": 64,
+          "verified_dimensions": ["scénario commercial, production attendue et variable préchargée explicités", "indication sur exigences d'expansion", "continuité pédagogique"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Transformation de texte",
+          "score_100": 84,
+          "verified_dimensions": ["traduction, ton, public et relecture expliqués avec exemples", "transition vers la pratique", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Traduction pour une communication multilingue",
+          "score_100": 40,
+          "verified_dimensions": ["action de transformation clairement formulée", "séquence après le cours de transformation"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": [
+            {
+              "issue_id": "059-CH03-06-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "Le titre annonce une traduction multilingue et l'indice demande les langues source/cibles ; la consigne demande uniquement de modifier le ton de sample_email pour le rendre professionnel, positif et centré utilisateur. L'apprenant ne peut déterminer s'il doit traduire ou ajuster le ton.",
+              "current_content": "Titre : traduction ; instructions : transformation de ton ; hint : langues d'entrée et de sortie.",
+              "proposed_content": "Renommer « Ajustement du ton d'un e-mail » et demander : « Rédigez un prompt qui réécrit sample_email avec un ton professionnel, positif et centré sur l'utilisateur, sans ajouter de contrainte de traduction. »",
+              "evidence": "JSON lessons[2].chapters[5].blocks[0], titre lignes 1300-1318, instructions lignes 1320-1323 et hint lignes 1327-1330.",
+              "confidence": "high",
+              "verification_status": "verified_source",
+              "recommended_action": "Choisir l'objectif de traduction ou d'ajustement de ton et réaligner tous les champs, notamment l'indice et la solution."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Ajustement du ton pour le marketing par e-mail",
+          "score_100": 62,
+          "verified_dimensions": ["deux étapes, ordre et tons cibles explicites", "indice pertinent", "continuité avec la vidéo"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Amélioration de l'écriture",
+          "score_100": 64,
+          "verified_dimensions": ["scénario, texte cible et action multi-étapes explicités", "indice cohérent", "progression depuis la transformation de texte"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Analyse de texte",
+          "score_100": 84,
+          "verified_dimensions": ["classification et extraction d'entités expliquées", "avertissement sur données clients contextualisé", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Acheminement des tickets d'assistance client",
+          "score_100": 45,
+          "verified_dimensions": ["consigne d'extraction few-shot et variable cible visibles", "prérequis d'analyse de texte disponibles"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": [
+            {
+              "issue_id": "059-CH03-10-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "Le titre évoque l'acheminement de tickets, la consigne demande l'extraction d'entités depuis ticket_4, et l'indice parle de classification dans des catégories connues avec production de la seule classe. Ces opérations et leurs sorties attendues sont différentes.",
+              "current_content": "Titre : acheminement ; instructions : extraire les entités ; hint : classer et ne produire que la classe.",
+              "proposed_content": "Renommer « Extraction few-shot d'entités de tickets » et demander : « Incluez trois paires ticket-entités comme exemples, puis demandez au modèle d'extraire les entités de ticket_4 dans la même structure. »",
+              "evidence": "JSON lessons[2].chapters[9].blocks[0], titre lignes 1439-1457, instructions lignes 1459-1462 et hint lignes 1466-1469.",
+              "confidence": "high",
+              "verification_status": "verified_source",
+              "recommended_action": "Réassocier titre, consigne, indice et solution à l'extraction d'entités, ou transformer réellement l'activité en classement de tickets."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch03_act11",
+          "title": "Analyse des tickets d'assistance client",
+          "score_100": 64,
+          "verified_dimensions": ["contexte métier, exemples disponibles et action few-shot explicités", "indice sur inclusion des tickets et entités", "prérequis vidéo immédiat"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch03_act12",
+          "title": "Génération et explication de code",
+          "score_100": 84,
+          "verified_dimensions": ["applications, formats attendus et limites expliqués", "progression vers les activités", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 12,
+          "chapter_id": "dc_ch03_act13",
+          "title": "Génération de code avec description du problème",
+          "score_100": 62,
+          "verified_dimensions": ["action et variable examples explicites", "indice sur langage et description", "prérequis vidéo immédiat"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 13,
+          "chapter_id": "dc_ch03_act14",
+          "title": "Exemples d'entrées-sorties pour la génération de code",
+          "score_100": 62,
+          "verified_dimensions": ["modifications demandées et résultat attendu explicités", "indice sur exemples d'entrées-sorties", "enchaînement logique"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 14,
+          "chapter_id": "dc_ch03_act15",
+          "title": "Modification du code à l'aide de prompts multi-étapes",
+          "score_100": 42,
+          "verified_dimensions": ["action affichée", "prérequis sur explication de code traité dans la vidéo précédente"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": [
+            {
+              "issue_id": "059-CH03-15-STATEMENT-CONFLICT",
+              "course_id": "prompt_engineering_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act15",
+              "content_id": "dc_3_act_15_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "énoncé",
+              "description": "Le titre annonce la modification de code au moyen d'un prompt multi-étapes, l'instruction demande d'expliquer function avec une chaîne de pensée, et l'indice exige de mentionner les étapes de réglage dans function. La tâche, la technique et l'aide ne convergent pas.",
+              "current_content": "Titre : modification multi-étapes ; instructions : expliquer function par chaîne de pensée ; hint : « étapes de réglage dans function ».",
+              "proposed_content": "Renommer « Expliquer une fonction avec un prompt par chaîne de pensée » et demander : « Rédigez un prompt qui fournit function et demande une explication étape par étape de son rôle, de ses entrées, de son calcul et de sa sortie. »",
+              "evidence": "JSON lessons[2].chapters[14].blocks[0] : titre lignes 1613-1631, instructions lignes 1633-1636 et hint lignes 1640-1643.",
+              "confidence": "high",
+              "verification_status": "verified_source",
+              "recommended_action": "Aligner le titre, la consigne, l'indice et la solution sur l'explication de fonction ou restaurer une consigne de modification."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 15,
+          "chapter_id": "dc_ch03_act16",
+          "title": "Explication du code étape par étape",
+          "score_100": 64,
+          "verified_dimensions": ["scénario, variable, technique attendue et indice explicites", "continuité avec l'explication de code", "action claire"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch04_act01",
+          "title": "Ingénierie des prompts pour le développement de chatbots",
+          "score_100": 84,
+          "verified_dimensions": ["rôle système, objectif, directives et conditions expliqués", "transition vers les exercices", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch04_act02",
+          "title": "Création d'une fonction get_response() à double prompt",
+          "score_100": 58,
+          "verified_dimensions": ["trois livrables nommés et attendus visibles", "progression depuis les prompts système", "éditeur et indice rendus"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch04_act03",
+          "title": "Chatbot d'assistance à la clientèle",
+          "score_100": 62,
+          "verified_dimensions": ["conditions, formulations et variable finale explicites", "enchaînement avec le prompt système", "indice disponible"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch04_act04",
+          "title": "Contrôle comportemental d'un chatbot dédié au service client",
+          "score_100": 64,
+          "verified_dimensions": ["scénario, dépendance à l'exercice précédent, actions et tests annoncés", "indice sur conditions et concaténation", "progression cohérente"],
+          "unverified_dimensions": ["exécution réelle", "feedback par test"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch04_act05",
+          "title": "Prompts de jeux de rôle pour les chatbots",
+          "score_100": 84,
+          "verified_dimensions": ["rôles, contraintes et exemples comparatifs expliqués", "transition vers la pratique", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch04_act06",
+          "title": "Chatbot conseiller en apprentissage",
+          "score_100": 62,
+          "verified_dimensions": ["directives comportementales et de réponse clairement demandées", "rôle et limite de recommandations explicites", "indice cohérent"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch04_act07",
+          "title": "Ajout de directives pour le chatbot conseiller en apprentissage",
+          "score_100": 64,
+          "verified_dimensions": ["contexte, variables et intégration demandée explicités", "dépendance à l'exercice antérieur annoncée", "indice cohérent"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch04_act08",
+          "title": "Intégration du contexte externe",
+          "score_100": 85,
+          "verified_dimensions": ["besoin, limites et deux méthodes de contexte expliqués", "avertissement sur limites contextuelles", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch04_act09",
+          "title": "Fournir du contexte à l'aide d'exemples de conversations",
+          "score_100": 62,
+          "verified_dimensions": ["objectif, service_description, comportement attendu et appel de fonction explicites", "indice de rôle pertinent", "progression depuis la vidéo"],
+          "unverified_dimensions": ["exécution réelle", "validation de variantes"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch04_act10",
+          "title": "Fournir un contexte via un prompt système",
+          "score_100": 64,
+          "verified_dimensions": ["changement de méthode, contexte fourni et test annoncés", "ordre attendu des éléments dans l'indice", "progression cohérente"],
+          "unverified_dimensions": ["exécution réelle", "feedback par critère"],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch04_act11",
+          "title": "Félicitations",
+          "score_100": 82,
+          "verified_dimensions": ["synthèse des quatre leçons et rappel des limites des LLM", "conclusion cohérente du parcours", "média transcrit et sous-titré"],
+          "unverified_dimensions": ["lecture effective de l'audio", "accessibilité effective du lecteur"],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope": "1 cours, 4 leçons, 55 chapitres et 55 activités/channels de formation examinés dans le JSON source ; 37 activités code_repl, 3 cloud_exercise et 15 vidéos revus.",
+    "score_method": "Les scores sur 100 renormalisent les dimensions vérifiables : contenu JSON, ordre des écrans, renderer LessonViewer, CodeReplBlock, CloudExerciseBlock et logique de progression. Les ressources multimédias déclarées sont considérées disponibles et non absentes ; leur lecture effective n'a pas été testée.",
+    "overall_assessment": "La progression conceptuelle est solide (fondamentaux, techniques avancées, applications, chatbots) et les 15 vidéos fournissent explications, transition et transcription. Les signaux statiques de simple absence de texte dans les chapitres d'exercice ne sont pas confirmés : les consignes sont rendues dans les blocs. Les défauts confirmés se concentrent sur les activités : validation textuelle non exécutable des 37 exercices de code, exercices de code non pris en compte dans le verrouillage, trois TP obligatoires sans correction ni grille, et sept écrans présentant une incohérence objective entre titre, consigne et indice.",
+    "confirmed_issues": 15,
+    "priority_counts": {"P0": 0, "P1": 15, "P2": 0, "P3": 0},
+    "priority_actions": ["1. Corriger la validation et le verrouillage des code_repl avant de rendre les activités obligatoires.", "2. Réconcilier titre, énoncé, indice et solution des sept activités à consignes contradictoires.", "3. Ajouter grille, correction, feedback et critères de remise aux trois cloud_exercise bloquants."]
+  },
+  "limits": [
+    "Audit qualitatif fondé sur le JSON effectivement référencé par le manifest, le registre des blocs et les composants LessonViewer/chapterProgress/CodeReplBlock/CloudExerciseBlock ; aucun contenu, code ou donnée source n'a été modifié.",
+    "Les fichiers audio, VTT et PDF locaux sont déclarés dans les JSON ; ils n'ont pas été lus ou joués dans un navigateur. Ils sont donc traités comme ressources accessibles mais leur qualité pédagogique audiovisuelle, lisibilité réelle et accessibilité de lecture restent non vérifiées.",
+    "Les appels réels à l'API, les clés personnelles et l'exécution Python ne sont pas testables par le renderer code_repl actuel : celui-ci n'exécute pas le code. L'audit ne conclut pas sur l'exactitude factuelle des solutions importées, seulement sur la logique de rendu et de validation vérifiée.",
+    "L'absence d'un objectif formalisé par chapitre n'est pas érigée en anomalie : objectifs et descriptions existent au niveau leçon/chapitre, et les dimensions insuffisamment étayées sont consignées comme non vérifiables."
+  ]
+}

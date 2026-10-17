@@ -1,0 +1,397 @@
+{
+  "formation_id": "datacamp_gemini_in_gmail",
+  "courses": [
+    {
+      "course_id": "gemini_in_gmail__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Introduction to Gemini in Gmail",
+          "score_100": 72,
+          "verified_dimensions": [
+            "L’ouverture explicite le périmètre : rédiger et affiner des e-mails avec Gemini, puis réaliser une activité dans un scénario de vente. La transcription signale aussi les limites des suggestions génératives et les restrictions possibles liées à l’édition Workspace ou aux politiques administratives.",
+            "Le média déclaré est contextualisé par son titre et le lecteur rend une vidéo MP4, un lien de sous-titres anglais, un PDF de slides et une transcription repliable. Le MP4 et le PDF ont répondu HTTP 200 dans l’environnement d’audit.",
+            "La suite annoncée (brouillon, affinage, puis pratique) correspond à l’ordre effectif des écrans 1 à 5."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre distinct, observable et mesurable n’est déclaré ; l’orientation est inférée du titre et de la transcription, sans pénalisation automatique.",
+            "La lisibilité réelle de la vidéo, de ses sous-titres et des commandes média dans un navigateur apprenant n’a pas été exécutée.",
+            "La disponibilité effective de Gemini pour le compte et l’édition Google Workspace de chaque apprenant ne peut pas être vérifiée dans cet audit."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act01:video-navigation-gate",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo obligatoire est franchissable sans être marquée comme vue. Le lecteur enregistre la complétion sous la clé MP4 `dc_1_act_01_video`, mais les contrôles de navigation ne retiennent ni `mp4Url` ni cet identifiant de 17 caractères : ils ne construisent donc aucune clé vidéo à exiger. Le quiz intermédiaire injecté ne compense pas ce défaut : aucune banque de questions n’est déclarée pour ce cours et ChapterQuiz passe automatiquement lorsqu’elle est vide.",
+              "current_content": "Chapitre `requiredBeforeAdvance: true`; bloc vidéo MP4 id=`dc_1_act_01_video`, sans `videoId` ni URL YouTube.",
+              "proposed_content": "Centraliser la résolution de la clé média : pour MP4/HLS/audio, exiger `block.id || fallback` sans filtre de longueur dans le footer, la navigation clavier et tout contrôle séquentiel. Ajouter un test couvrant un id MP4 long et le cas d’une banque ChapterQuiz absente.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[0].requiredBeforeAdvance et blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 554-558 (clé de rendu MP4), 304-306 et 1558-1568 (clés de navigation limitées à videoId/URL/id de 8 à 15 caractères); client/src/components/ChapterQuiz.tsx lignes 48-64 et 75-80; /data/lessonQuizzes.json ne contient pas `gemini_in_gmail__01`.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger la résolution de clé commune, puis tester qu’un clic Suivant reste bloqué tant que ce bloc n’est pas terminé ou explicitement marqué comme vu."
+            },
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act01:french-media-alternative",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "Le cours est étiqueté `sourceLanguage: fr-FR` et son introduction d’interface est traduite, mais ce média ne déclare qu’une transcription en anglais et `subtitleUrlEn`; aucune alternative textuelle ou piste de sous-titres française n’est fournie. Un apprenant francophone ne dispose donc pas d’un accès textuel français au contenu introductif et à ses avertissements d’usage.",
+              "current_content": "`transcript` et `transcriptSegments[0].text` sont en anglais ; `subtitleUrlEn` est renseigné et `subtitleUrlFr` est absent.",
+              "proposed_content": "Ajouter une transcription et des sous-titres français relus, synchronisés avec le média, ou requalifier explicitement le cours comme anglophone au lieu de le présenter comme import fr-FR.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → datacampImport.sourceLanguage et lessons[0].chapters[0].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 651-654 et 670-686 rend séparément les sous-titres disponibles et la transcription.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Livrer l’alternative française avant de compter ce média comme pleinement accessible dans le parcours français."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Draft an Email with Gemini",
+          "score_100": 75,
+          "verified_dimensions": [
+            "La transcription enseigne une procédure complète : ouvrir Gmail, Composer, sélectionner Help me write, formuler un prompt descriptif, créer, insérer ou recréer le brouillon. Elle donne des exemples RH, IT et commerciaux et explicite les paramètres utiles (destinataire, sujet, ton).",
+            "La dernière phrase annonce explicitement l’affinage du texte dans l’écran suivant ; cette transition et les prérequis sont cohérents avec le chapitre 3.",
+            "Le média possède une transcription, des sous-titres anglais déclarés et le même PDF de slides accessible par le lecteur. Le MP4 a répondu HTTP 200 lors de la vérification locale."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif mesurable séparé n’est déclaré dans les données du chapitre.",
+            "La démonstration visuelle réelle, sa lisibilité et la fidélité de l’interface Gmail actuelle n’ont pas été contrôlées par exécution navigateur.",
+            "La disponibilité du bouton Help me write selon le compte de l’apprenant demeure hors périmètre de la revue locale."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act02:video-navigation-gate",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo déclarée obligatoire peut être contournée : sa clé de rendu `dc_1_act_02_video` n’est pas retrouvée par les contrôles de navigation, qui ignorent les sources MP4 et ne conservent un id que s’il compte de 8 à 15 caractères. L’écran suivant est donc accessible sans avoir vu l’explication qui prépare le travail de rédaction.",
+              "current_content": "Chapitre `requiredBeforeAdvance: true`; vidéo MP4 id=`dc_1_act_02_video` (17 caractères), sans `videoId` ni URL YouTube.",
+              "proposed_content": "Employer dans tous les contrôles de passage la clé réellement utilisée par le rendu MP4, `block.id || fallback`, sans condition de longueur.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[1].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 554-558, 304-306 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction de clé média commune et ajouter ce chapitre au test de verrouillage séquentiel."
+            },
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act02:french-media-alternative",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "La démonstration ne fournit qu’une transcription et des sous-titres anglais, alors que le cours est importé comme fr-FR et que les descriptions de parcours sont françaises. Les explications détaillées des actions et des exemples de prompts ne sont donc pas accessibles textuellement en français.",
+              "current_content": "Transcription anglaise; `subtitleUrlEn` renseigné; aucun `subtitleUrlFr` ni transcript FR déclaré.",
+              "proposed_content": "Fournir une transcription et une piste de sous-titres françaises relues correspondant à la démonstration, ou afficher clairement que ce segment est en anglais.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[1].blocks[0].transcript, .subtitleUrlEn; client/src/pages/training/LessonViewer.tsx lignes 651-654 et 670-686.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Prioriser la localisation de ce support procédural avant de l’utiliser comme prérequis d’une activité en français."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Refine Prompts and Drafts",
+          "score_100": 76,
+          "verified_dimensions": [
+            "La transcription part d’un scénario concret, montre pourquoi un premier prompt peut viser le mauvais destinataire, puis explique comment le préciser. Elle définit les actions Formalize, Elaborate et Shorten et leur effet attendu.",
+            "La séquence réinvestit directement le brouillon et le prompt présentés au chapitre précédent ; le passage des notions à leur application est progressif.",
+            "Le média déclare une transcription et des sous-titres anglais, ainsi qu’un lien vers le PDF de slides. Le MP4 a répondu HTTP 200 dans l’environnement d’audit."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre explicitement formulé comme résultat d’apprentissage mesurable n’est stocké.",
+            "La lisibilité des manipulations et l’adéquation avec la version Gmail de l’apprenant ne sont pas vérifiables sans exécuter le média et le produit.",
+            "L’efficacité pédagogique réelle des exemples auprès d’un public débutant n’a pas été mesurée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act03:video-navigation-gate",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Le verrouillage annoncé par `requiredBeforeAdvance: true` ne fonctionne pas pour cette vidéo MP4 : le rendu marque `dc_1_act_03_video` comme complétée, mais les chemins de navigation ne reconnaissent pas l’id long sans videoId/URL YouTube. L’apprenant peut donc arriver à l’explication de l’activité sans les prérequis d’affinage.",
+              "current_content": "Vidéo MP4 id=`dc_1_act_03_video` (17 caractères), sans `videoId` ni URL YouTube, dans un chapitre obligatoire.",
+              "proposed_content": "Résoudre les clés MP4 à partir de `block.id` de façon partagée entre le lecteur, les boutons Précédent/Suivant et la navigation clavier.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[2].requiredBeforeAdvance et blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 554-558, 304-306 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger le gate et le couvrir par un test avec l’id `dc_1_act_03_video`."
+            },
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act03:french-media-alternative",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "Les définitions procédurales qui préparent les réponses aux deux quiz (Formalize, Elaborate, Shorten) ne sont déclarées qu’en anglais dans la transcription et les sous-titres. Cette localisation partielle est incohérente avec les consignes et descriptions françaises du même parcours.",
+              "current_content": "`transcript` anglais; `subtitleUrlEn` présent; aucun sous-titre ni transcript FR déclaré.",
+              "proposed_content": "Ajouter l’alternative française équivalente (transcription et sous-titres) ou identifier visiblement ce contenu comme une séquence en anglais.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[2].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 651-654 et 670-686.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Localiser ce média avant de s’appuyer sur lui comme unique explication préalable aux évaluations en français."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Activity Explained",
+          "score_100": 69,
+          "verified_dimensions": [
+            "La courte transcription joue correctement son rôle de transition : elle annonce l’activité suivante, le rôle de représentant commercial de Cymbal Retail, l’audience de prospects et les deux gestes à pratiquer (générer puis affiner un e-mail).",
+            "Le chapitre arrive après les démonstrations de rédaction et d’affinage, ce qui respecte l’ordre des prérequis déclarés.",
+            "La vidéo, sa transcription, ses sous-titres anglais et son lien de slides sont déclarés; le MP4 a répondu HTTP 200 dans l’environnement d’audit."
+          ],
+          "unverified_dimensions": [
+            "La clarté visuelle de la vidéo et sa lecture effective dans le navigateur n’ont pas été testées.",
+            "Aucun objectif formalisé, résultat attendu, ni critère de qualité du futur e-mail n’est déclaré au niveau de cet écran.",
+            "Le détail du produit Cymbal Retail et les contraintes permettant de réaliser l’activité ne sont pas fournis dans ce chapitre; leur éventuelle présence dans un système externe n’a pas été supposée."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act04:video-navigation-gate",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Cette transition est annoncée comme obligatoire mais peut être sautée. Le lecteur stocke bien l’état sous `dc_1_act_04_video`; les vérifications de navigation ignorent toutefois le MP4 et son id de 17 caractères, laissant le passage vers l’activité disponible sans preuve de consultation.",
+              "current_content": "Chapitre `requiredBeforeAdvance: true`; vidéo MP4 id=`dc_1_act_04_video`, sans `videoId` ni URL YouTube.",
+              "proposed_content": "Utiliser `block.id || fallback` comme clé de complétion pour les médias locaux dans tous les chemins de navigation, sans filtrage de longueur.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[3].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 554-558, 304-306 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger ce gate commun et ajouter un test de non-contournement pour cette vidéo de transition."
+            },
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act04:french-media-alternative",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "Le seul contenu qui introduit le scénario pratique est accessible textuellement uniquement en anglais : transcription anglaise et sous-titres anglais déclarés, sans équivalent français. Cela affaiblit l’autonomie d’un apprenant francophone juste avant l’activité.",
+              "current_content": "Transcript anglais et `subtitleUrlEn` uniquement; aucune propriété de sous-titre ou de transcript français.",
+              "proposed_content": "Fournir des sous-titres et une transcription françaises, ou afficher explicitement le statut anglophone de ce média avant lecture.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[3].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 651-654 et 670-686.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Rendre disponible l’alternative française avant de conserver ce média comme unique introduction de l’activité."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Generate an Email",
+          "score_100": 42,
+          "verified_dimensions": [
+            "L’écran rend bien un bloc `resource_review` : titre, consigne, lien vers le PDF local et bouton de confirmation sont affichés par LessonViewer.",
+            "La ressource n’est pas considérée absente : le PDF déclaré a répondu HTTP 200, contient neuf pages et a été inspecté. Son texte et ses diapositives se limitent aux titres des quatre vidéos et à « Let’s practice! ».",
+            "Le passage est techniquement cohérent avec le type `resource_review` : il se déverrouille après la confirmation explicite de consultation de la ressource."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre distinct et mesurable n’est déclaré.",
+            "Aucune exécution dans une boîte Gmail réelle ni disponibilité de Gemini pour le compte apprenant n’a été testée.",
+            "La qualité de la mise en page du PDF dans un navigateur n’a pas été évaluée au-delà de l’inspection locale de ses neuf pages."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act05:missing-hands-on-activity",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_resource",
+              "content_type": "resource_review",
+              "severity": "P1",
+              "category": "guidage",
+              "description": "L’activité pratique annoncée à l’écran précédent n’est pas implémentée dans le contenu accessible. L’unique consigne est « View the PDF before continuing » et le PDF ne contient ni scénario opérationnel, ni détail du produit, ni étapes Gmail, ni production à remettre. Le composant permet ensuite une simple auto-attestation, sans réaliser ni valider l’e-mail annoncé. L’apprenant ne peut donc pas savoir quoi produire ni recevoir de retour sur la compétence centrale promise.",
+              "current_content": "Titre « Generate an Email »; instructions : « View the PDF before continuing. »; PDF de neuf diapositives de titres/« Let’s practice! »; bouton « I have reviewed this resource ».",
+              "proposed_content": "Remplacer ou compléter ce `resource_review` par une activité guidée. Énoncé réutilisable avec les données disponibles : « Vous êtes représentant·e commercial·e de Cymbal Retail. Dans Gmail, utilisez Aidez-moi à écrire pour créer un brouillon d’e-mail destiné à des prospects au sujet du nouveau produit de l’entreprise, puis affinez le brouillon avant de le relire. » Avant de rendre l’activité obligatoire, ajouter le brief produit, le destinataire attendu, les critères de réussite et un feedback/correction. Ces éléments ne sont pas présents dans les données, donc aucun détail de produit ni réponse finale ne doit être inventé.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[3].blocks[0].transcript (rôle Cymbal Retail, prospects, générer et affiner) puis lessons[0].chapters[4].blocks[0] (seule consigne et PDF); PDF `/api/assets/chapter_01_slides_2f3ca926.pdf` récupéré avec HTTP 200, 9 pages, texte extrait : titres de section et « Let’s practice! »; client/src/pages/training/LessonViewer.tsx lignes 1068-1093 (lien et auto-confirmation) et 1583-1586 (gate de confirmation uniquement).",
+              "confidence": "high",
+              "verification_status": "verified_data_resource_and_rendering_code",
+              "recommended_action": "Restaurer ou concevoir l’activité pratique et sa validation avant de conserver ce chapitre comme exigence de progression."
+            },
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act05:untranslated-resource-review",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_resource",
+              "content_type": "resource_review",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "Dans un parcours déclaré fr-FR, les deux textes propres à l’activité sont identiques en anglais dans les variantes en/fr (« View the PDF before continuing. », « Open the local PDF resource »). La consigne de l’écran censée guider la pratique n’est donc pas localisée.",
+              "current_content": "`instructions.en` = `instructions.fr` = « View the PDF before continuing. »; `resourceLabel.en` = `resourceLabel.fr` = « Open the local PDF resource ».",
+              "proposed_content": "À minima, remplacer les variantes françaises par « Consultez le PDF avant de continuer. » et « Ouvrir la ressource PDF locale ». Si l’activité pratique est restaurée, traduire également son énoncé, ses étapes et ses feedbacks.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[4].blocks[0].instructions et .resourceLabel; client/src/pages/training/LessonViewer.tsx lignes 1069-1088 résout et affiche la variante correspondant à la langue.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Corriger les chaînes françaises de ce bloc avec la restauration de l’activité."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Quiz Question 1",
+          "score_100": 80,
+          "verified_dimensions": [
+            "La question situe un cas concret d’invitation à un événement d’équipe, demande explicitement deux réponses et évalue les deux notions expliquées auparavant : destinataire et ton.",
+            "Les cinq options, les deux bonnes réponses et un indice sont structurés. MultiChoiceBlock rend le nombre attendu, exige deux sélections, surligne les bonnes et mauvaises options après soumission et offre un réessai.",
+            "La progression est cohérente : ce QCM réemploie les paramètres de prompt présentés dans la démonstration de rédaction, et le lecteur bloque le passage tant que les deux réponses exactes ne sont pas soumises."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif mesurable n’est déclaré en dehors de l’énoncé du quiz.",
+            "Le comportement tactile, lecteur d’écran et navigateur de l’interaction n’a pas été exécuté ; le rendu et la logique ont été revus dans le code.",
+            "La lisibilité effective des textes anglais restants pour le public francophone n’a pas été testée auprès d’apprenants."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act06:untranslated-options",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "L’énoncé, l’indice et l’explication sont en français, mais les cinq libellés d’option fournis dans les variantes `fr` restent en anglais. Le lecteur sélectionne bien ces variantes et les affiche donc telles quelles dans une interface française.",
+              "current_content": "Options `text.fr` : « The tone », « The recipient », « A link to your company’s website », « An image », « Your to-do list ».",
+              "proposed_content": "Renseigner les variantes françaises : « Le ton », « Le destinataire », « Un lien vers le site web de votre entreprise », « Une image », « Votre liste de tâches ».",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[5].blocks[0].options; client/src/components/blocks/MultiChoiceBlock.tsx lignes 21-24 affiche `opt.text[lang]`.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Traduire les options avant publication de ce quiz dans le parcours français."
+            },
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act06:misleading-generic-feedback",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_qcm_multiple",
+              "content_type": "multi_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Après une réponse incorrecte, le composant affiche la même explication que pour une réponse correcte. Or son premier énoncé affirme « Cette réponse est correcte » et le paragraphe est dupliqué. La réponse choisie peut être fausse : ce feedback est donc contradictoire et n’explique pas clairement la règle de correction.",
+              "current_content": "Explication affichée quel que soit le résultat : « Cette réponse est correcte. Pour de meilleurs résultats, envisagez d’inclure dans votre invite le destinataire, le sujet et le ton que vous souhaitez transmettre. » répétée deux fois.",
+              "proposed_content": "Utiliser une explication neutre, compatible avec succès comme échec : « Pour rendre une invite pertinente, précisez le destinataire et le ton : ces éléments orientent le contenu et le style de l’e-mail. Ici, sélectionnez le ton et le destinataire. » Supprimer la répétition. Si un feedback différencié est souhaité, étendre le schéma et le composant avec des messages de réussite et d’erreur distincts.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[5].blocks[0].explanation; client/src/components/blocks/MultiChoiceBlock.tsx lignes 39-45 calcule le résultat et lignes 120-134 affiche `explanation` aussi bien pour `isAllCorrect` que pour l’échec.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Remplacer immédiatement l’explication par une formulation neutre et dédupliquée; envisager ensuite un feedback par réponse."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Quiz Question 2",
+          "score_100": 80,
+          "verified_dimensions": [
+            "Le scénario est compréhensible pour un débutant : e-mail au directeur financier, ton trop décontracté, action demandée clairement identifiable. Il réemploie directement Formalize, distingué au chapitre 3 de Shorten et Elaborate.",
+            "Les quatre options, la bonne réponse et l’indice sont complets. Le composant rend un choix unique, met en évidence la bonne option après validation, fournit un bouton de réessai et le passage reste bloqué jusqu’à une réponse correcte.",
+            "Cette question finale est placée après le contenu qui explique expressément que Formalize rend le texte plus adapté à un contexte professionnel."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif mesurable séparé du quiz n’est déclaré.",
+            "L’interaction n’a pas été exécutée dans un navigateur ni avec les technologies d’assistance ; sa structure et sa logique de rendu ont été lues.",
+            "L’adéquation de l’option Gemini à toutes les éditions Workspace n’est pas vérifiable ici."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act07:partial-french-localization",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_qcm",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "localisation",
+              "description": "La question et l’indice sont localisés en français, mais les quatre choix et l’explication française restent en anglais. Puisque SingleChoiceExercise rend la valeur `fr` lorsqu’elle existe, cette incohérence est exposée directement à l’apprenant francophone.",
+              "current_content": "Options `text.fr` : « Shorten », « Autocorrect », « Formalize », « Elaborate »; `explanation.fr` : « This answer is correct. You can choose this option to make the draft more formal. ».",
+              "proposed_content": "Conserver les noms d’actions Gemini si nécessaire, mais les contextualiser en français dans les choix, par exemple « Formalize (rendre plus formel) », et traduire l’explication : « L’option Formalize rend le brouillon plus formel. ».",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[6].blocks[0].options et .explanation; client/src/pages/training/LessonViewer.tsx lignes 977-1004 résout les valeurs selon `lang` et les transmet au composant.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Compléter les champs français des options et de l’explication sans traduire arbitrairement les libellés réels de l’interface Gmail."
+            },
+            {
+              "issue_id": "ped:gemini_in_gmail__01:dc_ch01_act07:misleading-generic-feedback",
+              "course_id": "gemini_in_gmail__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_qcm",
+              "content_type": "single_choice_exercise",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "La même explication, formulée « This answer is correct », s’affiche également après une sélection incorrecte. Le composant signale bien visuellement la bonne option, mais la phrase du feedback contredit l’état d’échec et ne formule pas le raisonnement de façon neutre.",
+              "current_content": "Explication unique : « This answer is correct. You can choose this option to make the draft more formal. ».",
+              "proposed_content": "Employer une explication neutre et directement réutilisable : « L’option Formalize rend un brouillon plus formel, ce qui convient à un e-mail destiné à un interlocuteur avec lequel vous travaillez peu. » Si des messages différenciés sont requis, ajouter des champs de feedback succès/échec au schéma et au rendu.",
+              "evidence": "client/public/data/courses/gemini_in_gmail__01.json → lessons[0].chapters[6].blocks[0].explanation; client/src/components/SingleChoiceExercise.tsx lignes 42-43 et 204-213 affiche la même `displayedExplanation` après réussite ou échec, tandis que les lignes 195-201 signalent l’échec.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_rendering_code",
+              "recommended_action": "Remplacer l’explication par une version neutre, puis décider si le produit doit gérer un feedback spécifique à l’erreur."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": "Revue qualitative exhaustive de la seule formation demandée : 1 cours, 1 leçon, 7 chapitres/écrans et les 7 activités importées ont été examinés individuellement (4 vidéos d’enseignement, 1 consultation de ressource requise, 2 quiz). Le téléchargement associé et le PDF utilisé par la consultation ont également été contrôlés ; le PDF et les quatre MP4 ont répondu HTTP 200 dans l’environnement disponible.",
+    "method": "Lecture du JSON de production désigné par le manifest, inspection du registre des blocs, de LessonViewer, chapterProgress, ChapterQuiz, MultiChoiceBlock et SingleChoiceExercise. Le pré-audit statique a été traité comme un signal : ses trois alertes de progression ne sont reprises que lorsqu’elles sont confirmées par le contenu et/ou le code. Le PDF de la ressource a été récupéré et inspecté (métadonnées, texte et planche des neuf pages).",
+    "score_method": "Scores qualitatifs sur 100 par chapitre, fondés sur les dimensions vérifiables : explications et prérequis, progression, énoncé/action/résultat attendu, feedback, contextualisation des médias et cohérence des verrous. Les dimensions non vérifiables sont listées et ne reçoivent pas de pénalité automatique ; l’absence d’un champ objectif formel est documentée comme limite, non comme défaut majeur par elle-même.",
+    "formation_score_100": 71,
+    "confirmed_issues": {
+      "total": 14,
+      "by_severity": {
+        "P0": 0,
+        "P1": 5,
+        "P2": 9,
+        "P3": 0
+      },
+      "by_category": {
+        "verrouillage": 4,
+        "guidage": 1,
+        "localisation": 7,
+        "feedback": 2
+      },
+      "priority": "1) Corriger le verrouillage des quatre vidéos MP4 obligatoires : il est contournable malgré `requiredBeforeAdvance: true`. 2) Restaurer l’activité centrale « Generate an Email » avec scénario complet, action, critères et feedback ; le bloc livré ne fait que confirmer la lecture d’un PDF de pages-titres. 3) Compléter la localisation française des médias, de la ressource et des réponses aux quiz. 4) Rendre les explications de quiz neutres ou différenciées selon la réussite afin qu’un échec ne reçoive pas le message « cette réponse est correcte »."
+    },
+    "pedagogical_findings": "La progression conceptuelle est bonne jusqu’à la mise en pratique : introduction, rédaction, affinage, puis annonce explicite de l’exercice. Les deux quiz finals sont cohérents, actionnables, corrigés et verrouillés sur la bonne réponse. En revanche, le parcours rompt précisément au moment du TP promis : l’activité devient la consultation auto-déclarée d’un PDF qui ne documente pas le scénario. Les vidéos présentent également une contradiction entre obligation déclarée et verrouillage effectif, et l’expérience française demeure partiellement anglaise."
+  },
+  "limits": [
+    "Audit strictement non modificatif : aucun JSON de cours, média, code applicatif, base de données ou configuration n’a été modifié.",
+    "Les ressources `/api/assets/...` ne sont pas déclarées absentes : les quatre MP4 et le PDF ciblés ont répondu HTTP 200. Le PDF a été inspecté ; les vidéos n’ont pas été visionnées intégralement dans une session navigateur, leur qualité visuelle, audio et leur synchronisation réelle restant non vérifiées.",
+    "Les interactions et la navigation n’ont pas été exécutées de bout en bout dans un navigateur authentifié. Les comportements de rendu, de feedback et de verrouillage signalés ont toutefois été vérifiés par lecture conjointe des données et des composants applicatifs.",
+    "La disponibilité de Gemini, Help me write et des commandes d’affinage selon l’édition Google Workspace, les politiques administratives et le compte individuel n’est pas vérifiable dans ce périmètre local.",
+    "Aucun champ d’objectifs pédagogiques mesurables par chapitre n’est déclaré. Cette absence est portée dans les dimensions non vérifiables et n’a pas été assimilée automatiquement à une issue P1."
+  ]
+}

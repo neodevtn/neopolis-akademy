@@ -1,0 +1,1356 @@
+{
+  "formation_id": "datacamp_software_development_with_claude_code",
+  "courses": [
+    {
+      "course_id": "software_development_with_claude_code__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "See Claude Code in Action",
+          "score_100": 81,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-LOCALE-L1",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "accessibilité_linguistique",
+              "description": "La version `fr` de nombreux champs affichés à l’apprenant est identique à la version anglaise, y compris des consignes, indices, questions ou transcriptions complètes. La sélection française de l’interface ne procure donc pas une expérience pédagogique française cohérente sur cette leçon. Les termes de code peuvent rester en anglais ; ce constat vise les phrases d’explication et les consignes.",
+              "current_content": "Le cours déclare `sourceLanguage: fr-FR`; dans la leçon 1, les valeurs `fr` et `en` sont identiques pour les contenus visibles des blocs : dc_1_act_01_video, dc_1_act_02_code, dc_1_act_03_code, dc_1_act_04_video, dc_1_act_05_code, dc_1_act_06_code, dc_1_act_07_video, dc_1_act_08_bucket_sort, dc_1_act_09_code.",
+              "proposed_content": "Fournir une traduction française pédagogique des descriptions, consignes, indices, questions, feedbacks et transcriptions affichés ; préserver les commandes, noms de fichiers, identifiants et extraits de code. Faire relire les actions attendues dans le contexte de l’interface française.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → datacampImport.sourceLanguage = `fr-FR`; comparaison des paires i18n du JSON : des valeurs `fr` identiques à `en` sont présentes dans les blocs de la leçon 1, notamment `dc_1_act_01_video`. client/src/pages/training/LessonViewer.tsx résout prioritairement `block.<champ>[lang]`, de sorte que ces chaînes anglaises sont bien celles rendues en français.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : traduire les chaînes apprenant de la leçon et ajouter un contrôle automatisé qui signale une longue chaîne `fr` strictement identique à `en`, hors liste blanche technique."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Getting Started with Claude Code",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-01",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nAsk Claude to explain the calculate_album_stats() function in analytics.py.\n\nWhen done exploring, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch01_act02` → blocks[id=dc_1_act_02_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Debug Python Code with Claude Code",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-02",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nAsk Claude to analyze analytics.py and identify bugs in calculate_average_tracks().\n\nAsk Claude to fix the bug.\n\nWhen done, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch01_act03` → blocks[id=dc_1_act_03_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "The Explore-Plan-Code Workflow",
+          "score_100": 84,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Initialize and Explore a Codebase",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-03",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec `claude`.\n\nInitialisez le projet avec `/init` pour créer un fichier `CLAUDE.md`.\n\nDemandez à Claude d’explorer la base de code : quelle est l’architecture et comment les composants s’articulent-ils ?\n\nLorsque vous avez terminé, tapez `/exit` pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch01_act05` → blocks[id=dc_1_act_05_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Deep Analysis with Extended Thinking",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-04",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nAsk Claude to think deeply: \"think about how to add a search endpoint that finds artists by name\".\n\nReview Claude's analysis of the trade-offs.\n\nWhen done, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch01_act06` → blocks[id=dc_1_act_06_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Creating Effective CLAUDE.md Files",
+          "score_100": 84,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "What Belongs in CLAUDE.md?",
+          "score_100": 72,
+          "verified_dimensions": [
+            "action attendue : vérifiée ; les catégories, cartes et clés de correction sont présentes. L’interface permet clic, clavier et glisser-déposer.",
+            "prérequis et transition : vérifiés qualitativement ; le tri suit l’explication vidéo de la notion correspondante.",
+            "validation et reprise : vérifiées ; toutes les cartes doivent être placées, le résultat est affiché et l’apprenant peut réinitialiser puis réessayer.",
+            "verrouillage : vérifié ; la poursuite est bloquée jusqu’à un classement entièrement correct, hors mode révision."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "usage réel au navigateur : non exécuté ; le contrôle porte sur les données et le composant de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-BUCKET-FEEDBACK-01",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch01_act08",
+              "content_id": "dc_1_act_08_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Un indice et un feedback pédagogique sont stockés dans le bloc, mais ne sont pas transmis au composant de tri rendu. Après une erreur, l’apprenant voit seulement son score et peut réessayer ; il n’obtient ni la justification prévue ni une explication conceptuelle de la catégorisation. Les catégories attendues sont visuellement signalées carte par carte, sans feedback exploitable pour comprendre la règle.",
+              "current_content": "Hint enregistré : CLAUDE.md should contain quick reminders and commands. Long content or things Claude can discover by reading code don't belong. | Feedback enregistré : Correct! CLAUDE.md should be concise — project name, commands, and conventions. Use @ references for specific files instead of pasting code. | Aucun champ `correction` n’est fourni.",
+              "proposed_content": "Rendre l’indice avant la soumission et le feedback après la soumission. Pour une réponse incorrecte, afficher aussi la catégorie attendue et une justification reliée à la règle exprimée par l’indice ; conserver le bouton de nouvelle tentative.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch01_act08` → blocks[id=dc_1_act_08_bucket_sort] contient `hint` et `feedback`, mais pas `correction` ; client/src/pages/training/LessonViewer.tsx lignes 198–215 transmet seulement id, titre, consigne, catégories, cartes et `correction` à `MatchingExercise` ; client/src/components/MatchingExercise.tsx lignes 420–465 n’affiche qu’une éventuelle `correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : faire passer `hint` et `feedback` au composant, ou migrer leur contenu vers le champ effectivement rendu, puis tester une tentative incorrecte et une tentative correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Keeping CLAUDE.md Current",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-05",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch01_act09",
+              "content_id": "dc_1_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nUse @routes.py to ask Claude what error handling patterns it observes.\n\nAsk Claude whether those patterns are documented in CLAUDE.md.\n\nIf they aren't, ask Claude to update CLAUDE.md.\n\nUse /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch01_act09` → blocks[id=dc_1_act_09_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Custom Agents",
+          "score_100": 81,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-LOCALE-L2",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "accessibilité_linguistique",
+              "description": "La version `fr` de nombreux champs affichés à l’apprenant est identique à la version anglaise, y compris des consignes, indices, questions ou transcriptions complètes. La sélection française de l’interface ne procure donc pas une expérience pédagogique française cohérente sur cette leçon. Les termes de code peuvent rester en anglais ; ce constat vise les phrases d’explication et les consignes.",
+              "current_content": "Le cours déclare `sourceLanguage: fr-FR`; dans la leçon 2, les valeurs `fr` et `en` sont identiques pour les contenus visibles des blocs : dc_2_act_01_video, dc_2_act_02_bucket_sort, dc_2_act_03_code, dc_2_act_04_video, dc_2_act_05_bucket_sort, dc_2_act_06_code, dc_2_act_07_video, dc_2_act_08_code, dc_2_act_09_code, dc_2_act_11_bucket_sort, dc_2_act_12_qcm.",
+              "proposed_content": "Fournir une traduction française pédagogique des descriptions, consignes, indices, questions, feedbacks et transcriptions affichés ; préserver les commandes, noms de fichiers, identifiants et extraits de code. Faire relire les actions attendues dans le contexte de l’interface française.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → datacampImport.sourceLanguage = `fr-FR`; comparaison des paires i18n du JSON : des valeurs `fr` identiques à `en` sont présentes dans les blocs de la leçon 2, notamment `dc_2_act_01_video`. client/src/pages/training/LessonViewer.tsx résout prioritairement `block.<champ>[lang]`, de sorte que ces chaînes anglaises sont bien celles rendues en français.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : traduire les chaînes apprenant de la leçon et ajouter un contrôle automatisé qui signale une longue chaîne `fr` strictement identique à `en`, hors liste blanche technique."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "When to Use Agents",
+          "score_100": 72,
+          "verified_dimensions": [
+            "action attendue : vérifiée ; les catégories, cartes et clés de correction sont présentes. L’interface permet clic, clavier et glisser-déposer.",
+            "prérequis et transition : vérifiés qualitativement ; le tri suit l’explication vidéo de la notion correspondante.",
+            "validation et reprise : vérifiées ; toutes les cartes doivent être placées, le résultat est affiché et l’apprenant peut réinitialiser puis réessayer.",
+            "verrouillage : vérifié ; la poursuite est bloquée jusqu’à un classement entièrement correct, hors mode révision."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "usage réel au navigateur : non exécuté ; le contrôle porte sur les données et le composant de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-BUCKET-FEEDBACK-02",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Un indice et un feedback pédagogique sont stockés dans le bloc, mais ne sont pas transmis au composant de tri rendu. Après une erreur, l’apprenant voit seulement son score et peut réessayer ; il n’obtient ni la justification prévue ni une explication conceptuelle de la catégorisation. Les catégories attendues sont visuellement signalées carte par carte, sans feedback exploitable pour comprendre la règle.",
+              "current_content": "Hint enregistré : Agents shine for multi-file investigation, consistent patterns (like code review), or specialized workflows. Direct prompts work for simple lookups and one-off questions. | Feedback enregistré : Bravo ! Utilisez des agents pour les tâches systématiques impliquant plusieurs fichiers et des modèles cohérents. Demandez directement à Claude d’effectuer des recherches simples et des corrections ponctuelles. | Aucun champ `correction` n’est fourni.",
+              "proposed_content": "Rendre l’indice avant la soumission et le feedback après la soumission. Pour une réponse incorrecte, afficher aussi la catégorie attendue et une justification reliée à la règle exprimée par l’indice ; conserver le bouton de nouvelle tentative.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch02_act02` → blocks[id=dc_2_act_02_bucket_sort] contient `hint` et `feedback`, mais pas `correction` ; client/src/pages/training/LessonViewer.tsx lignes 198–215 transmet seulement id, titre, consigne, catégories, cartes et `correction` à `MatchingExercise` ; client/src/components/MatchingExercise.tsx lignes 420–465 n’affiche qu’une éventuelle `correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : faire passer `hint` et `feedback` au composant, ou migrer leur contenu vers le champ effectivement rendu, puis tester une tentative incorrecte et une tentative correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Explore Agents and Review Code",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-06",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec `claude`.\n\nTapez `/agents` et appuyez sur Entrée pour voir les agents disponibles, y compris le `code-reviewer` personnalisé.\n\nAppuyez sur Échap pour revenir au mode par défaut.\n\nAppelez l’agent avec `@code-reviewer` et demandez-lui de réviser `models.py`.\n\nLorsque vous avez terminé, tapez `/exit` pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch02_act03` → blocks[id=dc_2_act_03_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Creating Skills",
+          "score_100": 84,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Choosing When to Use a Skill",
+          "score_100": 64,
+          "verified_dimensions": [
+            "action attendue : vérifiée ; les catégories, cartes et clés de correction sont présentes. L’interface permet clic, clavier et glisser-déposer.",
+            "prérequis et transition : vérifiés qualitativement ; le tri suit l’explication vidéo de la notion correspondante.",
+            "validation et reprise : vérifiées ; toutes les cartes doivent être placées, le résultat est affiché et l’apprenant peut réinitialiser puis réessayer.",
+            "verrouillage : vérifié ; la poursuite est bloquée jusqu’à un classement entièrement correct, hors mode révision."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "usage réel au navigateur : non exécuté ; le contrôle porte sur les données et le composant de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-BUCKET-FEEDBACK-03",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Un indice et un feedback pédagogique sont stockés dans le bloc, mais ne sont pas transmis au composant de tri rendu. Après une erreur, l’apprenant voit seulement son score et peut réessayer ; il n’obtient ni la justification prévue ni une explication conceptuelle de la catégorisation. Les catégories attendues sont visuellement signalées carte par carte, sans feedback exploitable pour comprendre la règle.",
+              "current_content": "Hint enregistré : Skills work best for repetitive tasks that follow consistent steps and apply across the team. Skip skills for one-off tasks, simple questions, or anything that varies significantly each time. | Feedback enregistré : Well done. Skills add value when consistency matters across repeated tasks. For everything else, a direct prompt is the right tool. | Aucun champ `correction` n’est fourni.",
+              "proposed_content": "Rendre l’indice avant la soumission et le feedback après la soumission. Pour une réponse incorrecte, afficher aussi la catégorie attendue et une justification reliée à la règle exprimée par l’indice ; conserver le bouton de nouvelle tentative.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch02_act05` → blocks[id=dc_2_act_05_bucket_sort] contient `hint` et `feedback`, mais pas `correction` ; client/src/pages/training/LessonViewer.tsx lignes 198–215 transmet seulement id, titre, consigne, catégories, cartes et `correction` à `MatchingExercise` ; client/src/components/MatchingExercise.tsx lignes 420–465 n’affiche qu’une éventuelle `correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : faire passer `hint` et `feedback` au composant, ou migrer leur contenu vers le champ effectivement rendu, puis tester une tentative incorrecte et une tentative correcte."
+            },
+            {
+              "issue_id": "PED-061-INSTRUCTION-01",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act05",
+              "content_id": "dc_2_act_05_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "énoncé",
+              "description": "L’activité de tri ne contient aucune consigne éditoriale (`instructions.en` et `instructions.fr` sont vides). L’interface indique seulement comment déplacer une carte ; elle ne formule ni l’objectif de classement ni le critère conceptuel qui distingue les deux catégories. Les intitulés et l’indice permettent d’inférer la tâche, mais cette inférence ne suffit pas comme énoncé pédagogique.",
+              "current_content": "Titre : « Choosing When to Use a Skill ». Deux catégories : « Good for a skill » et « Not good for a skill ». Six scénarios sont fournis ; `instructions` est vide dans les deux langues.",
+              "proposed_content": "Classez chacun des six scénarios dans la catégorie appropriée. Placez dans « Good for a skill » les tâches répétitives dont les étapes doivent rester cohérentes pour l’équipe ; placez dans « Not good for a skill » les demandes ponctuelles, les questions simples ou les tâches très variables. Soumettez lorsque toutes les cartes sont classées.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons[1].chapters[4] `dc_ch02_act05` → blocks[id=dc_2_act_05_bucket_sort].instructions = {en: '', fr: ''} ; client/src/components/MatchingExercise.tsx lignes 227–241 : l’instruction éditoriale n’est affichée que si elle est non vide, puis seule une aide générique d’usage de l’interface est affichée.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : renseigner l’énoncé proposé dans les deux langues et conserver l’aide générique d’interaction comme complément, non comme substitut de consigne."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Create a Skill File",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-07",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nAsk Claude to create a skill called format-code that enforces consistent code style.\n\nVerify the skill was created by running /skills.\n\nWhen done, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch02_act06` → blocks[id=dc_2_act_06_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Using Skills",
+          "score_100": 84,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Build a Test Baseline for Refactoring",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-08",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act08",
+              "content_id": "dc_2_act_08_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec claude.\n\nUtilisez la compétence de test : /unit-tests @routes.py pour générer des tests unitaires.\n\nExécutez les tests pour vérifier qu’ils passent.\n\nLorsque vous avez terminé, saisissez /exit pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch02_act08` → blocks[id=dc_2_act_08_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Practice Safe Refactoring",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-09",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act09",
+              "content_id": "dc_2_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec claude.\n\nUtilisez la compétence de refactorisation : /refactor @routes.py pour extraire la logique de préparation des données dans une fonction d’assistance.\n\nExécutez les tests pour vérifier que la refactorisation n’a rien cassé.\n\nLorsque vous avez terminé, saisissez /exit pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch02_act09` → blocks[id=dc_2_act_09_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act11",
+          "title": "When to Use Hooks",
+          "score_100": 72,
+          "verified_dimensions": [
+            "action attendue : vérifiée ; les catégories, cartes et clés de correction sont présentes. L’interface permet clic, clavier et glisser-déposer.",
+            "prérequis et transition : vérifiés qualitativement ; le tri suit l’explication vidéo de la notion correspondante.",
+            "validation et reprise : vérifiées ; toutes les cartes doivent être placées, le résultat est affiché et l’apprenant peut réinitialiser puis réessayer.",
+            "verrouillage : vérifié ; la poursuite est bloquée jusqu’à un classement entièrement correct, hors mode révision."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "usage réel au navigateur : non exécuté ; le contrôle porte sur les données et le composant de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-BUCKET-FEEDBACK-04",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Un indice et un feedback pédagogique sont stockés dans le bloc, mais ne sont pas transmis au composant de tri rendu. Après une erreur, l’apprenant voit seulement son score et peut réessayer ; il n’obtient ni la justification prévue ni une explication conceptuelle de la catégorisation. Les catégories attendues sont visuellement signalées carte par carte, sans feedback exploitable pour comprendre la règle.",
+              "current_content": "Hint enregistré : Hooks work best for repetitive tasks that should never be skipped. Skip hooks when the automation overhead exceeds the benefit or for one-time tasks. | Feedback enregistré : Well done! Knowing when automation helps versus adds overhead is key to using hooks effectively. | Aucun champ `correction` n’est fourni.",
+              "proposed_content": "Rendre l’indice avant la soumission et le feedback après la soumission. Pour une réponse incorrecte, afficher aussi la catégorie attendue et une justification reliée à la règle exprimée par l’indice ; conserver le bouton de nouvelle tentative.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch02_act11` → blocks[id=dc_2_act_11_bucket_sort] contient `hint` et `feedback`, mais pas `correction` ; client/src/pages/training/LessonViewer.tsx lignes 198–215 transmet seulement id, titre, consigne, catégories, cartes et `correction` à `MatchingExercise` ; client/src/components/MatchingExercise.tsx lignes 420–465 n’affiche qu’une éventuelle `correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : faire passer `hint` et `feedback` au composant, ou migrer leur contenu vers le champ effectivement rendu, puis tester une tentative incorrecte et une tentative correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act12",
+          "title": "Understanding Hooks",
+          "score_100": 86,
+          "verified_dimensions": [
+            "énoncé, action et résultat attendu : vérifiés ; question, options, bonne réponse, indice et explication sont renseignés.",
+            "feedback : vérifié ; LessonViewer transmet l’explication et le composant de choix unique marque la réponse et affiche l’explication.",
+            "progression : vérifiée qualitativement ; le quiz intervient après la présentation vidéo de la notion.",
+            "verrouillage : vérifié ; la réponse correcte est requise avant la poursuite, conformément au chapitre `quiz` obligatoire."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "usage réel au navigateur : non exécuté ; le contrôle porte sur les données et le composant de rendu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "What Is MCP?",
+          "score_100": 82,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-LOCALE-L3",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "accessibilité_linguistique",
+              "description": "La version `fr` de nombreux champs affichés à l’apprenant est identique à la version anglaise, y compris des consignes, indices, questions ou transcriptions complètes. La sélection française de l’interface ne procure donc pas une expérience pédagogique française cohérente sur cette leçon. Les termes de code peuvent rester en anglais ; ce constat vise les phrases d’explication et les consignes.",
+              "current_content": "Le cours déclare `sourceLanguage: fr-FR`; dans la leçon 3, les valeurs `fr` et `en` sont identiques pour les contenus visibles des blocs : dc_3_act_01_video, dc_3_act_02_qcm, dc_3_act_03_bucket_sort, dc_3_act_04_video, dc_3_act_05_code, dc_3_act_06_code, dc_3_act_07_video, dc_3_act_08_code, dc_3_act_09_code, dc_3_act_10_video, dc_3_act_11_code, dc_3_act_12_code.",
+              "proposed_content": "Fournir une traduction française pédagogique des descriptions, consignes, indices, questions, feedbacks et transcriptions affichés ; préserver les commandes, noms de fichiers, identifiants et extraits de code. Faire relire les actions attendues dans le contexte de l’interface française.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → datacampImport.sourceLanguage = `fr-FR`; comparaison des paires i18n du JSON : des valeurs `fr` identiques à `en` sont présentes dans les blocs de la leçon 3, notamment `dc_3_act_01_video`. client/src/pages/training/LessonViewer.tsx résout prioritairement `block.<champ>[lang]`, de sorte que ces chaînes anglaises sont bien celles rendues en français.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : traduire les chaînes apprenant de la leçon et ajouter un contrôle automatisé qui signale une longue chaîne `fr` strictement identique à `en`, hors liste blanche technique."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "What MCP Enables",
+          "score_100": 86,
+          "verified_dimensions": [
+            "énoncé, action et résultat attendu : vérifiés ; question, options, bonne réponse, indice et explication sont renseignés.",
+            "feedback : vérifié ; LessonViewer transmet l’explication et le composant de choix unique marque la réponse et affiche l’explication.",
+            "progression : vérifiée qualitativement ; le quiz intervient après la présentation vidéo de la notion.",
+            "verrouillage : vérifié ; la réponse correcte est requise avant la poursuite, conformément au chapitre `quiz` obligatoire."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "usage réel au navigateur : non exécuté ; le contrôle porte sur les données et le composant de rendu."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "When Does MCP Add Value?",
+          "score_100": 72,
+          "verified_dimensions": [
+            "action attendue : vérifiée ; les catégories, cartes et clés de correction sont présentes. L’interface permet clic, clavier et glisser-déposer.",
+            "prérequis et transition : vérifiés qualitativement ; le tri suit l’explication vidéo de la notion correspondante.",
+            "validation et reprise : vérifiées ; toutes les cartes doivent être placées, le résultat est affiché et l’apprenant peut réinitialiser puis réessayer.",
+            "verrouillage : vérifié ; la poursuite est bloquée jusqu’à un classement entièrement correct, hors mode révision."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "usage réel au navigateur : non exécuté ; le contrôle porte sur les données et le composant de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-BUCKET-FEEDBACK-05",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch03_act03",
+              "content_id": "dc_3_act_03_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Un indice et un feedback pédagogique sont stockés dans le bloc, mais ne sont pas transmis au composant de tri rendu. Après une erreur, l’apprenant voit seulement son score et peut réessayer ; il n’obtient ni la justification prévue ni une explication conceptuelle de la catégorisation. Les catégories attendues sont visuellement signalées carte par carte, sans feedback exploitable pour comprendre la règle.",
+              "current_content": "Hint enregistré : MCP apporte le plus de valeur lorsque la tâche implique une interaction en langage naturel avec des données externes, l’exploration en direct d’un schéma ou le maintien du contexte au sein d’une seule conversation. Les outils CLI fonctionnent tout aussi bien pour les tâches qui sont déjà simples à exécuter dans le terminal. | Feedback enregistré : MCP est particulièrement utile lorsque la tâche implique une interaction en langage naturel avec des données externes ou le maintien du contexte au sein d’une seule conversation. Pour des outils de terminal simples comme pytest, pip et git, l’approche CLI fonctionne tout aussi bien. | Aucun champ `correction` n’est fourni.",
+              "proposed_content": "Rendre l’indice avant la soumission et le feedback après la soumission. Pour une réponse incorrecte, afficher aussi la catégorie attendue et une justification reliée à la règle exprimée par l’indice ; conserver le bouton de nouvelle tentative.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch03_act03` → blocks[id=dc_3_act_03_bucket_sort] contient `hint` et `feedback`, mais pas `correction` ; client/src/pages/training/LessonViewer.tsx lignes 198–215 transmet seulement id, titre, consigne, catégories, cartes et `correction` à `MatchingExercise` ; client/src/components/MatchingExercise.tsx lignes 420–465 n’affiche qu’une éventuelle `correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : faire passer `hint` et `feedback` au composant, ou migrer leur contenu vers le champ effectivement rendu, puis tester une tentative incorrecte et une tentative correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Connect to a Database",
+          "score_100": 85,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Explore the Database Schema",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-10",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nAsk Claude to list all tables in the database.\n\nAsk Claude to describe the schema of one table (e.g., the Album table).\n\nWhen done, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch03_act05` → blocks[id=dc_3_act_05_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Explore the Music Database",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-11",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nAsk Claude to find all albums by an artist of your choice (e.g., AC/DC or Aerosmith).\n\nWhen done, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch03_act06` → blocks[id=dc_3_act_06_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Build One API Endpoint",
+          "score_100": 85,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Build an Albums Endpoint",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-12",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch03_act08",
+              "content_id": "dc_3_act_08_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec claude.\n\nDemandez à Claude de créer un nouveau Blueprint db_routes.py avec un endpoint à l’adresse /artists//albums qui renvoie au format JSON tous les albums d’un artiste spécifique depuis chinook.db, puis de l’enregistrer dans app.py.\n\nLorsque vous avez terminé, tapez /exit pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch03_act08` → blocks[id=dc_3_act_08_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Add Validation",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-13",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nAsk Claude to add Pydantic validation to db_routes.py and return a 404 error when the artist doesn't exist or has no albums.\n\nWhen done, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch03_act09` → blocks[id=dc_3_act_09_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Test Your Endpoint",
+          "score_100": 85,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch03_act11",
+          "title": "Write and Run Integration Tests",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-14",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch03_act11",
+              "content_id": "dc_3_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec claude.\n\nRéférencez @db_routes.py et demandez à Claude d’écrire un test d’intégration pytest pour l’endpoint.\n\nUne fois que le test vous semble correct, demandez à Claude de l’exécuter.\n\nLorsque vous avez terminé, tapez /exit pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch03_act11` → blocks[id=dc_3_act_11_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 11,
+          "chapter_id": "dc_ch03_act12",
+          "title": "Unit vs Integration Tests",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-15",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch03_act12",
+              "content_id": "dc_3_act_12_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec claude.\n\nDemandez à Claude d’expliquer la différence entre les tests unitaires et les tests d’intégration pour l’endpoint des albums.\n\nDemandez à Claude comment écrire un test unitaire pour le même endpoint (que simuleriez-vous avec un mock ?).\n\nLorsque vous avez terminé, tapez /exit pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch03_act12` → blocks[id=dc_3_act_12_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch04_act01",
+          "title": "Planning Your Tool",
+          "score_100": 81,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-LOCALE-L4",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch04_act01",
+              "content_id": "dc_4_act_01_video",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "accessibilité_linguistique",
+              "description": "La version `fr` de nombreux champs affichés à l’apprenant est identique à la version anglaise, y compris des consignes, indices, questions ou transcriptions complètes. La sélection française de l’interface ne procure donc pas une expérience pédagogique française cohérente sur cette leçon. Les termes de code peuvent rester en anglais ; ce constat vise les phrases d’explication et les consignes.",
+              "current_content": "Le cours déclare `sourceLanguage: fr-FR`; dans la leçon 4, les valeurs `fr` et `en` sont identiques pour les contenus visibles des blocs : dc_4_act_01_video, dc_4_act_02_code, dc_4_act_03_bucket_sort, dc_4_act_04_video, dc_4_act_05_code, dc_4_act_06_code, dc_4_act_07_video, dc_4_act_08_code, dc_4_act_09_code, dc_4_act_10_video.",
+              "proposed_content": "Fournir une traduction française pédagogique des descriptions, consignes, indices, questions, feedbacks et transcriptions affichés ; préserver les commandes, noms de fichiers, identifiants et extraits de code. Faire relire les actions attendues dans le contexte de l’interface française.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → datacampImport.sourceLanguage = `fr-FR`; comparaison des paires i18n du JSON : des valeurs `fr` identiques à `en` sont présentes dans les blocs de la leçon 4, notamment `dc_4_act_01_video`. client/src/pages/training/LessonViewer.tsx résout prioritairement `block.<champ>[lang]`, de sorte que ces chaînes anglaises sont bien celles rendues en français.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : traduire les chaînes apprenant de la leçon et ajouter un contrôle automatisé qui signale une longue chaîne `fr` strictement identique à `en`, hors liste blanche technique."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch04_act02",
+          "title": "Plan the CLI with Claude",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-16",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch04_act02",
+              "content_id": "dc_4_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec claude.\n\nPassez en mode Plan en saisissant /plan.\n\nDemandez à Claude de planifier un outil CLI pour interroger les statistiques des artistes, et incluez « think » dans votre invite pour une réflexion approfondie.\n\nExaminez le plan.\n\nLorsque vous avez terminé, saisissez /exit pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch04_act02` → blocks[id=dc_4_act_02_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch04_act03",
+          "title": "When to Plan Thoroughly",
+          "score_100": 72,
+          "verified_dimensions": [
+            "action attendue : vérifiée ; les catégories, cartes et clés de correction sont présentes. L’interface permet clic, clavier et glisser-déposer.",
+            "prérequis et transition : vérifiés qualitativement ; le tri suit l’explication vidéo de la notion correspondante.",
+            "validation et reprise : vérifiées ; toutes les cartes doivent être placées, le résultat est affiché et l’apprenant peut réinitialiser puis réessayer.",
+            "verrouillage : vérifié ; la poursuite est bloquée jusqu’à un classement entièrement correct, hors mode révision."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "usage réel au navigateur : non exécuté ; le contrôle porte sur les données et le composant de rendu."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-BUCKET-FEEDBACK-06",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch04_act03",
+              "content_id": "dc_4_act_03_bucket_sort",
+              "content_type": "bucket_sort",
+              "severity": "P2",
+              "category": "feedback",
+              "description": "Un indice et un feedback pédagogique sont stockés dans le bloc, mais ne sont pas transmis au composant de tri rendu. Après une erreur, l’apprenant voit seulement son score et peut réessayer ; il n’obtient ni la justification prévue ni une explication conceptuelle de la catégorisation. Les catégories attendues sont visuellement signalées carte par carte, sans feedback exploitable pour comprendre la règle.",
+              "current_content": "Hint enregistré : Plan mode + extended thinking work best for complex tasks with multiple components, unclear requirements, or significant architectural decisions. Skip thorough planning for simple, well-defined changes. | Feedback enregistré : Well done! Knowing when to invest in thorough planning versus diving in directly helps you work more efficiently with Claude. | Aucun champ `correction` n’est fourni.",
+              "proposed_content": "Rendre l’indice avant la soumission et le feedback après la soumission. Pour une réponse incorrecte, afficher aussi la catégorie attendue et une justification reliée à la règle exprimée par l’indice ; conserver le bouton de nouvelle tentative.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch04_act03` → blocks[id=dc_4_act_03_bucket_sort] contient `hint` et `feedback`, mais pas `correction` ; client/src/pages/training/LessonViewer.tsx lignes 198–215 transmet seulement id, titre, consigne, catégories, cartes et `correction` à `MatchingExercise` ; client/src/components/MatchingExercise.tsx lignes 420–465 n’affiche qu’une éventuelle `correction`.",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P2 : faire passer `hint` et `feedback` au composant, ou migrer leur contenu vers le champ effectivement rendu, puis tester une tentative incorrecte et une tentative correcte."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch04_act04",
+          "title": "Build and Test the Tool",
+          "score_100": 84,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch04_act05",
+          "title": "Build the CLI",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-17",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch04_act05",
+              "content_id": "dc_4_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nReference @PLAN.md to understand the CLI requirements and structure.\n\nAsk Claude to implement reporter.py based on the plan.\n\nWhen done, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch04_act05` → blocks[id=dc_4_act_05_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch04_act06",
+          "title": "Write and Run Tests",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-18",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch04_act06",
+              "content_id": "dc_4_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec claude.\n\nRéférencez @PLAN.md pour comprendre les exigences de test.\n\nRéférencez @reporter.py et demandez à Claude d’écrire et d’exécuter des tests pytest conformément au plan.\n\nLorsque vous avez terminé, saisissez /exit pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch04_act06` → blocks[id=dc_4_act_06_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch04_act07",
+          "title": "Review Before Shipping",
+          "score_100": 84,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch04_act08",
+          "title": "Review with the Code-Reviewer Agent",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-19",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch04_act08",
+              "content_id": "dc_4_act_08_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Start Claude Code with claude.\n\nRun /agents to confirm the code-reviewer agent is available.\n\nUse @code-reviewer to review @reporter.py.\n\nWhen done, type /exit to exit Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch04_act08` → blocks[id=dc_4_act_08_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch04_act09",
+          "title": "Fix the Case-Sensitivity Bug",
+          "score_100": 58,
+          "verified_dimensions": [
+            "énoncé et action attendue : vérifiés ; la consigne nomme les commandes/fichiers ou le résultat attendu et un indice est fourni.",
+            "prérequis et progression : vérifiés qualitativement dans la séquence ; l’activité suit la vidéo ou l’activité qui introduit la notion mobilisée.",
+            "rendu : vérifié ; LessonViewer rend un CodeReplBlock avec un éditeur, un bouton de vérification, réinitialisation et accès à la solution.",
+            "cohérence du verrouillage : vérifiée comme défaillante et documentée dans l’issue P1 associée."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre.",
+            "exécution réelle dans un environnement Claude Code : non fournie par CodeReplBlock ; elle ne peut pas être vérifiée comme une pratique authentique."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-061-CODE-20",
+              "course_id": "software_development_with_claude_code__01",
+              "chapter_id": "dc_ch04_act09",
+              "content_id": "dc_4_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "évaluation",
+              "description": "L’activité demande de travailler dans Claude Code, mais le bloc rendu n’exécute ni terminal ni Claude Code : il compare uniquement le texte saisi à une solution canonique complète. Cette solution est une suite de commandes de préparation qui écrit artificiellement l’historique `~/.claude/history.jsonl`, plutôt que le résultat de l’action demandée. En outre, `requiredBeforeAdvance: true` n’est pas appliqué aux `code_repl` par la logique de navigation : l’apprenant peut passer au chapitre suivant sans validation. L’action, le critère de réussite et le verrouillage ne sont donc pas cohérents.",
+              "current_content": "Consigne actuelle : Démarrez Claude Code avec claude.\n\nDemandez à Claude de corriger le bug de sensibilité à la casse dans @reporter.py. La requête LIKE doit inclure COLLATE NOCASE.\n\nDemandez à Claude d’exécuter les tests avec pytest afin de vérifier le correctif.\n\nLorsque vous avez terminé, saisissez /exit pour quitter Claude Code. | Le bloc fournit un éditeur de texte avec `starterCode` et une `solutionCode` canonique ; celle-ci commence (hors commentaires) par `mkdir -p ~/.claude` puis écrit `~/.claude/history.jsonl`.",
+              "proposed_content": "Utiliser un simulateur de terminal/Claude Code réellement exécutable et valider des traces observables de la tâche (commandes, fichier créé ou tests passants). À défaut, transformer l’activité en exercice de code explicite : annoncer que l’apprenant doit reproduire exactement un script fourni, afficher le résultat attendu et retirer la prétention de pratiquer Claude Code. Dans les deux cas, faire dépendre « Suivant » de la validation effective.",
+              "evidence": "client/public/data/courses/software_development_with_claude_code__01.json → lessons/chapter `dc_ch04_act09` → blocks[id=dc_4_act_09_code] ; client/src/components/blocks/CodeReplBlock.tsx: `handleRun` appelle `matchesCanonicalSolution(code, solutionCode)` sans exécution (lignes 28–43) ; shared/codeReplValidation.ts: égalité normalisée stricte ; client/src/pages/training/LessonViewer.tsx: le rendu ajoute la complétion mais les gates de navigation ne listent pas `code_repl` (chapitre de navigation, notamment lignes 98–152 et 123–133).",
+              "confidence": "high",
+              "verification_status": "confirmed_source_and_renderer",
+              "recommended_action": "Priorité P1 : remplacer ou recâbler ce format d’activité pour chaque `code_repl` listé, puis ajouter un test de navigation confirmant qu’une activité de code obligatoire ne peut être ignorée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch04_act10",
+          "title": "Congratulations and What's Next",
+          "score_100": 84,
+          "verified_dimensions": [
+            "contenu et contextualisation : vérifiés via le transcript/segments présents ; la vidéo annonce son sujet, explique les notions et prépare l’étape suivante.",
+            "transition théorie→activité : vérifiée dans le transcript (récapitulatif ou « Let’s Practice ») et dans l’ordre du chapitre suivant.",
+            "média : titre, mp4, transcription, sous-titres FR/EN et PDF de slides sont référencés ; la transcription est rendue repliable par LessonViewer.",
+            "verrouillage : vérifié dans LessonViewer ; une vidéo officielle doit être regardée ou marquée comme vue avant de poursuivre."
+          ],
+          "unverified_dimensions": [
+            "objectif pédagogique mesurable : aucun champ objectif dédié au chapitre ; l’intention est déduite du titre, de la description de leçon et du transcript.",
+            "lecture effective et qualité audiovisuelle : les assets sont référencés par `/api/assets/` et déclarés valides par les métadonnées d’import, mais aucune session navigateur/audio n’a été exécutée.",
+            "évaluation formative vidéo : LessonViewer peut appeler ChapterQuiz après un chapitre teaching ; aucune banque correspondante n’existe dans `lessonQuizzes.json`, donc ce contrôle s’auto-valide sans question visible."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "audit_scope": {
+      "courses_reviewed": 1,
+      "lessons_reviewed": 4,
+      "chapters_reviewed": 42,
+      "learner_activities_reviewed": 28,
+      "activity_breakdown": {
+        "code_repl": 20,
+        "bucket_sort": 6,
+        "single_choice_exercise": 2
+      },
+      "teaching_media_screens_reviewed": 14,
+      "download_blocks_reviewed": 4
+    },
+    "result": "Les 42 chapitres ont été lus dans leur ordre, avec revue des 28 activités interactives et du rendu LessonViewer/chapterProgress. Les 28 signaux statiques de progression ne sont pas confirmés : les consignes existent et les prérequis sont introduits dans la séquence précédente. En revanche, les 20 exercices `code_repl` présentent tous un écart confirmé entre pratique annoncée, validation textuelle et verrouillage. Les six tris ont des données d’aide/feedback non rendues ; l’un d’eux n’a pas de consigne éditoriale. La localisation française est largement incomplète sur les quatre leçons.",
+    "confirmed_issues": {
+      "total": 31,
+      "P0": 0,
+      "P1": 20,
+      "P2": 11,
+      "P3": 0
+    },
+    "priority_actions": [
+      "P1 — Réparer le modèle d’exécution, la validation et le verrouillage des 20 `code_repl` avant de les présenter comme exercices pratiques Claude Code.",
+      "P2 — Rendre les `hint`/`feedback` stockés dans les six tris et compléter l’énoncé de `dc_2_act_05_bucket_sort`.",
+      "P2 — Compléter les traductions françaises des chaînes apprenant et transcriptions de chaque leçon, en préservant le code et les commandes."
+    ],
+    "scores": {
+      "method": "Notes qualitatives sur 100 par chapitre : pondérations renormalisées sur les dimensions vérifiées. Les objectifs mesurables, l’exécution navigateur et la qualité audiovisuelle réellement lue ne sont pas notés lorsqu’ils ne sont pas vérifiables.",
+      "range": "58–85",
+      "interpretation": "Les séquences vidéo et les QCM sont contextualisés et ordonnés ; la faiblesse majeure concerne l’authenticité et la validation des exercices de pratique, non les signaux statiques de progression."
+    },
+    "static_pre_audit_reconciliation": {
+      "signals_reviewed": 30,
+      "progression_signals_not_confirmed": 28,
+      "missing_instruction_signal_confirmed_with_revised_severity": "1 (P2, pas P0 : les catégories, cartes et l’aide d’interface restent visibles)",
+      "additional_renderer_findings": {
+        "code_repl_validation_and_gate": 20,
+        "bucket_hint_feedback_not_rendered": 6,
+        "incomplete_french_localisation": 4
+      }
+    }
+  },
+  "limits": [
+    "Audit non destructif fondé sur le JSON exact du manifeste, blockRegistry.ts et le rendu/les gates LessonViewer/chapterProgress/CodeReplBlock/MatchingExercise ; aucune donnée, base ou code de formation n’a été modifié.",
+    "Les URL `/api/assets/` sont des ressources servies par l’application, non des fichiers publics du dépôt. Les métadonnées d’import du cours les déclarent téléchargées et valides ; elles ne sont donc pas considérées absentes. La lecture audiovisuelle effective, la fidélité visuelle des slides et l’accessibilité réelle au navigateur restent non vérifiées.",
+    "Les métadonnées d’import annoncent 43 activités et 15 vidéos extraites, tandis que le JSON courant contient 42 chapitres, 28 activités interactives et 14 blocs vidéo. Sans source amont, cet écart de traçabilité est documenté comme limite et non qualifié d’absence de contenu.",
+    "Aucun objectif pédagogique structuré et mesurable n’est fourni au niveau leçon ou chapitre ; ce manque est indiqué dans les dimensions non vérifiables, sans le convertir automatiquement en anomalie P1.",
+    "Les comportements nécessitant une session authentifiée, l’exécution d’un vrai terminal/Claude Code et une interaction tactile/lecteur d’écran n’ont pas été exécutés ; les constats de rendu reposent sur le code des composants et leurs données d’entrée."
+  ]
+}

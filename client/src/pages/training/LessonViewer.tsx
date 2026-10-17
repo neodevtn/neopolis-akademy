@@ -9,7 +9,7 @@ import { VideoRecommendations } from "@/components/VideoRecommendations";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { trpc } from "@/lib/trpc";
 import { resolveI18n } from "./contentDetectors";
-import { getPersistedCompletionProgress, hasOptionalSupplementaryVideos, isSequentialActivityNavigationLocked } from "./chapterProgress";
+import { getChapterMediaCompletionKeys, getMediaCompletionKey, getPersistedCompletionProgress, hasOptionalSupplementaryVideos, isSequentialActivityNavigationLocked } from "./chapterProgress";
 import { getCheckpointGateState } from "./checkpointGate";
 import { ExerciseRenderer } from "@/components/ExerciseRenderer";
 import { FlipCardsGrid } from "@/components/FlipCard";
@@ -302,7 +302,7 @@ export default function LessonViewer({
         if (ch && !isReviewMode) {
           const blocks = ch.blocks || [];
           // Video gate
-          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { if (b.mp4Url || b.hlsUrl || b.audioUrl) return b.id || ''; let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
+          const videoKeys = getChapterMediaCompletionKeys(ch);
           if (!hasOptionalSupplementaryVideos(ch) && videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
           // Flip cards gate
           const flipKeys = requiredFlipCardCompletionKeys(blocks, lessonIndex, currentChapter);
@@ -553,7 +553,7 @@ export default function LessonViewer({
         // Check if this is a managed MP4 or HLS video source.
         if (block.mp4Url || block.hlsUrl) {
           const mp4Title = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || block.title?.fr || 'Video') : (block.title || 'Video');
-          const mp4Key = block.id || `mp4_${blockIdx}`;
+          const mp4Key = getMediaCompletionKey(block, blockIdx);
           const isMp4Complete = completedVideos.has(mp4Key);
 
           // Use ProjectorPlayer if slide data exists (DataCamp Projector videos with blank zones)
@@ -691,7 +691,7 @@ export default function LessonViewer({
         // Audio-only fallback (when mp4Url is null but audioUrl exists)
         if (block.audioUrl) {
           const audioTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || block.title?.fr || 'Audio') : (block.title || 'Audio');
-          const audioKey = block.id || `audio_${blockIdx}`;
+          const audioKey = getMediaCompletionKey(block, blockIdx);
           const isAudioComplete = completedVideos.has(audioKey);
           const hasProjectorSlides = Array.isArray(block.projectorSlides) && block.projectorSlides.length > 0 && Array.isArray(block.projectorTimings);
 
@@ -832,16 +832,9 @@ export default function LessonViewer({
           );
         }
         // Extract YouTube ID from multiple possible fields: videoId, id, or url
-        let rawVideoId = block.videoId || "";
-        if (!rawVideoId && block.url) {
-          const urlMatch = (block.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
-          if (urlMatch) rawVideoId = urlMatch[1];
-        }
-        if (!rawVideoId && block.id && typeof block.id === 'string' && block.id.length >= 8 && block.id.length <= 15) {
-          rawVideoId = block.id;
-        }
+        const rawVideoId = block.videoId || block.url || block.watchUrl || "";
         const videoId = typeof rawVideoId === 'object' ? (rawVideoId[lang] || rawVideoId.en || rawVideoId.fr || "") : rawVideoId;
-        const videoKey = typeof rawVideoId === 'object' ? (rawVideoId.fr || rawVideoId.en || "") : rawVideoId;
+        const videoKey = getMediaCompletionKey(block, blockIdx);
         const videoTitle = typeof block.title === 'object' && block.title !== null && ('fr' in block.title || 'en' in block.title) ? (block.title[lang] || block.title.en || block.title.fr || "Video") : (block.title || "Video");
         const videoWatchUrl = typeof block.watchUrl === 'object' ? (block.watchUrl[lang] || block.watchUrl.en || block.watchUrl.fr || "") : (block.watchUrl || "");
         const isVideoComplete = completedVideos.has(videoKey);
@@ -1555,15 +1548,7 @@ export default function LessonViewer({
                 ? checkpointGateState.locked
                 : isEvaluationGateLocked({ totalQuestions: chapterExerciseIds.length, completedCorrectAnswers: completedChapterExercises, configuredThreshold: chapter?.passThreshold, required: validationRequired, reviewMode: isReviewMode }));
               // Video gate: block Next if current chapter has video blocks that haven't been watched
-              const chapterVideoKeys = (chapter?.blocks || [])
-                .filter((b: any) => b.type === 'video')
-                .map((b: any) => {
-                  let rawId = b.videoId || "";
-                  if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; }
-                  if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id;
-                  return typeof rawId === 'object' ? (rawId.fr || rawId.en || "") : rawId;
-                })
-                .filter(Boolean);
+              const chapterVideoKeys = getChapterMediaCompletionKeys(chapter);
               const allVideosWatched = chapterVideoKeys.length === 0 || chapterVideoKeys.every((k: string) => completedVideos.has(k));
               const isGatedByVideo = chapterVideoKeys.length > 0 && !allVideosWatched && !hasOptionalSupplementaryVideos(chapter) && !isReviewMode;
               // Flip cards gate: block if chapter has flip_cards and not all have been flipped

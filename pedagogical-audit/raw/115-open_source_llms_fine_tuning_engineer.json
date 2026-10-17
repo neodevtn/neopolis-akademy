@@ -1,0 +1,1960 @@
+{
+  "formation_id": "open_source_llms_fine_tuning_engineer",
+  "courses": [
+    {
+      "course_id": "open_source_llms_fine_tuning_engineer__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "lesson_01_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 35,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C01-L01-C01-001",
+              "course_id": "open_source_llms_fine_tuning_engineer__01",
+              "chapter_id": "lesson_01_chapter_01",
+              "content_id": "chapter_body",
+              "content_type": "chapter_body",
+              "severity": "P1",
+              "category": "rendu_objectifs_et_contextualisation_media",
+              "description": "Les quatre objectifs existent dans chapter.body, mais l’écran ne contient déjà qu’un bloc vidéo. La normalisation ne crée donc pas de bloc content à partir de chapter.body : l’apprenant voit seulement le titre générique « What You Will Learn » et la vidéo obligatoire, sans objectif affiché ni consigne avant lecture.",
+              "current_content": "chapter.body: « By the end of this lesson, you will be able to: • Identify the major open-source LLM families … • Evaluate trade-offs between model size, capability, and deployment constraints ». blocks[0]: vidéo « The Major LLM Families Explained: Llama, Mistral, Gemma », sans objectiveBefore/questionsAfter.",
+              "proposed_content": "Insérer avant la vidéo un bloc content réutilisant à l’identique le chapter.body déjà disponible : « By the end of this lesson, you will be able to: • Identify the major open-source LLM families and their architectural lineage • Understand the key differences between popular open-source licenses (Apache 2.0, MIT, Llama Community License) • Map model families to appropriate real-world use cases • Evaluate trade-offs between model size, capability, and deployment constraints ». Conserver la vidéo ensuite comme illustration des familles de modèles.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__01.json → lessons[0].chapters[0] contient body et blocks=[video]. shared/courseBlockNormalization.ts:24 n’ajoute chapter.body que si existingBlocks.length===0; LessonViewer.tsx:1308-1399 ne rend que chapter.blocks.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Corriger la structure de données (ou la normalisation) pour rendre le texte d’objectifs avant le média; vérifier ensuite que la vidéo reste une étape cohérente et explicitement contextualisée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "lesson_01_chapter_02",
+          "title": "Model Families, Licenses and Use Cases",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "lesson_01_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "lesson_01_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "lesson_01_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "lesson_01_chapter_06",
+          "title": "Module Complete",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "lesson_02_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "lesson_02_chapter_02",
+          "title": "Hugging Face Hub, Model Cards and Datasets",
+          "score_100": 42,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C01-L02-C02-002",
+              "course_id": "open_source_llms_fine_tuning_engineer__01",
+              "chapter_id": "lesson_02_chapter_02",
+              "content_id": "chapter_body",
+              "content_type": "chapter_body",
+              "severity": "P1",
+              "category": "rendu_contenu_et_progression",
+              "description": "Le corps de chapitre explique le Hub, les model cards, datasets et l’authentification, mais il est masqué au rendu parce qu’un bloc vidéo existe déjà. L’écran affiché est donc une vidéo sur Mistral 7B sans la théorie annoncée par le titre ni transition explicite vers l’activité suivante.",
+              "current_content": "chapter.body décrit Hugging Face Hub, model cards, datasets streaming et tokens d’accès; blocks[0] est uniquement « Mistral 7B: The BEST Tiny Model EVER! Beats LLAMA 2 », label « Recommended Viewing », sans objectiveBefore.",
+              "proposed_content": "Rendre avant la vidéo le chapter.body existant, sans le réécrire. Ajouter seulement une phrase de liaison fondée sur ce contenu : « Après avoir identifié les informations à vérifier dans une model card, utilisez cette vidéo comme exemple de comparaison de modèle; elle ne remplace pas la documentation du Hub. »",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__01.json → lessons[1].chapters[1] contient body et blocks=[video]. shared/courseBlockNormalization.ts:24-37 conserve le bloc existant et ne génère pas le bloc content; LessonViewer.tsx:1308-1399 parcourt uniquement blocks.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Rendre le contenu existant avant le média et requalifier le média comme complément, avec un objectif de visionnage explicite."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "lesson_02_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "lesson_02_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "lesson_02_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "lesson_02_chapter_06",
+          "title": "Module Complete",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "lesson_03_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "lesson_03_chapter_02",
+          "title": "Transformers Pipeline and Tokenizer Basics",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "lesson_03_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "lesson_03_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "lesson_03_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "lesson_03_chapter_06",
+          "title": "Module Complete",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C01-L03-C06-003",
+              "course_id": "open_source_llms_fine_tuning_engineer__01",
+              "chapter_id": "lesson_03_chapter_06",
+              "content_id": "chapter_body",
+              "content_type": "chapter_body",
+              "severity": "P2",
+              "category": "transition_et_rendu_contenu",
+              "description": "Le message de fin qui résume pipeline/tokenisation et annonce la décision API/local/fine-tuning de la leçon suivante est stocké dans chapter.body mais n’est pas affiché. Le dernier écran devient un tutoriel vidéo de configuration locale, sans synthèse ni transition rendue.",
+              "current_content": "chapter.body: « Congratulations on completing Lesson 3 … In the final lesson, you will integrate everything learned so far … ». blocks[0]: vidéo « How to Install LLaMA & Mistral Locally for Free—Easy Setup », label « Tutorial ».",
+              "proposed_content": "Rendre le chapter.body existant avant la vidéo. Présenter la vidéo comme complément facultatif de mise en pratique locale, plutôt que comme substitut au bilan et à la transition déjà rédigés.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__01.json → lessons[2].chapters[5] contient body et blocks=[video]; shared/courseBlockNormalization.ts:24; LessonViewer.tsx:1308-1399.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Préserver la synthèse/transition dans le flux et vérifier que le média ne devient pas une condition de sortie s’il demeure uniquement complémentaire."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "lesson_04_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "lesson_04_chapter_02",
+          "title": "Choosing Between API, Local Model and Fine-Tune",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "lesson_04_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "lesson_04_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 93,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "lesson_04_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "lesson_04_chapter_06",
+          "title": "Module Complete",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "course_id": "open_source_llms_fine_tuning_engineer__02",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 0,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Le bloc checkpoint brut, ses questions imbriquées, sa résolution par LessonViewer et les deux chemins de navigation ont été vérifiés.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C02-L01-C04-004",
+              "course_id": "open_source_llms_fine_tuning_engineer__02",
+              "chapter_id": "chapter_04",
+              "content_id": "checkpoint_block_0",
+              "content_type": "checkpoint",
+              "severity": "P0",
+              "category": "rendu_activite_et_verrouillage",
+              "description": "Le checkpoint contient bien trois questions, leurs choix, réponses et explications dans le JSON, mais elles ne sont jamais rendues : le bloc checkpoint n’a pas exerciseId, courseExercises est vide et LessonViewer retourne null. De plus chapter.type est absent, donc le bouton principal ne le traite pas comme un checkpoint; le parcours peut avancer par ce bouton sans validation, alors que la navigation clavier le considère verrouillé. L’activité est à la fois invisible et incohérente dans sa progression.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; aucun exerciseId; exercises: [] au niveau cours; chapter.type absent.",
+              "proposed_content": "Ne pas réécrire les questions, qui sont déjà exploitables. Transformer chacune des trois questions existantes en bloc single_choice_exercise avec un identifiant stable, en conservant question/choices/correctId/explanation, puis déclarer chapter.type=\"checkpoint\". À défaut, adapter le renderer du bloc checkpoint pour afficher directement questions. Le seuil de réussite et le verrouillage doivent alors s’appuyer sur ces trois identifiants rendus.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__02.json → lessons[0].chapters[3].blocks[0] contient type=\"checkpoint\" et questions, sans exerciseId; niveau cours exercises=[]. shared/courseBlockNormalization.ts:24-37 ne convertit les questions de checkpoint que lorsqu’il n’existe aucun bloc; LessonViewer.tsx:894-898 retourne null si courseExercises ne contient pas exerciseId; LessonViewer.tsx:1538-1556 ne reconnaît le checkpoint que si chapter.type=\"checkpoint\".",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Rétablir un seul modèle de checkpoint rendu et testé; vérifier par navigation bouton et clavier que les trois questions s’affichent, donnent leur feedback et conditionnent identiquement le passage."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 74,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C02-L02-C02-008",
+              "course_id": "open_source_llms_fine_tuning_engineer__02",
+              "chapter_id": "chapter_02",
+              "content_id": "video_lesson_02_chapter_02",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "pertinence_et_contextualisation_media",
+              "description": "Dans un chapitre consacré aux stratégies de séparation entraînement/validation/test, la vidéo obligatoire est titrée « LoRA, QLoRA Indepth Mathematical Intuition ». Aucun objectif avant lecture ni texte de liaison n’explique la relation avec les splits; le titre du média signale un changement de sujet vers une technique enseignée ultérieurement.",
+              "current_content": "Contenu du chapitre: random/stratified/group/temporal splits et prévention de leakage. Vidéo: « LoRA, QLoRA Indepth Mathematical Intuition », label « Recommended Viewing », sans objectiveBefore/questionsAfter/optional.",
+              "proposed_content": "Rendre cette vidéo optionnelle et la présenter explicitement comme une anticipation de la suite, ou la déplacer vers la leçon LoRA/QLoRA. Si elle doit rester ici, fournir un objectif vérifiable qui explique précisément le lien avec la conception des données; les données disponibles ne permettent pas de rédiger ce lien sans l’inventer.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__02.json → lessons[1].chapters[1].blocks: content sur les split strategies puis vidéo LoRA/QLoRA sans champ de contextualisation. LessonViewer.tsx:1557-1568 applique par défaut une barrière de progression aux vidéos non optionnelles.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Aligner le média sur l’objectif de l’écran ou le rendre explicitement optionnel; tester que la navigation ne force pas un détour hors sujet."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 0,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Le bloc checkpoint brut, ses questions imbriquées, sa résolution par LessonViewer et les deux chemins de navigation ont été vérifiés.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C02-L02-C04-005",
+              "course_id": "open_source_llms_fine_tuning_engineer__02",
+              "chapter_id": "chapter_04",
+              "content_id": "checkpoint_block_0",
+              "content_type": "checkpoint",
+              "severity": "P0",
+              "category": "rendu_activite_et_verrouillage",
+              "description": "Le checkpoint contient bien trois questions, leurs choix, réponses et explications dans le JSON, mais elles ne sont jamais rendues : le bloc checkpoint n’a pas exerciseId, courseExercises est vide et LessonViewer retourne null. De plus chapter.type est absent, donc le bouton principal ne le traite pas comme un checkpoint; le parcours peut avancer par ce bouton sans validation, alors que la navigation clavier le considère verrouillé. L’activité est à la fois invisible et incohérente dans sa progression.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; aucun exerciseId; exercises: [] au niveau cours; chapter.type absent.",
+              "proposed_content": "Ne pas réécrire les questions, qui sont déjà exploitables. Transformer chacune des trois questions existantes en bloc single_choice_exercise avec un identifiant stable, en conservant question/choices/correctId/explanation, puis déclarer chapter.type=\"checkpoint\". À défaut, adapter le renderer du bloc checkpoint pour afficher directement questions. Le seuil de réussite et le verrouillage doivent alors s’appuyer sur ces trois identifiants rendus.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__02.json → lessons[1].chapters[3].blocks[0] contient type=\"checkpoint\" et questions, sans exerciseId; niveau cours exercises=[]. shared/courseBlockNormalization.ts:24-37 ne convertit les questions de checkpoint que lorsqu’il n’existe aucun bloc; LessonViewer.tsx:894-898 retourne null si courseExercises ne contient pas exerciseId; LessonViewer.tsx:1538-1556 ne reconnaît le checkpoint que si chapter.type=\"checkpoint\".",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Rétablir un seul modèle de checkpoint rendu et testé; vérifier par navigation bouton et clavier que les trois questions s’affichent, donnent leur feedback et conditionnent identiquement le passage."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 86,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 0,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Le bloc checkpoint brut, ses questions imbriquées, sa résolution par LessonViewer et les deux chemins de navigation ont été vérifiés.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C02-L03-C04-006",
+              "course_id": "open_source_llms_fine_tuning_engineer__02",
+              "chapter_id": "chapter_04",
+              "content_id": "checkpoint_block_0",
+              "content_type": "checkpoint",
+              "severity": "P0",
+              "category": "rendu_activite_et_verrouillage",
+              "description": "Le checkpoint contient bien trois questions, leurs choix, réponses et explications dans le JSON, mais elles ne sont jamais rendues : le bloc checkpoint n’a pas exerciseId, courseExercises est vide et LessonViewer retourne null. De plus chapter.type est absent, donc le bouton principal ne le traite pas comme un checkpoint; le parcours peut avancer par ce bouton sans validation, alors que la navigation clavier le considère verrouillé. L’activité est à la fois invisible et incohérente dans sa progression.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; aucun exerciseId; exercises: [] au niveau cours; chapter.type absent.",
+              "proposed_content": "Ne pas réécrire les questions, qui sont déjà exploitables. Transformer chacune des trois questions existantes en bloc single_choice_exercise avec un identifiant stable, en conservant question/choices/correctId/explanation, puis déclarer chapter.type=\"checkpoint\". À défaut, adapter le renderer du bloc checkpoint pour afficher directement questions. Le seuil de réussite et le verrouillage doivent alors s’appuyer sur ces trois identifiants rendus.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__02.json → lessons[2].chapters[3].blocks[0] contient type=\"checkpoint\" et questions, sans exerciseId; niveau cours exercises=[]. shared/courseBlockNormalization.ts:24-37 ne convertit les questions de checkpoint que lorsqu’il n’existe aucun bloc; LessonViewer.tsx:894-898 retourne null si courseExercises ne contient pas exerciseId; LessonViewer.tsx:1538-1556 ne reconnaît le checkpoint que si chapter.type=\"checkpoint\".",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Rétablir un seul modèle de checkpoint rendu et testé; vérifier par navigation bouton et clavier que les trois questions s’affichent, donnent leur feedback et conditionnent identiquement le passage."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 88,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "chapter_02",
+          "title": "Core Concepts",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "chapter_03",
+          "title": "Key Concepts",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "chapter_04",
+          "title": "Checkpoint",
+          "score_100": 0,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Le bloc checkpoint brut, ses questions imbriquées, sa résolution par LessonViewer et les deux chemins de navigation ont été vérifiés.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C02-L04-C04-007",
+              "course_id": "open_source_llms_fine_tuning_engineer__02",
+              "chapter_id": "chapter_04",
+              "content_id": "checkpoint_block_0",
+              "content_type": "checkpoint",
+              "severity": "P0",
+              "category": "rendu_activite_et_verrouillage",
+              "description": "Le checkpoint contient bien trois questions, leurs choix, réponses et explications dans le JSON, mais elles ne sont jamais rendues : le bloc checkpoint n’a pas exerciseId, courseExercises est vide et LessonViewer retourne null. De plus chapter.type est absent, donc le bouton principal ne le traite pas comme un checkpoint; le parcours peut avancer par ce bouton sans validation, alors que la navigation clavier le considère verrouillé. L’activité est à la fois invisible et incohérente dans sa progression.",
+              "current_content": "blocks[0] = { type: \"checkpoint\", questions: [3 questions avec choices, correctId et explanation] }; aucun exerciseId; exercises: [] au niveau cours; chapter.type absent.",
+              "proposed_content": "Ne pas réécrire les questions, qui sont déjà exploitables. Transformer chacune des trois questions existantes en bloc single_choice_exercise avec un identifiant stable, en conservant question/choices/correctId/explanation, puis déclarer chapter.type=\"checkpoint\". À défaut, adapter le renderer du bloc checkpoint pour afficher directement questions. Le seuil de réussite et le verrouillage doivent alors s’appuyer sur ces trois identifiants rendus.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__02.json → lessons[3].chapters[3].blocks[0] contient type=\"checkpoint\" et questions, sans exerciseId; niveau cours exercises=[]. shared/courseBlockNormalization.ts:24-37 ne convertit les questions de checkpoint que lorsqu’il n’existe aucun bloc; LessonViewer.tsx:894-898 retourne null si courseExercises ne contient pas exerciseId; LessonViewer.tsx:1538-1556 ne reconnaît le checkpoint que si chapter.type=\"checkpoint\".",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Rétablir un seul modèle de checkpoint rendu et testé; vérifier par navigation bouton et clavier que les trois questions s’affichent, donnent leur feedback et conditionnent identiquement le passage."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "chapter_06",
+          "title": "Module Complete",
+          "score_100": 87,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "course_id": "open_source_llms_fine_tuning_engineer__03",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "lesson_01_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 58,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C03-L01-C01-009",
+              "course_id": "open_source_llms_fine_tuning_engineer__03",
+              "chapter_id": "lesson_01_chapter_01",
+              "content_id": "video_lesson_01_chapter_01",
+              "content_type": "video",
+              "severity": "P2",
+              "category": "ordre_objectifs_et_media",
+              "description": "L’écran « What You Will Learn » affiche d’abord une vidéo obligatoire sur LoRA, puis seulement les objectifs stockés dans le legacy block. L’apprenant doit donc entamer — et, hors revue, valider — le média avant de voir ce qu’il doit apprendre ou pourquoi ce média est proposé.",
+              "current_content": "blocks[0]: vidéo « How to Fine Tune your own LLM using LoRA (on a CUSTOM dataset!) »; legacy block: content « In this lesson you will learn: • The definition and mechanics of full fine-tuning … • When to choose full fine-tuning versus a PEFT approach … ».",
+              "proposed_content": "Placer le bloc content d’objectifs avant la vidéo, en réutilisant le texte existant. Ajouter à la vidéo un objectif de lecture fondé sur ces objectifs, par exemple : « Observez les éléments qui illustrent une approche PEFT; vous comparerez ensuite cette approche au full fine-tuning. »",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__03.json → lessons[0].chapters[0] ordonne blocks=[video] puis legacy block content. shared/courseBlockNormalization.ts:9-23 ajoute le legacy block après existingBlocks; LessonViewer.tsx:1398 rend les blocs dans cet ordre; LessonViewer.tsx:1557-1568 verrouille par défaut une vidéo non optionnelle.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Réordonner les objectifs avant le média et contrôler que le verrouillage vidéo n’intervient qu’après l’affichage du but pédagogique."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "lesson_01_chapter_02",
+          "title": "Full Fine-Tuning and PEFT Explained",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "lesson_01_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "lesson_01_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "lesson_01_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "lesson_01_chapter_06",
+          "title": "Module Complete",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "lesson_02_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "lesson_02_chapter_02",
+          "title": "LoRA and QLoRA Deep Dive",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "lesson_02_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "lesson_02_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "lesson_02_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "lesson_02_chapter_06",
+          "title": "Module Complete",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "lesson_03_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "lesson_03_chapter_02",
+          "title": "The TRL SFTTrainer in Practice",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "lesson_03_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "lesson_03_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "lesson_03_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "lesson_03_chapter_06",
+          "title": "Module Complete",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "lesson_04_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "lesson_04_chapter_02",
+          "title": "Hyperparameters and What Can Go Wrong",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "lesson_04_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "lesson_04_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 93,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "lesson_04_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "lesson_04_chapter_06",
+          "title": "Module Complete",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "course_id": "open_source_llms_fine_tuning_engineer__04",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "lesson_01_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 35,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C04-L01-C01-010",
+              "course_id": "open_source_llms_fine_tuning_engineer__04",
+              "chapter_id": "lesson_01_chapter_01",
+              "content_id": "chapter_body",
+              "content_type": "chapter_body",
+              "severity": "P1",
+              "category": "rendu_objectifs_et_contextualisation_media",
+              "description": "Les objectifs d’Adapter Saving and Merging sont présents dans chapter.body mais supprimés du flux au profit d’une vidéo obligatoire sur QLoRA. Le titre « What You Will Learn » reste visible, mais aucune compétence, action attendue ni finalité ne l’est.",
+              "current_content": "chapter.body liste sauvegarde des adapters, différence adapter/merge, merge_and_unload() et versioning; blocks[0] est la vidéo « qLoRa in Action: A Fine-Tuning Tutorial », sans objectiveBefore/questionsAfter.",
+              "proposed_content": "Rendre avant la vidéo le chapter.body existant, à l’identique. Utiliser ensuite la vidéo comme illustration de l’environnement PEFT, avec une courte indication de ce que l’apprenant doit y repérer; le détail de cette indication doit rester cohérent avec le contenu réel de la vidéo.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__04.json → lessons[0].chapters[0] contient body et blocks=[video]. shared/courseBlockNormalization.ts:24; LessonViewer.tsx:1308-1399.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Rétablir le bloc d’objectifs avant le média et ne garder la vidéo comme étape obligatoire que si sa contextualisation est ajoutée."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "lesson_01_chapter_02",
+          "title": "Adapter Saving and Merging",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "lesson_01_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "lesson_01_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "lesson_01_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "lesson_01_chapter_06",
+          "title": "Module Complete",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "lesson_02_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "lesson_02_chapter_02",
+          "title": "Model Card and Dataset Documentation",
+          "score_100": 42,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C04-L02-C02-011",
+              "course_id": "open_source_llms_fine_tuning_engineer__04",
+              "chapter_id": "lesson_02_chapter_02",
+              "content_id": "chapter_body",
+              "content_type": "chapter_body",
+              "severity": "P1",
+              "category": "rendu_contenu_et_progression",
+              "description": "La théorie centrale des model cards et dataset cards est disponible dans chapter.body mais n’est pas rendue, car l’écran possède déjà une vidéo. L’apprenant ne voit que « The Major LLM Families Explained: Llama, Mistral, Gemma », qui ne présente ni le YAML, ni les usages hors périmètre, ni la documentation de provenance annoncés par le chapitre.",
+              "current_content": "chapter.body décrit structure, YAML front matter, intended/out-of-scope uses, dataset cards et classe ModelCard; blocks[0] est une vidéo sur les familles de modèles, sans contextualisation déclarée.",
+              "proposed_content": "Afficher intégralement le chapter.body existant avant tout média. Déplacer la vidéo vers la leçon sur les familles de modèles, ou la rendre optionnelle avec une justification pédagogique explicitement fournie; aucune consigne spécifique de visionnage ne peut être rédigée fiablement à partir des seules données.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__04.json → lessons[1].chapters[1] contient body et blocks=[video]. shared/courseBlockNormalization.ts:24-37; LessonViewer.tsx:1308-1399; YouTubePlayer.tsx:258 et 365 ne peuvent afficher d’objectif/questions que si ces champs sont fournis.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Rendre le contenu théorique stocké, puis réaligner ou déclasser le média avant publication."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "lesson_02_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "lesson_02_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "lesson_02_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "lesson_02_chapter_06",
+          "title": "Module Complete",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "lesson_03_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "lesson_03_chapter_02",
+          "title": "Serving Fine-Tuned Models",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "lesson_03_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "lesson_03_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "lesson_03_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "lesson_03_chapter_06",
+          "title": "Module Complete",
+          "score_100": 48,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Présence, position, libellé et champs déclarés de contextualisation du média vérifiés; la vidéo est analysée comme média déclaré, sans présumer de son indisponibilité.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue.",
+            "Anomalie(s) étayée(s) ci-dessous par la confrontation du JSON source et du chemin de rendu/progression."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté.",
+            "Contenu factuel, qualité audiovisuelle, sous-titrage et accessibilité intrinsèque de la vidéo non visionnés."
+          ],
+          "issues": [
+            {
+              "issue_id": "PED-115-C04-L03-C06-012",
+              "course_id": "open_source_llms_fine_tuning_engineer__04",
+              "chapter_id": "lesson_03_chapter_06",
+              "content_id": "chapter_body",
+              "content_type": "chapter_body",
+              "severity": "P2",
+              "category": "transition_et_rendu_contenu",
+              "description": "Le bilan de Serving Fine-Tuned Models et l’annonce de la leçon coût/gouvernance sont stockés mais non rendus; le dernier écran se réduit à un tutoriel LoRA. La continuité pédagogique vers le sujet suivant disparaît, et le média ne porte aucune contextualisation visible.",
+              "current_content": "chapter.body: « Well done completing Serving Fine-Tuned Models! … In the final lesson, you will learn how to manage the cost, governance, and full lifecycle … ». blocks[0]: vidéo « How to Fine Tune your own LLM using LoRA », label « Tutorial ».",
+              "proposed_content": "Afficher le chapter.body existant avant le média. Réserver le tutoriel LoRA à un complément facultatif ou déplacer-le dans le cours de techniques de fine-tuning; conserver le bilan/annonce comme fin de leçon.",
+              "evidence": "client/public/data/courses/open_source_llms_fine_tuning_engineer__04.json → lessons[2].chapters[5] contient body et blocks=[video]. shared/courseBlockNormalization.ts:24; LessonViewer.tsx:1308-1399 et 1557-1568.",
+              "confidence": "high",
+              "verification_status": "verified_content_and_renderer",
+              "recommended_action": "Rétablir la transition affichée et vérifier que le média n’est pas un verrou obligatoire lorsqu’il est conçu comme complément."
+            }
+          ]
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 0,
+          "chapter_id": "lesson_04_chapter_01",
+          "title": "What You Will Learn",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 1,
+          "chapter_id": "lesson_04_chapter_02",
+          "title": "Cost, Governance and Lifecycle Management",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 2,
+          "chapter_id": "lesson_04_chapter_03",
+          "title": "Key Concepts",
+          "score_100": 90,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 3,
+          "chapter_id": "lesson_04_chapter_04",
+          "title": "Checkpoint",
+          "score_100": 92,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "Pour chaque QCM: énoncé, choix, réponse attendue et explication examinés; le rendu prévoit sélection, vérification, feedback, bonne réponse mise en évidence et nouvelle tentative (SingleChoiceExercise.tsx)."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 4,
+          "chapter_id": "lesson_04_chapter_05",
+          "title": "Key Takeaways",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 3,
+          "chapter_index": 5,
+          "chapter_id": "lesson_04_chapter_06",
+          "title": "Module Complete",
+          "score_100": 91,
+          "verified_dimensions": [
+            "Structure et ordre des écrans examinés dans le JSON normalisé par normalizeCourseBlocks.",
+            "Titre, texte, objectifs ou synthèse présents dans le flux effectivement rendu par LessonViewer.",
+            "Transitions entre les six écrans de la leçon et cohérence du sujet avec les chapitres adjacents.",
+            "Types de blocs et règles de navigation pertinentes vérifiés dans LessonViewer/chapterProgress.",
+            "La transition explicite vers la leçon suivante ou la clôture de cours a été examinée lorsqu’elle est effectivement rendue."
+          ],
+          "unverified_dimensions": [
+            "Rendu navigateur réel (responsive, lecteur tiers, contraste et technologies d’assistance) non exécuté."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "coverage": {
+      "courses_reviewed": 4,
+      "lessons_reviewed": 16,
+      "chapters_reviewed": 96,
+      "interactive_activity_blocks_reviewed": 40,
+      "assessment_prompts_reviewed": 48,
+      "score_average_100": 83.0
+    },
+    "confirmed_issues": 12,
+    "priority_counts": {
+      "P0": 4,
+      "P1": 4,
+      "P2": 4,
+      "P3": 0
+    },
+    "priority_summary": "Priorité immédiate : réparer les 4 checkpoints invisibles du cours 02 (P0), puis restaurer les objectifs et contenus théoriques déjà présents mais non rendus dans les cours 01 et 04 (P1). Enfin, réaligner les vidéos obligatoires avec leur écran et restaurer les transitions masquées (P2).",
+    "qualitative_findings": [
+      "Les cours 01, 03 et 04 contiennent 36 QCM à choix unique rendables: leurs questions, actions attendues, réponses attendues et explications sont explicites; le composant affiche résultat, explication, bonne réponse et possibilité de réessayer.",
+      "Les 4 checkpoints du cours 02 possèdent des questions exploitables dans les données, mais le modèle de données hybride empêche leur rendu et produit un verrouillage incohérent selon le moyen de navigation.",
+      "La progression conceptuelle globale est logique (écosystème → données/évaluation → techniques → packaging/déploiement), mais six écrans vidéo masquent des objectifs, explications ou transitions déjà écrits dans chapter.body; un écran du cours 03 place également ses objectifs après une vidéo obligatoire.",
+      "Aucune ressource vidéo n’a été qualifiée d’absente: les URLs sont déclarées. Les conclusions média portent sur l’intitulé, les champs de contextualisation et le placement dans le flux, non sur une inspection du contenu externe."
+    ]
+  },
+  "limits": [
+    "Audit sans modification: seuls le rapport demandé et des fichiers de travail isolés ont été créés; aucun JSON de cours, code applicatif ou donnée de progression n’a été modifié.",
+    "Périmètre lu intégralement: les quatre fichiers JSON désignés par le manifest, blockRegistry.ts, courseBlockNormalization.ts, LessonViewer.tsx, chapterProgress.ts, checkpointGate.ts, SingleChoiceExercise.tsx, YouTubePlayer.tsx et TrainingCourse.tsx.",
+    "Les vidéos YouTube n’ont pas été visionnées ni interrogées; leur accessibilité effective, leur exactitude factuelle, leurs sous-titres réels et leur adéquation fine ne sont donc pas vérifiés. Elles ne sont pas considérées absentes.",
+    "Le rendu a été vérifié par lecture du chemin applicatif, mais pas par session navigateur authentifiée: responsive, lecteurs tiers, persistance serveur et comportement d’assistance restent non vérifiés.",
+    "Des textes de fin évoquent un capstone/hands-on lab; aucun bloc ou lien vers ce lab n’est présent dans les quatre JSON du périmètre. Son existence ailleurs dans la plateforme n’a pas été inférée comme une absence."
+  ]
+}

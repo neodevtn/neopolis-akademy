@@ -1,0 +1,986 @@
+{
+  "formation_id": "datacamp_working_with_the_openai_api",
+  "courses": [
+    {
+      "course_id": "working_with_the_openai_api__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Qu'est-ce que l'API OpenAI ?",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média.",
+            "Le libellé du téléchargement associé a été contrôlé ; l’écart de langue est consigné comme amélioration mineure."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L01-C01-DC_CH01_SLIDES-FR-LABEL",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_ch01_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation",
+              "description": "Dans le parcours français, la carte de téléchargement affiche un titre uniquement en anglais. Le composant résout le texte tel qu’il est stocké, donc l’apprenant voit ce libellé anglais au milieu des contenus français.",
+              "current_content": "title='Chapter 1 slides' (chaîne non localisée).",
+              "proposed_content": "Diapositives du chapitre 1",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[0].blocks[id=dc_ch01_slides].title='Chapter 1 slides'. LessonViewer.tsx:1007-1010 résout une chaîne telle quelle et l’affiche à 1052-1055.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "Ajouter la paire i18n title={en: ..., fr: 'Diapositives du chapitre 1'} tout en conservant l’URL du fichier existante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "Applications construites sur l'API OpenAI",
+          "score_100": 15,
+          "verified_dimensions": [
+            "Le TP affiche son titre, son objectif, ses instructions, ses prérequis d’environnement, sa ressource et son indice lorsqu’ils sont renseignés.",
+            "Le composant et la règle de passage ont été inspectés : une zone de texte générique est rendue et la complétion est enregistrée après toute réponse non vide en l’absence de grille ou correcteur.",
+            "Le chapitre est placé après une séquence qui introduit le thème ; le défaut retenu porte sur la possibilité de réaliser et de valider réellement l’activité, non sur une absence automatique de prérequis."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Aucun environnement d’exécution réel ou comportement d’API correspondant au TP n’est disponible dans les données ou composants inspectés ; il ne peut pas être évalué ni supposé présent."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L01-C02-DC_1_ACT_02_TP-NO-EXECUTABLE-ASSESSMENT",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act02",
+              "content_id": "dc_1_act_02_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P0",
+              "category": "action attendue et feedback",
+              "description": "L’énoncé promet que le texte saisi dans une interface ChatGPT de formation sera envoyé à l’API et que la réponse reviendra ; l’interface réellement rendue est seulement une zone de réponse générique. `steps` est vide ; aucun critère, correcteur serveur, correction ni message de réussite n’est fourni. Dans CloudExerciseBlock, sans rubricCriteria ni évaluation serveur, la soumission de n’importe quel texte non vide valide l’activité et libère le verrou. L’action réellement exigée pour progresser n’est donc pas l’action pédagogique annoncée, et la réussite ne peut pas être déterminée.",
+              "current_content": "assignment=\"Des applications logicielles, des expériences de navigation sur le web et même des produits entiers sont construits sur la base de l'API OpenAI. Dans cet exercice, vous pourrez explorer une application construite sur la base de l'API OpenAI : La version formation de _ChatGPT_ !\\n\\n\\\\nLe texte que vous tapez dans l'interface sera envoyé sous forme de requête à l'API OpenAI et la réponse vous sera directement renvoyée et décompactée.\\n\\n\\\\n\\\\nEn utilisant l'interface ChatGPT, répondez à la question suivante : _Quelle est l’année de création d’OpenAI ?_\"; instructions='\\\\n- Saisissez votre prompt en remplaçant **`INSERT YOUR PROMPT HERE`**Expérimentez et envoyez votre réponse lorsqu’elle est prête !\\n\\\\n\\n\\n### Code de départ\\n\\n```python\\nresponse = client.chat.completions.create(\\\\n    model=\\\\\\n```'; steps=[]; hint=\"\\\\n- Si vous saisissez cette question ou une autre question similaire, vous devriez trouver l'année correcte.\\n\\\\n\"; solution=''; rubricCriteria=None; serverGradedAssessment=None; minimumAnswerLength=None; successMessage=''.",
+              "proposed_content": "Fournir une activité qui correspond à l’action annoncée : soit un éditeur ou environnement réellement connecté à un stub contrôlé de l’API, soit une production écrite explicitement demandée. Ajouter des étapes séquentielles visibles, des critères de réussite et une correction ou un feedback après tentative ; définir une longueur minimale et un mécanisme d’évaluation cohérents avec cette production. Aucun énoncé complet de remplacement n’est proposé, car les fragments de code, le comportement de l’interface de formation et la réponse de référence sont incomplets dans les données disponibles.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_tp] : steps=[], rubricCriteria absent, serverGradedAssessment absent, solution et successMessage vides. CloudExerciseBlock.tsx:153-161 valide directement une soumission non vide lorsqu’il n’existe ni grille ni correcteur ; CloudExerciseBlock.tsx:347-406 rend une zone de texte générique et un bouton Valider ; LessonViewer.tsx:1587-1592 verrouille ou déverrouille selon completedCloudExercises.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : aligner l’interface, l’énoncé, l’évaluation et le verrouillage ; tester qu’une réponse arbitraire ne débloque plus l’étape et qu’une tentative reçoit une aide ou une correction exploitable."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Votre première requête à l’API OpenAI",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L01-C03-DC_1_ACT_03_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "dc_1_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"Pour avoir un aperçu de ce qui nous attend, le code Python permettant d'envoyer une requête à l'API OpenAI est à votre disposition.\\n\\n\\\\nTransmettez n'importe quelle question ou instruction à l'argument `content` et voyez comment le modèle d'OpenAI réagit.\\n\\n\\\\n\\\\nVoici quelques suggestions à essayer si vous êtes à court d'idées :\\n\\n\\\\n\\\\n- _Pourquoi l'apprentissage de l'API OpenAI est-il utile pour les développeurs ?_\\n\\\\n- _Proposer trois tâches que je pourrais automatiser avec l'API OpenAI dans le cadre de mon travail._\\n\\\\n- _En deux phrases, comment l'API OpenAI peut-elle être utilisée pour améliorer mes compétences ?_\\n\\\\n\"; starterCode=''; solutionCode='response = client.chat.completions.create(\\\\n    model=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_code] : starterCode='', solutionCode='response = client.chat.completions.create(\\\\n    model=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            },
+            {
+              "issue_id": "OAI-01-CODE-REPL-REQUIREDBEFOREADVANCE-BYPASSED",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act03",
+              "content_id": "system:LessonViewer/code_repl",
+              "content_type": "code_repl",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "Les 18 chapitres contenant un `code_repl` portent `requiredBeforeAdvance: true`, mais la navigation ne les prend pas en compte. Une activité peut être ignorée via le bouton Suivant, les contrôles compacts ou la touche flèche droite. Cette incohérence rend le marqueur de prérequis inopérant pour l’ensemble des pratiques de code et permet d’achever la leçon sans les réaliser.",
+              "current_content": "18 chapitres `code_repl` avec requiredBeforeAdvance=true ; aucun type `code_repl` dans les listes de passerelles de navigation.",
+              "proposed_content": "Ajouter `code_repl` aux mêmes calculs de complétion que les autres activités, avec un identifiant scoped stable. Le verrou doit n’être levé qu’après une validation pédagogique correcte — après correction de l’activité P0 — et être appliqué identiquement au bouton Suivant, à la navigation compacte, au clavier et à la finalisation de la leçon.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json : 18 blocs code_repl, chacun dans un chapitre requiredBeforeAdvance=true. chapterProgress.ts:94-103 ne traite pas code_repl ; LessonViewer.tsx:314-325, 1576-1613 et 1653-1662 ne l’incluent pas dans les passerelles. CodeReplBlock.tsx:40 émet pourtant onComplete, ce qui rend possible un identifiant de complétion à utiliser.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "Après restauration des activités, implémenter et tester une unique règle de passage pour code_repl sur toutes les voies de navigation, sans créer de verrou basé sur une simple égalité textuelle."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Passer des requêtes à l'API OpenAI",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Construire une requête à l'API OpenAI",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L01-C05-DC_1_ACT_05_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act05",
+              "content_id": "dc_1_act_05_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions='\\\\n- Spécifiez le modèle `gpt-4o-mini`.\\n\\\\n- Attribuez le rôle correct dans la liste `messages`.\\n\\\\n'; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='# Create the OpenAI client\\\\nclient = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='# Create the OpenAI client\\\\nclient = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Spécifier un modèle OpenAI",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L01-C06-DC_1_ACT_06_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act06",
+              "content_id": "dc_1_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"\\\\n- Extrayez le contenu (`content`) de la réponse, qui est imbriqué dans l'attribut `message`.\\n\\\\n\"; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Creuser la réponse",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L01-C07-DC_1_ACT_07_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"L'une des compétences clés du travail avec les API consiste à **extraire les bonnes données** d'une réponse structurée. Vous allez maintenant vous entraîner à récupérer le texte nécessaire à partir d'une réponse de l'API OpenAI.\\n\\n\\\\nLa classe `OpenAI` a déjà été importée pour vous de la bibliothèque `openai`.\"; starterCode=''; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_07_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Résumer et éditer un texte",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média.",
+            "Le libellé du téléchargement associé a été contrôlé ; l’écart de langue est consigné comme amélioration mineure."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C01-DC_CH02_SLIDES-FR-LABEL",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_ch02_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation",
+              "description": "Dans le parcours français, la carte de téléchargement affiche un titre uniquement en anglais. Le composant résout le texte tel qu’il est stocké, donc l’apprenant voit ce libellé anglais au milieu des contenus français.",
+              "current_content": "title='Chapter 2 slides' (chaîne non localisée).",
+              "proposed_content": "Diapositives du chapitre 2",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[0].blocks[id=dc_ch02_slides].title='Chapter 2 slides'. LessonViewer.tsx:1007-1010 résout une chaîne telle quelle et l’affiche à 1052-1055.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "Ajouter la paire i18n title={en: ..., fr: 'Diapositives du chapitre 2'} tout en conservant l’URL du fichier existante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Rechercher et remplacer",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C02-DC_2_ACT_02_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act02",
+              "content_id": "dc_2_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions='\\\\n- Veuillez utiliser une chaîne f pour insérer `finance_text` dans `prompt`.\\n\\\\n- Créez une demande en envoyant le `prompt` fourni. Utilisez un maximum de `400` jetons.\\n\\\\n'; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Résumé de texte",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C03-DC_2_ACT_03_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act03",
+              "content_id": "dc_2_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"\\\\n- Veuillez extraire l'utilisation du jeton d'entrée de la `response`.\\n\\\\n- Veuillez compléter le calcul des coûts afin d'inclure le coût du jeton de sortie.\\n\\\\n\"; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Calcul du coût",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C04-DC_2_ACT_04_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"Avant de déployer des fonctionnalités d'IA à grande échelle, il est essentiel d'estimer les coûts. Le coût dépend du nombre de **jetons d'entrée et de sortie** utilisés et du **modèle choisi**.\\n\\n\\\\nVotre tâche consiste à **calculer le coût** de la synthèse des transcriptions des discussions avec les clients.\\n\\n\\\\nLes bibliothèques OpenAI `client`, ainsi que `text`, `prompt` et `max_completion_tokens` sont préchargées pour vous.\"; starterCode=''; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[3].blocks[id=dc_2_act_04_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Génération de texte",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Génération de contenu",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C06-DC_2_ACT_06_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act06",
+              "content_id": "dc_2_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions='- Créez un **prompt détaillé** afin de générer une description du produit pour les écouteurs SonicPro, incluant :\\n\\n\\n- Réduction active du bruit (ANC)\\n\\n- Autonomie de 40 heures\\n\\n- Design pliable\\n\\n- Testez les paramètres `max_completion_tokens` et `temperature` afin d’observer leur impact sur le résultat.'; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Création d'une description de produit",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C07-DC_2_ACT_07_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"Imaginez que vous rédigez un texte marketing pour les écouteurs **SonicPro**. Votre objectif est de générer une **description de produit convaincante** à l'aide de l'API OpenAI.\\n\\n\\\\nTestez différentes **techniques de prompt**, **longueurs de réponse** et **réglages de température** pour voir comment elles influencent le résultat.\"; starterCode=''; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_07_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act08",
+          "title": "Shot prompting",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Zero-shot prompting avec révisions",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C09-DC_2_ACT_09_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act09",
+              "content_id": "dc_2_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions='- Ajoutez l’exemple `Love these! = 5` au début du prompt, et ajoutez `=` après chaque avis dans le prompt afin d’indiquer comment le résultat doit être formaté.'; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[8].blocks[id=dc_2_act_09_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act10",
+          "title": "One-shot prompting : cela sera-t-il suffisant ?",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C10-DC_2_ACT_10_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act10",
+              "content_id": "dc_2_act_10_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"\\\\n- Ajoutez l'exemple `Comfortable, but not very pretty = 2` au prompt et relancez la requête.\\n\\\\n\"; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_10_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Few-shot prompting : tous les exemples !",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L02-C11-DC_2_ACT_11_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch02_act11",
+              "content_id": "dc_2_act_11_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"Et maintenant, place à la dernière étape ! Essayez d'ajouter l'exemple `Comfortable, but not very pretty = 2` au prompt. Comme cet exemple est plus modéré, il pourrait aider le modèle à résoudre le problème de l'avant-dernière évaluation.\"; starterCode=''; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[10].blocks[id=dc_2_act_11_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Rôles dans le chat et messages système",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média.",
+            "Le libellé du téléchargement associé a été contrôlé ; l’écart de langue est consigné comme amélioration mineure."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L03-C01-DC_CH03_SLIDES-FR-LABEL",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_ch03_slides",
+              "content_type": "download",
+              "severity": "P3",
+              "category": "localisation",
+              "description": "Dans le parcours français, la carte de téléchargement affiche un titre uniquement en anglais. Le composant résout le texte tel qu’il est stocké, donc l’apprenant voit ce libellé anglais au milieu des contenus français.",
+              "current_content": "title='Chapter 3 slides' (chaîne non localisée).",
+              "proposed_content": "Diapositives du chapitre 3",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[0].blocks[id=dc_ch03_slides].title='Chapter 3 slides'. LessonViewer.tsx:1007-1010 résout une chaîne telle quelle et l’affiche à 1052-1055.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "Ajouter la paire i18n title={en: ..., fr: 'Diapositives du chapitre 3'} tout en conservant l’URL du fichier existante."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Utilisation des messages système",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L03-C02-DC_3_ACT_02_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act02",
+              "content_id": "dc_3_act_02_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions='\\\\n- Remplissez la demande de chat en saisissant le message système dans `sys_msg` et testez un message utilisateur contenant une compétence non liée à la langue, telle que le patin à roulettes.\\n\\\\n'; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Ajout de protections",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L03-C03-DC_3_ACT_03_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act03",
+              "content_id": "dc_3_act_03_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"L'une des utilisations les plus courantes des messages système consiste à ajouter des **_protections_**, qui imposent des restrictions aux résultats du modèle.\\n\\n\\\\nDans cet exercice, vous imposerez une restriction sur les résultats du modèle afin d'empêcher les plans d'apprentissage _non_ liés aux langues, car votre système commence à trouver sa place dans cet espace. Vous concevrez un message personnalisé à l'intention des utilisateurs qui demandent ce type de plans d'apprentissage afin qu'ils comprennent ce changement.\"; starterCode=''; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Utilisation du rôle d'assistant",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Structuration des messages instantanés",
+          "score_100": 15,
+          "verified_dimensions": [
+            "Le TP affiche son titre, son objectif, ses instructions, ses prérequis d’environnement, sa ressource et son indice lorsqu’ils sont renseignés.",
+            "Le composant et la règle de passage ont été inspectés : une zone de texte générique est rendue et la complétion est enregistrée après toute réponse non vide en l’absence de grille ou correcteur.",
+            "Le chapitre est placé après une séquence qui introduit le thème ; le défaut retenu porte sur la possibilité de réaliser et de valider réellement l’activité, non sur une absence automatique de prérequis."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Aucun environnement d’exécution réel ou comportement d’API correspondant au TP n’est disponible dans les données ou composants inspectés ; il ne peut pas être évalué ni supposé présent."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L03-C05-DC_3_ACT_05_TP-NO-EXECUTABLE-ASSESSMENT",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act05",
+              "content_id": "dc_3_act_05_tp",
+              "content_type": "cloud_exercise",
+              "severity": "P0",
+              "category": "action attendue et feedback",
+              "description": "L’énoncé demande de structurer une paire utilisateur-assistant dans les messages envoyés au modèle ; l’interface réellement rendue est seulement une zone de réponse générique. `steps` est vide ; aucun critère, correcteur serveur, correction ni message de réussite n’est fourni. Dans CloudExerciseBlock, sans rubricCriteria ni évaluation serveur, la soumission de n’importe quel texte non vide valide l’activité et libère le verrou. L’action réellement exigée pour progresser n’est donc pas l’action pédagogique annoncée, et la réussite ne peut pas être déterminée.",
+              "current_content": "assignment='Vous voyez comment les rôles de chat peuvent modifier le comportement du modèle, fournir des exemples et structurer vos messages, mais êtes-vous en mesure de structurer ces messages ?'; instructions=\"\\\\n- Ajoutez l'exemple de question et de réponse fourni en tant que paire utilisateur-assistant dans les messages envoyés au modèle.\\n\\n\\\\n\\\\n- Exemple de question : `Give me a quick summary of Portugal.`\\n\\n\\\\n- Exemple de réponse : `Portugal is a country in Europe that borders Spain. The capital city is Lisboa.`\\n\\n\\\\n\\n\\n### Code de départ\\n\\n```python\\nclient = OpenAI(api_key=\\\\\\n```\"; steps=[]; hint='\\\\n- Les messages `\\\\'; solution=''; rubricCriteria=None; serverGradedAssessment=None; minimumAnswerLength=None; successMessage=''.",
+              "proposed_content": "Fournir une activité qui correspond à l’action annoncée : soit un éditeur ou environnement réellement connecté à un stub contrôlé de l’API, soit une production écrite explicitement demandée. Ajouter des étapes séquentielles visibles, des critères de réussite et une correction ou un feedback après tentative ; définir une longueur minimale et un mécanisme d’évaluation cohérents avec cette production. Aucun énoncé complet de remplacement n’est proposé, car les fragments de code, le comportement de l’interface de formation et la réponse de référence sont incomplets dans les données disponibles.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[4].blocks[id=dc_3_act_05_tp] : steps=[], rubricCriteria absent, serverGradedAssessment absent, solution et successMessage vides. CloudExerciseBlock.tsx:153-161 valide directement une soumission non vide lorsqu’il n’existe ni grille ni correcteur ; CloudExerciseBlock.tsx:347-406 rend une zone de texte générique et un bouton Valider ; LessonViewer.tsx:1587-1592 verrouille ou déverrouille selon completedCloudExercises.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : aligner l’interface, l’énoncé, l’évaluation et le verrouillage ; tester qu’une réponse arbitraire ne débloque plus l’étape et qu’une tentative reçoit une aide ou une correction exploitable."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Ajout de messages d'assistant",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L03-C06-DC_3_ACT_06_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act06",
+              "content_id": "dc_3_act_06_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"\\\\n- Complétez vos messages précédents en incluant des exemples supplémentaires d'autres pays, enregistrés sous les noms `example1`, `response1`, `example2`, `response2`, `example3` et `response3`.\\n\\\\n\"; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[5].blocks[id=dc_3_act_06_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Encore des messages d’assistant !",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L03-C07-DC_3_ACT_07_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions='Développez vos messages précédents afin de fournir des exemples supplémentaires, enregistrés sous les noms `example1`, `response1`, `example2`, `response2`, `example3` et `response3`.\\n\\n\\\\nVérifions si nous pouvons obtenir les informations générées par ce modèle dans le format souhaité.'; starterCode=''; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_07_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch03_act08",
+          "title": "Conversations en plusieurs interactions avec GPT",
+          "score_100": 85,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch03_act09",
+          "title": "Création d'un historique des conversations",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L03-C09-DC_3_ACT_09_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act09",
+              "content_id": "dc_3_act_09_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"\\\\n- Parcourez les messages des utilisateurs (`user_msgs`).\\n\\\\n- Créez un dictionnaire pour le message utilisateur à chaque itération et ajoutez-le à `messages`.\\n\\\\n- Envoyez `messages` au modèle dans une demande de Chat.\\n\\\\n- Ajoutez le dictionnaire des messages de l'assistant à `messages`.\\n\\\\n\"; starterCode='client = OpenAI(api_key=\\\\'; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[8].blocks[id=dc_3_act_09_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch03_act10",
+          "title": "Créer une IA de chatbot",
+          "score_100": 10,
+          "verified_dimensions": [
+            "L’écran est identifié comme EXERCICE et son titre, ses consignes, son éditeur, son bouton de vérification, sa réinitialisation et son accès à la solution sont rendus par LessonViewer et CodeReplBlock.",
+            "Les séquences d’enseignement précédentes et leurs transcriptions disponibles couvrent le thème immédiat (requête, transformation de texte, prompting ou rôles de chat) ; les signaux statiques d’absence de texte sur le même écran ne sont donc pas retenus comme défaut autonome.",
+            "Les données de code, la règle de validation et les passerelles de progression ont été vérifiées ; les défauts confirmés sont consignés ci-dessous."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "Le comportement attendu du programme restauré (API, variables préchargées et sortie fonctionnelle) ne peut pas être testé car les fragments stockés sont tronqués et CodeReplBlock n’exécute aucun code."
+          ],
+          "issues": [
+            {
+              "issue_id": "OAI-01-L03-C10-DC_3_ACT_10_CODE-TRUNCATED-CODE",
+              "course_id": "working_with_the_openai_api__01",
+              "chapter_id": "dc_ch03_act10",
+              "content_id": "dc_3_act_10_code",
+              "content_type": "code_repl",
+              "severity": "P0",
+              "category": "activité exécutable",
+              "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+              "current_content": "instructions=\"Pour finaliser votre POC, vous intégrerez votre historique de messages à une boucle `for` , ce qui vous permettra d'envoyer des prompts répétés au modèle, en stockant chaque réponse dans l'historique des messages en série.\"; starterCode=''; solutionCode='client = OpenAI(api_key=\\\\'; testCode=None; expectedOutput=''.",
+              "proposed_content": "Restaurer, depuis la source éditoriale, le code de départ complet, les variables et données préchargées, une solution complète et le résultat ou les assertions attendus. Ne pas réécrire le programme ici : les fragments stockés ne permettent pas de reconstituer sans invention le code, les valeurs ni l’environnement d’origine. Remplacer ensuite la comparaison textuelle par une exécution isolée ou des tests comportementaux qui acceptent des solutions Python équivalentes, avec un feedback ciblé.",
+              "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[9].blocks[id=dc_3_act_10_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code.",
+              "confidence": "high",
+              "verification_status": "verified_data_and_renderer",
+              "recommended_action": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch03_act11",
+          "title": "Félicitations !",
+          "score_100": 82,
+          "verified_dimensions": [
+            "Titre, description de chapitre et transcription française sont déclarés et LessonViewer rend le média avec ce cadre.",
+            "La vidéo est placée comme séquence d’enseignement avant les activités qu’elle prépare ; les transcriptions vérifiées explicitent les notions et la transition vers la pratique.",
+            "Le rendu fournit une action claire (lecture ou marquage manuel) et le verrou officiel de vidéo avant la suite est implémenté.",
+            "Sous-titres FR/EN et document de chapitre sont référencés dans les données et rendus comme pistes ou liens selon le type de média."
+          ],
+          "unverified_dimensions": [
+            "Exactitude factuelle exhaustive non auditée : examen limité aux JSON, au registre de blocs et au code de rendu fournis, sans source externe.",
+            "Aucun parcours navigateur authentifié, test responsive ou test avec technologies d’assistance n’a été exécuté.",
+            "La disponibilité effective, la lecture intégrale et la synchronisation des médias /api/assets servis via le proxy de stockage S3 ne sont pas vérifiables localement ; ils ne sont donc jamais considérés comme absents. Les transcriptions, sous-titres et liens de documents déclarés ont été contrôlés dans les JSON et leur rendu a été inspecté dans LessonViewer."
+          ],
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope_reviewed": {
+      "courses": 1,
+      "lessons": 3,
+      "chapters": 29,
+      "activity_items_reviewed": 20,
+      "code_repl_activities_reviewed": 18,
+      "cloud_exercises_reviewed": 2,
+      "declared_video_blocks_reviewed": 9,
+      "download_blocks_reviewed": 3
+    },
+    "assessment_of_structure": "Les trois leçons suivent une montée en compétence cohérente : découverte de l’API et de la requête, transformation et prompting, puis rôles de chat et historique de conversation. Les neuf séquences vidéo sont titrées, contextualisées par la description de leçon, accompagnées de transcriptions et de sous-titres référencés ; les transcriptions contrôlées introduisent les prérequis et annoncent la pratique suivante. Les difficultés critiques ne viennent donc pas des objectifs ou de l’ordre théorique, mais de la couche d’activités : les 18 activités de code contiennent des fragments tronqués et ne sont pas exécutées, tandis que les deux TP cloud valident une zone de texte générique sans vérifier l’action demandée.",
+    "pre_audit_resolution": "Les 23 signaux statiques ont été repris. Les 20 signaux « progression » fondés uniquement sur l’absence de texte dans l’écran d’exercice ne sont pas retenus comme défauts autonomes : les vidéos et transcriptions précédentes enseignent les notions mobilisées et les descriptions de leçon explicitent les finalités. Les deux signaux de TP sans étapes et le signal de feedback du second TP sont confirmés sous une cause plus précise et plus grave : interface non conforme à l’activité annoncée, absence de critères ou correction et complétion arbitraire. La revue du rendu révèle en outre la troncature généralisée des données de code et le contournement de requiredBeforeAdvance pour code_repl.",
+    "confirmed_issues": {
+      "P0": 20,
+      "P1": 1,
+      "P2": 0,
+      "P3": 3,
+      "total": 24
+    },
+    "priority_actions": [
+      "P0 — Restaurer avant toute diffusion les 18 jeux complets de code (départ, contexte, solution, résultats ou tests) puis remplacer la comparaison de chaînes par une validation exécutable ou comportementale avec feedback ciblé.",
+      "P0 — Reconcevoir les deux TP cloud pour que l’interface permette réellement l’action annoncée et que le correcteur, les critères et la correction empêchent une validation par un texte arbitraire.",
+      "P1 — Une fois la validation pédagogique corrigée, inclure code_repl dans une passerelle de progression unique appliquée au clavier, aux deux boutons Suivant et à la finalisation.",
+      "P3 — Localiser les trois intitulés de téléchargement dans le parcours français."
+    ],
+    "scoring_method": "Notes qualitatives sur 100 attribuées par chapitre à partir des dimensions effectivement inspectables dans les JSON et dans LessonViewer, CodeReplBlock, CloudExerciseBlock et chapterProgress : objectif et place dans la progression, explications et transitions disponibles dans les transcriptions, action attendue, feedback, rendu et verrouillage. Les scores des activités critiques reflètent l’impossibilité confirmée de réaliser ou valider convenablement l’activité. La qualité intrinsèque et la disponibilité effective des médias S3, l’accessibilité en navigateur et l’exactitude factuelle exhaustive ne sont pas notées artificiellement."
+  },
+  "limits": [
+    "Audit qualitatif sans modification : aucun JSON de cours, composant, base ou média n’a été modifié.",
+    "L’audit couvre uniquement la formation demandée, son unique cours, ses 3 leçons, 29 chapitres et 20 activités à partir du manifest fourni.",
+    "Les URLs /api/assets sont des ressources servies par le proxy de stockage S3 ; leur absence du répertoire public local ne prouve pas leur absence. Elles sont déclarées mais leur disponibilité, lecture et rendu navigateur n’ont pas été testés.",
+    "Aucune source externe n’a été consultée ; l’exactitude factuelle des propos et des réponses attendues ne peut donc pas être certifiée.",
+    "Les propositions de restauration des activités tronquées restent conditionnelles : le code complet d’origine, les variables de contexte, l’environnement d’exécution et les critères de résultat sont absents des données disponibles ; ils ne sont pas inventés."
+  ]
+}

@@ -1,0 +1,688 @@
+{
+  "formation_id": "datacamp_ai_for_marketing",
+  "courses": [
+    {
+      "course_id": "ai_for_marketing__01",
+      "chapters": [
+        {
+          "lesson_index": 0,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch01_act01",
+          "title": "Le tournant de l’IA dans le marketing",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La séquence ouvre la formation avec un titre explicite, 12 diapositives Projector et une transcription structurée qui expose le cycle de vie marketing ainsi que le cadre objectif-contexte-limitations.",
+            "Les sous-titres FR et EN, la transcription et le PDF de slides sont déclarés; le lecteur rend une alternative textuelle repliable.",
+            "La transition vers la mise en pratique est explicite dans la dernière section de transcription (« Passons à la pratique ! »)."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré dans les données; le titre et la transcription donnent néanmoins une orientation.",
+            "La lisibilité réelle des images, de la vidéo et des sous-titres au navigateur n’a pas été exécutée.",
+            "Le verrouillage de visionnage attendu n’est pas cohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch01_act01:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch01_act01",
+              "content_id": "dc_1_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : le lecteur l’enregistre sous la clé dc_1_act_01_video, mais la logique de navigation ne retient ni mp4Url ni un id de 17 caractères. Elle calcule donc une liste de vidéos vide et laisse passer au chapitre suivant malgré requiredBeforeAdvance: true.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_1_act_01_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[0].chapters[0].blocks[1]; client/src/pages/training/LessonViewer.tsx lignes 556-581 (clé de rendu) et 1558-1568 (clé de navigation limitée à videoId/url/id de 8 à 15 caractères).",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Corriger le calcul partagé des clés de vidéo puis ajouter un test de navigation couvrant ce chapitre MP4 à id long."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch01_act02",
+          "title": "De l’invite au résultat",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le TP formule un objectif observable : identifier 10 cas d’usage marketing de l’IA générative.",
+            "L’action attendue est décomposée en 5 étapes, accompagnée d’un contexte d’usage sûr, d’un indice et de 3 critères apprenant affichés.",
+            "La preuve est évaluée côté serveur; le composant affiche score, feedback, forces, améliorations et permet une nouvelle tentative avant déverrouillage."
+          ],
+          "unverified_dimensions": [
+            "La qualité effective de la réponse du modèle d’évaluation et l’accès individuel à un assistant IA personnel ne sont vérifiables qu’en exécution.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch01_act03",
+          "title": "Façonner vos invites",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le livrable attendu est précis : un tableau de 10 cas d’usage centrés sur contenu et réseaux sociaux.",
+            "Les 5 étapes demandent explicitement le format, les colonnes et le contrôle des 10 lignes.",
+            "Critères, indice, seuil de saisie et évaluation avec feedback individualisé sont configurés."
+          ],
+          "unverified_dimensions": [
+            "Le rendu effectif du feedback généré par le service d’évaluation n’a pas été simulé.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch01_act04",
+          "title": "Définir le périmètre des campagnes marketing avec l’IA",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La transcription explique avant la pratique objectifs, contexte et limitations à partir d’un scénario de campagne NovaMobile.",
+            "Les 16 slides, la transcription et les sous-titres bilingues sont déclarés; la fin annonce la pratique suivante.",
+            "Le scénario et les éléments de prompt préparent directement le TP de plan de campagne qui suit."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "Le rendu navigateur des médias n’a pas été testé.",
+            "Le verrouillage de visionnage est incohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch01_act04:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch01_act04",
+              "content_id": "dc_1_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : sa clé de complétion dc_1_act_04_video n’est jamais retrouvée par la navigation, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_1_act_04_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[0].chapters[3].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo et couvrir ce chapitre dans le test de verrouillage séquentiel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch01_act05",
+          "title": "Quel est le plan ?",
+          "score_100": 89,
+          "verified_dimensions": [
+            "L’objectif, le résultat attendu et les contraintes sont explicites : plan de quatre semaines, 3 000 précommandes, audience, canaux, budget et exclusion de l’influence.",
+            "Les 6 étapes réemploient immédiatement le cadre objectif-contexte-limitations de la vidéo précédente.",
+            "Les critères de réussite, l’indice, le retour serveur et la reprise après échec sont prévus."
+          ],
+          "unverified_dimensions": [
+            "L’évaluation générée et l’accès à l’assistant externe ne sont pas vérifiés en condition utilisateur.",
+            "Aucun objectif de chapitre formalisé séparément de la consigne n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch01_act06",
+          "title": "Que contient un prompt ?",
+          "score_100": 90,
+          "verified_dimensions": [
+            "La consigne de tri est explicite et les 6 cartes, 3 catégories et réponses attendues sont structurées.",
+            "L’indice définit les trois notions à mobiliser; l’interface explique également l’action clic-carte puis clic-catégorie.",
+            "Le composant rend les placements corrects/incorrects, un compteur, un retour de réussite et un bouton Réessayer; la progression attend une solution correcte."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré hors titre et consigne.",
+            "Le rendu tactile réel du glisser-déposer et de la navigation clavier n’a pas été exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch01_act07",
+          "title": "Accélérer l’idéation marketing avec l’IA",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La transcription relie explicitement la planification précédente à l’idéation, définit l’usage de recherche approfondie et fournit un scénario SleepWell.",
+            "La fin de la vidéo conduit explicitement vers la pratique; 16 slides, transcription et sous-titres bilingues sont déclarés.",
+            "Le TP suivant applique la recherche de communautés à un scénario fictif, cohérent avec l’idéation enseignée."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "Le rendu navigateur des médias n’a pas été testé.",
+            "Le verrouillage de visionnage est incohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch01_act07:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch01_act07",
+              "content_id": "dc_1_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : sa clé de complétion dc_1_act_07_video n’est jamais retrouvée par la navigation, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_1_act_07_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[0].chapters[6].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo et couvrir ce chapitre dans le test de verrouillage séquentiel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch01_act08",
+          "title": "Puis-je avoir un retour, s’il vous plaît ?",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le TP demande explicitement d’éprouver un plan fictif PulseLoop X5 et d’identifier des améliorations prioritaires.",
+            "Les étapes, l’alternative sans téléversement, l’indice et les critères permettent de savoir quoi produire sans données réelles.",
+            "Le verrouillage ne se lève qu’après une soumission satisfaisant le seuil serveur; feedback, forces et améliorations sont rendus."
+          ],
+          "unverified_dimensions": [
+            "La qualité de l’évaluation générée en production n’a pas été exécutée.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 0,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch01_act09",
+          "title": "Trouvez votre/vos communauté(s)",
+          "score_100": 88,
+          "verified_dimensions": [
+            "La quantité, le domaine et la prudence attendus sont explicites : 30 communautés, santé/fitness, aucune publication, vérification avant action.",
+            "La consigne prévoit le cas d’un assistant sans recherche et précise alors le statut à vérifier des résultats.",
+            "Les critères, l’indice, l’évaluation serveur et la possibilité de réessai sont présents."
+          ],
+          "unverified_dimensions": [
+            "L’exactitude des communautés proposées par un assistant tiers ne peut pas être vérifiée dans cet audit.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch02_act01",
+          "title": "Créer du contenu de qualité avec l’IA",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La transcription fait la transition stratégie-vers-exécution et présente les principes de création de contenu avec l’IA avant le TP SEO.",
+            "Les 12 slides, transcription, sous-titres FR/EN et téléchargement des slides sont déclarés.",
+            "Le titre, le scénario et la vidéo préparent le chapitre suivant consacré au plan SEO."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "Le rendu navigateur des médias et du document téléchargeable n’a pas été testé.",
+            "Le verrouillage de visionnage est incohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch02_act01:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch02_act01",
+              "content_id": "dc_2_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : sa clé de complétion dc_2_act_01_video n’est jamais retrouvée par la navigation, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_2_act_01_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[1].chapters[0].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo et couvrir ce chapitre dans le test de verrouillage séquentiel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch02_act02",
+          "title": "Des idées au plan",
+          "score_100": 89,
+          "verified_dimensions": [
+            "L’objectif définit un plan SEO à partir de points de douleur synthétiques.",
+            "Les 6 étapes expliquent la ressource à utiliser, l’alternative par copier-coller et les actions à réaliser.",
+            "Critères apprenant, indice, évaluation serveur, feedback et réessai sont prévus."
+          ],
+          "unverified_dimensions": [
+            "L’ouverture effective de la ressource /api/assets et l’évaluation en production n’ont pas été exécutées.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch02_act03",
+          "title": "Puis-je avoir du contexte ?",
+          "score_100": 89,
+          "verified_dimensions": [
+            "La tâche attendue est claire : rédiger puis améliorer l’introduction d’un article à partir d’un plan synthétique.",
+            "Les 6 étapes et l’alternative sans téléversement fournissent une marche à suivre utilisable.",
+            "Les critères, l’indice et le feedback serveur rendent le critère de réussite identifiable."
+          ],
+          "unverified_dimensions": [
+            "L’accès réel à la ressource et le rendu effectif de l’évaluation ne sont pas testés.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch02_act04",
+          "title": "Accélérer le design marketing avec l’IA",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La transcription présente l’usage de l’IA pour le design, les limites de production et le scénario ZenLeaf avant le TP de publicité Instagram.",
+            "Les 11 slides, transcription et sous-titres bilingues fournissent des voies d’accès textuelles au contenu.",
+            "Le tri suivant porte précisément sur les compromis annoncés par la vidéo."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "La lisibilité effective des maquettes/images et le rendu navigateur n’ont pas été testés.",
+            "Le verrouillage de visionnage est incohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch02_act04:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch02_act04",
+              "content_id": "dc_2_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : sa clé de complétion dc_2_act_04_video n’est jamais retrouvée par la navigation, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_2_act_04_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[1].chapters[3].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo et couvrir ce chapitre dans le test de verrouillage séquentiel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch02_act05",
+          "title": "Image parfaite",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le livrable demandé est concret : une proposition de publicité Instagram carrée pour une marque et un produit fictifs.",
+            "Les 6 étapes indiquent format, palette, police, accroche, ambiance et solution de repli sans téléversement.",
+            "Les critères apprenant, l’indice, la soumission évaluée et le réessai sont disponibles."
+          ],
+          "unverified_dimensions": [
+            "La consultation réelle du logo synthétique et l’évaluation de la qualité visuelle d’un livrable ne sont pas vérifiables ici.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch02_act06",
+          "title": "Image(in) the tradeoffs",
+          "score_100": 90,
+          "verified_dimensions": [
+            "La consigne demande sans ambiguïté de classer 6 scénarios entre forces et limitations de la génération d’images par IA.",
+            "L’indice renvoie aux notions nécessaires : texte, cohérence de marque, compositions complexes et post-production.",
+            "Le composant fournit action explicite, indicateurs par carte, feedback contextualisé et réessai; une réponse parfaite est requise pour poursuivre."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré hors titre et consigne.",
+            "Le rendu tactile réel du glisser-déposer et de la navigation clavier n’a pas été exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch02_act07",
+          "title": "Rationaliser l’analyse de données avec l’IA",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La transcription introduit l’analyse de performance, les risques liés aux données et la nécessité de vérifier les sorties, avant le quiz sur ces bonnes pratiques.",
+            "Les 19 slides, transcription et sous-titres FR/EN sont déclarés.",
+            "Le QCM suivant prolonge la séquence par des considérations de politique interne, IIP et limites de contexte."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "Le rendu navigateur et la lisibilité des visuels d’analyse n’ont pas été testés.",
+            "Le verrouillage de visionnage est incohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch02_act07:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch02_act07",
+              "content_id": "dc_2_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : sa clé de complétion dc_2_act_07_video n’est jamais retrouvée par la navigation, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_2_act_07_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[1].chapters[6].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo et couvrir ce chapitre dans le test de verrouillage séquentiel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 7,
+          "chapter_id": "dc_ch02_act09",
+          "title": "Analyse risques vs bénéfices",
+          "score_100": 90,
+          "verified_dimensions": [
+            "L’énoncé contextualise la décision avant téléversement de données d’engagement et identifie l’action : sélectionner toutes les bonnes pratiques.",
+            "L’indice oriente vers les IIP et les limites de contexte; les options et le nombre de réponses attendues sont rendus par le composant.",
+            "Après soumission, le composant affiche les bonnes/mauvaises options, l’explication, et un réessai; la progression requiert une réponse correcte."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré hors titre et question.",
+            "Le comportement exact sur navigateur n’a pas été exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 8,
+          "chapter_id": "dc_ch02_act10",
+          "title": "Projet de synthèse : Accélérez la publicité payante avec l’IA",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La transcription situe le sprint paid media, la recherche d’audiences, les variantes créatives et l’analyse qui sont pratiquées immédiatement après.",
+            "Les 7 slides, transcription et sous-titres bilingues sont déclarés.",
+            "La séquence prépare de façon cohérente les TP de ciblage puis de variantes d’annonces."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "Le rendu navigateur des médias n’a pas été testé.",
+            "Le verrouillage de visionnage est incohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch02_act10:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch02_act10",
+              "content_id": "dc_2_act_10_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : sa clé de complétion dc_2_act_10_video n’est jamais retrouvée par la navigation, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_2_act_10_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[1].chapters[8].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo et couvrir ce chapitre dans le test de verrouillage séquentiel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 9,
+          "chapter_id": "dc_ch02_act11",
+          "title": "Qui est l’audience ?",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le TP explicite le résultat attendu : pistes de postes et villes pour un ciblage LinkedIn fictif.",
+            "Les 6 étapes, le scénario synthétique et l’avertissement de validation avant ciblage réel encadrent l’activité.",
+            "Critères, indice, feedback serveur et reprise après échec sont configurés."
+          ],
+          "unverified_dimensions": [
+            "La qualité effective des pistes produites par l’assistant et l’évaluation en production ne sont pas vérifiables ici.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 1,
+          "chapter_index": 10,
+          "chapter_id": "dc_ch02_act12",
+          "title": "Pourquoi pas 50 ?",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le résultat attendu est quantifié : 50 variantes LinkedIn, avec variation des personas et axes de message.",
+            "Les 6 étapes imposent le tableau, les limites de caractères et la couverture équilibrée; l’indice rappelle ces contraintes.",
+            "Les critères de réussite, l’évaluation serveur, le feedback et le réessai sont présents."
+          ],
+          "unverified_dimensions": [
+            "La qualité finale des annonces et le comportement de l’évaluation IA en production ne sont pas vérifiables ici.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 0,
+          "chapter_id": "dc_ch03_act01",
+          "title": "Des solutions génériques aux assistants IA sur mesure",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La transcription introduit la différence entre assistant générique et assistant personnalisé, puis ses composants avant le QCM et le TP.",
+            "Les 8 slides, transcription, sous-titres bilingues et document de slides sont déclarés.",
+            "L’enchaînement vidéo → QCM de distinction → mise en pratique est pédagogiquement cohérent."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "Le rendu navigateur des médias et du document téléchargeable n’a pas été testé.",
+            "Le verrouillage de visionnage est incohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch03_act01:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch03_act01",
+              "content_id": "dc_3_act_01_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : sa clé de complétion dc_3_act_01_video n’est jamais retrouvée par la navigation, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_3_act_01_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[2].chapters[0].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo et couvrir ce chapitre dans le test de verrouillage séquentiel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 1,
+          "chapter_id": "dc_ch03_act02",
+          "title": "Assistants personnalisés : les bases",
+          "score_100": 90,
+          "verified_dimensions": [
+            "La question situe un apprenant novice, demande explicitement de distinguer assistant classique et personnalisé, et propose 4 options.",
+            "L’indice cible la différence conceptuelle nécessaire et l’explication relie la réponse au besoin de cohérence de marque.",
+            "Le composant donne résultat, bonne réponse, explication et réessai; la réussite est requise pour avancer."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré hors titre et question.",
+            "Le comportement exact sur navigateur n’a pas été exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 2,
+          "chapter_id": "dc_ch03_act03",
+          "title": "Faire jaillir les idées",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le TP demande un résultat précis : idées créatives et légendes Instagram pour un produit fictif GreenThrive.",
+            "Les 6 étapes, le contexte de marque, l’alternative sans mode spécialisé et l’indice rendent l’action praticable.",
+            "Trois critères visibles, l’évaluation serveur, les forces/améliorations et le réessai encadrent la réussite."
+          ],
+          "unverified_dimensions": [
+            "La qualité de l’évaluation générée en production et l’accès à un assistant externe ne sont pas testés.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 3,
+          "chapter_id": "dc_ch03_act04",
+          "title": "Créer des assistants personnalisés pour les workflows marketing",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La transcription explique les trois composants réutilisés par l’activité suivante : instructions, base de connaissances et capacités.",
+            "Les 15 slides, transcription et sous-titres bilingues sont déclarés; la dernière slide annonce explicitement la pratique.",
+            "Le QCM intermédiaire et le TP Onyx reprennent les composants exposés dans la vidéo."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "Le rendu navigateur des captures et des médias n’a pas été testé.",
+            "Le verrouillage de visionnage est incohérent avec requiredBeforeAdvance: true (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch03_act04:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch03_act04",
+              "content_id": "dc_3_act_04_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle peut être contournée : sa clé de complétion dc_3_act_04_video n’est jamais retrouvée par la navigation, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_3_act_04_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[2].chapters[3].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo et couvrir ce chapitre dans le test de verrouillage séquentiel."
+            }
+          ]
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 4,
+          "chapter_id": "dc_ch03_act05",
+          "title": "Composants d’un assistant de rédaction publicitaire",
+          "score_100": 90,
+          "verified_dimensions": [
+            "L’énoncé contextualise une décision de paid media et demande d’identifier tous les composants essentiels, avec 4 options.",
+            "L’indice prépare le raisonnement sur finalité, connaissances et capacités; l’explication confirme instructions et base de connaissances.",
+            "Le QCM à choix multiples rend le nombre de réponses attendu, les corrections par option, l’explication et le réessai; il verrouille la progression tant que la réponse n’est pas correcte."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré hors titre et question.",
+            "Le comportement exact sur navigateur n’a pas été exécuté."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 5,
+          "chapter_id": "dc_ch03_act06",
+          "title": "Créer un assistant de rédaction publicitaire",
+          "score_100": 89,
+          "verified_dimensions": [
+            "Le TP demande de configurer un assistant de rédaction Onyx puis de le tester avec une idée fictive.",
+            "Les 6 étapes, la ressource synthétique, l’alternative conversation standard et l’indice expliquent quoi faire sans dépendance à une fonction propriétaire.",
+            "Les critères visibles imposent rôle, règles de format, usage de la ressource et trois variantes adaptées aux plateformes; la soumission est évaluée et réessayable."
+          ],
+          "unverified_dimensions": [
+            "La disponibilité réelle du fichier synthétique et l’évaluation en production n’ont pas été exécutées; cette ressource n’est pas qualifiée d’absente.",
+            "Aucun objectif de chapitre formalisé séparément du TP n’est déclaré."
+          ],
+          "issues": []
+        },
+        {
+          "lesson_index": 2,
+          "chapter_index": 6,
+          "chapter_id": "dc_ch03_act07",
+          "title": "Félicitations",
+          "score_100": 78,
+          "verified_dimensions": [
+            "La vidéo de clôture synthétise le parcours recherche-planification-idéation, création-exécution et mesure-optimisation, puis encourage une pratique continue.",
+            "Les 5 slides, transcription et sous-titres bilingues sont déclarés.",
+            "Le lecteur comporte une action finale de fin de leçon; la synthèse est cohérente avec les trois leçons précédentes."
+          ],
+          "unverified_dimensions": [
+            "Aucun objectif de chapitre mesurable n’est déclaré en champ dédié.",
+            "Le rendu navigateur des médias n’a pas été testé.",
+            "Le même défaut de clé rend la vidéo de clôture non bloquante avant l’achèvement de la leçon (voir issue)."
+          ],
+          "issues": [
+            {
+              "issue_id": "ped:ai_for_marketing__01:dc_ch03_act07:video-navigation-gate",
+              "course_id": "ai_for_marketing__01",
+              "chapter_id": "dc_ch03_act07",
+              "content_id": "dc_3_act_07_video",
+              "content_type": "video",
+              "severity": "P1",
+              "category": "verrouillage",
+              "description": "La vidéo officielle de clôture peut être contournée : sa clé de complétion dc_3_act_07_video n’est jamais retrouvée par le calcul de verrouillage de fin de leçon, qui ignore les sources MP4 et les ids de plus de 15 caractères.",
+              "current_content": "Chapitre requiredBeforeAdvance: true; vidéo MP4 id=dc_3_act_07_video (17 caractères), sans videoId ni url YouTube.",
+              "proposed_content": "Faire utiliser à toutes les vérifications de navigation et de fin de leçon la même clé que le lecteur média : pour un bloc MP4/HLS/audio, block.id || fallback, sans filtre de longueur; tester le cas d’un id long.",
+              "evidence": "client/public/data/courses/ai_for_marketing__01.json → lessons[2].chapters[6].blocks[0]; client/src/pages/training/LessonViewer.tsx lignes 556-581, 1483-1512 et 1558-1568.",
+              "confidence": "high",
+              "verification_status": "verified_code_and_data",
+              "recommended_action": "Appliquer la correction commune de clé de vidéo, y compris la porte de fin de leçon, et ajouter un test de complétion terminale."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "formation_summary": {
+    "scope_completed": "1 cours, 3 leçons, 27 chapitres et 17 activités ont été examinés individuellement à partir du JSON de production, du registre de blocs, de LessonViewer, des composants d’activité et de chapterProgress.",
+    "activity_coverage": {
+      "cloud_exercise": 12,
+      "bucket_sort": 2,
+      "single_choice_exercise": 1,
+      "multi_choice_exercise": 2,
+      "total": 17
+    },
+    "media_coverage": {
+      "videos_projector": 10,
+      "videos_with_transcript": 10,
+      "videos_with_fr_and_en_subtitles_declared": 10,
+      "downloads": 3
+    },
+    "confirmed_issues": {
+      "total": 10,
+      "P0": 0,
+      "P1": 10,
+      "P2": 0,
+      "P3": 0,
+      "root_cause": "Un seul défaut de concordance de clé entre le rendu MP4 et les vérifications de progression affecte les 10 chapitres vidéo, tous marqués requiredBeforeAdvance: true."
+    },
+    "pedagogical_findings": [
+      "Les 17 activités disposent toutes d’un énoncé ou d’une consigne exploitable; les 12 TP donnent objectif, étapes, indice et critères apprenant, avec évaluation serveur et réessai.",
+      "Les deux tris et les trois QCM donnent action attendue, aide et feedback de correction; aucun signal statique de consigne absente n’a été confirmé.",
+      "Les progressions thématiques sont cohérentes : planification et idéation, exécution et mesure, puis assistants personnalisés. Les activités suivent les notions mobilisées dans les transcriptions et diapositives.",
+      "Les objectifs formels par chapitre ne sont pas déclarés. Cette absence est portée en dimension non vérifiable, sans être assimilée à un défaut P1.",
+      "La note moyenne renormalisée des 27 chapitres est 85/100. Les scores plus bas des chapitres vidéo reflètent uniquement le défaut de verrouillage confirmé et les contrôles de rendu média non exécutés, non une absence de contenu pédagogique."
+    ],
+    "priority_summary": "P1 prioritaire : unifier la clé de complétion des vidéos MP4 avec celle utilisée par la navigation, puis tester les 10 id longs. Après correction, vérifier en navigateur le parcours complet, les médias et les documents gérés."
+  },
+  "limits": [
+    "Audit qualitatif réalisé sans modification du contenu, de la base ou du code.",
+    "Les 86 URL /api/assets référencées par le cours ne sont pas présentes comme fichiers dans le dépôt audité; elles sont gérées par la route d’assets et ne sont donc pas considérées comme absentes. Leur disponibilité HTTP et leur qualité visuelle/audio n’ont pas été testées.",
+    "Le rendu navigateur réel, le responsive, la lecture des médias, l’accessibilité assistive et les interactions tactiles n’ont pas été exécutés; les constats de rendu reposent sur LessonViewer, ProjectorPlayer et les composants d’activité.",
+    "Les retours exacts produits en production par l’évaluation serveur Claude Sonnet et la disponibilité d’un assistant IA personnel chez chaque apprenant restent à vérifier en situation d’usage.",
+    "Aucune source externe n’a été utilisée ni citée."
+  ]
+}
