@@ -1,0 +1,72 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_09",
+  "index": 78,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__09"
+  ],
+  "review_scope": "Contre-revue en lecture seule de l’état actuel référencé par formation-manifest.json : client/public/data/courses/ia_appliquee_metiers_tp__09.json (1 cours, 1 leçon, 6 chapitres). Comparaison limitée aux 6 constats du rapport initial raw/078-ia_appliquee_metiers_tp__formation_09.json, aux critères objectifs/activités, faisabilité TP-fichiers-environnement, soumissions et gates, médias/téléchargements, duplications/corruption, rendu et bilinguisme, et au static-audit-data.json. Aucun cours modifié.",
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P3",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__09.json: lessons[0].chapters[2].blocks[type=sequence_visual].items versus lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__09-quiz-order].buckets",
+      "description": "Le vocabulaire de la démarche n’est pas harmonisé : la séquence utilise « Préparer » et « Contrôler », tandis que le tri final utilise « Construire » et « Valider ». Les deux formulations restent rapprochables, mais leur équivalence n’est pas explicitée.",
+      "recommendation": "Harmoniser les libellés ou afficher explicitement les correspondances « Préparer / construire » et « Contrôler / valider », sans modifier l’ordre ni les réponses correctes.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__09.json: lessons[0].chapters[3] (requiredBeforeAdvance=true, passThreshold=1), block id=ia_appliquee_metiers_tp__09-checkpoint-preparation (required=true, correctAnswer=a); client/src/components/blocks/GenericLearningBlocks.tsx: KnowledgeCheckBlock.select(); client/src/pages/training/LessonViewer.tsx: traitement knowledge_check",
+      "description": "Le checkpoint obligatoire est encore complété après toute sélection, y compris une réponse erronée. Le JSON exige un seuil de réussite de 1, mais la logique de rendu/progression appelle et enregistre la complétion indépendamment de isCorrect ; une mauvaise réponse peut donc lever le verrou.",
+      "recommendation": "N’enregistrer la complétion requise qu’après la sélection de « a » ; après une réponse erronée, conserver l’explication et maintenir « Suivant » verrouillé jusqu’à une nouvelle réponse correcte.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__09.json: lessons[0].chapters[4] (requiredBeforeAdvance=true), block id=ia_appliquee_metiers_tp__09-mini-project-proof; client/src/components/CloudExerciseBlock.tsx; client/src/components/blocks/cloudExerciseValidation.ts",
+      "description": "La preuve du mini-projet reste obligatoire mais toute réponse non blanche d’un caractère suffit par défaut : minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents. La soumission ne vérifie donc pas les quatre éléments demandés (scénario, résultat, contrôle, validation humaine) avant de déverrouiller le quiz final.",
+      "recommendation": "Configurer une preuve minimale réellement vérifiable couvrant les quatre éléments déjà demandés, avec longueur proportionnée et/ou checklist/évaluation ; retourner les éléments manquants et permettre une nouvelle soumission en cas d’échec.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__09.json: lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__09-mini-project-proof].assignment et instructions; client/src/components/blocks/cloudExerciseValidation.ts: resolveLocalizedBlockText(); client/src/components/CloudExerciseBlock.tsx",
+      "description": "assignment et instructions sont encore des chaînes françaises simples, contrairement aux champs bilingues du bloc. Le résolveur les affiche telles quelles en interface anglaise : l’activité centrale reste donc partiellement en français dans ce mode.",
+      "recommendation": "Convertir assignment et instructions en objets {fr,en}, avec une version anglaise relue qui reprend exactement les critères existants.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__09.json: lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__09-quiz-01..04].explanation",
+      "description": "Les quatre QCM finaux utilisent encore exactement la même explication post-tentative générique. Elle rappelle le cadre du TP mais n’explique pas le raisonnement spécifique demandé par chaque question.",
+      "recommendation": "Conserver le rappel commun et ajouter une justification spécifique à chaque QCM, sans modifier les réponses correctes ni les seuils.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__09.json: lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__09-quiz-order].feedback; client/src/pages/training/LessonViewer.tsx: case bucket_sort; client/src/components/MatchingExercise.tsx",
+      "description": "Le tri final déclare un champ feedback mais le lecteur transmet seulement correction au composant de tri. Le feedback pédagogique déclaré n’est donc pas rendu après soumission ; l’apprenant voit le résultat du tri sans cette explication.",
+      "recommendation": "Transmettre et rendre le feedback déclaré après une tentative complète, ou le renseigner dans le champ correction consommé, en conservant le message existant.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 2,
+    "p2": 2,
+    "p3": 2
+  }
+}

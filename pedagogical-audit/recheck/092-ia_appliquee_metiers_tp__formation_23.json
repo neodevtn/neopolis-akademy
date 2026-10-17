@@ -1,0 +1,83 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_23",
+  "index": 92,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__23"
+  ],
+  "review_scope": {
+    "manifest_entry": {
+      "index": 92,
+      "formation_id": "ia_appliquee_metiers_tp__formation_23",
+      "formation_title": {
+        "fr": "Recrutement avec agents spécialisés selon le poste",
+        "en": "Recrutement avec agents spécialisés selon le poste"
+      },
+      "course_ids": [
+        "ia_appliquee_metiers_tp__23"
+      ],
+      "course_paths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__23.json"
+      ],
+      "output_path": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/092-ia_appliquee_metiers_tp__formation_23.json"
+    },
+    "current_course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__23.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/092-ia_appliquee_metiers_tp__formation_23.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du JSON courant et des preuves localisées du rapport initial; aucun cours modifié; conclusions limitées aux preuves JSON/code localisées déjà citées."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__23.json → lessons[0].chapters[3] : type=checkpoint, requiredBeforeAdvance=true, passThreshold=1, bloc knowledge_check id=ia_appliquee_metiers_tp__23-checkpoint-preparation, correctAnswer=a. client/src/components/blocks/GenericLearningBlocks.tsx → KnowledgeCheckBlock : select() appelle onComplete(id, id === correctAnswer) pour toute option. client/src/pages/training/LessonViewer.tsx → callback knowledge_check : ajoute systématiquement l’id à completedNovasavoInteractions ; isGatedByNovasavoInteraction ne contrôle que la présence de cet id. checkpointGate.ts ne sélectionne que les blocs de type checkpoint, absents de ce chapitre.",
+      "description": "Le checkpoint obligatoire est franchissable après une réponse incorrecte. La sélection d’une option appelle la complétion quel que soit son caractère correct ; le verrouillage ne vérifie ensuite que cette complétion. Le passThreshold: 1 du chapitre n’est pas appliqué à ce bloc knowledge_check, alors que le chapitre est présenté comme un point de validation de l’environnement et de la sécurité.",
+      "recommendation": "Modifier la règle de progression pour exiger isCorrect pour ce knowledge_check requis, ou traiter explicitement les knowledge_check des chapitres checkpoint dans getCheckpointGateState. Ajouter un test couvrant la réponse b : le bouton Suivant doit rester désactivé après cette réponse et ne se déverrouiller qu’après a.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__23.json → lessons[0].chapters[4].blocks[0] : assignment et instructions détaillés, mais pas de minimumAnswerLength, rubricCriteria, serverGradedAssessment ni requirePostRevealReflection. client/src/components/CloudExerciseBlock.tsx : resolveAssessmentMinimumLength renvoie 1 pour une activité non évaluée ; après une réponse non vide, submit() fixe submitted et solutionRevealed puis appelle onComplete. client/src/pages/training/LessonViewer.tsx : onComplete ajoute l’id au jeu completedCloudExercises, dont dépend le verrouillage du chapitre.",
+      "description": "La preuve de réalisation, pourtant obligatoire pour accéder au quiz final, n’est pas évaluée contre les éléments demandés. Sans minimumAnswerLength, rubrique, évaluation serveur ni réflexion obligatoire, un caractère non vide suffit : CloudExerciseBlock marque alors le TP validé, ouvre la correction et déverrouille la suite. Le verrouillage mesure donc une soumission, pas une preuve du routeur RH ni des contrôles attendus.",
+      "recommendation": "Rendre la preuve vérifiable avant complétion : afficher les cinq critères ci-dessus, imposer une longueur minimale proportionnée et évaluer la soumission (rubrique explicite ou revue humaine/serveur). Ne déclencher onComplete qu’après atteinte du seuil ; à défaut, présenter clairement l’étape comme une auto-déclaration non certificative et ne pas l’utiliser comme verrou de validation.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__23.json → lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__23-quiz-order] contient feedback mais pas correction. client/src/pages/training/LessonViewer.tsx → case bucket_sort transmet correction: block.correction à MatchingExercise, sans transmettre block.feedback. client/src/components/MatchingExercise.tsx → le texte correctif n’est rendu que lorsque exercise.correction est présent.",
+      "description": "L’activité annonce que « La correction est disponible après une tentative complète », mais son feedback pédagogique renseigné dans le JSON n’est pas transmis au composant de tri. Après un échec, l’apprenant obtient seulement le nombre de cartes correctes, le marquage visuel et Réessayer ; la correction textuelle promise n’est pas affichée.",
+      "recommendation": "Dans le rendu bucket_sort, transmettre block.correction || block.feedback comme correction, ou migrer explicitement ce contenu vers correction. Vérifier qu’après une tentative erronée le message de correction promis est visible avant le bouton Réessayer.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__23.json → lessons[0].chapters[2].blocks[type=sequence_visual].items et lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__23-quiz-order].buckets. Les quatre formulations proposées reprennent les descriptions déjà présentes dans ces deux blocs, sans ajout de nouvelle exigence.",
+      "description": "Le tri final évalue une démarche dont les intitulés ne sont pas ceux de la timeline de préparation : celle-ci enseigne « Cadrer, Préparer, Tester, Contrôler », tandis que le tri demande « Cadrer, Construire, Tester, Valider ». Aucune transition ne relie explicitement « Préparer » à « Construire » ni « Contrôler » à « Valider ». Pour un débutant, la dernière activité donne ainsi l’impression de changer de référentiel de phases.",
+      "recommendation": "Harmoniser les quatre libellés et leurs descriptions dans la timeline, les consignes du mini-projet et le tri final ; si deux niveaux de granularité doivent subsister, ajouter juste avant le tri une phrase explicite qui fait correspondre les deux vocabulaires.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 4,
+    "p0": 0,
+    "p1": 2,
+    "p2": 2
+  }
+}

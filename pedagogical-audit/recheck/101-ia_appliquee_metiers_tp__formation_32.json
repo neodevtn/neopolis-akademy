@@ -1,0 +1,105 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_32",
+  "index": 101,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__32"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__32.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/101-ia_appliquee_metiers_tp__formation_32.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule du JSON de cours actuel, du rapport initial et du static-audit-data.json; aucune modification de cours, code ou ressource."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__32.json#/lessons/0/chapters/3 (ia_appliquee_metiers_tp__32-checkpoint-01), blocks/0; client/src/components/blocks/GenericLearningBlocks.tsx:57-64; client/src/pages/training/LessonViewer.tsx:359-377,484-489; client/src/pages/training/checkpointGate.ts:18-21",
+      "description": "Le checkpoint obligatoire déclare passThreshold=1 et correctAnswer='a', mais son unique bloc est de type knowledge_check. La preuve du rapport initial reste applicable: le rendu appelle la complétion à chaque sélection et la progression mémorise l'interaction sans exiger isCorrect=true; le calcul de gate ne recense que les blocs de type checkpoint. Une option fausse peut donc satisfaire la porte.",
+      "recommendation": "Ne marquer le knowledge_check requis comme complété et ne déverrouiller la suite qu'après une réponse correcte; conserver feedback et réessai, puis tester les choix faux avant le choix a.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__32.json#/lessons/0/chapters/4/blocks/0 (ia_appliquee_metiers_tp__32-mini-project-proof); client/src/components/blocks/cloudExerciseValidation.ts:1-8; client/src/components/CloudExerciseBlock.tsx:117-125,153-161; LessonViewer.tsx:1587-1592",
+      "description": "La consigne exige le scénario testé, le résultat, un contrôle et une étape soumise à validation humaine, mais le cloud_exercise courant ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment. La validation générique accepte une saisie non blanche, donc une preuve d'un seul caractère peut compléter le TP et ouvrir le quiz final.",
+      "recommendation": "Exiger une preuve structurée correspondant aux quatre éléments annoncés, avec un seuil de longueur ou une validation vérifiable; rejouer le parcours avec une soumission d'un caractère.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "alignement",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__32.json#/lessons/0/chapters/0/blocks/0/items; #/lessons/0/chapters/4/blocks/0; #/lessons/0/chapters/5/blocks",
+      "description": "Les objectifs déclarent quatre compétences, dont séparer récupération et calculs, utiliser Calculator et répondre en langage métier. Le mini-projet ne possède pas de rubrique/évaluation déclarée et les quatre QCM plus le tri final portent sur preuve, sécurité, contrôle, tests et démarche; aucune question ou critère courant ne vérifie explicitement ces trois compétences.",
+      "recommendation": "Aligner la condition de réussite sur les quatre objectifs, via des critères observables dans la preuve ou des questions/activités vérifiant séparation récupération-calcul, Calculator et réponse métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "faisabilité TP/fichiers/environnement",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__32.json#/lessons/0/chapters/4/blocks/0/resources/0/url; /home/ubuntu/neopolis-akademy/client/public/manus-storage/32-32-construire-un-data-analyst-ia-conversationnel-support-fictif_6e351af8.md",
+      "description": "Le JSON courant déclare un support fictif local à /manus-storage/32-32-construire-un-data-analyst-ia-conversationnel-support-fictif_6e351af8.md, mais ce fichier n'est pas présent dans l'arborescence locale vérifiée. Le TP demande d'utiliser ce support; sa disponibilité actuelle n'est donc pas démontrée, contrairement à l'affirmation du rapport initial.",
+      "recommendation": "Rendre le fichier déclaré effectivement disponible à l'emplacement référencé ou remplacer la référence par une ressource vérifiable; tester l'ouverture depuis le parcours.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__32.json#/lessons/0/chapters/4/blocks/0/steps",
+      "description": "Le constat initial d'absence de séquencement est fixé dans l'état courant: le bloc contient désormais trois étapes explicites (relire la consigne, réaliser la tâche, vérifier la production), et la présence de steps est localisée dans le JSON. Cela ne constitue toutefois pas un guidage détaillé des dix questions métier.",
+      "recommendation": "Aucune correction requise pour le constat initial; conserver les étapes et vérifier séparément si leur niveau de détail suffit au TP.",
+      "status": "fixed"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__32.json#/lessons/0/chapters/2/blocks/0/items; #/lessons/0/chapters/5/blocks/4/buckets; #/lessons/0/chapters/5/blocks/4/cards",
+      "description": "La séquence enseignée est « Cadrer → Préparer → Tester → Contrôler », alors que le tri final emploie « Cadrer → Construire → Tester → Valider ». Les libellés et les cartes ne reprennent donc pas la nomenclature enseignée.",
+      "recommendation": "Unifier les libellés et les affectations du tri sur la séquence enseignée, ou fournir une correspondance explicite avant l'évaluation.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__32.json#/lessons/0/chapters/5/blocks/4 (ia_appliquee_metiers_tp__32-quiz-order)/feedback; client/src/pages/training/LessonViewer.tsx:957-973; client/src/components/MatchingExercise.tsx:40-42,444-450",
+      "description": "Le bucket_sort déclare un feedback explicatif, mais pas de correction. Le rendu transmet correction à MatchingExercise sans mapper feedback; le texte configuré n'est donc pas rendu après tentative selon le rapport initial, tandis que score et placements restent affichés.",
+      "recommendation": "Mapper feedback vers la propriété affichée par MatchingExercise ou renseigner correction, puis tester les tentatives correcte et incorrecte.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu/bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__32.json#/lessons/0/chapters/0/blocks/0/items/1,3; #/lessons/0/chapters/2/blocks/0/items/3; #/lessons/0/chapters/5/blocks/4/cards/valider/text",
+      "description": "Plusieurs champs anglais contiennent exactement le texte français au lieu d'une traduction, notamment l'objectif de séparation récupération/calculs, l'objectif de réponse en langage métier, la description de l'étape Contrôler et le texte de la carte valider. Le contenu est bilingue structurellement mais pas linguistiquement pour ces chaînes.",
+      "recommendation": "Fournir des traductions anglaises cohérentes pour les chaînes localisées identifiées et vérifier le rendu dans les deux langues.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 8,
+    "p0": 0,
+    "p1": 4,
+    "p2": 4
+  }
+}

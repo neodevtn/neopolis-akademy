@@ -1,0 +1,69 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_26",
+  "index": 95,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__26"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json (index 95)",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__26.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/095-ia_appliquee_metiers_tp__formation_26.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue localisée du JSON actuel, comparée au rapport initial et au pré-audit statique ; aucun cours, code ou donnée source n’a été modifié. Les constats non démontrés par les JSON locaux ou les éléments explicitement cités dans le rapport initial ne sont pas ajoutés."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P3",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "location": "lessons[0].chapters[2].blocks[type=sequence_visual].items versus lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__26-quiz-order].buckets",
+      "description": "Le JSON actuel enseigne la séquence « Cadrer / Préparer / Tester / Contrôler » dans sequence_visual, puis demande au quiz de tri « 1. Cadrer / 2. Construire / 3. Tester / 4. Valider ». Les substitutions Préparer→Construire et Contrôler→Valider ne sont pas explicitées dans les contenus localisés ; cela crée une ambiguïté de vocabulaire pour l’activité finale.",
+      "recommendation": "Harmoniser les libellés de la séquence et du quiz, ou expliciter dans le contenu la correspondance entre les deux vocabulaires avant la tentative.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "location": "lessons[0].chapters[3] (ia_appliquee_metiers_tp__26-checkpoint-01), blocks[0] (ia_appliquee_metiers_tp__26-checkpoint-preparation)",
+      "description": "Le checkpoint est déclaré required avec correctAnswer « a » ; le chapitre est requiredBeforeAdvance avec passThreshold 1. Le rapport initial confirme toutefois, par le comportement de rendu/progression cité, que la complétion de knowledge_check peut être enregistrée après une réponse fausse et que le calcul de checkpoint ne recense pas ce type de bloc. Le gate ne garantit donc pas une réponse correcte avant l’accès au mini-projet.",
+      "recommendation": "Faire dépendre le déverrouillage de la réponse correcte, ou employer un mécanisme de checkpoint effectivement comptabilisé ; tester explicitement une réponse fausse suivie d’une tentative de passage.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "location": "lessons[0].chapters[4] (ia_appliquee_metiers_tp__26-mini-project), blocks[0] (ia_appliquee_metiers_tp__26-mini-project-proof)",
+      "description": "La consigne du cloud_exercise demande quatre éléments de preuve : scénario testé, résultat obtenu, contrôle effectué et étape restant soumise à validation humaine. Dans le JSON actuel, le bloc ne définit ni minimumAnswerLength, ni learnerCriteria/rubricCriteria, ni serverGradedAssessment, ni requirePostRevealReflection. Le rapport initial confirme que la configuration accepte une zone non vide et peut valider/déverrouiller la suite sans vérifier ces quatre éléments.",
+      "recommendation": "Configurer une preuve structurée et une validation bloquante reprenant les quatre éléments demandés ; empêcher une soumission symbolique tout en conservant l’aide et la correction prévues.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "location": "lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__26-quiz-order]",
+      "description": "Le bloc bucket_sort renseigne feedback en français et en anglais, mais ne renseigne pas correction. Le rapport initial confirme que le renderer reçoit correction et non feedback pour cette activité ; après soumission, le rappel conceptuel configuré n’est donc pas affiché, au-delà du score/état de placement.",
+      "recommendation": "Faire transmettre et afficher le champ feedback existant pour bucket_sort, ou renseigner le champ effectivement consommé par le renderer, puis vérifier les tentatives correcte et incorrecte.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 4,
+    "p0": 0,
+    "p1": 2,
+    "p2": 1
+  }
+}

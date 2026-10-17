@@ -1,0 +1,150 @@
+{
+  "formation_id": "datacamp_introduction_to_google_workspace_with_gemini",
+  "index": 49,
+  "course_ids": [
+    "introduction_to_google_workspace_with_gemini__01"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json → index 49",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/049-datacamp_introduction_to_google_workspace_with_gemini.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue limitée aux preuves JSON locales et au rapport initial; aucun cours ni fichier de cours modifié. Le static audit local signale 0 problème pour ce course_id."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "localisation et accessibilité",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] (transcript anglais, absence d’alternativeTextFr/subtitleUrlFr) ; client/src/pages/training/LessonViewer.tsx:604-620 rend block.transcript sous « Transcription vidéo »."
+      },
+      "description": "Dans l’interface française, la transcription rendue à l’apprenant est en anglais. Elle contient le contexte pédagogique principal du chapitre ; un apprenant francophone ne dispose donc pas d’une alternative textuelle française pour suivre ou réviser ce contenu.",
+      "recommendation": "Ajouter la variante française de transcription et des sous-titres, puis vérifier en mode fr que le panneau « Transcription vidéo » affiche cette variante.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation et accessibilité",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_video",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_video] ; client/src/pages/training/LessonViewer.tsx:670-686 affiche la transcription du bloc vidéo MP4."
+      },
+      "description": "La version française du chapitre expose une transcription anglaise, y compris les définitions nécessaires de l’IA générative, du prompt et de l’hallucination. L’alternative textuelle ne remplit donc pas son rôle pour un apprenant francophone.",
+      "recommendation": "Créer et associer une transcription et des sous-titres FR ; contrôler le rendu en sélectionnant la langue fr.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation et accessibilité",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_video",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_video] ; client/src/pages/training/LessonViewer.tsx:670-686 rend le transcript fourni."
+      },
+      "description": "La transcription affichable dans le parcours français reste en anglais alors qu’elle porte les usages, exemples métier et précautions qui préparent les deux derniers quiz.",
+      "recommendation": "Ajouter une version FR de la transcription et des sous-titres, puis vérifier que le mode fr les rend sans bascule vers le texte anglais.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation et accessibilité",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_qcm",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_qcm].question/options/explanation.fr ; client/src/pages/training/LessonViewer.tsx:977-1004 choisit explicitement question[lang], option.text[lang] et explanation[lang]."
+      },
+      "description": "Les champs français de la question, des quatre options et de l’explication contiennent le texte anglais. Dans une interface française, l’activité obligatoire n’est donc pas proposée dans la langue sélectionnée.",
+      "recommendation": "Remplacer les valeurs fr par leurs traductions et effectuer un contrôle de lecture du QCM en mode fr.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_qcm",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_qcm].explanation ; client/src/components/SingleChoiceExercise.tsx:204-213 affiche cette explication après soumission, y compris en cas de réponse incorrecte."
+      },
+      "description": "Après une réponse correcte ou incorrecte, l’explication affichée est seulement « This answer is correct. ». La bonne option est certes surlignée par le composant, mais le feedback n’explique ni la définition retenue ni la confusion avec l’IA générale, le machine learning ou l’hallucination.",
+      "recommendation": "Remplacer l’explication générique par le feedback proposé ; il est entièrement déductible des quatre définitions déjà présentes dans les options et de la transcription du chapitre précédent.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation et accessibilité",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_qcm",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm].explanation.fr ; client/src/pages/training/LessonViewer.tsx:983 et client/src/components/SingleChoiceExercise.tsx:204-213 rendent explanation[lang] après soumission."
+      },
+      "description": "La question, les options et l’indice sont en français, mais l’explication affichée après réponse reste en anglais. Le feedback correctif rompt ainsi la cohérence de langue au moment de l’apprentissage le plus important.",
+      "recommendation": "Traduire explanation.fr avec le texte proposé et contrôler le rendu après une réponse correcte puis incorrecte en mode fr.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation et accessibilité",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_qcm",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_qcm].question/options/explanation.fr ; LessonViewer.tsx:977-1004 utilise les valeurs localisées fr pour le QCM."
+      },
+      "description": "Dans la variante française, la question, ses quatre options et son explication sont toujours en anglais, alors que l’indice est en français. Cette alternance rend l’activité obligatoire linguistiquement incohérente.",
+      "recommendation": "Traduire les champs fr de question, options et explication ; conserver l’indice français existant et valider l’activité en interface fr.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation et accessibilité",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_resource",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_07_resource] ; client/src/pages/training/LessonViewer.tsx:1069-1087 sélectionne title, instructions et resourceLabel selon lang."
+      },
+      "description": "L’instruction et le libellé d’action affichés en mode français sont en anglais, alors que ce chapitre exige une action avant la fin du cours.",
+      "recommendation": "Renseigner les deux valeurs fr proposées et contrôler leur affichage dans le bloc ressource en interface fr.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "introduction_to_google_workspace_with_gemini__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_resource",
+        "evidence": "client/public/data/courses/introduction_to_google_workspace_with_gemini__01.json → lessons[0].chapters[6].requiredBeforeAdvance=true ; client/src/pages/training/LessonViewer.tsx:1083-1088 rend le lien et le bouton, dont onClick marque immédiatement le bloc complet ; lignes 1583-1586 et 1497-1511 utilisent cet état pour le verrouillage du chapitre et de la fin de leçon."
+      },
+      "description": "La ressource est obligatoire avant la fin, mais la confirmation « J’ai consulté cette ressource » est activée dès l’affichage du chapitre et n’est pas conditionnée à l’ouverture du lien PDF. L’apprenant peut donc lever le verrou sans effectuer l’action annoncée.",
+      "recommendation": "Mettre en cohérence la promesse « consulter avant de continuer » et l’état de progression : soit tracer l’ouverture avant d’autoriser la confirmation, soit retirer le caractère bloquant de cette ressource complémentaire.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 9,
+    "p0": 0,
+    "p1": 5,
+    "p2": 4
+  }
+}

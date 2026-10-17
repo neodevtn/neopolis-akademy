@@ -1,0 +1,78 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_08",
+  "index": 77,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__08"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__08.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/077-ia_appliquee_metiers_tp__formation_08.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Comparaison du rapport initial avec le JSON de cours actuel et les entrées locales de static-audit-data.json. Aucun cours n’a été modifié. Les constats non prouvés par des données locales sont exclus."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P3",
+      "category": "rendu_des_consigne",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "location": "lessons[0].chapters[1].blocks[1] (id ia_appliquee_metiers_tp__08-source-review), fields instructions/resourceUrl",
+      "description": "L’instruction française et son équivalent anglais contiennent un lien Markdown alors que le bloc possède déjà resourceUrl/resourceLabel. Le rendu attendu pour instructions est du texte de paragraphe, ce qui expose le libellé Markdown littéral en plus du bouton de ressource. Le rapport initial documente ce point et l’état actuel du JSON conserve exactement ce contenu aux lignes 144-152 du cours.",
+      "recommendation": "Supprimer le lien Markdown redondant des instructions ou rendre ces instructions avec un interpréteur Markdown; conserver le bouton resourceUrl comme appel à l’action unique.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage_evaluation",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "location": "lessons[0].chapters[3] (id ia_appliquee_metiers_tp__08-checkpoint-01), requiredBeforeAdvance/passThreshold et blocks[0]",
+      "description": "Le chapitre checkpoint déclare requiredBeforeAdvance=true et passThreshold=1, mais son unique bloc est de type knowledge_check (lignes 267-280), non de type checkpoint. Le rapport initial établit par lecture de la logique de progression que cette combinaison ne fait pas compter la question comme checkpoint et que l’interaction peut être marquée terminée après une réponse incorrecte. Le JSON actuel n’a pas changé ces champs.",
+      "recommendation": "Aligner la règle de checkpoint sur le type knowledge_check ou modéliser l’activité avec le type effectivement attendu, et ne comptabiliser la complétion requise qu’après la bonne réponse; tester explicitement une réponse erronée.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_de_la_preuve",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "location": "lessons[0].chapters[4].blocks[0] (id ia_appliquee_metiers_tp__08-mini-project-proof), type cloud_exercise, lignes 334-361",
+      "description": "Le TP demande d’analyser 200 commentaires et de produire 20 idées, mais le bloc actuel ne contient ni minimumAnswerLength, ni learnerCriteria, ni rubricCriteria, ni serverGradedAssessment. Le rapport initial documente donc un minimum implicite de soumission d’un caractère et une complétion sur texte non vide, sans preuve structurée que les éléments demandés ont été réalisés.",
+      "recommendation": "Ajouter des critères visibles et une validation proportionnée au livrable, par exemple des sections obligatoires ou une grille structurée, puis vérifier qu’une réponse d’un seul caractère ne déverrouille pas le quiz final.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "feedback_non_rendu",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "location": "lessons[0].chapters[5].blocks[4] (id ia_appliquee_metiers_tp__08-quiz-order), fields feedback/buckets/cards",
+      "description": "Le JSON actuel fournit feedback mais pas correction pour le bucket_sort (lignes 548-625), tout en annonçant que la correction est disponible après une tentative complète (lignes 554-556). Le rapport initial a vérifié dans le renderer que le feedback n’est pas transmis comme correction détaillée: l’apprenant reçoit le score générique et les états visuels, mais pas le message pédagogique fourni ni la catégorie attendue pour chaque carte erronée.",
+      "recommendation": "Rendre explicitement feedback après tentative complète ou le passer comme correction de repli, et afficher la catégorie attendue pour les cartes erronées; tester une tentative fausse puis juste.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "coherence_terminologique",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "location": "lessons[0].chapters[2].blocks[0].items versus lessons[0].chapters[5].blocks[4].buckets",
+      "description": "La séquence actuelle enseigne les libellés Cadrer, Préparer, Tester, Contrôler (lignes 166-212), tandis que le tri final utilise Cadrer, Construire, Tester, Valider (lignes 558-585). Les données JSON ne fournissent pas de transition définissant ce changement de vocabulaire; le rapport initial le signale comme incohérence pédagogique vérifiable localement.",
+      "recommendation": "Employer les mêmes libellés dans la séquence et le tri, ou introduire et définir explicitement Construire/Valider avant l’activité finale.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 3,
+    "p2": 1
+  }
+}

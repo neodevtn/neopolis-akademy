@@ -1,0 +1,87 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_25",
+  "index": 94,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__25"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json (index 94)",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__25.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/094-ia_appliquee_metiers_tp__formation_25.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue localisée en lecture seule du JSON actuel, comparée au rapport initial et au pré-audit statique. Aucun cours, code ou fichier source n’a été modifié. Aucun constat n’est ajouté sans preuve JSON localisée ou preuve explicitement citée dans le rapport initial."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "location": "lessons[0].chapters[1].blocks[id=ia_appliquee_metiers_tp__25-source-review] (resource_review)",
+      "description": "Le JSON actuel conserve un resource_review requis avec resourceUrl et bouton de confirmation, mais aucune propriété du bloc ne prouve l’ouverture effective du lien avant la confirmation. Le rapport initial cite le rendu LessonViewer : la confirmation ajoute directement reviewId aux completedExercises. La ressource est bien déclarée ; l’anomalie porte uniquement sur le contournement de la condition de consultation.",
+      "recommendation": "Faire dépendre l’activation de la confirmation d’un état d’ouverture du lien, puis vérifier ce parcours dans le navigateur tout en conservant la confirmation explicite.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "location": "lessons[0].chapters[3] (ia_appliquee_metiers_tp__25-checkpoint-01), blocks[id=ia_appliquee_metiers_tp__25-checkpoint-preparation]",
+      "description": "Le checkpoint actuel configure requiredBeforeAdvance: true et passThreshold: 1 au niveau du chapitre, avec correctAnswer: \"a\" et required: true dans le knowledge_check. Le rapport initial documente, via les composants de rendu/progression cités, que toute sélection appelle la complétion sans vérifier isCorrect et que le seuil ne produit pas une réussite effective du knowledge_check : une réponse incorrecte peut donc déverrouiller la suite.",
+      "recommendation": "Faire dépendre la complétion de la réponse correcte, ou utiliser un bloc dont la réussite est effectivement imposée, puis tester explicitement le passage après réponse incorrecte et après bonne réponse.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "location": "lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__25-mini-project-proof] (cloud_exercise)",
+      "description": "Les champs essentiels du cloud_exercise restent des chaînes françaises simples dans l’état actuel : assignment, instructions, hint, solution et successMessage. Seul environmentGuide et la liste steps portent des objets fr/en. Le rapport initial localise que CloudExerciseBlock résout ces champs selon la langue ; le parcours anglais restitue donc encore ces chaînes françaises pour l’objectif, la consigne, l’indice, la correction et le message de succès.",
+      "recommendation": "Stocker dans des objets i18n tous les champs directement visibles de l’activité, puis contrôler les parcours fr et en, y compris correction et message de succès.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "location": "lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__25-mini-project-proof] (cloud_exercise)",
+      "description": "Le cloud_exercise demande toujours quatre éléments de preuve dans instructions (scénario testé, résultat obtenu, contrôle effectué, étape soumise à validation humaine), mais le JSON ne configure ni minimumAnswerLength, ni learnerCriteria/rubricCriteria, ni serverGradedAssessment. Le rapport initial cite la validation du composant : en l’absence de minimumAnswerLength, une réponse non blanche d’un caractère suffit à enregistrer la soumission et à déverrouiller la suite.",
+      "recommendation": "Configurer une preuve structurée et une validation bloquante correspondant aux quatre éléments demandés ; empêcher une soumission symbolique sans retirer l’indice ni la correction.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "location": "lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__25-mini-project-proof].steps",
+      "description": "L’état actuel contient désormais trois étapes bilingues structurées (relire la consigne, réaliser la tâche, vérifier la production), alors que le rapport initial constatait l’absence de steps. Le constat précis d’absence de guidage structuré est donc corrigé dans le JSON actuel ; ces étapes génériques ne sont pas requalifiées ici au-delà de cette vérification.",
+      "recommendation": "Aucune correction supplémentaire retenue pour le constat d’absence de propriété steps ; conserver une vérification fonctionnelle du rendu des étapes.",
+      "status": "fixed"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "location": "lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__25-quiz-order] (bucket_sort)",
+      "description": "Le JSON actuel conserve feedback en fr/en mais ne déclare pas correction pour le bucket_sort. Le rapport initial localise que LessonViewer transmet block.correction à MatchingExercise et que le composant n’affiche le texte détaillé que depuis exercise.correction : le feedback métier configuré n’est donc pas rendu après soumission selon la chaîne citée.",
+      "recommendation": "Transmettre et afficher feedback pour bucket_sort, ou placer explicitement ce texte dans le champ consommé par le renderer, avec une correction détaillée des placements erronés.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 3,
+    "p2": 2
+  }
+}

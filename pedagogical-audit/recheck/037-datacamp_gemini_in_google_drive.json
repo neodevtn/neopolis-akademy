@@ -1,0 +1,86 @@
+{
+  "formation_id": "datacamp_gemini_in_google_drive",
+  "index": 37,
+  "course_ids": [
+    "gemini_in_google_drive__01"
+  ],
+  "review_scope": {
+    "current_course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/gemini_in_google_drive__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/037-datacamp_gemini_in_google_drive.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité des TP, fichiers et environnement",
+      "fausses soumissions et gates",
+      "médias et téléchargements",
+      "duplications ou corruption",
+      "rendu et bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule des valeurs JSON actuelles et des constats localisés du rapport initial et de static-audit-data. Les dimensions non prouvées par ces fichiers restent non vérifiées."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "duplication/progression",
+      "course_id": "gemini_in_google_drive__01",
+      "location": "lessons[0].chapters[1..7] vs lessons[1].chapters[0..6]",
+      "description": "La seconde leçon répète les trois vidéos opérationnelles et les trois QCM de la première leçon : les titres, transcriptions et scénarios d’évaluation correspondent, sans objectif distinct ni apport complémentaire visible dans le JSON actuel. La répétition impose de nouvelles étapes séquentielles sans nouvelle compétence démontrée.",
+      "recommendation": "Vérifier avec le propriétaire du contenu si la répétition est intentionnelle ; sinon dédoublonner la seconde leçon ou la reconstruire avec un objectif, une pratique et une évaluation de transfert distincts.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "médias/gate",
+      "course_id": "gemini_in_google_drive__01",
+      "location": "lessons[1].chapters[3].blocks[0] (dc_2_act_04_visual_content)",
+      "description": "Le chapitre demande « View the PDF before continuing », mais le bloc actuel est de type content, contient optionalMediaUnavailable=true et ne fournit ni resourceUrl, ni download_url, ni autre média. La consigne est donc inexécutable. D’après le rapport initial, ce type de bloc n’est pas reconnu par le verrouillage de navigation ; requiredBeforeAdvance=true ne constitue pas un gate effectif ici.",
+      "recommendation": "Restaurer une ressource accessible avec une consigne et une alternative textuelle vérifiables, ou retirer la demande de consultation obligatoire si aucun support n’est livrable.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "objectifs/guidage",
+      "course_id": "gemini_in_google_drive__01",
+      "location": "lessons[0].chapters[4].blocks[0] (dc_1_act_05_resource)",
+      "description": "Le resource_review possède uniquement l’instruction « View the PDF before continuing. ». Le JSON ne précise ni objectif d’observation, ni résultat attendu, ni lien explicite avec les questions suivantes. La confirmation est une auto-attestation de consultation ; elle ne prouve pas l’observation ou la réalisation d’une activité.",
+      "recommendation": "Décrire ce que l’apprenant doit repérer dans le PDF et comment cela prépare la suite, puis conserver la confirmation comme trace légère plutôt que comme preuve de pratique.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "bilinguisme",
+      "course_id": "gemini_in_google_drive__01",
+      "location": "lessons[0].chapters[5].blocks[0] et lessons[1].chapters[4].blocks[0] (dc_1_act_06_qcm/dc_2_act_05_qcm)",
+      "description": "Dans les deux occurrences du QCM 1, la question.fr est française mais les quatre options.text.fr et explanation.fr restent en anglais, alors que datacampImport.sourceLanguage vaut fr-FR. L’évaluation française mélange donc les langues.",
+      "recommendation": "Renseigner les options et l’explication françaises dans les deux occurrences, sans changer les identifiants de choix ni correctAnswer.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "bilinguisme",
+      "course_id": "gemini_in_google_drive__01",
+      "location": "lessons[0].chapters[6].blocks[0] et lessons[1].chapters[5].blocks[0] (dc_1_act_07_qcm/dc_2_act_06_qcm)",
+      "description": "Dans les deux occurrences du QCM 2, les quatre options.text.fr reprennent les formulations anglaises, tandis que la question et le feedback français sont partiellement localisés. L’apprenant francophone doit changer de langue pour lire les choix évalués.",
+      "recommendation": "Traduire ou présenter bilinguellement les quatre options dans les deux occurrences et vérifier que correctAnswer et le feedback restent inchangés.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "bilinguisme",
+      "course_id": "gemini_in_google_drive__01",
+      "location": "lessons[0].chapters[7].blocks[0] et lessons[1].chapters[6].blocks[0] (dc_1_act_08_qcm/dc_2_act_07_qcm)",
+      "description": "Dans les deux occurrences du QCM 3, question.fr et explanation.fr restent en anglais ; les options.fr mélangent également anglais et français. Le champ fr ne fournit donc pas une évaluation homogène malgré sourceLanguage=fr-FR.",
+      "recommendation": "Compléter et relire la localisation française de l’énoncé, des quatre choix et du feedback dans les deux occurrences.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 2,
+    "p2": 4
+  }
+}

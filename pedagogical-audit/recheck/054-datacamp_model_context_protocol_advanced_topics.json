@@ -1,0 +1,267 @@
+{
+  "formation_id": "datacamp_model_context_protocol_advanced_topics",
+  "index": 54,
+  "course_ids": [
+    "model_context_protocol_advanced_topics__01"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json → index 54",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/model_context_protocol_advanced_topics__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/054-datacamp_model_context_protocol_advanced_topics.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue limitée aux preuves JSON locales et au rapport initial; aucun cours ni fichier de cours modifié. Le static audit local signale 0 problème pour ce course_id; les constats ci-dessous sont ceux du rapport pédagogique initial encore observables dans l’état courant."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_qcm_multiple",
+        "evidence": "client/public/data/courses/model_context_protocol_advanced_topics__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_qcm_multiple].explanation ; client/src/components/blocks/MultiChoiceBlock.tsx lignes 120-123 rend la même explication après toute soumission, y compris quand isAllCorrect est faux."
+      },
+      "description": "Après une réponse erronée, l’interface colore les choix mais affiche aussi l’explication stockée, qui commence par « Correct ! ». Le feedback textuel contredit donc le résultat de l’apprenant au lieu d’annoncer explicitement l’erreur et la réponse attendue.",
+      "recommendation": "Rendre le texte de feedback conditionnel à la correction ; conserver l’explication conceptuelle, mais préfixer clairement l’échec et vérifier les états correct/incorrect dans le navigateur.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_tp",
+        "evidence": "client/public/data/courses/model_context_protocol_advanced_topics__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 122-161 applique une longueur minimale par défaut de 1 puis appelle onComplete sans évaluation quand il n’y a ni rubrique ni serveur ; LessonViewer.tsx lignes 1587-1592 déverrouille sur cette complétion."
+      },
+      "description": "Ce TP obligatoire se valide avec toute réponse non vide : aucun minimum de réponse, aucune rubrique et aucun évaluateur serveur ne sont configurés. Le composant révèle alors la correction et déverrouille la navigation sans vérifier les trois blancs ou l’exécution du code.",
+      "recommendation": "Priorité P1 : ajouter une validation exécutable ou serveur et tester qu’une réponse d’un caractère ne déverrouille plus le TP, tandis qu’une tentative validée donne accès à la correction.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_qcm_multiple",
+        "evidence": "JSON → lessons[0].chapters[6].blocks[id=dc_1_act_07_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 rend explanation sans distinguer isAllCorrect."
+      },
+      "description": "Le texte de correction positif est rendu également après une mauvaise réponse, sans expliciter l’échec dans le feedback textuel.",
+      "recommendation": "Ajouter un feedback d’échec conditionnel, nommant l’option correcte et la distinction ctx.info/ctx.report_progress.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch01_act09",
+        "content_id": "dc_1_act_09_tp",
+        "evidence": "JSON → lessons[0].chapters[8].blocks[id=dc_1_act_09_tp] ; CloudExerciseBlock.tsx lignes 153-161 valide sans évaluation une réponse de longueur minimale 1 ; LessonViewer.tsx lignes 1587-1592 fonde le verrouillage sur onComplete."
+      },
+      "description": "Le TP bloque le passage mais accepte n’importe quel texte non vide et déverrouille immédiatement sa correction, sans contrôler ctx.info, ctx.report_progress ni leurs arguments.",
+      "recommendation": "Configurer un validateur de TP et effectuer un test de non-déverrouillage avec une réponse minimale invalide.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch01_act11",
+        "content_id": "dc_1_act_11_qcm_multiple",
+        "evidence": "JSON → lessons[0].chapters[10].blocks[id=dc_1_act_11_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 affiche ce champ après toute soumission."
+      },
+      "description": "Après une erreur, le composant affiche aussi l’explication commençant par « Correct ! », sans message textuel d’échec.",
+      "recommendation": "Différencier le feedback de réussite de celui d’échec.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch01_act13",
+        "content_id": "dc_1_act_13_tp",
+        "evidence": "JSON → lessons[0].chapters[12].blocks[id=dc_1_act_13_tp] ; CloudExerciseBlock.tsx lignes 153-161 et LessonViewer.tsx lignes 1587-1592 établissent la validation/déverrouillage sans test du code en l’absence de configuration d’évaluation."
+      },
+      "description": "La compétence de sécurité annoncée est verrouillée par une simple soumission textuelle non vide ; l’activité ne vérifie ni list_roots ni le retour True lorsque le chemin est dans une root.",
+      "recommendation": "Ajouter un test automatisé ou une évaluation serveur avant le déverrouillage et vérifier le retour de correction sur les deux chemins.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch01_act14",
+        "content_id": "dc_1_act_14_tp",
+        "evidence": "JSON → lessons[0].chapters[13].blocks[id=dc_1_act_14_tp] ; CloudExerciseBlock.tsx lignes 122-161 applique la complétion sans validation technique quand les champs d’évaluation sont absents."
+      },
+      "description": "Le dernier TP Roots est déverrouillable par tout texte non vide, alors qu’il doit vérifier une garde de sécurité avant l’accès à un fichier.",
+      "recommendation": "Ajouter une évaluation de code avant le verrouillage de sortie et couvrir les chemins autorisé et refusé.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act02",
+        "content_id": "dc_2_act_02_qcm_multiple",
+        "evidence": "JSON → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 ne conditionne pas l’explication au succès."
+      },
+      "description": "L’explication positive est affichée après une réponse erronée comme après une réponse correcte.",
+      "recommendation": "Créer deux messages de feedback conditionnels.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback_et_rendu",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act03",
+        "content_id": "dc_2_act_03_bucket_sort",
+        "evidence": "JSON → lessons[1].chapters[2].blocks[id=dc_2_act_03_bucket_sort].feedback ; LessonViewer.tsx lignes 957-974 passe block.correction mais pas block.feedback ; MatchingExercise.tsx lignes 420-466 n’affiche qu’une correction fournie dans exercise.correction."
+      },
+      "description": "Le tri possède un feedback pédagogique utile dans le JSON, mais LessonViewer ne le transmet pas à MatchingExercise. À la réussite, seul « 6/6 · Parfait ! » est visible ; après erreur, seule la proportion correcte est affichée.",
+      "recommendation": "Transmettre feedback au composant, l’afficher après réussite et ajouter un message d’erreur actionnable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act04",
+        "content_id": "dc_2_act_04_tp",
+        "evidence": "JSON → lessons[1].chapters[3].blocks[id=dc_2_act_04_tp] ; CloudExerciseBlock.tsx lignes 153-161 complète sans évaluation si aucun mécanisme suivi n’est configuré ; LessonViewer.tsx lignes 1587-1592 lie cette complétion au passage."
+      },
+      "description": "Ce TP obligatoire ne vérifie pas les trois constructions demandées (id=1, méthode notifications/initialized et clé id) ; tout texte non vide révèle la correction et ouvre la suite.",
+      "recommendation": "Mettre en place une validation de code/test avant déverrouillage et tester une soumission arbitraire contre une soumission correcte.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act06",
+        "content_id": "dc_2_act_06_qcm_multiple",
+        "evidence": "JSON → lessons[1].chapters[5].blocks[id=dc_2_act_06_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 affiche ce même texte après toute soumission."
+      },
+      "description": "L’explication affirmative est affichée également en cas de sélection erronée.",
+      "recommendation": "Conditionner le libellé du feedback au résultat de la réponse.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act08",
+        "content_id": "dc_2_act_08_qcm_multiple",
+        "evidence": "JSON → lessons[1].chapters[7].blocks[id=dc_2_act_08_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123."
+      },
+      "description": "Le retour textuel utilise « Correct ! » même si l’apprenant a répondu faux.",
+      "recommendation": "Distinguer explicitement les feedbacks de réussite et d’échec.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act10",
+        "content_id": "dc_2_act_10_qcm_multiple",
+        "evidence": "JSON → lessons[1].chapters[9].blocks[id=dc_2_act_10_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123."
+      },
+      "description": "Le composant affiche le texte « Correct ! » même après une réponse incorrecte.",
+      "recommendation": "Afficher un texte d’échec distinct avant la justification conceptuelle.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act11",
+        "content_id": "dc_2_act_11_qcm_multiple",
+        "evidence": "JSON → lessons[1].chapters[10].blocks[id=dc_2_act_11_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123."
+      },
+      "description": "L’explication positive est utilisée après les réponses correctes comme erronées, ce qui atténue la signalisation textuelle de l’échec.",
+      "recommendation": "Introduire un feedback d’échec conditionnel.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act13",
+        "content_id": "dc_2_act_13_qcm_multiple",
+        "evidence": "JSON → lessons[1].chapters[12].blocks[id=dc_2_act_13_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123."
+      },
+      "description": "La justification commence par « Correct ! » et est affichée après une soumission incorrecte comme correcte.",
+      "recommendation": "Dissocier le feedback de réussite et le feedback d’échec.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act14",
+        "content_id": "dc_2_act_14_qcm_multiple",
+        "evidence": "JSON → lessons[1].chapters[13].blocks[id=dc_2_act_14_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123."
+      },
+      "description": "Après une mauvaise réponse, l’apprenant reçoit le même texte débutant par « Correct ! » que dans l’état de réussite.",
+      "recommendation": "Ajouter un message d’échec explicite et contextualisé.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act16",
+        "content_id": "dc_2_act_16_qcm_multiple",
+        "evidence": "JSON → lessons[1].chapters[15].blocks[id=dc_2_act_16_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123."
+      },
+      "description": "Le texte de succès « Correct ! » est également rendu pour une réponse erronée.",
+      "recommendation": "Rendre le feedback textuel conditionnel au succès.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback_et_rendu",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "location": {
+        "chapter_id": "dc_ch02_act17",
+        "content_id": "dc_2_act_17_bucket_sort",
+        "evidence": "JSON → lessons[1].chapters[16].blocks[id=dc_2_act_17_bucket_sort].feedback ; LessonViewer.tsx lignes 957-974 ne passe pas feedback ; MatchingExercise.tsx lignes 420-466 ne rend que correction."
+      },
+      "description": "Le feedback de synthèse sur le compromis stateless est présent dans le JSON mais ne parvient pas au composant de tri. L’apprenant ne voit donc pas l’explication de consolidation prévue après réussite.",
+      "recommendation": "Transmettre et afficher feedback pour le succès, et ajouter un retour d’erreur actionnable.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 18,
+    "p0": 0,
+    "p1": 5,
+    "p2": 13
+  }
+}

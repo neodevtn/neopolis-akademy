@@ -1,0 +1,69 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_31",
+  "index": 100,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__31"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__31.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/100-ia_appliquee_metiers_tp__formation_31.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du contenu JSON actuel et des preuves localisées du rapport initial; aucun cours ni code n'a été modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__31",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__31.json#/lessons/0/chapters/3; client/src/components/blocks/GenericLearningBlocks.tsx; client/src/pages/training/LessonViewer.tsx; client/src/pages/training/checkpointGate.ts",
+      "description": "Le checkpoint obligatoire 'ia_appliquee_metiers_tp__31-checkpoint-01' déclare passThreshold=1 et contient un knowledge_check requis avec correctAnswer='a', mais une réponse incorrecte est enregistrée comme interaction complétée et peut déverrouiller la suite. Le feedback et le réessai existent, sans condition de réponse correcte effective.",
+      "recommendation": "Ne comptabiliser la complétion requise et ne déverrouiller le chapitre suivant qu'après isCorrect=true, ou faire évaluer explicitement ce knowledge_check par la logique de checkpoint; conserver le feedback et le réessai.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__31",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__31.json#/lessons/0/chapters/4/blocks/0; client/src/components/CloudExerciseBlock.tsx; client/src/components/blocks/cloudExerciseValidation.ts",
+      "description": "Le mini-projet obligatoire demande une preuve couvrant scénario, résultat, contrôle et validation humaine, mais le cloud_exercise ne configure ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment. La validation par défaut accepte donc une valeur d'un seul caractère et peut déverrouiller le quiz final sans vérifier la preuve.",
+      "recommendation": "Ajouter un gabarit et des critères visibles vérifiant les quatre éléments demandés, appliquer une longueur minimale décidée pédagogiquement et empêcher onComplete tant qu'une preuve recevable n'est pas fournie.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "accessibilité linguistique",
+      "course_id": "ia_appliquee_metiers_tp__31",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__31.json#/lessons/0/chapters/4/blocks/0; client/src/components/CloudExerciseBlock.tsx; client/src/components/blocks/cloudExerciseValidation.ts",
+      "description": "Les champs centraux du mini-projet obligatoire (assignment, instructions, hint, solution et successMessage) sont des chaînes françaises simples, alors que le cours expose une locale anglaise. La résolution d'une chaîne simple la conserve quelle que soit la langue; l'activité reste donc partiellement en français pour un apprenant anglophone.",
+      "recommendation": "Fournir des variantes {fr,en} pour les cinq champs apprenant du cloud_exercise et vérifier le rendu dans les deux locales, sans modifier les identifiants techniques ni les exigences de sécurité.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__31",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__31.json#/lessons/0/chapters/5/blocks/4; client/src/pages/training/LessonViewer.tsx; client/src/components/MatchingExercise.tsx",
+      "description": "Le bucket_sort 'ia_appliquee_metiers_tp__31-quiz-order' contient feedback.fr/en et annonce une correction après tentative complète, mais le renderer transmet seulement block.correction; le feedback pédagogique prévu n'est donc pas rendu après soumission.",
+      "recommendation": "Mapper block.feedback vers la propriété de correction rendue par MatchingExercise, ou placer explicitement ce texte dans correction, puis vérifier le rendu après tentatives correcte et incorrecte.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 4,
+    "p0": 0,
+    "p1": 2,
+    "p2": 2
+  }
+}

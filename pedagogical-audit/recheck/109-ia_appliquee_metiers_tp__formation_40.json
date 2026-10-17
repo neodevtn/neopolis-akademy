@@ -1,0 +1,71 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_40",
+  "index": 109,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__40"
+  ],
+  "review_scope": "Contre-revue du cours référencé par formation-manifest.json (course_paths), comparaison avec le rapport initial raw/109-ia_appliquee_metiers_tp__formation_40.json et static-audit-data.json. Contrôles : objectifs et activités, faisabilité TP/fichiers/environnement, soumissions et gates, médias/téléchargements, duplications/corruption, rendu et bilinguisme. Revue documentaire statique ; aucune exécution navigateur, workflow ou ressource externe.",
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[3] (ia_appliquee_metiers_tp__40-checkpoint-01), blocks[0] (ia_appliquee_metiers_tp__40-checkpoint-preparation)",
+      "description": "Le gate conserve requiredBeforeAdvance=true et passThreshold=1, avec correctAnswer=a. Le rapport initial documente que le renderer marque l'interaction terminée dès la sélection, y compris lorsque la réponse est incorrecte, et que le calcul dédié du seuil ne recense pas ce bloc knowledge_check. La configuration actuelle du cours n'apporte aucune preuve de correction de ce comportement.",
+      "recommendation": "Faire dépendre le déverrouillage d'une réponse correcte, ou intégrer explicitement ce knowledge_check au calcul du seuil, puis tester une réponse incorrecte suivie d'une navigation.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[4] (ia_appliquee_metiers_tp__40-mini-project), blocks[0] (ia_appliquee_metiers_tp__40-mini-project-proof)",
+      "description": "Le mini-projet demande bien une preuve couvrant scénario, résultat, contrôle et validation humaine (lignes 337-338), mais le bloc ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment, ni workflowUploadRequired (lignes 331-358). Selon le rapport initial, le renderer accepte alors toute réponse non vide et le gate requiredBeforeAdvance peut être levé par une saisie triviale.",
+      "recommendation": "Mettre en place une validation significative couvrant les éléments demandés, sans considérer une simple réponse non vide comme preuve suffisante.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[5].blocks[4] (ia_appliquee_metiers_tp__40-quiz-order), feedback aux lignes 619-622",
+      "description": "Le bloc bucket_sort contient un feedback pédagogique bilingue, mais le rapport initial localise que LessonViewer transmet correction à MatchingExercise et non feedback, tandis que correction est absent du bloc. Le contenu actuel ne montre pas de champ correction ajouté ; le feedback reste donc susceptible de ne pas être visible après une tentative incorrecte.",
+      "recommendation": "Corriger le mapping de rendu ou fournir le champ attendu par le composant, puis vérifier visiblement le débrief après une tentative erronée.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[2].blocks[0].items[3].description.en (lignes 201-208); chapters[5].blocks[2].question.en (lignes 459-463); chapters[5].blocks[4].cards[3].text.en (lignes 611-614)",
+      "description": "Plusieurs valeurs déclarées en anglais sont identiques au français au lieu d'être traduites : la description de l'étape Contrôler, la question du quiz 03 et le texte de la carte Valider. Le cours est donc partiellement bilingue dans ses données actuelles.",
+      "recommendation": "Fournir une traduction anglaise distincte pour ces champs, ou documenter explicitement un choix monolingue cohérent pour l'ensemble du cours.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[4].blocks[0].steps (lignes 359-372)",
+      "description": "Le rapport initial signalait l'absence d'étapes structurées dans le mini-projet. L'état actuel contient désormais trois étapes bilingues explicites : relire la consigne, réaliser la tâche sans donnée confidentielle, puis vérifier la production avant soumission.",
+      "recommendation": "Aucune correction supplémentaire sur ce point ; conserver ces étapes et vérifier leur rendu si une validation navigateur est ultérieurement disponible.",
+      "status": "fixed"
+    },
+    {
+      "severity": "P2",
+      "category": "médias_téléchargements",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: sourceReference (lignes 12-15), resource_review (lignes 135-149), cloud_exercise.resources[0] (lignes 343-354)",
+      "description": "Les médias audiovisuels sont explicitement absents (recommendedVideosManaged=false, recommendedVideos=[] aux lignes 58-59), mais une ressource n8n externe et un support fictif /manus-storage sont bien déclarés. Le rapport initial indique que leur contenu et leur disponibilité réelle n'ont pas été vérifiés ; aucune absence ou corruption ne peut donc être affirmée à partir des JSON locaux.",
+      "recommendation": "Aucune correction déduite des seules preuves locales ; vérifier séparément l'accessibilité et le contenu de ces URLs dans une session apprenant.",
+      "status": "false_positive"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 2,
+    "p2": 3
+  }
+}

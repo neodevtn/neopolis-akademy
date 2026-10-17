@@ -1,0 +1,94 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_20",
+  "index": 89,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__20"
+  ],
+  "review_scope": {
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__20.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/089-ia_appliquee_metiers_tp__formation_20.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "current_state_source": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__20.json",
+    "static_course_result": {
+      "issue_count": 0,
+      "lesson_count": 1,
+      "chapter_count": 6
+    },
+    "method_note": "Contre-revue en lecture seule fondée sur le JSON de cours actuellement référencé, le rapport initial et l'entrée locale de static-audit-data.json. Aucun cours ni contenu de cours n'a été modifié ; aucune absence de preuve externe n'est transformée en anomalie."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P3",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__20-screen-01",
+        "content_id": "learning_section[0].items[1,3]",
+        "content_type": "learning_section",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__20.json → lessons[0].chapters[0].blocks[0].items[1] et [3] : les valeurs en sont respectivement « Rédiger des e-mails de relance adaptés au retard » et « Automatiser les remerciements après paiement », tandis que les valeurs fr diffèrent. static-audit-data.json référence ce cours avec issue_count 0, mais ne contrôle pas cette localisation qualitative."
+      },
+      "description": "Deux objectifs affichés dans l'interface anglaise restent en français, ce qui rend la liste d'objectifs linguistiquement hétérogène pour un apprenant anglophone.",
+      "recommendation": "Renseigner les deux valeurs en avec une traduction anglaise cohérente, puis relire les autres champs en du parcours.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__20-checkpoint-01",
+        "content_id": "ia_appliquee_metiers_tp__20-checkpoint-preparation",
+        "content_type": "knowledge_check",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__20.json → lessons[0].chapters[3] : passThreshold=1, bloc knowledge_check required=true, correctAnswer=\"a\". Le rapport initial documente le parcours de rendu : KnowledgeCheckBlock.select appelle onComplete pour réponse correcte ou incorrecte et LessonViewer enregistre alors la complétion ; le gate peut donc être franchi après une réponse erronée."
+      },
+      "description": "Le checkpoint de sécurité reste contournable : une réponse incorrecte peut être enregistrée comme complétion et déverrouiller le mini-projet, malgré le seuil annoncé de validation.",
+      "recommendation": "Ne valider la complétion requise qu'après la réponse correcte ; conserver le feedback et permettre une nouvelle tentative après erreur.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__20-mini-project",
+        "content_id": "ia_appliquee_metiers_tp__20-mini-project-proof",
+        "content_type": "cloud_exercise",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__20.json → lessons[0].chapters[4].blocks[0] : instructions demandent le scénario, résultat, contrôle et validation humaine ; le bloc contient désormais steps, resources, hint et solution, mais ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment. Le rapport initial localise dans CloudExerciseBlock.tsx/cloudExerciseValidation.ts que, sans ces champs, une réponse non vide (seuil 1) suffit à setSubmitted/onComplete."
+      },
+      "description": "La preuve du mini-projet reste obligatoire pour progresser mais n'est pas réellement vérifiée : une saisie non vide peut valider l'activité et révéler la correction, sans critères visibles ni évaluation structurée. La présence actuelle de steps améliore le guidage mais ne corrige pas le mécanisme de validation.",
+      "recommendation": "Déclarer des critères visibles et un seuil de preuve explicite, puis relier la complétion à une validation cohérente avec les quatre éléments attendus.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__20-final-quiz",
+        "content_id": "ia_appliquee_metiers_tp__20-quiz-order",
+        "content_type": "bucket_sort",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__20.json → lessons[0].chapters[5].blocks[4] : instructions annoncent « La correction est disponible après une tentative complète », feedback est renseigné, mais aucun champ correction n'est présent. Le rapport initial localise le rendu : LessonViewer transmet block.correction à MatchingExercise, qui consulte exercise.correction pour afficher la correction détaillée ; feedback n'est pas utilisé à cette fin."
+      },
+      "description": "Après une tentative complète, la correction détaillée promise pour le tri n'est toujours pas fournie dans le champ consommé par le composant ; l'apprenant ne reçoit donc pas la répartition attendue ni l'explication annoncée en clair.",
+      "recommendation": "Renseigner le champ correction avec la répartition attendue détaillée et vérifier son affichage après une tentative erronée.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 4,
+    "p0": 0,
+    "p1": 2,
+    "p2": 1
+  }
+}

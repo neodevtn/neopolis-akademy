@@ -1,0 +1,59 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_38",
+  "index": 107,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__38"
+  ],
+  "review_scope": {
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__38.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/107-ia_appliquee_metiers_tp__formation_38.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule du JSON de cours actuel, comparaison aux constats du rapport initial et contrôle de l'entrée static-audit-data.json. Aucun cours, code ou contenu n'a été modifié; aucun rendu navigateur, téléchargement ou soumission réelle n'a été exécuté."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "fausse soumission ou gate",
+      "course_id": "ia_appliquee_metiers_tp__38",
+      "location": "lessons[0].chapters[3].blocks[0] (knowledge_check id ia_appliquee_metiers_tp__38-checkpoint-preparation; required=true; correctAnswer=\"a\"); gate du chapitre requiredBeforeAdvance=true, passThreshold=1",
+      "description": "Le checkpoint obligatoire reste franchissable après une réponse incorrecte. Le JSON actuel conserve un knowledge_check avec correctAnswer=\"a\" et un seuil de passage à 1, mais le rapport initial établit, via le chemin de rendu/progression, que toute sélection est enregistrée comme interaction complétée sans condition sur isCorrect; la porte de navigation est donc levée même après une mauvaise réponse.",
+      "recommendation": "Ne marquer le knowledge_check comme complété et ne lever la porte qu'après une réponse correcte; vérifier explicitement les scénarios de réponse correcte et incorrecte.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "fausse soumission ou gate",
+      "course_id": "ia_appliquee_metiers_tp__38",
+      "location": "lessons[0].chapters[4].blocks[0] (cloud_exercise id ia_appliquee_metiers_tp__38-mini-project-proof)",
+      "description": "La preuve du TP reste validable avec un seul caractère non blanc et peut déverrouiller le quiz final, alors que la consigne demande les quatre éléments de preuve (scénario testé, résultat, contrôle et étape soumise à validation humaine, selon le contenu actuel). Le bloc JSON ne déclare ni minimumAnswerLength, ni learnerCriteria, ni rubricCriteria, ni serverGradedAssessment; le rapport initial documente que le défaut applicatif devient un seuil d'un caractère et appelle onComplete sans évaluation suivie.",
+      "recommendation": "Exiger une preuve structurée couvrant les éléments explicitement demandés, au moyen de critères visibles ou d'une rubrique suivie; empêcher la complétion et le déverrouillage sur une réponse minimale.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu/bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__38",
+      "location": "lessons[0].chapters[5].blocks[4] (bucket_sort id ia_appliquee_metiers_tp__38-quiz-order); champs feedback.fr et feedback.en, sans champ correction",
+      "description": "Le feedback pédagogique du tri est toujours présent dans le JSON actuel en français et en anglais, mais il n'est pas rendu après tentative: le rapport initial localise que LessonViewer transmet uniquement block.correction à MatchingExercise, tandis que le bloc ne définit pas correction. Le learner voit donc les indicateurs de résultat prévus par le composant, mais pas la synthèse feedback configurée.",
+      "recommendation": "Transmettre et afficher block.feedback (ou l'utiliser comme correction de secours) après une tentative complète, puis vérifier les tentatives incorrecte et correcte dans les deux langues.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 3,
+    "p0": 0,
+    "p1": 2,
+    "p2": 1
+  }
+}

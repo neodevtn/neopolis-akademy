@@ -1,0 +1,78 @@
+{
+  "formation_id": "datacamp_multi_agent_systems_with_langgraph",
+  "index": 55,
+  "course_ids": [
+    "multi_agent_systems_with_langgraph__01"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_agent_systems_with_langgraph__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/055-datacamp_multi_agent_systems_with_langgraph.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue fondée uniquement sur les JSON locaux et les localisations de code déjà citées par le rapport initial ; aucune modification de cours. Le static-audit-data.json indique issue_count=0 pour ce course_id, mais sa couverture est verified_static_only et ne remplace pas la vérification pédagogique du rapport initial."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "objectifs_et_activites_faisabilite_tp",
+      "course_id": "multi_agent_systems_with_langgraph__01",
+      "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: datacampImport.expected; lessons[0].chapters[0].blocks; lessons[0].chapters[0].blocks[1].projectorSlides[10..11]",
+      "description": "Le cours annonce des exercices de code, un environnement de développement local, une section d'instructions et un notebook, tandis que datacampImport.expected déclare activities_expected_from_outline=13 et exercise_types.LocalEnvironmentExercise=9. L'état courant ne rend que 4 chapitres et 7 blocs au total (video=4, download=2, content=1), sans bloc d'exercice. La première vidéo renvoie aux exercices, mais aucune action de programmation, critère de réussite ou feedback n'est fourni pour construire les agents.",
+      "recommendation": "Restaurer les TP annoncés avec fichiers/environnement, consigne, action attendue, critère de réussite et feedback, ou réaligner explicitement les objectifs et scripts sur un parcours vidéo sans TP.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage_fausse_soumission_gate",
+      "course_id": "multi_agent_systems_with_langgraph__01",
+      "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: lessons[*].chapters[*].requiredBeforeAdvance=true et blocs video dc_1_act_01_video, dc_2_act_01_video, dc_2_act_04_video, dc_2_act_07_video; LessonViewer.tsx lignes 1483-1492, 1557-1568, 1511-1534, 1634-1663",
+      "description": "Les 4 chapitres déclarent requiredBeforeAdvance=true, mais les 4 vidéos ont audioUrl et un id de 17 caractères sans videoId/url. La dérivation de LessonViewer ne retient qu'un id de longueur 8 à 15 pour chapterVideoKeys : la liste de clés est donc vide, le bouton Suivant et la fin de parcours peuvent être validés sans consultation des Projector audio. En l'absence d'activité évaluée livrée, ce gate contournable ne fournit aucune preuve de consultation ou de compréhension.",
+      "recommendation": "Corriger et tester la dérivation de clé pour les Projector audio, puis vérifier le verrouillage de chaque chapitre et de la fin de leçon sur le rendu courant.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu_bilinguisme_accessibilite",
+      "course_id": "multi_agent_systems_with_langgraph__01",
+      "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: datacampImport.sourceLanguage=fr-FR; video.transcript et projectorSlides[*].script des 4 vidéos; subtitleUrlFr/subtitleUrlEn; LessonViewer.tsx lignes 735-759; ProjectorPlayer.tsx lignes 159-175",
+      "description": "La formation est déclarée fr-FR et les en-têtes sont français, mais les scripts/transcriptions rendus dans le lecteur sont majoritairement en anglais, avec un mélange ponctuel français/anglais. Les sous-titres français sont présents, mais ProjectorPlayer ne les incorpore pas comme piste et LessonViewer les propose comme lien séparé ; l'alternative textuelle ouverte via Transcription reste donc largement anglaise pour un parcours français.",
+      "recommendation": "Localiser la transcription affichée et vérifier par rendu que la variante française est celle fournie à l'apprenant francophone, sans supprimer les sous-titres déclarés.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "progression_et_prerequis",
+      "course_id": "multi_agent_systems_with_langgraph__01",
+      "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: lessons[1].chapters[0].blocks[0] (dc_2_act_01_video), projectorSlides[0..1,10]; lessons[0].chapters[0].blocks=[content, video, download]",
+      "description": "La première vidéo de la seconde leçon dit que l'apprenant a déjà construit un « very first agent » et repart d'un workflow linéaire opérationnel. La seule leçon antérieure livrée est une introduction vidéo, un bloc content et un téléchargement, sans bloc de code ni exercice ; elle annonce que le code sera écrit dans les exercices. Le prérequis pratique nécessaire pour suivre le diagnostic du workflow linéaire n'a donc pas été réalisé dans l'état courant.",
+      "recommendation": "Réaligner l'accroche sur le prérequis réellement acquis, ou restaurer et faire valider le TP du workflow linéaire avant cette vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "transition_vers_activite",
+      "course_id": "multi_agent_systems_with_langgraph__01",
+      "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: lessons.length=2; lessons[1].chapters.length=3; lessons[1].chapters[2].blocks[0] (dc_2_act_07_video), projectorSlides[number=7].script",
+      "description": "La conclusion se termine par « Let's practice! », mais dc_ch02_act07 est le dernier chapitre rendu et son bloc unique est une vidéo. Après cette injonction, aucune consigne, action, exercice, indication de fin ou évaluation n'est fournie ; la pratique annoncée ne suit pas la synthèse.",
+      "recommendation": "Remplacer l'appel à une pratique inexistante par une clôture explicite, ou ajouter immédiatement le TP final avec énoncé, action attendue, critère de réussite et feedback.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 3,
+    "p2": 2
+  }
+}

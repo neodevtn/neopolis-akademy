@@ -1,0 +1,103 @@
+{
+  "formation_id": "datacamp_end_to_end_rag_with_weaviate",
+  "index": 34,
+  "course_ids": ["end_to_end_rag_with_weaviate__01"],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": ["/home/ubuntu/neopolis-akademy/client/public/data/courses/end_to_end_rag_with_weaviate__01.json"],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/034-datacamp_end_to_end_rag_with_weaviate.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": ["objectifs et activités", "faisabilité TP/fichiers/environnement", "fausses soumissions ou gates", "médias/téléchargements", "duplications ou corruption", "rendu/bilinguisme"],
+    "method": "Contre-vérification du JSON de cours, du rapport initial et de l'entrée static-audit-data; aucune modification de cours. Les binaires média n'ont pas été visionnés."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "fausses soumissions ou gates",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[0].chapters[0].requiredBeforeAdvance; lessons[0].chapters[0].blocks[1].id=dc_1_act_01_video; lessons[1].chapters[0].blocks[0].id=dc_2_act_01_video; lessons[2].chapters[0].blocks[0].id=dc_3_act_01_video; lessons[2].chapters[1].blocks[0].id=dc_3_act_04_video",
+      "description": "Les quatre chapitres rendus déclarent requiredBeforeAdvance=true, mais le rapport initial documente que LessonViewer ne retient comme clés de progression que des ids de blocs de 8 à 15 caractères; les quatre ids vidéo MP4 ont 17 caractères. La liste de vidéos à contrôler reste donc vide et l'avancement peut être autorisé sans visionnage ni marquage manuel.",
+      "recommendation": "Corriger la résolution de clé côté navigation pour toute vidéo MP4/HLS/audio, puis tester les deux chemins Suivant/Leçon terminée; ne pas traiter ce constat comme une absence de média.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "objectifs et activités",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[0].description.fr; lessons[0].chapters[0].blocks; datacampImport.expected",
+      "description": "La description promet de construire manuellement un workflow RAG de bout en bout, tandis que le chapitre ne rend que content, video et download. datacampImport.expected annonce 14 activités dont 10 LocalEnvironmentExercise; les quatre activités pratiques du chapitre 1 sont absentes du parcours rendu, sans action, production attendue, validation ni feedback.",
+      "recommendation": "À partir de sources autorisées, restaurer des TP évaluables avec consignes, environnement/fichiers, preuve attendue, réussite, indice et feedback; sinon réaligner explicitement l'objectif sur une démonstration vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu/bilinguisme",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[0].chapters[0].blocks[1].transcript; lessons[0].chapters[0].blocks[1].transcriptSegments; lessons[0].chapters[0].blocks[1].subtitleUrlFr",
+      "description": "Le cours et l'interface sont en français, mais la transcription rendue est en anglais (par exemple ‘Hi, and welcome to the course!’); un VTT français est seulement référencé. Le rapport initial confirme que LessonViewer rend directement transcript/transcriptSegments sans sélection selon la langue.",
+      "recommendation": "Fournir et sélectionner une transcription française révisée pour lang=fr, en conservant l'anglais comme alternative; vérifier le panneau de transcription.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "objectifs et activités",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[1].description.fr; lessons[1].chapters[0].blocks; datacampImport.expected",
+      "description": "Le chapitre annonce génération d'embeddings, stockage, retrieval et génération avec Weaviate, mais ne rend qu'une vidéo et un téléchargement. Les quatre activités pratiques attendues du chapitre 2 (extraction/découpage PDF, premiers pas Weaviate, requêtes, RAG de bout en bout) ne sont pas proposées; aucun résultat ni feedback n'est observable.",
+      "recommendation": "Restaurer uniquement avec instructions et critères autorisés, fichiers/prérequis et validation; sinon annoncer une démonstration et non une réalisation autonome.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu/bilinguisme",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[1].chapters[0].blocks[0].transcript; lessons[1].chapters[0].blocks[0].transcriptSegments; lessons[1].chapters[0].blocks[0].subtitleUrlFr",
+      "description": "La transcription affichable du chapitre 2 est en anglais (par exemple ‘Welcome back!’) alors que le chapitre français référence un VTT français séparé; le rapport initial confirme l'absence de sélection linguistique dans le rendu.",
+      "recommendation": "Ajouter une transcription française issue du VTT français et la sélectionner pour l'interface fr, avec l'anglais en alternative.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "objectifs et activités",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[2].chapters[0].description.fr; lessons[2].chapters[0].blocks; datacampImport.expected",
+      "description": "Le chapitre annonce un RAG avec texte et images, ColPali et des réponses multimodales, mais ne rend qu'une vidéo et un téléchargement. Les deux activités pratiques multimodales attendues (préparer puis exécuter/observer le RAG multimodal) sont absentes, sans action, résultat attendu ni feedback.",
+      "recommendation": "Concevoir, à partir de sources autorisées, deux activités guidées avec données de départ, environnement, preuve, critères et retours; sinon réduire la promesse à une présentation guidée.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu/bilinguisme",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[2].chapters[0].blocks[0].transcript; lessons[2].chapters[0].blocks[0].transcriptSegments; lessons[2].chapters[0].blocks[0].subtitleUrlFr",
+      "description": "La transcription rendue du chapitre multimodal est anglaise (elle commence par ‘Congrats on making it to the final chapter...’) malgré un VTT français référencé.",
+      "recommendation": "Mettre à disposition et sélectionner la transcription française dans le panneau de la vidéo, sans supprimer l'alternative anglaise.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "duplications ou corruption",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[2].chapters[1].description.fr; lessons[2].chapters[0].description.fr; lessons[2].chapters[1].blocks[0].transcript",
+      "description": "La description du chapitre final ‘Félicitations !’ est identique à celle du chapitre multimodal précédent, alors que son transcript annonce une récapitulation et une ouverture. Il s'agit d'une duplication de description qui rend la transition finale trompeuse; aucune corruption binaire n'est déduite.",
+      "recommendation": "Remplacer uniquement la description du chapitre final par une introduction cohérente avec sa fonction de synthèse et d'ouverture.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu/bilinguisme",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "location": "lessons[2].chapters[1].blocks[0].transcript; lessons[2].chapters[1].blocks[0].transcriptSegments; lessons[2].chapters[1].blocks[0].subtitleUrlFr",
+      "description": "La transcription de conclusion affichée est anglaise (elle commence par ‘Congratulations on making it to the end of the course!’) dans un cours français; le VTT français est référencé mais n'est pas utilisé comme transcription localisée.",
+      "recommendation": "Ajouter et sélectionner la transcription française dans le panneau de la vidéo finale, puis tester l'affichage en locale fr.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 9,
+    "p0": 0,
+    "p1": 4,
+    "p2": 5
+  }
+}

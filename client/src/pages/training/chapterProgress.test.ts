@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getChapterMediaCompletionKeys, getDisplayedChapterProgress, getMediaCompletionKey, getPersistedCompletionProgress, hasOptionalSupplementaryVideos, normalizeChapterProgress } from "./chapterProgress";
+import { getChapterMediaCompletionKeys, getDisplayedChapterProgress, getMediaCompletionKey, getPersistedCompletionProgress, hasOptionalSupplementaryVideos, isSequentialActivityNavigationLocked, normalizeChapterProgress } from "./chapterProgress";
 
 describe("chapter progress display", () => {
   it("clamps an invalid zero-based index so a counter can never show 7/6", () => {
@@ -48,5 +48,18 @@ describe("chapter progress display", () => {
       { type: "video", id: "hosted-video", mp4Url: "/media/video.mp4" },
       { type: "video", id: "hosted-audio", audioUrl: "/media/audio.mp3" },
     ] })).toEqual(["hosted-video", "hosted-audio"]);
+  });
+
+  it("locks a numeric exercise until its stable completion key is recorded, except in review mode", () => {
+    const input = {
+      blocks: [{ type: "exercise", exercise_type: "numeric_answers", id: "numeric_exercise_02" }],
+      completedExercises: new Set<string>(),
+      completedCloudExercises: new Set<string>(),
+      completedMatching: new Set<string>(),
+      completedInlineInteractions: new Set<string>(),
+    };
+    expect(isSequentialActivityNavigationLocked(input)).toBe(true);
+    expect(isSequentialActivityNavigationLocked({ ...input, completedExercises: new Set(["numeric_exercise_02"]) })).toBe(false);
+    expect(isSequentialActivityNavigationLocked({ ...input, reviewMode: true })).toBe(false);
   });
 });

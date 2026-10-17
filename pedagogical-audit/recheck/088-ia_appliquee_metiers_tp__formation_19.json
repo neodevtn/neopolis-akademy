@@ -1,0 +1,111 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_19",
+  "index": 88,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__19"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__19.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/088-ia_appliquee_metiers_tp__formation_19.json",
+    "static_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du contenu actuel et des preuves localisées du rapport initial; aucun cours ni code modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__19-checkpoint-01",
+        "content_id": "ia_appliquee_metiers_tp__19-checkpoint-preparation",
+        "evidence": "`client/public/data/courses/ia_appliquee_metiers_tp__19.json` → `lessons[0].chapters[3]` déclare `requiredBeforeAdvance: true`, `passThreshold: 1` et le bloc requis `ia_appliquee_metiers_tp__19-checkpoint-preparation` avec bonne réponse `a`. `client/src/components/blocks/GenericLearningBlocks.tsx:57` appelle `onComplete` dès la sélection, avec ou sans correction ; `client/src/pages/training/LessonViewer.tsx:484-489` ajoute alors toujours l’id aux interactions complétées. `client/src/pages/training/checkpointGate.ts:12-15` ne recense que les blocs de type `checkpoint`, pas ce `knowledge_check`, tandis que `LessonViewer.tsx:359-377` et `:1601-1624` lèvent le verrou dès que l’interaction est complétée."
+      },
+      "description": "Le checkpoint annoncé obligatoire avec `passThreshold: 1` se déverrouille après n’importe quelle sélection, y compris une réponse erronée. La consigne de relire puis réessayer ne correspond donc pas au verrou réel : un apprenant peut poursuivre sans avoir validé le prérequis de sécurité.",
+      "recommendation": "P1 — Aligner le statut de complétion et le verrou sur la réponse correcte, puis tester une sélection de b/c/d : « Suivant » doit rester indisponible et redevenir disponible seulement après `a`.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__19-mini-project",
+        "content_id": "ia_appliquee_metiers_tp__19-mini-project-proof",
+        "evidence": "`client/public/data/courses/ia_appliquee_metiers_tp__19.json` → `lessons[0].chapters[4].blocks[0]` contient l’instruction de preuve mais aucun des champs de validation cités. `client/src/components/CloudExerciseBlock.tsx:117-122` fixe `usesTrackedRubric` à faux et résout l’absence de minimum à 1 ; `:153-161` soumet alors toute réponse non vide, révèle la correction et appelle `onComplete`. `cloudExerciseValidation.ts:1-8` confirme qu’un minimum absent devient 1 ; `LessonViewer.tsx:1587-1592` débloque ensuite le chapitre quand cet id est complété."
+      },
+      "description": "La « preuve de réalisation » exigée pour passer le TP n’est pas réellement vérifiée. En l’absence de longueur minimale, de rubrique ou d’évaluation serveur, un seul caractère non blanc active « Valider », débloque la correction et marque le TP comme terminé ; le message « Preuve enregistrée » peut ainsi valider une preuve qui ne contient ni scénario, ni résultat, ni contrôle, ni validation humaine.",
+      "recommendation": "P1 — Ajouter une validation de la preuve avant la complétion et un test couvrant une remise d’un caractère : elle ne doit ni révéler la correction ni déverrouiller le quiz final.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__19-mini-project",
+        "content_id": "ia_appliquee_metiers_tp__19-mini-project-proof",
+        "evidence": "`client/public/data/courses/ia_appliquee_metiers_tp__19.json` → `lessons[0].chapters[4].blocks[0]` ne possède pas de clé `steps` et son instruction ne donne que quatre puces de compétences. Le support déclaré par ce bloc a été lu localement à travers le chemin applicatif `/manus-storage/19-19-comptabilisation-automatique-des-factures-recues-dans-google-drive-support-fictif_52287e34.md` : ses 1 299 octets ne contiennent aucune série de 10 factures ni données d’extraction/nommage/comptabilisation, mais seulement le résultat attendu. `CloudExerciseBlock.tsx:278-297` ne rend une procédure numérotée que si `tpSteps.length > 0`, donc aucune étape structurée n’est affichée."
+      },
+      "description": "Le mini-projet promet de traiter 10 factures mais ne fournit ni étapes de construction séquentielles ni jeu de 10 factures à traiter. Le support fictif effectivement disponible donne un contexte, un dossier et des règles de vigilance, puis répète le résultat attendu ; il ne contient pas les 10 entrées factures, leurs champs extraits, les règles de renommage ou le référentiel nécessaire pour vérifier le compte proposé. L’apprenant doit donc inventer les données et une partie substantielle de la procédure malgré l’intitulé « TP guidé ».",
+      "recommendation": "P1 — Fournir les intrants fictifs et les étapes affichables avant utilisation pédagogique ; valider le parcours avec une personne qui ne connaît pas le workflow et vérifier qu’elle peut produire la preuve demandée sans créer elle-même le jeu d’essai ni deviner les règles.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__19-final-quiz",
+        "content_id": "ia_appliquee_metiers_tp__19-quiz-order",
+        "evidence": "`client/public/data/courses/ia_appliquee_metiers_tp__19.json` → `lessons[0].chapters[5].blocks[4].feedback` contient le texte pédagogique. `client/src/pages/training/LessonViewer.tsx:957-974` transmet seulement `correction: block.correction` à `MatchingExercise`, jamais `block.feedback`. `client/src/components/MatchingExercise.tsx:444-450` n’affiche un texte détaillé que si `exercise.correction` est présent."
+      },
+      "description": "Le feedback pédagogique renseigné pour le tri n’est pas rendu. Après une tentative, l’apprenant obtient le nombre de cartes correctes, des indicateurs visuels et « Réessayer », mais pas la consolidation disponible sur la démarche correcte ; cela réduit l’aide à la correction après échec comme après réussite.",
+      "recommendation": "P2 — Mapper `bucket_sort.feedback` vers le feedback affiché par `MatchingExercise` (ou vers `correction`) et couvrir les cas de réponse correcte et incorrecte par un test de rendu.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "énoncé",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__19-final-quiz",
+        "content_id": "ia_appliquee_metiers_tp__19-quiz-order",
+        "evidence": "`client/public/data/courses/ia_appliquee_metiers_tp__19.json` → `lessons[0].chapters[2].blocks[0].items` contient les étapes Préparer et Contrôler ; `lessons[0].chapters[5].blocks[4]` contient le titre, l’instruction et les catégories Construire et Valider. `MatchingExercise.tsx:227-241` rend à la fois cette instruction et l’aide d’interface « Cliquez sur une carte… puis … une catégorie »."
+      },
+      "description": "Le titre « Ordonnez la démarche de réalisation » décrit une remise en ordre, alors que l’interface demande de placer chaque action dans une catégorie/étape. De plus, la démarche enseignée précédemment est nommée « Cadrer → Préparer → Tester → Contrôler », tandis que les catégories évaluées sont « Cadrer → Construire → Tester → Valider ». L’instruction détaillée permet de réaliser le tri, mais ces variations inutiles fragilisent la continuité terminologique.",
+      "recommendation": "P3 — Harmoniser le vocabulaire dans la prochaine révision éditoriale et vérifier le libellé avec un test utilisateur rapide.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "accessibilité",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__19-final-quiz",
+        "content_id": "ia_appliquee_metiers_tp__19-mini-project-proof",
+        "evidence": "`client/public/data/courses/ia_appliquee_metiers_tp__19.json:339-360` montre les champs du TP sous forme de chaînes françaises ; `client/src/components/CloudExerciseBlock.tsx:104-113` les passe à `resolveLocalizedBlockText`, dont `cloudExerciseValidation.ts:9-16` retourne une chaîne inchangée. `client/src/pages/TrainingCourse.tsx:514` rend `LanguageSwitcher` sauf si `course.languageSelectionDisabled === true`; l’entrée `client/src/data/trainingIndex.json` pour `ia_appliquee_metiers_tp__19` ne porte pas cette désactivation. Les textes anglais de certains QCM comportent également des segments français dans le JSON."
+      },
+      "description": "Le sélecteur de langue reste disponible pour ce cours, mais l’activité centrale et certains libellés du quiz restent en français lorsqu’un apprenant sélectionne l’anglais. Les champs `assignment`, `instructions`, `hint`, `solution` et `successMessage` du TP sont des chaînes françaises non localisées ; le composant rend une chaîne telle quelle dans toute langue. Un parcours en anglais ne fournit donc pas de consigne de TP cohérente dans la langue choisie.",
+      "recommendation": "P2 — Décider de la langue effectivement supportée, puis compléter la localisation ou désactiver le sélecteur pour prévenir une expérience hybride.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 3,
+    "p2": 2
+  }
+}

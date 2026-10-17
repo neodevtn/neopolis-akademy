@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { ExpectedAnswerCount } from "@/components/ExpectedAnswerCount";
+import { getNumericAnswerFeedback, isNumericAnswerCorrect } from "@/components/numericAnswerValidation";
 
 interface Question {
   id: string;
@@ -12,6 +13,8 @@ interface Question {
   expected_value: number | string;
   unit: string;
   tolerance: number;
+  feedback?: string | { en?: string; fr?: string };
+  explanation?: string | { en?: string; fr?: string };
 }
 
 interface NumericAnswerExerciseProps {
@@ -48,30 +51,6 @@ export default function NumericAnswerExercise({
     }
   };
 
-  const validateAnswer = (question: Question, userAnswer: string): boolean => {
-    if (typeof question.expected_value === "string") {
-      return userAnswer.trim().toLowerCase() === question.expected_value.toLowerCase();
-    }
-    const numericAnswer = parseFloat(userAnswer.replace(/[,\s]/g, "").replace(",", "."));
-    if (isNaN(numericAnswer)) return false;
-    const expected = question.expected_value as number;
-    const tolerance = question.tolerance || 0;
-    if (tolerance === 0) {
-      return numericAnswer === expected;
-    }
-    // For percentage tolerance
-    if (question.unit === "%") {
-      return Math.abs(numericAnswer - expected) <= tolerance;
-    }
-    // For EUR tolerance (relative: 0.01 means ±1%)
-    if (question.unit === "EUR" && tolerance === 0.01) {
-      // Allow 1% relative tolerance for large EUR amounts
-      const relTolerance = Math.abs(expected) * 0.01;
-      return Math.abs(numericAnswer - expected) <= relTolerance;
-    }
-    return Math.abs(numericAnswer - expected) <= tolerance;
-  };
-
   const handleSubmitAll = () => {
     const newResults: Record<string, "correct" | "incorrect" | null> = {};
     let allCorrect = true;
@@ -82,7 +61,7 @@ export default function NumericAnswerExercise({
         newResults[q.id] = null;
         allCorrect = false;
       } else {
-        const isCorrect = validateAnswer(q, userAnswer);
+        const isCorrect = isNumericAnswerCorrect(q, userAnswer);
         newResults[q.id] = isCorrect ? "correct" : "incorrect";
         if (!isCorrect) allCorrect = false;
       }
@@ -213,9 +192,7 @@ export default function NumericAnswerExercise({
                 </div>
                 {results[q.id] === "incorrect" && (
                   <p className="text-xs text-red-600 dark:text-red-400 mt-1.5">
-                    {lang === "fr"
-                      ? `Réponse incorrecte. Vérifiez votre calcul.${q.tolerance > 0 ? ` (tolérance : ±${q.tolerance} ${q.unit})` : ""}`
-                      : `Incorrect answer. Check your calculation.${q.tolerance > 0 ? ` (tolerance: ±${q.tolerance} ${q.unit})` : ""}`}
+                    {getNumericAnswerFeedback(q, lang)}
                   </p>
                 )}
               </div>

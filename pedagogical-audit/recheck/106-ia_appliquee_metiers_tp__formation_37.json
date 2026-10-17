@@ -1,0 +1,87 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_37",
+  "index": 106,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__37"
+  ],
+  "review_scope": {
+    "formation_manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__37.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/106-ia_appliquee_metiers_tp__formation_37.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule ; constats retenus uniquement lorsqu'ils sont localisés dans le JSON courant ou déjà vérifiés dans le rapport initial par inspection du rendu."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage_et_evaluation",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "location": "lessons[0].chapters[3].blocks[0] (knowledge_check id ia_appliquee_metiers_tp__37-checkpoint-preparation), lessons[0].chapters[3].passThreshold",
+      "description": "Le checkpoint comporte une bonne réponse JSON (correctAnswer=\"a\") et passThreshold=1, mais le rapport initial vérifié sur le rendu indique qu'une sélection incorrecte appelle néanmoins la complétion et peut lever le verrou. Le seuil de réussite n'est donc pas effectivement conditionnant pour ce knowledge_check.",
+      "recommendation": "Ne marquer le knowledge_check comme complété et ne déverrouiller la suite qu'après la réponse correcte ; conserver le feedback et la nouvelle tentative.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "ressources_et_prerequis",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "location": "lessons[0].chapters[4].blocks[0].assignment, instructions, resources[0].url",
+      "description": "La consigne actuelle demande d'analyser trois contrats fictifs contre un playbook et de produire une matrice clauses/risques/recommandations, tout en renvoyant au support fourni. Le JSON courant ne contient pas ces trois contrats ni les règles du playbook nécessaires pour qualifier écart, sévérité et alternative ; la faisabilité et la vérifiabilité du livrable ne sont donc pas démontrées par les artefacts déclarés.",
+      "recommendation": "Fournir explicitement les trois extraits et un playbook de test avec règles de comparaison, sévérité et alternatives, ou réécrire la consigne pour demander leur création avec des critères observables.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "feedback_et_evaluation",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "location": "lessons[0].chapters[4].blocks[0] (cloud_exercise id ia-appliquee-metiers-tp__37-mini-project-proof)",
+      "description": "Le JSON exige dans la preuve un scénario, un résultat, un contrôle et une validation humaine, mais ne fournit aucun minimumAnswerLength, rubricCriteria ni serverGradedAssessment. Le rapport initial vérifié sur le rendu constate qu'une saisie d'un seul caractère suffit à terminer le TP et à déverrouiller le quiz final.",
+      "recommendation": "Ajouter une remise structurée et vérifiable avec les quatre rubriques, une longueur minimale adaptée et une grille affichée ; conditionner la suite à cette validation ou à une auto-évaluation explicite.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "clarte_et_localisation",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "location": "lessons[0].chapters[4].blocks[0].assignment, instructions, hint, solution, successMessage",
+      "description": "Dans le JSON courant, ces cinq champs du cloud_exercise sont des chaînes françaises simples, alors que le cours expose un mode anglais et que plusieurs champs voisins sont bilingues. Le TP n'est donc pas cohérent en anglais pour l'apprenant.",
+      "recommendation": "Fournir pour assignment, instructions, hint, solution et successMessage des valeurs fr/en, puis vérifier le rendu dans les deux langues.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback_et_rendu",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "location": "lessons[0].chapters[5].blocks[4] (bucket_sort id ia-appliquee-metiers-tp__37-quiz-order).feedback",
+      "description": "Le JSON courant contient un feedback bilingue pour le tri final, mais le rapport initial vérifié sur le rendu indique que ce feedback n'est pas transmis au composant de tri et n'est donc pas affiché après réussite.",
+      "recommendation": "Mapper explicitement feedback vers la propriété rendue après réussite, et ajouter un test de rendu du feedback post-réussite.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "coherence_et_progression",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "location": "lessons[0].chapters[2].blocks[0].items[1], items[3], lessons[0].chapters[5].blocks[4].buckets[1], buckets[3]",
+      "description": "La séquence enseignée emploie Cadrer → Préparer → Tester → Contrôler, tandis que le tri final emploie Cadrer → Construire → Tester → Valider. Cette terminologie différente n'est pas expliquée dans le JSON courant.",
+      "recommendation": "Harmoniser les quatre libellés entre séquence et évaluation, ou expliciter la correspondance Préparer/Construire et Contrôler/Valider avant le tri.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 3,
+    "p2": 3
+  }
+}

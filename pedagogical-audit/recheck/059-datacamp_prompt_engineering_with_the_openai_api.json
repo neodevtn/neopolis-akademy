@@ -1,0 +1,170 @@
+{
+  "formation_id": "datacamp_prompt_engineering_with_the_openai_api",
+  "index": 59,
+  "course_ids": [
+    "prompt_engineering_with_the_openai_api__01"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/prompt_engineering_with_the_openai_api__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/059-datacamp_prompt_engineering_with_the_openai_api.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue limitée aux preuves JSON locales et aux constats explicitement étayés par le rapport initial; aucune exécution navigateur/API n'est déduite."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "renderer: client/src/components/blocks/CodeReplBlock.tsx lignes 28-40; shared/codeReplValidation.ts lignes 10-13; cours: tous les blocs type=code_repl (37)",
+      "description": "La validation des code_repl compare le texte saisi à solutionCode après normalisation au lieu d'exécuter le programme ou de tester les exigences. Le message d'échec reste générique; le constat du rapport initial est toujours applicable au contenu actuel, qui contient 37 blocs code_repl.",
+      "recommendation": "Mettre en place une validation exécutable ou sémantique, avec feedback par critère, et accepter les solutions fonctionnellement équivalentes.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "renderer: LessonViewer.tsx lignes 1181-1183, 1576-1624, 1637-1652; chapterProgress.ts lignes 94-103; cours: chapitres requiredBeforeAdvance=true contenant code_repl",
+      "description": "Les chapitres sont marqués requiredBeforeAdvance=true, mais code_repl n'est pas inclus dans les conditions de passage; onComplete est enregistré sans être utilisé pour verrouiller la navigation. Le JSON courant conserve des exercices code_repl dans des chapitres requis.",
+      "recommendation": "Inclure les identifiants code_repl requis dans les calculs de gate et de finalisation, après correction de la validation.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[0].chapters[9].blocks[0] (dc_ch01_act10 / dc_1_act_10_code).title, instructions, hint",
+      "description": "Le titre annonce la création d'une table; les instructions demandent langue/titre de text et sorties Text/Language/Title; l'indice demande nombre de livres, genre et noms de colonnes. Les formulations restent incompatibles dans le JSON courant.",
+      "recommendation": "Choisir une seule tâche et réaligner titre, instructions, indice et solution canonique.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[1].chapters[5].blocks[0] (dc_ch02_act06 / dc_2_act_06_code).title, instructions, hint",
+      "description": "Le titre annonce un prompt en une seule étape; les instructions demandent explicitement un prompt multi-étapes pour des vacances à la plage; l'indice explique un prompt standard en une seule étape. L'ambiguïté est présente dans le JSON courant.",
+      "recommendation": "Aligner le titre, la consigne, l'indice et la solution sur une seule modalité de prompt.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[1].chapters[6].blocks[0] (dc_ch02_act07 / dc_2_act_07_code).title, instructions, hint",
+      "description": "Le titre porte sur la planification de voyage; les instructions demandent d'évaluer une fonction selon syntaxe/deux entrées/sortie; l'indice parle de quatre étapes d'un plan de voyage. Ces éléments restent discordants.",
+      "recommendation": "Réassocier l'indice et la solution au bon énoncé, ou restaurer la tâche annoncée par le titre.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[1].chapters[10].blocks[0] (dc_ch02_act11 / dc_2_act_11_code).title, instructions, hint",
+      "description": "Le titre annonce un prompt one-shot par chaîne de pensée; les instructions demandent une cohérence propre avec trois experts et vote majoritaire; l'indice reprend l'exemple de nombres pairs. La technique nommée, la consigne et l'aide ne convergent pas.",
+      "recommendation": "Aligner la technique, l'indice et la solution sur la cohérence propre, ou restaurer la tâche one-shot.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[1].chapters[14].blocks[0] (dc_ch02_act15 / dc_2_act_15_code).instructions, hint",
+      "description": "Les instructions demandent d'affiner des exemples pour qu'aucune émotion explicite ne soit produite; l'indice demande une table à trois colonnes et ses en-têtes. L'indice reste hors sujet dans le JSON courant.",
+      "recommendation": "Remplacer l'indice par une aide portant sur la classification d'émotion et vérifier la solution canonique correspondante.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[2].chapters[5].blocks[0] (dc_ch03_act06 / dc_3_act_06_code).title, instructions, hint",
+      "description": "Le titre et l'indice évoquent une traduction multilingue; les instructions demandent seulement de modifier le ton de sample_email en professionnel, positif et centré utilisateur. Le conflit reste présent.",
+      "recommendation": "Choisir entre traduction et ajustement de ton puis réaligner titre, instructions, indice et solution.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[2].chapters[9].blocks[0] (dc_ch03_act10 / dc_3_act_10_code).title, instructions, hint",
+      "description": "Le titre évoque l'acheminement de tickets; les instructions demandent l'extraction d'entités de ticket_4; l'indice parle de classification dans des catégories connues et de produire seulement la classe. Les sorties attendues restent incompatibles.",
+      "recommendation": "Réécrire titre, consigne, indice et solution autour d'une seule opération et d'une seule sortie attendue.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[2].chapters[14].blocks[0] (dc_ch03_act15 / dc_3_act_15_code).title, instructions, hint",
+      "description": "Le titre annonce une modification de code par prompt multi-étapes; les instructions demandent d'expliquer function avec une chaîne de pensée; l'indice exige les étapes de réglage dans function. La tâche, la technique et l'aide restent discordantes.",
+      "recommendation": "Choisir la tâche et la technique visées puis réaligner titre, instructions, indice et solution.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "fausse_soumission/feedback",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[0].chapters[5].blocks[0] (dc_ch01_act06 / dc_1_act_06_tp_learning_note)",
+      "description": "Le TP cloud signalé dans le rapport initial n'est plus présent dans l'état courant: le bloc est désormais un bloc content portant remediation.reason=activity_removed_unverifiable_or_incomplete_source et sourcePreserved=true. Les constats de soumission minimale et de conflit d'énoncé ne sont donc pas reproductibles sur ce bloc courant.",
+      "recommendation": "Aucune correction de ce TP supprimé ne doit être déduite de cette contre-revue; vérifier séparément si une activité de remplacement est souhaitée.",
+      "status": "false_positive"
+    },
+    {
+      "severity": "P1",
+      "category": "fausse_soumission/feedback",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[1].chapters[1].blocks[0] (dc_ch02_act02 / dc_2_act_02_tp_learning_note)",
+      "description": "Le TP cloud signalé dans le rapport initial a été retiré de l'état courant et remplacé par un bloc content avec remediation.reason=activity_removed_unverifiable_or_incomplete_source et sourcePreserved=true; ses anciens défauts de correction et d'objectif ne s'appliquent plus au bloc courant.",
+      "recommendation": "Ne pas traiter l'ancien TP comme une anomalie active; ne pas inventer de correction pour une activité retirée.",
+      "status": "false_positive"
+    },
+    {
+      "severity": "P1",
+      "category": "fausse_soumission/feedback",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[1].chapters[13].blocks[0] (dc_ch02_act14 / dc_2_act_14_tp_learning_note)",
+      "description": "Le TP cloud d'itération signalé dans le rapport initial n'est plus présent dans l'état courant; le chapitre contient un bloc content avec remediation.reason=activity_removed_unverifiable_or_incomplete_source et sourcePreserved=true. Le constat de remise minimale bloquante n'est donc pas actif sur le JSON courant.",
+      "recommendation": "Ne pas corriger l'ancien TP sans preuve d'une activité de remplacement; conserver le statut retiré comme état observé.",
+      "status": "false_positive"
+    },
+    {
+      "severity": "P1",
+      "category": "médias/téléchargements",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "lessons[*].chapters[*].blocks[*] type=video/download",
+      "description": "Les 15 vidéos courantes déclarent audioUrl, subtitleUrlFr, subtitleUrlEn et slidesPdf; les 4 blocs download déclarent une URL PDF. Aucune anomalie de média ou de téléchargement n'est établie par les données JSON locales.",
+      "recommendation": "Aucune action fondée sur cette revue statique; la lecture effective, l'accessibilité réelle et la validité des fichiers restent non vérifiées.",
+      "status": "false_positive"
+    },
+    {
+      "severity": "P1",
+      "category": "duplication/corruption/rendu-bilinguisme",
+      "course_id": "prompt_engineering_with_the_openai_api__01",
+      "location": "cours entier; vérification des identifiants, champs title/description/instructions/hint et blocs media",
+      "description": "Aucun identifiant dupliqué n'a été trouvé dans le cours; les champs bilingues inspectés disposent de valeurs en/fr; la structure JSON est lisible et les médias déclarent les deux sous-titres. Aucun défaut actif de duplication, corruption ou bilinguisme n'est prouvé localement.",
+      "recommendation": "Aucune correction déduite; les limites de rendu navigateur et d'accessibilité effective demeurent celles du rapport statique.",
+      "status": "false_positive"
+    }
+  ],
+  "summary": {
+    "issue_count": 10,
+    "p0": 0,
+    "p1": 10,
+    "p2": 0,
+    "open_findings": 10,
+    "false_positive_findings": 5
+  }
+}

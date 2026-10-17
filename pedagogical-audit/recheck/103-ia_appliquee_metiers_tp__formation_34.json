@@ -1,0 +1,87 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_34",
+  "index": 103,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__34"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json (index 103)",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__34.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/103-ia_appliquee_metiers_tp__formation_34.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule du JSON actuel, comparée au rapport initial et à l’entrée du pré-audit statique. Aucun cours, code ou fichier n’a été modifié. Aucun constat n’est ajouté sans preuve JSON localisée ou preuve explicitement citée dans le rapport initial; l’absence d’anomalie dans static-audit-data.json n’est pas interprétée comme une preuve de bon rendu navigateur."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "location": "lessons[0].chapters[1].blocks[id=ia_appliquee_metiers_tp__34-source-review] (resource_review)",
+      "description": "La ressource YouTube est bien déclarée, mais le JSON ne contient aucun état ou preuve d’ouverture effective avant la confirmation. Le rapport initial documente que la confirmation est déclarative et que LessonViewer enregistre directement la complétion du resource_review; l’apprenant peut donc confirmer sans que la consultation soit établie.",
+      "recommendation": "Conserver la confirmation explicite, mais l’activer ou la valider seulement après ouverture enregistrée de la ressource; tester le passage sans ouverture puis après ouverture.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "location": "lessons[0].chapters[3] (requiredBeforeAdvance=true, passThreshold=1); blocks[0] id=ia_appliquee_metiers_tp__34-checkpoint-preparation (type=knowledge_check, correctAnswer=\"a\")",
+      "description": "Le checkpoint obligatoire configure une réponse correcte « a » et passThreshold: 1, mais le rapport initial documente que le composant knowledge_check appelle onComplete dès qu’un choix est fait et que la logique de gate ne recense que les blocs de type checkpoint. Une réponse incorrecte peut donc déverrouiller la suite malgré le seuil annoncé.",
+      "recommendation": "Ne marquer l’activité comme réussie et ne déverrouiller la suite qu’après isCorrect=true; conserver le verrouillage après une réponse incorrecte et tester les deux scénarios.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "location": "lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__34-mini-project-proof] (cloud_exercise)",
+      "description": "Le mini-projet demande dans instructions une preuve du scénario testé, du résultat, d’un contrôle et de l’étape restant sous validation humaine, mais le bloc actuel ne définit ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment, ni requirePostRevealReflection. Le rapport initial localise le comportement de validation par défaut à un caractère non blanc: une soumission triviale peut donc enregistrer la preuve, révéler la correction et déverrouiller le quiz final sans vérifier les quatre éléments.",
+      "recommendation": "Configurer des critères visibles et une validation proportionnée aux quatre éléments requis (au minimum une longueur et des critères contrôlés); ne déclencher la complétion et le message de succès qu’après cette validation.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "location": "lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__34-quiz-order] (bucket_sort)",
+      "description": "Le JSON actuel contient feedback fr/en (« La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. ») mais aucune propriété correction. Le rapport initial documente que LessonViewer transmet correction au composant de tri sans transmettre feedback et que le composant n’affiche le texte détaillé que depuis correction; le feedback configuré n’est donc pas rendu après soumission.",
+      "recommendation": "Transmettre et afficher feedback après soumission, ou renseigner le champ effectivement consommé par le renderer avec une correction détaillée des placements erronés.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "location": "lessons[0].chapters[2].blocks[0].items[0..3] versus lessons[0].chapters[5].blocks[4].buckets[0..3] et cards[0..3]",
+      "description": "La timeline enseigne « Cadrer, Préparer, Tester, Contrôler », tandis que le tri final obligatoire évalue « Cadrer, Construire, Tester, Valider ». Les libellés Préparer/Contrôler ne sont pas explicitement mis en correspondance avec Construire/Valider dans le JSON; le rapport initial documente cette rupture de vocabulaire entre théorie et évaluation.",
+      "recommendation": "Harmoniser les quatre libellés et descriptions entre l’écran d’enseignement et le tri, ou ajouter explicitement la correspondance avant l’évaluation.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "location": "lessons[0].chapters[4].blocks[0] (cloud_exercise): assignment, instructions, hint, solution, successMessage; lessons[0].chapters[1].blocks[0].instructions/resourceLabel et lessons[0].chapters[2].blocks[0..1]",
+      "description": "Plusieurs champs directement visibles sont des chaînes uniques, sans variante en/en: assignment, instructions, hint, solution et successMessage du cloud_exercise; les titres et textes de plusieurs blocs des écrans 2 et 3 sont également des chaînes françaises recopiées ou non localisées. Le JSON ne fournit donc pas une couverture bilingue complète pour ces contenus, contrairement aux champs structurés qui portent effectivement fr/en.",
+      "recommendation": "Fournir des objets fr/en pour chaque champ visible et contrôler séparément le rendu français et anglais, notamment consigne, indice, correction et message de succès du TP.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 3,
+    "p2": 3
+  }
+}

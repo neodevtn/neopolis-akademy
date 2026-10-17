@@ -76,6 +76,15 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
       const hasExplanation = blocks.some((block) => explanatoryTypes.has(block?.type) && (hasUsableText(block.body) || hasUsableText(block.content) || hasUsableText(block.description)));
       const activities = blocks.filter((block) => activityTypes.has(block?.type));
       const media = blocks.filter((block) => mediaTypes.has(block?.type));
+      const chapterTitle = text(chapter.title);
+      const chapterBody = blocks.map((block) => text(block.body || block.content)).join("\n");
+      const isPseudoSubmission = /^checkpoint/i.test(chapterTitle)
+        && blocks.length > 0
+        && blocks.every((block) => block.type === "content")
+        && /\b(?:soumettez|submit)\b/i.test(chapterBody);
+      if (isPseudoSubmission) {
+        add(lessonIndex, chapterIndex, chapter, null, "P0", "évaluation", "L’écran promet une soumission mais ne contient ni champ, ni dépôt, ni mécanisme de correction observable.", "Retirer cet écran ou fournir une activité rendue, une preuve attendue et une correction réellement vérifiable.");
+      }
       // A standard checkpoint delegates its visible prompt and correction to the
       // referenced course exercise. Likewise, scenario checks place their
       // learner-facing statement in `scenario`. Audit the rendered source, not
@@ -108,6 +117,11 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
         if (block.type === "checkpoint") {
           if (!block.exerciseId) add(lessonIndex, chapterIndex, chapter, block, "P0", "verrouillage", "Le checkpoint obligatoire ne référence aucun exercice à rendre ou valider.", "Associer le checkpoint à un exerciseId existant et vérifiable.");
           else if (!exercises.has(block.exerciseId)) add(lessonIndex, chapterIndex, chapter, block, "P0", "verrouillage", "Le checkpoint référence un exercice absent de la banque du cours.", "Créer ou restaurer l’exercice référencé, ou corriger exerciseId.");
+          else if (exercises.get(block.exerciseId)?.interactionType === "free_text") add(lessonIndex, chapterIndex, chapter, block, "P0", "évaluation", "Le checkpoint verrouillant s’appuie sur une réponse libre sans clé de correction sélectionnable ou mécanisme de notation vérifiable dans le cours.", "Retirer la porte ou la remplacer uniquement lorsqu’une correction machine-évaluable est fournie.");
+        }
+        if (block.type === "exercise" && block.exercise_type === "numeric_answers") {
+          if (!block.id) add(lessonIndex, chapterIndex, chapter, block, "P0", "traçabilité", "L’exercice numérique n’a pas d’identifiant stable pour enregistrer sa complétion et verrouiller la progression.", "Ajouter un id stable unique au bloc numérique.");
+          if (!Array.isArray(block.questions) || !block.questions.length || block.questions.some((question) => question?.expected_value === undefined)) add(lessonIndex, chapterIndex, chapter, block, "P0", "évaluation", "L’exercice numérique ne contient pas toutes les valeurs attendues nécessaires à une validation réelle.", "Conserver uniquement les questions qui possèdent déjà une valeur attendue et une tolérance explicite.");
         }
         if (block.type === "cloud_exercise") {
           if (!hasUsableText(block.instructions) && !hasUsableText(block.assignment)) add(lessonIndex, chapterIndex, chapter, block, "P0", "énoncé", "Le TP ne précise pas clairement ce que l’apprenant doit réaliser.", "Ajouter une consigne détaillée, un résultat attendu et un exemple de preuve recevable.");
@@ -125,6 +139,11 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
         }
         if (["matching", "bucket_sort", "ordering", "fill_blank", "terminal_sim", "code_repl"].includes(block.type) && !hasUsableText(block.instructions)) {
           add(lessonIndex, chapterIndex, chapter, block, "P1", "énoncé", "L’activité interactive ne comporte pas de consigne d’utilisation explicite.", "Préciser ce que l’apprenant doit sélectionner, déplacer, saisir ou exécuter, ainsi que le résultat attendu.");
+        }
+      }
+      for (const block of blocks) {
+        if (block?.type === "text" && hasUsableText(block.content) && !hasUsableText(block.body)) {
+          add(lessonIndex, chapterIndex, chapter, block, "P1", "rendu", "Le contenu utilise le format historique text/content que le lecteur ne rend pas comme un bloc pédagogique courant.", "Migrer à l’identique vers le format content/body ou retirer le bloc s’il est une copie.");
         }
       }
     });

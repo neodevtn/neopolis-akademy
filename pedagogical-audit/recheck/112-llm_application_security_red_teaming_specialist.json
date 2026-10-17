@@ -1,0 +1,408 @@
+{
+  "formation_id": "llm_application_security_red_teaming_specialist",
+  "index": 112,
+  "course_ids": [
+    "llm_application_security_red_teaming_specialist__01",
+    "llm_application_security_red_teaming_specialist__02",
+    "llm_application_security_red_teaming_specialist__03",
+    "llm_application_security_red_teaming_specialist__04"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/llm_application_security_red_teaming_specialist__01.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/llm_application_security_red_teaming_specialist__02.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/llm_application_security_red_teaming_specialist__03.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/llm_application_security_red_teaming_specialist__04.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/112-llm_application_security_red_teaming_specialist.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue fondée uniquement sur les preuves JSON localisées du rapport initial et la vérification de l’état JSON courant; aucun cours modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__01",
+      "location": "llm_application_security_red_teaming_specialist__01.json → lessons[0].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "llm_application_security_red_teaming_specialist__01",
+      "location": "llm_application_security_red_teaming_specialist__01.json → lessons[1].chapters[1].blocks[1]; chapterProgress.ts:38-54 ne considère optionnelle qu’une vidéo avec `optional: true` ou un callout dédié; LessonViewer.tsx:1557-1568 désactive Suivant tant que toute vidéo non optionnelle n’est pas vue/marquée vue.",
+      "description": "La vidéo est libellée « Recommended Viewing », mais elle bloque néanmoins le passage au chapitre suivant : aucun attribut `optional: true` ni marqueur de contenu complémentaire ne la rend facultative. Le vocabulaire affiché et le verrouillage sont contradictoires.",
+      "recommendation": "Décider explicitement du statut pédagogique de la vidéo puis aligner données et UX : `optional: true` pour une recommandation, ou objectif/consigne explicite pour une exigence.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__01",
+      "location": "llm_application_security_red_teaming_specialist__01.json → lessons[1].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__01",
+      "location": "llm_application_security_red_teaming_specialist__01.json → lessons[2].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__01",
+      "location": "llm_application_security_red_teaming_specialist__01.json → lessons[3].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__02",
+      "location": "llm_application_security_red_teaming_specialist__02.json → lessons[0].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "llm_application_security_red_teaming_specialist__02",
+      "location": "llm_application_security_red_teaming_specialist__02.json → lessons[1].chapters[1].blocks[1]; chapterProgress.ts:38-54 ne considère optionnelle qu’une vidéo avec `optional: true` ou un callout dédié; LessonViewer.tsx:1557-1568 désactive Suivant tant que toute vidéo non optionnelle n’est pas vue/marquée vue.",
+      "description": "La vidéo est libellée « Recommended Viewing », mais elle bloque néanmoins le passage au chapitre suivant : aucun attribut `optional: true` ni marqueur de contenu complémentaire ne la rend facultative. Le vocabulaire affiché et le verrouillage sont contradictoires.",
+      "recommendation": "Décider explicitement du statut pédagogique de la vidéo puis aligner données et UX : `optional: true` pour une recommandation, ou objectif/consigne explicite pour une exigence.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__02",
+      "location": "llm_application_security_red_teaming_specialist__02.json → lessons[1].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__02",
+      "location": "llm_application_security_red_teaming_specialist__02.json → lessons[2].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__02",
+      "location": "llm_application_security_red_teaming_specialist__02.json → lessons[3].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__03",
+      "location": "llm_application_security_red_teaming_specialist__03.json → lessons[0].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "llm_application_security_red_teaming_specialist__03",
+      "location": "llm_application_security_red_teaming_specialist__03.json → lessons[1].chapters[1].blocks[1]; chapterProgress.ts:38-54 ne considère optionnelle qu’une vidéo avec `optional: true` ou un callout dédié; LessonViewer.tsx:1557-1568 désactive Suivant tant que toute vidéo non optionnelle n’est pas vue/marquée vue.",
+      "description": "La vidéo est libellée « Recommended Viewing », mais elle bloque néanmoins le passage au chapitre suivant : aucun attribut `optional: true` ni marqueur de contenu complémentaire ne la rend facultative. Le vocabulaire affiché et le verrouillage sont contradictoires.",
+      "recommendation": "Décider explicitement du statut pédagogique de la vidéo puis aligner données et UX : `optional: true` pour une recommandation, ou objectif/consigne explicite pour une exigence.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__03",
+      "location": "llm_application_security_red_teaming_specialist__03.json → lessons[1].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__03",
+      "location": "llm_application_security_red_teaming_specialist__03.json → lessons[2].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "évaluation",
+      "course_id": "llm_application_security_red_teaming_specialist__03",
+      "location": "llm_application_security_red_teaming_specialist__03.json → lessons[3].chapters[3].blocks[0]; shared/courseBlockNormalization.ts:6-37 ne transforme pas les questions imbriquées dans un bloc checkpoint existant; LessonViewer.tsx:894-898 renvoie null sans exercice résolu; LessonViewer.tsx:1538-1556 ne traite un checkpoint comme gate que si chapter.type vaut \"checkpoint\", ce qui est absent ici.",
+      "description": "Les trois questions du checkpoint existent dans les données, mais le checkpoint ne rend aucun élément à l’apprenant et n’impose aucune validation effective. Le bloc est donc une évaluation essentielle invisible et contournable, non une activité réalisable.",
+      "recommendation": "Conserver les trois questions source, mais les normaliser en trois `single_choice_exercise` dans `chapters[].blocks` (ou les relier à des exercices réellement présents via `exerciseId`) et définir explicitement `chapter.type: \"checkpoint\"` avec le seuil voulu. Ajouter la consigne proposée avant les questions.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[0].chapters[0] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène. La vidéo est en outre placée avant les objectifs textuels, puis les objectifs sont répétés : l’apprenant est invité à regarder avant de savoir ce qu’il doit en retirer.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[0].chapters[1] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[0].chapters[2] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[0].chapters[3] (`block.type=\"checkpoint\"` et trois `blocks[].type=\"single_choice_exercise\"`); shared/courseBlockNormalization.ts:11-23 génère trois QCM depuis `block.questions`, puis ligne 36 concatène `existingBlocks` et `generated`; LessonViewer.tsx:977-1005 rend chaque QCM.",
+      "description": "Chaque question de checkpoint est affichée deux fois. Le chapitre contient déjà trois `single_choice_exercise` et porte aussi un `block` legacy de type `checkpoint`; le normaliseur génère et ajoute trois QCM supplémentaires avec les mêmes identifiants. L’apprenant voit des répétitions et une activité étiquetée « TEACHING » plutôt que checkpoint (le chapitre n’a pas de type).",
+      "recommendation": "Choisir une seule représentation : conserver les trois `single_choice_exercise` existants et omettre/supprimer le `block` legacy de checkpoint, ou conserver le legacy et vider les blocs redondants. Définir `chapter.type: \"checkpoint\"` afin que l’interface annonce correctement la nature de l’écran.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[0].chapters[4] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[0].chapters[5] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[1].chapters[0] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[1].chapters[1] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[1].chapters[1].blocks[0]; chapterProgress.ts:38-54 ne considère optionnelle qu’une vidéo avec `optional: true` ou un callout dédié; LessonViewer.tsx:1557-1568 désactive Suivant tant que toute vidéo non optionnelle n’est pas vue/marquée vue.",
+      "description": "La vidéo est libellée « Recommended Viewing », mais elle bloque néanmoins le passage au chapitre suivant : aucun attribut `optional: true` ni marqueur de contenu complémentaire ne la rend facultative. Le vocabulaire affiché et le verrouillage sont contradictoires.",
+      "recommendation": "Décider explicitement du statut pédagogique de la vidéo puis aligner données et UX : `optional: true` pour une recommandation, ou objectif/consigne explicite pour une exigence.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[1].chapters[2] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[1].chapters[3] (`block.type=\"checkpoint\"` et trois `blocks[].type=\"single_choice_exercise\"`); shared/courseBlockNormalization.ts:11-23 génère trois QCM depuis `block.questions`, puis ligne 36 concatène `existingBlocks` et `generated`; LessonViewer.tsx:977-1005 rend chaque QCM.",
+      "description": "Chaque question de checkpoint est affichée deux fois. Le chapitre contient déjà trois `single_choice_exercise` et porte aussi un `block` legacy de type `checkpoint`; le normaliseur génère et ajoute trois QCM supplémentaires avec les mêmes identifiants. L’apprenant voit des répétitions et une activité étiquetée « TEACHING » plutôt que checkpoint (le chapitre n’a pas de type).",
+      "recommendation": "Choisir une seule représentation : conserver les trois `single_choice_exercise` existants et omettre/supprimer le `block` legacy de checkpoint, ou conserver le legacy et vider les blocs redondants. Définir `chapter.type: \"checkpoint\"` afin que l’interface annonce correctement la nature de l’écran.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[1].chapters[4] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[1].chapters[5] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[2].chapters[0] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[2].chapters[1] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[2].chapters[2] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[2].chapters[3] (`block.type=\"checkpoint\"` et trois `blocks[].type=\"single_choice_exercise\"`); shared/courseBlockNormalization.ts:11-23 génère trois QCM depuis `block.questions`, puis ligne 36 concatène `existingBlocks` et `generated`; LessonViewer.tsx:977-1005 rend chaque QCM.",
+      "description": "Chaque question de checkpoint est affichée deux fois. Le chapitre contient déjà trois `single_choice_exercise` et porte aussi un `block` legacy de type `checkpoint`; le normaliseur génère et ajoute trois QCM supplémentaires avec les mêmes identifiants. L’apprenant voit des répétitions et une activité étiquetée « TEACHING » plutôt que checkpoint (le chapitre n’a pas de type).",
+      "recommendation": "Choisir une seule représentation : conserver les trois `single_choice_exercise` existants et omettre/supprimer le `block` legacy de checkpoint, ou conserver le legacy et vider les blocs redondants. Définir `chapter.type: \"checkpoint\"` afin que l’interface annonce correctement la nature de l’écran.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[2].chapters[4] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[2].chapters[5] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[3].chapters[0] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[3].chapters[1] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[3].chapters[2] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[3].chapters[3] (`block.type=\"checkpoint\"` et trois `blocks[].type=\"single_choice_exercise\"`); shared/courseBlockNormalization.ts:11-23 génère trois QCM depuis `block.questions`, puis ligne 36 concatène `existingBlocks` et `generated`; LessonViewer.tsx:977-1005 rend chaque QCM.",
+      "description": "Chaque question de checkpoint est affichée deux fois. Le chapitre contient déjà trois `single_choice_exercise` et porte aussi un `block` legacy de type `checkpoint`; le normaliseur génère et ajoute trois QCM supplémentaires avec les mêmes identifiants. L’apprenant voit des répétitions et une activité étiquetée « TEACHING » plutôt que checkpoint (le chapitre n’a pas de type).",
+      "recommendation": "Choisir une seule représentation : conserver les trois `single_choice_exercise` existants et omettre/supprimer le `block` legacy de checkpoint, ou conserver le legacy et vider les blocs redondants. Définir `chapter.type: \"checkpoint\"` afin que l’interface annonce correctement la nature de l’écran.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[3].chapters[4] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[3].chapters[5] (champ `block` content et `blocks` non vide); shared/courseBlockNormalization.ts:11-12 génère le contenu legacy et ligne 36 l’ajoute aux blocs existants; useCourseData.ts:75-81 applique normalizeCourseBlocks avant le rendu; LessonViewer.tsx:498-550 rend chaque bloc content.",
+      "description": "Le même contenu est rendu deux fois : le chapitre possède à la fois un bloc legacy `block.type=\"content\"` et un bloc de contenu déjà présent dans `blocks`; le normaliseur les concatène.",
+      "recommendation": "Dédupliquer les données à la source ou introduire une déduplication sûre dans le normaliseur; ne garder qu’une source de vérité par contenu de chapitre.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "progression",
+      "course_id": "llm_application_security_red_teaming_specialist__04",
+      "location": "llm_application_security_red_teaming_specialist__04.json → lessons[3].chapters[5].blocks[0].body; formation-manifest.json → entrée 112, exactement quatre course_paths (__01 à __04); ce chapitre ne contient aucun bloc de TP, URL ou référence d’activité.",
+      "description": "La conclusion annonce « Proceed to the Final Lab », mais aucun Final Lab, lien, identifiant d’activité ou ressource n’est présent dans ce chapitre ni dans les quatre fichiers de cours exacts listés par le manifest. La transition finale promet donc une pratique sans chemin d’accès vérifiable.",
+      "recommendation": "Soit ajouter au manifest/parcours la ressource « Final Lab » et une navigation explicite, soit supprimer la promesse de TP et clore le cours. Ne pas inventer de cible tant que son identifiant n’est pas confirmé.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 41,
+    "p0": 12,
+    "p1": 5,
+    "p2": 24
+  }
+}

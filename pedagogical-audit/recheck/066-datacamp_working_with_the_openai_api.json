@@ -1,0 +1,441 @@
+{
+  "formation_id": "datacamp_working_with_the_openai_api",
+  "index": 66,
+  "course_ids": [
+    "working_with_the_openai_api__01"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json → index 66",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/066-datacamp_working_with_the_openai_api.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Relecture du JSON de cours actuel et rapprochement explicite avec le rapport initial et le registre statique. Les constats sont conservés uniquement lorsqu’ils sont localisés par les preuves JSON/renderer du rapport initial; aucun fait externe ni correction inventée."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "issue_id": "OAI-01-L01-C01-DC_CH01_SLIDES-FR-LABEL",
+      "severity": "P3",
+      "category": "localisation",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 0,
+        "chapter_index": 0,
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_ch01_slides",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[0].blocks[id=dc_ch01_slides].title='Chapter 1 slides'. LessonViewer.tsx:1007-1010 résout une chaîne telle quelle et l’affiche à 1052-1055."
+      },
+      "description": "Dans le parcours français, la carte de téléchargement affiche un titre uniquement en anglais. Le composant résout le texte tel qu’il est stocké, donc l’apprenant voit ce libellé anglais au milieu des contenus français.",
+      "recommendation": "Ajouter la paire i18n title={en: ..., fr: 'Diapositives du chapitre 1'} tout en conservant l’URL du fichier existante.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L01-C02-DC_1_ACT_02_TP-NO-EXECUTABLE-ASSESSMENT",
+      "severity": "P0",
+      "category": "action attendue et feedback",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 0,
+        "chapter_index": 1,
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_tp",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_tp] : steps=[], rubricCriteria absent, serverGradedAssessment absent, solution et successMessage vides. CloudExerciseBlock.tsx:153-161 valide directement une soumission non vide lorsqu’il n’existe ni grille ni correcteur ; CloudExerciseBlock.tsx:347-406 rend une zone de texte générique et un bouton Valider ; LessonViewer.tsx:1587-1592 verrouille ou déverrouille selon completedCloudExercises."
+      },
+      "description": "L’énoncé promet que le texte saisi dans une interface ChatGPT de formation sera envoyé à l’API et que la réponse reviendra ; l’interface réellement rendue est seulement une zone de réponse générique. `steps` est vide ; aucun critère, correcteur serveur, correction ni message de réussite n’est fourni. Dans CloudExerciseBlock, sans rubricCriteria ni évaluation serveur, la soumission de n’importe quel texte non vide valide l’activité et libère le verrou. L’action réellement exigée pour progresser n’est donc pas l’action pédagogique annoncée, et la réussite ne peut pas être déterminée.",
+      "recommendation": "P0 avant diffusion : aligner l’interface, l’énoncé, l’évaluation et le verrouillage ; tester qu’une réponse arbitraire ne débloque plus l’étape et qu’une tentative reçoit une aide ou une correction exploitable.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L01-C03-DC_1_ACT_03_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 0,
+        "chapter_index": 2,
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_code] : starterCode='', solutionCode='response = client.chat.completions.create(\\\\n    model=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-CODE-REPL-REQUIREDBEFOREADVANCE-BYPASSED",
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 0,
+        "chapter_index": 2,
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "system:LessonViewer/code_repl",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json : 18 blocs code_repl, chacun dans un chapitre requiredBeforeAdvance=true. chapterProgress.ts:94-103 ne traite pas code_repl ; LessonViewer.tsx:314-325, 1576-1613 et 1653-1662 ne l’incluent pas dans les passerelles. CodeReplBlock.tsx:40 émet pourtant onComplete, ce qui rend possible un identifiant de complétion à utiliser."
+      },
+      "description": "Les 18 chapitres contenant un `code_repl` portent `requiredBeforeAdvance: true`, mais la navigation ne les prend pas en compte. Une activité peut être ignorée via le bouton Suivant, les contrôles compacts ou la touche flèche droite. Cette incohérence rend le marqueur de prérequis inopérant pour l’ensemble des pratiques de code et permet d’achever la leçon sans les réaliser.",
+      "recommendation": "Après restauration des activités, implémenter et tester une unique règle de passage pour code_repl sur toutes les voies de navigation, sans créer de verrou basé sur une simple égalité textuelle.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L01-C05-DC_1_ACT_05_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 0,
+        "chapter_index": 4,
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='# Create the OpenAI client\\\\nclient = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L01-C06-DC_1_ACT_06_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 0,
+        "chapter_index": 5,
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L01-C07-DC_1_ACT_07_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 0,
+        "chapter_index": 6,
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_07_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C01-DC_CH02_SLIDES-FR-LABEL",
+      "severity": "P3",
+      "category": "localisation",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 0,
+        "chapter_id": "dc_ch02_act01",
+        "content_id": "dc_ch02_slides",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[0].blocks[id=dc_ch02_slides].title='Chapter 2 slides'. LessonViewer.tsx:1007-1010 résout une chaîne telle quelle et l’affiche à 1052-1055."
+      },
+      "description": "Dans le parcours français, la carte de téléchargement affiche un titre uniquement en anglais. Le composant résout le texte tel qu’il est stocké, donc l’apprenant voit ce libellé anglais au milieu des contenus français.",
+      "recommendation": "Ajouter la paire i18n title={en: ..., fr: 'Diapositives du chapitre 2'} tout en conservant l’URL du fichier existante.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C02-DC_2_ACT_02_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 1,
+        "chapter_id": "dc_ch02_act02",
+        "content_id": "dc_2_act_02_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C03-DC_2_ACT_03_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 2,
+        "chapter_id": "dc_ch02_act03",
+        "content_id": "dc_2_act_03_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C04-DC_2_ACT_04_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 3,
+        "chapter_id": "dc_ch02_act04",
+        "content_id": "dc_2_act_04_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[3].blocks[id=dc_2_act_04_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C06-DC_2_ACT_06_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 5,
+        "chapter_id": "dc_ch02_act06",
+        "content_id": "dc_2_act_06_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C07-DC_2_ACT_07_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 6,
+        "chapter_id": "dc_ch02_act07",
+        "content_id": "dc_2_act_07_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_07_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C09-DC_2_ACT_09_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 8,
+        "chapter_id": "dc_ch02_act09",
+        "content_id": "dc_2_act_09_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[8].blocks[id=dc_2_act_09_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C10-DC_2_ACT_10_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 9,
+        "chapter_id": "dc_ch02_act10",
+        "content_id": "dc_2_act_10_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_10_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L02-C11-DC_2_ACT_11_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 1,
+        "chapter_index": 10,
+        "chapter_id": "dc_ch02_act11",
+        "content_id": "dc_2_act_11_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[1].chapters[10].blocks[id=dc_2_act_11_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L03-C01-DC_CH03_SLIDES-FR-LABEL",
+      "severity": "P3",
+      "category": "localisation",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 2,
+        "chapter_index": 0,
+        "chapter_id": "dc_ch03_act01",
+        "content_id": "dc_ch03_slides",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[0].blocks[id=dc_ch03_slides].title='Chapter 3 slides'. LessonViewer.tsx:1007-1010 résout une chaîne telle quelle et l’affiche à 1052-1055."
+      },
+      "description": "Dans le parcours français, la carte de téléchargement affiche un titre uniquement en anglais. Le composant résout le texte tel qu’il est stocké, donc l’apprenant voit ce libellé anglais au milieu des contenus français.",
+      "recommendation": "Ajouter la paire i18n title={en: ..., fr: 'Diapositives du chapitre 3'} tout en conservant l’URL du fichier existante.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L03-C02-DC_3_ACT_02_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 2,
+        "chapter_index": 1,
+        "chapter_id": "dc_ch03_act02",
+        "content_id": "dc_3_act_02_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L03-C03-DC_3_ACT_03_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 2,
+        "chapter_index": 2,
+        "chapter_id": "dc_ch03_act03",
+        "content_id": "dc_3_act_03_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L03-C05-DC_3_ACT_05_TP-NO-EXECUTABLE-ASSESSMENT",
+      "severity": "P0",
+      "category": "action attendue et feedback",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 2,
+        "chapter_index": 4,
+        "chapter_id": "dc_ch03_act05",
+        "content_id": "dc_3_act_05_tp",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[4].blocks[id=dc_3_act_05_tp] : steps=[], rubricCriteria absent, serverGradedAssessment absent, solution et successMessage vides. CloudExerciseBlock.tsx:153-161 valide directement une soumission non vide lorsqu’il n’existe ni grille ni correcteur ; CloudExerciseBlock.tsx:347-406 rend une zone de texte générique et un bouton Valider ; LessonViewer.tsx:1587-1592 verrouille ou déverrouille selon completedCloudExercises."
+      },
+      "description": "L’énoncé demande de structurer une paire utilisateur-assistant dans les messages envoyés au modèle ; l’interface réellement rendue est seulement une zone de réponse générique. `steps` est vide ; aucun critère, correcteur serveur, correction ni message de réussite n’est fourni. Dans CloudExerciseBlock, sans rubricCriteria ni évaluation serveur, la soumission de n’importe quel texte non vide valide l’activité et libère le verrou. L’action réellement exigée pour progresser n’est donc pas l’action pédagogique annoncée, et la réussite ne peut pas être déterminée.",
+      "recommendation": "P0 avant diffusion : aligner l’interface, l’énoncé, l’évaluation et le verrouillage ; tester qu’une réponse arbitraire ne débloque plus l’étape et qu’une tentative reçoit une aide ou une correction exploitable.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L03-C06-DC_3_ACT_06_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 2,
+        "chapter_index": 5,
+        "chapter_id": "dc_ch03_act06",
+        "content_id": "dc_3_act_06_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[5].blocks[id=dc_3_act_06_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L03-C07-DC_3_ACT_07_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 2,
+        "chapter_index": 6,
+        "chapter_id": "dc_ch03_act07",
+        "content_id": "dc_3_act_07_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_07_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L03-C09-DC_3_ACT_09_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 2,
+        "chapter_index": 8,
+        "chapter_id": "dc_ch03_act09",
+        "content_id": "dc_3_act_09_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[8].blocks[id=dc_3_act_09_code] : starterCode='client = OpenAI(api_key=\\\\', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    },
+    {
+      "issue_id": "OAI-01-L03-C10-DC_3_ACT_10_CODE-TRUNCATED-CODE",
+      "severity": "P0",
+      "category": "activité exécutable",
+      "course_id": "working_with_the_openai_api__01",
+      "location": {
+        "course_path": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json",
+        "lesson_index": 2,
+        "chapter_index": 9,
+        "chapter_id": "dc_ch03_act10",
+        "content_id": "dc_3_act_10_code",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_api__01.json → lessons[2].chapters[9].blocks[id=dc_3_act_10_code] : starterCode='', solutionCode='client = OpenAI(api_key=\\\\', testCode absent et expectedOutput vide. CodeReplBlock.tsx:28-40 appelle uniquement matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 exige l’égalité normalisée avec solutionCode, sans exécuter de code."
+      },
+      "description": "L’activité est annoncée comme du code interactif, mais les données de code sont incomplètes : le code de départ est vide ou s’arrête sur une barre oblique inverse après `api_key=` ; la solution s’arrête également prématurément (sur `api_key=` ou `model=`). Plusieurs consignes ou indices s’interrompent de la même manière. CodeReplBlock ne lance pas Python : il valide seulement l’égalité textuelle (hors fins de lignes et espaces terminaux) avec cette solution tronquée. L’apprenant ne peut donc ni exécuter la requête attendue ni recevoir un diagnostic de son code, alors que l’écran est une activité essentielle de la formation.",
+      "recommendation": "P0 avant diffusion : restaurer les données complètes de l’activité, puis ajouter des tests exécutables ou comportementaux et vérifier qu’une solution valide non identique octet à octet reçoit une validation et un feedback utiles.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 24,
+    "p0": 20,
+    "p1": 1,
+    "p2": 0
+  }
+}

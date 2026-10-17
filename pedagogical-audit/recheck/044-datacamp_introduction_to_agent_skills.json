@@ -1,0 +1,222 @@
+{
+  "formation_id": "datacamp_introduction_to_agent_skills",
+  "index": 44,
+  "course_ids": [
+    "introduction_to_agent_skills__01"
+  ],
+  "review_scope": {
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "sources": [
+      "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+      "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/044-datacamp_introduction_to_agent_skills.json",
+      "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_agent_skills__01.json"
+    ],
+    "method": "Contre-vérification des constats du rapport initial contre les champs et structures du cours actuel; aucun cours modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[0].chapters[0].blocks[id=dc_1_act_01_video]",
+      "description": "Dans le parcours déclaré fr-FR, la vidéo obligatoire ne propose qu’une transcription et une piste de sous-titres anglaises. Un apprenant ayant choisi le français peut ouvrir la transcription affichée par LessonViewer, mais elle reste en anglais ; ce soutien textuel ne remplit donc pas son rôle d’alternative française.",
+      "recommendation": "Prioriser une alternative française accessible pour cette vidéo requise, puis vérifier son affichage dans le lecteur réel.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[0].chapters[0] (LessonViewer.videoCompletionKey)",
+      "description": "Le bouton principal « Suivant » ne verrouille pas les six vidéos locales requises de ce cours. Le lecteur marque une vidéo complétée avec son `block.id`, alors que le calcul du verrouillage de pied de page cherche `videoId`, puis `url`, puis seulement un `id` de 8 à 15 caractères. Les six ids locaux ont 17 caractères et n’ont ni `videoId` ni `url` : la liste des vidéos à valider devient vide et le passage est autorisé sans visionnage ni marquage manuel.",
+      "recommendation": "Corriger la clé de complétion avant toute modification pédagogique : le verrouillage annoncé doit correspondre à l’action réellement demandée.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple]",
+      "description": "Les champs français affichés au choix de langue français sont identiques aux champs anglais, y compris l’énoncé, les options, l’indice et le feedback. L’activité est donc réellement proposée en anglais dans une formation importée en fr-FR.",
+      "recommendation": "Localiser ce QCM avant sa diffusion auprès d’un public francophone.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "activité_et_validation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[0].chapters[2].blocks[id=dc_1_act_03_code]",
+      "description": "L’activité demande de piloter Claude Code dans un terminal, mais le composant présenté est un simple éditeur de texte Python : il n’exécute ni le code de départ ni les commandes `claude`. « Vérifier le code » ne contrôle que l’égalité exacte entre le texte de l’éditeur et le champ `solutionCode`, lequel contient des commentaires et des commandes shell de préparation/validation. L’apprenant ne peut donc pas faire évaluer l’action demandée ; il peut seulement reproduire la solution interne affichée.",
+      "recommendation": "Bloquer la publication de cette activité sous sa forme actuelle et choisir un renderer compatible avec la tâche terminale annoncée.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[0].chapters[2] (LessonViewer.codeReplGate)",
+      "description": "Le passage à l’écran suivant n’est pas conditionné par la validation des blocs `code_repl`, alors que cette activité est marquée `requiredBeforeAdvance: true`. Le renderer enregistre bien une complétion si une égalité de texte est obtenue, mais aucune des listes de conditions de passage ne traite le type `code_repl`. Le même défaut affecte les cinq activités `code_repl` de ce cours.",
+      "recommendation": "Corriger la cohérence de verrouillage en même temps que le mécanisme de validation de l’exercice.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[0].chapters[3].blocks[id=dc_1_act_04_video]",
+      "description": "La vidéo obligatoire ne comporte ni sous-titres français ni transcription française, alors que la formation est déclarée `sourceLanguage: fr-FR`. Le transcript rendu reste anglais.",
+      "recommendation": "Créer et valider l’alternative française sans supposer que l’URL locale est absente.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple]",
+      "description": "La question, les options, l’indice et l’explication affichés via les valeurs `fr` sont en anglais, ce qui rompt la continuité avec les descriptions françaises du parcours.",
+      "recommendation": "Localiser ensemble consigne, distracteurs, indice et explication pour conserver leur cohérence pédagogique.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "activité_et_validation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[0].chapters[5].blocks[id=dc_1_act_06_code]",
+      "description": "La consigne demande une interaction terminale et la création d’un fichier SKILL.md, mais le renderer ne lance aucune commande et ne vérifie que la copie textuelle exacte de `solutionCode`. Le pseudo-code de solution contient des commandes shell de seed, non une réponse Python exécutable dans l’éditeur affiché.",
+      "recommendation": "Reconcevoir la modalité de réalisation et la validation avant de considérer cette activité comme obligatoire.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[1].chapters[0].blocks[id=dc_2_act_01_video]",
+      "description": "La vidéo requise n’offre qu’une transcription anglaise et `subtitleUrlEn`; aucun équivalent français n’est renseigné pour le parcours fr-FR.",
+      "recommendation": "Prévoir une alternative française accessible sans qualifier la ressource référencée d’absente.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple]",
+      "description": "L’énoncé, les options et l’explication sont identiques en français et en anglais. L’indice est traduit, ce qui crée une activité bilingue incomplète plutôt qu’une activité française cohérente.",
+      "recommendation": "Finaliser la localisation avant de présenter ce contrôle dans l’interface française.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "activité_et_validation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[1].chapters[2].blocks[id=dc_2_act_03_code]",
+      "description": "L’exercice pratique est rendu dans un éditeur Python sans exécution. Sa validation ne vérifie ni le champ `allowed-tools`, ni le déplacement de `Architecture Reference`, ni le lien créé : elle compare seulement le texte saisi au `solutionCode` interne contenant des commandes shell de seed.",
+      "recommendation": "Remplacer la validation par égalité de texte par une validation compatible avec l’action annoncée.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[1].chapters[3].blocks[id=dc_2_act_04_video]",
+      "description": "La vidéo obligatoire et son alternative textuelle sont uniquement en anglais; seule une piste de sous-titres anglais est déclarée dans un cours importé fr-FR.",
+      "recommendation": "Rendre le média et son alternative accessibles dans la langue du parcours.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple]",
+      "description": "L’énoncé, les options et l’indice restent en anglais dans leurs champs français. Seule l’explication est localisée, ce qui laisse l’action attendue non localisée dans l’interface française.",
+      "recommendation": "Localiser l’énoncé avant l’explication afin que l’apprenant comprenne quoi sélectionner.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "feedback",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort]",
+      "description": "Le feedback pédagogique rédigé dans le JSON n’est jamais transmis au renderer. LessonViewer passe seulement `correction`, qui vaut `null`; MatchingExercise n’affiche un commentaire détaillé qu’à partir de cette propriété. Après une erreur, l’apprenant obtient surtout un score « X/4 · Réessayez » et des marques correct/incorrect, sans explication visible de la règle CLAUDE.md versus skill pourtant fournie dans `feedback`.",
+      "recommendation": "Rétablir un feedback explicatif visible avant de considérer le tri comme une évaluation formative suffisante.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort]",
+      "description": "Les instructions, l’indice, le feedback et les quatre cartes affichent la même formulation anglaise pour `fr` et `en`. Les libellés de catégories sont identiques par nature, mais l’action et les situations à classer restent en anglais pour l’interface française.",
+      "recommendation": "Localiser l’activité de tri au même niveau que le reste de l’interface française.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[2].chapters[0].blocks[id=dc_3_act_01_video]",
+      "description": "La ressource obligatoire ne met à disposition que le support anglais : transcription anglaise et sous-titres anglais, sans piste ni alternative française renseignée.",
+      "recommendation": "Fournir une alternative textuelle française pour le média requis.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[2].chapters[1].blocks[id=dc_3_act_02_qcm_multiple]",
+      "description": "L’énoncé et l’explication sont localisés, mais l’indice affiché au besoin est identique en anglais dans les deux langues. Cela réduit l’utilité de l’aide précisément au moment où l’apprenant hésite.",
+      "recommendation": "Localiser l’aide afin que le dispositif de remédiation soit réellement utilisable dans la langue sélectionnée.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "activité_et_validation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[2].chapters[2].blocks[id=dc_3_act_03_code]",
+      "description": "La tâche demande des opérations terminales et une explication à Claude, mais le bloc `code_repl` affiche un éditeur Python sans terminal et valide uniquement une égalité textuelle avec une solution interne de commandes shell. Les compétences déplacées, le frontmatter du sous-agent et l’explication sur les agents intégrés ne sont donc pas réellement évalués.",
+      "recommendation": "Rebâtir l’activité autour de l’environnement annoncé avant de la rendre certificative ou bloquante.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[2].chapters[3].blocks[id=dc_3_act_04_video]",
+      "description": "Le support obligatoire est disponible avec transcription et sous-titres anglais uniquement; aucune alternative française n’est déclarée malgré le contexte fr-FR.",
+      "recommendation": "Rendre l’alternative textuelle du média utilisable pour le public français.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[2].chapters[4].blocks[id=dc_3_act_05_qcm_multiple]",
+      "description": "L’énoncé et les quatre propositions sont identiques dans les versions française et anglaise, tandis que l’indice et l’explication ont été traduits. L’apprenant français reçoit donc une aide en français après avoir dû interpréter une question de diagnostic en anglais.",
+      "recommendation": "Compléter la localisation de la partie à résoudre, pas seulement celle de la remédiation.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "activité_et_validation",
+      "course_id": "introduction_to_agent_skills__01",
+      "location": "lessons[2].chapters[5].blocks[id=dc_3_act_06_code]",
+      "description": "L’interface proposée ne permet pas de réaliser ni d’évaluer le dépannage demandé dans Claude Code. Elle présente un éditeur Python et compare son contenu à une solution textuelle interne contenant des copies de fichiers; elle n’exécute ni `claude`, ni la lecture/réécriture de SKILL.md, ni un test de déclenchement sémantique.",
+      "recommendation": "Traiter comme bloquant de conception : l’action annoncée et l’action validée doivent être les mêmes.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 21,
+    "p0": 5,
+    "p1": 9,
+    "p2": 7
+  }
+}

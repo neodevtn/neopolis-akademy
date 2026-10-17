@@ -1,0 +1,168 @@
+{
+  "formation_id": "novasavo_automatisation_comptable_ia",
+  "index": 114,
+  "course_ids": [
+    "automatisation_comptable_ia__01"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/automatisation_comptable_ia__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/114-novasavo_automatisation_comptable_ia.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du contenu JSON actuel et des preuves localisées du rapport initial; aucun cours ni code n'a été modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P0",
+      "category": "verrouillage / évaluation",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "Données : client/public/data/courses/automatisation_comptable_ia__01.json → 31 blocs type=knowledge_check, tous avec correctAnswer et required=true. Rendu : client/src/components/blocks/GenericLearningBlocks.tsx, lignes 50-64. Progression : client/src/pages/training/LessonViewer.tsx, lignes 484-489 et 359-377 ; client/src/pages/training/chapterProgress.ts, lignes 94-103.",
+      "description": "Une réponse erronée à un knowledge check obligatoire est enregistrée comme activité terminée et déverrouille la suite. Le contrôle fournit bien un feedback et un bouton « Réessayer », mais le parcours ne requiert pas la bonne réponse. Le défaut concerne les 31 knowledge_check de la formation, y compris les checkpoints et l’examen final.",
+      "recommendation": "Ne marquer l’activité comme complétée pour le verrouillage qu’après une réponse correcte (ou, si le choix pédagogique est une auto-évaluation formative, ne pas rendre le chapitre obligatoire). Conserver le feedback actuel et autoriser explicitement une nouvelle tentative après erreur.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "complétude des explications",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[0].chapters[4].blocks[0] ; le scénario lessons[0].chapters[15].blocks[0] porte sur une facture de fournitures de 300 € à crédit.",
+      "description": "L’écran est intitulé « Exemple concret débit et crédit », mais son contenu reste définitionnel : il précise que l’effet dépend du type de compte sans montrer une écriture, des comptes, des montants ou l’équilibre obtenu. Cette lacune réduit la préparation au scénario ultérieur sur une facture de fournitures payable à crédit.",
+      "recommendation": "Ajouter un exemple travaillé reliant deux comptes, les montants au débit/crédit et la vérification de l’égalité. Le cas de 300 € déjà présent dans le scénario suivant peut servir de fil rouge si sa qualification comptable est validée par l’équipe pédagogique/métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "verrouillage",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "Données : lessons[1..11].chapters[4].blocks[0] et lessons[12].chapters[4].blocks[0] sont des knowledge_check requis dans client/public/data/courses/automatisation_comptable_ia__01.json. Rendu/gate : client/src/pages/training/LessonViewer.tsx, lignes 1507-1515, où knowledge_check est absent de lastNovasavoIds.",
+      "description": "Le knowledge check placé sur le dernier écran des unités 2 à 12 ne conditionne pas la fin de l’unité : l’apprenant peut cliquer sur « Leçon terminée » sans y répondre. La même omission s’applique à la question 5, dernier écran de l’examen final.",
+      "recommendation": "Inclure knowledge_check dans lastNovasavoIds et tester le cas terminal afin que « Leçon terminée » reste désactivé tant que le contrôle final n’est pas validé selon la règle retenue (réponse correcte si AUD-114-001 est corrigé).",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation / alignement pédagogique",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[1..11].chapters[4].blocks[0] : mêmes options a–d, correctAnswer=b et même explanation ; seules les mentions de thème diffèrent.",
+      "description": "Les 11 scénarios de validation des unités 2 à 12 évaluent la même règle générale de déploiement contrôlé, quelle que soit la compétence annoncée. Seul le segment après « liée à » change. Ils ne permettent pas de vérifier que l’apprenant sait appliquer les notions propres à la saisie, catégorisation, rapprochement, factures, prévisions, fraude, paie, intégration, gouvernance ou évolution du métier.",
+      "recommendation": "Conserver éventuellement un contrôle transversal sur le déploiement responsable, mais rédiger pour chaque unité un scénario fondé sur son exemple métier et son objectif déclaré, avec une décision concrète à prendre, des distracteurs plausibles et un feedback qui explique la règle spécifique mobilisée. Les données disponibles ne permettent pas de produire les cas spécifiques sans inventer les règles métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[2].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « saisie automatisée des données comptables » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant les données ou champs à fiabiliser, la règle de contrôle de saisie et un exemple de traitement d’une anomalie de saisie. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[3].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « catégorisation automatique des transactions » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant un exemple de transaction, les catégories/règles de classement et le traitement d’une catégorie incertaine. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[4].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « rapprochement bancaire intelligent » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant les éléments à rapprocher, un critère de rapprochement et un exemple d’exception à investiguer. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[5].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « gestion automatisée des factures et des dépenses » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant les étapes extraction–imputation–approbation–paiement et un exemple de facture ou de dépense en exception. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[6].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « prévisions financières et analyses prédictives » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant les données d’entrée, les hypothèses à documenter et un exemple d’interprétation prudente d’un résultat. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[7].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « détection des anomalies et prévention de la fraude » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant un signal d’anomalie, les vérifications à mener et la distinction entre alerte et conclusion. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[8].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « automatisation de la paie et des déclarations fiscales » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant les contrôles de données, les validations avant transmission et un cas d’exception adapté au périmètre local. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[9].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « intégration des outils d’IA dans les systèmes comptables » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant les systèmes/données à relier, les contrôles d’interface et un exemple de flux intégration–relecture–journalisation. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[10].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « gouvernance, conformité et éthique de l’IA en comptabilité » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant les responsabilités, règles documentées, traces attendues et un exemple de décision nécessitant une revue. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude / progression",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[11].chapters[2].blocks[0..1] et chapters[3].blocks[0]. Les mêmes libellés et la même structure sont répétés dans les unités 3 à 12, alors que les titres et objectifs déclarent des sujets distincts.",
+      "description": "L’unité annoncée sur « avenir de la profession comptable à l’ère de l’IA » ne développe pas son objet propre avant son activité de validation. L’écran de processus reprend le même canevas générique que les autres unités (« Collecter et vérifier les données source », « Appliquer des règles documentées », « Traiter les exceptions », « Valider et journaliser la décision ») ; l’écran suivant réutilise également les mêmes erreurs/corrections. Un débutant ne reçoit donc ni définition opérationnelle ni exemple comptable lié au sujet annoncé.",
+      "recommendation": "Avant le schéma, ajouter une explication spécifique à l’unité couvrant les évolutions de tâches/compétences, une situation professionnelle concrète et les limites du rôle de l’outil. Les données auditées ne contiennent pas le cas métier détaillé permettant de rédiger cet exemple de manière fiable sans hypothèse ; le cas et ses règles doivent donc être fournis/validés par l’équipe métier.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "automatisation_comptable_ia__01",
+      "location": "client/public/data/courses/automatisation_comptable_ia__01.json → lessons[12].chapters[0..4].blocks[0] : contenus prompt/options/correctAnswer/explanation identiques.",
+      "description": "L’examen final ne diversifie pas l’évaluation : ses cinq écrans posent exactement la même question avec les mêmes quatre options, la même bonne réponse et la même explication. Il ne peut donc pas attester l’acquisition des compétences réparties sur les 12 unités ; il répète cinq fois un seul principe transversal.",
+      "recommendation": "Construire cinq questions distinctes, chacune rattachée à un objectif effectivement enseigné et à une unité différente ; conserver la supervision humaine comme fil conducteur, sans réutiliser la même question. Les données ne fournissent pas de banque de cas ni de barème couvrant les objectifs, donc les nouveaux énoncés ne peuvent pas être rédigés de façon fiable ici.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 15,
+    "p0": 2,
+    "p1": 12,
+    "p2": 1
+  }
+}

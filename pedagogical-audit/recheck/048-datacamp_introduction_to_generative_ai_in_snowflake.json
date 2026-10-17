@@ -1,0 +1,78 @@
+{
+  "formation_id": "datacamp_introduction_to_generative_ai_in_snowflake",
+  "index": 48,
+  "course_ids": [
+    "introduction_to_generative_ai_in_snowflake__01"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_generative_ai_in_snowflake__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/048-datacamp_introduction_to_generative_ai_in_snowflake.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "current_inventory": {
+      "lessons": 2,
+      "chapters": 7,
+      "video_blocks": 7,
+      "interactive_or_practical_blocks": 0,
+      "download_blocks": 2,
+      "import_declared_activities": 20,
+      "import_declared_cloud_exercises": 13,
+      "static_audit_issue_count": 0
+    }
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "objectifs_et_activites",
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "location": "datacampImport.expected.exercise_types.CloudExercise; lessons[*].chapters[*].blocks",
+      "description": "L’état courant déclare 13 CloudExercise parmi 20 activités importées, mais l’inventaire local des blocs rendables contient uniquement 7 video, 1 content et 2 download : aucun bloc cloud_exercise ou autre activité interactive/pratique. Plusieurs vidéos se terminent par une invitation explicite à pratiquer, sans activité correspondante ni feedback. Le rapport initial documente ce même écart et le JSON courant le confirme.",
+      "recommendation": "Restaurer les 13 activités annoncées avec consigne, action attendue, critères de réussite, indice et feedback, ou réaligner explicitement les métadonnées et les promesses pédagogiques sur un format démonstratif.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "fausses_soumissions_ou_gates",
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "location": "lessons[*].chapters[*].requiredBeforeAdvance; blocks[type=video].id; initial_report finding PED-048-002",
+      "description": "Les 7 chapitres sont marqués requiredBeforeAdvance=true, mais les 7 identifiants vidéo audio mesurent 17 caractères (par exemple dc_1_act_01_video) et le rapport initial localise une logique de navigation qui ne reconnaît les block.id que pour une longueur de 8 à 15 caractères. La clé de progression vidéo devient donc vide dans le chemin concerné, ce qui neutralise le gate de visionnage. Aucun checkpoint ou soumission pratique n’est présent dans le JSON courant.",
+      "recommendation": "Utiliser block.id sans contrainte de longueur pour les blocs audioUrl/mp4Url/hlsUrl, puis tester le verrouillage et la fin de leçon avec les 7 identifiants actuels.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "faisabilite_tp_fichiers_environnement",
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "location": "lessons[0].chapters[0].blocks[id=dc_1_act_01_video].projectorSlides[number=10].script; transcriptSegments[heading=10. Configuration de Cortex]",
+      "description": "La procédure d’environnement demande de rechercher « snowlfake-ml-python ». Le même JSON utilise par ailleurs snowflake.cortex et Snowflake correctement. La chaîne fournie à l’apprenant est donc incohérente avec les autres références du cours et peut empêcher la préparation indiquée si elle est saisie telle quelle.",
+      "recommendation": "Corriger la chaîne dans le script et la transcription, puis vérifier la procédure dans l’environnement Snowflake avant republication.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "rendu_bilinguisme",
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "location": "lessons[1].chapters[0].blocks[id=dc_2_act_01_video].subtitleUrlFr; lessons[1].chapters[1].blocks[id=dc_2_act_04_video].subtitleUrlFr; lessons[1].chapters[3].blocks[id=dc_2_act_10_video].subtitleUrlFr",
+      "description": "Ces trois vidéos ont une transcription française et subtitleUrlEn, mais aucun subtitleUrlFr. Le rapport initial localise le rendu qui expose alors un lien générique « Sous-titres » vers la version anglaise. La transcription française existe comme alternative repliée, mais aucun sous-titre français synchronisé n’est déclaré pour ces vidéos.",
+      "recommendation": "Ajouter les VTT français correspondants ; à défaut, libeller explicitement le lien comme sous-titres anglais et rendre la transcription française plus repérable.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 4,
+    "p0": 0,
+    "p1": 2,
+    "p2": 1
+  }
+}

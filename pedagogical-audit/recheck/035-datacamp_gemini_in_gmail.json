@@ -1,0 +1,207 @@
+{
+  "formation_id": "datacamp_gemini_in_gmail",
+  "index": 35,
+  "course_ids": [
+    "gemini_in_gmail__01"
+  ],
+  "review_scope": {
+    "manifest_course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/gemini_in_gmail__01.json"
+    ],
+    "initial_report_path": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/035-datacamp_gemini_in_gmail.json",
+    "static_audit_path": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "covered": "État JSON actuel du cours, objectifs et activités déclarés, faisabilité du TP et des ressources, soumissions/gates, médias/téléchargements, duplications ou corruption observables dans les données, rendu et bilinguisme; comparaison au rapport initial et au pré-audit statique.",
+    "method_note": "Contre-revue strictement locale et non modificative. Les constats sont retenus uniquement lorsqu’ils sont localisés dans le JSON actuel et confirmés par le rapport initial; aucune disponibilité de compte Workspace, exécution navigateur ou qualité audiovisuelle non observée n’est déduite. Le pré-audit statique localise ce cours avec issue_count=0."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act01].blocks[content_id=dc_1_act_01_video]"
+      },
+      "description": "La vidéo obligatoire est franchissable sans être marquée comme vue. Le lecteur enregistre la complétion sous la clé MP4 `dc_1_act_01_video`, mais les contrôles de navigation ne retiennent ni `mp4Url` ni cet identifiant de 17 caractères : ils ne construisent donc aucune clé vidéo à exiger. Le quiz intermédiaire injecté ne compense pas ce défaut : aucune banque de questions n’est déclarée pour ce cours et ChapterQuiz passe automatiquement lorsqu’elle est vide.",
+      "recommendation": "Corriger la résolution de clé commune, puis tester qu’un clic Suivant reste bloqué tant que ce bloc n’est pas terminé ou explicitement marqué comme vu.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act01].blocks[content_id=dc_1_act_01_video]"
+      },
+      "description": "Le cours est étiqueté `sourceLanguage: fr-FR` et son introduction d’interface est traduite, mais ce média ne déclare qu’une transcription en anglais et `subtitleUrlEn`; aucune alternative textuelle ou piste de sous-titres française n’est fournie. Un apprenant francophone ne dispose donc pas d’un accès textuel français au contenu introductif et à ses avertissements d’usage.",
+      "recommendation": "Livrer l’alternative française avant de compter ce média comme pleinement accessible dans le parcours français.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_video",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act02].blocks[content_id=dc_1_act_02_video]"
+      },
+      "description": "La vidéo déclarée obligatoire peut être contournée : sa clé de rendu `dc_1_act_02_video` n’est pas retrouvée par les contrôles de navigation, qui ignorent les sources MP4 et ne conservent un id que s’il compte de 8 à 15 caractères. L’écran suivant est donc accessible sans avoir vu l’explication qui prépare le travail de rédaction.",
+      "recommendation": "Appliquer la correction de clé média commune et ajouter ce chapitre au test de verrouillage séquentiel.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_video",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act02].blocks[content_id=dc_1_act_02_video]"
+      },
+      "description": "La démonstration ne fournit qu’une transcription et des sous-titres anglais, alors que le cours est importé comme fr-FR et que les descriptions de parcours sont françaises. Les explications détaillées des actions et des exemples de prompts ne sont donc pas accessibles textuellement en français.",
+      "recommendation": "Prioriser la localisation de ce support procédural avant de l’utiliser comme prérequis d’une activité en français.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_video",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act03].blocks[content_id=dc_1_act_03_video]"
+      },
+      "description": "Le verrouillage annoncé par `requiredBeforeAdvance: true` ne fonctionne pas pour cette vidéo MP4 : le rendu marque `dc_1_act_03_video` comme complétée, mais les chemins de navigation ne reconnaissent pas l’id long sans videoId/URL YouTube. L’apprenant peut donc arriver à l’explication de l’activité sans les prérequis d’affinage.",
+      "recommendation": "Corriger le gate et le couvrir par un test avec l’id `dc_1_act_03_video`.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_video",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act03].blocks[content_id=dc_1_act_03_video]"
+      },
+      "description": "Les définitions procédurales qui préparent les réponses aux deux quiz (Formalize, Elaborate, Shorten) ne sont déclarées qu’en anglais dans la transcription et les sous-titres. Cette localisation partielle est incohérente avec les consignes et descriptions françaises du même parcours.",
+      "recommendation": "Localiser ce média avant de s’appuyer sur lui comme unique explication préalable aux évaluations en français.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_video",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act04].blocks[content_id=dc_1_act_04_video]"
+      },
+      "description": "Cette transition est annoncée comme obligatoire mais peut être sautée. Le lecteur stocke bien l’état sous `dc_1_act_04_video`; les vérifications de navigation ignorent toutefois le MP4 et son id de 17 caractères, laissant le passage vers l’activité disponible sans preuve de consultation.",
+      "recommendation": "Corriger ce gate commun et ajouter un test de non-contournement pour cette vidéo de transition.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_video",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act04].blocks[content_id=dc_1_act_04_video]"
+      },
+      "description": "Le seul contenu qui introduit le scénario pratique est accessible textuellement uniquement en anglais : transcription anglaise et sous-titres anglais déclarés, sans équivalent français. Cela affaiblit l’autonomie d’un apprenant francophone juste avant l’activité.",
+      "recommendation": "Rendre disponible l’alternative française avant de conserver ce média comme unique introduction de l’activité.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_resource",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act05].blocks[content_id=dc_1_act_05_resource]"
+      },
+      "description": "L’activité pratique annoncée à l’écran précédent n’est pas implémentée dans le contenu accessible. L’unique consigne est « View the PDF before continuing » et le PDF ne contient ni scénario opérationnel, ni détail du produit, ni étapes Gmail, ni production à remettre. Le composant permet ensuite une simple auto-attestation, sans réaliser ni valider l’e-mail annoncé. L’apprenant ne peut donc pas savoir quoi produire ni recevoir de retour sur la compétence centrale promise.",
+      "recommendation": "Restaurer ou concevoir l’activité pratique et sa validation avant de conserver ce chapitre comme exigence de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_resource",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act05].blocks[content_id=dc_1_act_05_resource]"
+      },
+      "description": "Dans un parcours déclaré fr-FR, les deux textes propres à l’activité sont identiques en anglais dans les variantes en/fr (« View the PDF before continuing. », « Open the local PDF resource »). La consigne de l’écran censée guider la pratique n’est donc pas localisée.",
+      "recommendation": "Corriger les chaînes françaises de ce bloc avec la restauration de l’activité.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_qcm_multiple",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act06].blocks[content_id=dc_1_act_06_qcm_multiple]"
+      },
+      "description": "L’énoncé, l’indice et l’explication sont en français, mais les cinq libellés d’option fournis dans les variantes `fr` restent en anglais. Le lecteur sélectionne bien ces variantes et les affiche donc telles quelles dans une interface française.",
+      "recommendation": "Traduire les options avant publication de ce quiz dans le parcours français.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_qcm_multiple",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act06].blocks[content_id=dc_1_act_06_qcm_multiple]"
+      },
+      "description": "Après une réponse incorrecte, le composant affiche la même explication que pour une réponse correcte. Or son premier énoncé affirme « Cette réponse est correcte » et le paragraphe est dupliqué. La réponse choisie peut être fausse : ce feedback est donc contradictoire et n’explique pas clairement la règle de correction.",
+      "recommendation": "Remplacer immédiatement l’explication par une formulation neutre et dédupliquée; envisager ensuite un feedback par réponse.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_qcm",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act07].blocks[content_id=dc_1_act_07_qcm]"
+      },
+      "description": "La question et l’indice sont localisés en français, mais les quatre choix et l’explication française restent en anglais. Puisque SingleChoiceExercise rend la valeur `fr` lorsqu’elle existe, cette incohérence est exposée directement à l’apprenant francophone.",
+      "recommendation": "Compléter les champs français des options et de l’explication sans traduire arbitrairement les libellés réels de l’interface Gmail.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "gemini_in_gmail__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_qcm",
+        "path": "lessons[0].chapters[chapter_id=dc_ch01_act07].blocks[content_id=dc_1_act_07_qcm]"
+      },
+      "description": "La même explication, formulée « This answer is correct », s’affiche également après une sélection incorrecte. Le composant signale bien visuellement la bonne option, mais la phrase du feedback contredit l’état d’échec et ne formule pas le raisonnement de façon neutre.",
+      "recommendation": "Remplacer l’explication par une version neutre, puis décider si le produit doit gérer un feedback spécifique à l’erreur.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 14,
+    "p0": 0,
+    "p1": 5,
+    "p2": 9
+  }
+}

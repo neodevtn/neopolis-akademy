@@ -1,0 +1,87 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_18",
+  "index": 87,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__18"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__18.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/087-ia_appliquee_metiers_tp__formation_18.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Comparaison du JSON de cours actuel avec les preuves localisées du rapport initial et la fiche correspondante de static-audit-data.json. Aucun cours, code ou ressource n'a été modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P3",
+      "category": "ux_rendu",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "location": "lessons[0].chapters[1].blocks[id=ia_appliquee_metiers_tp__18-source-review] (resource_review.instructions); rendu via le renderer resource_review",
+      "description": "La consigne contient un lien Markdown alors que le renderer affiche les instructions dans un paragraphe React brut. Le lien risque donc d'être affiché littéralement, en doublon du bouton d'ouverture fonctionnel. Le JSON actuel conserve cette consigne et resourceUrl.",
+      "recommendation": "Retirer le lien Markdown de la consigne ou le rendre via un composant de lien adapté, en conservant le bouton d'ouverture fonctionnel.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "location": "lessons[0].chapters[2] (sequence_visual) et lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__18-quiz-order]",
+      "description": "Le visuel pédagogique précédent emploie les étapes « Préparer » et « Contrôler », tandis que le tri final emploie « Construire » et « Valider ». Les cartes évaluent la configuration du workflow sous « Construire » sans reprendre le vocabulaire du visuel, ce qui impose une inférence non explicitée.",
+      "recommendation": "Aligner les libellés et les étapes du tri final sur le vocabulaire du visuel, ou expliciter dans le cours l'équivalence entre les deux nomenclatures.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "location": "lessons[0].chapters[3] id=ia_appliquee_metiers_tp__18-checkpoint-01; blocks[id=ia_appliquee_metiers_tp__18-checkpoint-preparation]; requiredBeforeAdvance=true; passThreshold=1",
+      "description": "Le checkpoint est requis avec un seuil de réussite de 1, mais le comportement de progression vérifié dans le rapport initial enregistre aussi une réponse incorrecte comme interaction terminée et déverrouille le mini-projet. Le JSON actuel conserve le checkpoint à réponse unique et son seuil sans preuve de correction de ce gate.",
+      "recommendation": "Ne déverrouiller la suite qu'après une réponse correcte effectivement validée, ou retirer le caractère bloquant si aucune correction machine-évaluable fiable n'est garantie.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "location": "lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__18-mini-project-proof] (cloud_exercise); assignment/instructions/steps",
+      "description": "Le mini-projet demande quatre éléments de preuve, mais le bloc actuel ne contient ni critère d'évaluation, ni évaluation serveur, ni longueur minimale spécifique. Selon le renderer et la logique de progression documentés dans le rapport initial, une saisie d'un seul caractère non blanc peut être acceptée et déverrouiller le quiz final sans vérifier ces éléments.",
+      "recommendation": "Collecter les quatre preuves dans des champs structurés et vérifier leur présence avant onComplete ; ajouter des critères apprenant et une évaluation adaptée si la qualité doit être évaluée.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "location": "lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__18-quiz-03].explanation",
+      "description": "La question porte sur le contrôle de l'objectif « Recevoir une facture par Telegram », mais l'explication actuelle est générique (« données fictives, contrôle humain et vérification avant toute action réelle ») et ne relie pas explicitement le résultat à un critère métier observable ni à la consignation d'un écart.",
+      "recommendation": "Ajouter une explication spécifique comparant le résultat de réception au critère métier défini et demandant de documenter tout écart.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "location": "lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__18-quiz-04].explanation",
+      "description": "La réponse correcte interdit une clé API, un mot de passe ou un identifiant réel, mais l'explication actuelle reste générique et n'explicite pas le risque d'exposition ni l'usage exclusif de données fictives et d'accès de test.",
+      "recommendation": "Ajouter un feedback spécifique rappelant de ne jamais mettre de secrets ou d'identifiants réels dans le support ou la preuve et d'utiliser des données fictives et accès de test.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 2,
+    "p2": 1
+  }
+}

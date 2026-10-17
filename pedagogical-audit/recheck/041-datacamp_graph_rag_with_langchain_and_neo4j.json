@@ -1,0 +1,501 @@
+{
+  "formation_id": "datacamp_graph_rag_with_langchain_and_neo4j",
+  "index": 41,
+  "course_ids": [
+    "graph_rag_with_langchain_and_neo4j__01"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/041-datacamp_graph_rag_with_langchain_and_neo4j.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue de l’état JSON actuel et du rapport initial; aucune modification de cours et aucun constat sans preuve localisée."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_07_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act08",
+        "content_id": "dc_1_act_08_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[7].blocks[id=dc_1_act_08_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act09",
+        "content_id": "dc_1_act_09_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[8].blocks[id=dc_1_act_09_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act10",
+        "content_id": "dc_1_act_10_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[9].blocks[id=dc_1_act_10_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch01_act11",
+        "content_id": "dc_1_act_11_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[0].chapters[10].blocks[id=dc_1_act_11_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act01",
+        "content_id": "dc_2_act_01_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[0].blocks[id=dc_2_act_01_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "complétude",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act01",
+        "content_id": "datacampImport.expected.exercise_types.VisualExercise",
+        "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json lignes 9-24 et inventaire complet lessons[].chapters[] : comptes effectifs VideoExercise=11, NormalExercise=10, SingleProcessExercise=12, BulletExercise=1, TabExercise=2 (total 36), VisualExercise=0."
+      },
+      "description": "La traçabilité d’import est incohérente : le manifeste interne annonce 37 activités extraites, dont un VisualExercise, alors que les 36 chapitres réellement rendables totalisent 36 types source et aucun VisualExercise. Le passage dc_ch02_act01 → dc_ch02_act03 confirme qu’une activité numérotée ou sa représentation est manquante ; son contenu ne peut pas être audité.",
+      "recommendation": "Bloquer la publication ou marquer le cours incomplet jusqu’à résolution de l’écart d’extraction ; documenter l’identifiant et le contenu de l’activité manquante.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act03",
+        "content_id": "dc_2_act_03_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_03_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "action attendue",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act04",
+        "content_id": "dc_2_act_04_content",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[2] : sourceActivityType=TabExercise mais blocks=[content] ; LessonViewer.tsx lignes 498-550 rend ce bloc comme PageContent et aucun TabbedContent/contrôle d’activité n’est déclaré."
+      },
+      "description": "La source qualifie cet écran de TabExercise, mais le contenu rendu ne contient qu’un texte narratif : aucun onglet, zone de saisie, choix, action réalisable, résultat attendu ni feedback n’est présent. Le texte emploie pourtant « Dans cet exercice, vous allez… », créant une attente d’interaction non satisfaite.",
+      "recommendation": "Retrouver l’extraction de l’activité TabExercise et ses données ; sinon retirer le vocabulaire d’exercice et ajouter une synthèse explicative, sans simuler une pratique inexistante.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act05",
+        "content_id": "dc_2_act_05_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[3].blocks[id=dc_2_act_05_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act06",
+        "content_id": "dc_2_act_06_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[4].blocks[id=dc_2_act_06_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act07",
+        "content_id": "dc_2_act_07_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_07_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act08",
+        "content_id": "dc_2_act_08_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_08_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act09",
+        "content_id": "dc_2_act_09_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[7].blocks[id=dc_2_act_09_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act10",
+        "content_id": "dc_2_act_10_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[8].blocks[id=dc_2_act_10_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act11",
+        "content_id": "dc_2_act_11_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_11_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act12",
+        "content_id": "dc_2_act_12_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[10].blocks[id=dc_2_act_12_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act13",
+        "content_id": "dc_2_act_13_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[11].blocks[id=dc_2_act_13_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act14",
+        "content_id": "dc_2_act_14_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[12].blocks[id=dc_2_act_14_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch02_act15",
+        "content_id": "dc_2_act_15_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[1].chapters[13].blocks[id=dc_2_act_15_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act01",
+        "content_id": "dc_3_act_01_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[0].blocks[id=dc_3_act_01_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act02",
+        "content_id": "dc_3_act_02_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act03",
+        "content_id": "dc_3_act_03_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act04",
+        "content_id": "dc_3_act_04_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[3].blocks[id=dc_3_act_04_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "action attendue",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act05",
+        "content_id": "dc_3_act_05_content",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[4] : sourceActivityType=TabExercise mais blocks=[content] ; LessonViewer.tsx lignes 498-550 rend ce bloc comme PageContent et aucun TabbedContent/contrôle d’activité n’est déclaré."
+      },
+      "description": "La source qualifie cet écran de TabExercise, mais le contenu rendu ne contient qu’un texte narratif : aucun onglet, zone de saisie, choix, action réalisable, résultat attendu ni feedback n’est présent. Le texte emploie pourtant « Dans cet exercice, vous allez… », créant une attente d’interaction non satisfaite.",
+      "recommendation": "Retrouver l’extraction de l’activité TabExercise et ses données ; sinon retirer le vocabulaire d’exercice et ajouter une synthèse explicative, sans simuler une pratique inexistante.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act06",
+        "content_id": "dc_3_act_06_tp",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[5].blocks[id=dc_3_act_06_tp] ; CloudExerciseBlock.tsx lignes 117-160 : hors évaluation suivie, submit() valide dès la longueur minimale ; LessonViewer.tsx lignes 1587-1592 bloque ensuite sur cette seule complétion."
+      },
+      "description": "La validation de ce TP ne vérifie pas la réalisation demandée : une réponse d’un seul caractère non vide suffit à soumettre, déverrouiller la correction et marquer l’activité terminée. L’apprenant peut donc progresser sans démontrer la compétence pratique.",
+      "recommendation": "Configurer un critère de réussite vérifiable et un feedback lié aux erreurs avant de conserver le verrouillage de progression.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act07",
+        "content_id": "dc_3_act_07_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_07_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act08",
+        "content_id": "dc_3_act_08_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[7].blocks[id=dc_3_act_08_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act09",
+        "content_id": "dc_3_act_09_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[8].blocks[id=dc_3_act_09_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act10",
+        "content_id": "dc_3_act_10_code",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[9].blocks[id=dc_3_act_10_code] ; CodeReplBlock.tsx lignes 28-40 et shared/codeReplValidation.ts lignes 10-13 ; LessonViewer.tsx lignes 1181-1182 enregistre la complétion, tandis que les portes de navigation (lignes 1587-1592 et chapterProgress.ts lignes 94-103) ne listent pas code_repl."
+      },
+      "description": "Cette activité de code obligatoire peut être contournée : le verrouillage de navigation ne prend pas en compte code_repl. De plus, si l’apprenant clique sur « Vérifier le code », le résultat repose sur l’égalité textuelle avec une solution unique, sans exécution ni acceptation d’une variante correcte ; le retour d’échec reste générique.",
+      "recommendation": "Rendre la complétion de code_repl nécessaire à la progression et remplacer la comparaison canonique par des tests d’exécution/sortie accompagnés d’indices spécifiques.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "média",
+      "course_id": "graph_rag_with_langchain_and_neo4j__01",
+      "location": {
+        "chapter_id": "dc_ch03_act11",
+        "content_id": "dc_3_act_11_video",
+        "evidence": "client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json → lessons[2].chapters[10].blocks[id=dc_3_act_11_video] : sourceLanguage=fr-FR, transcript et projectorSlides[].script en anglais, subtitleUrlFr présent ; LessonViewer.tsx lignes 571-603 ; ProjectorPlayer.tsx lignes 20-33 et 159-175."
+      },
+      "description": "Dans ce cours déclaré fr-FR, la narration et la transcription intégrée sont en anglais. Une URL de sous-titres français est bien déclarée, mais le lecteur Projector ne reçoit ni ne rend de piste de sous-titres : LessonViewer propose seulement un lien « Sous-titres ». L’apprenant francophone doit donc quitter la lecture ou suivre des slides partielles pour accéder au français.",
+      "recommendation": "Corriger le composant Projector pour afficher une piste française synchronisée et ajouter une alternative textuelle française vérifiable.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 36,
+    "p0": 0,
+    "p1": 25,
+    "p2": 11
+  }
+}

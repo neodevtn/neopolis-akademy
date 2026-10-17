@@ -8,18 +8,15 @@ const developerCoursePath = path.join(projectRoot, "client/public/data/courses/c
 const indexPath = path.join(projectRoot, "client/src/data/trainingIndex.json");
 
 describe("cohérence des parcours Anthropic", () => {
-  it("rend l’exercice officiel AI Fluency validable avant de poursuivre", () => {
+  it("conserve le contenu officiel AI Fluency sans verrou fondé sur une réponse libre non vérifiable", () => {
     const course = JSON.parse(fs.readFileSync(coursePath, "utf8"));
     const lesson = course.lessons.find((item: any) => item.title?.en === "Introduction to AI Fluency");
     const chapter = lesson.chapters.find((item: any) => item.title?.en === "Exercise: Introduction to AI Fluency");
-    const checkpoint = chapter.blocks.find((block: any) => block.id === "checkpoint_ai_fluency_intro_reflection");
-    const exercise = course.exercises.find((item: any) => item.id === checkpoint.exerciseId);
-
-    expect(chapter.completionRule.requires).toContain("requiredExercisesPassed");
-    expect(checkpoint.exerciseId).toBe("ex_ai_fluency_intro_reflection");
-    expect(exercise.interactionType).toBe("free_text");
-    expect(exercise.required).toBe(true);
-    expect(exercise.inputSchema.minWords).toBe(50);
+    expect(chapter.blocks.some((block: any) => block.id === "checkpoint_ai_fluency_intro_reflection")).toBe(false);
+    expect(chapter.blocks.some((block: any) => block.type === "checkpoint")).toBe(false);
+    expect(chapter.completionRule).toBeUndefined();
+    expect(course.exercises.some((item: any) => item.id === "ex_ai_fluency_intro_reflection")).toBe(false);
+    expect(chapter.blocks.find((block: any) => block.type === "content").body.en).toContain("Exercise: Putting Things into Practice");
   });
 
   it("expose des totaux synchronisés pour les quatre certifications Anthropic", () => {

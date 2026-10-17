@@ -1,0 +1,86 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_35",
+  "index": 104,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__35"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__35.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/104-ia_appliquee_metiers_tp__formation_35.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ]
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage / fausse soumission",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__35.json: lessons[0].chapters[3] (ia_appliquee_metiers_tp__35-checkpoint-01), passThreshold=1, blocks[0].type=knowledge_check, blocks[0].correctAnswer=\"a\"",
+      "description": "Le checkpoint de sécurité reste franchissable après n’importe quelle sélection : le JSON définit la bonne réponse « a », mais la complétion du bloc ne porte pas dans le contenu sur une condition de réponse correcte. Le rapport initial documente la conséquence dans le rendu/verrouillage : le seuil annoncé ne garantit pas la maîtrise de la règle avant la suite.",
+      "recommendation": "Faire dépendre le gate de la réponse correcte, ou utiliser un mécanisme de seuil compatible avec ce knowledge_check, puis vérifier qu’une réponse incorrecte affiche le feedback sans déverrouiller l’étape suivante.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation / fausse soumission",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__35.json: lessons[0].chapters[4].blocks[0] (ia_appliquee_metiers_tp__35-mini-project-proof), type=cloud_exercise, steps[0..2], absence de rubricCriteria/learnerCriteria/serverGradedAssessment/minimumAnswerLength",
+      "description": "Le mini-projet demande une preuve, mais le JSON ne déclare aucun critère de grille, évaluation serveur ou longueur minimale ; la preuve attendue n’est donc pas qualifiée par une règle vérifiable dans le contenu. La présence de steps génériques ne change pas cette absence. Le rapport initial et le code de validation référencé établissent qu’une remise non vide peut être acceptée.",
+      "recommendation": "Afficher avant soumission des critères contrôlables dérivés des acquis du cours et choisir une validation cohérente (revue humaine ou évaluation instrumentée), sans inventer de seuil technique absent des données.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "alignement évaluatif",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__35.json: metadata.acquiredSkills[0..3] versus lessons[0].chapters[5].blocks[0..3] et blocks[4]",
+      "description": "Les acquis déclarés sont l’ingestion/chunking, les embeddings/recherche vectorielle, la réponse documentée et le rapport Google Docs. Les quatre QCM portent surtout sur données fictives, validation humaine et secrets ; le tri porte sur une démarche générale. Le JSON ne montre pas d’évaluation finale suffisante de chacun des quatre acquis techniques.",
+      "recommendation": "Aligner la preuve et le quiz sur chacun des quatre acquis en s’appuyant sur les artefacts du TP et le support/workflow de référence ; ne pas inventer de réponses ou métriques non présentes.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "objectifs et activités / guidage TP",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__35.json: lessons[0].chapters[4].blocks[0].steps[0..2]",
+      "description": "Le contenu actuel possède trois étapes, mais elles restent génériques (« relisez la consigne », « réalisez la tâche », « vérifiez votre production ») et ne séquencent pas les opérations RAG explicitement promises dans metadata.acquiredSkills et dans instructions. La correction du défaut structurel steps=[] est donc visible, mais le guidage opératoire reste insuffisant pour le TP annoncé comme guidé.",
+      "recommendation": "Décrire une séquence opératoire propre à ce TP (choix des rapports, ingestion/chunking, embeddings/recherche, traçabilité de la réponse, rapport Google Docs, test et contrôle humain), uniquement à partir des éléments déjà déclarés et validés par l’équipe pédagogique.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback / duplication",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__35.json: lessons[0].chapters[5].blocks[0..3].explanation",
+      "description": "Les quatre explications de QCM sont identiques en français et en anglais (« La correction rappelle le cadre du TP… »). Cette duplication est confirmée directement par le JSON et limite le feedback correctif spécifique à chaque question, notamment celle sur ingestion et chunking.",
+      "recommendation": "Rédiger un feedback spécifique à chaque item, en expliquant le risque évité et le lien avec la question, sans ajouter de contrôle technique absent du cours.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu / bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__35.json: nombreux couples title/description/body/items fr/en, notamment /title, /description, lessons[0].chapters[0].blocks[0].body et lessons[0].chapters[2].blocks[0].items[3].description",
+      "description": "De nombreux champs bilingues contiennent exactement la même chaîne française dans fr et en ; l’analyse locale des couples fr/en le confirme, et certains champs anglais conservent explicitement une formulation française (par exemple « Prévoyez une revue humaine… »). Le parcours anglais n’est donc pas intégralement traduit dans les données actuelles.",
+      "recommendation": "Faire traduire et relire les champs en qui sont identiques au français ou manifestement restés en français, puis vérifier le rendu dans chaque langue ; ne pas modifier le cours dans cette contre-revue.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 3,
+    "p2": 3
+  }
+}

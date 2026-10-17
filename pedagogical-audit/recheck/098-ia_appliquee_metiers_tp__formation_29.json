@@ -1,0 +1,76 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_29",
+  "index": 98,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__29"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/098-ia_appliquee_metiers_tp__formation_29.json",
+    "current_course": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__29.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule du contenu JSON actuel, comparaison avec le rapport initial et contrôle des entrées static-audit-data.json. Les ressources externes et le rendu navigateur n'ont pas été inférés comme vérifiés."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "location": "lessons[0].chapters[1].blocks[1] (resource_review id ia_appliquee_metiers_tp__29-source-review); initial report evidence also identifies client/src/pages/training/LessonViewer.tsx:1068-1088 and 1583-1586",
+      "description": "La consigne demande d'ouvrir la ressource source puis de confirmer la consultation, mais le contenu JSON ne définit pas de preuve d'ouverture. Le rapport initial documente que le bouton de confirmation suffit à enregistrer la complétion et à lever le verrouillage; l'entrée static-audit-data.json pour ce cours ne signale toutefois aucune anomalie statique.",
+      "recommendation": "Conserver la consigne et rendre la confirmation dépendante d'une ouverture enregistrée du lien, puis vérifier le passage au chapitre suivant après ouverture et confirmation.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "location": "lessons[0].chapters[2].blocks[0].items; lessons[0].chapters[5].blocks[4].buckets/cards",
+      "description": "Le JSON enseigne la timeline « Cadrer, Préparer, Tester, Contrôler » mais le tri final utilise « Cadrer, Construire, Tester, Valider ». Les cartes du tri reprennent Construire et Valider, sans correspondance textuelle avec les étapes enseignées; cette variation est confirmée par le rapport initial.",
+      "recommendation": "Harmoniser les quatre libellés de la timeline et du tri final, sans introduire de nouvelle étape non enseignée.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "location": "lessons[0].chapters[3] (requiredBeforeAdvance=true, passThreshold=1); block ia_appliquee_metiers_tp__29-checkpoint-preparation (required=true, correctAnswer=\"a\")",
+      "description": "Le checkpoint obligatoire déclare une réponse correcte « a », mais le rapport initial documente que la complétion est enregistrée dès qu'un choix est sélectionné; une réponse incorrecte peut donc déverrouiller la suite malgré passThreshold=1. Le JSON actuel conserve ces paramètres et static-audit-data.json indique issue_count=0 car son contrôle est structurel et ne couvre pas ce comportement applicatif.",
+      "recommendation": "Ne marquer le knowledge_check comme complété qu'après une réponse correcte; maintenir le verrouillage après une réponse incorrecte et tester les deux scénarios.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "location": "lessons[0].chapters[4].blocks[0] (cloud_exercise id ia_appliquee_metiers_tp__29-mini-project-proof)",
+      "description": "Le mini-projet demande une preuve décrivant le scénario testé, le résultat, un contrôle et l'étape soumise à validation humaine, mais le bloc JSON ne contient ni minimumAnswerLength, ni learnerCriteria, ni rubricCriteria, ni serverGradedAssessment. Le rapport initial constate que la soumission peut donc être acceptée avec un seul caractère non blanc et marquer le TP terminé; aucun problème n'est listé pour ce cours dans static-audit-data.json.",
+      "recommendation": "Configurer des critères visibles et une validation proportionnée aux cinq éléments explicitement demandés, puis tester une preuve minimale, incomplète et complète.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "location": "lessons[0].chapters[5].blocks[4] (bucket_sort id ia_appliquee_metiers_tp__29-quiz-order, feedback présent dans le JSON)",
+      "description": "Le JSON contient un feedback pédagogique pour le tri (« La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. »), mais le rapport initial documente que le mapping de rendu ne transmet pas ce champ au composant de tri. L'apprenant ne voit donc pas le feedback prévu après tentative, malgré sa présence dans le contenu actuel.",
+      "recommendation": "Transmettre et afficher le champ feedback après une tentative du tri, puis vérifier les tentatives erronée et correcte.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 2,
+    "p2": 3
+  }
+}

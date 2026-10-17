@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { ARCHITECT_FOUNDATIONS_SECURE_CORRECTIONS } from "./architectFoundationsCorrectionRegistry";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { normalizeCourseContent } from "../client/src/pages/training/contentNormalization";
@@ -112,14 +111,14 @@ describe("Anthropic certification audit corrections", () => {
     }
   });
 
-  it("keeps the Rewind checkpoint only in its source screen and leaves Plugins as an informational review", () => {
+  it("removes the unverifiable Rewind checkpoint and leaves Plugins as an informational review", () => {
     const course = readCourse("claude_certified_architect_foundations__04");
     const rewindExerciseId = "ex_claude_certified_architect_foundations__04_005";
     const rewindBlocks = course.lessons.flatMap((lesson: any) => lesson.chapters || [])
       .flatMap((chapter: any) => chapter.blocks || [])
       .filter((block: any) => block.type === "checkpoint" && block.exerciseId === rewindExerciseId);
-    expect(rewindBlocks).toHaveLength(1);
-    expect(course.exercises.find((exercise: any) => exercise.id === rewindExerciseId)).toMatchObject({ required: true, chapterId: "chapter_01" });
+    expect(rewindBlocks).toHaveLength(0);
+    expect(course.exercises.find((exercise: any) => exercise.id === rewindExerciseId)).toBeUndefined();
     const pluginsLesson = course.lessons.find((lesson: any) => lesson.title?.en === "Plugins");
     const review = pluginsLesson.chapters.find((chapter: any) => chapter.title?.en === "Review: Plugins");
     expect(review).toMatchObject({ type: "teaching", completionRule: { requires: ["contentViewed"] } });
@@ -171,48 +170,41 @@ describe("Anthropic certification audit corrections", () => {
     }
   });
 
-  it("keeps the active AI Fluency reflection while removing its unreferenced duplicate definition", () => {
+  it("removes the unscorable AI Fluency reflection while preserving its explanatory content", () => {
     const course = readCourse("claude_certified_architect_foundations__01");
     const chapter = course.lessons.find((lesson: any) => lesson.id === "lesson_10").chapters.find((item: any) => item.id === "chapter_02");
-    expect(chapter.blocks.find((block: any) => block.type === "checkpoint")?.exerciseId).toBe("ex_ai_fluency_intro_reflection");
-    expect(course.exercises.some((exercise: any) => exercise.id === "ex_ai_fluency_intro_reflection")).toBe(true);
+    expect(chapter.blocks.some((block: any) => block.type === "checkpoint")).toBe(false);
+    expect(course.exercises.some((exercise: any) => exercise.id === "ex_ai_fluency_intro_reflection")).toBe(false);
     expect(course.exercises.some((exercise: any) => exercise.id === "ex_claude_certified_architect_foundations__01_010")).toBe(false);
+    expect(chapter.blocks.find((block: any) => block.type === "content").body.en).toContain("Exercise: Putting Things into Practice");
   });
 
-  it("keeps the referenced AI Fluency reflection and its completion rule", () => {
+  it("keeps the AI Fluency source content and download without a phantom activity gate", () => {
     const course = readCourse("claude_certified_architect_foundations__01");
     const lesson = course.lessons.find((item: any) => item.id === "lesson_10");
     const chapter = lesson.chapters.find((item: any) => item.id === "chapter_02");
     const content = chapter.blocks.find((block: any) => block.type === "content");
     const download = chapter.blocks.find((block: any) => block.type === "download");
-    const exercise = course.exercises.find((item: any) => item.id === "ex_ai_fluency_intro_reflection");
 
-    expect(chapter.completionRule.requires).toEqual(["requiredExercisesPassed"]);
+    expect(chapter.completionRule).toBeUndefined();
     expect(chapter.blocks[0]).toMatchObject({ type: "callout", variant: "info", title: { fr: "Contenu officiel Anthropic" } });
     expect(content.body.en).toContain("Exercise: Putting Things into Practice");
     expect(content.body.en).not.toContain("Option 3");
     expect(download.download_url).toBe("/api/assets/01_AI_Fluency_vocabulary_cheat_sheet_d44ea415.pdf");
     expect(download).not.toHaveProperty("image");
-    expect(chapter.blocks.find((block: any) => block.type === "checkpoint")?.exerciseId).toBe("ex_ai_fluency_intro_reflection");
-    expect(exercise).toMatchObject({ chapterId: "chapter_02", required: true, title: { en: "Reflection: Introduction to AI Fluency" } });
-    expect(exercise.prompt.en).toContain("Before moving on, reflect on your own experiences");
+    expect(chapter.blocks.some((block: any) => block.type === "checkpoint")).toBe(false);
+    expect(course.exercises.some((item: any) => item.id === "ex_ai_fluency_intro_reflection")).toBe(false);
   });
 
-  it("labels the practical tutorials as a Neopolis supplement", () => {
+  it("does not retain the supplemental tutorial screen after its media was removed", () => {
     const course = readCourse("claude_certified_architect_foundations__01");
     const lesson = course.lessons.find((item: any) => item.id === "lesson_10");
     const chapter = lesson.chapters.find((item: any) => item.id === "chapter_03");
-    expect(chapter.blocks[0]).toMatchObject({ type: "callout", variant: "info", title: { fr: "Complément Neopolis" } });
+    expect(chapter).toBeUndefined();
   });
 
-  it("normalizes only the generic French localization defects approved by Claude Sonnet", () => {
+  it("does not retain orphan free-text correction targets in Architect Foundations course 1", () => {
     const architectFoundations = readCourse("claude_certified_architect_foundations__01");
-    const architectProfessional = readCourse("claude_certified_architect_professional__05");
-    const architectCorrection = ARCHITECT_FOUNDATIONS_SECURE_CORRECTIONS.claude_certified_architect_foundations__01?.[architectFoundations.exercises[28].id]?.correction as { fr?: string } | undefined;
-    expect(architectFoundations.exercises[28]).toMatchObject({ serverCorrectionRequired: true });
-    expect(architectCorrection?.fr).toContain("fiche de modèle");
-    expect(architectCorrection?.fr).not.toContain("model card");
-    expect(architectProfessional.exercises[0].correction.fr).toContain("bonnes pratiques");
-    expect(architectProfessional.exercises[0].correction.fr).not.toContain("best practices");
+    expect(architectFoundations.exercises.some((exercise: any) => exercise.interactionType === "free_text")).toBe(false);
   });
 });

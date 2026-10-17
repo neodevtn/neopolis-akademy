@@ -1,0 +1,96 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_21",
+  "index": 90,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__21"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__21.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/090-ia_appliquee_metiers_tp__formation_21.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule du JSON de cours actuel et des chemins de rendu/gate cités par le rapport initial. Le static-audit-data.json contient 0 constat statique pour ce cours ; cela ne clôt pas les constats pédagogiques nécessitant le code de rendu/progression."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "rendu/bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__21.json -> lessons[0].chapters[2].blocks[0].items[3].description.en et blocks[1].columns[*].items[*].en",
+      "description": "La version anglaise conserve des phrases françaises dans l'étape « Contrôler » et dans les deux colonnes du panneau comparatif : « Prévoyez une revue humaine… », « Utiliser des données fictives. », « Définir un contrôle humain. », « Tester les cas limites. » et les trois items « À éviter ».",
+      "recommendation": "Localiser ces valeurs en anglais sans modifier la séquence française.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "fausses soumissions ou gates",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "location": "course JSON -> lessons[0].chapters[3] (checkpoint) ; client/src/components/blocks/GenericLearningBlocks.tsx -> KnowledgeCheckBlock.select ; client/src/pages/training/LessonViewer.tsx -> completedNovasavoInteractions/isGatedByNovasavoInteraction ; client/src/pages/training/checkpointGate.ts",
+      "description": "Le checkpoint porte passThreshold: 1 et requiredBeforeAdvance: true, mais le knowledge_check est enregistré comme interaction terminée après toute sélection, y compris une réponse fausse. Le calcul de checkpointGate.ts ne recense que les blocs de type checkpoint, tandis que le bloc de la question est de type knowledge_check ; une mauvaise réponse peut donc satisfaire le verrou de navigation.",
+      "recommendation": "Faire dépendre la complétion du knowledge_check obligatoire de la réponse correcte, ou intégrer explicitement ce bloc au calcul du seuil, puis tester la navigation après une réponse fausse.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "objectifs et activités / guidage",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__21.json -> lessons[0].chapters[4].blocks[0].steps",
+      "description": "Le bloc cloud_exercise contient maintenant 3 étapes, mais elles restent génériques (« Relisez la consigne… », « Réalisez la tâche… », « Vérifiez votre production… ») et ne décomposent pas le workflow demandé : support fictif, comparaison des deux périodes, seuils/anomalies, commentaire financier, test et validation humaine. Le mini-projet demeure insuffisamment opérationalisé au regard de ses quatre objectifs et de sa preuve attendue.",
+      "recommendation": "Remplacer ces étapes génériques par un déroulé court et vérifiable ancré uniquement dans les objectifs, outils et ressources déjà déclarés ; ne pas inventer de seuils ou de valeurs P&L.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "fausses soumissions ou gates",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "location": "course JSON -> lessons[0].chapters[4].blocks[0] ; client/src/components/CloudExerciseBlock.tsx -> submit()/onComplete ; client/src/components/blocks/cloudExerciseValidation.ts -> resolveMinimumAnswerLength()/hasRequiredAnswerLength",
+      "description": "La preuve du mini-projet doit décrire le scénario, le résultat, un contrôle et l'étape soumise à validation humaine, mais le bloc actuel ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment, ni learnerCriteria, ni requirePostRevealReflection. La validation de longueur retombe donc sur 1 caractère et la soumission peut déverrouiller la suite avec une réponse non vide sans vérifier les quatre éléments annoncés.",
+      "recommendation": "Ajouter une validation de couverture des quatre éléments déjà exigés avant onComplete ; ne pas introduire de critère chiffré non décidé pédagogiquement.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "rendu/bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "location": "course JSON -> lessons[0].chapters[4].blocks[0] (assignment, instructions, hint, solution)",
+      "description": "assignment, instructions, hint et solution sont des chaînes françaises, alors que environmentGuide est localisé fr/en. Le renderer résout une chaîne telle quelle ; la version anglaise du mini-projet affiche donc la consigne, l'aide et la correction en français.",
+      "recommendation": "Localiser assignment, instructions, hint et solution en fr/en sans changer les exigences métier françaises.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "objectifs et activités / feedback",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "location": "course JSON -> lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__21-quiz-03].explanation",
+      "description": "L'explication de quiz-03 reste générique (« données fictives, contrôle humain et vérification avant toute action réelle ») et n'explique pas le raisonnement spécifique consistant à comparer le résultat au critère métier puis documenter l'écart.",
+      "recommendation": "Fournir un feedback directement relié au contrôle de comparaison de deux périodes, en conservant éventuellement le rappel de sécurité.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu/feedback",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "location": "course JSON -> lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__21-quiz-order].feedback ; client/src/pages/training/LessonViewer.tsx -> case bucket_sort ; client/src/components/MatchingExercise.tsx",
+      "description": "Le bucket_sort déclare un feedback bilingue explicite, mais le chemin de rendu inspecté transmet les propriétés de l'exercice sans ce champ ; MatchingExercise affiche la correction détaillée à partir de exercise.correction. Le feedback déclaré risque donc de rester invisible après validation.",
+      "recommendation": "Relier le champ feedback au renderer, ou le mapper explicitement vers le champ effectivement affiché, puis vérifier son affichage après tentative complète.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 7,
+    "p0": 0,
+    "p1": 4,
+    "p2": 3
+  }
+}

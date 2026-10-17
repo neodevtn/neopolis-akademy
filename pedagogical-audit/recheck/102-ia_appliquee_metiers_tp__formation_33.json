@@ -1,0 +1,78 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_33",
+  "index": 102,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__33"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__33.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/102-ia_appliquee_metiers_tp__formation_33.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du JSON de cours actuel, du rapport initial et de l'entrée statique localisée; constats limités aux preuves JSON/code localisées; aucun cours ni code n'a été modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__33.json#/lessons/0/chapters/3/blocks/0; client/src/components/blocks/GenericLearningBlocks.tsx; client/src/pages/training/LessonViewer.tsx",
+      "description": "Le checkpoint obligatoire de sécurité déclare correctAnswer='a', mais le rapport initial documente que la complétion et le déverrouillage peuvent être enregistrés après une réponse incorrecte. Le feedback d'erreur n'empêche donc pas la progression vers le mini-projet.",
+      "recommendation": "Faire dépendre la complétion requise et le déverrouillage de isCorrect=true, tout en conservant le feedback et le réessai; vérifier une tentative incorrecte puis correcte.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__33.json#/lessons/0/chapters/4/blocks/0; client/src/components/CloudExerciseBlock.tsx; client/src/pages/training/chapterProgress.ts",
+      "description": "Le mini-projet demande dans instructions une preuve couvrant scénario testé, résultat obtenu, contrôle effectué et étape soumise à validation humaine, mais la validation de cloud_exercise accepte une réponse non vide sans contrôle de fond, puis déclenche la réussite et le déverrouillage. Une soumission minimale peut donc contourner l'évaluation attendue.",
+      "recommendation": "Configurer des critères de preuve et un seuil cohérent avec les quatre éléments explicitement demandés, puis relier la réussite à une grille contrôlée (serveur, revue humaine ou checklist obligatoire) plutôt qu'à la seule présence de texte.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__33.json#/lessons/0/chapters/4/blocks/0; client/src/components/CloudExerciseBlock.tsx",
+      "description": "Le mini-projet annonce un livrable complexe et une preuve, mais le bloc ne contient pas de champ steps. Les éléments listés dans instructions décrivent des compétences à démontrer, pas une séquence de réalisation vérifiable; l'apprenant doit déduire la construction du workflow du support et de la ressource.",
+      "recommendation": "Renseigner une séquence steps vérifiable, adaptée uniquement si le support fictif impose des noms de tables ou un mode d'import spécifiques; conserver l'indice comme aide optionnelle.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "énoncé",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__33.json#/lessons/0/chapters/5/blocks/2",
+      "description": "La question du quiz-03 demande quel contrôle vérifie la lecture du schéma avant la génération de SQL, alors que correctAnswer='a' désigne la comparaison du résultat au critère métier et la documentation d'un écart. L'option correcte est utile, mais n'évalue pas explicitement ce que l'énoncé annonce.",
+      "recommendation": "Aligner l'énoncé sur le contrôle de qualité de la requête et du résultat, ou remplacer l'option correcte par un contrôle réellement centré sur la lecture du schéma; ne modifier qu'un des deux éléments pour préserver une réponse non ambiguë.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__33.json#/lessons/0/chapters/5/blocks/4; client/src/pages/training/LessonViewer.tsx; client/src/components/MatchingExercise.tsx",
+      "description": "Le tri final contient feedback='La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés.' mais le rendu documenté transmet seulement block.correction à MatchingExercise et le texte détaillé n'est rendu que depuis exercise.correction. Après tentative, le feedback pédagogique présent dans les données n'est donc pas affiché.",
+      "recommendation": "Transmettre block.feedback comme correction, ou faire évoluer le rendu pour afficher feedback après soumission, puis vérifier une réponse juste et une réponse erronée.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 1,
+    "p2": 4
+  }
+}

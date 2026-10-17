@@ -1,0 +1,248 @@
+{
+  "formation_id": "datacamp_gemini_in_google_docs",
+  "index": 36,
+  "course_ids": [
+    "gemini_in_google_docs__01"
+  ],
+  "review_scope": {
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/gemini_in_google_docs__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/036-datacamp_gemini_in_google_docs.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "current_state_source": "/home/ubuntu/neopolis-akademy/client/public/data/courses/gemini_in_google_docs__01.json",
+    "static_course_result": {
+      "issue_count": 0,
+      "lesson_count": 1,
+      "chapter_count": 9
+    },
+    "method_note": "Contre-revue fondée uniquement sur les JSON locaux et les preuves localisées du rapport initial ; aucune modification de cours effectuée."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "content_type": "video",
+        "evidence": "client/public/data/courses/gemini_in_google_docs__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] ; sourceLanguage = fr-FR. LessonViewer.tsx lignes 555 et 598-620 rend le titre localisé, les sous-titres et la transcription. Vérification locale : MP4 206 video/mp4 et sous-titre 206 text/vtt."
+      },
+      "description": "Dans le parcours français, le titre, la transcription et le seul sous-titre disponible de cette vidéo sont en anglais. Le lecteur sélectionne la valeur fr puis retombe sur en lorsqu’elle est identique ou non traduite : l’apprenant francophone ne reçoit donc pas une version française exploitable de l’introduction.",
+      "recommendation": "Prioriser la localisation complète des éléments visibles et des alternatives textuelles de cette vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557 utilise block.id pour mp4Key ; lignes 1557-1568 n’ajoutent block.id que si sa longueur est comprise entre 8 et 15 ; dc_1_act_01_video a 17 caractères. ChapterQuiz.tsx lignes 48-52 et 75-79 charge une banque absente puis appelle onPass()."
+      },
+      "description": "La vidéo officielle peut être contournée alors que le chapitre est requis avant avancement. Le lecteur MP4 enregistre sa complétion sous l’identifiant dc_1_act_01_video, mais le calcul du verrouillage ne retient un id de bloc qu’entre 8 et 15 caractères. Cet identifiant fait 17 caractères, la liste des vidéos à exiger est donc vide. En plus, aucun quiz de chapitre n’est configuré : ChapterQuiz passe automatiquement lorsque la banque est vide.",
+      "recommendation": "Corriger la clé de gate MP4 puis tester que le bouton Suivant reste indisponible avant visionnage ou marquage explicite de la vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_video",
+        "content_type": "video",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_video] ; LessonViewer.tsx lignes 555 et 670-686 applique le repli vers en. Vérification locale : MP4 et VTT répondent 206, le VTT est de langue anglaise."
+      },
+      "description": "Les explications détaillées, le titre affiché, la transcription et le sous-titre disponible restent en anglais quand le parcours est consulté en français. Cette lacune porte sur l’écran qui introduit les actions concrètes Help me write et Insert.",
+      "recommendation": "Localiser entièrement cet écran avant de le présenter comme contenu français.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; lessonQuizzes.json ne possède pas de clé gemini_in_google_docs__01."
+      },
+      "description": "Le passage peut s’effectuer sans visionner ni marquer la vidéo, malgré requiredBeforeAdvance. L’identifiant MP4 dc_1_act_02_video (17 caractères) est exclu de chapterVideoKeys par le filtre de longueur ; le contrôle de chapitre qui s’ouvre ensuite est auto-validé faute de banque de questions pour ce cours.",
+      "recommendation": "Corriger la condition de sélection des clés vidéo et ajouter un test de non-contournement pour les id MP4 de plus de 15 caractères.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_video",
+        "content_type": "video",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_video] ; LessonViewer.tsx lignes 555, 598-620 et 670-686."
+      },
+      "description": "Cet écran de démonstration dense n’offre pas de version française : son titre, sa transcription et son seul sous-titre sont en anglais, malgré le paramétrage source fr-FR et l’interface française de la plateforme.",
+      "recommendation": "Localiser les alternatives textuelles de cette vidéo avant diffusion française.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557, 1557-1568 et 1636-1649 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; id de 17 caractères dans le JSON du chapitre."
+      },
+      "description": "La vidéo peut être ignorée tout en permettant de poursuivre. dc_1_act_03_video est une clé de 17 caractères, ignorée lors de la construction de chapterVideoKeys ; l’écran est ensuite auto-validé par ChapterQuiz sans banque dédiée.",
+      "recommendation": "Réparer le verrouillage vidéo et couvrir ce cas d’identifiant MP4 par un test automatisé.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_video",
+        "content_type": "video",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_video] ; LessonViewer.tsx lignes 555 et 670-686 rend les champs localisés/repliés."
+      },
+      "description": "La séquence qui explique Proofread ne propose aucun contenu pédagogique français : titre, transcription et sous-titres disponibles sont anglais. Cela réduit la compréhension des gestes et notions de relecture pour le public du parcours français.",
+      "recommendation": "Rendre cet écran réellement bilingue avant publication française.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; lessonQuizzes.json ne contient pas gemini_in_google_docs__01."
+      },
+      "description": "La vidéo de relecture peut être contournée malgré requiredBeforeAdvance. Son id de 17 caractères est ignoré par la condition de longueur de chapterVideoKeys, puis le contrôle générique sans question valide l’écran automatiquement.",
+      "recommendation": "Rétablir la cohérence du verrouillage et tester le parcours sans marquage vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_video",
+        "content_type": "video",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_video] ; transcript : \"Now it's your turn…\" ; LessonViewer.tsx lignes 555 et 670-686."
+      },
+      "description": "La transition essentielle vers la pratique est en anglais dans le titre, la vidéo transcrite et le seul sous-titre fourni. L’apprenant francophone risque d’aborder la suite sans comprendre le scénario et l’action attendue.",
+      "recommendation": "Localiser cette transition avant l’activité pratique.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; id de 17 caractères dans le JSON."
+      },
+      "description": "L’écran de préparation de l’activité peut être passé sans la vidéo. dc_1_act_05_video a 17 caractères et n’est pas retenu comme clé de vidéo obligatoire ; le ChapterQuiz sans banque passe ensuite automatiquement.",
+      "recommendation": "Corriger ce verrouillage avant de s’appuyer sur cette vidéo comme prérequis de l’activité pratique.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_resource",
+        "content_type": "resource_review",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_resource] ; PDF local /api/assets/chapter_01_slides_6a295357.pdf, HTTP 200, texte extrait : \"Generate a Blog Post\" et \"Let's practice!\" ; LessonViewer.tsx lignes 1068-1092."
+      },
+      "description": "Le chapitre resource_review est affiché dans l’interface française avec un titre et une consigne en anglais. Le PDF auquel il renvoie est lui aussi constitué de titres et de cartes \"Let's practice!\" en anglais.",
+      "recommendation": "Fournir une ressource et une consigne françaises cohérentes avec la langue choisie.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé_et_action_attendue",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_resource",
+        "content_type": "resource_review",
+        "evidence": "JSON → lessons[0].chapters[5].blocks[0].instructions.fr ; texte extrait du PDF local : uniquement les titres de séquences et \"Let's practice!\". LessonViewer.tsx lignes 1083-1088 : le lien ouvre la ressource et le bouton ajoute directement reviewId aux complétions, sans contrôle d’ouverture ni production apprenante. La transcription précédente (chapitre 4) est la seule source du scénario Cymbal Retail et des actions generate/refine."
+      },
+      "description": "L’écran intitulé \"Generate a Blog Post\" ne donne pour toute consigne que \"View the PDF before continuing.\" Le PDF ne contient que les titres des cinq séquences et \"Let's practice!\" : il ne fournit ni étapes, ni action à réaliser dans Docs, ni résultat attendu, ni critère de réussite. Le bouton \"J’ai consulté cette ressource\" déverrouille l’avancement sans vérifier l’ouverture du PDF ou la réalisation du billet.",
+      "recommendation": "Remplacer la simple attestation de consultation par une activité guidée avec consigne, étapes et critère de réussite ; ne verrouiller la progression qu’après une action proportionnée et vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_qcm",
+        "content_type": "single_choice_exercise",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[6].title.fr et blocks[id=dc_1_act_07_qcm].options ; LessonViewer.tsx lignes 977-1004 sélectionne option.text.fr quand lang=fr."
+      },
+      "description": "Bien que la question, l’indice et l’explication soient français, trois réponses sur quatre sont uniquement en anglais et le titre du chapitre reste anglais. Le QCM mélange ainsi deux langues dans une évaluation destinée au parcours fr-FR.",
+      "recommendation": "Compléter la version française de toutes les réponses avant d’utiliser ce QCM dans le parcours français.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act08",
+        "content_id": "dc_1_act_08_qcm",
+        "content_type": "single_choice_exercise",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[7], block[id=dc_1_act_08_qcm] ; LessonViewer.tsx lignes 977-1004 rend explicitement les champs fr quand ils existent."
+      },
+      "description": "Dans la version française, la question, les quatre options, l’explication de correction et le titre de chapitre sont en anglais ; seul l’indice est français. Cette incohérence rend l’évaluation moins accessible au public visé par le sourceLanguage fr-FR.",
+      "recommendation": "Corriger la localisation de l’énoncé et du feedback avant diffusion à des apprenants francophones.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act09",
+        "content_id": "dc_1_act_09_qcm",
+        "content_type": "single_choice_exercise",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[8], block[id=dc_1_act_09_qcm] ; SingleChoiceExercise.tsx lignes 42-45 et 204-223 affiche l’explication localisée fournie par LessonViewer."
+      },
+      "description": "La question et l’indice sont français, mais le titre, les quatre propositions et l’explication post-réponse sont anglais. Le dernier contrôle obligatoire change donc de langue au moment où l’apprenant doit interpréter les réponses et le feedback.",
+      "recommendation": "Compléter la localisation du QCM final pour préserver la cohérence linguistique du parcours.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 15,
+    "p0": 0,
+    "p1": 15,
+    "p2": 0
+  }
+}

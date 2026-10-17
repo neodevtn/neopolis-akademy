@@ -1,0 +1,96 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_30",
+  "index": 99,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__30"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__30.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/099-ia_appliquee_metiers_tp__formation_30.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule du JSON actuel, du rapport initial et des données statiques; seuls les constats confirmés par preuve JSON localisée (et, pour le rendu/verrouillage, par les preuves de code citées dans le rapport initial) sont retenus. Aucun cours ni code n'a été modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "ux_localisation",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__30.json#/lessons/0/chapters/2/blocks/1/columns",
+      "description": "Le comparison_panel du chapitre « Construire progressivement » contient des textes apprenant non localisés: plusieurs valeurs de colonnes sont des chaînes françaises simples plutôt que des objets fr/en. Le rapport initial confirme qu'en interface anglaise ces textes sont donc exposés en français.",
+      "recommendation": "Fournir une version anglaise pour chaque texte exposé de ce comparison_panel et relire le chapitre avec lang=en.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__30.json#/lessons/0/chapters/3/blocks/0; client/src/components/blocks/GenericLearningBlocks.tsx:57-64; client/src/pages/training/LessonViewer.tsx:359-362,484-489",
+      "description": "Le knowledge_check obligatoire « ia_appliquee_metiers_tp__30-checkpoint-preparation » déclare required=true et correctAnswer='a', mais une réponse incorrecte est enregistrée comme interaction complétée et n'empêche pas la progression. Le feedback existe, sans rendre le gate réellement bloquant.",
+      "recommendation": "Ne comptabiliser la complétion requise et ne déverrouiller le chapitre suivant qu'après isCorrect=true; conserver le feedback et la possibilité de réessai.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__30.json#/lessons/0/chapters/4/blocks/0/steps",
+      "description": "Le mini-projet demande de décrire un scénario testé, le résultat, un contrôle et l'étape soumise à validation humaine, mais le bloc cloud_exercise ne fournit pas de structure opérationnelle suffisante pour guider ces éléments; l'absence de champs ou de critères structurés est confirmée par le rapport initial.",
+      "recommendation": "Structurer les étapes et la zone de preuve selon les quatre éléments demandés, avec un gabarit explicite et des consignes vérifiables.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "evaluation",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__30.json#/lessons/0/chapters/4/blocks/0; client/src/components/blocks/cloudExerciseValidation.ts:1-8; client/src/components/CloudExerciseBlock.tsx:117-125,153-161; client/src/pages/training/LessonViewer.tsx:1587-1592",
+      "description": "La preuve du mini-projet est complétée dès qu'une valeur non vide est fournie: aucune longueur minimale, grille, critère structuré ou serverGradedAssessment n'est configuré. Une saisie minimale peut donc déclencher submitted/onComplete et déverrouiller le quiz sans validation substantielle des quatre éléments demandés.",
+      "recommendation": "Ajouter des critères d'évaluation structurés et une règle de réussite cohérente avec la preuve attendue; au minimum valider explicitement les quatre éléments avant completion et vérifier qu'une saisie d'un caractère ne déverrouille plus la suite.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "ux_localisation",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__30.json#/lessons/0/chapters/4/blocks/0; client/src/components/blocks/cloudExerciseValidation.ts:11-17; client/src/components/CloudExerciseBlock.tsx:104-113",
+      "description": "Les principaux textes apprenant du cloud_exercise (assignment, instructions, hint, solution et successMessage) sont des chaînes françaises simples. Le résolveur les retourne tels quels, de sorte qu'en lang=en l'objectif, les consignes, l'indice, la correction et le succès restent en français.",
+      "recommendation": "Renseigner les versions anglaises de tous les champs apprenant du cloud_exercise et relire le TP complet avec lang=en.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__30.json#/lessons/0/chapters/5/blocks/4; client/src/pages/training/LessonViewer.tsx:957-973; client/src/components/MatchingExercise.tsx:40-42,444-450",
+      "description": "Le bucket_sort annonce qu'une correction est disponible après une tentative complète et fournit feedback, mais aucune propriété correction n'est présente. Le rendu transmet correction au composant; après erreur, le score et les couleurs sont visibles, sans l'affectation attendue ni la justification pédagogique de feedback.",
+      "recommendation": "Faire correspondre feedback au rendu de correction, ou renseigner correction avec l'explication détaillée de l'ordre attendu; vérifier le feedback après tentative incorrecte et correcte.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__30.json#/lessons/0/chapters/2/blocks/0/items; client/public/data/courses/ia_appliquee_metiers_tp__30.json#/lessons/0/chapters/5/blocks/4/buckets",
+      "description": "La démarche explicitement enseignée au chapitre 3 porte les étapes « Cadrer », « Préparer », « Tester », « Contrôler », tandis que le tri final obligatoire utilise « Cadrer », « Construire », « Tester », « Valider ». Le JSON ne fournit pas de transition expliquant le remplacement de Préparer par Construire et de Contrôler par Valider.",
+      "recommendation": "Harmoniser la nomenclature entre enseignement et évaluation, ou ajouter une transition explicite reliant Construire à Préparer et Valider au contrôle humain.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 7,
+    "p0": 0,
+    "p1": 4,
+    "p2": 3
+  }
+}

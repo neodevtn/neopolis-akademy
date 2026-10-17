@@ -1,0 +1,62 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_28",
+  "index": 97,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__28"
+  ],
+  "review_scope": "Contre-revue de l’état courant du seul cours référencé par l’entrée 97, comparé au rapport initial raw/097-ia_appliquee_metiers_tp__formation_28.json, au JSON du cours courant et à static-audit-data.json. Vérifications ciblées : objectifs et activités, faisabilité TP/fichiers/environnement, soumissions et gates, médias/téléchargements, duplications ou corruption, rendu et bilinguisme. Les constats de rendu/progression hérités du rapport initial sont retenus uniquement lorsqu’ils restent étayés par l’état JSON courant et les preuves de logique de rendu citées dans ce rapport initial.",
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "location": "lessons[0].chapters[0..2].requiredBeforeAdvance; absence de clé ia_appliquee_metiers_tp__28 dans client/public/data/lessonQuizzes.json",
+      "description": "Les trois chapitres théoriques sont déclarés requiredBeforeAdvance=true, mais le rapport initial documente que ChapterQuiz est alors affiché sans banc de questions et appelle onPass automatiquement lorsque allQuestions est vide. La configuration courante du cours confirme les trois verrous requis ; static-audit-data.json ne signale pas d’anomalie structurelle, ce qui ne réfute pas ce comportement applicatif.",
+      "recommendation": "Fournir des questions ciblées pour ces trois écrans, ou ne pas les présenter comme une validation requise tant qu’aucun item n’est disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "location": "lessons[0].chapters[1].blocks[1] (id=ia_appliquee_metiers_tp__28-source-review), resourceUrl et consigne de confirmation",
+      "description": "La consigne demande d’ouvrir la ressource YouTube puis de confirmer. Le rapport initial localise toutefois la logique courante : le bouton de confirmation ajoute directement reviewId aux complétions, sans preuve d’ouverture de resourceUrl. La ressource est présente dans le JSON et avait répondu lors du contrôle initial ; le problème concerne la vérification de consultation, pas l’absence du média.",
+      "recommendation": "Conditionner la confirmation à l’enregistrement de l’ouverture du lien, avec un mode de secours explicitement signalé si le navigateur bloque l’ouverture.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "location": "lessons[0].chapters[3] (type=checkpoint, passThreshold=1), blocks[0] (type=knowledge_check, required=true, correctAnswer=a)",
+      "description": "Le checkpoint de sécurité est requis et possède une réponse correcte, mais le rapport initial a vérifié que le renderer enregistre l’interaction à chaque sélection, indépendamment de isCorrect, tandis que checkpointGate ne compte que les blocs de type checkpoint. Le JSON courant conserve exactement cette structure knowledge_check dans un chapitre type checkpoint : une réponse incorrecte peut donc être enregistrée sans validation effective du prérequis.",
+      "recommendation": "Aligner le type de bloc et la règle de gate, et ne déclarer la complétion requise qu’après sélection de la réponse correcte.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "location": "lessons[0].chapters[4].blocks[0] (id=ia_appliquee_metiers_tp__28-mini-project-proof)",
+      "description": "La consigne exige quatre éléments de preuve (scénario, résultat, contrôle, validation humaine), mais le bloc cloud_exercise courant ne contient ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment. Le rapport initial localise la logique CloudExerciseBlock selon laquelle, en l’absence de rubrique/évaluation serveur, une réponse non vide suffit et l’activité est complétée, ce qui permet de franchir le TP avec une preuve insuffisante.",
+      "recommendation": "Structurer la remise autour des quatre éléments obligatoires et appliquer une longueur minimale ou une évaluation à critères explicites avant de compléter l’activité.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "location": "course.description; lessons[0].chapters[0..5].title; nombreux champs fr/en des blocs et options, notamment lessons[0].chapters[2].blocks[0].items[3].description et chapters[5].blocks[0..3].options[*].text",
+      "description": "Le JSON courant contient de nombreux couples fr/en strictement identiques ou en français dans les deux langues : la description générale est identique, plusieurs titres et libellés sont identiques, et certains textes déclarés en anglais restent en français. Le chapitre et le titre de leçon anglais comportent aussi le suffixe « - FR ». Cela prouve une couverture bilingue incomplète dans le rendu anglais ; ce n’est pas traité comme corruption JSON.",
+      "recommendation": "Réviser les champs en identiques ou restés en français et fournir une traduction anglaise cohérente, sans modifier le contenu dans le cadre de cette contre-revue.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 2,
+    "p2": 3
+  }
+}

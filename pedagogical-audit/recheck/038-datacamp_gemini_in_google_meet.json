@@ -1,0 +1,94 @@
+{
+  "formation_id": "datacamp_gemini_in_google_meet",
+  "index": 38,
+  "course_ids": ["gemini_in_google_meet__01"],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": ["/home/ubuntu/neopolis-akademy/client/public/data/courses/gemini_in_google_meet__01.json"],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/038-datacamp_gemini_in_google_meet.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": ["objectifs et activités", "faisabilité TP/fichiers/environnement", "fausses soumissions ou gates", "médias/téléchargements", "duplications ou corruption", "rendu/bilinguisme"],
+    "current_state_basis": "Relecture du JSON de cours actuel, confrontation au rapport initial et à l'entrée static-audit ciblée (issue_count=0). Aucun cours modifié. Les médias sont déclarés présents; leur lecture navigateur effective n'est pas déduite."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage/gate",
+      "course_id": "gemini_in_google_meet__01",
+      "location": "lessons[0].chapters[0..4].requiredBeforeAdvance; lessons[0].chapters[0..4].blocks[0].id=dc_1_act_01_video..dc_1_act_05_video",
+      "description": "Les cinq chapitres vidéo sont requis et déclarent un mp4Url, mais les IDs de média locaux de 17 caractères ne sont pas reconnus par le gate de navigation décrit dans le rapport initial; la vidéo peut donc être sautée sans lecture ni marquage manuel.",
+      "recommendation": "Utiliser systématiquement block.id pour les médias locaux dans les calculs de complétion du bouton Suivant et de fin de leçon, puis tester les cinq chapitres.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "objectifs et activités/progression",
+      "course_id": "gemini_in_google_meet__01",
+      "location": "lessons[0].chapters[4].blocks[0].transcript; lessons[0].chapters[5].blocks[0]",
+      "description": "Le chapitre 5 annonce une mise en situation Cymbal retail avec trois actions (générer un arrière-plan, activer les sous-titres traduits, prendre des notes), mais le chapitre suivant ne contient qu'un resource_review demandant de consulter le PDF; aucune action Meet, production attendue ou preuve de réussite n'est fournie.",
+      "recommendation": "Ajouter une activité guidée de transfert alignée sur les trois actions annoncées; conserver le PDF comme support et définir un mode de preuve réalisable dans l'environnement disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "verrouillage/fausse soumission",
+      "course_id": "gemini_in_google_meet__01",
+      "location": "lessons[0].chapters[5].blocks[0].resource_review; resource_review.id=dc_1_act_06_resource",
+      "description": "La consigne demande de voir le PDF avant de continuer, mais le lien d'ouverture et le bouton de confirmation sont indépendants: la confirmation peut être envoyée sans ouverture. Le gate atteste une auto-déclaration, pas la consultation demandée.",
+      "recommendation": "Renommer explicitement le bouton comme auto-attestation, ou enregistrer l'ouverture du lien avant d'autoriser la confirmation; ne pas présenter cette action comme une lecture vérifiée.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu/bilinguisme",
+      "course_id": "gemini_in_google_meet__01",
+      "location": "datacampImport.sourceLanguage=fr-FR; lessons[0].title/description; chapters[0..5].title/description; blocs vidéo title/transcript; chapters[6..9].options[].text et explanation",
+      "description": "Le parcours est déclaré fr-FR, mais de nombreux champs fr sont identiques à l'anglais ou restent en anglais: titres, descriptions, titres/transcripts vidéo, libellés de ressource, options et explications de QCM. Le rendu en interface française expose donc encore du texte pédagogique anglais.",
+      "recommendation": "Fournir les variantes françaises réellement traduites pour les textes visibles, choix et feedbacks; ajouter une piste française lorsque nécessaire, puis effectuer une revue complète en mode fr-FR.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "objectifs pédagogiques",
+      "course_id": "gemini_in_google_meet__01",
+      "location": "lessons[0].chapters[0..9] (absence de champ objectiveBefore ou équivalent)",
+      "description": "Le JSON actuel ne formalise pas d'objectif pédagogique mesurable avant lecture pour les chapitres; les intentions sont portées par les titres, descriptions génériques et transcripts. Ce constat est documenté comme non vérifié/à améliorer dans le rapport initial, et non comme absence de contenu.",
+      "recommendation": "Ajouter des objectifs observables et mesurables au niveau approprié, sans déduire d'objectif au-delà du contenu existant.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "faisabilité TP/environnement",
+      "course_id": "gemini_in_google_meet__01",
+      "location": "lessons[0].chapters[1].blocks[0].transcript (visit meet.google.com; desktop browser); chapters[0..4] vidéo et chapter[5] resource_review",
+      "description": "Les démonstrations demandent un environnement Google Meet sur ordinateur, mais l'activité annoncée n'est pas exécutée ni vérifiée dans Meet et aucune preuve de réalisation n'est définie. La faisabilité réelle selon les droits/configurations Workspace n'est donc pas démontrée par les JSON.",
+      "recommendation": "Préciser l'environnement, les prérequis et une alternative simulée ou une preuve guidée; tester le parcours avec une configuration apprenant autorisée avant de le considérer réalisable.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "médias/téléchargements",
+      "course_id": "gemini_in_google_meet__01",
+      "location": "lessons[0].chapters[0..4].blocks[0].mp4Url/audioUrl/subtitleUrlEn/slidesPdf; chapters[0].blocks[1].url/resourceUrl",
+      "description": "Les cinq vidéos déclarent MP4, audio, transcript, sous-titres EN et PDF, et le cours déclare un téléchargement PDF. Les chemins sont présents et disposent d'un chemin de rendu, mais l'accès, la lecture, la durée, la qualité visuelle et le contenu effectif n'ont pas été testés en navigateur; aucune absence n'est prouvée.",
+      "recommendation": "Effectuer un test navigateur authentifié des MP4, audios, VTT et PDF (ouverture, lecture, téléchargement, alternatives) et corriger uniquement les défaillances observées.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "duplication/corruption",
+      "course_id": "gemini_in_google_meet__01",
+      "location": "static-audit-data.json courses[course_id=gemini_in_google_meet__01]",
+      "description": "Le pré-audit statique actuel indique lesson_count=1, chapter_count=10 et issue_count=0 pour ce cours; aucune duplication ou corruption JSON n'est signalée dans cette source. Ce point est donc conservé comme contrôle négatif, pas comme défaut confirmé.",
+      "recommendation": "Aucune correction déduite; conserver une validation JSON et une vérification de cohérence des IDs lors des futures modifications.",
+      "status": "false_positive"
+    }
+  ],
+  "summary": {
+    "issue_count": 7,
+    "p0": 0,
+    "p1": 2,
+    "p2": 5
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_06",
+  "index": 75,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__06"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "current_course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__06.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/075-ia_appliquee_metiers_tp__formation_06.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "no_course_modification": true
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "fausses_soumissions_ou_gates",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "location": "lessons[0].chapters[3] (ia_appliquee_metiers_tp__06-checkpoint-preparation)",
+      "description": "Le checkpoint déclare requiredBeforeAdvance:true et passThreshold:1, mais le bloc knowledge_check ne fournit qu’une réponse attendue sans preuve JSON d’un contrôle de réussite distinct ; le rapport initial documente que toute réponse est enregistrée comme complétion malgré une réponse erronée (constat confirmé par la règle de rendu inspectée dans ce rapport initial).",
+      "recommendation": "Vérifier/corriger le gate pour n’autoriser la progression qu’après la réponse correcte, puis tester une réponse erronée et une réponse correcte.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "faisabilite_tp_fichiers_environnement",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "location": "lessons[0].chapters[4].blocks[0] (ia_appliquee_metiers_tp__06-mini-project-proof)",
+      "description": "Le mini-projet demande une proposition commerciale complète, un calcul de ROI et un e-mail brouillon ; le rapport initial constate que le support disponible ne fournit pas les intrants nécessaires à une proposition et un ROI vérifiables et que les étapes structurées annoncées sont absentes.",
+      "recommendation": "Fournir explicitement les intrants fictifs et hypothèses chiffrées nécessaires, ou réduire l’exigence à une production vérifiable avec les ressources réellement présentes ; documenter des étapes de réalisation contrôlables.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "fausses_soumissions_ou_gates",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "location": "lessons[0].chapters[4] (requiredBeforeAdvance:true) et bloc cloud_exercise ia_appliquee_metiers_tp__06-mini-project-proof",
+      "description": "Le rapport initial documente que le verrouillage du mini-projet ne contrôle pas sa réalisation : sans critère ni évaluation suivie, une saisie minimale suffit à révéler la correction et à débloquer le quiz final.",
+      "recommendation": "Associer la complétion à des critères observables et à une validation de la preuve soumise ; tester les soumissions vides, minimales et conformes.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "objectifs_activites_et_feedback",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "location": "lessons[0].chapters[5].blocks[0..3].explanation (ia_appliquee_metiers_tp__06-quiz-01..04)",
+      "description": "Les quatre QCM réutilisent la même explication générale (« La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle. »). Le feedback est donc peu diagnostique au regard des objectifs distincts mesurés, constat déjà localisé par le rapport initial.",
+      "recommendation": "Conserver le rappel commun de sécurité mais ajouter une explication spécifique à chaque question et à ses distracteurs.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "médias_téléchargements",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "location": "lessons[0].chapters[1].blocks[1] (resource_review ia_appliquee_metiers_tp__06-source-review)",
+      "description": "Aucune anomalie de média ou de téléchargement n’est retenue : le rapport initial vérifie que la ressource locale « Support fictif de TP 6 » est servie par l’application et le contrôle statique du cours indique issue_count:0.",
+      "recommendation": "Aucune correction de cours ; conserver comme point vérifié et revalider la disponibilité lors d’un test navigateur si nécessaire.",
+      "status": "false_positive"
+    },
+    {
+      "severity": "P2",
+      "category": "duplication_corruption_rendu_bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "location": "course JSON ia_appliquee_metiers_tp__06, lessons[0], chapters[0..5]",
+      "description": "Aucune duplication ou corruption structurelle n’est retenue : le cours contient 1 leçon et 6 chapitres cohérents ; le contrôle statique indique issue_count:0. Les contenus comportent des variantes fr/en dans les champs inspectés ; aucune anomalie de rendu bilingue n’est prouvée par les données locales.",
+      "recommendation": "Aucune correction sur la base des preuves disponibles ; un test de rendu bilingue reste hors périmètre statique.",
+      "status": "false_positive"
+    }
+  ],
+  "summary": {
+    "issue_count": 4,
+    "p0": 0,
+    "p1": 3,
+    "p2": 1
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_15",
+  "index": 84,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__15"
+  ],
+  "review_scope": {
+    "object": "Contre-revue pédagogique de la formation ia_appliquee_metiers_tp__formation_15, sans modification de cours.",
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json (index 84)",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__15.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/084-ia_appliquee_metiers_tp__formation_15.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "evidence_policy": "Constats limités aux JSON locaux, au rapport initial et aux preuves de rendu/code explicitement localisées dans le rapport initial ; aucune déduction hors preuve."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__15",
+      "location": "lessons[0].chapters[3] (checkpoint, passThreshold=1), block id=ia_appliquee_metiers_tp__15-checkpoint-preparation (knowledge_check)",
+      "description": "Le checkpoint intitulé « environnement et sécurité » ne vérifie pas la réponse du knowledge_check avant de marquer le chapitre complété : le passage peut donc être déverrouillé après une mauvaise réponse.",
+      "recommendation": "Faire dépendre la complétion du checkpoint d’une réponse correcte vérifiable, ou retirer le verrou ; ne pas présenter ce contrôle comme une validation d’acquis s’il ne vérifie pas la correction.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__15",
+      "location": "lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__15-mini-project-proof] (cloud_exercise)",
+      "description": "La preuve de réalisation obligatoire déverrouille la suite avec une réponse non vide ; aucun minimum explicite, critère/rubrique, évaluation serveur ou réflexion obligatoire ne vérifie les quatre éléments demandés. Le gate atteste donc une soumission, pas la preuve attendue.",
+      "recommendation": "Ajouter une validation exploitable des éléments de preuve (critères/rubrique et seuil explicites, ou contrôle structuré) ; sinon ne pas présenter ce gate comme une preuve de réalisation.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__15",
+      "location": "lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__15-mini-project-proof] (assignment/instructions ; propriété steps absente)",
+      "description": "Le mini-projet annonce quatre compétences et demande un scénario, un résultat, un contrôle et une validation humaine, mais les instructions directement affichées ne séquencent pas la construction, les cas de test ni l’escalade. Le champ resources pointe bien vers le support fictif localisé, mais cela ne remplace pas un guidage opératoire dans le TP.",
+      "recommendation": "Ajouter des étapes numérotées directement dans le bloc du TP, ou documenter explicitement que le parcours n’est pas guidé ; conserver l’usage de la sandbox et des données fictives déjà indiqué.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__15",
+      "location": "lessons[0].chapters[2].blocks[type=sequence_visual].items[0..3] et lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__15-quiz-order].buckets[0..3]",
+      "description": "L’enseignement utilise « Cadrer → Préparer → Tester → Contrôler », tandis que le tri final utilise « Cadrer → Construire → Tester → Valider », sans équivalence explicite. L’évaluation peut ainsi porter sur l’interprétation des libellés plutôt que sur la démarche enseignée.",
+      "recommendation": "Employer les mêmes quatre libellés dans l’enseignement et l’évaluation, ou fournir l’équivalence explicite avant le tri et aligner les cartes sur ce choix.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__15",
+      "location": "lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__15-quiz-order] ; JSON: feedback présent, correction absent ; rendu localisé dans LessonViewer.tsx:962-973 et MatchingExercise.tsx:40-42, 444-450",
+      "description": "La consigne promet une correction après tentative complète, mais le bloc fournit feedback et non correction ; le chemin de rendu transmis à MatchingExercise n’affiche la correction détaillée que depuis exercise.correction. Le feedback textuel configuré n’est donc pas rendu comme correction promise.",
+      "recommendation": "Rendre feedback effectivement visible après tentative, ou le migrer dans correction et respecter cette convention ; ne conserver la promesse de correction qu’une fois le rendu garanti.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 2,
+    "p2": 3
+  }
+}

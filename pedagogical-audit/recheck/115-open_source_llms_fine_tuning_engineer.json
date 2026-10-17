@@ -1,0 +1,129 @@
+{
+  "formation_id": "open_source_llms_fine_tuning_engineer",
+  "index": 115,
+  "course_ids": [
+    "open_source_llms_fine_tuning_engineer__01",
+    "open_source_llms_fine_tuning_engineer__02",
+    "open_source_llms_fine_tuning_engineer__03",
+    "open_source_llms_fine_tuning_engineer__04"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/115-open_source_llms_fine_tuning_engineer.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/open_source_llms_fine_tuning_engineer__01.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/open_source_llms_fine_tuning_engineer__02.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/open_source_llms_fine_tuning_engineer__03.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/open_source_llms_fine_tuning_engineer__04.json"
+    ],
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method_note": "État courant relu dans les quatre JSON; aucune conclusion n'est tirée de l'absence de preuve statique seule. static-audit-data.json signale 0 issue pour chacun des quatre course_id (vérification statique uniquement)."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "rendu_objectifs_et_contextualisation_media",
+      "course_id": "open_source_llms_fine_tuning_engineer__01",
+      "location": "lessons[0].chapters[0] (id=lesson_01_chapter_01), body et blocks[0]",
+      "description": "Le corps JSON contient quatre objectifs, mais blocks[0] est uniquement la vidéo YouTube « The Major LLM Families Explained: Llama, Mistral, Gemma ». Le rapport initial établit que la normalisation/rendu parcourt les blocks lorsqu'ils existent et n'affiche donc pas body; l'état courant conserve exactement cette structure. L'objectif-before de la vidéo est bilingue, mais ne remplace pas l'affichage des objectifs.",
+      "recommendation": "Rendre le body d'objectifs comme bloc content avant la vidéo, ou adapter la normalisation; conserver la vidéo comme complément contextualisé.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "rendu_contenu_et_progression",
+      "course_id": "open_source_llms_fine_tuning_engineer__01",
+      "location": "lessons[1].chapters[1] (id=lesson_02_chapter_02), body et blocks[0]",
+      "description": "Le body décrit Hugging Face Hub, model cards, datasets et authentification, tandis que blocks[0] est uniquement la vidéo « Mistral 7B: The BEST Tiny Model EVER! Beats LLAMA 2 ». Selon l'analyse initiale du chemin de rendu, le body n'est pas affiché quand un bloc existe; cette structure est inchangée dans le JSON courant.",
+      "recommendation": "Afficher le body avant la vidéo et expliciter que la vidéo illustre le sujet sans remplacer la documentation du Hub.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "transition_et_rendu_contenu",
+      "course_id": "open_source_llms_fine_tuning_engineer__01",
+      "location": "lessons[2].chapters[5] (id=lesson_03_chapter_06), body et blocks[0]",
+      "description": "Le body contient le bilan et l'annonce de la leçon suivante, mais blocks[0] est uniquement la vidéo « How to Install LLaMA & Mistral Locally for Free—Easy Setup ». Le rapport initial a localisé la perte du bilan/transition au rendu; le JSON courant conserve body + vidéo sans bloc content.",
+      "recommendation": "Rendre le bilan et la transition avant la vidéo; ne pas faire de la vidéo complémentaire une condition implicite de sortie.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "pertinence_et_contextualisation_media",
+      "course_id": "open_source_llms_fine_tuning_engineer__02",
+      "location": "lessons[1].chapters[1] (id=chapter_02), blocks[1]",
+      "description": "Le chapitre traite des stratégies de séparation train/validation/test, alors que le média déclaré est la vidéo « LoRA, QLoRA Indepth Mathematical Intuition ». Le JSON courant conserve ce titre et un objectiveBefore générique; aucune consigne spécifique de séparation ou de validation n'est déclarée autour de la vidéo.",
+      "recommendation": "Remplacer ou déplacer ce média vers le chapitre LoRA/QLoRA, ou fournir une consigne explicitement reliée aux stratégies de split et à la prévention de fuite.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "duplication_ou_corruption_structurelle",
+      "course_id": "open_source_llms_fine_tuning_engineer__03",
+      "location": "chapitres du cours contenant simultanément chapter.block et chapter.blocks (notamment lessons[0].chapters[0], [1], [2], [3], [4], [5] et lessons[1].chapters[0], [1], [2], [3], [4], [5])",
+      "description": "Le JSON courant conserve une représentation legacy dans chapter.block et une représentation rendue dans chapter.blocks. Par exemple lessons[0].chapters[0] possède block={type:'content', body:...} et blocks=[video, content] dont le second content reprend le même texte; lessons[0].chapters[1] et [2] ont également block + blocks content dupliqué. La duplication est visible dans le fichier, même si le rapport initial a confirmé le rendu de blocks.",
+      "recommendation": "Choisir une représentation canonique et supprimer/normaliser la copie legacy sans changer le contenu pédagogique; vérifier que la normalisation n'affiche pas deux fois le même texte.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "ordre_objectifs_et_media",
+      "course_id": "open_source_llms_fine_tuning_engineer__03",
+      "location": "lessons[0].chapters[0] (id=lesson_01_chapter_01), blocks[0..1]",
+      "description": "L'écran « What You Will Learn » place la vidéo LoRA en blocks[0], puis le content d'objectifs en blocks[1]. Le rapport initial signalait que la vidéo obligatoire précédait les objectifs; l'ordre courant est inchangé. Les objectifs sont présents mais arrivent après le média.",
+      "recommendation": "Placer le bloc d'objectifs avant la vidéo ou rendre la vidéo facultative; conserver l'objectif-before bilingue seulement comme aide de visionnage.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "rendu_objectifs_et_contextualisation_media",
+      "course_id": "open_source_llms_fine_tuning_engineer__04",
+      "location": "lessons[0].chapters[0] (id=lesson_01_chapter_01), body et blocks[0]",
+      "description": "Le body contient les objectifs d'Adapter Saving and Merging, mais blocks[0] est uniquement la vidéo « qLoRa in Action: A Fine-Tuning Tutorial ». L'analyse initiale du rendu établit que le body n'est pas affiché dans cette configuration; la structure actuelle est inchangée.",
+      "recommendation": "Rendre le body d'objectifs avant la vidéo et qualifier celle-ci comme complément relié à l'enregistrement/merge d'adapters.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "rendu_contenu_et_progression",
+      "course_id": "open_source_llms_fine_tuning_engineer__04",
+      "location": "lessons[1].chapters[1] (id=lesson_02_chapter_02), body et blocks[0]",
+      "description": "Le body contient la théorie centrale des model cards et dataset cards, mais blocks[0] est uniquement la vidéo « The Major LLM Families Explained: Llama, Mistral, Gemma ». Le rapport initial a localisé la non-exposition du body au rendu; le JSON courant conserve body + vidéo sans bloc content.",
+      "recommendation": "Afficher le body avant le média et remplacer/déplacer cette vidéo non spécifique, ou documenter précisément son lien avec la documentation de cartes.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "transition_et_rendu_contenu",
+      "course_id": "open_source_llms_fine_tuning_engineer__04",
+      "location": "lessons[2].chapters[5] (id=lesson_03_chapter_06), body et blocks[0]",
+      "description": "Le body contient le bilan de Serving Fine-Tuned Models et la transition vers la leçon coût/gouvernance, mais blocks[0] est uniquement la vidéo « How to Fine Tune your own LLM using LoRA (on a CUSTOM dataset!) ». L'état courant conserve cette structure; le rapport initial établit que le bilan/transition n'est pas rendu.",
+      "recommendation": "Rendre le bilan et la transition comme content, puis conserver une vidéo cohérente et complémentaire si nécessaire.",
+      "status": "open"
+    },
+    {
+      "severity": "P0",
+      "category": "rendu_activite_et_verrouillage",
+      "course_id": "open_source_llms_fine_tuning_engineer__02",
+      "location": "lessons[0..3].chapters: chapter_04 absent dans le JSON courant; course.exercises=[]",
+      "description": "Les quatre chapitres checkpoint signalés dans le rapport initial (chapter_04 des quatre leçons) ne sont plus présents dans l'état courant. Les leçons du cours 02 contiennent respectivement chapter_01, chapter_02, chapter_03, chapter_05 et chapter_06, sans chapitre checkpoint ni questions/blocks d'exercice. Le défaut initial « checkpoint invisible/non verrouillant » n'est donc plus observable tel quel, mais l'activité évaluative correspondante a disparu du JSON courant.",
+      "recommendation": "Vérifier explicitement l'intention éditoriale. Si des checkpoints sont requis par les objectifs, réintroduire une activité rendue et machine-évaluable avec une règle de progression cohérente; sinon documenter leur suppression et revoir l'alignement objectifs-évaluation.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 10,
+    "p0": 1,
+    "p1": 4,
+    "p2": 5
+  }
+}

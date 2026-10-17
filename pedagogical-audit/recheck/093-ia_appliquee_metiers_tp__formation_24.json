@@ -1,0 +1,102 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_24",
+  "index": 93,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__24"
+  ],
+  "review_scope": {
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__24.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/093-ia_appliquee_metiers_tp__formation_24.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "dimensions": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "review_method": "Comparaison du JSON de cours actuel avec le rapport initial et le registre statique local ; seuls les constats appuyés par une preuve localisée sont retenus. Aucun cours modifié.",
+    "static_current_state": {
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "lesson_count": 1,
+      "chapter_count": 6,
+      "issue_count": 0,
+      "issues": []
+    }
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "location": "lessons[0].chapters[1] (chapter_id=ia_appliquee_metiers_tp__24-screen-02); content_id=ia_appliquee_metiers_tp__24-source-review",
+      "description": "La consigne demande d’ouvrir la ressource puis de confirmer sa consultation, mais le bouton de confirmation est activable sans que l’ouverture du lien ait été enregistrée. Le verrouillage atteste donc une déclaration de consultation, non la consultation demandée. État courant vérifié : « Ouvrez la ressource source dans un nouvel onglet… revenez ici pour confirmer votre consultation. » Le bloc porte requiredBeforeAdvance=true au niveau du chapitre. Preuve JSON/code localisée : client/public/data/courses/ia_appliquee_metiers_tp__24.json → lessons[0].chapters[1].blocks[id=ia_appliquee_metiers_tp__24-source-review] ; client/src/pages/training/LessonViewer.tsx → branche resource_review : le lien et le bouton de confirmation sont indépendants, et le bouton ajoute directement reviewId aux exercices complétés.",
+      "recommendation": "Modifier le mécanisme de complétion du bloc resource_review et ajouter un test couvrant le refus de la confirmation avant l’ouverture enregistrée de la ressource.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "location": "lessons[0].chapters[2] (chapter_id=ia_appliquee_metiers_tp__24-screen-03); content_id=ia_appliquee_metiers_tp__24-quiz-order",
+      "description": "La démarche explicitée juste avant l’évaluation emploie « Cadrer → Préparer → Tester → Contrôler », tandis que l’activité finale intitulée « Ordonnez la démarche de réalisation » exige « Cadrer → Construire → Tester → Valider ». Comme l’activité se présente comme la même démarche, les deux changements de vocabulaire créent une ambiguïté évitable sur les étapes à retenir. État courant vérifié : sequence_visual : « Cadrer », « Préparer », « Tester », « Contrôler » ; bucket_sort : « 1. Cadrer », « 2. Construire », « 3. Tester », « 4. Valider ». Preuve JSON/code localisée : client/public/data/courses/ia_appliquee_metiers_tp__24.json → lessons[0].chapters[2].blocks[type=sequence_visual].items et lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__24-quiz-order].buckets.",
+      "recommendation": "Harmoniser les libellés et les descriptions avant de maintenir le tri final comme validation de la démarche.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "location": "lessons[0].chapters[3] (chapter_id=ia_appliquee_metiers_tp__24-checkpoint-01); content_id=ia_appliquee_metiers_tp__24-checkpoint-preparation",
+      "description": "Le checkpoint obligatoire peut être franchi après une réponse erronée. KnowledgeCheckBlock appelle onComplete quel que soit le résultat ; LessonViewer marque alors l’interaction terminée, et les règles de verrouillage contrôlent cette terminaison sans exiger isCorrect. Le passThreshold=1 porté par le chapitre ne s’applique pas à ce bloc knowledge_check. État courant vérifié : Chapitre requiredBeforeAdvance=true et passThreshold=1 ; bloc knowledge_check required=true, correctAnswer=« a ». Preuve JSON/code localisée : client/public/data/courses/ia_appliquee_metiers_tp__24.json → lessons[0].chapters[3] ; client/src/components/blocks/GenericLearningBlocks.tsx → KnowledgeCheckBlock.select appelle onComplete(..., id === correctAnswer) pour toute sélection ; client/src/pages/training/LessonViewer.tsx → onComplete ajoute systématiquement l’identifiant à completedNovasavoInteractions ; client/src/pages/training/chapterProgress.ts → un knowledge_check est déverrouillé dès sa présence dans completedInlineInteractions.",
+      "recommendation": "Aligner la complétion du knowledge_check sur la réussite, appliquer effectivement le seuil configuré et ajouter un test de non-déverrouillage après une réponse erronée.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "location": "lessons[0].chapters[4] (chapter_id=ia_appliquee_metiers_tp__24-mini-project); content_id=ia_appliquee_metiers_tp__24-mini-project-proof",
+      "description": "Pour un TP annoncé à 4 heures et mobilisant quatre compétences, le bloc ne contient aucune étape structurée (steps est absent) : l’apprenant reçoit une consigne globale, une liste d’objectifs et un indice, mais pas une séquence vérifiable de réalisation. Le pré-audit est donc confirmé sur ce point, avec une gravité modérée car le but, les garde-fous et la correction sont néanmoins présents. État courant vérifié : assignment : « Simuler une présélection avec un agent vocal sur deux candidats fictifs et produire une synthèse RH à valider. » ; instructions : liste des quatre compétences ; steps : absent. Preuve JSON/code localisée : client/public/data/courses/ia_appliquee_metiers_tp__24.json → lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__24-mini-project-proof] : aucune propriété steps ; client/src/components/CloudExerciseBlock.tsx → la section numérotée « Étapes » n’est rendue que lorsque tpSteps.length > 0.",
+      "recommendation": "Ajouter les étapes structurées au bloc cloud_exercise et les garder visibles dans une section « Étapes » avant la zone de preuve.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "location": "lessons[0].chapters[4] (chapter_id=ia_appliquee_metiers_tp__24-mini-project); content_id=ia_appliquee_metiers_tp__24-mini-project-proof",
+      "description": "Le chapitre obligatoire intitulé « preuve de réalisation » se déverrouille sur toute saisie non vide : le bloc ne fournit ni minimumAnswerLength, ni critères/rubrique, ni évaluation serveur. Une lettre suffit donc à révéler la correction, à déclencher la complétion et à permettre de passer au quiz, sans établir que la preuve contient le scénario, le résultat, un contrôle et la validation humaine demandés. État courant vérifié : minimumAnswerLength, rubricCriteria et serverGradedAssessment sont absents ; le chapitre a requiredBeforeAdvance=true. Preuve JSON/code localisée : client/public/data/courses/ia_appliquee_metiers_tp__24.json → lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__24-mini-project-proof] ; shared/assessmentSubmissionGuidance.ts → resolveAssessmentMinimumLength retourne 1 hors évaluation tracée ; client/src/components/CloudExerciseBlock.tsx → sans évaluation tracée, submit marque submitted, révèle la solution et appelle onComplete dès que la saisie atteint le minimum.",
+      "recommendation": "Définir des critères visibles et une condition de réussite proportionnée au caractère obligatoire de la preuve ; couvrir par un test qu’une réponse minimale non probante ne déverrouille pas le chapitre suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "location": "lessons[0].chapters[5] (chapter_id=ia_appliquee_metiers_tp__24-final-quiz); content_id=ia_appliquee_metiers_tp__24-quiz-order",
+      "description": "Le feedback pédagogique renseigné pour le tri n’est pas transmis au composant rendu. LessonViewer transmet uniquement block.correction à MatchingExercise, alors que ce bloc ne possède que feedback. Après une réussite, l’apprenant ne voit donc que le retour générique « 4/4 · Parfait ! » ; après une erreur, il voit le score et les couleurs mais pas l’explication métier prévue. État courant vérifié : feedback : « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. » ; correction : absent. Preuve JSON/code localisée : client/public/data/courses/ia_appliquee_metiers_tp__24.json → lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__24-quiz-order] ; client/src/pages/training/LessonViewer.tsx → branche bucket_sort transmet correction: block.correction ; client/src/components/MatchingExercise.tsx → le feedback détaillé ne s’affiche que via exercise.correction.",
+      "recommendation": "Mapper feedback vers la propriété de correction rendue, ou renseigner correction dans les données, puis tester le rendu du feedback après succès et erreur.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "location": "lessons[0].chapters[5] (chapter_id=ia_appliquee_metiers_tp__24-final-quiz); content_id=ia_appliquee_metiers_tp__24-final-quiz",
+      "description": "L’évaluation finale ne vérifie pas directement deux compétences annoncées au début du TP : créer des questions de relance selon les réponses et évaluer un entretien avec une grille comportementale. Les QCM et le tri valident surtout le cadre de sécurité, le contrôle humain et la séquence de réalisation ; le mini-projet pourrait couvrir le reste, mais sa preuve n’est pas qualifiée avant déverrouillage. État courant vérifié : Objectifs annoncés : relances selon les réponses et grille comportementale. Les blocs du quiz final sont quatre single_choice_exercise sur données/contrôle/vérification/secrets et un bucket_sort sur la démarche. Preuve JSON/code localisée : client/public/data/courses/ia_appliquee_metiers_tp__24.json → lessons[0].chapters[0].blocks[type=learning_section].items ; lessons[0].chapters[5].blocks : quatre single_choice_exercise et un bucket_sort, dont les libellés et explications ne portent pas sur la production de relances ni l’application d’une grille comportementale.",
+      "recommendation": "Compléter le blueprint d’évaluation finale afin que toutes les compétences déclarées soient observables dans une activité corrigée ou dans une preuve effectivement évaluée.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 7,
+    "p0": 0,
+    "p1": 2,
+    "p2": 5
+  }
+}

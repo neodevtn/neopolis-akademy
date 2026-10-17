@@ -1,0 +1,862 @@
+{
+  "formation_id": "huggingface_llm_course",
+  "index": 69,
+  "course_ids": [
+    "huggingface_llm_course__01"
+  ],
+  "review_scope": {
+    "formation_manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json (index 69)",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/huggingface_llm_course__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/069-huggingface_llm_course.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "current_state_checks": {
+      "lessons": 14,
+      "chapters": 103,
+      "content_blocks": 103,
+      "cloud_exercises": 82,
+      "required_cloud_exercises": 82,
+      "supplemental_download_blocks": 11,
+      "import_expected": {
+        "pages_expected": 103,
+        "pages_extracted": 103,
+        "checkpoint_or_lab_pages": 82,
+        "videos_expected": 98,
+        "videos_local": 0,
+        "supplemental_files_expected": 11,
+        "supplemental_files_local": 11,
+        "missing_source_files": []
+      },
+      "static_pre_audit_issue_count": 0
+    },
+    "method": "Contre-revue documentaire du JSON de cours et de ses preuves localisées; aucun cours modifié et aucune donnée non présente dans les sources déduite."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[0].chapters[0].blocks[id=hf_llm-course_page_001_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média / données de rendu",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → hf_llm-course_page_001 (2), hf_llm-course_page_002 (5), hf_llm-course_page_004 (1), hf_llm-course_page_005 (17), hf_llm-course_page_009 (1), hf_llm-course_page_014 (4), hf_llm-course_page_016 (6), hf_llm-course_page_020 (1), hf_llm-course_page_030 (2), hf_llm-course_page_031 (11), hf_llm-course_page_039 (5), hf_llm-course_page_040 (2), hf_llm-course_page_045 (2), hf_llm-course_page_046 (2), hf_llm-course_page_047 (2), hf_llm-course_page_051 (2), hf_llm-course_page_055 (2), hf_llm-course_page_056 (3), hf_llm-course_page_057 (3), hf_llm-course_page_058 (4), hf_llm-course_page_059 (2), hf_llm-course_page_060 (2), hf_llm-course_page_064 (4), hf_llm-course_page_065 (7), hf_llm-course_page_073 (3), hf_llm-course_page_079 (1), hf_llm-course_page_080 (1), hf_llm-course_page_081 (2), hf_llm-course_page_082 (3), hf_llm-course_page_088 (4), hf_llm-course_page_102 (9). PageContent.tsx:82-776 normalise et affiche des lignes textuelles sans gestion de <img>; les blocs téléchargements observés ont leurs propres download_url.",
+      "description": "Les illustrations importées ont, dans une partie substantielle du cours, une balise `<img>` dont l’attribut `src` ne contient pas d’URL exploitable. Ce défaut de données est distinct de l’accessibilité d’une ressource : ici, aucune cible d’image n’est fournie au rendu. De plus, PageContent ne convertit pas ces balises HTML en image.",
+      "recommendation": "Corriger le mapping image par image dans la chaîne d’import, puis contrôler le rendu et le sens pédagogique visuel dans un navigateur.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage / évaluation",
+      "course_id": "huggingface_llm_course__01",
+      "location": "cloudExerciseValidation.ts:1-9 fixe le minimum par défaut à 1; CloudExerciseBlock.tsx:153-161 complète l’activité après toute réponse au seuil lorsque l’évaluation suivie n’est pas configurée; LessonViewer.tsx:1587-1592 bloque la navigation pour chaque cloud_exercise.",
+      "description": "Les 82 cloud_exercise sont des verrous effectifs, mais aucun ne définit une longueur minimale ni une grille/évaluation serveur. Le composant applique donc son seuil par défaut d’un caractère et marque l’activité terminée dès qu’une réponse non vide est soumise. Le passage obligatoire ne correspond pas à la réussite de la tâche annoncée.",
+      "recommendation": "Redéfinir la politique de verrouillage activité par activité avant d’exiger la complétion dans la navigation.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "feedback",
+      "course_id": "huggingface_llm_course__01",
+      "location": "CloudExerciseBlock.tsx:408-455 n’affiche le feedback/solution qu’après soumission; la solution source ci-dessus est la seule valeur disponible dans chaque bloc cloud_exercise du JSON.",
+      "description": "Après soumission, l’apprenant ne reçoit aucune correction liée à son travail : la même phrase générique annonce qu’une correction détaillée serait disponible, sans contenu de correction, sur les 82 activités. Il n’obtient ni explication de réussite/erreur, ni piste de révision exploitable.",
+      "recommendation": "Collecter les corrigés et critères source, puis les associer à chaque bloc avant de maintenir l’activité comme obligatoire.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue / UX",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → blocks cloud_exercise (82 occurrences). cloudExerciseValidation.ts:11-18 retourne une chaîne inchangée; CloudExerciseBlock.tsx:104-113 utilise ce résolveur pour les champs affichés.",
+      "description": "Les 82 activités utilisent un énoncé en anglais et une pseudo-correction en français sous forme de chaînes simples, alors que le cours expose une version française. Le résolveur de langue conserve une chaîne telle quelle : l’interface française mélange donc les langues au moment où l’apprenant doit agir.",
+      "recommendation": "Localiser les données d’activité avant tout test utilisateur francophone.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média / rendu",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → hf_llm-course_page_002 (1), hf_llm-course_page_003 (1), hf_llm-course_page_004 (1), hf_llm-course_page_005 (3), hf_llm-course_page_006 (1), hf_llm-course_page_007 (3), hf_llm-course_page_009 (1), hf_llm-course_page_014 (1), hf_llm-course_page_015 (1), hf_llm-course_page_016 (5), hf_llm-course_page_017 (1), hf_llm-course_page_023 (3), hf_llm-course_page_024 (1), hf_llm-course_page_025 (2), hf_llm-course_page_029 (1), hf_llm-course_page_031 (3), hf_llm-course_page_036 (1), hf_llm-course_page_037 (3), hf_llm-course_page_038 (1), hf_llm-course_page_039 (1), hf_llm-course_page_040 (1), hf_llm-course_page_044 (1), hf_llm-course_page_045 (4), hf_llm-course_page_046 (2), hf_llm-course_page_047 (2), hf_llm-course_page_048 (1), hf_llm-course_page_049 (1), hf_llm-course_page_050 (1), hf_llm-course_page_051 (1), hf_llm-course_page_055 (2), hf_llm-course_page_056 (4), hf_llm-course_page_057 (4), hf_llm-course_page_058 (3), hf_llm-course_page_059 (3), hf_llm-course_page_060 (4), hf_llm-course_page_061 (1), hf_llm-course_page_064 (3), hf_llm-course_page_065 (1), hf_llm-course_page_066 (1), hf_llm-course_page_067 (1), hf_llm-course_page_073 (1), hf_llm-course_page_101 (7), hf_llm-course_page_102 (15). LessonViewer.tsx:552-627 ne rend un lecteur que pour block.type='video'; PageContent.tsx:82-776 ne comporte aucun parseur de balise Youtube; blockRegistry.ts:66-93 définit pourtant le type video.",
+      "description": "Des références vidéo sont bien présentes dans le contenu importé, mais elles ne sont pas converties en blocs `video` ni interprétées par PageContent. Elles ne peuvent donc pas devenir des lecteurs visibles dans LessonViewer; les chapitres concernés perdent le média annoncé et sa contextualisation visuelle effective.",
+      "recommendation": "Restaurer la conversion/rendu des références vidéo et vérifier ensuite en navigateur la lecture, le texte alternatif et le caractère obligatoire de chaque vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation / verrouillage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "LessonViewer.tsx:1615-1648 déclenche ChapterQuiz pour tout teaching chapter; ChapterQuiz.tsx:48-64 charge /data/lessonQuizzes.json et 75-80 appelle onPass() lorsque la banque est vide.",
+      "description": "LessonViewer injecte un ChapterQuiz après chaque écran d’enseignement. Pour ce course_id, aucune banque de questions n’existe dans lessonQuizzes.json; ChapterQuiz exécute alors onPass() automatiquement. Les 21 écrans d’enseignement concernés affichent ainsi un contrôle de compréhension sans question et valident le passage sans preuve d’acquisition.",
+      "recommendation": "Aligner le mécanisme de progression avec une évaluation réellement disponible et tester le parcours d’échec/réessai.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "UX / rendu de contenu",
+      "course_id": "huggingface_llm_course__01",
+      "location": "PageContent.tsx:82-776 parcourt les lignes normalisées sans parseur de ces composants; contentNormalization.ts:6-45 ne les convertit pas; LessonViewer.tsx:498-550 délègue le contenu au composant.",
+      "description": "Du balisage de composants d’origine est conservé dans le contenu riche sans transformation correspondante. Il est traité comme des lignes de texte par PageContent, ce qui expose une syntaxe technique ou des emplacements vides plutôt qu’une bannière de notebooks, un sélecteur de framework ou un encadré pédagogique.",
+      "recommendation": "Ajouter des transformations d’import typées et un test de non-affichage de balises de composant brutes.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[1].chapters[1].blocks[id=hf_llm-course_page_003_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[1].chapters[2].blocks[id=hf_llm-course_page_004_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[1].chapters[6].blocks[id=hf_llm-course_page_008_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "activité / rendu",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → hf_llm-course_page_008 (11), hf_llm-course_page_021 (10), hf_llm-course_page_023 (5), hf_llm-course_page_024 (6), hf_llm-course_page_025 (7), hf_llm-course_page_026 (5), hf_llm-course_page_034 (9), hf_llm-course_page_042 (10), hf_llm-course_page_053 (10), hf_llm-course_page_062 (13), hf_llm-course_page_069 (8), hf_llm-course_page_078 (10), hf_llm-course_page_085 (8), hf_llm-course_page_088 (5), hf_llm-course_page_090 (6), hf_llm-course_page_094 (5), hf_llm-course_page_095 (5). LessonViewer.tsx:977-1005 et 1190-1192 ne rendent que les blocs structurés; PageContent.tsx:82-776 n’interprète pas <Question>.",
+      "description": "Les questions importées sous forme de composants `<Question>` ne deviennent pas des activités apprenantes. Elles restent dans le texte brut, alors que des écrans intitulés « End-of-chapter quiz » reposent sur elles; les choix, la sélection, la correction et le feedback détaillé inclus dans le balisage ne sont donc pas accessibles comme interaction.",
+      "recommendation": "Réparer la transformation des composants Question avant toute publication des pages concernées, puis tester une réponse juste, une erreur et une nouvelle tentative.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[1].chapters[7].blocks[id=hf_llm-course_page_009_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[1].chapters[8].blocks[id=hf_llm-course_page_010_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[1].chapters[10].blocks[id=hf_llm-course_page_012_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[2].chapters[1].blocks[id=hf_llm-course_page_014_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[2].chapters[2].blocks[id=hf_llm-course_page_015_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[2].chapters[3].blocks[id=hf_llm-course_page_016_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[2].chapters[4].blocks[id=hf_llm-course_page_017_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[2].chapters[5].blocks[id=hf_llm-course_page_018_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[2].chapters[8].blocks[id=hf_llm-course_page_021_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[3].chapters[1].blocks[id=hf_llm-course_page_023_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[3].chapters[2].blocks[id=hf_llm-course_page_024_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[3].chapters[3].blocks[id=hf_llm-course_page_025_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[3].chapters[4].blocks[id=hf_llm-course_page_026_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[3].chapters[5].blocks[id=hf_llm-course_page_027_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[3].chapters[6].blocks[id=hf_llm-course_page_028_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[4].chapters[0].blocks[id=hf_llm-course_page_029_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[4].chapters[1].blocks[id=hf_llm-course_page_030_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[4].chapters[2].blocks[id=hf_llm-course_page_031_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[4].chapters[4].blocks[id=hf_llm-course_page_033_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[4].chapters[5].blocks[id=hf_llm-course_page_034_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[5].chapters[1].blocks[id=hf_llm-course_page_036_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[5].chapters[2].blocks[id=hf_llm-course_page_037_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[5].chapters[3].blocks[id=hf_llm-course_page_038_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[5].chapters[4].blocks[id=hf_llm-course_page_039_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[5].chapters[5].blocks[id=hf_llm-course_page_040_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[5].chapters[6].blocks[id=hf_llm-course_page_041_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[5].chapters[7].blocks[id=hf_llm-course_page_042_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[0].blocks[id=hf_llm-course_page_043_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[1].blocks[id=hf_llm-course_page_044_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[2].blocks[id=hf_llm-course_page_045_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[3].blocks[id=hf_llm-course_page_046_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[4].blocks[id=hf_llm-course_page_047_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[5].blocks[id=hf_llm-course_page_048_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[6].blocks[id=hf_llm-course_page_049_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[7].blocks[id=hf_llm-course_page_050_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[8].blocks[id=hf_llm-course_page_051_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[6].chapters[10].blocks[id=hf_llm-course_page_053_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[7].chapters[1].blocks[id=hf_llm-course_page_055_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[7].chapters[2].blocks[id=hf_llm-course_page_056_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[7].chapters[3].blocks[id=hf_llm-course_page_057_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[7].chapters[4].blocks[id=hf_llm-course_page_058_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[7].chapters[5].blocks[id=hf_llm-course_page_059_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[7].chapters[6].blocks[id=hf_llm-course_page_060_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[7].chapters[8].blocks[id=hf_llm-course_page_062_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[8].chapters[0].blocks[id=hf_llm-course_page_063_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[8].chapters[1].blocks[id=hf_llm-course_page_064_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[8].chapters[2].blocks[id=hf_llm-course_page_065_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[8].chapters[3].blocks[id=hf_llm-course_page_066_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[8].chapters[4].blocks[id=hf_llm-course_page_067_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[8].chapters[6].blocks[id=hf_llm-course_page_069_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[0].blocks[id=hf_llm-course_page_070_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[1].blocks[id=hf_llm-course_page_071_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[2].blocks[id=hf_llm-course_page_072_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[3].blocks[id=hf_llm-course_page_073_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[4].blocks[id=hf_llm-course_page_074_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[5].blocks[id=hf_llm-course_page_075_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[6].blocks[id=hf_llm-course_page_076_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[7].blocks[id=hf_llm-course_page_077_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[9].chapters[8].blocks[id=hf_llm-course_page_078_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[10].chapters[0].blocks[id=hf_llm-course_page_079_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[10].chapters[1].blocks[id=hf_llm-course_page_080_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[10].chapters[2].blocks[id=hf_llm-course_page_081_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[10].chapters[3].blocks[id=hf_llm-course_page_082_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[10].chapters[4].blocks[id=hf_llm-course_page_083_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[10].chapters[5].blocks[id=hf_llm-course_page_084_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[10].chapters[6].blocks[id=hf_llm-course_page_085_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[11].chapters[0].blocks[id=hf_llm-course_page_086_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[11].chapters[1].blocks[id=hf_llm-course_page_087_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[11].chapters[2].blocks[id=hf_llm-course_page_088_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[11].chapters[3].blocks[id=hf_llm-course_page_089_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[11].chapters[6].blocks[id=hf_llm-course_page_092_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[12].chapters[0].blocks[id=hf_llm-course_page_093_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[12].chapters[4].blocks[id=hf_llm-course_page_097_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[12].chapters[5].blocks[id=hf_llm-course_page_098_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[12].chapters[6].blocks[id=hf_llm-course_page_099_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[12].chapters[7].blocks[id=hf_llm-course_page_100_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[13].chapters[1].blocks[id=hf_llm-course_page_102_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "huggingface_llm_course__01",
+      "location": "client/public/data/courses/huggingface_llm_course__01.json → lessons[13].chapters[2].blocks[id=hf_llm-course_page_103_practice] (instructions=, assignment/criteria/solution identiques aux 82 activités). CloudExerciseBlock.tsx:227-245 rend l’objectif et les instructions; LessonViewer.tsx:1587-1592 bloque le passage tant que le bloc n’est pas complété.",
+      "description": "Le seul contrôle interactif de l’écran est obligatoire pour poursuivre, mais son champ `instructions` est vide et son énoncé est une formule identique, non spécifique à la page. Il ne définit ni action observable, ni livrable, ni critère de réussite propre au sujet; un débutant ne peut donc pas savoir quoi produire dans le champ de réponse.",
+      "recommendation": "Réécrire et faire valider pédagogiquement la consigne à partir de la page source avant de conserver le verrou; ajouter les données d’étapes, d’indice, de réussite et de correction au bloc.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 90,
+    "p0": 0,
+    "p1": 88,
+    "p2": 2
+  }
+}

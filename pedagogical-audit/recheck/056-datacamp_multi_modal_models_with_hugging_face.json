@@ -1,0 +1,568 @@
+{
+  "formation_id": "datacamp_multi_modal_models_with_hugging_face",
+  "index": 56,
+  "course_ids": [
+    "multi_modal_models_with_hugging_face__01"
+  ],
+  "review_scope": {
+    "current_course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_modal_models_with_hugging_face__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/056-datacamp_multi_modal_models_with_hugging_face.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue fondée uniquement sur les preuves JSON localisées du rapport initial et l’état JSON actuel; aucun test d’exécution ou rendu navigateur supplémentaire n’est déduit.",
+    "current_static_record": {
+      "issue_count": 0,
+      "lesson_count": 4,
+      "chapter_count": 45
+    }
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[0].blocks[1] (dc_1_act_01_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[1].blocks[0] (dc_1_act_02_tp) ; CloudExerciseBlock.tsx:119-161 applique un minimum par défaut de 1 caractère et complète un TP sans rubrique ; LessonViewer.tsx:1587-1592 verrouille le passage seulement jusqu’à cette soumission.",
+      "description": "Ce TP requis peut être validé avec une réponse arbitraire d’un seul caractère. Il n’a ni minimumAnswerLength explicite, ni rubricCriteria, ni serverGradedAssessment ; après soumission, le composant marque l’activité validée, déverrouille la correction et autorise la progression sans contrôler le code demandé.",
+      "recommendation": "Priorité 1 : définir une production attendue et une validation (tests isolés ou rubrique/évaluation serveur). Ne débloquer le chapitre suivant qu’après atteinte du critère.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[2].blocks[0] (dc_1_act_03_tp) ; CloudExerciseBlock.tsx:119-161 applique un minimum par défaut de 1 caractère et complète un TP sans rubrique ; LessonViewer.tsx:1587-1592 verrouille le passage seulement jusqu’à cette soumission.",
+      "description": "Ce TP requis peut être validé avec une réponse arbitraire d’un seul caractère. Il n’a ni minimumAnswerLength explicite, ni rubricCriteria, ni serverGradedAssessment ; après soumission, le composant marque l’activité validée, déverrouille la correction et autorise la progression sans contrôler le code demandé.",
+      "recommendation": "Priorité 1 : définir une production attendue et une validation (tests isolés ou rubrique/évaluation serveur). Ne débloquer le chapitre suivant qu’après atteinte du critère.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[3].blocks[0] (dc_1_act_04_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "activité",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[4] (sourceActivityType=\"TabExercise\", blocks=[content]); LessonViewer.tsx:498-550 rend seulement PageContent pour ce bloc.",
+      "description": "L’écran est une activité source de type TabExercise, mais le rendu ne contient qu’un bloc de texte. Le texte annonce « Dans cet exercice, vous allez utiliser… » sans éditeur, choix, question, validation ni résultat attendu : l’apprenant ne peut réaliser aucune opération de tokenisation.",
+      "recommendation": "Priorité 1 : récupérer les données de l’exercice d’origine puis rendre un bloc d’activité. À défaut, reformuler l’écran comme explication et ne plus le présenter comme un exercice.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[5].blocks[0] (dc_1_act_06_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[6].blocks[0] (dc_1_act_07_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[7].blocks[0] (dc_1_act_08_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[8].blocks[0] (dc_1_act_09_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[9].blocks[0] (dc_1_act_10_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[0].chapters[10].blocks[0] (dc_1_act_11_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[0].blocks[0] (dc_2_act_01_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[1].blocks[0] (dc_2_act_02_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[2].blocks[0] (dc_2_act_03_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[3].blocks[0] (dc_2_act_04_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[4].blocks[0] (dc_2_act_05_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[5].blocks[0] (dc_2_act_06_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[6].blocks[0] (dc_2_act_07_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[7].blocks[0] (dc_2_act_08_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[8].blocks[0] (dc_2_act_09_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[9].blocks[0] (dc_2_act_10_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[10].blocks[0] (dc_2_act_11_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[11].blocks[0] (dc_2_act_12_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[12].blocks[0] (dc_2_act_13_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[13].blocks[0] (dc_2_act_14_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[1].chapters[14].blocks[0] (dc_2_act_15_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[0].blocks[0] (dc_3_act_01_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[1].blocks[0] (dc_3_act_02_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[2].blocks[0] (dc_3_act_03_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[3].blocks[0] (dc_3_act_04_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[4].blocks[0] (dc_3_act_05_tp) ; CloudExerciseBlock.tsx:119-161 applique un minimum par défaut de 1 caractère et complète un TP sans rubrique ; LessonViewer.tsx:1587-1592 verrouille le passage seulement jusqu’à cette soumission.",
+      "description": "Ce TP requis peut être validé avec une réponse arbitraire d’un seul caractère. Il n’a ni minimumAnswerLength explicite, ni rubricCriteria, ni serverGradedAssessment ; après soumission, le composant marque l’activité validée, déverrouille la correction et autorise la progression sans contrôler le code demandé.",
+      "recommendation": "Priorité 1 : définir une production attendue et une validation (tests isolés ou rubrique/évaluation serveur). Ne débloquer le chapitre suivant qu’après atteinte du critère.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[5].blocks[0] (dc_3_act_06_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[6].blocks[0] (dc_3_act_07_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[7].blocks[0] (dc_3_act_08_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[2].chapters[8].blocks[0] (dc_3_act_09_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[0].blocks[0] (dc_4_act_01_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[1].blocks[0] (dc_4_act_02_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[2].blocks[0] (dc_4_act_03_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[3].blocks[0] (dc_4_act_04_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[4].blocks[0] (dc_4_act_05_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[5].blocks[0] (dc_4_act_06_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "LessonViewer.tsx:1621-1649 déclenche ChapterQuiz après les chapitres teaching ; ChapterQuiz.tsx:44-64 charge lessonQuizzes.json et 75-80 appelle onPass() sans question ; lessonQuizzes.json ne possède aucune clé multi_modal_models_with_hugging_face__01.",
+      "description": "Après cet écran d’enseignement, le parcours déclenche le quiz de chapitre générique ; aucune banque de questions n’est configurée pour ce cours. Le composant appelle donc onPass() automatiquement lorsque le tableau est vide : aucune récupération active ni feedback pédagogique n’est proposé avant l’écran suivant.",
+      "recommendation": "Priorité 2 : créer des questions formatives avec explications pour les écrans conceptuels, ou neutraliser proprement ce mécanisme afin d’éviter une validation invisible.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[6].blocks[0] (dc_4_act_07_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[7].blocks[0] (dc_4_act_08_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[8].blocks[0] (dc_4_act_09_code) : solutionCode défini, testCode absent, expectedOutput vide ; CodeReplBlock.tsx:28-40 appelle matchesCanonicalSolution ; shared/codeReplValidation.ts:10-13 compare les chaînes normalisées ; LessonViewer.tsx:1537-1624 ne calcule aucun isGatedByCodeRepl.",
+      "description": "L’activité demande de compléter du code, mais le bouton « Vérifier le code » n’exécute aucun programme ni test : il n’accepte que le texte identique à solutionCode (hors fins d’espace). Une solution fonctionnellement correcte mais formulée autrement est rejetée avec un feedback générique. En outre, code_repl n’est inclus dans aucune condition de passage : l’apprenant peut utiliser « Suivant » sans réaliser l’activité alors que requiredBeforeAdvance vaut true.",
+      "recommendation": "Priorité 1 : choisir un mode cohérent — validation par tests et verrouillage, ou pratique explicitement facultative — puis ajuster le feedback à ce mode.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "média",
+      "course_id": "multi_modal_models_with_hugging_face__01",
+      "location": "client/public/data/courses/multi_modal_models_with_hugging_face__01.json → lessons[3].chapters[9].blocks[0] (dc_4_act_10_video) contient subtitleUrlFr et un champ transcript anglais ; LessonViewer.tsx:603-620 et 743-760 affiche block.transcript sans sélection de langue.",
+      "description": "Dans le parcours en français, le contrôle « Transcription » affiche la transcription anglaise importée. Le rendu ne choisit pas de variante selon lang. Les sous-titres français sont bien référencés, ce qui limite l’impact, mais l’alternative textuelle affichée n’est pas cohérente avec la langue de l’interface et des consignes.",
+      "recommendation": "Priorité 3 : localiser les transcriptions ou libeller explicitement leur langue tant que la traduction n’est pas disponible.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 59,
+    "p0": 0,
+    "p1": 31,
+    "p2": 14
+  }
+}

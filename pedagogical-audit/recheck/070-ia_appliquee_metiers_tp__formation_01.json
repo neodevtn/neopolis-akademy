@@ -1,0 +1,69 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_01",
+  "index": 70,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__01"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json → index 70",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/070-ia_appliquee_metiers_tp__formation_01.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Lecture seule du JSON actuel, rapprochement avec le rapport initial et les constats statiques localisés. Aucun contenu de cours ni code modifié. Les ressources externes/non accessibles ne sont pas déclarées absentes."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__01.json → lessons[0].chapters[3] (ia_appliquee_metiers_tp__01-checkpoint-01), passThreshold=1, blocks[0].type=knowledge_check, correctAnswer=\"a\"; client/src/components/blocks/GenericLearningBlocks.tsx → KnowledgeCheckBlock.select; client/src/pages/training/LessonViewer.tsx → completedNovasavoInteractions/isGatedByNovasavoInteraction",
+      "description": "Le checkpoint obligatoire contient bien une question, la réponse correcte a et une explication, mais le rapport initial documente que KnowledgeCheckBlock enregistre l’interaction comme complétée pour toute sélection et que le gate utilise cette complétion plutôt que la justesse. Une réponse incorrecte peut donc déverrouiller la suite malgré passThreshold=1. Le constat reste corroboré par l’état JSON actuel et le code de rendu/progression cité dans le rapport initial.",
+      "recommendation": "Faire dépendre la complétion déverrouillante de la réponse correcte a ; conserver l’explication et le réessai après erreur, puis tester explicitement le parcours erreur → réessai → bonne réponse.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__01.json → lessons[0].chapters[4].blocks[0] (ia_appliquee_metiers_tp__01-mini-project-proof)",
+      "description": "La preuve obligatoire demande le scénario testé, le résultat obtenu, un contrôle effectué et l’étape restant sous validation humaine, mais le bloc actuel ne déclare ni minimumAnswerLength, ni learnerCriteria, ni rubricCriteria, ni serverGradedAssessment, ni requirePostRevealReflection. Le champ steps existe désormais, mais CloudExerciseBlock peut toujours considérer comme soumission toute valeur non vide selon le rapport initial et le code de validation cité ; la complétude des quatre éléments n’est donc pas contrôlée.",
+      "recommendation": "Rendre visibles les critères de preuve et ajouter un contrôle de complétude adapté à cette preuve réflexive avant de lever le verrouillage ; ne pas assimiler une saisie non vide à une preuve complète.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__01.json → lessons[0].chapters[5].blocks[4] (ia_appliquee_metiers_tp__01-quiz-order), feedback présent, correction absent; client/src/pages/training/LessonViewer.tsx → branche bucket_sort; client/src/components/MatchingExercise.tsx → rendu de la correction détaillée",
+      "description": "Le tri final annonce que la correction est disponible après une tentative complète et contient un champ feedback bilingue, mais le bloc actuel ne contient pas de champ correction. Le rapport initial localise que LessonViewer transmet correction sans transmettre feedback et que MatchingExercise n’affiche le texte détaillé que si correction est renseigné. Le feedback déclaré n’est donc pas rendu après erreur dans ce parcours.",
+      "recommendation": "Transmettre le feedback existant ou renseigner correction avec ce texte afin que la correction annoncée soit effectivement visible après une tentative complète.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__01.json → lessons[0].chapters[4].blocks[0].steps[0..2]",
+      "description": "Le constat initial d’absence totale de steps est corrigé : le JSON actuel contient trois étapes. Toutefois ces étapes restent génériques (relire la consigne, réaliser la tâche, vérifier avant soumission) et ne relient pas explicitement le cadrage fictif, l’extraction Apify, la déduplication/scoring Gemini, la restitution Sheets, le test et la preuve demandée. Le besoin de guidage structuré du TP de 2 h 30 reste donc ouvert, sans déduire de procédures d’interface non présentes dans les données.",
+      "recommendation": "Détailler les étapes observables déjà couvertes par le contenu du cours (cadrer, extraire, traiter/scorer, restituer/tester, documenter la preuve), sans inventer de clics, paramètres ou configurations d’outils.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 4,
+    "p0": 0,
+    "p1": 3,
+    "p2": 1
+  }
+}

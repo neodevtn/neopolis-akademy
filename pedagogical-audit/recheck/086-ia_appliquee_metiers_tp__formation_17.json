@@ -1,0 +1,62 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_17",
+  "index": 86,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__17"
+  ],
+  "review_scope": "Contre-revue de l'état courant du cours listé dans formation-manifest.json, comparé au rapport initial raw/086-ia_appliquee_metiers_tp__formation_17.json, au contenu JSON courant et à static-audit-data.json. Vérifications ciblées : objectifs et activités, faisabilité TP/fichiers/environnement, soumissions et gates, médias/téléchargements, duplications/corruption, rendu/bilinguisme. Aucun cours ni fichier de cours n'a été modifié. Les constats non prouvés par des données JSON locales ou par les éléments explicitement documentés dans le rapport initial sont exclus.",
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "location": "lessons[0].chapters[2].blocks[0].items versus lessons[0].chapters[5].blocks[4].buckets (ids ia_appliquee_metiers_tp__17-screen-03 et ia_appliquee_metiers_tp__17-quiz-order)",
+      "description": "L'écran pédagogique courant enseigne les étapes « Cadrer / Préparer / Tester / Contrôler », tandis que le tri final courant évalue « Cadrer / Construire / Tester / Valider ». Les actions restent proches, mais le JSON courant ne fournit pas de transition définissant ce changement de repères terminologiques. Le rapport initial signale le même écart et les champs concernés sont toujours présents dans l'état courant.",
+      "recommendation": "Harmoniser les quatre libellés entre la séquence pédagogique et le tri final, ou définir explicitement le passage de Préparer/Contrôler à Construire/Valider avant l'évaluation.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage_evaluation",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "location": "lessons[0].chapters[3] (id ia_appliquee_metiers_tp__17-checkpoint-01), requiredBeforeAdvance=true, passThreshold=1, blocks[0] type=knowledge_check",
+      "description": "Le checkpoint courant déclare requiredBeforeAdvance=true et passThreshold=1, avec un knowledge_check dont correctAnswer est « a ». Le rapport initial a établi par la logique de rendu/progression locale que la sélection d'une réponse incorrecte peut néanmoins être enregistrée comme interaction terminée et déverrouiller la suite. L'état JSON courant conserve cette configuration et les choix incorrects dangereux (données de production, partage de clé API, actions définitives). Le pré-audit statique ne signale pas ce cours (issue_count=0), mais cela ne réfute pas le constat comportemental documenté dans le rapport initial.",
+      "recommendation": "Ne comptabiliser le checkpoint et ne déverrouiller le mini-projet qu'après la réponse correcte « a » ; maintenir le gate fermé après b, c ou d et tester explicitement ce parcours.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "location": "lessons[0].chapters[4].blocks[0] (id ia_appliquee_metiers_tp__17-mini-project-proof), assignment/instructions/steps/resources",
+      "description": "Le mini-projet courant demande un rapprochement sur 20 justificatifs et transactions CSV et énumère quatre capacités, mais son champ steps contient seulement trois étapes génériques de soumission et ne décrit pas la constitution/validation du jeu de 20 cas, la configuration du workflow, le traitement des exceptions et la journalisation. Le rapport initial documentait déjà l'absence de guidage opératoire et relevait que le support ne fournissait pas les 20 justificatifs ni les transactions CSV correspondantes. Le JSON courant conserve un support fictif déclaré, sans preuve JSON locale que le jeu complet de test est fourni.",
+      "recommendation": "Publier un jeu de test exploitable ou demander explicitement sa constitution, puis ajouter des étapes opératoires couvrant les 20 cas, l'extraction, le rapprochement, les exceptions, la journalisation et la preuve attendue, sans inventer de paramétrage outil.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_de_la_preuve",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "location": "lessons[0].chapters[4].blocks[0] (id ia_appliquee_metiers_tp__17-mini-project-proof), type=cloud_exercise; absence de minimumAnswerLength, rubricCriteria et serverGradedAssessment",
+      "description": "La preuve courante demande textuellement un scénario testé, un résultat obtenu, un contrôle effectué et une étape restant soumise à validation humaine, mais le bloc JSON ne déclare aucune longueur minimale, aucun critère de grille et aucune évaluation serveur. Le rapport initial documente que le composant accepte alors une réponse non vide, potentiellement d'un seul caractère, et appelle la complétion qui déverrouille le quiz final. Le JSON courant conserve ces absences. Il s'agit d'un risque de fausse soumission/gate, pas d'une affirmation sur une session utilisateur non exécutée.",
+      "recommendation": "Conditionner la complétion à des critères vérifiables couvrant les quatre éléments demandés, avec longueur minimale justifiée et possibilité de compléter/refuser une preuve incomplète avant le déverrouillage.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback_non_rendu",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "location": "lessons[0].chapters[5].blocks[4] (id ia_appliquee_metiers_tp__17-quiz-order), fields feedback et correction",
+      "description": "Le tri courant déclare un feedback bilingue (« La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. ») et annonce une correction après tentative complète, mais le JSON ne contient pas de champ correction. Le rapport initial a vérifié dans le chemin de rendu que LessonViewer transmet block.correction au composant de tri, de sorte que le feedback déclaré n'est pas affiché comme correction pédagogique. Le champ feedback et l'absence de correction sont toujours présents dans l'état courant.",
+      "recommendation": "Rendre explicitement le feedback après tentative complète ou le mapper vers la propriété de correction effectivement affichée, puis vérifier les tentatives fausse et juste.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 3,
+    "p2": 2
+  }
+}

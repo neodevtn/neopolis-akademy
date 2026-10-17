@@ -1,0 +1,67 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_07",
+  "index": 76,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__07"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/076-ia_appliquee_metiers_tp__formation_07.json",
+    "current_course": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__07.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "note": "Contre-revue en lecture seule du contenu JSON actuellement référencé et des constats du rapport initial. Le static-audit-data.json contient issue_count=0 pour ce cours. Aucun cours ni code n’a été modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__07",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__07.json  '->'  lessons[0].chapters[3] (ia_appliquee_metiers_tp__07-checkpoint-01), blocks[0] (knowledge_check); client/src/components/blocks/GenericLearningBlocks.tsx; client/src/pages/training/LessonViewer.tsx; client/src/pages/training/checkpointGate.ts",
+      "description": "Le défaut de gate signalé initialement reste démontré dans l’état courant : le chapitre est requiredBeforeAdvance=true avec passThreshold=1, mais son unique bloc est un knowledge_check (et non un bloc type checkpoint). GenericLearningBlocks appelle onComplete(..., id === correctAnswer) dès toute sélection, LessonViewer enregistre l’interaction sans condition sur isCorrect, et checkpointGate ne recense que les blocs de type checkpoint. Une option erronée peut donc satisfaire la progression du chapitre.",
+      "recommendation": "Corriger la règle de complétion afin qu’une réponse erronée ne déverrouille pas « Suivant », ou intégrer les knowledge_check au calcul du seuil ; ajouter un test de régression couvrant b/c/d puis a.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__07",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__07.json  '->'  lessons[0].chapters[4].blocks[0] (ia_appliquee_metiers_tp__07-mini-project-proof), type=cloud_exercise; client/src/components/CloudExerciseBlock.tsx; client/src/components/blocks/cloudExerciseValidation.ts; LessonViewer.tsx",
+      "description": "La fausse soumission signalée initialement reste présente : la preuve du mini-projet demande quatre éléments, mais le cloud_exercise courant ne déclare ni minimumAnswerLength, ni rubricCriteria, ni learnerCriteria, ni serverGradedAssessment, ni requirePostRevealReflection. La configuration rendue utilise donc la validation minimale où un caractère non blanc suffit, puis la soumission alimente completedCloudExercises et la progression.",
+      "recommendation": "Exiger une preuve structurée par critères observables ou revue humaine explicite, avec un seuil de saisie cohérent ; vérifier qu’une réponse d’un caractère ne déverrouille pas le quiz final.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__07",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__07.json  '->'  lessons[0].chapters[4].blocks[0] (ia_appliquee_metiers_tp__07-mini-project-proof).steps",
+      "description": "Le constat initial d’absence de séquencement du TP est corrigé dans le JSON courant : le bloc contient désormais un tableau steps de trois étapes (« Relisez la consigne… », « Réalisez la tâche… », « Vérifiez votre production… »), et CloudExerciseBlock rend cette liste lorsque tpSteps.length > 0. Ce constat est donc fixé, sans conclure que le support externe est disponible ou que l’exécution n8n est réalisable.",
+      "recommendation": "Aucune correction requise pour ce constat. Conserver la vérification du support externe séparée, car son contenu n’est pas une preuve JSON locale.",
+      "status": "fixed"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__07",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__07.json  '->'  lessons[0].chapters[5].blocks[4] (ia_appliquee_metiers_tp__07-quiz-order), feedback présent et correction absent; client/src/pages/training/LessonViewer.tsx; client/src/components/MatchingExercise.tsx",
+      "description": "Le défaut de rendu du feedback du tri reste présent : le bloc bucket_sort déclare feedback mais pas correction. LessonViewer transmet correction à MatchingExercise sans transmettre feedback, et MatchingExercise n’affiche un texte de correction que si exercise.correction existe. Après une tentative incorrecte, le JSON courant ne fournit donc pas la correction textuelle configurée.",
+      "recommendation": "Mapper feedback vers le composant ou renseigner correction avec une explication explicite des quatre associations, puis tester le rendu après tentative incorrecte.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 4,
+    "p0": 0,
+    "p1": 2,
+    "p2": 2
+  }
+}

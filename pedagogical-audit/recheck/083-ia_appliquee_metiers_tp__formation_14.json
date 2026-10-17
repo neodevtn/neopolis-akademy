@@ -1,0 +1,95 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_14",
+  "index": 83,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__14"
+  ],
+  "review_scope": {
+    "current_course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__14.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/083-ia_appliquee_metiers_tp__formation_14.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du contenu actuel; constats retenus uniquement avec preuve JSON/code déjà localisée dans le rapport initial. Aucun cours modifié. static-audit-data indique issue_count=0 pour ce cours."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:4-10 et lessons[0].chapters[0].blocks[0] (lignes 80-105) ; LearningSectionBlock affiche la valeur de la langue courante à GenericLearningBlocks.tsx:12-15.",
+      "description": "En interface anglaise, le titre, la description et les objectifs de l’écran d’ouverture restent majoritairement en français. Un apprenant anglophone ne reçoit donc pas un cadrage et des objectifs dans la langue sélectionnée avant de commencer le TP.",
+      "recommendation": "Compléter les champs en anglais de ce cadrage avant publication ; contrôler ensuite les deux sélecteurs de langue sur le premier écran.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:221-260 ; ComparisonPanelBlock résout et affiche column.items dans la langue courante à GenericLearningBlocks.tsx:74-76.",
+      "description": "Les éléments des colonnes de vérification restent en français dans leur variante .en. L’écran anglais mélange ainsi explications anglaises et six consignes de sécurité en français immédiatement avant le checkpoint.",
+      "recommendation": "Traduire les items .en du panneau comparatif et vérifier visuellement le chapitre en anglais.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:267-321 (passThreshold: 1, required: true, correctAnswer: a) ; GenericLearningBlocks.tsx:57-64 ; LessonViewer.tsx:484-489 et 359-377 ; chapterProgress.ts:94-103.",
+      "description": "Le checkpoint annonce required: true et passThreshold: 1, mais une réponse incorrecte déclenche tout de même la complétion qui ouvre la navigation. La validation ne garantit donc pas l’acquisition que le checkpoint est censé vérifier.",
+      "recommendation": "Faire dépendre le Set de complétion et le verrouillage de la correction de la réponse, puis ajouter un test couvrant le choix incorrect et le choix correct de ce knowledge_check.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:334-361 ; cloudExerciseValidation.ts:11-18 ; CloudExerciseBlock.tsx:104-113 et 227-257, 323-333, 438-495.",
+      "description": "Les champs centraux du TP sont de simples chaînes françaises, et le renderer les affiche tels quels quelle que soit la langue. En anglais, l’apprenant voit donc en français l’objectif, les instructions de preuve, l’indice, la correction et le message de réussite de l’activité essentielle.",
+      "recommendation": "Localiser tous les champs textuels de ce cloud_exercise et contrôler l’activité complète dans les deux langues.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:340-361 ; CloudExerciseBlock.tsx:117-125, 153-161 et 390-406 ; cloudExerciseValidation.ts:1-9 ; assessmentSubmissionGuidance.ts:134-139 ; LessonViewer.tsx:1587-1592.",
+      "description": "La preuve est présentée comme condition de passage, mais aucune grille, évaluation serveur, choix de réflexion ni longueur minimale significative n’est configuré. Toute réponse non vide est marquée « Validé », révèle la correction et déverrouille le quiz final ; elle peut donc ne contenir aucune des preuves demandées.",
+      "recommendation": "Configurer une évaluation structurée ou un contrôle de critères réellement bloquant, puis tester qu’une réponse d’un seul caractère ne révèle plus la correction ni ne déverrouille le chapitre suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:398-402, 433-438 et 513-517 ; LessonViewer.tsx:977-1004 transmet opt.text[lang] à SingleChoiceExercise.",
+      "description": "Des propositions de réponse restent en français dans le quiz affiché en anglais. Le problème est observé dans plusieurs QCM de validation, dont des distracteurs : cela dégrade la lisibilité et l’équité de l’évaluation pour un apprenant ayant choisi l’anglais.",
+      "recommendation": "Traduire les options identifiées et effectuer une revue exhaustive des textes .en des cinq activités du quiz final.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__14.json:534-611 ; LessonViewer.tsx:957-975 ; MatchingExercise.tsx:40-42 et 420-450.",
+      "description": "Le feedback pédagogique rédigé pour l’activité de tri n’est pas transmis au composant qui l’affiche. Après une réussite, l’apprenant reçoit seulement « 4/4 · Parfait ! » au lieu de la synthèse qui explicite la logique de la démarche.",
+      "recommendation": "Mapper block.feedback vers le champ affiché par MatchingExercise ou étendre son interface avec un champ feedback, puis tester l’affichage après une réussite et un échec.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 7,
+    "p0": 0,
+    "p1": 4,
+    "p2": 3
+  }
+}

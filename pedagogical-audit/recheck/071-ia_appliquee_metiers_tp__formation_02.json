@@ -1,0 +1,87 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_02",
+  "index": 71,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__02"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__02.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/071-ia_appliquee_metiers_tp__formation_02.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "evidence_basis": "Revue du JSON de cours actuel, du rapport initial et de l'entrée ciblée dans static-audit-data.json; aucun constat sans preuve JSON localisée."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__02.json → lessons[0].chapters[3] (ia_appliquee_metiers_tp__02-checkpoint-01) → blocks[0]",
+      "description": "Le checkpoint obligatoire déclare passThreshold: 1, correctAnswer: a et required: true, mais le rapport initial documente que le rendu enregistre la complétion quelle que soit la réponse sélectionnée. Le défaut de gate après réponse incorrecte reste donc ouvert dans l'état vérifié; le JSON de cours ne fournit aucun correctif local de cette logique.",
+      "recommendation": "Corriger la logique de complétion du knowledge_check afin qu'une réponse incorrecte conserve l'échec et ne déverrouille pas la suite; vérifier par un test de navigation après erreur puis après réussite.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__02.json → lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__02-mini-project-proof]",
+      "description": "La preuve du cloud_exercise demande quatre éléments (scénario, résultat, contrôle et étape restant sous validation humaine), mais le bloc actuel ne déclare ni minimumAnswerLength, ni rubricCriteria, learnerCriteria, serverGradedAssessment, evaluationPrompt, passingScore ou postRevealReflectionOptions. Le rapport initial établit que la validation par défaut accepte une réponse non vide et déclenche la complétion; cette fausse soumission reste donc ouverte.",
+      "recommendation": "Ajouter une validation structurée vérifiable des quatre éléments déjà demandés, idéalement côté serveur; à défaut, empêcher la soumission tant que les quatre rubriques ne sont pas présentes.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "faisabilité_tp",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__02.json → lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__02-mini-project-proof] → steps, assignment, instructions",
+      "description": "Le champ steps existe désormais, mais ses trois étapes restent génériques (relire la consigne, réaliser la tâche, vérifier avant soumission). Elles ne séquencent pas la construction du formulaire, les critères chaud/tiède/froid, la sortie JSON ou le routage; ces attendus restent seulement listés dans assignment/instructions. Pour un niveau Débutant, la faisabilité opérationnelle du TP n'est donc pas démontrée par le contenu actuel.",
+      "recommendation": "Décrire les étapes de réalisation à partir de paramètres métier effectivement définis: cas fictif, formulaire, critères de qualification, sortie JSON, routage, test et validation humaine; ne pas inventer de seuils ou de schéma non définis.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__02.json → metadata.acquiredSkills, lessons[0].chapters[0].blocks[0].items et lessons[0].chapters[5].blocks[0..4]",
+      "description": "Les acquis annoncés incluent des critères de qualification, une sortie JSON fiable pour le CRM et des actions différentes selon le score. Les quatre QCM et le tri du quiz final évaluent la preuve, la validation humaine, le contrôle d'un test, les secrets et l'ordre de démarche, mais aucun item ne vérifie directement ces trois compétences métier.",
+      "recommendation": "Après définition explicite de ces éléments dans le TP, ajouter des questions corrigées traçables aux critères, au JSON et aux règles de routage; ne pas inventer de seuils ou champs absents du cours.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__02.json → lessons[0].chapters[5].blocks[4] (ia_appliquee_metiers_tp__02-quiz-order) → feedback",
+      "description": "Le tri déclare un feedback bilingue, mais le rapport initial établit que le chemin de rendu du bucket_sort ne le transmet pas au composant; l'état courant du JSON n'apporte aucun champ de correction alternatif. Après erreur, l'apprenant ne bénéficie donc pas du feedback pédagogique configuré.",
+      "recommendation": "Transmettre feedback au composant de tri ou le mapper vers le champ effectivement rendu, puis tester une tentative incorrecte et une correcte.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "rendu_bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__02.json → chaînes fr/en identiques dans title, description, consignes, items et feedback (ex. /lessons/0/chapters/2/blocks/0/items/3)",
+      "description": "Le JSON contient au moins 16 chaînes longues où fr est strictement identique à en, notamment la description, plusieurs consignes et éléments d'activité. Les chaînes techniques peuvent rester en anglais, mais ces phrases d'explication et consignes identiques ne constituent pas un bilinguisme pédagogique français complet.",
+      "recommendation": "Traduire les chaînes apprenant françaises qui sont des phrases ou consignes, en conservant les termes techniques nécessaires; ajouter un contrôle ciblé des longues chaînes fr=en.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 3,
+    "p2": 3
+  }
+}

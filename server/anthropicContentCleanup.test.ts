@@ -25,7 +25,7 @@ describe("nettoyage pédagogique Anthropic — Associate Foundations 01", () => 
     expect(course.lessons).toHaveLength(1);
     expect(course.lessons[0].chapters).toHaveLength(10);
     expect(countBlocks(course)).toBe(25);
-    expect(course.exercises).toHaveLength(12);
+    expect(course.exercises).toHaveLength(0);
     expect(course.lessons[0].completionRule).toEqual({ requires: ["allChaptersComplete"] });
     expect(course.lessons[0].chapters[3].blocks.map((block: any) => block.type)).toEqual([
       "content",
@@ -41,31 +41,27 @@ describe("nettoyage pédagogique Anthropic — Associate Foundations 01", () => 
     const capabilityChapter = course.lessons[0].chapters[3];
     const memoryTab = capabilityChapter.blocks[1].tabs.find((tab: any) => tab.label.en === "Memory");
     const scenario = capabilityChapter.blocks[2].body;
-    const scenarioExercise = course.exercises.find(
-      (exercise: any) => exercise.id === "ex_claude_certified_associate_foundations__01_004",
-    );
+    const scenarioActivity = capabilityChapter.blocks.find((block: any) => block.id === "bucket_capability_layer");
 
     expect(memoryTab.content.fr).not.toContain("ScenarioCapability Layer");
     expect(memoryTab.content.fr).not.toContain("QuestionLayer");
     expect(scenario.fr).not.toContain("Scénario illustratif");
     expect(scenario.en).not.toContain("Illustrative Scenario");
     expect(scenario.fr).toContain("| Question | Couche correspondante |");
-    expect(scenarioExercise.prompt.fr).not.toContain("Scénario illustratif");
-    expect(scenarioExercise.prompt.fr).toContain("## Cas pratique");
+    expect(scenarioActivity).toMatchObject({ type: "bucket_sort", title: { fr: "Classez les composants dans les couches de capacité" } });
+    expect(capabilityChapter.blocks.some((block: any) => block.type === "checkpoint")).toBe(false);
   });
 
   it("fournit un contenu français localisé et des tableaux Markdown rendables", async () => {
     const course = await loadCourse();
     const capabilityBody = course.lessons[0].chapters[3].blocks[0].body.fr;
     const takeaways = course.lessons[0].chapters[9].blocks[0].body.fr;
-    const entryPointExercise = course.exercises.find(
-      (exercise: any) => exercise.id === "ex_claude_certified_associate_foundations__01_002",
-    );
+    const entryPointActivity = course.lessons[0].chapters[2].blocks.find((block: any) => block.id === "bucket_entry_points");
 
     expect(capabilityBody).not.toContain("Entry points determine where you work");
     expect(capabilityBody).toContain("| Couche | Rôle | À utiliser lorsque |");
     expect(takeaways.match(/Révisez les concepts clés de cette section/g)).toBeNull();
-    expect(entryPointExercise.title.fr).toBe("Choisir le bon point d’entrée");
-    expect(entryPointExercise.prompt.fr).toContain("| Type de tâche | Point d’entrée |");
+    expect(entryPointActivity).toMatchObject({ type: "bucket_sort", title: { fr: "Associez les types de tâches aux points d'entrée" } });
+    expect(entryPointActivity.instructions.fr).toMatch(/point d['’]entrée/);
   });
 });

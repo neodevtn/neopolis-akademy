@@ -1,0 +1,79 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_13",
+  "index": 82,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__13"
+  ],
+  "review_scope": {
+    "sources": [
+      "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+      "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/082-ia_appliquee_metiers_tp__formation_13.json",
+      "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__13.json"
+    ],
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du JSON de cours actuel, comparaison au rapport initial et au pré-audit statique local, avec preuves JSON localisées et vérification des comportements de rendu documentés dans le rapport initial. Aucun cours modifié.",
+    "static_audit_observation": "Le pré-audit statique local associe issue_count=0 à ia_appliquee_metiers_tp__13 ; cela ne couvre pas les défauts pédagogiques et de mapping de rendu constatés dans la revue qualitative."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "bilinguisme",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "location": "lessons[0].chapters[0].blocks[0].items[0..2].en",
+      "description": "Les trois objectifs du héros conservent des chaînes anglaises incorrectes ou non traduites : les items anglais reprennent « Mettre en place… », « Limiter… » et « Créer… » au lieu d’une formulation anglaise. Le champ anglais est sélectionné par le rendu lorsque la langue vaut en.",
+      "recommendation": "Corriger les chaînes anglaises du héros et effectuer un contrôle de cohérence fr/en sur les libellés apprenant du cours, sans modifier la version française.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "location": "lessons[0].chapters[2].blocks[0].items[0..3] et lessons[0].chapters[5].blocks[4].buckets[0..3]",
+      "description": "La frise « Démarche de réalisation » enseigne Cadrer → Préparer → Tester → Contrôler, tandis que le bucket_sort final attend Cadrer → Construire → Tester → Valider. Le passage de Préparer à Construire et de Contrôler à Valider n’est pas explicité dans le contenu actuel.",
+      "recommendation": "Harmoniser les libellés et les descriptions de la séquence pédagogique et de l’activité finale avant publication.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "location": "lessons[0].chapters[4].blocks[0] (content_id=ia_appliquee_metiers_tp__13-mini-project-proof)",
+      "description": "Le mini-projet demande quatre capacités distinctes (RAG de support, restriction de recherche au domaine, ticket e-mail si la confiance est insuffisante, widget), mais le bloc ne contient aucune clé steps. Les instructions présentes sont une liste d’objectifs et non une procédure opérationnelle ; le seul guidage antérieur est une frise générale.",
+      "recommendation": "Ajouter un guidage séquentiel propre au TP et valider avec un formateur les paramètres métier nécessaires à l’escalade avant de considérer le TP autonome.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "location": "lessons[0].chapters[4].blocks[0] (content_id=ia_appliquee_metiers_tp__13-mini-project-proof)",
+      "description": "Le bloc demande de décrire le scénario testé, le résultat obtenu, un contrôle effectué et l’étape restant soumise à validation humaine, mais ne déclare ni minimumAnswerLength, ni rubricCriteria, ni learnerCriteria, ni serverGradedAssessment. D’après le comportement de rendu documenté dans le rapport initial, une réponse d’un caractère non vide suffit à marquer le TP complété et à permettre la progression : le verrou ne vérifie donc pas la preuve annoncée.",
+      "recommendation": "Mettre en cohérence l’intitulé, le critère de complétion et le niveau réel de validation : imposer une preuve minimale portant sur les quatre éléments et/ou une grille fiable ; sinon présenter honnêtement la saisie comme une auto-attestation.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "location": "lessons[0].chapters[5].blocks[4] (content_id=ia_appliquee_metiers_tp__13-quiz-order)",
+      "description": "Le bucket_sort contient feedback.fr et feedback.en, mais correction est absent. Le rapport initial localise que LessonViewer transmet seulement block.correction au composant de tri et que le composant n’affiche un texte de correction que si correction est présent ; après une erreur, le feedback prévu sur la démarche correcte n’est donc pas rendu.",
+      "recommendation": "Réparer le mapping feedback vers le rendu de correction ou renseigner une correction compatible, puis vérifier une tentative erronée en français et en anglais.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 2,
+    "p2": 3
+  }
+}

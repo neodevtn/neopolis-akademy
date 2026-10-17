@@ -1,0 +1,93 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_36",
+  "index": 105,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__36"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json → index 105",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__36.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/105-ia_appliquee_metiers_tp__formation_36.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue de l'état JSON actuel et comparaison au rapport initial; aucun cours modifié, aucune disponibilité externe ou exécution navigateur supposée."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P3",
+      "category": "internationalisation",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "location": "lessons[0].chapters[2].blocks[1].columns (comparison_panel)",
+      "description": "Le rapport initial localise des titres et items encore en français dans les valeurs anglaises du panneau de vérification (notamment « À faire », « À éviter » et « Utiliser des données fictives. »). L'état courant du cours est celui contre lequel le rapport initial a été établi; static-audit-data.json ne signale pas cette dimension sémantique.",
+      "recommendation": "Compléter les valeurs anglaises des titres et items du comparison_panel sans changer les garde-fous.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "location": "lessons[0].chapters[3] (ia_appliquee_metiers_tp__36-checkpoint-01), knowledge_check ia_appliquee_metiers_tp__36-checkpoint-preparation",
+      "description": "Le checkpoint est déclaré requiredBeforeAdvance avec passThreshold: 1 et correctAnswer « a », mais le rapport initial documente que KnowledgeCheckBlock signale onComplete pour toute option et que LessonViewer enregistre la complétion sans tester isCorrect. Une réponse incorrecte peut donc ouvrir la suite malgré le seuil annoncé.",
+      "recommendation": "Ne marquer l'activité obligatoire comme complétée qu'après la réponse correcte; conserver Réessayer et verrouiller le passage après une réponse incorrecte.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "location": "lessons[0].chapters[4].blocks[0] (ia_appliquee_metiers_tp__36-mini-project-proof, cloud_exercise)",
+      "description": "Le TP demande une preuve couvrant scénario, résultat, contrôle et validation humaine, mais le rapport initial localise l'absence de steps, minimumAnswerLength, rubricCriteria et serverGradedAssessment. CloudExerciseBlock applique alors un seuil par défaut d'un caractère et valide toute saisie non vide, ce qui permet de déverrouiller le quiz final sans démontrer le mini-projet.",
+      "recommendation": "Ajouter une validation cohérente avec les quatre éléments demandés, un seuil adapté et un feedback indiquant les critères couverts/manquants; vérifier qu'une preuve d'un caractère ne déverrouille pas la suite.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "location": "lessons[0].chapters[4].blocks[0] (cloud_exercise), champ steps absent",
+      "description": "Le mini-projet est présenté comme un TP guidé, mais le champ steps est absent dans le JSON courant rapporté. Les objectifs et compétences existent, sans succession d'étapes de réalisation vérifiables rendue avant la preuve.",
+      "recommendation": "Ajouter des étapes actionnables et cohérentes avec les objectifs déjà présents (données fictives, ingestion/indexation, interrogation/citations, preuve et validation humaine), puis vérifier leur rendu.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "internationalisation",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "location": "lessons[0].chapters[4].blocks[0] (cloud_exercise): assignment, instructions, hint, solution, successMessage",
+      "description": "Ces champs sont des chaînes françaises simples et non des objets bilingues {fr,en}; selon le rapport initial et le résolveur localisé, l'écran anglais affiche donc les consignes centrales, l'indice, la correction et le message de succès en français.",
+      "recommendation": "Fournir pour chacun de ces champs une version anglaise fidèle, sans modifier les exigences ni les garde-fous du TP.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "location": "lessons[0].chapters[5].blocks[4] (ia_appliquee_metiers_tp__36-quiz-order), field feedback",
+      "description": "Le tri final contient le feedback « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. », mais le rapport initial localise que LessonViewer ne transmet que correction et que MatchingExercise n'affiche l'explication que depuis correction. Le feedback JSON n'est donc pas rendu après soumission.",
+      "recommendation": "Transmettre ce feedback au composant de tri ou faire prendre en charge explicitement feedback, puis tester son affichage après une tentative complète.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 2,
+    "p2": 3,
+    "p3": 1,
+    "open": 6,
+    "fixed": 0,
+    "false_positive": 0,
+    "static_target_issue_count": 0,
+    "static_target_note": "static-audit-data.json → courses[course_id=ia_appliquee_metiers_tp__36] indique issue_count: 0 et issues: []; cela ne couvre pas les constats pédagogiques/rendu localisés ci-dessus."
+  }
+}

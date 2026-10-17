@@ -1,0 +1,78 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_39",
+  "index": 108,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__39"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__39.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/108-ia_appliquee_metiers_tp__formation_39.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du JSON de cours actuel, du rapport initial et de l’entrée correspondante de static-audit-data.json; aucun cours ni code n’a été modifié. Les constats runtime non prouvés par JSON/code local n’ont pas été déduits."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/1/blocks/1; client/src/pages/training/LessonViewer.tsx (preuve citée dans le rapport initial)",
+      "description": "La resource_review demande d’ouvrir la ressource puis de confirmer, mais le JSON ne porte qu’une resourceUrl et une consigne; le rapport initial localise le rendu où le bouton de confirmation est indépendant de l’ouverture du lien. Une auto-attestation peut donc compléter l’étape sans preuve de consultation.",
+      "recommendation": "Si la consultation doit être obligatoire, conditionner la confirmation à une ouverture/retour observable ou demander une micro-trace structurée (résultat métier, entrée, sortie, contrôle); sinon documenter explicitement qu’il s’agit d’une auto-attestation.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/3; client/src/components/blocks/GenericLearningBlocks.tsx; client/src/pages/training/LessonViewer.tsx; client/src/pages/training/checkpointGate.ts",
+      "description": "Le chapitre checkpoint obligatoire déclare passThreshold=1 et contient un knowledge_check requis avec correctAnswer='a'. Le rapport initial fournit la preuve localisée que la complétion de l’interaction est enregistrée même si isCorrect=false et que la logique de checkpoint ne filtre que les blocs type checkpoint, pas knowledge_check; une réponse fausse peut donc déverrouiller la suite. L’entrée du cours dans static-audit-data.json indique issue_count=0, mais ce pré-audit statique ne contredit pas cette preuve de logique/rendu.",
+      "recommendation": "Ne déverrouiller le chapitre suivant qu’après isCorrect=true, ou inclure explicitement knowledge_check dans l’évaluation du checkpoint; tester les réponses b/c/d (bloquées) et a (autorisée).",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/4/blocks/0; client/src/components/CloudExerciseBlock.tsx; client/src/components/blocks/cloudExerciseValidation.ts",
+      "description": "Le mini-projet obligatoire demande une preuve du scénario, du résultat, d’un contrôle et de la validation humaine, mais le cloud_exercise ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment. Le rapport initial localise la validation par défaut à une réponse non vide d’un caractère, suffisante pour terminer et déverrouiller le quiz sans preuve exploitable.",
+      "recommendation": "Configurer des critères visibles et une validation proportionnée (gabarit/auto-évaluation bloquante ou évaluation), avec longueur minimale décidée pédagogiquement; vérifier qu’une saisie comme ‘x’ ne permet pas de continuer.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "accessibilité linguistique",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/4/blocks/0",
+      "description": "Le cours expose des champs fr/en pour ses textes structurés, mais les champs centraux du cloud_exercise assignment, instructions, hint, solution et successMessage sont des chaînes simples. L’état JSON actuel ne fournit donc pas de variante anglaise pour ces contenus de l’activité, alors que la locale anglaise est déclarée au niveau du cours; le rendu peut conserver ces chaînes françaises.",
+      "recommendation": "Fournir des variantes {fr,en} pour ces cinq champs apprenant et vérifier le rendu dans les deux locales, sans changer les identifiants ni les exigences de sécurité.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "énoncé",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/5/blocks/2",
+      "description": "La troisième question du quiz final vise explicitement l’objectif ‘Recevoir un contrat PDF depuis un formulaire’, mais sa réponse correcte est le contrôle générique du résultat contre un critère métier et la documentation d’un écart. Le JSON ne nomme pas de signal observable de réception; l’explication est également le rappel générique utilisé par les autres questions. L’alignement objectif–activité reste donc partiel.",
+      "recommendation": "Définir la trace de réception réellement observable dans le workflow, puis aligner énoncé, bonne réponse, distracteurs et explication sur cette trace; ne pas inventer de nœud ou de règle non présent dans le support.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 5,
+    "p0": 0,
+    "p1": 2,
+    "p2": 3
+  }
+}

@@ -10,8 +10,10 @@ function correctionFor(courseId: string, exerciseId: string) {
   return correction;
 }
 
-function completionFromSelection(correctOptionIds: string[] | undefined, selectedOptionIds: string[]) {
-  if (!correctOptionIds?.length) return true;
+export function completionFromSelection(correctOptionIds: string[] | undefined, selectedOptionIds: string[]) {
+  // A free-text response can be submitted for formative feedback, but it must
+  // never become a successful checkpoint without a machine-verifiable key.
+  if (!correctOptionIds?.length) return false;
   const expected = new Set(correctOptionIds);
   const selected = new Set(selectedOptionIds);
   return selected.size === expected.size && Array.from(expected).every((optionId) => selected.has(optionId));
@@ -37,6 +39,7 @@ export async function submitArchitectFoundationsCheckpoint(input: {
     1,
     JSON.stringify({ answer: input.answer, selectedOptionIds: input.selectedOptionIds }),
   );
+  const machineValidated = Array.isArray(correction.correctOptionIds) && correction.correctOptionIds.length > 0;
   await recordLearningEvent({
     userId: input.userId,
     eventType: "checkpoint_submitted",
@@ -45,7 +48,7 @@ export async function submitArchitectFoundationsCheckpoint(input: {
     score: passed ? 100 : 0,
     success: passed ? 1 : 0,
     attemptNumber,
-    metadata: { serverValidated: true, correctionReleased: true },
+    metadata: { serverValidated: machineValidated, correctionReleased: true },
   });
 
   return {
@@ -73,7 +76,12 @@ export async function getArchitectFoundationsCheckpointStatus(input: { userId: n
     }));
   return {
     submittedExerciseIds: Array.from(new Set(attempts.map((attempt) => attempt.exerciseId))),
-    passedExerciseIds: Array.from(new Set(attempts.filter((attempt) => attempt.passed).map((attempt) => attempt.exerciseId))),
+    // Historical records may contain successes written by the former
+    // free-text auto-pass behavior. Only a currently registered machine key
+    // may participate in gating and progression.
+    passedExerciseIds: Array.from(new Set(attempts
+      .filter((attempt) => attempt.passed && Boolean(ARCHITECT_FOUNDATIONS_SECURE_CORRECTIONS[input.courseId]?.[attempt.exerciseId]?.correctOptionIds?.length))
+      .map((attempt) => attempt.exerciseId))),
   };
 }
 

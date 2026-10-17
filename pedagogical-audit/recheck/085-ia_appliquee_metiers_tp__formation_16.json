@@ -1,0 +1,60 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_16",
+  "index": 85,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__16"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json (index 85)",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__16.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/085-ia_appliquee_metiers_tp__formation_16.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue localisée du JSON actuel, comparée au rapport initial et au pré-audit statique ; aucun cours, code ou donnée source n’a été modifié. Les constats non démontrés par le JSON local ou les éléments cités dans le rapport initial ne sont pas ajoutés."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "location": "lessons[0].chapters[3] (ia_appliquee_metiers_tp__16-checkpoint-01), blocks[0] (ia_appliquee_metiers_tp__16-checkpoint-preparation)",
+      "description": "Le checkpoint obligatoire est de type knowledge_check et configure correctAnswer « a », required: true et passThreshold: 1 au niveau du chapitre. Le rapport initial documente, avec les composants de rendu/progression cités, que toute sélection appelle la complétion sans vérifier isCorrect et que le seuil ne comptabilise que les blocs de type checkpoint ; une réponse incorrecte peut donc déverrouiller le chapitre et l’accès au mini-projet.",
+      "recommendation": "Faire dépendre la complétion de la réponse correcte, ou employer un bloc dont la réussite est effectivement imposée, puis tester explicitement le cas réponse incorrecte suivie d’une tentative de passage.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "location": "lessons[0].chapters[4] (ia_appliquee_metiers_tp__16-mini-project), blocks[0] (ia_appliquee_metiers_tp__16-mini-project-proof)",
+      "description": "Le cloud_exercise demande dans instructions une preuve comprenant scénario testé, résultat obtenu, contrôle effectué et étape restant soumise à validation humaine, mais le JSON ne configure ni minimumAnswerLength, ni learnerCriteria/rubricCriteria, ni serverGradedAssessment. Le rapport initial localise le comportement du composant : pour un exercice non évalué, la longueur minimale par défaut est 1 et la soumission peut marquer le TP comme validé et déverrouiller le quiz final avec une saisie non probante.",
+      "recommendation": "Configurer une preuve structurée et une validation bloquante reprenant les quatre éléments déjà demandés ; empêcher au minimum une soumission symbolique, sans retirer l’indice ni la correction.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "location": "lessons[0].chapters[5] (ia_appliquee_metiers_tp__16-final-quiz), blocks[id=ia_appliquee_metiers_tp__16-quiz-order] (bucket_sort)",
+      "description": "Le JSON actuel configure le champ feedback « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. », sans champ correction. Le rapport initial localise que LessonViewer transmet uniquement block.correction à MatchingExercise et que ce composant rend le texte détaillé uniquement depuis exercise.correction : le feedback configuré n’est donc pas rendu après soumission. L’apprenant ne voit que le score/état de placement et peut réessayer.",
+      "recommendation": "Transmettre et afficher le feedback existant pour bucket_sort, ou le placer explicitement dans le champ consommé par le renderer, en conservant la reprise et les marqueurs de placement.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 3,
+    "p0": 0,
+    "p1": 2,
+    "p2": 1
+  }
+}

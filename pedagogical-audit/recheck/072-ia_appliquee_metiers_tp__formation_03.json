@@ -1,0 +1,136 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_03",
+  "index": 72,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__03"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__03.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/072-ia_appliquee_metiers_tp__formation_03.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule du JSON de cours courant, comparaison au rapport initial et vérification des entrées static-audit-data.json; aucune modification de cours.",
+    "current_static_record": {
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "lesson_count": 1,
+      "chapter_count": 6,
+      "issue_count": 0,
+      "issues": []
+    }
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__03-screen-03",
+        "content_id": "ia_appliquee_metiers_tp__03-quiz-order",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__03.json → lessons[0].chapters[2].blocks[0].items (Préparer, Contrôler) et lessons[0].chapters[5].blocks[4].buckets (Construire, Valider). LessonViewer rend les deux blocs via SequenceVisualBlock et MatchingExercise."
+      },
+      "description": "La démarche enseignée n'emploie pas les mêmes noms d'étapes que l'activité finale. L'apprenant voit « Cadrer, Préparer, Tester, Contrôler », puis doit classer les cartes sous « Cadrer, Construire, Tester, Valider ». Les deux étapes divergentes ne sont pas explicitement reliées ; cela affaiblit la fonction de réactivation du quiz.",
+      "recommendation": "Choisir une terminologie unique et la conserver dans la frise, le mini-projet, les consignes et les catégories de l'activité finale.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__03-checkpoint-01",
+        "content_id": "ia_appliquee_metiers_tp__03-checkpoint-preparation",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__03.json → lessons[0].chapters[3]. Le callback knowledge_check de client/src/pages/training/LessonViewer.tsx (lignes 484-489) ajoute l'identifiant de l'interaction quelle que soit la valeur de isCorrect ; le verrou isGatedByNovasavo (lignes 359-362 et 1601-1624) teste cette complétion. checkpointGate.ts (lignes 18-31) ne recense que les blocs de type checkpoint, alors que ce chapitre contient un knowledge_check."
+      },
+      "description": "Le checkpoint annoncé comme obligatoire avec passThreshold: 1 ne requiert pas une réponse correcte pour déverrouiller l'écran suivant. Une réponse erronée est bien signalée, mais elle marque l'interaction comme terminée ; la navigation devient alors possible. Le contrôle ne valide donc pas l'acquis qu'il est censé conditionner.",
+      "recommendation": "Pour un knowledge_check requis dans un checkpoint, n'enregistrer la complétion de progression qu'après une réponse correcte, ou étendre le calcul du checkpoint pour compter explicitement les knowledge_check corrects. Préserver le bouton Réessayer après une erreur.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__03-mini-project",
+        "content_id": "ia_appliquee_metiers_tp__03-mini-project-proof",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__03.json → lessons[0].chapters[4].blocks[0] : absence de minimumAnswerLength, rubricCriteria, passingScore et serverGradedAssessment. client/src/components/blocks/cloudExerciseValidation.ts (lignes 1-9) fixe alors le minimum à 1 caractère ; CloudExerciseBlock.tsx (lignes 119-123 et 153-161) soumet, révèle la solution et appelle onComplete sans évaluation lorsque la rubrique n'est pas configurée. LessonViewer.tsx (lignes 1587-1592) déverrouille ensuite le chapitre terminé."
+      },
+      "description": "La preuve du mini-projet déverrouille la suite après n'importe quelle réponse non vide. Aucun minimumAnswerLength, rubricCriteria, passingScore ni serverGradedAssessment n'est défini ; la preuve peut donc être réduite à un caractère sans démontrer le scénario, le résultat, le contrôle et la validation humaine explicitement demandés.",
+      "recommendation": "Configurer une validation de preuve proportionnée au TP : critères apprenant visibles et rubrique locale/serveur ou validation humaine. Ne faire progresser qu'une preuve évaluée conforme ; ne pas inventer de réponse modèle non fournie.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__03-mini-project",
+        "content_id": "ia_appliquee_metiers_tp__03-mini-project-proof",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__03.json → lessons[0].chapters[4].blocks[0] : assignment, instructions, hint, solution et successMessage sont des chaînes non i18n, tandis que environmentGuide contient fr et en. CloudExerciseBlock.tsx (lignes 104-111) les résout pour la langue courante ; cloudExerciseValidation.ts (lignes 11-17) retourne une chaîne simple telle quelle, y compris quand lang vaut en."
+      },
+      "description": "Dans l'interface anglaise, les instructions opérationnelles du mini-projet restent en français alors que son titre et le guide d'environnement ont une version anglaise. Le changement de langue donne donc une activité partiellement non localisée au moment de produire la preuve.",
+      "recommendation": "Traduire intégralement les champs apprenant du cloud_exercise et les fournir sous clés fr/en ; vérifier l'écran avec lang=en avant publication.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__03-final-quiz",
+        "content_id": "ia_appliquee_metiers_tp__03-quiz-03",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__03.json → lessons[0].chapters[5].blocks[2] : l'option correcte demande de comparer le résultat au critère métier et documenter l'écart, mais explanation réutilise le texte générique des autres QCM. SingleChoiceExercise.tsx (lignes 204-213) affiche cette seule explication après réponse."
+      },
+      "description": "Le feedback de la question sur le contrôle de l'enrichissement est générique et identique aux autres QCM. Il ne justifie pas le lien entre la bonne réponse — comparer au critère métier puis documenter l'écart — et la vérification de l'enrichissement. L'apprenant reçoit la bonne réponse mais peu d'explication réutilisable pour son propre workflow.",
+      "recommendation": "Remplacer l'explication générique de cette question par l'explication contextualisée proposée, en conservant le feedback commun de sécurité dans les questions auxquelles il répond réellement.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "énoncé",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__03-final-quiz",
+        "content_id": "ia_appliquee_metiers_tp__03-quiz-order",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__03.json → lessons[0].chapters[5].blocks[4]. MatchingExercise.tsx (lignes 227-244) affiche les instructions puis précise « Cliquez sur une carte pour la sélectionner, puis cliquez sur une catégorie pour la placer. »"
+      },
+      "description": "Le titre annonce une remise en ordre (« Ordonnez la démarche »), mais l'interface et la consigne demandent un classement de cartes dans quatre catégories. L'action réelle reste réalisable, mais le verbe « ordonner » est moins précis que « classer » et peut créer une attente de glisser-déposer séquentiel.",
+      "recommendation": "Aligner le titre sur le mécanisme de tri réellement rendu ; conserver les catégories et cartes existantes.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "location": {
+        "chapter_id": "ia_appliquee_metiers_tp__03-final-quiz",
+        "content_id": "ia_appliquee_metiers_tp__03-quiz-01, ia_appliquee_metiers_tp__03-quiz-02, ia_appliquee_metiers_tp__03-quiz-04",
+        "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__03.json → lessons[0].chapters[5].blocks[0], blocks[1] et blocks[3]. LessonViewer.tsx (lignes 977-1004) sélectionne opt.text[lang] pour chaque choix ; SingleChoiceExercise rend le texte reçu (lignes 139-158). Le chapitre a passThreshold: 4."
+      },
+      "description": "Plusieurs distracteurs visibles dans l'interface anglaise restent en français. Cela dégrade l'équité et la lisibilité d'un quiz final dont les quatre QCM doivent être réussis pour continuer.",
+      "recommendation": "Compléter les champs en manquants et réaliser une revue linguistique des quatre QCM dans les deux langues avant publication.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 7,
+    "p0": 0,
+    "p1": 2,
+    "p2": 4,
+    "p3": 1,
+    "open": 7,
+    "fixed": 0,
+    "false_positive": 0,
+    "basis": "Les sept constats du rapport initial restent observables dans le fichier de cours courant; static-audit-data.json ne signale aucune anomalie structurelle, ce qui ne réfute pas les constats pédagogiques qualitatifs."
+  }
+}

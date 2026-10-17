@@ -311,7 +311,7 @@ export default function LessonViewer({
           const matchIds = getRequiredMatchingInteractionIds(blocks);
           if (matchIds.length > 0 && !matchIds.every((id: string) => isScopedInteractionComplete(matchingCompleted, lessonIndex, currentChapter, id))) return;
           // Single choice exercise gate
-          const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review').map((b: any, i: number) => b.id || `quiz_${i}`);
+          const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review' || (b.type === 'exercise' && b.exercise_type === 'numeric_answers')).map((b: any, i: number) => b.id || (b.type === 'exercise' ? `numeric_exercise_${i}` : `quiz_${i}`));
           if (scIds.length > 0 && !scIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true }))) return;
           const cloudIds = blocks.filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
           if (cloudIds.length > 0 && !cloudIds.every((id: string) => completedCloudExercises.has(id))) return;
@@ -1119,7 +1119,12 @@ export default function LessonViewer({
                 instructions={exerciseInstructions}
                 lang={lang as "en" | "fr"}
                 courseId={courseId}
-                moduleId={`module_${lessonIndex + 1}`}
+                moduleId={`numeric:${block.id || `numeric_exercise_${blockIdx}`}`}
+                onAllCorrect={() => {
+                  const numericId = String(block.id || `numeric_exercise_${blockIdx}`);
+                  setCompletedExercises((previous) => new Set(previous).add(scopedInteractionKey(lessonIndex, currentChapter, numericId)));
+                  trackEventOnce("exercise_complete", `numeric-exercise:${courseId}:${lessonIndex}:${currentChapter}:${numericId}`, { ...analyticsParams, content_id: numericId, score_band: "100" });
+                }}
               />
             </div>
           );
@@ -1487,7 +1492,7 @@ export default function LessonViewer({
                 const lastAllCloudDone = lastChapterCloudIds.length === 0 || lastChapterCloudIds.every((id: string) => completedCloudExercises.has(id));
                 const lastChapterMatchingIds = getRequiredMatchingInteractionIds(chapter?.blocks || []);
                 const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => isScopedInteractionComplete(matchingCompleted, lessonIndex, currentChapter, id));
-              const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review').map((b: any, i: number) => b.id || `quiz_${i}`);
+              const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review' || (b.type === 'exercise' && b.exercise_type === 'numeric_answers')).map((b: any, i: number) => b.id || (b.type === 'exercise' ? `numeric_exercise_${i}` : `quiz_${i}`));
               const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true }));
                 const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
                 const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true }));
@@ -1569,6 +1574,10 @@ export default function LessonViewer({
                 .filter((b: any) => b.type === 'resource_review')
                 .map((b: any, i: number) => b.id || `resource_review_${i}`);
               const isGatedByResourceReview = chapterResourceReviewIds.length > 0 && !chapterResourceReviewIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id, { allowUnscopedServerId: true })) && !isReviewMode;
+              const chapterNumericExerciseIds = (chapter?.blocks || [])
+                .filter((b: any) => b.type === 'exercise' && b.exercise_type === 'numeric_answers')
+                .map((b: any, i: number) => b.id || `numeric_exercise_${i}`);
+              const isGatedByNumericExercise = chapterNumericExerciseIds.length > 0 && !chapterNumericExerciseIds.every((id: string) => isScopedInteractionComplete(completedExercises, lessonIndex, currentChapter, id)) && !isReviewMode;
               // Cloud exercise (TP) gate: block if chapter has cloud_exercise blocks not completed
               const chapterCloudExerciseIds = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'cloud_exercise')
@@ -1589,6 +1598,7 @@ export default function LessonViewer({
                 isGatedByFlipCards && t({ en: "Turn over every study card.", fr: "Retournez toutes les cartes de révision." }),
                 isGatedByMatching && t({ en: "Complete the interactive sorting activity.", fr: "Terminez l’activité de tri interactive." }),
                 (isGatedByExercises || isGatedBySingleChoice) && t({ en: "Submit the required validation activity.", fr: "Soumettez l’activité de validation requise." }),
+                isGatedByNumericExercise && t({ en: "Validate every numeric answer.", fr: "Validez toutes les réponses numériques." }),
                 isGatedByResourceReview && t({ en: "Open and confirm review of the required local resource.", fr: "Ouvrez puis confirmez la consultation de la ressource locale requise." }),
                 isGatedByCloudExercise && t({ en: "Submit the practical exercise.", fr: "Soumettez l’exercice pratique." }),
                 isGatedByCourseFinalQuiz && t({ en: "Pass the final course assessment.", fr: "Réussissez l’évaluation finale du cours." }),
@@ -1606,7 +1616,7 @@ export default function LessonViewer({
               const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter)
                 && courseId !== "automatisation_comptable_ia__01" && !usesSourceOwnedAssessmentBlueprint;
 
-              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise || isGatedByCourseFinalQuiz || isGatedByReflection || isGatedByGuidedAction || isGatedByNovasavo;
+              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByNumericExercise || isGatedByResourceReview || isGatedByCloudExercise || isGatedByCourseFinalQuiz || isGatedByReflection || isGatedByGuidedAction || isGatedByNovasavo;
               return (
                 <div className="flex w-full min-w-0 flex-col items-stretch gap-2 sm:w-auto sm:items-end sm:gap-1.5">
                   {passageConditions.length > 0 && (

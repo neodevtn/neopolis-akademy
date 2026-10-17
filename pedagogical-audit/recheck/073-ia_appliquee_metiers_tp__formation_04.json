@@ -1,0 +1,60 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_04",
+  "index": 73,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__04"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__04.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/073-ia_appliquee_metiers_tp__formation_04.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du contenu JSON courant et confrontation aux trois constats explicites du rapport initial; aucun cours modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__04",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__04.json -> lessons[0].chapters[3] (ia_appliquee_metiers_tp__04-checkpoint-01) -> blocks[0] (ia_appliquee_metiers_tp__04-checkpoint-preparation); client/src/pages/training/LessonViewer.tsx:105-109, 359-362, 1601; client/src/lib/checkpointGate.ts:18-21",
+      "description": "Le checkpoint est toujours déclaré comme knowledge_check avec required=true, correctAnswer=\"a\" et passThreshold=1, mais le flux de progression enregistre l'interaction dès qu'une réponse est sélectionnée, sans exiger que la réponse soit correcte. Le rapport initial documente ce comportement; static-audit-data.json ne signale aucune issue pour ce cours, mais cette absence ne constitue pas une preuve de correction.",
+      "recommendation": "Faire dépendre le déverrouillage de la réussite effective du knowledge_check (et tester explicitement une réponse erronée), sans considérer une simple interaction comme validation du checkpoint.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__04",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__04.json -> lessons[0].chapters[4] (ia_appliquee_metiers_tp__04-mini-project) -> blocks[0] (ia_appliquee_metiers_tp__04-mini-project-proof), fields steps/minimumAnswerLength/rubricCriteria/serverGradedAssessment; client/src/components/blocks/cloudExerciseValidation.ts:1-8; client/src/components/CloudExerciseBlock.tsx:153-161",
+      "description": "Le bloc courant contient maintenant trois étapes génériques, mais minimumAnswerLength, rubricCriteria et serverGradedAssessment sont explicitement null/absents de validation. Le mini-projet demande cinq questions commerciales et une preuve structurée, alors que le validateur retombe sur une longueur minimale de 1 et peut appeler onComplete dès une saisie non vide lorsqu'aucune évaluation suivie n'est configurée. Une fausse soumission reste donc possible et la réalisation des cinq tests, de la limitation des champs et du contrôle humain n'est pas établie.",
+      "recommendation": "Configurer des critères de preuve vérifiables (longueur/structure adaptée, rubricCriteria ou évaluation serveur) et ne déverrouiller le quiz qu'après validation de ces critères; vérifier qu'une saisie d'un caractère ne complète pas le TP.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__04",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__04.json -> lessons[0].chapters[5] (ia_appliquee_metiers_tp__04-final-quiz) -> blocks[4] (ia_appliquee_metiers_tp__04-quiz-order); client/src/pages/training/LessonViewer.tsx:183-195; client/src/components/MatchingExercise.tsx:40-42, 444-450",
+      "description": "Le tri annonce que la correction est disponible après une tentative complète et le JSON courant fournit feedback, mais pas correction. Le rendu transmet/affiche uniquement exercise.correction pour la correction détaillée; l'apprenant reçoit donc le score et l'état de tentative, sans l'explication de démarche promise.",
+      "recommendation": "Mapper le feedback courant vers le champ correction attendu par le composant, ou fournir correction dans le bloc, puis vérifier le rendu après une tentative complète.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 3,
+    "p0": 0,
+    "p1": 2,
+    "p2": 1
+  }
+}

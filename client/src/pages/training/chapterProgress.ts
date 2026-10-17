@@ -89,7 +89,7 @@ export function hasOptionalSupplementaryVideos(chapter?: { blocks?: ChapterBlock
   return hasVideo && (hasSupplementLabel || hasExplicitOptionalVideo);
 }
 
-type GatedBlock = { id?: string; exerciseId?: string; type?: string };
+type GatedBlock = { id?: string; exerciseId?: string; type?: string; exercise_type?: string };
 
 /**
  * Applies the same activity gate to compact navigation controls as to the
@@ -123,13 +123,14 @@ export function isSequentialActivityNavigationLocked({
       : block.type === "resource_review" ? `resource_review_${index}`
           : block.type === "cloud_exercise" ? `cloud_exercise_${index}`
             : block.type === "bucket_sort" ? `bucket_${index}`
-              : block.type === "ordering" ? `ordering_${index}`
+              : block.type === "exercise" && block.exercise_type === "numeric_answers" ? `numeric_exercise_${index}`
+                : block.type === "ordering" ? `ordering_${index}`
             : block.type === "knowledge_check" || block.type?.startsWith("inline_") ? `novasavo_${index}`
               : `quiz_${index}`
   );
   return blocks.some((block, index) => {
     const key = completionKey(block, index);
-    if (["single_choice_exercise", "multi_choice_exercise", "resource_review", "checkpoint"].includes(block.type || "")) return !completedExercises.has(key);
+    if (["single_choice_exercise", "multi_choice_exercise", "resource_review", "checkpoint"].includes(block.type || "") || (block.type === "exercise" && block.exercise_type === "numeric_answers")) return !completedExercises.has(key);
     if (block.type === "cloud_exercise") return !completedCloudExercises.has(key);
     if (block.type === "course_final_quiz") return !completedCourseFinalQuizzes.has(key);
     if (block.type === "reflection") return !completedReflections.has(key);

@@ -62,11 +62,12 @@ describe('Developer Foundations course 3 critical content contract', () => {
     expect(course.videoRecommendationStatus).toBe('none');
   });
 
-  it('exposes the sole Claude-validated written checkpoint as a required standard gate', () => {
-    const exercise = course.exercises.find((item: any) => item.id === 'ex_claude_certified_developer_foundations__03_001');
-    expect(exercise).toMatchObject({ chapterId: 'chapter_01', required: true, completionRequiresCorrectAnswer: false });
-    expect(exercise.inputSchema.minWords).toBeGreaterThanOrEqual(15);
-    expect(chapter('chapter_01').blocks).toContainEqual({ type: 'checkpoint', exerciseId: exercise.id });
+  it('removes the non-verifiable written checkpoint while preserving the required matching activity', () => {
+    const removedExercise = course.exercises.find((item: any) => item.id === 'ex_claude_certified_developer_foundations__03_001');
+    const matching = chapter('chapter_01').blocks.find((item: any) => item.id === 'checkpoint1_settings_human_control');
+    expect(removedExercise).toBeUndefined();
+    expect(chapter('chapter_01').blocks.some((item: any) => item.type === 'checkpoint')).toBe(false);
+    expect(matching).toMatchObject({ type: 'bucket_sort', cards: expect.any(Array) });
     expect(chapter('chapter_01').completionRule).toEqual({ requires: ['contentViewed', 'requiredExercisesPassed'] });
   });
 

@@ -1,0 +1,204 @@
+{
+  "formation_id": "datacamp_introduction_to_model_context_protocol_mcp",
+  "index": 50,
+  "course_ids": [
+    "introduction_to_model_context_protocol_mcp__01"
+  ],
+  "review_scope": {
+    "current_course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/050-datacamp_introduction_to_model_context_protocol_mcp.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue en lecture seule du JSON de cours actuel et comparaison aux constats localisés du rapport initial; les constats non prouvés par JSON/code localisé ne sont pas ajoutés.",
+    "coverage": "1 cours, 3 leçons, 30 chapitres/écrans; static-audit-data signale issue_count=0 pour le course_id ciblé."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "p1",
+      "category": "feedback_et_rendu",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_bucket_sort] contient `hint` et `feedback`. LessonViewer.tsx:957-974 ne passe au MatchingExercise que id, title, instructions, buckets, cards et correction ; MatchingExercise.tsx:420-465 n’affiche après erreur que le score et « Réessayer » (aucune propriété hint/feedback reçue). La navigation est verrouillée tant que le tri n’est pas complété (LessonViewer.tsx:1572-1575).",
+      "description": "Les données fournissent un indice et un feedback pédagogique, mais le rendu de l’activité de tri ne les transmet pas au composant. En cas d’erreur, l’apprenant voit seulement le nombre de cartes correctes, les cartes erronées en rouge et « Réessayez » ; il reste verrouillé jusqu’au sans-faute sans retour explicatif visible sur le classement attendu.",
+      "recommendation": "Afficher l’indice fourni avant la première soumission, le feedback fourni après réussite et, après une erreur, la catégorie attendue pour chaque carte erronée avec une brève justification. Conserver la possibilité de réessayer.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "activité_non_rendue_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[3] : sourceActivityType=\"TabExercise\", requiredBeforeAdvance=true et unique bloc content `dc_1_act_05_content`. LessonViewer.tsx:498-550 rend `content` via PageContent ; les règles de navigation (LessonViewer.tsx:1572-1592) ne créent un verrou que pour les types interactifs/exercice pris en charge.",
+      "description": "L’activité source est de type TabExercise, mais les données ne contiennent qu’un bloc `content`. LessonViewer le rend comme texte statique ; aucun onglet, éditeur, réponse, validation ni correction n’est rendu. Malgré `requiredBeforeAdvance: true`, aucune activité rendue ne peut alimenter le verrouillage et l’apprenant peut continuer sans pratiquer.",
+      "recommendation": "Ajouter un bloc de pratique compatible avec le viewer (cloud_exercise ou code_repl), un code de départ et une correction. Énoncé réutilisable à afficher : « Dans l’environnement de code, définissez un serveur MCP `Currency Converter` avec l’outil `convert_currency(amount, from_currency, to_currency)`. L’outil doit renvoyer une chaîne contenant le montant converti et le taux utilisé (ex. `100 EUR = 88.04 GBP (Rate: 0.8804)`). Validez votre réalisation puis comparez-la à la correction. »",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "feedback_et_rendu",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_08_bucket_sort] contient `hint` et `feedback`. LessonViewer.tsx:957-974 ne passe au MatchingExercise que id, title, instructions, buckets, cards et correction ; MatchingExercise.tsx:420-465 n’affiche après erreur que le score et « Réessayer » (aucune propriété hint/feedback reçue). La navigation est verrouillée tant que le tri n’est pas complété (LessonViewer.tsx:1572-1575).",
+      "description": "Les données fournissent un indice et un feedback pédagogique, mais le rendu de l’activité de tri ne les transmet pas au composant. En cas d’erreur, l’apprenant voit seulement le nombre de cartes correctes, les cartes erronées en rouge et « Réessayez » ; il reste verrouillé jusqu’au sans-faute sans retour explicatif visible sur le classement attendu.",
+      "recommendation": "Afficher l’indice fourni avant la première soumission, le feedback fourni après réussite et, après une erreur, la catégorie attendue pour chaque carte erronée avec une brève justification. Conserver la possibilité de réessayer.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "activité_non_rendue_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[6] : sourceActivityType=\"TabExercise\", requiredBeforeAdvance=true et unique bloc content `dc_1_act_09_content`. LessonViewer.tsx:498-550 rend `content` via PageContent ; les règles de navigation (LessonViewer.tsx:1572-1592) ne créent un verrou que pour les types interactifs/exercice pris en charge.",
+      "description": "L’activité source est de type TabExercise, mais les données ne contiennent qu’un bloc `content`. LessonViewer le rend comme texte statique ; aucun onglet, éditeur, réponse, validation ni correction n’est rendu. Malgré `requiredBeforeAdvance: true`, aucune activité rendue ne peut alimenter le verrouillage et l’apprenant peut continuer sans pratiquer.",
+      "recommendation": "Remplacer le seul bloc de texte par un bloc de pratique compatible avec le viewer (cloud_exercise ou code_repl), doté d’un code de départ, d’une validation et d’une correction. Les données disponibles permettent de réutiliser l’objectif « lister les outils disponibles pour comprendre ce qu’ils font et comment les utiliser », mais ne permettent pas de reconstituer de façon fiable le code de départ ou la solution : les récupérer depuis la source avant rédaction.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[0].chapters[7].blocks[id=dc_1_act_10_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[3].blocks[id=dc_2_act_04_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[6].blocks[id=dc_2_act_07_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[7].blocks[id=dc_2_act_08_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p2",
+      "category": "feedback",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[9].blocks[id=dc_2_act_10_bucket_sort] contient `hint` et `feedback`. OrderingBlock.tsx:27-29 lit title/instructions/feedback mais pas hint ; lignes 79-92 évaluent les positions, et lignes 148-163 n’affichent le feedback que si toutes sont correctes. L’activité est soumise au verrouillage (LessonViewer.tsx:1572-1575).",
+      "description": "Après une réponse erronée, la remise en ordre indique seulement le nombre d’éléments bien placés et colore les positions. L’indice riche du JSON n’est pas rendu, et le feedback pédagogique ne s’affiche qu’en cas de réussite. Dans une activité obligatoire, cela limite l’apprentissage par l’erreur.",
+      "recommendation": "Rendre l’indice avant la soumission. Après une erreur, indiquer les étapes mal placées et leur position attendue (ou expliquer la dépendance logique), puis proposer « Réessayer ». Après réussite, conserver le feedback actuel.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[10].blocks[id=dc_2_act_11_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[12].blocks[id=dc_2_act_13_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[1].chapters[13].blocks[id=dc_2_act_14_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[2].chapters[3].blocks[id=dc_3_act_04_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    },
+    {
+      "severity": "p1",
+      "category": "évaluation_et_verrouillage",
+      "course_id": "introduction_to_model_context_protocol_mcp__01",
+      "location": "client/public/data/courses/introduction_to_model_context_protocol_mcp__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_09_tp]: minimumAnswerLength, rubricCriteria et serverGradedAssessment absents. client/src/components/blocks/cloudExerciseValidation.ts:1-8 résout cette absence à 1 ; CloudExerciseBlock.tsx:153-161 marque le TP soumis, révèle la solution et appelle onComplete sans évaluation lorsque aucune grille/évaluation serveur n’est configurée ; LessonViewer.tsx:1587-1592 bloque puis déverrouille le chapitre selon cette complétion.",
+      "description": "Ce TP obligatoire peut être validé avec n’importe quelle réponse non vide : aucune grille, validation d’exécution ou évaluation serveur n’est fournie. La soumission révèle la correction et déclenche la complétion, donc le verrouillage ne vérifie pas l’acquisition de la compétence demandée.",
+      "recommendation": "Ajouter un contrat de validation propre à ce TP : critères observables correspondant aux blancs/au comportement attendu, seuil de réussite et feedback de réussite/erreur. Utiliser une validation déterministe du code lorsque possible, sinon une évaluation structurée avec critères affichés ; ne déverrouiller qu’après atteinte du seuil.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 19,
+    "p0": 0,
+    "p1": 18,
+    "p2": 1
+  }
+}

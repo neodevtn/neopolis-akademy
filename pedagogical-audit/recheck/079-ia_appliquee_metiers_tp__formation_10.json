@@ -1,0 +1,80 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_10",
+  "index": 79,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__10"
+  ],
+  "review_scope": "Contre-revue en lecture seule du cours référencé par formation-manifest.json, comparée au rapport initial raw/079-ia_appliquee_metiers_tp__formation_10.json et à static-audit-data.json. Vérification du JSON actuel sur les objectifs et activités, faisabilité TP/fichiers/environnement, gates et soumissions, médias/ressources, duplications/corruption et rendu bilingue. Aucun cours ni fichier source de cours n’a été modifié. Les points sans preuve JSON localisée ne sont pas déclarés comme anomalies.",
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "location": "lessons[0].chapters[0].blocks[0].body.en; lessons[0].chapters[0].blocks[0].items[0..3].en",
+      "description": "Les objectifs, le métier cible, le niveau et la durée du learning_section restent en français dans les champs en. Le parcours propose donc une version anglaise sans objectifs lisibles en anglais.",
+      "recommendation": "Renseigner les variantes anglaises de body et de chaque item, puis contrôler l’affichage de l’écran en anglais.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "location": "lessons[0].chapters[3].passThreshold; lessons[0].chapters[3].blocks[0] (type knowledge_check, id ia_appliquee_metiers_tp__10-checkpoint-preparation)",
+      "description": "Le checkpoint est requis et annonce passThreshold=1, mais la réponse correcte est portée par un knowledge_check. Le rapport initial documente que la logique de progression enregistre la complétion utilisable pour avancer après une sélection erronée et que le gate ne recense que les blocs checkpoint ; la suite peut donc être atteinte sans réponse correcte.",
+      "recommendation": "Faire dépendre le gate de la réponse correcte a, sans enregistrer une complétion de progression après une réponse erronée, et tester le parcours d’erreur.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "location": "lessons[0].chapters[4].blocks[0] (type cloud_exercise): assignment, instructions, hint, solution",
+      "description": "Les éléments déterminants du mini-projet sont des chaînes simples en français, non des objets {fr,en}. Les champs environmentGuide et resources sont bilingues, mais assignment, instructions, hint et solution ne le sont pas.",
+      "recommendation": "Fournir les quatre champs dans les deux langues et vérifier le rendu anglais de CloudExerciseBlock.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "location": "lessons[0].chapters[4].blocks[0] (type cloud_exercise, id ia_appliquee_metiers_tp__10-mini-project-proof)",
+      "description": "La consigne demande quatre éléments de preuve (scénario, résultat, contrôle, étape soumise à validation humaine), mais le JSON ne définit ni minimumAnswerLength explicite supérieur à 1, ni learnerCriteria/rubricCriteria, ni passingScore, ni serverGradedAssessment. Le rapport initial localise une validation par saisie non vide qui révèle la correction et débloque le quiz final sans vérifier ces quatre éléments.",
+      "recommendation": "Ajouter des critères structurés correspondant aux quatre éléments et une validation cohérente ; sinon présenter l’activité comme auto-déclarative non évaluée et ne pas l’utiliser comme prérequis validant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "location": "lessons[0].chapters[5].blocks[4] (type bucket_sort, id ia_appliquee_metiers_tp__10-quiz-order)",
+      "description": "Le tri fournit un champ feedback bilingue et annonce une correction après tentative complète, mais le JSON ne fournit pas de champ correction. Le rapport initial confirme que feedback n’est pas transmis au composant rendu : après erreur, l’apprenant voit le score et les cartes en rouge sans explication textuelle détaillée, alors que le tri reste bloquant jusqu’à réussite.",
+      "recommendation": "Mapper feedback vers la propriété rendue ou fournir une correction compatible avec le composant, en conservant le détail des quatre associations.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "location": "lessons[0].chapters[0].blocks[0].items[1..3]; lessons[0].chapters[5].blocks[0..4]; lessons[0].chapters[5].passThreshold",
+      "description": "Les compétences annoncées incluent l’exploitation de résultats SERP, l’assemblage audit technique/mots-clés/local SEO/contenu et la production d’un rapport client. Les quatre QCM et le tri final portent principalement sur données fictives, sécurité, contrôle humain et ordre de démarche ; le seuil de quatre bonnes réponses peut être atteint sans démontrer explicitement ces trois compétences.",
+      "recommendation": "Concevoir depuis le support fictif et le livrable attendu des items ou une grille couvrant explicitement ces compétences, sans inventer de données SERP ou de correction non présentes.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "localisation",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "location": "lessons[0].chapters[5].blocks[1].options[1].text.en; lessons[0].chapters[5].blocks[3].options[2].text.en",
+      "description": "Deux options du quiz final restent en français dans la variante anglaise : l’option b du quiz-02 et l’option c du quiz-04.",
+      "recommendation": "Traduire ces deux variantes anglaises et effectuer une passe de contrôle des chaînes du quiz final.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 7,
+    "p0": 0,
+    "p1": 5,
+    "p2": 1
+  }
+}

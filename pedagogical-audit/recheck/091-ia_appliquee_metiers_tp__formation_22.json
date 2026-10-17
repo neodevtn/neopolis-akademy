@@ -1,0 +1,60 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_22",
+  "index": 91,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__22"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__22.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/091-ia_appliquee_metiers_tp__formation_22.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue du contenu JSON actuel et des preuves localisées du rapport initial; aucun cours ni code n'a été modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__22.json#/lessons/0/chapters/3/blocks/0; client/src/components/blocks/GenericLearningBlocks.tsx:57-64; client/src/pages/training/LessonViewer.tsx:359-362,484-489",
+      "description": "Le checkpoint obligatoire 'ia_appliquee_metiers_tp__22-checkpoint-preparation' déclare correctAnswer='a' et required=true, mais une réponse incorrecte est tout de même enregistrée comme interaction complétée et le chapitre suivant est déverrouillé. Le feedback 'Réponse incorrecte' existe, sans empêcher la progression.",
+      "recommendation": "Ne comptabiliser la complétion requise et ne déverrouiller le chapitre suivant qu'après isCorrect=true; conserver le feedback et la possibilité de réessai.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__22.json#/lessons/0/chapters/4/blocks/0; client/src/components/blocks/cloudExerciseValidation.ts:1-8; client/src/components/CloudExerciseBlock.tsx:117-125,153-161",
+      "description": "Le mini-projet exige une preuve décrivant le scénario, le résultat, un contrôle et l'étape soumise à validation humaine, mais le bloc cloud_exercise ne configure ni longueur minimale, ni critères de grille, ni évaluation serverGradedAssessment. La validation accepte donc toute valeur non vide, y compris un seul caractère, puis révèle la correction et déverrouille le quiz final.",
+      "recommendation": "Ajouter un gabarit ou des champs/critères vérifiant les quatre éléments déjà exigés, appliquer une longueur minimale réaliste et empêcher onComplete tant que la preuve recevable n'est pas fournie.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__22.json#/lessons/0/chapters/5/blocks/4; client/src/pages/training/LessonViewer.tsx:957-973; client/src/components/MatchingExercise.tsx:40-42,420-465",
+      "description": "Le bloc bucket_sort 'ia_appliquee_metiers_tp__22-quiz-order' contient un feedback explicatif, mais le rendu transmet seulement block.correction à MatchingExercise. Après tentative, le score et les cartes justes/fausses sont visibles, tandis que le feedback prévu dans les données n'est pas affiché.",
+      "recommendation": "Mapper block.feedback vers la propriété de correction rendue par MatchingExercise, ou déplacer explicitement ce texte dans correction, puis vérifier le rendu après tentative incorrecte et correcte.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 3,
+    "p0": 0,
+    "p1": 2,
+    "p2": 1
+  }
+}

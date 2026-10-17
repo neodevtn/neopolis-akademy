@@ -1,0 +1,87 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_27",
+  "index": 96,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__27"
+  ],
+  "review_scope": {
+    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json (index 96)",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__27.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/096-ia_appliquee_metiers_tp__formation_27.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Contre-revue localisée en lecture seule du JSON actuel, comparée au rapport initial et au pré-audit statique. Aucun cours, code ou paramètre n’a été modifié ; aucun constat non démontré par le JSON local ou les éléments cités dans le rapport initial n’est ajouté."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "location": "lessons[0].chapters[1] (ia_appliquee_metiers_tp__27-screen-02), blocks[1] (resource_review, id=ia_appliquee_metiers_tp__27-source-review)",
+      "description": "Le chapitre est requis et le bloc resource_review annonce une consultation de ressource, mais la progression repose sur le bouton de consultation sans preuve que l’URL ait été effectivement ouverte ; le rapport initial documente que cette auto-déclaration seule peut contourner la préparation annoncée.",
+      "recommendation": "Lier la complétion à l’ouverture effective de la ressource ou reformuler la consigne comme une auto-déclaration explicite ; tester le passage sans ouverture du lien.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "location": "lessons[0].chapters[3] (ia_appliquee_metiers_tp__27-checkpoint-01), blocks[0] (knowledge_check, id=ia_appliquee_metiers_tp__27-checkpoint-preparation)",
+      "description": "Le checkpoint requis configure correctAnswer « a » et passThreshold: 1, mais le rapport initial, après inspection de la logique de progression, établit qu’une sélection quelconque déclenche la complétion sans vérifier isCorrect ; une réponse fausse peut donc déverrouiller la suite malgré le contrôle de sécurité annoncé.",
+      "recommendation": "Faire dépendre la complétion de la réponse correcte ou utiliser un mécanisme dont la réussite est effectivement imposée, puis tester explicitement une réponse incorrecte suivie d’une tentative de passage.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "guidage",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "location": "lessons[0].chapters[4] (ia_appliquee_metiers_tp__27-mini-project), blocks[0] (cloud_exercise, id=ia_appliquee_metiers_tp__27-mini-project-proof), field steps présent dans le JSON actuel",
+      "description": "Le JSON actuel contient désormais trois steps génériques (relire la consigne, réaliser la tâche, vérifier avant soumission), mais ils ne structurent pas l’enchaînement opératoire spécifique reliant le support fictif, Gmail sandbox, n8n, les tests et la preuve ; le rapport initial signalait l’absence de steps et un guidage trop peu séquencé. La présence de ces trois étapes génériques ne démontre pas que le guidage métier détaillé soit résolu.",
+      "recommendation": "Décrire, si le cours doit être renforcé, des étapes spécifiques et vérifiables reliant support, configuration, scénarios fictifs, journalisation, contrôle humain et rédaction de la preuve ; ne pas considérer la ressource déclarée comme preuve qu’elle comble ce guidage.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "location": "lessons[0].chapters[4] (ia_appliquee_metiers_tp__27-mini-project), blocks[0] (cloud_exercise, id=ia_appliquee_metiers_tp__27-mini-project-proof), fields assignment/instructions/environmentGuide/resources/hint/solution/successMessage/steps",
+      "description": "Les instructions demandent quatre éléments de preuve (scénario testé, résultat obtenu, contrôle effectué, étape restant soumise à validation humaine), mais le bloc ne configure ni minimumAnswerLength, ni learnerCriteria/rubricCriteria, ni serverGradedAssessment. Le rapport initial localise le comportement : pour un exercice non évalué, une réponse d’un caractère peut suffire ; la soumission marque le TP terminé, révèle la correction et déverrouille le quiz final sans contrôler les quatre éléments demandés.",
+      "recommendation": "Configurer une preuve structurée et une validation bloquante reprenant les quatre éléments demandés ; empêcher au minimum une soumission symbolique, puis tester une réponse minimale et une preuve complète.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "location": "lessons[0].chapters[5] (ia_appliquee_metiers_tp__27-final-quiz), blocks[id=ia_appliquee_metiers_tp__27-quiz-order] (bucket_sort), field feedback",
+      "description": "Le JSON renseigne feedback.fr et feedback.en pour le tri, mais le rapport initial, fondé sur le câblage de rendu cité, constate que LessonViewer transmet correction: block.correction à MatchingExercise alors que le bloc ne possède pas correction ; l’explication prévue sur la séquence Cadrer → Construire → Tester → Valider n’est donc pas rendue après tentative.",
+      "recommendation": "Mapper explicitement block.feedback vers le champ affiché par le renderer ou normaliser vers le champ consommé, sans supprimer le message pédagogique ; tester une soumission erronée et correcte.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "clarté linguistique",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "location": "lessons[0].chapters[5] (ia_appliquee_metiers_tp__27-final-quiz), blocks[0..4], fields options[*].text.en, buckets[*].label.en, cards[*].text.en",
+      "description": "Plusieurs valeurs anglaises restent en français dans le quiz final et le tri : par exemple quiz-01 option c, quiz-02 option b, quiz-04 options c et d, les catégories du tri et la carte de validation humaine. Le rapport initial établit que cette alternance ne bloque pas la validation mais dégrade la clarté d’un quiz annoncé bilingue.",
+      "recommendation": "Compléter toutes les traductions anglaises visibles du quiz, des catégories, cartes, feedback et corrections, puis relire le parcours en langue anglaise pour vérifier l’homogénéité terminologique.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 3,
+    "p2": 2
+  }
+}

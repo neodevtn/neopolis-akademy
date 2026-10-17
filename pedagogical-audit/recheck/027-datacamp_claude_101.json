@@ -1,0 +1,105 @@
+{
+  "formation_id": "datacamp_claude_101",
+  "index": 27,
+  "course_ids": [
+    "claude_101__01"
+  ],
+  "review_scope": {
+    "current_state_sources": [
+      "/home/ubuntu/neopolis-akademy/formation-manifest.json",
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_101__01.json",
+      "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/027-datacamp_claude_101.json",
+      "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json"
+    ],
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "coverage": "1 cours, 4 leçons, 19 chapitres, 20 activités et 21 blocs ; comparaison du JSON actuel, du rapport initial et du pré-audit statique. Les constats non prouvés localement (qualité factuelle, disponibilité effective des assets via API, exécution du service IA, rendu navigateur) ne sont pas transformés en findings."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[0] (dc_ch01_act01), blocks[0] (dc_1_act_01_prompting)",
+      "description": "Le chapitre est déclaré requiredBeforeAdvance et contient une ai_evaluation, mais le rapport initial vérifie que LessonViewer n’intègre pas ce type de bloc dans les conditions de navigation : la pratique peut être franchie sans soumission ni réussite.",
+      "recommendation": "Corriger génériquement le verrouillage des blocs ai_evaluation et ajouter un test de non-contournement.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[2] (dc_ch01_act03), blocks[0] (dc_1_act_03_video)",
+      "description": "La vidéo obligatoire du parcours français déclare subtitleUrlEn et une transcription anglaise, sans subtitleUrlFr ni alternative textuelle française ; le contenu théorique est donc insuffisamment accessible aux apprenants francophones non anglophones.",
+      "recommendation": "Fournir des sous-titres et une transcription françaises fidèles, ou annoncer explicitement l’anglais et fournir un résumé français couvrant le cadre de prompt.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[2] (dc_ch01_act03), blocks[0] (dc_1_act_03_video)",
+      "description": "La vidéo MP4 obligatoire peut être franchie via la navigation basse : le rapport initial localise l’usage d’une clé vidéo filtrée par longueur, alors que l’identifiant dc_1_act_03_video est utilisé par le rendu mais exclu du calcul de la navigation.",
+      "recommendation": "Utiliser systématiquement block.id pour les vidéos MP4/HLS/audio et tester le verrouillage avec un identifiant long.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[4] (dc_ch01_act05), blocks[0] (dc_1_act_05_prompting)",
+      "description": "Cette ai_evaluation est dans un chapitre requiredBeforeAdvance, mais sa complétion n’est pas prise en compte par les règles de passage ; l’exercice de rédaction peut être quitté sans soumission ni réussite.",
+      "recommendation": "Inclure ai_evaluation et sa clé de complétion dans les conditions de progression et couvrir le cas par un test.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[6] (dc_ch01_act07), blocks[0] (dc_1_act_07_prompting)",
+      "description": "L’exercice d’itération de prompt est déclaré obligatoire mais le type ai_evaluation est omis du mécanisme de passage ; il peut donc être quitté sans soumission ni réussite.",
+      "recommendation": "Verrouiller le passage jusqu’à la réussite de l’évaluation IA, ou rendre explicitement l’exercice facultatif.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "claude_101__01",
+      "location": "lessons[1].chapters[0] (dc_ch02_act01), blocks[0] (dc_2_act_01_video)",
+      "description": "La vidéo théorique obligatoire de Projects ne déclare que des sous-titres et une transcription anglaise dans une formation affichée en français ; elle porte les prérequis évalués ensuite.",
+      "recommendation": "Ajouter des sous-titres et une transcription françaises, ou annoncer l’anglais et fournir un résumé français couvrant Projects, la base de connaissances, les instructions et les droits.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[1].chapters[0] (dc_ch02_act01), blocks[0] (dc_2_act_01_video)",
+      "description": "La vidéo MP4 requiredBeforeAdvance peut être passée sans action : l’identifiant dc_2_act_01_video est rendu et marqué, mais n’est pas retenu par le calcul de clé de la navigation basse.",
+      "recommendation": "Résoudre la clé de toute vidéo MP4/HLS/audio par block.id, sans filtre de longueur, et ajouter un test de régression.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "claude_101__01",
+      "location": "lessons[1].chapters[4] (dc_ch02_act06), blocks[0] (dc_2_act_06_bucket_sort).feedback",
+      "description": "Le feedback pédagogique JSON sur la complémentarité Projects/Skills existe, mais le rapport initial vérifie qu’il n’est pas transmis au composant rendu ; après réussite, l’apprenant voit « Parfait ! » sans la consolidation conceptuelle prévue.",
+      "recommendation": "Mapper block.feedback vers la propriété de correction/feedback rendue et tester sa visibilité après réussite.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 8,
+    "p0": 0,
+    "p1": 7,
+    "p2": 1
+  }
+}

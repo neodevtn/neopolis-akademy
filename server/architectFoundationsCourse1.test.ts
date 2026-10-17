@@ -10,9 +10,9 @@ const chapters = course.lessons.flatMap((lesson: any) => lesson.chapters || []);
 const blocks = chapters.flatMap((chapter: any) => chapter.blocks || []);
 
 describe("Architect Foundations course 1 reconstruction", () => {
-  it("keeps the 15 official lesson milestones and the 39 short Neopolis screens", () => {
+  it("keeps the 15 official lesson milestones and 33 usable Neopolis screens", () => {
     expect(course.lessons).toHaveLength(15);
-    expect(chapters).toHaveLength(39);
+    expect(chapters).toHaveLength(33);
     expect(course.lessons.map((lesson: any) => lesson.title.en)).toContain("Certificate of completion");
     expect(course.lessons.at(-2)).toMatchObject({
       id: "lesson_ai_fluency_certificate",
@@ -30,13 +30,13 @@ describe("Architect Foundations course 1 reconstruction", () => {
     expect(content.body.en).not.toContain("Estimated time for this module: 10-15 minutes");
   });
 
-  it("labels and inventories official versus supplementary media without changing the playable video blocks", () => {
+  it("keeps the 11 official playable videos and their verified downloads", () => {
     const videos = blocks.filter((block: any) => block.type === "video");
     const official = videos.filter((block: any) => block.mediaMeta?.official === true);
     const supplementary = videos.filter((block: any) => block.mediaMeta?.official === false);
-    expect(videos).toHaveLength(17);
+    expect(videos).toHaveLength(11);
     expect(official).toHaveLength(11);
-    expect(supplementary).toHaveLength(6);
+    expect(supplementary).toHaveLength(0);
     for (const video of videos) {
       expect(video.videoId).toBeTruthy();
       expect(video.mediaMeta).toMatchObject({ localAssetId: video.videoId, language: "en", checksumScope: "canonical_video_reference" });
@@ -50,25 +50,22 @@ describe("Architect Foundations course 1 reconstruction", () => {
     }
   });
 
-  it("preserves mandatory checkpoints and leaves supplemental tutorials outside the gate", () => {
+  it("preserves only the machine-evaluable completion checkpoint", () => {
     const checkpointIds = blocks.filter((block: any) => block.type === "checkpoint").map((block: any) => block.exerciseId);
-    expect(checkpointIds).toHaveLength(15);
-    expect(new Set(checkpointIds).size).toBe(15);
+    expect(checkpointIds).toEqual(["ex_ai_fluency_certificate_completion"]);
     expect(course.exercises.find((exercise: any) => exercise.id === "ex_ai_fluency_certificate_completion")).toMatchObject({
       required: true,
       interactionType: "single_choice",
       sourcePedagogique: "AI Fluency: Framework & Foundations — 4D framework and conclusion",
     });
-    const tutorials = course.lessons[0].chapters.find((chapter: any) => chapter.id === "chapter_03");
-    expect(tutorials.blocks[0]).toMatchObject({ type: "callout", title: { fr: "Complément Neopolis" } });
+    expect(course.exercises.some((exercise: any) => exercise.interactionType === "free_text")).toBe(false);
   });
 
-  it("locks each required checkpoint until completion and resets the chapter display when the reconstructed lesson changes", () => {
-    const introductionCheckpointChapter = course.lessons[0].chapters.find((chapter: any) => chapter.id === "chapter_02");
+  it("locks the remaining required checkpoint until completion and resets the chapter display when the reconstructed lesson changes", () => {
     const certificateCheckpointChapter = course.lessons.find((lesson: any) => lesson.id === "lesson_ai_fluency_certificate").chapters[0];
 
     const empty = new Set<string>();
-    expect(isSequentialActivityNavigationLocked({ blocks: introductionCheckpointChapter.blocks, completedExercises: empty, completedCloudExercises: empty, completedMatching: empty, completedInlineInteractions: empty })).toBe(true);
+    expect(isSequentialActivityNavigationLocked({ blocks: certificateCheckpointChapter.blocks, completedExercises: empty, completedCloudExercises: empty, completedMatching: empty, completedInlineInteractions: empty })).toBe(true);
     expect(isSequentialActivityNavigationLocked({ blocks: certificateCheckpointChapter.blocks, completedExercises: new Set(["ex_ai_fluency_certificate_completion"]), completedCloudExercises: empty, completedMatching: empty, completedInlineInteractions: empty })).toBe(false);
     expect(getDisplayedChapterProgress({ current: 1, total: 2 }, 13, 14, certificateCheckpointChapter.blocks.length)).toEqual({ current: 0, total: 3 });
   });

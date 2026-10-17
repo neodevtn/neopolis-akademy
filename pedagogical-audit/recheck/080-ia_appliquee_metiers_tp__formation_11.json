@@ -1,0 +1,87 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_11",
+  "index": 80,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__11"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__11.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/080-ia_appliquee_metiers_tp__formation_11.json",
+    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ],
+    "method": "Comparaison du rapport initial avec le JSON du cours actuel et les constats localisés des fichiers JSON locaux. Aucun contenu de cours n’a été modifié."
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "location": "lessons[0].chapters[2].blocks[0].items versus lessons[0].chapters[5].blocks[4].buckets",
+      "description": "Le modèle de démarche actuel est « Cadrer → Préparer → Tester → Contrôler », tandis que le tri final utilise « Cadrer → Construire → Tester → Valider ». Les libellés ne sont pas alignés alors que le tri valide la démarche enseignée.",
+      "recommendation": "Harmoniser les quatre libellés dans la séquence, les catégories du tri, les cartes et le feedback.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "location": "lessons[0].chapters[3] and blocks[0] (id: ia_appliquee_metiers_tp__11-checkpoint-preparation)",
+      "description": "Le checkpoint est requis et possède passThreshold: 1, mais le JSON actuel conserve une question à choix unique avec correctAnswer « a » sans autre mécanisme de seuil dans le contenu. Le rapport initial vérifie dans le rendu que toute réponse appelle la complétion et que le gate est donc franchissable après une réponse fausse.",
+      "recommendation": "Faire dépendre la complétion navigable d’une réponse correcte pour ce checkpoint requis, puis tester le cas réponse fausse → navigation suivante verrouillée.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "location": "lessons[0].chapters[4].blocks[0] (id: ia_appliquee_metiers_tp__11-mini-project-proof)",
+      "description": "Le mini-projet demande une preuve détaillée, mais le bloc cloud_exercise actuel ne déclare ni minimumAnswerLength, ni rubricCriteria, ni learnerCriteria, ni serverGradedAssessment. Selon le rapport initial et la logique de rendu inspectée, la validation par défaut accepte une réponse d’un caractère et déclenche la complétion.",
+      "recommendation": "Définir des critères observables fondés sur les éléments déjà demandés (scénario, procédure/workflow, résultat, contrôle humain et test fictif) et ne pas présenter une saisie d’un caractère comme preuve validée.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "location": "lessons[0].chapters[4].blocks[0] fields assignment, instructions, hint, solution, successMessage",
+      "description": "Les champs centraux du cloud_exercise sont encore des chaînes françaises simples, contrairement aux champs environmentGuide et resources qui ont des variantes fr/en. Le parcours anglais reçoit donc ces textes français non localisés.",
+      "recommendation": "Fournir une valeur fr/en pour chaque champ affiché de l’activité pratique et vérifier les parcours fr et en.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "location": "lessons[0].chapters[5].blocks[4] (id: ia_appliquee_metiers_tp__11-quiz-order)",
+      "description": "Le JSON actuel contient feedback mais pas correction pour le bucket_sort. Le rapport initial localise que LessonViewer transmet seulement block.correction et que MatchingExercise n’affiche ainsi pas le feedback pédagogique ni la destination attendue des cartes erronées après tentative.",
+      "recommendation": "Mapper feedback vers le mécanisme de correction consommé par le composant, et rendre la catégorie attendue pour chaque carte incorrecte.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "progression",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "location": "lessons[0].chapters[2].blocks[0].items versus lessons[0].chapters[5].blocks[4].buckets",
+      "description": "Le tri final exige implicitement de faire correspondre « Préparer » à « Construire » et « Contrôler » à « Valider », car les catégories du tri diffèrent des étapes présentées dans la séquence précédente.",
+      "recommendation": "Utiliser exactement une terminologie de référence dans la séquence, le tri, la consigne et le feedback; traiter cette correction avec le constat d’alignement de vocabulaire.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 6,
+    "p0": 0,
+    "p1": 2,
+    "p2": 4
+  }
+}

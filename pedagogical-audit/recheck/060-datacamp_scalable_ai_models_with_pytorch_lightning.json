@@ -1,0 +1,606 @@
+{
+  "formation_id": "datacamp_scalable_ai_models_with_pytorch_lightning",
+  "index": 60,
+  "course_ids": [
+    "scalable_ai_models_with_pytorch_lightning__01"
+  ],
+  "review_scope": {
+    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+    "course_paths": [
+      "/home/ubuntu/neopolis-akademy/client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json"
+    ],
+    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/060-datacamp_scalable_ai_models_with_pytorch_lightning.json",
+    "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+    "criteria": [
+      "objectifs et activités",
+      "faisabilité TP/fichiers/environnement",
+      "fausses soumissions ou gates",
+      "médias/téléchargements",
+      "duplications ou corruption",
+      "rendu/bilinguisme"
+    ]
+  },
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[0] (`requiredBeforeAdvance: true`, bloc `dc_1_act_01_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[1].blocks[id=dc_1_act_02_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[2].blocks[id=dc_1_act_03_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "clarte_redactionnelle",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[2].blocks[id=dc_1_act_03_tp].instructions et .hint ; ces chaînes sont rendues par `CloudExerciseBlock.tsx:235-245,323-333`."
+      },
+      "description": "Plusieurs formulations de la consigne sont grammaticalement dégradées (« l'Trainer », « l'trainer.fit e »), ce qui brouille les noms d’API précisément à reproduire dans le code pour un apprenant débutant.",
+      "recommendation": "P3 — Remplacer ces formulations dans `instructions` et `hint`; vérifier l’affichage Markdown et la conservation exacte des identifiants de code.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[3] (`requiredBeforeAdvance: true`, bloc `dc_1_act_04_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[3].blocks[id=dc_1_act_04_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[5].blocks[id=dc_1_act_06_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[6].blocks[id=dc_1_act_07_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "exactitude_de_la_correction",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[6].blocks[id=dc_1_act_07_tp].solution. La consigne demande d’appliquer ReLU à la sortie de `self.hidden(x)`, mais le code de correction instancie `nn.ReLU` avec `x` comme argument au lieu d’appliquer la couche."
+      },
+      "description": "La correction fournie pour le passage avant ne réalise pas l’activation ReLU : elle écrit `nn.ReLU(x)` au lieu d’appeler une instance de couche sur `x`. La solution révélée après soumission diffuse ainsi une implémentation erronée au cœur de la notion exercée.",
+      "recommendation": "P1 — Corriger immédiatement la solution, puis faire valider/exécuter automatiquement tous les snippets de correction de cette formation avant publication.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act08",
+        "content_id": "dc_1_act_08_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[7] (`requiredBeforeAdvance: true`, bloc `dc_1_act_08_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act08",
+        "content_id": "dc_1_act_08_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[7].blocks[id=dc_1_act_08_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act09",
+        "content_id": "dc_1_act_09_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[8].blocks[id=dc_1_act_09_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act10",
+        "content_id": "dc_1_act_10_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[9].blocks[id=dc_1_act_10_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch01_act11",
+        "content_id": "dc_1_act_11_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[0].chapters[10].blocks[id=dc_1_act_11_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act01",
+        "content_id": "dc_2_act_01_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[0] (`requiredBeforeAdvance: true`, bloc `dc_2_act_01_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act01",
+        "content_id": "dc_2_act_01_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[0].blocks[id=dc_2_act_01_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act02",
+        "content_id": "dc_2_act_02_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[1].blocks[id=dc_2_act_02_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act03",
+        "content_id": "dc_2_act_03_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[2].blocks[id=dc_2_act_03_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act04",
+        "content_id": "dc_2_act_04_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[3] (`requiredBeforeAdvance: true`, bloc `dc_2_act_04_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act04",
+        "content_id": "dc_2_act_04_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[3].blocks[id=dc_2_act_04_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act05",
+        "content_id": "dc_2_act_05_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[4].blocks[id=dc_2_act_05_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act06",
+        "content_id": "dc_2_act_06_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[5].blocks[id=dc_2_act_06_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act07",
+        "content_id": "dc_2_act_07_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[6] (`requiredBeforeAdvance: true`, bloc `dc_2_act_07_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act07",
+        "content_id": "dc_2_act_07_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[6].blocks[id=dc_2_act_07_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "feedback_rendu",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act08",
+        "content_id": "dc_2_act_08_bucket_sort",
+        "content_type": "bucket_sort",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[7].blocks[id=dc_2_act_08_bucket_sort] contient `feedback`. `client/src/pages/training/LessonViewer.tsx:957-973` construit l’exercice sans ce champ ; `client/src/components/MatchingExercise.tsx:420-465` ne rend qu’un score générique et éventuellement `exercise.correction`."
+      },
+      "description": "Un feedback pédagogique est bien renseigné dans le JSON, mais il n’est jamais transmis au composant de tri et ne peut donc pas être vu après une réussite. MatchingExercise reçoit seulement `correction`; en l’absence de ce champ, l’apprenant voit le score générique « Parfait ! » sans la consolidation explicitement prévue sur ModelCheckpoint et EarlyStopping.",
+      "recommendation": "P2 — Passer le feedback source au composant et ajouter un test UI confirmant son affichage après un tri exact.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch02_act09",
+        "content_id": "dc_2_act_09_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[1].chapters[8].blocks[id=dc_2_act_09_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act01",
+        "content_id": "dc_3_act_01_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[0] (`requiredBeforeAdvance: true`, bloc `dc_3_act_01_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act01",
+        "content_id": "dc_3_act_01_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[0].blocks[id=dc_3_act_01_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act02",
+        "content_id": "dc_3_act_02_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[1].blocks[id=dc_3_act_02_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act03",
+        "content_id": "dc_3_act_03_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[2].blocks[id=dc_3_act_03_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act04",
+        "content_id": "dc_3_act_04_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[3] (`requiredBeforeAdvance: true`, bloc `dc_3_act_04_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act04",
+        "content_id": "dc_3_act_04_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[3].blocks[id=dc_3_act_04_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act05",
+        "content_id": "dc_3_act_05_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[4].blocks[id=dc_3_act_05_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act06",
+        "content_id": "dc_3_act_06_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[5].blocks[id=dc_3_act_06_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P3",
+      "category": "terminologie",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act06",
+        "content_id": "dc_3_act_06_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[5].title et blocks[id=dc_3_act_06_tp].assignment/instructions ; la vidéo précédente nomme explicitement « model pruning » et « pruning mask »."
+      },
+      "description": "Le titre et la consigne emploient « taille » pour désigner le pruning, alors que la vidéo précédente et le code parlent d’« élagage ». Cette variation terminologique rend la continuité notionnelle moins nette, notamment au moment de comprendre la suppression du masque.",
+      "recommendation": "P3 — Harmoniser les titres, consignes et indices de cette séquence avec le terme pédagogique « élagage ».",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act07",
+        "content_id": "dc_3_act_07_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[6] (`requiredBeforeAdvance: true`, bloc `dc_3_act_07_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act07",
+        "content_id": "dc_3_act_07_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[6].blocks[id=dc_3_act_07_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "validation_et_feedback",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act09",
+        "content_id": "dc_3_act_09_tp",
+        "content_type": "cloud_exercise",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[8].blocks[id=dc_3_act_09_tp] : aucune propriété `minimumAnswerLength`, `rubricCriteria` ou `serverGradedAssessment`. `client/src/components/blocks/cloudExerciseValidation.ts:1-9` ramène l’absence à 1 caractère ; `client/src/components/CloudExerciseBlock.tsx:117-125,153-161` soumet et appelle `onComplete` sans évaluation quand aucune rubrique/évaluation serveur n’est déclarée ; `LessonViewer.tsx:1587-1592` déverrouille dès `onComplete`."
+      },
+      "description": "Ce TP de complétion de code requis est validé par n’importe quel caractère non blanc : il ne déclare ni longueur minimale, ni critères de rubrique, ni évaluation serveur. Dans ce cas, CloudExerciseBlock fixe le minimum à 1, ignore `onEvaluate`, marque le TP soumis, révèle la correction et déverrouille la suite. L’apprenant ne reçoit donc aucun contrôle de la réponse, aucun feedback spécifique à son erreur et peut contourner l’activité sans pratiquer le code demandé.",
+      "recommendation": "P1 — Ajouter une validation pédagogique adaptée à chacun des 17 TP et un test de non-régression : une réponse « x » ne doit ni révéler la correction ni déverrouiller l’écran suivant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act10",
+        "content_id": "dc_3_act_10_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[9] (`requiredBeforeAdvance: true`, bloc `dc_3_act_10_video`). `client/src/pages/training/LessonViewer.tsx:692-726` complète l’audio sous la clé `audioKey = block.id`; `LessonViewer.tsx:1557-1569` et `1483-1511` n’utilisent `block.id` que si sa longueur est comprise entre 8 et 15."
+      },
+      "description": "Le chapitre est déclaré obligatoire avant passage, mais le bouton principal de bas d’écran ne reconnaît pas ce média Projector audio comme média à compléter : son identifiant de 17 caractères est écarté par l’heuristique de résolution des clés. L’apprenant peut donc passer cet écran d’enseignement sans lecture ni clic sur « Marquer comme écoutée ». Pour le chapitre final, la même logique permet de terminer la leçon sans consulter la synthèse. Le raccourci clavier traite au contraire `audioUrl` avec `block.id`, ce qui rend le verrouillage incohérent selon le mode de navigation.",
+      "recommendation": "P1 — Corriger le résolveur de clé dans toutes les gates et ajouter un test avec les 10 IDs audio de 17 caractères : le bouton Suivant/fin doit rester inactif tant que le média n’est ni terminé ni marqué comme écouté.",
+      "status": "open"
+    },
+    {
+      "severity": "P2",
+      "category": "langue_et_accessibilite",
+      "course_id": "scalable_ai_models_with_pytorch_lightning__01",
+      "location": {
+        "chapter_id": "dc_ch03_act10",
+        "content_id": "dc_3_act_10_video",
+        "content_type": "video",
+        "evidence": "`client/public/data/courses/scalable_ai_models_with_pytorch_lightning__01.json` → lessons[2].chapters[9].blocks[id=dc_3_act_10_video] : `transcript`/`transcriptSegments` en anglais. `client/src/pages/training/LessonViewer.tsx:743-759` rend directement `seg.heading` et `seg.text` dans le lecteur audio Projector."
+      },
+      "description": "Dans le parcours français, la transcription Projector affichée au lecteur est exclusivement en anglais. LessonViewer restitue directement `segment.heading` et `segment.text` sans sélection i18n ; la ressource textuelle d’appui n’est donc pas cohérente avec les titres, descriptions et activités en français. Le constat porte sur la transcription rendue, non sur l’accessibilité réelle du média audio.",
+      "recommendation": "P2 — Fournir une transcription française alignée sur l’audio/slides ou indiquer explicitement la langue du média avant lecture ; vérifier le rendu FR et EN.",
+      "status": "open"
+    }
+  ],
+  "summary": {
+    "issue_count": 41,
+    "p0": 0,
+    "p1": 28,
+    "p2": 11
+  }
+}
