@@ -1,0 +1,773 @@
+{
+  "formationId": "analyse_donnees_reporting_bi_codex",
+  "initialIssueCount": 75,
+  "resolvedWithEvidence": 1,
+  "documentedRemoval": 0,
+  "stillOpen": 74,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 23.1,
+  "keyOpenIssues": [
+    "client/public/data/courses/analyse_donnees_reporting_bi_codex__02–08.json : écrans de téléchargement dupliqués dès lessons[0].chapters[0–1].",
+    "client/public/data/courses/analyse_donnees_reporting_bi_codex__02–08.json : titres « Télécharger les données de test » non alignés sur le brief de lab de chapters[2].",
+    "client/public/data/courses/analyse_donnees_reporting_bi_codex__02–08.json : brief de lab répété sur chapters[2–4], dont l’écran TP.",
+    "client/public/data/courses/analyse_donnees_reporting_bi_codex__01–08.json : 32 checkpoints restent content-only, sans soumission/confirmation ni porte de progression.",
+    "client/src/pages/training/LessonViewer.tsx:1116-1123 ; chapterProgress.ts:130-139 : exercices numériques des cours 02–08 non verrouillants.",
+    "client/src/components/NumericAnswerExercise.tsx:66-72 : tolérance EUR affichée ±0,01 mais exécutée à ±1 % (cours 03, 04, 05, 08).",
+    "client/src/components/NumericAnswerExercise.tsx:214-219 et JSON cours 02–08 : feedback numérique générique sans diagnostic par question.",
+    "client/public/data/courses/analyse_donnees_reporting_bi_codex__01.json ; LessonViewer.tsx:418-1188 : deux blocs legacy text restent non rendus."
+  ],
+  "methodSummary": "Contre-revue sans modification des cours ni du code. Le manifeste a identifié les 8 JSON actuels de la formation (analyse_donnees_reporting_bi_codex__01 à __08) ; les 75 constats du rapport initial ont été rapprochés un à un des JSON actuels et du rendu/progression actuel : client/src/pages/training/LessonViewer.tsx, client/src/pages/training/chapterProgress.ts, shared/blockRegistry.ts et shared/learningDesign.ts (ainsi que NumericAnswerExercise.tsx pour les trois constats numériques). Le manifeste de remédiation P0–P2 ne contient aucune entrée pour cette formation : aucun retrait documenté. Une absence d’écran n’a jamais été assimilée à une correction : seul l’identifiant stable du chapitre Solutions est résolu avec preuve de donnée actuelle et trace Git. Score = 100 − somme des pénalités résiduelles des constats ouverts/non vérifiables (P1=1,5 ; P2=0,6 ; P3=0,2) = 100 − (37×1,5 + 35×0,6 + 2×0,2) = 23,1/100. Les retraits documentés seraient traités comme résolus seulement s’ils figuraient dans le manifeste de remédiation ; les éléments externes non vérifiables ne reçoivent aucun crédit. Ici, les 74 constats restants sont vérifiables dans les données et le rendu et restent ouverts.",
+  "issueClassifications": [
+    {
+      "issueId": "007-01-duplicate-data-screen",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__01",
+      "chapterId": "chapter_01",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__01.json → lessons[0].chapters[0] et [1] portent toujours tous deux le titre FR « Télécharger les données de test » et un unique bloc content d’inventaire du pack ; LessonViewer.tsx:1391 rend tous les blocs de chaque écran distinct."
+    },
+    {
+      "issueId": "007-01-l1-c5-legacy-text-not-rendered",
+      "initialSeverity": "P3",
+      "category": "rendu",
+      "courseId": "analyse_donnees_reporting_bi_codex__01",
+      "chapterId": "chapter_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__01.json → lessons[0].chapters[4].blocks[0] reste type=text avec le champ content ; LessonViewer.tsx:418-1188 ne définit aucun case text et le default (1186-1187) retourne null."
+    },
+    {
+      "issueId": "007-01-l1-c7-checkpoint-no-submission",
+      "initialSeverity": "P2",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__01",
+      "chapterId": "chapter_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__01.json → lessons[0].chapters[6] a toujours type absent et blocks=[{type: content}], avec une consigne de production/réponse ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-01-l2-c1-legacy-text-not-rendered",
+      "initialSeverity": "P3",
+      "category": "rendu",
+      "courseId": "analyse_donnees_reporting_bi_codex__01",
+      "chapterId": "chapter_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__01.json → lessons[1].chapters[0].blocks[0] reste type=text avec le champ content ; LessonViewer.tsx:418-1188 ne définit aucun case text et le default (1186-1187) retourne null."
+    },
+    {
+      "issueId": "007-01-l2-c3-checkpoint-no-submission",
+      "initialSeverity": "P2",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__01",
+      "chapterId": "chapter_07",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__01.json → lessons[1].chapters[2] a toujours type absent et blocks=[{type: content}], avec une consigne de production/réponse ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-01-l3-c3-checkpoint-no-submission",
+      "initialSeverity": "P2",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__01",
+      "chapterId": "chapter_10",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__01.json → lessons[2].chapters[2] a toujours type absent et blocks=[{type: content}], avec une consigne de production/réponse ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-01-l4-c3-checkpoint-no-submission",
+      "initialSeverity": "P2",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__01",
+      "chapterId": "chapter_13",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__01.json → lessons[3].chapters[2] a toujours type absent et blocks=[{type: content}], avec une consigne de production/réponse ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-02-duplicate-data-screen",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_01",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[0].chapters[0] et [1] portent toujours tous deux le titre FR « Télécharger les données de test » et un unique bloc content d’inventaire du pack ; LessonViewer.tsx:1391 rend tous les blocs de chaque écran distinct."
+    },
+    {
+      "issueId": "007-02-misleading-download-title",
+      "initialSeverity": "P2",
+      "category": "organisation",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_02",
+      "contentId": "chapter.title",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[0].chapters[2].title.fr reste « Télécharger les données de test », alors que blocks[0].body.fr commence par « ## Lab 02 : Profiling de données avec DuckDB et SQL » ; LessonViewer.tsx:1223-1231 rend le titre explicite Markdown et conserve le titre de chapitre en badge."
+    },
+    {
+      "issueId": "007-02-theory-practice-duplication",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[0].chapters[2], [3] et [4] conservent le même brief de lab dans blocks[0].body.fr ; chapter_04 reste un bloc content (pas un composant d’activité) et LessonViewer.tsx:498-550 le rend comme contenu."
+    },
+    {
+      "issueId": "007-02-l1-c6-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[0].chapters[5] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-02-l2-c3-checkpoint-no-submission",
+      "initialSeverity": "P2",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[1].chapters[2] a toujours type absent et blocks=[{type: content}], avec une consigne de production/réponse ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-02-l3-c3-checkpoint-no-submission",
+      "initialSeverity": "P2",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_09",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[2].chapters[2] a toujours type absent et blocks=[{type: content}], avec une consigne de production/réponse ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-02-numeric-activity-not-gated",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_exercise_02",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[3].chapters[1] a toujours type absent et blocks[0].type=exercise/exercise_type=numeric_answers ; LessonViewer.tsx:1116-1123 n’envoie pas onAllCorrect et les portes (1531-1609 ; chapterProgress.ts:130-139) ne gèrent pas exercise numérique."
+    },
+    {
+      "issueId": "007-02-numeric-feedback-generic",
+      "initialSeverity": "P2",
+      "category": "feedback",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_exercise_02",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[3].chapters[1].blocks[0] conserve 10 questions sans feedback/explanation (toutes concernées) ; NumericAnswerExercise.tsx:214-219 affiche toujours le retour générique « Réponse incorrecte. Vérifiez votre calcul. »."
+    },
+    {
+      "issueId": "007-02-l4-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__02",
+      "chapterId": "chapter_12",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__02.json → lessons[3].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-03-duplicate-data-screen",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_01",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[0].chapters[0] et [1] portent toujours tous deux le titre FR « Télécharger les données de test » et un unique bloc content d’inventaire du pack ; LessonViewer.tsx:1391 rend tous les blocs de chaque écran distinct."
+    },
+    {
+      "issueId": "007-03-misleading-download-title",
+      "initialSeverity": "P2",
+      "category": "organisation",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_02",
+      "contentId": "chapter.title",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[0].chapters[2].title.fr reste « Télécharger les données de test », alors que blocks[0].body.fr commence par « ## Lab 03 : Conception du schéma en étoile avec Codex » ; LessonViewer.tsx:1223-1231 rend le titre explicite Markdown et conserve le titre de chapitre en badge."
+    },
+    {
+      "issueId": "007-03-theory-practice-duplication",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[0].chapters[2], [3] et [4] conservent le même brief de lab dans blocks[0].body.fr ; chapter_04 reste un bloc content (pas un composant d’activité) et LessonViewer.tsx:498-550 le rend comme contenu."
+    },
+    {
+      "issueId": "007-03-l1-c6-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[0].chapters[5] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-03-l2-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[1].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-03-l3-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_09",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[2].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-03-numeric-tolerance-contract",
+      "initialSeverity": "P1",
+      "category": "évaluation",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_exercise_03",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[3].chapters[1].blocks[0].questions[0] conserve unit=EUR et tolerance=0.01, et son libellé annonce ±0.01 EUR ; NumericAnswerExercise.tsx:66-72 transforme explicitement ce cas en tolérance relative de 1 %."
+    },
+    {
+      "issueId": "007-03-numeric-activity-not-gated",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_exercise_03",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[3].chapters[1] a toujours type absent et blocks[0].type=exercise/exercise_type=numeric_answers ; LessonViewer.tsx:1116-1123 n’envoie pas onAllCorrect et les portes (1531-1609 ; chapterProgress.ts:130-139) ne gèrent pas exercise numérique."
+    },
+    {
+      "issueId": "007-03-numeric-feedback-generic",
+      "initialSeverity": "P2",
+      "category": "feedback",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_exercise_03",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[3].chapters[1].blocks[0] conserve 5 questions sans feedback/explanation (toutes concernées) ; NumericAnswerExercise.tsx:214-219 affiche toujours le retour générique « Réponse incorrecte. Vérifiez votre calcul. »."
+    },
+    {
+      "issueId": "007-03-l4-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__03",
+      "chapterId": "chapter_12",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__03.json → lessons[3].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-04-duplicate-data-screen",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_01",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[0].chapters[0] et [1] portent toujours tous deux le titre FR « Télécharger les données de test » et un unique bloc content d’inventaire du pack ; LessonViewer.tsx:1391 rend tous les blocs de chaque écran distinct."
+    },
+    {
+      "issueId": "007-04-misleading-download-title",
+      "initialSeverity": "P2",
+      "category": "organisation",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_02",
+      "contentId": "chapter.title",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[0].chapters[2].title.fr reste « Télécharger les données de test », alors que blocks[0].body.fr commence par « ## TP Excel 01 : Consolidation multi-CSV avec Power Query » ; LessonViewer.tsx:1223-1231 rend le titre explicite Markdown et conserve le titre de chapitre en badge."
+    },
+    {
+      "issueId": "007-04-theory-practice-duplication",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[0].chapters[2], [3] et [4] conservent le même brief de lab dans blocks[0].body.fr ; chapter_04 reste un bloc content (pas un composant d’activité) et LessonViewer.tsx:498-550 le rend comme contenu."
+    },
+    {
+      "issueId": "007-04-l1-c6-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[0].chapters[5] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-04-l2-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[1].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-04-l3-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_09",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[2].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-04-numeric-tolerance-contract",
+      "initialSeverity": "P1",
+      "category": "évaluation",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_exercise_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[3].chapters[1].blocks[0].questions[0] conserve unit=EUR et tolerance=0.01, et son libellé annonce ±0.01 EUR ; NumericAnswerExercise.tsx:66-72 transforme explicitement ce cas en tolérance relative de 1 %."
+    },
+    {
+      "issueId": "007-04-numeric-activity-not-gated",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_exercise_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[3].chapters[1] a toujours type absent et blocks[0].type=exercise/exercise_type=numeric_answers ; LessonViewer.tsx:1116-1123 n’envoie pas onAllCorrect et les portes (1531-1609 ; chapterProgress.ts:130-139) ne gèrent pas exercise numérique."
+    },
+    {
+      "issueId": "007-04-numeric-feedback-generic",
+      "initialSeverity": "P2",
+      "category": "feedback",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_exercise_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[3].chapters[1].blocks[0] conserve 7 questions sans feedback/explanation (toutes concernées) ; NumericAnswerExercise.tsx:214-219 affiche toujours le retour générique « Réponse incorrecte. Vérifiez votre calcul. »."
+    },
+    {
+      "issueId": "007-04-l4-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__04",
+      "chapterId": "chapter_12",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__04.json → lessons[3].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-05-duplicate-data-screen",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_01",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[0].chapters[0] et [1] portent toujours tous deux le titre FR « Télécharger les données de test » et un unique bloc content d’inventaire du pack ; LessonViewer.tsx:1391 rend tous les blocs de chaque écran distinct."
+    },
+    {
+      "issueId": "007-05-misleading-download-title",
+      "initialSeverity": "P2",
+      "category": "organisation",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_02",
+      "contentId": "chapter.title",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[0].chapters[2].title.fr reste « Télécharger les données de test », alors que blocks[0].body.fr commence par « ## Lab 06 : Modèle sémantique Power BI » ; LessonViewer.tsx:1223-1231 rend le titre explicite Markdown et conserve le titre de chapitre en badge."
+    },
+    {
+      "issueId": "007-05-theory-practice-duplication",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[0].chapters[2], [3] et [4] conservent le même brief de lab dans blocks[0].body.fr ; chapter_04 reste un bloc content (pas un composant d’activité) et LessonViewer.tsx:498-550 le rend comme contenu."
+    },
+    {
+      "issueId": "007-05-l1-c6-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[0].chapters[5] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-05-l2-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[1].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-05-l3-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_09",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[2].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-05-numeric-tolerance-contract",
+      "initialSeverity": "P1",
+      "category": "évaluation",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_exercise_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[3].chapters[1].blocks[0].questions[0] conserve unit=EUR et tolerance=0.01, et son libellé annonce ±0.01 EUR ; NumericAnswerExercise.tsx:66-72 transforme explicitement ce cas en tolérance relative de 1 %."
+    },
+    {
+      "issueId": "007-05-numeric-activity-not-gated",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_exercise_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[3].chapters[1] a toujours type absent et blocks[0].type=exercise/exercise_type=numeric_answers ; LessonViewer.tsx:1116-1123 n’envoie pas onAllCorrect et les portes (1531-1609 ; chapterProgress.ts:130-139) ne gèrent pas exercise numérique."
+    },
+    {
+      "issueId": "007-05-numeric-feedback-generic",
+      "initialSeverity": "P2",
+      "category": "feedback",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_exercise_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[3].chapters[1].blocks[0] conserve 5 questions sans feedback/explanation (toutes concernées) ; NumericAnswerExercise.tsx:214-219 affiche toujours le retour générique « Réponse incorrecte. Vérifiez votre calcul. »."
+    },
+    {
+      "issueId": "007-05-l4-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__05",
+      "chapterId": "chapter_12",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__05.json → lessons[3].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-06-duplicate-data-screen",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_01",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[0].chapters[0] et [1] portent toujours tous deux le titre FR « Télécharger les données de test » et un unique bloc content d’inventaire du pack ; LessonViewer.tsx:1391 rend tous les blocs de chaque écran distinct."
+    },
+    {
+      "issueId": "007-06-misleading-download-title",
+      "initialSeverity": "P2",
+      "category": "organisation",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_02",
+      "contentId": "chapter.title",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[0].chapters[2].title.fr reste « Télécharger les données de test », alors que blocks[0].body.fr commence par « ## Lab 07 : Pack reporting exécutif » ; LessonViewer.tsx:1223-1231 rend le titre explicite Markdown et conserve le titre de chapitre en badge."
+    },
+    {
+      "issueId": "007-06-theory-practice-duplication",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[0].chapters[2], [3] et [4] conservent le même brief de lab dans blocks[0].body.fr ; chapter_04 reste un bloc content (pas un composant d’activité) et LessonViewer.tsx:498-550 le rend comme contenu."
+    },
+    {
+      "issueId": "007-06-l1-c6-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[0].chapters[5] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-06-l2-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[1].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-06-l3-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_09",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[2].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-06-numeric-activity-not-gated",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_exercise_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[3].chapters[1] a toujours type absent et blocks[0].type=exercise/exercise_type=numeric_answers ; LessonViewer.tsx:1116-1123 n’envoie pas onAllCorrect et les portes (1531-1609 ; chapterProgress.ts:130-139) ne gèrent pas exercise numérique."
+    },
+    {
+      "issueId": "007-06-numeric-feedback-generic",
+      "initialSeverity": "P2",
+      "category": "feedback",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_exercise_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[3].chapters[1].blocks[0] conserve 7 questions sans feedback/explanation (toutes concernées) ; NumericAnswerExercise.tsx:214-219 affiche toujours le retour générique « Réponse incorrecte. Vérifiez votre calcul. »."
+    },
+    {
+      "issueId": "007-06-l4-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__06",
+      "chapterId": "chapter_12",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__06.json → lessons[3].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-07-duplicate-data-screen",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_01",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[0].chapters[0] et [1] portent toujours tous deux le titre FR « Télécharger les données de test » et un unique bloc content d’inventaire du pack ; LessonViewer.tsx:1391 rend tous les blocs de chaque écran distinct."
+    },
+    {
+      "issueId": "007-07-misleading-download-title",
+      "initialSeverity": "P2",
+      "category": "organisation",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_02",
+      "contentId": "chapter.title",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[0].chapters[2].title.fr reste « Télécharger les données de test », alors que blocks[0].body.fr commence par « ## Lab 08 : Industrialiser le projet BI » ; LessonViewer.tsx:1223-1231 rend le titre explicite Markdown et conserve le titre de chapitre en badge."
+    },
+    {
+      "issueId": "007-07-theory-practice-duplication",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[0].chapters[2], [3] et [4] conservent le même brief de lab dans blocks[0].body.fr ; chapter_04 reste un bloc content (pas un composant d’activité) et LessonViewer.tsx:498-550 le rend comme contenu."
+    },
+    {
+      "issueId": "007-07-l1-c6-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[0].chapters[5] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-07-l2-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[1].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-07-l3-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_09",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[2].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-07-numeric-activity-not-gated",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_exercise_07",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[3].chapters[1] a toujours type absent et blocks[0].type=exercise/exercise_type=numeric_answers ; LessonViewer.tsx:1116-1123 n’envoie pas onAllCorrect et les portes (1531-1609 ; chapterProgress.ts:130-139) ne gèrent pas exercise numérique."
+    },
+    {
+      "issueId": "007-07-numeric-feedback-generic",
+      "initialSeverity": "P2",
+      "category": "feedback",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_exercise_07",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[3].chapters[1].blocks[0] conserve 3 questions sans feedback/explanation (toutes concernées) ; NumericAnswerExercise.tsx:214-219 affiche toujours le retour générique « Réponse incorrecte. Vérifiez votre calcul. »."
+    },
+    {
+      "issueId": "007-07-l4-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__07",
+      "chapterId": "chapter_12",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__07.json → lessons[3].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-08-duplicate-data-screen",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_01",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[0].chapters[0] et [1] portent toujours tous deux le titre FR « Télécharger les données de test » et un unique bloc content d’inventaire du pack ; LessonViewer.tsx:1391 rend tous les blocs de chaque écran distinct."
+    },
+    {
+      "issueId": "007-08-misleading-download-title",
+      "initialSeverity": "P2",
+      "category": "organisation",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_02",
+      "contentId": "chapter.title",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[0].chapters[2].title.fr reste « Télécharger les données de test », alors que blocks[0].body.fr commence par « ## Projet final certifiant : Mission BI 360 » ; LessonViewer.tsx:1223-1231 rend le titre explicite Markdown et conserve le titre de chapitre en badge."
+    },
+    {
+      "issueId": "007-08-theory-practice-duplication",
+      "initialSeverity": "P2",
+      "category": "progression",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_04",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[0].chapters[2], [3] et [4] conservent le même brief de lab dans blocks[0].body.fr ; chapter_04 reste un bloc content (pas un composant d’activité) et LessonViewer.tsx:498-550 le rend comme contenu."
+    },
+    {
+      "issueId": "007-08-l1-c6-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_05",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[0].chapters[5] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-08-l2-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_06",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[1].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-08-l3-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_09",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[2].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-08-numeric-tolerance-contract",
+      "initialSeverity": "P1",
+      "category": "évaluation",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_exercise_08",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[3].chapters[1].blocks[0].questions[0] conserve unit=EUR et tolerance=0.01, et son libellé annonce ±0.01 EUR ; NumericAnswerExercise.tsx:66-72 transforme explicitement ce cas en tolérance relative de 1 %."
+    },
+    {
+      "issueId": "007-08-numeric-activity-not-gated",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_exercise_08",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[3].chapters[1] a toujours type absent et blocks[0].type=exercise/exercise_type=numeric_answers ; LessonViewer.tsx:1116-1123 n’envoie pas onAllCorrect et les portes (1531-1609 ; chapterProgress.ts:130-139) ne gèrent pas exercise numérique."
+    },
+    {
+      "issueId": "007-08-numeric-feedback-generic",
+      "initialSeverity": "P2",
+      "category": "feedback",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_exercise_08",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[3].chapters[1].blocks[0] conserve 5 questions sans feedback/explanation (toutes concernées) ; NumericAnswerExercise.tsx:214-219 affiche toujours le retour générique « Réponse incorrecte. Vérifiez votre calcul. »."
+    },
+    {
+      "issueId": "007-08-l4-c3-checkpoint-no-submission",
+      "initialSeverity": "P1",
+      "category": "verrouillage",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": "chapter_12",
+      "contentId": "blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[3].chapters[2] a toujours type absent et blocks=[{type: content}], avec « Soumettez » ; aucune interaction/dépôt n’est déclarée. LessonViewer.tsx:1531-1609 et chapterProgress.ts:121-140 ne créent aucune porte pour un simple bloc content."
+    },
+    {
+      "issueId": "007-08-missing-chapter-id",
+      "initialSeverity": "P3",
+      "category": "traçabilité",
+      "courseId": "analyse_donnees_reporting_bi_codex__08",
+      "chapterId": null,
+      "contentId": "chapter",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "client/public/data/courses/analyse_donnees_reporting_bi_codex__08.json → lessons[3].chapters[3] (« Solutions et réponses de référence ») porte désormais l’id stable « lesson_4_chapter_4 ». L’historique Git documente l’ajout dans le commit 6b66d9c (2026-10-17)."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/007-analyse_donnees_reporting_bi_codex.json"
+}

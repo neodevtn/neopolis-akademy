@@ -1,0 +1,71 @@
+{
+  "formationId": "datacamp_building_scalable_agentic_systems",
+  "initialIssueCount": 8,
+  "resolvedWithEvidence": 0,
+  "documentedRemoval": 0,
+  "stillOpen": 8,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 56,
+  "keyOpenIssues": [
+    "PED-026-006 — FoodGPT : prompts à exécuter sans sorties/simulateur ; QCM bloquant (client/public/data/courses/building_scalable_agentic_systems__01.json, lessons[2].chapters[1]; client/src/components/blocks/MultiChoiceBlock.tsx).",
+    "PED-026-001 — tri sans feedback rendu ni correction pédagogique visible (lessons[0].chapters[1].blocks[id=dc_1_act_02_bucket_sort]; client/src/pages/training/LessonViewer.tsx:950-968).",
+    "PED-026-002 — tri sans feedback rendu ni correction pédagogique visible (lessons[0].chapters[4].blocks[id=dc_1_act_05_bucket_sort]; client/src/pages/training/LessonViewer.tsx:950-968).",
+    "PED-026-003 — tri sans feedback rendu ni correction pédagogique visible (lessons[0].chapters[8].blocks[id=dc_1_act_09_bucket_sort]; client/src/pages/training/LessonViewer.tsx:950-968).",
+    "PED-026-004 — tri sans feedback rendu ni correction pédagogique visible (lessons[1].chapters[2].blocks[id=dc_2_act_03_bucket_sort]; client/src/pages/training/LessonViewer.tsx:950-968).",
+    "PED-026-005 — tri sans feedback rendu ni correction pédagogique visible (lessons[1].chapters[6].blocks[id=dc_2_act_10_bucket_sort]; client/src/pages/training/LessonViewer.tsx:950-968).",
+    "PED-026-007 — tri sans feedback rendu ni correction pédagogique visible (lessons[2].chapters[2].blocks[id=dc_3_act_03_bucket_sort]; client/src/pages/training/LessonViewer.tsx:950-968).",
+    "PED-026-008 — la vidéo promet des « ressources suivantes » sans ressource déclarée (lessons[2].chapters[8]; client/public/data/courses/building_scalable_agentic_systems__01.json)."
+  ],
+  "methodSummary": "Contre-revue qualitative statique, sans modification de cours ni de code. Le manifeste formation-manifest.json identifie le seul fichier actuel de la formation : client/public/data/courses/building_scalable_agentic_systems__01.json. Les 8 constats du rapport raw/026-datacamp_building_scalable_agentic_systems.json ont été contrôlés un à un dans ce JSON et dans les chemins de rendu/progression actuels : client/src/pages/training/LessonViewer.tsx, client/src/pages/training/chapterProgress.ts, shared/blockRegistry.ts, shared/learningDesign.ts, ainsi que MatchingExercise.tsx et MultiChoiceBlock.tsx lorsque nécessaires. Les retraits documentés ont aussi été recherchés dans pedagogical-audit/p0-p2-remediation-manifest.json : aucune entrée ne concerne ce cours. Classification stricte : resolved_with_evidence requiert une donnée et un rendu actuels prouvant la correction complète ; documented_removal requiert une entrée explicite du manifeste de remédiation ; still_open est retenu quand le défaut demeure prouvé par les données et/ou le rendu ; externally_unverifiable ne concerne que les constats dont l’état ne peut pas être établi depuis les sources demandées. Aucun constat n’a été considéré corrigé du seul fait qu’un écran ou un bloc n’est pas observé. Score : 100 moins 18 points pour chaque P0 ouvert, 4 points pour chaque P1 ouvert et 2 points pour chaque P2 ouvert ; les constats externalement non vérifiables auraient reçu la moitié de leur pénalité. Ici : 100 - 18 - (6 × 4) - 2 = 56. Aucun constat résolu/documenté-retiré/ne pouvant être vérifié ne modifie ce calcul.",
+  "issueClassifications": [
+    {
+      "issueId": "PED-026-001",
+      "severity": "P1",
+      "classification": "still_open",
+      "currentEvidence": "Le bloc lessons[0].chapters[1].blocks[id=dc_1_act_02_bucket_sort] contient feedback et n’a pas de correction. LessonViewer.tsx:950-968 ne transmet à MatchingExercise que title, instructions, buckets, cards et correction : feedback est omis. MatchingExercise.tsx:444-450 n’affiche une correction que si exercise.correction existe. Le composant expose désormais la catégorie attendue uniquement dans un span sr-only pour une carte erronée (lignes 388-395), ce qui ne rend ni le feedback ni une correction pédagogique visuelle ; le constat complet reste ouvert."
+    },
+    {
+      "issueId": "PED-026-002",
+      "severity": "P1",
+      "classification": "still_open",
+      "currentEvidence": "Le bloc lessons[0].chapters[4].blocks[id=dc_1_act_05_bucket_sort] a feedback/hint mais aucun champ correction. Le contrat LessonViewer.tsx:950-968 omet feedback et MatchingExercise.tsx:444-450 ne peut afficher une correction en l’absence de correction."
+    },
+    {
+      "issueId": "PED-026-003",
+      "severity": "P1",
+      "classification": "still_open",
+      "currentEvidence": "Le bloc lessons[0].chapters[8].blocks[id=dc_1_act_09_bucket_sort] a feedback/hint mais aucun champ correction. LessonViewer.tsx:950-968 ne passe pas feedback ; MatchingExercise.tsx:444-450 conditionne le texte de correction à correction, absent des données."
+    },
+    {
+      "issueId": "PED-026-004",
+      "severity": "P1",
+      "classification": "still_open",
+      "currentEvidence": "Le bloc lessons[1].chapters[2].blocks[id=dc_2_act_03_bucket_sort] a feedback/hint mais aucun champ correction. Le même chemin LessonViewer.tsx:950-968 omet feedback et MatchingExercise.tsx:444-450 ne rend aucune explication corrective sans correction."
+    },
+    {
+      "issueId": "PED-026-005",
+      "severity": "P1",
+      "classification": "still_open",
+      "currentEvidence": "Le bloc lessons[1].chapters[6].blocks[id=dc_2_act_10_bucket_sort] a feedback/hint mais aucun champ correction. LessonViewer.tsx:950-968 ne transmet pas feedback à MatchingExercise et le rendu de correction reste conditionné au champ absent (MatchingExercise.tsx:444-450)."
+    },
+    {
+      "issueId": "PED-026-006",
+      "severity": "P0",
+      "classification": "still_open",
+      "currentEvidence": "Le bloc lessons[2].chapters[1].blocks[id=dc_3_act_02_qcm_multiple] conserve la question/hint demandant d’exécuter les prompts, correctAnswers=a,c, et chatScenario.messages ne contient que trois messages de rôle user, sans sortie agent, simulateur ni règle observable. MultiChoiceBlock.tsx:62-73 rend ces messages tels quels, puis ne complète l’activité que pour la combinaison exacte (lignes 39-44). LessonViewer.tsx:1561-1567 applique un verrou aux multi_choice_exercise tant que la réponse correcte n’est pas complétée."
+    },
+    {
+      "issueId": "PED-026-007",
+      "severity": "P1",
+      "classification": "still_open",
+      "currentEvidence": "Le bloc lessons[2].chapters[2].blocks[id=dc_3_act_03_bucket_sort] contient feedback/hint mais aucun correction. LessonViewer.tsx:950-968 omet feedback et MatchingExercise.tsx:444-450 ne fournit pas de correction pédagogique visible sans correction."
+    },
+    {
+      "issueId": "PED-026-008",
+      "severity": "P2",
+      "classification": "still_open",
+      "currentEvidence": "Le chapitre lessons[2].chapters[8] contient uniquement le bloc vidéo dc_3_act_09_video. Sa transcription conserve « je vous recommande de consulter les ressources suivantes », mais ce bloc ne déclare ni URL ni ressources et le chapitre ne contient aucun bloc download/source_references. VideoRecommendations.tsx:16-21 et 110-118 ne rend des recommandations qu’avec recommendedVideosManaged=true et une liste éditorialisée ; aucune telle trace n’est présente dans les données de cette leçon."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/026-datacamp_building_scalable_agentic_systems.json"
+}

@@ -1,0 +1,35 @@
+{
+  "formationId": "datacamp_building_marketing_workflows_with_n8n",
+  "initialIssueCount": 2,
+  "resolvedWithEvidence": 0,
+  "documentedRemoval": 0,
+  "stillOpen": 2,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 0,
+  "keyOpenIssues": [
+    "client/public/data/courses/building_marketing_workflows_with_n8n__01.json#/datacampImport/expected/activities_expected_from_outline — 23 activités attendues, mais exerciseCount=0 et les 11 blocs actuels sont seulement 8 video + 3 download; aucune pratique, correction ou feedback n’est rendue.",
+    "client/src/pages/training/LessonViewer.tsx:227-240,249-251,1261-1267 — les huit écrans vidéo sans bloc content ni durationSeconds conservent l’estimation plancher « 1 min de lecture » au lieu d’une durée vidéo ou de l’absence de badge."
+  ],
+  "methodSummary": "Contre-revue qualitative statique strictement limitée aux 2 constats explicites du rapport initial 025. formation-manifest.json:459-471 identifie un seul JSON courant, client/public/data/courses/building_marketing_workflows_with_n8n__01.json. Les données actuelles, LessonViewer.tsx, pages/training/chapterProgress.ts, shared/blockRegistry.ts et shared/learningDesign.ts ont été relus, ainsi que p0-p2-remediation-manifest.json. Règle de classement : resolved_with_evidence exige qu’un changement complet soit prouvé dans les données actuellement servies et le chemin de rendu/progression; documented_removal exige une trace explicite pour cette activité; still_open est employé lorsqu’un défaut reste objectivement démontré; externally_unverifiable est réservé à ce qui ne peut être tranché avec les artefacts présents. Aucune absence d’écran n’est assimilée à une correction : le manifeste p0-p2 ne contient aucune entrée pour building_marketing_workflows_with_n8n__01. Score de résolution pondéré : P1=2, P2=1, P3=0,5; 100 % de crédit pour resolved_with_evidence, 50 % pour documented_removal, 0 % pour still_open ou externally_unverifiable. Les deux constats demeurent ouverts (P1 + P3), donc crédit 0 sur 2,5 et score actuel 0/100. Ce score mesure exclusivement la résolution vérifiable des constats initiaux, non une nouvelle appréciation exhaustive des médias. blockRegistry.ts confirme que des blocs exercice/évaluation et le champ vidéo durationSeconds existent dans le modèle; learningDesign.ts ne règle que l’apparence et ne corrige ni contenu ni progression. Aucun fichier de cours ou de code n’a été modifié.",
+  "issueClassifications": [
+    {
+      "issueId": "ped-025-001",
+      "initialSeverity": "P1",
+      "initialCategory": "activité_et_progression",
+      "initialLocation": "client/public/data/courses/building_marketing_workflows_with_n8n__01.json#/datacampImport/expected/activities_expected_from_outline; dc_ch01_act02",
+      "classification": "still_open",
+      "currentEvidence": "Le seul JSON déclaré par formation-manifest.json:465-470 conserve datacampImport.expected.activities_expected_from_outline=23 (JSON:9-13), exerciseCount=0 (JSON:394) et totalActivities=8 (JSON:398). Son inventaire effectif comprend exactement 8 blocs type video et 3 type download dans les 8 chapitres (JSON:48-82, 96-116, 148-182, 196-216, 230-250, 283-317, 331-351, 365-385), sans bloc exercise, cloud_exercise, QCM, activité interactive, consigne, ressources d’exercice, solution, critères ou feedback. LessonViewer.tsx:400-404 ne détecte une activité que pour les types d’exercice/interaction et chapterProgress.ts:121-139 ne peut verrouiller que les types réellement présents; les chapitres actuels ne peuvent donc rendre ni exiger une pratique. Le flux vidéo est bien verrouillé (chapterProgress.ts:45-66; LessonViewer.tsx:1550-1553), mais cela ne rétablit pas les 23 activités promises. blockRegistry.ts:260-309 décrit les types cloud_exercise/exercise disponibles, sans que le JSON de ce cours ne les instancie. p0-p2-remediation-manifest.json:4-52 ne contient aucune entrée courseId=building_marketing_workflows_with_n8n__01; aucun retrait documenté ne peut donc être crédité.",
+      "currentFinding": "La rupture structurelle entre 23 activités attendues et un parcours livré exclusivement en vidéos/téléchargements reste prouvée. La progression valide le visionnage, pas la pratique, le feedback ni la démonstration de compétence annoncés."
+    },
+    {
+      "issueId": "ped-025-002",
+      "initialSeverity": "P3",
+      "initialCategory": "ux",
+      "initialLocation": "client/public/data/courses/building_marketing_workflows_with_n8n__01.json#/lessons/0/chapters/0/blocks/0 (et huit écrans vidéo)",
+      "classification": "still_open",
+      "currentEvidence": "Les 8 blocs vidéo actuels ne portent toujours aucun durationSeconds (notamment JSON:49-67 pour dc_1_act_01_video; même forme aux JSON:97-115, 149-167, 197-215, 231-249, 284-302, 332-350 et 366-384) et chaque chapitre ne contient aucun bloc type content. LessonViewer.tsx:227-240 calcule l’estimation uniquement en comptant les mots des blocs content puis applique Math.max(1,...); pour ce cours, displayedDurationMinutes reprend cette valeur hors exception Claude Science (249-251). LessonViewer.tsx:1261-1267 rend alors le badge « ${displayedDurationMinutes} min de lecture ». Le registre prévoit pourtant durationSeconds pour les vidéos (shared/blockRegistry.ts:74-90), sans données correspondantes dans ce cours. Aucun changement de règle ciblé ou métadonnée de durée ne prouve une correction.",
+      "currentFinding": "Le libellé reste un minimum d’une minute présenté comme durée de lecture pour des écrans composés de vidéo, sans durée média fiable; le constat UX initial reste ouvert."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/025-datacamp_building_marketing_workflows_with_n8n.json"
+}

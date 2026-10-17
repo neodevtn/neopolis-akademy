@@ -1,0 +1,87 @@
+{
+  "formationId": "claude_science_recherche_sante_v3",
+  "initialIssueCount": 6,
+  "resolvedWithEvidence": 0,
+  "documentedRemoval": 0,
+  "stillOpen": 6,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 40,
+  "keyOpenIssues": [
+    "P0 — les 3 réflexions TP portent encore un ID sans le préfixe exigé `claude_science_03_tp__` : client/public/data/courses/claude_science_03_tp.json (écrans c3_m1/c3_m2/c3_m3_screen_4) ; server/claudeScienceV2AssessmentService.ts:198-201.",
+    "P0 — ces réflexions restent des portes obligatoires : client/src/pages/training/LessonViewer.tsx:320-321,480-483 ; client/src/pages/training/chapterProgress.ts:130-136.",
+    "P2 — `minimumCharacters` est toujours absent des 3 blocs reflection ; le rendu local retombe à 1 caractère : client/public/data/courses/claude_science_03_tp.json ; client/src/components/blocks/ReflectionBlock.tsx:15,27.",
+    "P2 — le contrat serveur impose désormais 100 caractères, mais ni le JSON ni l'UI n'alignent ce seuil et aucun critère/feedback qualitatif n'est configuré : server/routers.ts:925-935 ; shared/blockRegistry.ts:657-659."
+  ],
+  "methodSummary": "Contre-revue strictement limitée aux 6 constats du rapport initial. Le manifeste a fixé le périmètre actuel aux trois JSON `claude_science_01_fondamentaux.json`, `claude_science_02_pratique.json` et `claude_science_03_tp.json`. Chaque constat a été rapproché des blocs JSON actuels, de LessonViewer.tsx, chapterProgress.ts, blockRegistry.ts, learningDesign.ts, ReflectionBlock.tsx et du contrat serveur. Une absence d'écran, de trace de changement ou de retrait n'a jamais été assimilée à une résolution. Les deux manifests de remédiation (`pedagogical-audit/remediation-manifest.json` et `pedagogical-audit/p0-p2-remediation-manifest.json`) ne contiennent aucune entrée `courseId` Claude Science : aucun retrait documenté ne peut donc être crédité. Score : base 100, moins 15 points par P0 encore ouvert (3 × 15 = 45) et moins 5 points par P2 encore ouvert (3 × 5 = 15), soit 40/100. Aucun point de résolution n'est accordé : les trois bloquages P0 restent reproductibles dans les données et le contrat courant ; les trois P2 restent ouverts, même si la validation API actuelle à 100 caractères atténue l'ancien scénario précis d'une réponse d'un seul caractère côté serveur sans résoudre l'absence de seuil cohérent dans le contenu/UI ni l'absence de critères ou feedback qualitatif.",
+  "issueClassifications": [
+    {
+      "issueId": "pedag:claude_science_03_tp:claude_science_03_tp_c3_m1_c3_l1_screen_4:claude_science_03_tp_c3_m1_c3_l1_reflection_4:reflection-id-gate",
+      "initialSeverity": "P0",
+      "classification": "still_open",
+      "currentEvidence": [
+        "client/public/data/courses/claude_science_03_tp.json, lessons[0].chapters[3].blocks[0].id = `claude_science_03_tp_c3_m1_c3_l1_reflection_4`, qui ne commence pas par `claude_science_03_tp__`.",
+        "client/src/pages/training/LessonViewer.tsx:480-483 soumet exactement l'ID du bloc au endpoint Claude Science et n'appelle `onComplete` qu'après succès de la mutation.",
+        "server/claudeScienceV2AssessmentService.ts:198-201 exige `reflectionId.startsWith(`${courseId}__`)` ; cet ID est donc rejeté avant persistance.",
+        "client/src/pages/training/LessonViewer.tsx:320-321 et client/src/pages/training/chapterProgress.ts:130-136 maintiennent le verrouillage tant que la réflexion n'est pas complétée."
+      ],
+      "conclusion": "Le verrouillage initial est toujours présent ; aucune correction de l'ID ni retrait documenté du bloc obligatoire n'a été trouvé."
+    },
+    {
+      "issueId": "pedag:claude_science_03_tp:claude_science_03_tp_c3_m1_c3_l1_screen_4:claude_science_03_tp_c3_m1_c3_l1_reflection_4:reflection-minimum-response",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "client/public/data/courses/claude_science_03_tp.json, lessons[0].chapters[3].blocks[0] n'a toujours pas de propriété `minimumCharacters`.",
+        "client/src/components/blocks/ReflectionBlock.tsx:15 et :27 calculent alors un seuil local de 1 caractère et l'annoncent dans l'interface ; aucune liste de vérification ni feedback qualitatif n'est rendue par ce composant.",
+        "shared/blockRegistry.ts:657-659 prévoit pourtant un champ configurable `minimumCharacters` avec valeur de création 300 ; cette valeur de création n'est pas présente dans le bloc existant.",
+        "server/routers.ts:925-935 impose maintenant `answer.trim().min(100)`. Cette protection API évite une persistance à un caractère, mais crée un seuil serveur différent de l'UI et ne fournit ni critères de complétude aux trois réponses ni feedback qualitatif."
+      ],
+      "conclusion": "Le constat reste ouvert : l'ancien effet exact « 1 caractère accepté côté serveur » est atténué par le contrat API actuel, mais le défaut audité de configuration/rendu cohérent et de contrôle qualitatif demeure sans preuve de résolution."
+    },
+    {
+      "issueId": "pedag:claude_science_03_tp:claude_science_03_tp_c3_m2_c3_l2_screen_4:claude_science_03_tp_c3_m2_c3_l2_reflection_4:reflection-id-gate",
+      "initialSeverity": "P0",
+      "classification": "still_open",
+      "currentEvidence": [
+        "client/public/data/courses/claude_science_03_tp.json, lessons[1].chapters[3].blocks[0].id = `claude_science_03_tp_c3_m2_c3_l2_reflection_4`, sans préfixe `claude_science_03_tp__`.",
+        "LessonViewer.tsx:480-483 transmet cet ID au service ; server/claudeScienceV2AssessmentService.ts:198-201 le refuse car le préfixe requis est `${courseId}__`.",
+        "LessonViewer.tsx:320-321 et chapterProgress.ts:130-136 rendent cette réflexion bloquante jusqu'à complétion."
+      ],
+      "conclusion": "Toujours bloquant, sans correction dans les données ni retrait documenté."
+    },
+    {
+      "issueId": "pedag:claude_science_03_tp:claude_science_03_tp_c3_m2_c3_l2_screen_4:claude_science_03_tp_c3_m2_c3_l2_reflection_4:reflection-minimum-response",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "client/public/data/courses/claude_science_03_tp.json, lessons[1].chapters[3].blocks[0] ne contient toujours pas `minimumCharacters`.",
+        "ReflectionBlock.tsx:15,27 applique donc un minimum local de 1 caractère ; le bloc n'embarque aucun critère de complétude ni feedback qualitatif.",
+        "Le routeur actuel exige 100 caractères (server/routers.ts:925-935), seuil non reflété par les données ni l'UI ; le registre prévoit un paramètre explicite (shared/blockRegistry.ts:657-659)."
+      ],
+      "conclusion": "Toujours ouvert ; la contrainte API partielle ne prouve ni une configuration pédagogique corrigée ni un feedback qualitatif."
+    },
+    {
+      "issueId": "pedag:claude_science_03_tp:claude_science_03_tp_c3_m3_c3_l3_screen_4:claude_science_03_tp_c3_m3_c3_l3_reflection_4:reflection-id-gate",
+      "initialSeverity": "P0",
+      "classification": "still_open",
+      "currentEvidence": [
+        "client/public/data/courses/claude_science_03_tp.json, lessons[2].chapters[3].blocks[0].id = `claude_science_03_tp_c3_m3_c3_l3_reflection_4`, sans préfixe `claude_science_03_tp__`.",
+        "LessonViewer.tsx:480-483 envoie l'ID du bloc ; server/claudeScienceV2AssessmentService.ts:198-201 impose le préfixe `${courseId}__`.",
+        "La progression reste conditionnée à l'ID dans `completedReflections` (LessonViewer.tsx:320-321 ; chapterProgress.ts:130-136)."
+      ],
+      "conclusion": "Toujours bloquant, sans correction dans les données ni retrait documenté."
+    },
+    {
+      "issueId": "pedag:claude_science_03_tp:claude_science_03_tp_c3_m3_c3_l3_screen_4:claude_science_03_tp_c3_m3_c3_l3_reflection_4:reflection-minimum-response",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "client/public/data/courses/claude_science_03_tp.json, lessons[2].chapters[3].blocks[0] n'a pas `minimumCharacters`.",
+        "ReflectionBlock.tsx:15,27 ramène ce bloc à un minimum UI de 1 caractère ; l'implémentation n'évalue ni les trois éléments demandés ni ne retourne de feedback qualitatif.",
+        "server/routers.ts:925-935 impose 100 caractères, sans alignement des données/UI ; le modèle administrable prévoit un minimum explicite de 300 dans blockRegistry.ts:657-659."
+      ],
+      "conclusion": "Toujours ouvert ; aucune preuve d'une remédiation complète de la complétude ou du feedback n'a été trouvée."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/012-claude_science_recherche_sante_v3.json"
+}

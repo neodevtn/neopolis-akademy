@@ -1,0 +1,63 @@
+{
+  "formationId": "claude_certified_developer_foundations",
+  "initialIssueCount": 8,
+  "resolvedWithEvidence": 0,
+  "documentedRemoval": 0,
+  "stillOpen": 8,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 72,
+  "keyOpenIssues": [
+    "Quiz final annoncé, absent — client/public/data/courses/claude_certified_developer_foundations__03.json → lessons[0].chapters[0].blocks[0].body",
+    "Quiz final annoncé, absent — client/public/data/courses/claude_certified_developer_foundations__04.json → lessons[0].chapters[0].blocks[0].body",
+    "Durée 15–25 min vs 211 min — client/public/data/courses/claude_certified_developer_foundations__04.json → lessons[0].chapters[0].blocks[0].body / officialDurationMinutes",
+    "TP cumulatif sans évaluation de réponse — client/public/data/courses/claude_certified_developer_foundations__04.json → chapter_skilljar_04_s17 / chapter_cumulative_s17",
+    "TP cumulatif sans évaluation de réponse — client/public/data/courses/claude_certified_developer_foundations__04.json → chapter_skilljar_04_s18 / chapter_cumulative_s18",
+    "Quiz final annoncé, absent — client/public/data/courses/claude_certified_developer_foundations__05.json → lessons[0].chapters[0].blocks[0].body",
+    "TP cumulatif sans évaluation de réponse — client/public/data/courses/claude_certified_developer_foundations__05.json → chapter_skilljar_05_s17 / chapter_cumulative_s17",
+    "TP cumulatif sans évaluation de réponse — client/public/data/courses/claude_certified_developer_foundations__05.json → chapter_skilljar_05_s18 / chapter_cumulative_s18"
+  ],
+  "methodSummary": "Contre-revue limitée aux 8 constats initiaux. Le manifeste formation-manifest.json désigne exactement les 5 JSON __01 à __05, tous relus. Pour chaque constat, les données actuelles ont été confrontées au rendu/progression : LessonViewer.tsx rend course_final_quiz seulement pour un bloc explicite et passe les cloud_exercise à CloudExerciseBlock ; chapterProgress.ts verrouille les cloud_exercise sur leur état de complétion ; blockRegistry.ts définit les champs de rubriquage/évaluation disponibles ; learningDesign.ts n’ajoute aucune sémantique d’évaluation. CloudExerciseBlock.tsx:153-161 complète encore un TP non rubricé dès que minimumAnswerLength est atteint. Aucun retrait de cette formation ne figure dans p0-p2-remediation-manifest.json. Le score est calculé strictement sur les constats initiaux : 100 - (4 P1 × 5) - (4 P2 × 2) = 72 ; aucun bonus n’est accordé sans preuve de résolution et aucun point n’est retiré au titre d’éléments externes non vérifiables.",
+  "issueClassifications": [
+    {
+      "issueId": "ped-011-03-final-quiz-promise",
+      "classification": "still_open",
+      "evidence": "Le texte actuel conserve « A quiz at the end / Un quiz à la fin » dans client/public/data/courses/claude_certified_developer_foundations__03.json → lessons[0].chapters[id=chapter_01_1].blocks[0].body. Aucun chapter.type=\"quiz\" ni bloc.type=\"course_final_quiz\" n’existe dans ce JSON. LessonViewer.tsx:472-477 ne rend un quiz final que pour course_final_quiz ; les ChapterQuiz génériques ne constituent pas la preuve d’un final annoncé."
+    },
+    {
+      "issueId": "ped-011-04-final-quiz-promise",
+      "classification": "still_open",
+      "evidence": "Le texte actuel conserve « A quiz at the end / Un quiz à la fin » dans client/public/data/courses/claude_certified_developer_foundations__04.json → lessons[0].chapters[id=chapter_01_1].blocks[0].body. Aucun chapter.type=\"quiz\" ni bloc.type=\"course_final_quiz\" n’existe dans ce JSON ; LessonViewer.tsx:472-477 requiert précisément ce bloc pour le rendu du quiz final."
+    },
+    {
+      "issueId": "ped-011-04-duration-mismatch",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/claude_certified_developer_foundations__04.json conserve « Estimated time / Durée estimée : 15-25 minutes » dans lessons[0].chapters[id=chapter_01_1].blocks[0].body, tandis que les métadonnées racine restent officialDurationMinutes=211 et durationMinutes=211."
+    },
+    {
+      "issueId": "ped-011-04-chapter_cumulative_s17-validation",
+      "classification": "still_open",
+      "evidence": "Le bloc actuel chapter_skilljar_04_s17/chapter_cumulative_s17 est toujours cloud_exercise, sans serverGradedAssessment, rubricCriteria, postRevealReflectionOptions ni requirePostRevealReflection. minimumAnswerLength est passé de 10 à 40, mais CloudExerciseBlock.tsx:153-161 révèle la correction et appelle onComplete dès ce seuil pour un TP non rubricé ; ce relèvement ne démontre pas la compétence."
+    },
+    {
+      "issueId": "ped-011-04-chapter_cumulative_s18-validation",
+      "classification": "still_open",
+      "evidence": "Le bloc actuel chapter_skilljar_04_s18/chapter_cumulative_s18 est toujours cloud_exercise, sans serverGradedAssessment, rubricCriteria, postRevealReflectionOptions ni requirePostRevealReflection. minimumAnswerLength=40 ne modifie pas le comportement de CloudExerciseBlock.tsx:153-161 : une réponse arbitraire assez longue complète le TP et la progression associée."
+    },
+    {
+      "issueId": "ped-011-05-final-quiz-promise",
+      "classification": "still_open",
+      "evidence": "Le texte actuel conserve « A quiz at the end / Un quiz à la fin » dans client/public/data/courses/claude_certified_developer_foundations__05.json → lessons[0].chapters[id=chapter_01_1].blocks[0].body. Aucun chapter.type=\"quiz\" ni bloc.type=\"course_final_quiz\" n’existe dans ce JSON ; LessonViewer.tsx:472-477 nécessite ce bloc explicite pour un quiz final."
+    },
+    {
+      "issueId": "ped-011-05-chapter_cumulative_s17-validation",
+      "classification": "still_open",
+      "evidence": "Le bloc actuel chapter_skilljar_05_s17/chapter_cumulative_s17 est toujours cloud_exercise avec minimumAnswerLength=10 et sans serverGradedAssessment, rubricCriteria, postRevealReflectionOptions ni requirePostRevealReflection. CloudExerciseBlock.tsx:153-161 termine un TP non rubricé à la soumission minimale ; chapterProgress.ts:130-139 et LessonViewer.tsx:316-317 utilisent ensuite cette complétion pour le verrou."
+    },
+    {
+      "issueId": "ped-011-05-chapter_cumulative_s18-validation",
+      "classification": "still_open",
+      "evidence": "Le bloc actuel chapter_skilljar_05_s18/chapter_cumulative_s18 est toujours cloud_exercise avec minimumAnswerLength=10 et sans serverGradedAssessment, rubricCriteria, postRevealReflectionOptions ni requirePostRevealReflection. CloudExerciseBlock.tsx:153-161 complète après le seul seuil de longueur ; la progression est donc déverrouillable sans vérification des défauts/corrections demandés."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/011-claude_certified_developer_foundations.json"
+}

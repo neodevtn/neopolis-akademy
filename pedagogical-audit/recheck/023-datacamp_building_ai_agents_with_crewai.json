@@ -1,0 +1,50 @@
+{
+  "formationId": "datacamp_building_ai_agents_with_crewai",
+  "initialIssueCount": 5,
+  "resolvedWithEvidence": 0,
+  "documentedRemoval": 0,
+  "stillOpen": 5,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 0,
+  "keyOpenIssues": [
+    "client/public/data/courses/building_ai_agents_with_crewai__01.json:24-847 — 2 leçons, 2 chapitres, exerciseCount:0 et aucun bloc interactif/TP, malgré les compétences promises.",
+    "client/src/pages/training/LessonViewer.tsx:1476-1504 — le gate de fin conserve le filtre d’ID vidéo 8–15 caractères; dc_1_act_01_video (17) est exclu.",
+    "client/src/pages/training/LessonViewer.tsx:1476-1504 — le même filtre exclut dc_2_act_04_video (17) et laisse la finalisation non verrouillée.",
+    "client/public/data/courses/building_ai_agents_with_crewai__01.json:64-439 — média d’introduction narré/transcrit en anglais, sans subtitleUrlFr ni alternativeTextFr.",
+    "client/public/data/courses/building_ai_agents_with_crewai__01.json:491-840 — média de conclusion narré/transcrit en anglais, sans subtitleUrlFr ni alternativeTextFr."
+  ],
+  "methodSummary": "Contre-revue strictement limitée aux 5 constats explicites du rapport initial. Le manifeste de formation désigne un seul JSON courant : client/public/data/courses/building_ai_agents_with_crewai__01.json. Sa structure actuelle prouve que le parcours publié contient toujours exactement 2 leçons et 2 chapitres : dc_ch01_act01 (content, video, download) et dc_ch02_act04 (video), avec exerciseCount:0; aucun TP ou bloc interactif/évalué n’a été restauré. trainingIndex.json présente désormais des compteurs cohérents (2 leçons, 2 écrans, 0 activité), mais cette synchronisation partielle du catalogue ne résout pas le constat composé de complétude/progression : les compétences annoncées restent sans séquences d’enseignement et de pratique. Le manifeste p0-p2-remediation-manifest.json ne contient aucune entrée pour building_ai_agents_with_crewai__01 : aucune activité ne peut être classée documented_removal. La correction générique de clés média est bien présente dans chapterProgress.ts:45-66 et est appliquée aux chapitres non finaux par LessonViewer.tsx:1551-1553; elle ne couvre toutefois pas ces deux chapitres, chacun étant le dernier de sa leçon. Leur bouton « Leçon terminée » utilise encore la logique distincte de LessonViewer.tsx:1476-1504, qui n’accepte block.id qu’entre 8 et 15 caractères : dc_1_act_01_video et dc_2_act_04_video (17 caractères) produisent donc une liste vide et lastAllVideosWatched vaut true sans complétion. Les deux constats de langue restent prouvés par les transcripts/segments anglais et l’absence de subtitleUrlFr et alternativeTextFr dans le JSON; LessonViewer.tsx:597-620 et 735-760 affiche les sous-titres/transcripts déclarés sans sélection ou traduction de langue. blockRegistry.ts:66-93 confirme que les champs d’alternative et de sous-titres français existent, mais ne sont pas renseignés; learningDesign.ts:1-80 ne gère que le thème visuel et n’apporte pas de correction. Aucun constat ne dépend d’un asset externe ou d’une simple absence d’écran : les 5 sont vérifiables dans les données et le rendu actuels. Score : 100 × (resolvedWithEvidence + documentedRemoval) / initialIssueCount = 100 × 0 / 5 = 0; les 5 constats still_open ne reçoivent aucun crédit.",
+  "issueClassifications": [
+    {
+      "issueId": "P023-CURRICULUM-01",
+      "classification": "still_open",
+      "initialFinding": "Le parcours publié ne contenait qu’une introduction et une conclusion, sans enseignement ni pratique des compétences CrewAI annoncées, tout en affichant des compteurs de TP incompatibles.",
+      "currentEvidence": "client/public/data/courses/building_ai_agents_with_crewai__01.json:24-847 contient toujours seulement lessons[0].chapters[0]=dc_ch01_act01 et lessons[1].chapters[0]=dc_ch02_act04, quatre blocs au total (content, video, download, video) et exerciseCount:0. Les descriptions (lignes 32-33 et 466-467) promettent toujours agent, tâches, outils, équipes, mémoire, routage et flux; les transcripts d’introduction (136-176) et de conclusion (518-648) les annoncent/récapitulent sans séquence intermédiaire. trainingIndex.json affiche maintenant correctement 2 leçons, 2 écrans, 0 activité, mais cette correction de compteur ne constitue pas la restauration du contenu/TP manquant. datacampImport.expected annonce paradoxalement activities_extracted:7 (lignes 9-20), non sérialisées dans les chapitres publiés."
+    },
+    {
+      "issueId": "P023-LOCK-01",
+      "classification": "still_open",
+      "initialFinding": "La vidéo Projector obligatoire dc_1_act_01_video pouvait être ignorée au moment de terminer la première leçon parce que son identifiant long était exclu du calcul de gate final.",
+      "currentEvidence": "Le JSON courant conserve requiredBeforeAdvance:true et le bloc MP4/HLS id=dc_1_act_01_video dans lessons[0].chapters[0] (lignes 41-71). chapterProgress.ts:45-66 résout correctement cette clé pour les gates ordinaires et LessonViewer.tsx:556-581 l’utilise pour le lecteur, mais ce chapitre unique est le dernier de la leçon. Le gate terminal spécifique de LessonViewer.tsx:1476-1485 reconstruit une liste distincte et n’utilise block.id que si sa longueur est de 8 à 15; l’ID de 17 caractères est donc exclu, la liste est vide et lastAllVideosWatched devient true à 1485. Le bouton de finalisation reste donc activable sans complétion du média."
+    },
+    {
+      "issueId": "P023-MEDIA-LANG-01",
+      "classification": "still_open",
+      "initialFinding": "Le média d’introduction dans une interface française était narré et transcrit en anglais, sans sous-titres ou alternative française déclarés.",
+      "currentEvidence": "client/public/data/courses/building_ai_agents_with_crewai__01.json:64-439 conserve des titres/slides français mais des scripts et transcriptSegments anglais, par exemple « Welcome to... » (78) et « We’ll start small... » (136); le bloc ne contient ni subtitleUrlFr ni alternativeTextFr. LessonViewer.tsx:597-620 ne rend qu’un lien si un champ de sous-titres existe et affiche seg.text directement. blockRegistry.ts:81-86 confirme que subtitleUrlFr et alternativeTextFr sont des champs prévus, mais ils ne sont pas fournis."
+    },
+    {
+      "issueId": "P023-LOCK-02",
+      "classification": "still_open",
+      "initialFinding": "La vidéo Projector obligatoire dc_2_act_04_video pouvait être ignorée au moment de terminer la seconde leçon, du fait du même filtre de longueur d’identifiant dans le gate final.",
+      "currentEvidence": "Le JSON courant conserve requiredBeforeAdvance:true et le bloc MP4/audio id=dc_2_act_04_video dans lessons[1].chapters[0] (lignes 476-499). Il s’agit aussi du dernier chapitre de sa leçon. LessonViewer.tsx:1476-1485 applique encore le filtre 8–15 à block.id dans le calcul de fin; l’ID de 17 caractères est exclu, aucune autre gate n’existe dans le chapitre, et lastAllVideosWatched est true sur liste vide. La clé partagée corrigée de chapterProgress.ts:45-66 n’est appelée qu’au chemin non final (LessonViewer.tsx:1551-1553), donc elle ne résout pas ce cas terminal."
+    },
+    {
+      "issueId": "P023-MEDIA-LANG-02",
+      "classification": "still_open",
+      "initialFinding": "Le média de conclusion affiché dans le parcours français était narré et transcrit en anglais, sans sous-titres ni alternative française déclarés.",
+      "currentEvidence": "client/public/data/courses/building_ai_agents_with_crewai__01.json:491-840 conserve des scripts/transcriptSegments anglais, notamment « Congratulations on completing... » (505 et 778), tandis que les titres sont français; aucun subtitleUrlFr ni alternativeTextFr n’est déclaré pour ce bloc. LessonViewer.tsx:597-620 prend ici le chemin MP4 Projector et rend les segments tels quels; aucune alternative française n’est sélectionnée ou générée."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/023-datacamp_building_ai_agents_with_crewai.json"
+}

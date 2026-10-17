@@ -1,0 +1,158 @@
+{
+  "formationId": "datacamp_building_agentic_workflows_with_llamaindex",
+  "initialIssueCount": 13,
+  "resolvedWithEvidence": 4,
+  "documentedRemoval": 0,
+  "stillOpen": 9,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 68,
+  "keyOpenIssues": [
+    "P1 — Le bouton final reste contournable : LessonViewer.tsx:1476-1485 filtre encore les id Projector de 17 caractères (dc_2_act_08_video).",
+    "P2 — Les 5 vidéos restent sans sous-titres, transcription ou alternative textuelle FR (JSON blocks vidéo ; LessonViewer.tsx:597-620).",
+    "P2 — dc_ch01_act03 promet encore une mise en pratique alors que l’écran suivant est seulement la vidéo conceptuelle dc_ch01_act05.",
+    "P2 — dc_ch01_act05 suppose toujours « a working agent » alors qu’aucune construction n’est livrée avant lui.",
+    "P2 — Le récapitulatif dc_ch02_act08 revendique encore human oversight et custom workflows, absents des cinq activités livrées."
+  ],
+  "methodSummary": "Contre-revue limitée aux 13 constats du rapport initial, menée sur le seul JSON de cours indiqué par formation-manifest.json (client/public/data/courses/building_agentic_workflows_with_llamaindex__01.json), le manifeste de remédiation et les chemins de rendu/progression actuels. Les constats de verrouillage ont été vérifiés contre LessonViewer.tsx et chapterProgress.ts ; les constats de langue, de progression et de complétude contre les champs et scripts actuellement livrés. blockRegistry.ts confirme que les alternatives françaises et sous-titres FR sont des champs de média distincts ; learningDesign.ts ne modifie pas ces données ni la progression. Une correction est retenue uniquement lorsqu’une preuve actuelle établit le comportement corrigé ; aucun écran absent n’est assimilé à une correction. Le manifeste p0-p2 ne comporte aucune entrée pour ce cours : les 10 TP exclus sont tracés dans datacampImport.delivered, mais cette trace ne corrige pas les formulations trompeuses des constats ped-022-005, -008 et -013. Score de contre-revue des seuls constats initiaux : 100 - 12 points pour le P1 restant - 2,5 points pour chacun des 8 P2 restants = 68. Il n’y a aucun retrait documenté applicable ni constat restant uniquement externe/non vérifiable.",
+  "issueClassifications": [
+    {
+      "issueId": "ped-022-001",
+      "initialSeverity": "P1",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": [
+        "client/public/data/courses/building_agentic_workflows_with_llamaindex__01.json, lessons[0].chapters[0].blocks[id=dc_1_act_01_video] reste un MP4 obligatoire avec l’id Projector de 17 caractères dc_1_act_01_video.",
+        "client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id sans filtre de longueur pour tout bloc mp4Url/hlsUrl/audioUrl ; :62-67 utilise cette même clé pour le chapitre.",
+        "client/src/pages/training/LessonViewer.tsx:556 et :571-590 emploie getMediaCompletionKey(block, blockIdx) pour ProjectorPlayer et le marquage manuel ; :1551-1553 utilise getChapterMediaCompletionKeys pour verrouiller Suivant."
+      ],
+      "conclusion": "La clé enregistrée et la clé exigée sont désormais toutes deux dc_1_act_01_video ; le contournement décrit initialement est corrigé sur le passage intermédiaire."
+    },
+    {
+      "issueId": "ped-022-002",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "Le bloc dc_1_act_01_video du JSON actuel contient subtitleUrlEn et un transcript/script anglais, mais ni subtitleUrlFr, ni transcriptFr, ni alternativeTextFr.",
+        "LessonViewer.tsx:597-601 propose subtitleUrlFr ou, à défaut, subtitleUrlEn ; :604-620 rend le transcript déclaré sans traduction."
+      ],
+      "conclusion": "Aucune alternative française détaillée n’est livrée ni rendue pour la vidéo d’ouverture."
+    },
+    {
+      "issueId": "ped-022-003",
+      "initialSeverity": "P1",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": [
+        "Le JSON actuel conserve lessons[0].chapters[1].blocks[id=dc_1_act_03_video], requiredBeforeAdvance=true et l’id de 17 caractères dc_1_act_03_video.",
+        "chapterProgress.ts:45-47 fait de cet id la clé média MP4 ; LessonViewer.tsx:556-581 écrit exactement cette clé et :1551-1553 l’exige avant Suivant.",
+        "client/src/pages/training/chapterProgress.test.ts:46-52 couvre explicitement la conservation de la clé d’un écran MP4/audio hébergé."
+      ],
+      "conclusion": "Le garde de navigation intermédiaire ne filtre plus cet id Projector long."
+    },
+    {
+      "issueId": "ped-022-004",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "Le bloc dc_1_act_03_video contient uniquement subtitleUrlEn ; subtitleUrlFr, transcriptFr et alternativeTextFr sont absents. Son transcript et les scripts des sept slides sont anglais.",
+        "LessonViewer.tsx:597-620 n’ajoute aucun mécanisme de localisation à ces champs."
+      ],
+      "conclusion": "La définition centrale agent/LLM n’a toujours pas d’alternative textuelle ou de sous-titrage français."
+    },
+    {
+      "issueId": "ped-022-005",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "Le script courant de lessons[0].chapters[1].blocks[id=dc_1_act_03_video].projectorSlides[number=7] est toujours « Exciting, right? Let’s get into it. ».",
+        "Le chapitre suivant, lessons[0].chapters[2] (dc_ch01_act05), ne contient qu’un bloc vidéo conceptuel ; datacampImport.delivered indique toujours activities=5, interactiveExercises=0 et excludedSourcePracticalActivities=10.",
+        "p0-p2-remediation-manifest.json ne contient aucune entrée pour building_agentic_workflows_with_llamaindex ; l’exclusion est documentée dans le JSON du cours, mais aucune correction de la transition n’est attestée."
+      ],
+      "conclusion": "Le retrait documenté des TP externes n’est pas une correction de la promesse de mise en pratique : le constat de transition trompeuse demeure."
+    },
+    {
+      "issueId": "ped-022-006",
+      "initialSeverity": "P1",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": [
+        "Le JSON actuel conserve lessons[0].chapters[2].blocks[id=dc_1_act_05_video] avec requiredBeforeAdvance=true et un id de 17 caractères.",
+        "chapterProgress.ts:45-47 renvoie désormais dc_1_act_05_video pour ce MP4, et LessonViewer.tsx:1551-1553 bloque Suivant tant que completedVideos ne contient pas cette même clé.",
+        "Le clavier applique aussi getChapterMediaCompletionKeys avant avancement dans LessonViewer.tsx:305-306."
+      ],
+      "conclusion": "La divergence de clé qui permettait de contourner ce chapitre intermédiaire est résolue."
+    },
+    {
+      "issueId": "ped-022-007",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "Le bloc dc_1_act_05_video fournit subtitleUrlEn et un transcript anglais, sans subtitleUrlFr, transcriptFr ni alternativeTextFr.",
+        "LessonViewer.tsx:597-620 sélectionne le VTT anglais en repli et affiche la transcription anglaise fournie."
+      ],
+      "conclusion": "Le chapitre sur l’état et Context reste sans alternative française détaillée."
+    },
+    {
+      "issueId": "ped-022-008",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "Le premier script de dc_1_act_05_video demeure « Now that we have a working agent, a question arises: do agents remember? ».",
+        "Les deux chapitres livrés avant lui ne contiennent respectivement que content/video/download et video ; le JSON déclare toujours interactiveExercises=0 et excludedSourcePracticalActivities=10.",
+        "Le texte d’introduction du cours précise même qu’il ne comprend pas de TP exécutable ni d’environnement de code intégré."
+      ],
+      "conclusion": "Le prérequis implicite d’un agent déjà construit reste contradictoire avec le niveau effectivement atteint."
+    },
+    {
+      "issueId": "ped-022-009",
+      "initialSeverity": "P1",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": [
+        "Le bloc obligatoire lessons[1].chapters[0].blocks[id=dc_2_act_01_video] est toujours un MP4 à id de 17 caractères.",
+        "La fonction commune chapterProgress.ts:45-67 retourne cet id sans condition de longueur ; LessonViewer.tsx:556-581 l’écrit à la lecture/marquage et :1551-1553 l’exige pour le bouton Suivant.",
+        "La navigation clavier applique la même liste à LessonViewer.tsx:305-306."
+      ],
+      "conclusion": "Le verrouillage de ce chapitre non terminal utilise maintenant la même clé que le lecteur."
+    },
+    {
+      "issueId": "ped-022-010",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "dc_2_act_01_video contient un transcript et des scripts anglais, subtitleUrlEn seulement, et aucune propriété subtitleUrlFr, transcriptFr ou alternativeTextFr.",
+        "Le rendu actuel de LessonViewer.tsx:597-620 expose seulement ces ressources déclarées."
+      ],
+      "conclusion": "Les explications multi-agents restent non localisées au-delà des points visuels français."
+    },
+    {
+      "issueId": "ped-022-011",
+      "initialSeverity": "P1",
+      "classification": "still_open",
+      "currentEvidence": [
+        "Le dernier bloc obligatoire est toujours lessons[1].chapters[1].blocks[id=dc_2_act_08_video], avec un id de 17 caractères et requiredBeforeAdvance=true.",
+        "Malgré la fonction corrigée pour les chapitres intermédiaires, LessonViewer.tsx:1476-1485 reconstruit séparément lastChapterVideoKeys avec l’ancienne condition b.id.length >= 8 && b.id.length <= 15.",
+        "dc_2_act_08_video est ainsi exclu de lastChapterVideoKeys, lastAllVideosWatched devient vrai sur une liste vide (:1485) et le bouton Leçon terminée est déverrouillé (:1504-1527)."
+      ],
+      "conclusion": "La correction n’a pas été appliquée au garde de dernier chapitre : la fin de formation reste contournable."
+    },
+    {
+      "issueId": "ped-022-012",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "dc_2_act_08_video dispose de subtitleUrlEn et de cinq segments/scripts de transcript anglais, mais subtitleUrlFr, transcriptFr et alternativeTextFr sont absents.",
+        "LessonViewer.tsx:597-620 affiche ce qui est fourni, sans traduction de la conclusion."
+      ],
+      "conclusion": "La conclusion détaillée demeure inaccessible en français sous forme de sous-titres ou de transcription validés."
+    },
+    {
+      "issueId": "ped-022-013",
+      "initialSeverity": "P2",
+      "classification": "still_open",
+      "currentEvidence": [
+        "Le premier script de dc_2_act_08_video est toujours « We covered a lot of ground ... from adding memory to injecting human oversight, and even designing custom workflows outside the defaults. ».",
+        "L’inventaire actuel datacampImport.delivered reste limité à 5 activités, 5 vidéos, 0 interactiveExercises et 10 activités pratiques exclues ; les quatre chapitres antérieurs livrés ne contiennent que contenu, vidéos et téléchargements, sans écran sur human oversight ou custom workflows.",
+        "Aucune entrée de remédiation visant ce cours n’apparaît dans p0-p2-remediation-manifest.json."
+      ],
+      "conclusion": "Le récapitulatif revendique encore deux thèmes qui ne sont pas enseignés dans les activités effectivement disponibles."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/022-datacamp_building_agentic_workflows_with_llamaindex.json"
+}

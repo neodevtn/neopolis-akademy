@@ -1,0 +1,142 @@
+{
+  "formationId": "datacamp_building_ai_agents_with_haystack",
+  "initialIssueCount": 10,
+  "resolvedWithEvidence": 0,
+  "documentedRemoval": 0,
+  "stillOpen": 10,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 61.0,
+  "keyOpenIssues": [
+    "P1 — client/public/data/courses/building_ai_agents_with_haystack__01.json → datacampImport.expected et lessons[*].chapters : 6 LocalEnvironmentExercise attendus, mais 5 chapitres VideoExercise seulement et aucun bloc pratique.",
+    "P1 — client/public/data/lessonQuizzes.json + client/src/components/ChapterQuiz.tsx:75-79 : aucune banque Haystack ; le quiz injecté valide automatiquement sans question.",
+    "P1 — course JSON → dc_1_act_03_video.projectorSlides[14] puis dc_2_act_01_video.projectorSlides[0] : l’agent est annoncé à construire, puis présupposé construit sans activité intermédiaire.",
+    "P1 — course JSON → dc_2_act_01_video.projectorSlides[7] suivi de lessons[1].chapters[1] : le tracing annoncé n’est pas enseigné ni pratiqué.",
+    "P1 — course JSON → dc_2_act_03_video.projectorSlides[7] puis dc_2_act_06_video.projectorSlides[5] : le pipeline text-to-SQL/outillage est annoncé et récapitulé sans TP intermédiaire.",
+    "P2 — course JSON → dc_1_act_03_video.projectorSlides[2..5] : contenu affichable « $$ » ; ProjectorPlayer.tsx:301-315 ne rend pas script.",
+    "P2 — course JSON → les 5 blocs vidéo : transcription anglaise ; 4/5 sans subtitleUrlFr et ProjectorPlayer.tsx:159-176 ne rend aucune piste de captions intégrée."
+  ],
+  "methodSummary": "Contre-revue qualitative limitée aux 10 constats explicitement consignés dans le rapport initial, sans modification des fichiers de cours ou de code. Le manifeste de formation (entrée 24) désigne un seul JSON courant : client/public/data/courses/building_ai_agents_with_haystack__01.json, courseId building_ai_agents_with_haystack__01. Les données actuelles ont été rapprochées constat par constat du rendu réel de LessonViewer.tsx, de la progression chapterProgress.ts, du registre blockRegistry.ts, du thème learningDesign.ts, ainsi que des composants effectivement impliqués ChapterQuiz.tsx et ProjectorPlayer.tsx. Le manifeste p0-p2-remediation-manifest.json ne contient aucune entrée pour ce courseId : aucun retrait n’est donc documenté. L’index courant a bien été mis à jour pour annoncer 5 écrans, 5 vidéos et 0 activité (trainingIndex.json:6783-6795), mais cette correction de compteur ne constitue ni la restauration des 6 TP attendus par datacampImport.expected, ni une trace de retrait documenté ; les promesses/transitions pratiques persistent. Aucune absence d’écran n’a été assimilée à une correction. Tous les constats sont tranchables par les données et le code de rendu actuels, donc aucun n’est classé externally_unverifiable. Score : les cinq scores de chapitre du rapport initial (64, 56, 61, 64, 60) sont conservés faute de résolution démontrée des constats qui les pénalisent ; moyenne non pondérée = 305 / 5 = 61,0/100. Le score n’infère ni disponibilité réseau/qualité audiovisuelle réelle ni réussite d’une session apprenant authentifiée.",
+  "issueClassifications": [
+    {
+      "issueId": "haystack-001",
+      "severity": "P1",
+      "category": "complétude et progression",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch01_act01",
+      "contentId": "datacampImport.expected.exercise_types",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → datacampImport.expected; lessons[0].chapters[0..1]; lessons[1].chapters[0..2]",
+      "currentState": "L’import actuel déclare toujours 5 VideoExercise et 6 LocalEnvironmentExercise, tandis que le parcours ne contient que 5 chapitres, tous sourceActivityType=VideoExercise. Les blocs actuels sont content/video/download ou video ; aucun exercise, cloud_exercise, code_repl ou ai_evaluation n’est présent.",
+      "evidence": "Le JSON actuel indique expected.activities_expected_from_outline=11 et expected.exercise_types={VideoExercise:5, LocalEnvironmentExercise:6}, mais ses 2+3 chapitres sont tous VideoExercise. trainingIndex.json:6783-6795 annonce désormais explicitement exerciseCount:0 et totalActivities:5. LessonViewer.tsx:402 et 1137-1184 sait rendre/gérer les types pratiques, et blockRegistry.ts:260-352/419-438 les définit, mais ils ne figurent pas dans ce cours. Le manifeste de remédiation ne cite pas ce courseId : le retrait n’est pas documenté."
+    },
+    {
+      "issueId": "haystack-005",
+      "severity": "P1",
+      "category": "évaluation et verrouillage",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch01_act01",
+      "contentId": "ChapterQuiz:0_0",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/lessonQuizzes.json; client/src/components/ChapterQuiz.tsx; client/src/pages/training/LessonViewer.tsx",
+      "currentState": "lessonQuizzes.json ne possède toujours pas la clé building_ai_agents_with_haystack__01. Les cinq chapitres sont de type teaching, donc LessonViewer continue d’injecter ChapterQuiz avant l’avance lorsqu’ils ne sont pas déjà validés.",
+      "evidence": "ChapterQuiz.tsx:48-59 charge une banque par courseId et retourne une liste vide pour une clé absente ; 75-80 appelle alors onPass(), puis 104 ne rend aucune question. LessonViewer.tsx:1601-1607 calcule needsQuiz pour un chapitre teaching et 1624-1626 ouvre ce quiz ; son onPass à 1404-1422 valide le chapitre et avance. Ainsi, après la garde vidéo, l’évaluation reste une validation sans question."
+    },
+    {
+      "issueId": "haystack-006",
+      "severity": "P2",
+      "category": "langue et accessibilité média",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch01_act01",
+      "contentId": "dc_1_act_01_video",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[0].chapters[0].blocks[1]",
+      "currentState": "Le premier Projector conserve une transcription anglaise, subtitleUrlEn renseigné, subtitleUrlFr absent et aucune alternativeTextFr.",
+      "evidence": "Le bloc dc_1_act_01_video commence sa transcription par « Hello and welcome to this course... ». LessonViewer.tsx:571-582 transmet seulement média/slides/timings à ProjectorPlayer, puis 597-601 propose un lien externe vers les sous-titres et 604-620 affiche cette transcription. ProjectorPlayer.tsx:159-176 ne comporte qu’un élément audio : aucune prop ni balise track/captions ne rend une piste dans le lecteur."
+    },
+    {
+      "issueId": "haystack-002",
+      "severity": "P1",
+      "category": "transition théorie-vers-activité",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch01_act03",
+      "contentId": "dc_1_act_03_video",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[0].chapters[1].blocks[0].projectorSlides[14]; lessons[1].chapters[0].blocks[0].projectorSlides[0]",
+      "currentState": "La transition continue d’annoncer la création de l’agent, puis l’écran suivant déclaré dans le JSON affirme qu’un agent pleinement fonctionnel existe ; aucune activité ou aucun chapitre ne sépare ces deux vidéos.",
+      "evidence": "dc_1_act_03_video.projectorSlides[14].script vaut « Let’s start creating our agent. ». Le chapitre suivant dans l’ordre est lessons[1].chapters[0], dc_ch02_act01, dont projectorSlides[0].script vaut « We now have a fully working agent... ». La structure actuelle ne contient que dc_ch01_act01, dc_ch01_act03, dc_ch02_act01, dc_ch02_act03 et dc_ch02_act06, tous VideoExercise."
+    },
+    {
+      "issueId": "haystack-007",
+      "severity": "P2",
+      "category": "média et rendu",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch01_act03",
+      "contentId": "dc_1_act_03_video#projectorSlides[2-5]",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[0].chapters[1].blocks[0].projectorSlides[2..5]",
+      "currentState": "Les quatre slides « Atouts des agents » ont toujours content et contentLeft égaux à « $$ » ; leurs explications ne sont présentes que dans script.",
+      "evidence": "Les slides [2], [3], [4] et [5] de dc_1_act_03_video conservent toutes le marqueur « $$ » dans le champ affichable et du texte anglais dans script. ProjectorPlayer.tsx:275-315 affiche uniquement title, images, contentLeft, contentRight ou content selon le type de slide ; script n’est jamais rendu. Le marqueur reste donc visible plutôt que l’explication synchronisée."
+    },
+    {
+      "issueId": "haystack-003",
+      "severity": "P1",
+      "category": "transition théorie-vers-activité",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch02_act01",
+      "contentId": "dc_2_act_01_video",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[0].blocks[0].projectorSlides[7]; lessons[1].chapters[1]",
+      "currentState": "La vidéo promet toujours un exercice de tracing des appels d’outils et étapes intermédiaires, mais l’entrée suivante est dc_ch02_act03, une vidéo sur les pipelines sans bloc pratique de tracing.",
+      "evidence": "dc_2_act_01_video.projectorSlides[7].script annonce « In the next exercise ... trace tool usage and inspect intermediate steps ... ». lessons[1].chapters[1] est dc_ch02_act03, sourceActivityType=VideoExercise, blocks=[dc_2_act_03_video de type video]. Aucun chapitre intermédiaire ni type pratique n’est présent."
+    },
+    {
+      "issueId": "haystack-008",
+      "severity": "P2",
+      "category": "langue et accessibilité média",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch02_act01",
+      "contentId": "dc_2_act_01_video",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[0].blocks[0]",
+      "currentState": "Le média de transparence conserve une transcription anglaise, subtitleUrlEn renseigné, subtitleUrlFr absent et aucune alternativeTextFr.",
+      "evidence": "dc_2_act_01_video.transcript commence par « We now have a fully working agent... ». LessonViewer.tsx:597-601 offre au mieux un lien de sous-titres, tandis que ProjectorPlayer.tsx:20-33 et 159-176 ne reçoivent ni ne rendent subtitleUrlFr/subtitleUrlEn sous forme de captions intégrées."
+    },
+    {
+      "issueId": "haystack-004",
+      "severity": "P1",
+      "category": "transition théorie-vers-activité",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch02_act03",
+      "contentId": "dc_2_act_03_video",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[1].blocks[0].projectorSlides[7]; lessons[1].chapters[2].blocks[0].projectorSlides[5]",
+      "currentState": "La vidéo pipelines annonce toujours plusieurs exercices pour construire, envelopper et connecter un pipeline text-to-SQL ; le JSON passe directement au récapitulatif, lequel affirme ces étapes faites.",
+      "evidence": "dc_2_act_03_video.projectorSlides[7].script annonce « In the next exercises, we’ll build a pipeline ... wrap that pipeline as a tool and connect it to our agent ». Le chapitre suivant est directement dc_ch02_act06, VideoExercise ; son projectorSlides[5].script dit « Next, we built a text-to-SQL pipeline ... Finally, we wrapped that pipeline as a tool... ». Aucun bloc pratique n’est intercalé."
+    },
+    {
+      "issueId": "haystack-009",
+      "severity": "P2",
+      "category": "langue et accessibilité média",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch02_act03",
+      "contentId": "dc_2_act_03_video",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[1].blocks[0]",
+      "currentState": "Cette vidéo conserve bien subtitleUrlFr et subtitleUrlEn, mais la transcription affichée reste anglaise et le Projector ne rend toujours pas de captions synchronisées dans son lecteur.",
+      "evidence": "dc_2_act_03_video.transcript commence par « Agents are a powerful... » et alternativeTextFr est absent, malgré subtitleUrlFr renseigné. Dans le chemin Projector, LessonViewer.tsx:571-582 n’envoie pas les URLs de sous-titres à ProjectorPlayer ; 597-601 crée seulement un lien externe, et ProjectorPlayer.tsx:159-176 contient un audio sans track."
+    },
+    {
+      "issueId": "haystack-010",
+      "severity": "P2",
+      "category": "langue et accessibilité média",
+      "courseId": "building_ai_agents_with_haystack__01",
+      "chapterId": "dc_ch02_act06",
+      "contentId": "dc_2_act_06_video",
+      "classification": "still_open",
+      "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[2].blocks[0]",
+      "currentState": "La synthèse finale conserve une transcription anglaise, subtitleUrlEn renseigné, subtitleUrlFr absent et aucune alternativeTextFr.",
+      "evidence": "dc_2_act_06_video.transcript commence par « Congrats on making it to the end of this course! ». Le même chemin Projector de LessonViewer.tsx:571-620 affiche cette transcription et un lien de sous-titres externe seulement ; ProjectorPlayer.tsx:159-176 ne contient aucune piste de captions intégrée."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/024-datacamp_building_ai_agents_with_haystack.json"
+}

@@ -1,0 +1,118 @@
+{
+  "formationId": "datacamp_ai_for_finance",
+  "initialIssueCount": 16,
+  "resolvedWithEvidence": 9,
+  "documentedRemoval": 0,
+  "stillOpen": 7,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 69.2,
+  "keyOpenIssues": [
+    "dc_ch03_act10 / dc_3_act_10_video : verrou de fin contourne encore l’audio (LessonViewer.tsx:1476-1485).",
+    "dc_ch01_act04 / dc_1_act_04_bucket_sort : feedback JSON non passé à MatchingExercise (LessonViewer.tsx:955-963).",
+    "dc_ch02_act02 / dc_2_act_02_bucket_sort : feedback de remise en ordre limité au succès (OrderingBlock.tsx:157).",
+    "dc_ch02_act08 / dc_2_act_08_bucket_sort : feedback JSON non passé à MatchingExercise (LessonViewer.tsx:955-963).",
+    "dc_ch03_act02 / dc_3_act_02_bucket_sort : feedback de remise en ordre limité au succès (OrderingBlock.tsx:157).",
+    "dc_ch03_act08 / dc_3_act_08_bucket_sort : feedback de remise en ordre limité au succès (OrderingBlock.tsx:157).",
+    "dc_ch03_act09 / dc_3_act_09_bucket_sort : feedback JSON non passé à MatchingExercise (LessonViewer.tsx:955-963)."
+  ],
+  "methodSummary": "Contre-revue statique des 16 constats du rapport initial, exclusivement sur le fichier actuel identifié par formation-manifest.json (/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_finance__01.json), le manifeste de retraits et les chemins de rendu/progression demandés (LessonViewer.tsx, chapterProgress.ts, blockRegistry.ts, learningDesign.ts), complétée par le test ciblé chapterProgress.test.ts (8/8 réussis). Une correction n’est comptée que lorsqu’un contrat de données actuel et le rendu/gate actuel emploient la même clé ou le même feedback. Aucun retrait documenté ne cible ai_for_finance__01. Score: pondération des constats initiaux uniquement, P1=2 et P2=1; 9 P1 résolus sur un total de 26 points de sévérité, soit 18/26*100=69.2. Les 1 P1 et 6 P2 ouverts conservent intégralement leur poids; aucun constat n’est classé résolu sur la seule absence d’écran ou non vérifiable car tous sont déterminables dans les données et le code actuels.",
+  "issueClassifications": [
+    {
+      "issueId": "PAF-018-LOCK-01-01",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc actuel lessons[0].chapters[0].blocks[1] conserve audioUrl et id dc_1_act_01_video. chapterProgress.ts:45-60 retourne désormais block.id dès qu’audioUrl est présent; LessonViewer.tsx:694 et 718 enregistre précisément cette clé, tandis que LessonViewer.tsx:1551-1553 utilise getChapterMediaCompletionKeys pour désactiver Suivant. Le test chapterProgress.test.ts:46-50 confirme le cas audio hébergé."
+    },
+    {
+      "issueId": "PAF-018-FEEDBACK-BUCKET-01-04",
+      "severity": "P2",
+      "classification": "still_open",
+      "evidence": "Le bloc lessons[0].chapters[3].blocks[0] conserve feedback.fr (263 caractères) sans correction. LessonViewer.tsx:955-963 transmet seulement correction: block.correction à MatchingExercise; MatchingExercise.tsx:444-450 n’affiche que exercise.correction. Le feedback existant n’est donc toujours pas rendu après soumission."
+    },
+    {
+      "issueId": "PAF-018-LOCK-01-05",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc lessons[0].chapters[4] / dc_1_act_05_video est audio et non terminal. La clé audio est block.id dans chapterProgress.ts:45-47, est utilisée par le lecteur à LessonViewer.tsx:694, 718 et par le gate Suivant à LessonViewer.tsx:1551-1553."
+    },
+    {
+      "issueId": "PAF-018-LOCK-01-08",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc lessons[0].chapters[7] / dc_1_act_09_video est audio et non terminal. chapterProgress.ts:45-47 établit block.id comme clé; LessonViewer.tsx:694, 718 et 1551-1553 emploient la même résolution pour l’écoute et le verrou Suivant."
+    },
+    {
+      "issueId": "PAF-018-LOCK-02-01",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc lessons[1].chapters[0] / dc_2_act_01_video est audio et non terminal. getMediaCompletionKey retourne son id pour audioUrl (chapterProgress.ts:45-47); le rendu marque cette clé (LessonViewer.tsx:694, 718) et Suivant la vérifie via getChapterMediaCompletionKeys (LessonViewer.tsx:1551-1553)."
+    },
+    {
+      "issueId": "PAF-018-FEEDBACK-ORDER-02-02",
+      "severity": "P2",
+      "classification": "still_open",
+      "evidence": "Le bloc lessons[1].chapters[1].blocks[0] (ordering) conserve feedback.fr (292 caractères). OrderingBlock.tsx:157 ne rend ce feedback que sous la condition submitted && allCorrect; à l’erreur, seules les positions correctes sont montrées aux lignes 148-154."
+    },
+    {
+      "issueId": "PAF-018-LOCK-02-04",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc lessons[1].chapters[3] / dc_2_act_04_video est audio et non terminal. Le contrat partagé getMediaCompletionKey (chapterProgress.ts:45-47) est utilisé à la fois par Projector audio (LessonViewer.tsx:694, 718) et par le gate Suivant (LessonViewer.tsx:1551-1553)."
+    },
+    {
+      "issueId": "PAF-018-LOCK-02-07",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc lessons[1].chapters[6] / dc_2_act_07_video est audio et non terminal. Il est couvert par la résolution audio par id de chapterProgress.ts:45-47 et le contrôle de Suivant fondé sur getChapterMediaCompletionKeys dans LessonViewer.tsx:1551-1553."
+    },
+    {
+      "issueId": "PAF-018-FEEDBACK-BUCKET-02-08",
+      "severity": "P2",
+      "classification": "still_open",
+      "evidence": "Le bloc lessons[1].chapters[7].blocks[0] conserve feedback.fr (109 caractères), sans correction. LessonViewer.tsx:955-963 ne transmet pas block.feedback à MatchingExercise et MatchingExercise.tsx:444-450 ne lit que correction."
+    },
+    {
+      "issueId": "PAF-018-LOCK-03-01",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc lessons[2].chapters[0] / dc_3_act_01_video est audio et non terminal. chapterProgress.ts:45-47 utilise son id, identiquement au lecteur audio de LessonViewer.tsx:694, 718 et au gate Suivant de LessonViewer.tsx:1551-1553."
+    },
+    {
+      "issueId": "PAF-018-FEEDBACK-ORDER-03-02",
+      "severity": "P2",
+      "classification": "still_open",
+      "evidence": "Le bloc lessons[2].chapters[1].blocks[0] (ordering) conserve feedback.fr (344 caractères). La condition submitted && allCorrect de OrderingBlock.tsx:157 empêche encore l’affichage de ce feedback après une réponse incorrecte."
+    },
+    {
+      "issueId": "PAF-018-LOCK-03-04",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc lessons[2].chapters[3] / dc_3_act_04_video est audio et non terminal. getMediaCompletionKey retourne block.id pour audioUrl (chapterProgress.ts:45-47); cette clé unique est partagée par le Player (LessonViewer.tsx:694, 718) et le gate Suivant (LessonViewer.tsx:1551-1553)."
+    },
+    {
+      "issueId": "PAF-018-LOCK-03-07",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le bloc lessons[2].chapters[6] / dc_3_act_07_video est audio et non terminal. chapterProgress.ts:45-47 et LessonViewer.tsx:694, 718, 1551-1553 relient désormais le marquage d’écoute et le verrou à la même clé block.id."
+    },
+    {
+      "issueId": "PAF-018-FEEDBACK-ORDER-03-08",
+      "severity": "P2",
+      "classification": "still_open",
+      "evidence": "Le bloc lessons[2].chapters[7].blocks[0] (ordering) conserve feedback.fr (272 caractères). OrderingBlock.tsx:157-163 l’affiche seulement en cas de résultat entièrement correct, contrairement au besoin de feedback après erreur."
+    },
+    {
+      "issueId": "PAF-018-FEEDBACK-BUCKET-03-09",
+      "severity": "P2",
+      "classification": "still_open",
+      "evidence": "Le bloc lessons[2].chapters[8].blocks[0] conserve feedback.fr (342 caractères), sans correction. LessonViewer.tsx:955-963 passe uniquement block.correction; MatchingExercise.tsx:444-450 affiche uniquement correction. Le feedback n’est pas accessible dans le rendu actuel."
+    },
+    {
+      "issueId": "PAF-018-LOCK-03-10",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "Le bloc lessons[2].chapters[9] / dc_3_act_10_video est terminal, audio et son id compte 17 caractères. Le contrôle de fin de leçon contourne encore le helper: LessonViewer.tsx:1476-1485 ne garde block.id que si sa longueur est comprise entre 8 et 15, donc produit une liste vide et lastAllVideosWatched=true. Il n’emploie pas getChapterMediaCompletionKeys contrairement au contrôle Suivant."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/018-datacamp_ai_for_finance.json"
+}

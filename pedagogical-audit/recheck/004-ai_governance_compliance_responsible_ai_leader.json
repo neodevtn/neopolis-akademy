@@ -1,0 +1,413 @@
+{
+  "formationId": "ai_governance_compliance_responsible_ai_leader",
+  "initialIssueCount": 28,
+  "resolvedWithEvidence": 3,
+  "documentedRemoval": 0,
+  "stillOpen": 13,
+  "externallyUnverifiable": 12,
+  "currentQualityScore100": 77,
+  "keyOpenIssues": [
+    "client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json, __03.json, __04.json : les 12 checkpoints initiaux (L1–L4/C4) ont disparu sans activité équivalente ni trace dans p0-p2-remediation-manifest.json.",
+    "client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json → lessons[3].chapters[5] : annonce toujours un « course lab » sans bloc pratique correspondant dans les 4 fichiers de formation.",
+    "client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json → lessons[0..3].chapters[3] : Checkpoint et trois QCM, mais chapter.type absent ; LessonViewer affiche TEACHING.",
+    "client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json, __02.json, __03.json, __04.json → lessons[1].chapters[1].video : « Recommended Viewing » reste sans optional:true et reste bloquant.",
+    "client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json : 212 valeurs i18n visibles restent sans fr ; resolveI18n applique le repli anglais.",
+    "client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json, __03.json, __04.json : 44 valeurs i18n par fichier restent sans fr ; seul objectiveBefore vidéo est partiellement bilingue."
+  ],
+  "methodSummary": "Contre-revue en lecture seule des quatre chemins actuels désignés par formation-manifest.json, du rapport initial et de p0-p2-remediation-manifest.json. Les chemins de rendu/progression LessonViewer.tsx, chapterProgress.ts, blockRegistry.ts et learningDesign.ts ont été lus. Chaque constat initial a été rapproché de la donnée courante et du chemin de rendu applicable. Une correction n’est créditée que si la donnée et le composant démontrent le résultat apprenant ; un retrait n’est crédité que s’il figure dans le manifeste de retraits. Ainsi, les trois objectifs vidéo ajoutés et effectivement transmis/affichés sont resolved_with_evidence. Les douze checkpoints disparus des cours 02–04 sont externally_unverifiable, et non « résolus » : aucune trace de retrait de cette formation ni équivalence pédagogique n’est fournie. Score : 77/100. Base = moyenne non arrondie des 96 scores de chapitres du rapport initial (71,02), arrondie à 71 ; +2 points pour chacune des trois corrections P2 prouvées (= +6), arrondi à 77. Les 13 constats still_open et les 12 constats externally_unverifiable ne reçoivent aucun crédit ; aucune absence d’écran n’augmente la note. Le score ne certifie ni le visionnage des vidéos, ni l’exactitude réglementaire, ni une exécution navigateur authentifiée de bout en bout.",
+  "issueClassifications": [
+    {
+      "issueId": "P2-ai_governance_compliance_responsible_ai_leader__01-localisation-fr-absente",
+      "initialSeverity": "P2",
+      "initialCategory": "langue_et_accessibilité",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__01",
+        "lessonIndex": 0,
+        "chapterIndex": 0,
+        "chapterId": "lesson_01_chapter_01"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json : 215 objets i18n comportant en ont été recensés ; seulement 3 objectiveBefore vidéo comportent fr, 212 restent sans fr. client/src/pages/training/contentDetectors.tsx:3-9 applique fr || en : le parcours français reste très majoritairement en anglais.",
+      "rationale": "La présence de trois objectifs vidéo bilingues est une amélioration partielle, mais ne résout pas l’absence de traduction des titres, contenus, questions, options et explications."
+    },
+    {
+      "issueId": "P3-ai_governance_compliance_responsible_ai_leader__01-L1-C4-type-visuel",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__01",
+        "lessonIndex": 0,
+        "chapterIndex": 3,
+        "chapterId": "lesson_01_chapter_04"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json → lessons[0].chapters[3] : title=Checkpoint, type absent, blocs=['single_choice_exercise', 'single_choice_exercise', 'single_choice_exercise']. client/src/pages/training/LessonViewer.tsx:1239-1249 retombe alors sur le badge TEACHING.",
+      "rationale": "La métadonnée sémantique attendue n’est toujours pas présente ; le rendu ne peut pas distinguer correctement cette activité."
+    },
+    {
+      "issueId": "P1-ai_governance_compliance_responsible_ai_leader__01-L2-C2-recommended-video-verrouille",
+      "initialSeverity": "P1",
+      "initialCategory": "verrouillage",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__01",
+        "lessonIndex": 1,
+        "chapterIndex": 1,
+        "chapterId": "lesson_02_chapter_02"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json → lessons[1].chapters[1].blocks[0] : label=\"Recommended Viewing\", optional absent. client/src/pages/training/chapterProgress.ts:74-90 ne considère une vidéo comme non bloquante que si optional:true (ou complément Neopolis) ; LessonViewer.tsx:306-307 applique ce verrou.",
+      "rationale": "Le libellé « Recommended Viewing » et le verrou de progression restent contradictoires."
+    },
+    {
+      "issueId": "P3-ai_governance_compliance_responsible_ai_leader__01-L2-C4-type-visuel",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__01",
+        "lessonIndex": 1,
+        "chapterIndex": 3,
+        "chapterId": "lesson_02_chapter_04"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json → lessons[1].chapters[3] : title=Checkpoint, type absent, blocs=['single_choice_exercise', 'single_choice_exercise', 'single_choice_exercise']. client/src/pages/training/LessonViewer.tsx:1239-1249 retombe alors sur le badge TEACHING.",
+      "rationale": "La métadonnée sémantique attendue n’est toujours pas présente ; le rendu ne peut pas distinguer correctement cette activité."
+    },
+    {
+      "issueId": "P3-ai_governance_compliance_responsible_ai_leader__01-L3-C4-type-visuel",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__01",
+        "lessonIndex": 2,
+        "chapterIndex": 3,
+        "chapterId": "lesson_03_chapter_04"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json → lessons[2].chapters[3] : title=Checkpoint, type absent, blocs=['single_choice_exercise', 'single_choice_exercise', 'single_choice_exercise']. client/src/pages/training/LessonViewer.tsx:1239-1249 retombe alors sur le badge TEACHING.",
+      "rationale": "La métadonnée sémantique attendue n’est toujours pas présente ; le rendu ne peut pas distinguer correctement cette activité."
+    },
+    {
+      "issueId": "P3-ai_governance_compliance_responsible_ai_leader__01-L4-C4-type-visuel",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__01",
+        "lessonIndex": 3,
+        "chapterIndex": 3,
+        "chapterId": "lesson_04_chapter_04"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json → lessons[3].chapters[3] : title=Checkpoint, type absent, blocs=['single_choice_exercise', 'single_choice_exercise', 'single_choice_exercise']. client/src/pages/training/LessonViewer.tsx:1239-1249 retombe alors sur le badge TEACHING.",
+      "rationale": "La métadonnée sémantique attendue n’est toujours pas présente ; le rendu ne peut pas distinguer correctement cette activité."
+    },
+    {
+      "issueId": "P1-ai_governance_compliance_responsible_ai_leader__01-L4-C6-lab-annonce-introuvable",
+      "initialSeverity": "P1",
+      "initialCategory": "progression",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__01",
+        "lessonIndex": 3,
+        "chapterIndex": 5,
+        "chapterId": "lesson_04_chapter_06"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__01.json → lessons[3].chapters[5].blocks[0].body.en conserve l’annonce « ready to apply these concepts in the course lab… ». Dans les quatre fichiers du manifeste, aucun bloc exercise, cloud_exercise, guided_action ni ai_evaluation n’a été trouvé pour fournir ce lab.",
+      "rationale": "La promesse de lab persiste sans activité équivalente dans le périmètre actuel."
+    },
+    {
+      "issueId": "P2-ai_governance_compliance_responsible_ai_leader__02-localisation-fr-absente",
+      "initialSeverity": "P2",
+      "initialCategory": "langue_et_accessibilité",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__02",
+        "lessonIndex": 0,
+        "chapterIndex": 0,
+        "chapterId": "chapter_01"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json : 47 objets i18n comportant en ont été recensés ; seuls 3 objectiveBefore vidéo comportent fr, 44 restent sans fr. client/src/pages/training/contentDetectors.tsx:3-9 retombe sur en en interface fr.",
+      "rationale": "La présence de trois objectifs vidéo bilingues est une amélioration partielle, mais ne résout pas l’absence de traduction des titres, contenus, questions, options et explications."
+    },
+    {
+      "issueId": "P2-ai_governance_compliance_responsible_ai_leader__02-L1-C1-video-contextualisation",
+      "initialSeverity": "P2",
+      "initialCategory": "média_et_transition",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__02",
+        "lessonIndex": 0,
+        "chapterIndex": 0,
+        "chapterId": "chapter_01"
+      },
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json → lessons[0].chapters[0].blocks[1] : vidéo « How to use the AI Act Single Information Platform » porte désormais objectiveBefore bilingue (« Pendant cette vidéo, repérez les éléments qui illustrent “What You Will Learn”… »). client/src/pages/training/LessonViewer.tsx:846-861 transmet objectiveBefore à YouTubePlayer ; client/src/components/YouTubePlayer.tsx:256-259 l’affiche avant lecture.",
+      "rationale": "Le défaut vérifiable — absence de contextualisation affichable avant une vidéo obligatoire — est corrigé dans les données et le chemin de rendu. Le visionnage et la validité fine de la curation ne sont pas revendiqués."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__02-L1-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__02",
+        "lessonIndex": 0,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json : la leçon 1 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P1-ai_governance_compliance_responsible_ai_leader__02-L2-C2-recommended-video-verrouille",
+      "initialSeverity": "P1",
+      "initialCategory": "verrouillage",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__02",
+        "lessonIndex": 1,
+        "chapterIndex": 1,
+        "chapterId": "chapter_02"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json → lessons[1].chapters[1].blocks[1] : label='Recommended Viewing', optional absent. client/src/pages/training/chapterProgress.ts:74-90 ne considère une vidéo comme non bloquante que si optional:true (ou complément Neopolis) ; LessonViewer.tsx:306-307 applique ce verrou.",
+      "rationale": "Le libellé « Recommended Viewing » et le verrou de progression restent contradictoires."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__02-L2-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__02",
+        "lessonIndex": 1,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json : la leçon 2 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__02-L3-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__02",
+        "lessonIndex": 2,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json : la leçon 3 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__02-L4-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__02",
+        "lessonIndex": 3,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__02.json : la leçon 4 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P2-ai_governance_compliance_responsible_ai_leader__03-localisation-fr-absente",
+      "initialSeverity": "P2",
+      "initialCategory": "langue_et_accessibilité",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__03",
+        "lessonIndex": 0,
+        "chapterIndex": 0,
+        "chapterId": "chapter_01"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__03.json : 47 objets i18n comportant en ont été recensés ; seuls 3 objectiveBefore vidéo comportent fr, 44 restent sans fr. client/src/pages/training/contentDetectors.tsx:3-9 retombe sur en en interface fr.",
+      "rationale": "La présence de trois objectifs vidéo bilingues est une amélioration partielle, mais ne résout pas l’absence de traduction des titres, contenus, questions, options et explications."
+    },
+    {
+      "issueId": "P2-ai_governance_compliance_responsible_ai_leader__03-L1-C1-video-contextualisation",
+      "initialSeverity": "P2",
+      "initialCategory": "média_et_transition",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__03",
+        "lessonIndex": 0,
+        "chapterIndex": 0,
+        "chapterId": "chapter_01"
+      },
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__03.json → lessons[0].chapters[0].blocks[1] : vidéo « Deep Dive into the OWASP Top 10 for Agentic AI Applications » porte désormais objectiveBefore bilingue (« Pendant cette vidéo, repérez les éléments qui illustrent “What You Will Learn”… »). client/src/pages/training/LessonViewer.tsx:846-861 transmet objectiveBefore à YouTubePlayer ; client/src/components/YouTubePlayer.tsx:256-259 l’affiche avant lecture.",
+      "rationale": "Le défaut vérifiable — absence de contextualisation affichable avant une vidéo obligatoire — est corrigé dans les données et le chemin de rendu. Le visionnage et la validité fine de la curation ne sont pas revendiqués."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__03-L1-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__03",
+        "lessonIndex": 0,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__03.json : la leçon 1 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P1-ai_governance_compliance_responsible_ai_leader__03-L2-C2-recommended-video-verrouille",
+      "initialSeverity": "P1",
+      "initialCategory": "verrouillage",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__03",
+        "lessonIndex": 1,
+        "chapterIndex": 1,
+        "chapterId": "chapter_02"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__03.json → lessons[1].chapters[1].blocks[1] : label='Recommended Viewing', optional absent. client/src/pages/training/chapterProgress.ts:74-90 ne considère une vidéo comme non bloquante que si optional:true (ou complément Neopolis) ; LessonViewer.tsx:306-307 applique ce verrou.",
+      "rationale": "Le libellé « Recommended Viewing » et le verrou de progression restent contradictoires."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__03-L2-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__03",
+        "lessonIndex": 1,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__03.json : la leçon 2 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__03-L3-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__03",
+        "lessonIndex": 2,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__03.json : la leçon 3 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__03-L4-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__03",
+        "lessonIndex": 3,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__03.json : la leçon 4 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P2-ai_governance_compliance_responsible_ai_leader__04-localisation-fr-absente",
+      "initialSeverity": "P2",
+      "initialCategory": "langue_et_accessibilité",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__04",
+        "lessonIndex": 0,
+        "chapterIndex": 0,
+        "chapterId": "chapter_01"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__04.json : 47 objets i18n comportant en ont été recensés ; seuls 3 objectiveBefore vidéo comportent fr, 44 restent sans fr. client/src/pages/training/contentDetectors.tsx:3-9 retombe sur en en interface fr.",
+      "rationale": "La présence de trois objectifs vidéo bilingues est une amélioration partielle, mais ne résout pas l’absence de traduction des titres, contenus, questions, options et explications."
+    },
+    {
+      "issueId": "P2-ai_governance_compliance_responsible_ai_leader__04-L1-C1-video-contextualisation",
+      "initialSeverity": "P2",
+      "initialCategory": "média_et_transition",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__04",
+        "lessonIndex": 0,
+        "chapterIndex": 0,
+        "chapterId": "chapter_01"
+      },
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__04.json → lessons[0].chapters[0].blocks[1] : vidéo « Red Teaming AI: OWASP LLM Top 10 » porte désormais objectiveBefore bilingue (« Pendant cette vidéo, repérez les éléments qui illustrent “What You Will Learn”… »). client/src/pages/training/LessonViewer.tsx:846-861 transmet objectiveBefore à YouTubePlayer ; client/src/components/YouTubePlayer.tsx:256-259 l’affiche avant lecture.",
+      "rationale": "Le défaut vérifiable — absence de contextualisation affichable avant une vidéo obligatoire — est corrigé dans les données et le chemin de rendu. Le visionnage et la validité fine de la curation ne sont pas revendiqués."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__04-L1-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__04",
+        "lessonIndex": 0,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__04.json : la leçon 1 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P1-ai_governance_compliance_responsible_ai_leader__04-L2-C2-recommended-video-verrouille",
+      "initialSeverity": "P1",
+      "initialCategory": "verrouillage",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__04",
+        "lessonIndex": 1,
+        "chapterIndex": 1,
+        "chapterId": "chapter_02"
+      },
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__04.json → lessons[1].chapters[1].blocks[1] : label='Recommended Viewing', optional absent. client/src/pages/training/chapterProgress.ts:74-90 ne considère une vidéo comme non bloquante que si optional:true (ou complément Neopolis) ; LessonViewer.tsx:306-307 applique ce verrou.",
+      "rationale": "Le libellé « Recommended Viewing » et le verrou de progression restent contradictoires."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__04-L2-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__04",
+        "lessonIndex": 1,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__04.json : la leçon 2 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__04-L3-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__04",
+        "lessonIndex": 2,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__04.json : la leçon 3 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    },
+    {
+      "issueId": "P0-ai_governance_compliance_responsible_ai_leader__04-L4-C4-checkpoint-non-rendu",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_évaluation",
+      "initialLocation": {
+        "courseId": "ai_governance_compliance_responsible_ai_leader__04",
+        "lessonIndex": 3,
+        "chapterIndex": 3,
+        "chapterId": "chapter_04"
+      },
+      "classification": "externally_unverifiable",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_governance_compliance_responsible_ai_leader__04.json : la leçon 4 ne contient plus que 5 chapitres (chapter_01, chapter_02, chapter_03, chapter_05, chapter_06) ; le chapter_04 initial et tout bloc checkpoint sont absents (checkpoint_count=0, exercises=[]). pedagogical-audit/p0-p2-remediation-manifest.json:4-52 ne référence aucun courseId de cette formation. LessonViewer.tsx:887-918 rend toujours un checkpoint uniquement via exerciseId/courseExercises.",
+      "rationale": "L’écran/activité initialement défaillant a disparu, sans trace de retrait documenté ni preuve d’une activité équivalente. Conformément à la règle de contre-revue, cette absence n’est pas créditée comme correction ni comme retrait documenté."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/004-ai_governance_compliance_responsible_ai_leader.json"
+}

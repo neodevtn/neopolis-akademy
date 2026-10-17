@@ -1,0 +1,180 @@
+{
+  "formationId": "datacamp_ai_for_sales",
+  "initialIssueCount": 12,
+  "resolvedWithEvidence": 0,
+  "documentedRemoval": 1,
+  "stillOpen": 11,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 6.7,
+  "keyOpenIssues": [
+    "client/public/data/courses/ai_for_sales__01.json → 8 TP actifs conservent des rubricCriteria.label anglais, rendus tels quels en FR par CloudExerciseBlock.tsx:299-319.",
+    "client/public/data/courses/ai_for_sales__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_tp] exige Microsoft Copilot/Copilot Studio sans le fournir dans environmentGuide ni resources, tout en restant bloquant.",
+    "client/public/data/courses/ai_for_sales__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_09_bucket_sort].correction est absente; aucune explication détaillée n’est rendue après erreur.",
+    "client/public/data/courses/ai_for_sales__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_bucket_sort].correction est absente; aucune explication détaillée n’est rendue après erreur."
+  ],
+  "methodSummary": "Contre-revue statique limitée aux 12 constats du rapport initial. Le manifeste de formation désigne le seul JSON actif `/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json`; chaque constat a été recherché par chapter_id et block id dans ce fichier actuel, puis confronté au manifeste de remédiation `/home/ubuntu/neopolis-akademy/pedagogical-audit/p0-p2-remediation-manifest.json` et aux chemins demandés : `LessonViewer.tsx`, `chapterProgress.ts`, `blockRegistry.ts` et `learningDesign.ts`. Une absence n’est jamais créditée comme correction : seul `dc_3_act_05_tp` est `documented_removal`, car le manifeste trace explicitement sa conversion en `dc_3_act_05_tp_learning_note` pour `activity_removed_unverifiable_or_incomplete_source`, et le JSON actuel contient précisément ce bloc content non bloquant. Les neuf constats de langue restants sont ouverts : les blocs cloud présents n’ont pas de `learnerCriteria` localisé et conservent des labels anglais; `CloudExerciseBlock.tsx:299-306` priorise `criterion.label`, puis `:309-319` l’affiche. Les deux constats de feedback restent ouverts : les champs `correction` sont absents et `LessonViewer.tsx:950-965` transmet cette valeur à `MatchingExercise`, qui ne rend une correction détaillée qu’avec une correction non vide (`MatchingExercise.tsx:40-42,444-450`). Le verrou d’accès agent reste ouvert : le TP conserve le prérequis générique, aucune ressource et le critère bloquant Copilot; `CloudExerciseBlock.tsx:137-175` n’appelle la complétion qu’après évaluation réussie, et `LessonViewer.tsx:1572-1597`/`chapterProgress.ts:130-134` verrouillent l’avancement sur un cloud_exercise incomplet. `blockRegistry.ts` confirme que les champs concernés sont supportés mais ne fournit aucune traduction de remplacement; `learningDesign.ts` ne modifie que l’apparence. Score par constat : 100 pour `resolved_with_evidence`, 80 pour `documented_removal`, 0 pour `still_open` ou `externally_unverifiable`; `(0×100 + 1×80 + 11×0 + 0×0) / 12 = 6.7`. Aucun crédit n’est accordé à une correction ou à un retrait sans trace probante.",
+  "issueClassifications": [
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_1_act_02_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch01_act02/dc_1_act_02_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_tp].rubricCriteria",
+      "evidence": "Le bloc cloud existe toujours, sans `learnerCriteria`; ses labels actuels sont « First Prompt - Task Identification », « Task Quantity Specification » et « Second Prompt - AI Assistance Inquiry ». CloudExerciseBlock.tsx:299-306 sélectionne chaque `criterion.label` avant la description et :309-319 rend ces chaînes dans « Ce que votre travail doit montrer » en interface FR.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_1_act_07_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch01_act07/dc_1_act_07_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_07_tp].rubricCriteria",
+      "evidence": "Le bloc cloud est présent et ne fournit aucun `learnerCriteria` localisé; les labels visibles restent « Company Specification », « Quantity Specification », « Role Targeting » et « LinkedIn Summaries ». Le rendu courant affiche directement ces labels par CloudExerciseBlock.tsx:299-319.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:feedback:dc_1_act_09_bucket_sort",
+      "initialSeverity": "P2",
+      "initialCategory": "feedback",
+      "initialLocation": "ai_for_sales__01/dc_ch01_act09/dc_1_act_09_bucket_sort",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[0].chapters[6].blocks[id=dc_1_act_09_bucket_sort].correction",
+      "evidence": "Le bucket_sort actuel contient `hint` et `feedback`, mais aucun champ `correction`. LessonViewer.tsx:950-965 transmet `block.correction` à MatchingExercise; MatchingExercise.tsx:40-42 et :444-450 n’affiche une explication détaillée après soumission que si ce champ comporte une chaîne. Après erreur, il reste donc score/cartes correctes-incorrectes et « Réessayer », sans explication de classement.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
+        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_1_act_10_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch01_act10/dc_1_act_10_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[0].chapters[7].blocks[id=dc_1_act_10_tp].rubricCriteria",
+      "evidence": "Le TP actuel est toujours un cloud_exercise sans `learnerCriteria`; `rubricCriteria.label` contient « Multiple Variations », « Subject Line Word Limit », « One-Sentence Hook » et « One-Sentence CTA ». CloudExerciseBlock.tsx:299-319 les rend sans branche de traduction.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_2_act_02_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch02_act02/dc_2_act_02_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_tp].rubricCriteria",
+      "evidence": "Le bloc cloud actif n’a pas de `learnerCriteria`; ses labels de rubrique sont encore « Research Request » et « Strategic Output ». Ils sont sélectionnés puis affichés dans le lecteur actuel (CloudExerciseBlock.tsx:299-319).",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_2_act_03_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch02_act03/dc_2_act_03_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_tp].rubricCriteria",
+      "evidence": "Le TP demeure présent, sans `learnerCriteria` localisé. Ses labels actuels, notamment « Request to extract objections », « Quantity specified », « All four framework components » et « Conciseness requirement », restent en anglais et sont ceux que le composant rend (CloudExerciseBlock.tsx:299-319).",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_2_act_08_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch02_act08/dc_2_act_08_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_08_tp].rubricCriteria",
+      "evidence": "Le cloud_exercise actuel ne contient pas de `learnerCriteria`; ses six labels, dont « Prompting Framework Structure », « Deliverable Type », « Buyer Priorities » et « Trigger Events », restent en anglais. CloudExerciseBlock.tsx:299-319 les affiche comme critères apprenant.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:feedback:dc_3_act_02_bucket_sort",
+      "initialSeverity": "P2",
+      "initialCategory": "feedback",
+      "initialLocation": "ai_for_sales__01/dc_ch03_act02/dc_3_act_02_bucket_sort",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[2].chapters[1].blocks[id=dc_3_act_02_bucket_sort].correction",
+      "evidence": "Le tri actif comporte un `feedback` de réussite et un `hint`, mais `correction` est absent. LessonViewer.tsx:950-965 ne transmet donc aucune correction détaillée; MatchingExercise.tsx:40-42 et :444-450 conditionne cet affichage à une correction non vide. Une tentative erronée ne reçoit pas l’explication conceptuelle demandée avant « Réessayer ».",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
+        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_3_act_03_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch03_act03/dc_3_act_03_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_tp].rubricCriteria",
+      "evidence": "Le TP actuel est présent sans `learnerCriteria`. Il conserve les labels anglais « Agent Creation (BLOCKING REQUIREMENT) », « Analysis Scope », « Feedback Structure (BOTH DIMENSIONS REQUIRED) » et « Actionable Guidance »; CloudExerciseBlock.tsx:299-319 affiche ces labels en priorité dans l’interface FR.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:agent-access-gate",
+      "initialSeverity": "P1",
+      "initialCategory": "prérequis et verrouillage",
+      "initialLocation": "ai_for_sales__01/dc_ch03_act03/dc_3_act_03_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[2].chapters[2].blocks[id=dc_3_act_03_tp]",
+      "evidence": "Le critère 1 exige toujours la création effective d’un agent dans Microsoft Copilot/Copilot Studio et précise que Copilot Chat seul échoue automatiquement. Pourtant `environmentGuide.fr` ne garantit que l’accès à « un assistant IA génératif », `resources` est vide et aucune voie alternative n’est déclarée. La réussite est toujours une condition réelle : CloudExerciseBlock.tsx:137-175 appelle `onComplete` seulement si l’évaluation est réussie; LessonViewer.tsx:1572-1597 et chapterProgress.ts:130-134 bloquent le passage tant que le cloud_exercise n’est pas complété.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx",
+        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
+        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_3_act_05_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch03_act05/dc_3_act_05_tp",
+      "classification": "documented_removal",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[2].chapters[4].blocks[id=dc_3_act_05_tp_learning_note]",
+      "evidence": "`p0-p2-remediation-manifest.json` documente explicitement la conversion pour `courseId=ai_for_sales__01`, `chapterId=dc_ch03_act05`, nouveau `blockId=dc_3_act_05_tp_learning_note`, raison `activity_removed_unverifiable_or_incomplete_source`. Dans le JSON actif, l’ancien `dc_3_act_05_tp` n’existe plus et ce chapitre contient exactement le bloc content identifié, donc non soumis à la porte cloud_exercise de LessonViewer.tsx:1572-1577. C’est un retrait traçable de l’activité impraticable, non une résolution inférée d’une absence.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/pedagogical-audit/p0-p2-remediation-manifest.json",
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx"
+      ]
+    },
+    {
+      "issueId": "ped:ai_for_sales:criteria-language:dc_3_act_07_tp",
+      "initialSeverity": "P2",
+      "initialCategory": "clarté des critères",
+      "initialLocation": "ai_for_sales__01/dc_ch03_act07/dc_3_act_07_tp",
+      "classification": "still_open",
+      "currentPath": "client/public/data/courses/ai_for_sales__01.json → lessons[2].chapters[6].blocks[id=dc_3_act_07_tp].rubricCriteria",
+      "evidence": "Le dernier TP est toujours un cloud_exercise, sans `learnerCriteria`; `rubricCriteria.label` conserve « Evaluation Criteria Specification », « Structured Output Format », « Evidence Requirement » et « Coaching Style Specification ». CloudExerciseBlock.tsx:299-319 en fait la liste de critères visible en FR, sans localisation.",
+      "evidencePaths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_for_sales__01.json",
+        "/home/ubuntu/neopolis-akademy/client/src/components/CloudExerciseBlock.tsx"
+      ]
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/021-datacamp_ai_for_sales.json"
+}

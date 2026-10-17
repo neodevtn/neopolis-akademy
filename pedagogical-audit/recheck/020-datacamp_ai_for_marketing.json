@@ -1,0 +1,74 @@
+{
+  "formationId": "datacamp_ai_for_marketing",
+  "initialIssueCount": 10,
+  "resolvedWithEvidence": 10,
+  "documentedRemoval": 0,
+  "stillOpen": 0,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 100,
+  "keyOpenIssues": [],
+  "methodSummary": "Contre-revue limitée aux 10 constats explicites du rapport initial, tous des défauts P1 de verrouillage vidéo. Le manifeste identifie un unique JSON courant : client/public/data/courses/ai_for_marketing__01.json. Pour chaque cible, la donnée actuelle conserve un bloc video MP4 identifié, requiredBeforeAdvance:true et le même identifiant de 17 caractères. La correction est démontrée par la clé média unique : chapterProgress.ts:45-60 renvoie désormais block.id pour MP4/HLS/audio sans filtre de longueur ; chapterProgress.ts:62-66 emploie cette même fonction pour les clés de garde. LessonViewer.tsx:556,581 emploie cette clé au rendu/à la complétion et LessonViewer.tsx:1551-1553 l’emploie pour la garde du bouton Suivant (également 305-306 pour le raccourci clavier). Le test ciblé chapterProgress.test.ts:46-51, exécuté avec succès (8/8), couvre les clés de médias hébergés. Le manifeste de remédiation ne contient aucun retrait pour ai_for_marketing__01 : aucune absence de bloc n’a donc été assimilée à une correction. Score = 100 × (resolvedWithEvidence + documentedRemoval) / initialIssueCount, soit 100 ; les constats still_open ou externally_unverifiable auraient réduit ce ratio. blockRegistry.ts confirme les schémas vidéo/activité disponibles ; learningDesign.ts ne porte que les thèmes visuels et ne modifie pas la logique de garde. Aucune exécution navigateur n’est nécessaire pour ces constats de cohérence code-données, et aucun fichier de cours ou de code n’a été modifié.",
+  "issueClassifications": [
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch01_act01:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_1_act_01_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[0].chapters[0].blocks[1], conserve le bloc video MP4 id=dc_1_act_01_video (17 caractères) et requiredBeforeAdvance=true. chapterProgress.ts:45-46 retourne block.id pour une source MP4 ; LessonViewer.tsx:556 et 581 utilisent cette clé au rendu et à la complétion, tandis que 1551-1553 la vérifient avant Suivant."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch01_act04:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_1_act_04_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[0].chapters[3].blocks[0], contient toujours le bloc video MP4 id=dc_1_act_04_video (17 caractères) et requiredBeforeAdvance=true. La clé partagée de chapterProgress.ts:45-66 est utilisée au rendu dans LessonViewer.tsx:556/581 et à la garde dans 1551-1553."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch01_act07:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_1_act_07_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[0].chapters[6].blocks[0], contient le bloc video MP4 id=dc_1_act_07_video (17 caractères) et requiredBeforeAdvance=true. chapterProgress.ts:45-46 accepte explicitement les identifiants de médias MP4 sans contrainte de longueur ; LessonViewer.tsx:1551-1553 bloque Suivant tant que cette clé n’est pas complétée."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch02_act01:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_2_act_01_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[1].chapters[0].blocks[0], contient le bloc video MP4 id=dc_2_act_01_video (17 caractères) et requiredBeforeAdvance=true. getMediaCompletionKey de chapterProgress.ts:45-60 fournit exactement cet id au lecteur (LessonViewer.tsx:556/581) et à la garde (1551-1553)."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch02_act04:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_2_act_04_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[1].chapters[3].blocks[0], contient le bloc video MP4 id=dc_2_act_04_video (17 caractères) et requiredBeforeAdvance=true. getChapterMediaCompletionKeys (chapterProgress.ts:62-66) emploie la même clé que le rendu ; LessonViewer.tsx:1551-1553 applique la garde."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch02_act07:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_2_act_07_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[1].chapters[6].blocks[0], contient le bloc video MP4 id=dc_2_act_07_video (17 caractères) et requiredBeforeAdvance=true. chapterProgress.ts:45-66 ne filtre plus sur la longueur et LessonViewer.tsx:556/581/1551-1553 réutilise la clé unique."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch02_act10:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_2_act_10_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[1].chapters[8].blocks[0], contient le bloc video MP4 id=dc_2_act_10_video (17 caractères) et requiredBeforeAdvance=true. Le rendu écrit/complète getMediaCompletionKey et la navigation contrôle getChapterMediaCompletionKeys, via LessonViewer.tsx:556/581 et 1551-1553."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch03_act01:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_3_act_01_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[2].chapters[0].blocks[0], contient le bloc video MP4 id=dc_3_act_01_video (17 caractères) et requiredBeforeAdvance=true. chapterProgress.ts:45-66 centralise la clé block.id ; LessonViewer.tsx:1551-1553 la rend obligatoire avant Suivant."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch03_act04:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_3_act_04_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[2].chapters[3].blocks[0], contient le bloc video MP4 id=dc_3_act_04_video (17 caractères) et requiredBeforeAdvance=true. getMediaCompletionKey (chapterProgress.ts:45-60), utilisé par LessonViewer.tsx:556/581, et getChapterMediaCompletionKeys (62-66), utilisé à 1551-1553, produisent la même clé."
+    },
+    {
+      "issueId": "ped:ai_for_marketing__01:dc_ch03_act07:video-navigation-gate",
+      "classification": "resolved_with_evidence",
+      "initialFinding": "La vidéo MP4 dc_3_act_07_video pouvait être ignorée car la navigation ne reconnaissait pas son identifiant long.",
+      "currentEvidence": "client/public/data/courses/ai_for_marketing__01.json, lessons[2].chapters[6].blocks[0], contient le bloc video MP4 id=dc_3_act_07_video (17 caractères) et requiredBeforeAdvance=true. La garde actuelle de LessonViewer.tsx:1551-1553 dérive sa clé par chapterProgress.ts:62-66, dont la règle MP4 de 45-46 renvoie cet id sans filtre de longueur ; le test chapterProgress.test.ts:46-51 est passé."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/020-datacamp_ai_for_marketing.json"
+}

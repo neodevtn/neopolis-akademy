@@ -1,0 +1,38 @@
+{
+  "formationId": "claude_certified_associate_foundations",
+  "initialIssueCount": 3,
+  "resolvedWithEvidence": 3,
+  "documentedRemoval": 0,
+  "stillOpen": 0,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 100,
+  "keyOpenIssues": [],
+  "methodSummary": "Contre-revue en lecture seule des 3 signaux initiaux explicitement consignés dans formation_summary.static_signals_disposition du rapport initial (le rapport ne contient aucun élément dans les tableaux issues des 69 chapitres). Le manifeste formation-manifest.json identifie exactement les 8 JSON actifs : client/public/data/courses/claude_certified_associate_foundations__01.json à __08.json ; ils ont été relus. Les données actuelles ont été confrontées au rendu et à la progression dans LessonViewer.tsx, chapterProgress.ts, blockRegistry.ts et learningDesign.ts. LessonViewer rend les bucket_sort via MatchingExercise, les checkpoints via ExerciseRenderer, les cartes et QCM, et bloque la navigation tant que les interactions requises ne sont pas complétées (notamment lignes 887-998 et 1531-1623) ; chapterProgress.ts:121-140 aligne le verrou séquentiel. blockRegistry.ts définit les contrats de données des tris, QCM et checkpoints ; learningDesign.ts ne modifie que le thème/apparence. Le manifeste p0-p2-remediation-manifest.json ne contient aucune entrée pour cette formation : aucun retrait documenté. Les « objectifs formalisés » sont une limite répétée du rapport initial, explicitement non comptée comme anomalie initiale, et ne sont donc pas artificiellement transformés en constat résolu ou ouvert. Score de contre-revue strictement fondé sur les 3 signaux initiaux : 100 − aucune pénalité résiduelle (0 ouvert, 0 externe non vérifiable) = 100/100. Ce score mesure la clôture des constats initiaux, pas la vérification externe en session connectée (persistance de compte, réseau et technologies d’assistance restent hors périmètre).",
+  "issueClassifications": [
+    {
+      "issueId": "010-static-03-chapter-07-triage",
+      "initialSeverity": "signal statique",
+      "courseId": "claude_certified_associate_foundations__03",
+      "chapterId": "chapter_07",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le JSON actuel client/public/data/courses/claude_certified_associate_foundations__03.json → lessons[0].chapters[id=chapter_07] contient deux bucket_sort opérationnels : triage_sortie_exercise_01 (4 catégories, 4 cartes, consigne FR explicite sur discernement/diligence et correction itemisée) et bucket_output_triage (4 catégories, 6 cartes, consigne et correction). Les chapitres antérieurs couvrent Discernement, Schémas d’échec, Vérification des faits et ancrage, Diligence et Édition pour le public. LessonViewer.tsx:950-967 passe titre, consigne, catégories, cartes et correction à MatchingExercise puis marque l’interaction complétée ; LessonViewer.tsx:1557-1560 interdit la suite jusqu’à complétion. Preuve positive de réalisation et de verrouillage, non inférée d’une absence d’écran."
+    },
+    {
+      "issueId": "010-static-04-chapter-10-workflow-redesign",
+      "initialSeverity": "signal statique",
+      "courseId": "claude_certified_associate_foundations__04",
+      "chapterId": "chapter_10",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le JSON actuel client/public/data/courses/claude_certified_associate_foundations__04.json → lessons[0].chapters[id=chapter_10].blocks[id=reconcevoir_flux_de_travail_delegation] est un bucket_sort doté d’un objectif/titre, d’une consigne explicite (Automatiser, Humain, Collaboratif ; prévisibilité, risque, coût, jugement humain), de 3 catégories, 5 cartes et d’une correction bilingue. Les notions de délégation sont présentes dans les chapitres antérieurs du même module. LessonViewer.tsx:950-967 rend ce contrat dans MatchingExercise et LessonViewer.tsx:1557-1560 en exige la complétion avant navigation."
+    },
+    {
+      "issueId": "010-static-p0-08-chapter-02-checkpoint-reference",
+      "initialSeverity": "P0 signal",
+      "courseId": "claude_certified_associate_foundations__08",
+      "chapterId": "chapter_02",
+      "classification": "resolved_with_evidence",
+      "evidence": "Le checkpoint actuel client/public/data/courses/claude_certified_associate_foundations__08.json → lessons[0].chapters[id=chapter_02].blocks[type=checkpoint] référence ex_claude_certified_associate_foundations__08_001. Ce même JSON le résout dans exercises[] : interactionType=single_choice, prompt et instructions bilingues, 4 options dont b.correct=true, completionRequiresCorrectAnswer=true et correction détaillée. LessonViewer.tsx:887-915 résout exerciseId dans courseExercises et rend ExerciseRenderer ; ExerciseRenderer.tsx:620-632 ne complète pas un exercice dont completionRequiresCorrectAnswer est vrai si la sélection n’est pas correcte. LessonViewer.tsx:1492-1504 et 1533-1549 maintiennent ensuite la porte de checkpoint jusqu’à complétion."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/010-claude_certified_associate_foundations.json"
+}

@@ -1,0 +1,299 @@
+{
+  "formationId": "datacamp_ai_assisted_coding_for_developers",
+  "initialIssueCount": 31,
+  "resolvedWithEvidence": 9,
+  "documentedRemoval": 0,
+  "stillOpen": 22,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 46.4,
+  "keyOpenIssues": [
+    "P1 — cinq activités ai_evaluation obligatoires restent contournables : client/src/pages/training/LessonViewer.tsx:314-325,1562-1609 ; client/src/pages/training/chapterProgress.ts:130-139.",
+    "P1 — la vidéo terminale dc_ch03_act10 (id audio de 17 caractères) reste non verrouillée : client/src/pages/training/LessonViewer.tsx:1476-1485,1504.",
+    "P2 — les hints/feedbacks de trois bucket_sort ne sont pas transmis à MatchingExercise : client/src/pages/training/LessonViewer.tsx:950-966 ; client/src/components/MatchingExercise.tsx:444-450.",
+    "P3 — dix Projector audio de 300 s restent affichés comme temps de lecture textuelle : client/src/pages/training/LessonViewer.tsx:227-251,1261-1267.",
+    "P3 — trois cartes de slides conservent leurs chaînes anglaises dans le parcours FR : client/public/data/courses/ai_assisted_coding_for_developers__01.json ; client/src/pages/training/LessonViewer.tsx:1000-1003."
+  ],
+  "methodSummary": "Contre-revue statique effectuée exclusivement sur le manifeste de formation (une seule donnée de cours actuelle : `client/public/data/courses/ai_assisted_coding_for_developers__01.json`), le rapport initial, le manifeste de remédiation P0–P2 et les chemins de rendu/progression actuels : `client/src/pages/training/LessonViewer.tsx`, `client/src/pages/training/chapterProgress.ts`, `shared/blockRegistry.ts` et `shared/learningDesign.ts`. Chaque constat initial a été confronté à son bloc actuel et au chemin de rendu/gate applicable. `resolved_with_evidence` exige une correction observable dans les données ou le code actuel; `documented_removal` exige une entrée correspondante dans le manifeste P0–P2 (aucune correspondance); une absence d’écran n’a jamais été assimilée à une correction. Aucun constat n’exige ici une vérification externe pour statuer sur le code/données. Score de clôture pondéré des constats connus : P1=5, P2=3, P3=1; 9 P1 résolus = 45 points de poids, contre 52 points de poids encore ouverts (6 P1, 3 P2, 13 P3), soit 100 × 45/(45+52) = 46,4/100. Ce score mesure la qualité après remédiation des constats initiaux vérifiables, non une certification de parcours navigateur connecté de bout en bout.",
+  "issueClassifications": [
+    {
+      "issueId": "PAAC-015-LOCK-L1-C1",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch01_act01",
+      "contentId": "dc_1_act_01_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_1_act_01_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L1-C1",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch01_act01",
+      "contentId": "dc_1_act_01_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_1_act_01_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-I18N-L1-C1",
+      "severity": "P3",
+      "category": "localisation",
+      "chapterId": "dc_ch01_act01",
+      "contentId": "dc_ch01_slides",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `client/public/data/courses/ai_assisted_coding_for_developers__01.json`, bloc `dc_ch01_slides`, conserve `title.fr: \"Chapter 1 slides\"` et `description.fr: \"Official course slides provided for this course.\"`. `client/src/pages/training/LessonViewer.tsx:1000-1003` privilégie précisément les valeurs `[lang]`; avec `lang=\"fr\"`, ces chaînes anglaises sont encore rendues."
+    },
+    {
+      "issueId": "PAAC-015-FEEDBACK-L1-C3",
+      "severity": "P2",
+      "category": "feedback",
+      "chapterId": "dc_ch01_act03",
+      "contentId": "dc_1_act_03_bucket_sort",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : le bloc `dc_1_act_03_bucket_sort` conserve `hint` et `feedback`, sans `correction`. `client/src/pages/training/LessonViewer.tsx:950-966` passe à `MatchingExercise` seulement `id`, `title`, `instructions`, `buckets`, `cards` et `correction`; `client/src/components/MatchingExercise.tsx:40-42,444-450` ne rend le détail qu’à partir de `exercise.correction`. Ni l’indice ni le feedback ne sont donc transmis/rendus."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L1-C4",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch01_act04",
+      "contentId": "dc_1_act_04_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_1_act_04_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L1-C4",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch01_act04",
+      "contentId": "dc_1_act_04_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_1_act_04_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-AIEVAL-GATE-L1-C5",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch01_act05",
+      "contentId": "dc_1_act_05_prompting",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : bloc `dc_1_act_05_prompting` de type `ai_evaluation` dans le chapitre obligatoire `dc_ch01_act05`. Son succès alimente bien `completedExercises` dans `client/src/pages/training/LessonViewer.tsx:1180-1182`, mais le type est absent des filtres de gate du clavier (`314-325`), du contrôle compact via `client/src/pages/training/chapterProgress.ts:130-139`, du bouton principal (`1562-1577,1609`) et du bouton terminal (`1490-1504`). La réponse évaluée reste donc contournable."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L1-C7",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch01_act07",
+      "contentId": "dc_1_act_07_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_1_act_07_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L1-C7",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch01_act07",
+      "contentId": "dc_1_act_07_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_1_act_07_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-AIEVAL-GATE-L1-C8",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch01_act08",
+      "contentId": "dc_1_act_08_prompting",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : bloc `dc_1_act_08_prompting` de type `ai_evaluation` dans le chapitre obligatoire `dc_ch01_act08`. Son succès alimente bien `completedExercises` dans `client/src/pages/training/LessonViewer.tsx:1180-1182`, mais le type est absent des filtres de gate du clavier (`314-325`), du contrôle compact via `client/src/pages/training/chapterProgress.ts:130-139`, du bouton principal (`1562-1577,1609`) et du bouton terminal (`1490-1504`). La réponse évaluée reste donc contournable."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L2-C1",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch02_act01",
+      "contentId": "dc_2_act_01_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_2_act_01_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L2-C1",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch02_act01",
+      "contentId": "dc_2_act_01_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_2_act_01_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-I18N-L2-C1",
+      "severity": "P3",
+      "category": "localisation",
+      "chapterId": "dc_ch02_act01",
+      "contentId": "dc_ch02_slides",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `client/public/data/courses/ai_assisted_coding_for_developers__01.json`, bloc `dc_ch02_slides`, conserve `title.fr: \"Chapter 2 slides\"` et `description.fr: \"Official course slides provided for this course.\"`. `client/src/pages/training/LessonViewer.tsx:1000-1003` privilégie précisément les valeurs `[lang]`; avec `lang=\"fr\"`, ces chaînes anglaises sont encore rendues."
+    },
+    {
+      "issueId": "PAAC-015-AIEVAL-GATE-L2-C2",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch02_act02",
+      "contentId": "dc_2_act_02_prompting",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : bloc `dc_2_act_02_prompting` de type `ai_evaluation` dans le chapitre obligatoire `dc_ch02_act02`. Son succès alimente bien `completedExercises` dans `client/src/pages/training/LessonViewer.tsx:1180-1182`, mais le type est absent des filtres de gate du clavier (`314-325`), du contrôle compact via `client/src/pages/training/chapterProgress.ts:130-139`, du bouton principal (`1562-1577,1609`) et du bouton terminal (`1490-1504`). La réponse évaluée reste donc contournable."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L2-C4",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch02_act04",
+      "contentId": "dc_2_act_04_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_2_act_04_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L2-C4",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch02_act04",
+      "contentId": "dc_2_act_04_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_2_act_04_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-AIEVAL-GATE-L2-C5",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch02_act05",
+      "contentId": "dc_2_act_05_prompting",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : bloc `dc_2_act_05_prompting` de type `ai_evaluation` dans le chapitre obligatoire `dc_ch02_act05`. Son succès alimente bien `completedExercises` dans `client/src/pages/training/LessonViewer.tsx:1180-1182`, mais le type est absent des filtres de gate du clavier (`314-325`), du contrôle compact via `client/src/pages/training/chapterProgress.ts:130-139`, du bouton principal (`1562-1577,1609`) et du bouton terminal (`1490-1504`). La réponse évaluée reste donc contournable."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L2-C7",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch02_act07",
+      "contentId": "dc_2_act_07_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_2_act_07_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L2-C7",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch02_act07",
+      "contentId": "dc_2_act_07_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_2_act_07_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-AIEVAL-GATE-L2-C8",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch02_act08",
+      "contentId": "dc_2_act_08_prompting",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : bloc `dc_2_act_08_prompting` de type `ai_evaluation` dans le chapitre obligatoire `dc_ch02_act08`. Son succès alimente bien `completedExercises` dans `client/src/pages/training/LessonViewer.tsx:1180-1182`, mais le type est absent des filtres de gate du clavier (`314-325`), du contrôle compact via `client/src/pages/training/chapterProgress.ts:130-139`, du bouton principal (`1562-1577,1609`) et du bouton terminal (`1490-1504`). La réponse évaluée reste donc contournable."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L3-C1",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch03_act01",
+      "contentId": "dc_3_act_01_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_3_act_01_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L3-C1",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch03_act01",
+      "contentId": "dc_3_act_01_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_3_act_01_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-I18N-L3-C1",
+      "severity": "P3",
+      "category": "localisation",
+      "chapterId": "dc_ch03_act01",
+      "contentId": "dc_ch03_slides",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `client/public/data/courses/ai_assisted_coding_for_developers__01.json`, bloc `dc_ch03_slides`, conserve `title.fr: \"Chapter 3 slides\"` et `description.fr: \"Official course slides provided for this course.\"`. `client/src/pages/training/LessonViewer.tsx:1000-1003` privilégie précisément les valeurs `[lang]`; avec `lang=\"fr\"`, ces chaînes anglaises sont encore rendues."
+    },
+    {
+      "issueId": "PAAC-015-FEEDBACK-L3-C3",
+      "severity": "P2",
+      "category": "feedback",
+      "chapterId": "dc_ch03_act03",
+      "contentId": "dc_3_act_03_bucket_sort",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : le bloc `dc_3_act_03_bucket_sort` conserve `hint` et `feedback`, sans `correction`. `client/src/pages/training/LessonViewer.tsx:950-966` passe à `MatchingExercise` seulement `id`, `title`, `instructions`, `buckets`, `cards` et `correction`; `client/src/components/MatchingExercise.tsx:40-42,444-450` ne rend le détail qu’à partir de `exercise.correction`. Ni l’indice ni le feedback ne sont donc transmis/rendus."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L3-C4",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch03_act04",
+      "contentId": "dc_3_act_04_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_3_act_04_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L3-C4",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch03_act04",
+      "contentId": "dc_3_act_04_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_3_act_04_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L3-C6",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch03_act07",
+      "contentId": "dc_3_act_07_video",
+      "classification": "resolved_with_evidence",
+      "currentEvidence": "Correction vérifiable dans le rendu actuel : `client/src/pages/training/chapterProgress.ts:45-66` fait retourner `block.id` pour tout média `audioUrl`/`mp4Url` et construit les clés de chaque bloc vidéo sans test de longueur. `client/src/pages/training/LessonViewer.tsx:305-306` (navigation clavier) et `1551-1553,1609,1622` (bouton principal) emploient `getChapterMediaCompletionKeys` et bloquent tant que `completedVideos` ne contient pas cette clé. La donnée actuelle du bloc `dc_3_act_07_video` conserve bien `audioUrl` et `requiredBeforeAdvance: true`; son id de 17 caractères est désormais accepté hors chemin terminal."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L3-C6",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch03_act07",
+      "contentId": "dc_3_act_07_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_3_act_07_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    },
+    {
+      "issueId": "PAAC-015-FEEDBACK-L3-C8",
+      "severity": "P2",
+      "category": "feedback",
+      "chapterId": "dc_ch03_act09",
+      "contentId": "dc_3_act_09_bucket_sort",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : le bloc `dc_3_act_09_bucket_sort` conserve `hint` et `feedback`, sans `correction`. `client/src/pages/training/LessonViewer.tsx:950-966` passe à `MatchingExercise` seulement `id`, `title`, `instructions`, `buckets`, `cards` et `correction`; `client/src/components/MatchingExercise.tsx:40-42,444-450` ne rend le détail qu’à partir de `exercise.correction`. Ni l’indice ni le feedback ne sont donc transmis/rendus."
+    },
+    {
+      "issueId": "PAAC-015-LOCK-L3-C9",
+      "severity": "P1",
+      "category": "verrouillage",
+      "chapterId": "dc_ch03_act10",
+      "contentId": "dc_3_act_10_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `client/public/data/courses/ai_assisted_coding_for_developers__01.json`, `lessons[2].chapters[8]` (`dc_ch03_act10`), bloc `dc_3_act_10_video`, conserve `audioUrl`, `requiredBeforeAdvance: true` et un id de 17 caractères. Dans le chemin terminal, `client/src/pages/training/LessonViewer.tsx:1476-1485` reconstruit encore la clé vidéo inline et n’accepte `b.id` qu’entre 8 et 15 caractères; `lastChapterVideoKeys` est donc vide et `lastIsGated` (ligne 1504) peut rester faux sans écoute."
+    },
+    {
+      "issueId": "PAAC-015-DURATION-L3-C9",
+      "severity": "P3",
+      "category": "ux_information_de_duree",
+      "chapterId": "dc_ch03_act10",
+      "contentId": "dc_3_act_10_video",
+      "classification": "still_open",
+      "currentEvidence": "Donnée actuelle : `dc_3_act_10_video` conserve `projectorDuration: 300`. Le calcul actuel de `client/src/pages/training/LessonViewer.tsx:227-251` ne compte que les blocs `content`, puis `displayedDurationMinutes` est rendu comme « min de lecture » aux lignes `1261-1267`; `projectorDuration` n’entre pas dans ce calcul. Le décalage durée/modalité persiste."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/015-datacamp_ai_assisted_coding_for_developers.json"
+}

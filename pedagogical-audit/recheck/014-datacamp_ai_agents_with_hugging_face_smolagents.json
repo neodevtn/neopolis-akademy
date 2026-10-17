@@ -1,0 +1,182 @@
+{
+  "formationId": "datacamp_ai_agents_with_hugging_face_smolagents",
+  "initialIssueCount": 27,
+  "resolvedWithEvidence": 9,
+  "documentedRemoval": 0,
+  "stillOpen": 18,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 35,
+  "keyOpenIssues": [
+    "14 TP cloud restent validables localement dès 1 caractère, sans grille ni évaluation serveur — client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json; client/src/components/CloudExerciseBlock.tsx:117-161.",
+    "Le dernier média dc_3_act_10_video (id 17 caractères) échappe toujours au verrouillage de fin de leçon — client/src/pages/training/LessonViewer.tsx:1476-1485.",
+    "La vidéo d’introduction ne fournit pas d’alternative textuelle française intégrée; le VTT FR n’est qu’un lien externe — JSON /lessons/0/chapters/0/blocks/0; LessonViewer.tsx:597-620; ProjectorPlayer.tsx:159-167.",
+    "Le code_repl dc_3_act_05_code ne participe pas aux conditions de passage — LessonViewer.tsx:1174-1175,1561-1609; chapterProgress.ts:121-139.",
+    "La vérification de code reste une égalité canonique, sans exécution/comportement ni feedback conceptuel — shared/codeReplValidation.ts:10-12; CodeReplBlock.tsx:34-40."
+  ],
+  "methodSummary": "Contre-revue statique strictement limitée à la formation déclarée par formation-manifest.json (entrée 14 : course_paths=[client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json]) et aux 27 constats du rapport initial. Les données actuelles, LessonViewer.tsx, pages/training/chapterProgress.ts, shared/blockRegistry.ts et shared/learningDesign.ts ont été relus; le manifeste p0-p2 ne contient aucune entrée pour ce courseId, donc aucun retrait n’est attribué sans trace. Chaque constat est resolved_with_evidence uniquement lorsqu’un chemin JSON actuel et la logique de rendu/progression actuelle prouvent la correction; une activité présente mais sans écran de preuve n’est jamais assimilée à une correction. Score = taux pondéré de résolution prouvée : P1=4, P2=2; 9 P1 résolus = 36 points sur 104 points initiaux (25 P1 et 2 P2), soit 34,6 arrondi à 35/100. Les constats ouverts et non vérifiables ne reçoivent aucun crédit; aucun constat de ce lot ne nécessite ici la classe externally_unverifiable car les défauts initiaux sont contrôlables dans les données et le code de rendu actuel.",
+  "issueClassifications": [
+    {
+      "issueId": "PED-014-VIDEO-GATE-01-01",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/0/blocks/0 conserve le bloc video MP4/Projector id=dc_1_act_01_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-MEDIA-FR-ACCESS-01",
+      "severity": "P2",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/0/blocks/0 a subtitleUrlFr mais ni alternativeTextFr ni transcription française (segments en anglais). LessonViewer.tsx:597-620 ne fournit qu’un lien VTT externe et ProjectorPlayer.tsx:159-167 utilise <audio> sans piste <track>."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-01-02",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/1/blocks/0 (id=dc_1_act_02_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-01-04",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/3/blocks/0 conserve le bloc video MP4/Projector id=dc_1_act_04_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-01-05",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/4/blocks/0 (id=dc_1_act_05_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-01-06",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/5/blocks/0 (id=dc_1_act_06_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-01-07",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/6/blocks/0 conserve le bloc video MP4/Projector id=dc_1_act_07_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-01-08",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/7/blocks/0 (id=dc_1_act_08_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-01-09",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/8/blocks/0 (id=dc_1_act_09_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-01-10",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/0/chapters/9/blocks/0 (id=dc_1_act_10_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-02-01",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/1/chapters/0/blocks/0 conserve le bloc video MP4/Projector id=dc_2_act_01_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-02-05",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/1/chapters/4/blocks/0 conserve le bloc video MP4/Projector id=dc_2_act_05_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-02-06",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/1/chapters/5/blocks/0 (id=dc_2_act_06_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-02-07",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/1/chapters/6/blocks/0 (id=dc_2_act_07_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-02-08",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/1/chapters/7/blocks/0 conserve le bloc video MP4/Projector id=dc_2_act_08_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-02-09",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/1/chapters/8/blocks/0 (id=dc_2_act_09_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-02-10",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/1/chapters/9/blocks/0 (id=dc_2_act_10_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-03-01",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/0/blocks/0 conserve le bloc video MP4/Projector id=dc_3_act_01_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-03-02",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/1/blocks/0 (id=dc_3_act_02_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-03-04",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/3/blocks/0 conserve le bloc video MP4/Projector id=dc_3_act_04_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-CODE-REPL-GATE-01",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "Le code_repl /lessons/2/chapters/4/blocks/0 reste requis dans le JSON. LessonViewer.tsx:1174-1175 enregistre sa réussite dans completedExercises, mais LessonViewer.tsx:1561-1609 et chapterProgress.ts:121-139 ne listent pas code_repl parmi les types qui verrouillent l’avancement."
+    },
+    {
+      "issueId": "PED-014-CODE-REPL-FEEDBACK-01",
+      "severity": "P2",
+      "classification": "still_open",
+      "evidence": "Le code_repl /lessons/2/chapters/4/blocks/0 n’a ni testCode ni expectedOutput non vide. CodeReplBlock.tsx:34-40 délègue à matchesCanonicalSolution; shared/codeReplValidation.ts:10-12 n’accepte que l’égalité textuelle normalisée avec solutionCode, puis CodeReplBlock.tsx:36-39 affiche un feedback générique."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-03-06",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/5/blocks/0 (id=dc_3_act_06_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-03-07",
+      "severity": "P1",
+      "classification": "resolved_with_evidence",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/6/blocks/0 conserve le bloc video MP4/Projector id=dc_3_act_07_video et requiredBeforeAdvance=true. client/src/pages/training/chapterProgress.ts:45-60 retourne désormais block.id pour mp4Url/hlsUrl/audioUrl, et LessonViewer.tsx:556-581 emploie cette même clé pour le lecteur; LessonViewer.tsx:1551-1553 l’exige avant Suivant."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-03-08",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/7/blocks/0 (id=dc_3_act_08_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-CLOUD-VALIDATION-03-09",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/8/blocks/0 (id=dc_3_act_09_tp) ne contient ni minimumAnswerLength, ni rubricCriteria/learnerCriteria, ni serverGradedAssessment. CloudExerciseBlock.tsx:117-123 ne déclenche donc pas de grille suivie; :153-161 valide localement et révèle la solution; cloudExerciseValidation.ts:1-8 ramène la longueur absente à 1 caractère."
+    },
+    {
+      "issueId": "PED-014-VIDEO-GATE-03-10",
+      "severity": "P1",
+      "classification": "still_open",
+      "evidence": "Le bloc terminal client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/9/blocks/0 reste requiredBeforeAdvance=true, MP4 et id=dc_3_act_10_video (17 caractères). Mais la branche de fin de leçon de LessonViewer.tsx:1476-1485 conserve l’ancien filtre block.id longueur 8..15; elle construit donc une liste de clés vide et ne bloque pas la complétion."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/014-datacamp_ai_agents_with_hugging_face_smolagents.json"
+}

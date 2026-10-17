@@ -1,0 +1,275 @@
+{
+  "formationId": "ai_product_management_human_centered_ux_specialist",
+  "initialIssueCount": 28,
+  "resolvedWithEvidence": 0,
+  "documentedRemoval": 0,
+  "stillOpen": 28,
+  "externallyUnverifiable": 0,
+  "currentQualityScore100": 32,
+  "keyOpenIssues": [
+    "client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[0-3]: chapter_04/checkpoints supprimés sans activité équivalente ni trace de retrait dans p0-p2-remediation-manifest.json.",
+    "client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[0].chapters[0].blocks[1]: vidéo obligatoire sans durée/langue/questions après lecture/transcription ou alternative.",
+    "client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[1].chapters[1].blocks[1]: vidéo obligatoire encore incomplètement contextualisée/accessibilisée.",
+    "client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[2].chapters[5].blocks[1]: vidéo obligatoire encore incomplètement contextualisée/accessibilisée.",
+    "client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[0-3].chapters[*_chapter_04].type: type absent, badge ENSEIGNEMENT pour les checkpoints QCM.",
+    "client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[0-3].chapters[*_chapter_04].type: type absent, badge ENSEIGNEMENT pour les checkpoints QCM.",
+    "client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[0-3].chapters[*_chapter_04].type: type absent, badge ENSEIGNEMENT pour les checkpoints QCM.",
+    "client/src/pages/training/LessonViewer.tsx:1239-1249, 1550-1567: signalétique et règles de gate confirment les écarts ci-dessus."
+  ],
+  "methodSummary": "Contre-revue statique limitée aux quatre JSON pointés par formation-manifest.json:99-103, au rapport initial, au manifeste p0-p2 et aux chemins de rendu/progression demandés (LessonViewer.tsx, chapterProgress.ts, blockRegistry.ts, learningDesign.ts ; YouTubePlayer.tsx, checkpointGate.ts et SingleChoiceExercise.tsx relus comme dépendances directes). Chaque constat initial a été retrouvé par courseId/lesson/chapterId, puis confronté au JSON actuel et au code qui le rend. Statut strict : resolved_with_evidence seulement si le constat entier est corrigé et rendu prouvable ; documented_removal seulement avec trace dans le manifeste de retraits ; still_open si la déficience persiste ou si le retrait non tracé ne prouve pas une correction ; externally_unverifiable pour une propriété qui ne peut être établie dans les données/code disponibles. Les 12 vidéos ont reçu objectiveBefore, mais conservent toutes l’absence de durée, langue, questions, transcription et alternative ; elles restent donc ouvertes. Les quatre checkpoints hérités du cours 01 ont disparu, mais ce retrait n’est pas documenté pour cette formation et aucune équivalence n’est présente : ils restent ouverts, sans transformer une absence d’écran en correction. Score : 100 − (4 P0 × 8 + 12 P2 × 2 + 12 P3 × 1) = 32 ; une résolution prouvée ou un retrait documenté porte une pénalité nulle, tandis qu’un constat non vérifiable porterait la moitié de sa pénalité (aucun ici). Cette grille rend la sévérité initiale explicite et ne confère aucun crédit aux corrections partielles non closes.",
+  "issueClassifications": [
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__01:l0:c0:video-context-1",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[0].chapters[id=chapter_01].blocks[1]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[0].chapters[id=chapter_01].blocks[1] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__01:l0:c3:checkpoint-not-rendered",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_verrouillage",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[0].chapters[id=chapter_04].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[0] ne contient plus de chapitre id=chapter_04 ni de bloc type=checkpoint (chapitres actuels : chapter_01, chapter_02, chapter_03, chapter_05, chapter_06). Le p0-p2-remediation-manifest.json:4-52 ne contient aucune entrée convertedActivities, structuredActivities ni autre trace pour ai_product_management_human_centered_ux_specialist__01. LessonViewer.tsx:887-918 rendrait encore un checkpoint seulement avec exerciseId/exercice.",
+      "currentFinding": "L’activité défaillante a disparu, mais aucune activité équivalente rendue ni retrait documenté pour cette formation n’est fourni ; l’absence d’écran ne constitue donc pas une résolution."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__01:l1:c1:video-context-1",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[1].chapters[id=chapter_02].blocks[1]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[1].chapters[id=chapter_02].blocks[1] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__01:l1:c3:checkpoint-not-rendered",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_verrouillage",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[1].chapters[id=chapter_04].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[1] ne contient plus de chapitre id=chapter_04 ni de bloc type=checkpoint (chapitres actuels : chapter_01, chapter_02, chapter_03, chapter_05, chapter_06). Le p0-p2-remediation-manifest.json:4-52 ne contient aucune entrée convertedActivities, structuredActivities ni autre trace pour ai_product_management_human_centered_ux_specialist__01. LessonViewer.tsx:887-918 rendrait encore un checkpoint seulement avec exerciseId/exercice.",
+      "currentFinding": "L’activité défaillante a disparu, mais aucune activité équivalente rendue ni retrait documenté pour cette formation n’est fourni ; l’absence d’écran ne constitue donc pas une résolution."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__01:l2:c3:checkpoint-not-rendered",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_verrouillage",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[2].chapters[id=chapter_04].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[2] ne contient plus de chapitre id=chapter_04 ni de bloc type=checkpoint (chapitres actuels : chapter_01, chapter_02, chapter_03, chapter_05, chapter_06). Le p0-p2-remediation-manifest.json:4-52 ne contient aucune entrée convertedActivities, structuredActivities ni autre trace pour ai_product_management_human_centered_ux_specialist__01. LessonViewer.tsx:887-918 rendrait encore un checkpoint seulement avec exerciseId/exercice.",
+      "currentFinding": "L’activité défaillante a disparu, mais aucune activité équivalente rendue ni retrait documenté pour cette formation n’est fourni ; l’absence d’écran ne constitue donc pas une résolution."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__01:l2:c5:video-context-1",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[2].chapters[id=chapter_06].blocks[1]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[2].chapters[id=chapter_06].blocks[1] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__01:l3:c3:checkpoint-not-rendered",
+      "initialSeverity": "P0",
+      "initialCategory": "rendu_et_verrouillage",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[3].chapters[id=chapter_04].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__01.json → lessons[3] ne contient plus de chapitre id=chapter_04 ni de bloc type=checkpoint (chapitres actuels : chapter_01, chapter_02, chapter_03, chapter_05, chapter_06). Le p0-p2-remediation-manifest.json:4-52 ne contient aucune entrée convertedActivities, structuredActivities ni autre trace pour ai_product_management_human_centered_ux_specialist__01. LessonViewer.tsx:887-918 rendrait encore un checkpoint seulement avec exerciseId/exercice.",
+      "currentFinding": "L’activité défaillante a disparu, mais aucune activité équivalente rendue ni retrait documenté pour cette formation n’est fourni ; l’absence d’écran ne constitue donc pas une résolution."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__02:l0:c0:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[0].chapters[id=lesson_01_chapter_01].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[0].chapters[id=lesson_01_chapter_01].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__02:l0:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[0].chapters[id=lesson_01_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[0].chapters[3] id=lesson_01_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__02:l1:c1:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[1].chapters[id=lesson_02_chapter_02].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[1].chapters[id=lesson_02_chapter_02].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__02:l1:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[1].chapters[id=lesson_02_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[1].chapters[3] id=lesson_02_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__02:l2:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[2].chapters[id=lesson_03_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[2].chapters[3] id=lesson_03_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__02:l2:c5:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[2].chapters[id=lesson_03_chapter_06].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[2].chapters[id=lesson_03_chapter_06].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__02:l3:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[3].chapters[id=lesson_04_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__02.json → lessons[3].chapters[3] id=lesson_04_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__03:l0:c0:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[0].chapters[id=lesson_01_chapter_01].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[0].chapters[id=lesson_01_chapter_01].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__03:l0:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[0].chapters[id=lesson_01_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[0].chapters[3] id=lesson_01_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__03:l1:c1:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[1].chapters[id=lesson_02_chapter_02].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[1].chapters[id=lesson_02_chapter_02].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__03:l1:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[1].chapters[id=lesson_02_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[1].chapters[3] id=lesson_02_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__03:l2:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[2].chapters[id=lesson_03_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[2].chapters[3] id=lesson_03_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__03:l2:c5:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[2].chapters[id=lesson_03_chapter_06].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[2].chapters[id=lesson_03_chapter_06].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__03:l3:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[3].chapters[id=lesson_04_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__03.json → lessons[3].chapters[3] id=lesson_04_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__04:l0:c0:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[0].chapters[id=lesson_01_chapter_01].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[0].chapters[id=lesson_01_chapter_01].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__04:l0:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[0].chapters[id=lesson_01_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[0].chapters[3] id=lesson_01_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__04:l1:c1:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[1].chapters[id=lesson_02_chapter_02].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[1].chapters[id=lesson_02_chapter_02].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__04:l1:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[1].chapters[id=lesson_02_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[1].chapters[3] id=lesson_02_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__04:l2:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[2].chapters[id=lesson_03_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[2].chapters[3] id=lesson_03_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__04:l2:c5:video-context-0",
+      "initialSeverity": "P2",
+      "initialCategory": "média_contextualisation",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[2].chapters[id=lesson_03_chapter_06].blocks[0]",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[2].chapters[id=lesson_03_chapter_06].blocks[0] : objectiveBefore est maintenant renseigné, mais durationSeconds, videoLanguage, questionsAfter, transcript, alternativeTextFr restent absents et optional n’est pas true. LessonViewer.tsx:846-861 transmet ces champs à YouTubePlayer ; YouTubePlayer.tsx:258 et 365 ne rend le cadrage complet, les questions et l’alternative que si les données existent ; chapterProgress.ts:62-89 et LessonViewer.tsx:1550-1553 maintiennent la vidéo non optionnelle comme étape de progression.",
+      "currentFinding": "Correction partielle vérifiable (objectif avant lecture), insuffisante pour résoudre le constat initial composé : durée/langue, réinvestissement et alternative textuelle manquent toujours."
+    },
+    {
+      "issueId": "005:ai_product_management_human_centered_ux_specialist__04:l3:c3:checkpoint-labelled-teaching",
+      "initialSeverity": "P3",
+      "initialCategory": "hiérarchie_ux",
+      "initialLocation": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[3].chapters[id=lesson_04_chapter_04].chapter",
+      "classification": "still_open",
+      "currentEvidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/ai_product_management_human_centered_ux_specialist__04.json → lessons[3].chapters[3] id=lesson_04_chapter_04 : chapter.type est toujours absent et les 3 blocs single_choice_exercise subsistent. LessonViewer.tsx:1239-1249 affiche ENSEIGNEMENT par défaut sans type quiz/checkpoint, bien que LessonViewer.tsx:970-997 rende les QCM et 1561-1567 en contrôle la progression.",
+      "currentFinding": "Les QCM restent fonctionnels, mais leur signalétique de chapitre demeure « ENSEIGNEMENT » plutôt qu’évaluation ; le défaut de hiérarchie UX est ouvert."
+    }
+  ],
+  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/005-ai_product_management_human_centered_ux_specialist.json"
+}
