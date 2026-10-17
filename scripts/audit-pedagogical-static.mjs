@@ -76,7 +76,16 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
       const hasExplanation = blocks.some((block) => explanatoryTypes.has(block?.type) && (hasUsableText(block.body) || hasUsableText(block.content) || hasUsableText(block.description)));
       const activities = blocks.filter((block) => activityTypes.has(block?.type));
       const media = blocks.filter((block) => mediaTypes.has(block?.type));
-      if (activities.length && !hasExplanation) {
+      // A standard checkpoint delegates its visible prompt and correction to the
+      // referenced course exercise. Likewise, scenario checks place their
+      // learner-facing statement in `scenario`. Audit the rendered source, not
+      // just the small wrapper block stored in the chapter.
+      const activityPrompt = (block) => {
+        const linkedExercise = block?.type === "checkpoint" && block.exerciseId ? exercises.get(block.exerciseId) : null;
+        return block?.question || block?.prompt || block?.scenario || block?.instructions || block?.assignment || block?.body || linkedExercise?.prompt || linkedExercise?.instructions || linkedExercise?.title || block?.title;
+      };
+      const activitiesAreSelfContained = activities.length > 0 && activities.every((block) => hasUsableText(activityPrompt(block)));
+      if (activities.length && !hasExplanation && !activitiesAreSelfContained) {
         add(lessonIndex, chapterIndex, chapter, null, "P1", "progression", "Une activité apparaît sans explication textuelle suffisante dans le même écran ; les prérequis doivent être confirmés manuellement.", "Ajouter une courte mise en contexte : objectif, connaissance à mobiliser et transition vers l’activité.", "medium");
       }
       if (media.length && !hasExplanation) {
@@ -86,12 +95,15 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
         }
       }
       for (const block of activities) {
-        const prompt = block.question || block.prompt || block.instructions || block.assignment || block.body || block.title;
+        const prompt = activityPrompt(block);
         if (!hasUsableText(prompt)) add(lessonIndex, chapterIndex, chapter, block, "P0", "énoncé", "L’activité ne contient aucun énoncé ou consigne exploitable par l’apprenant.", "Rédiger un énoncé indiquant l’objectif, l’action attendue, le résultat attendu et le critère de réussite.");
         if (["single_choice_exercise", "multi_choice_exercise"].includes(block.type)) {
           const options = Array.isArray(block.options) ? block.options : [];
           if (options.length < 2) add(lessonIndex, chapterIndex, chapter, block, "P0", "activité", "Le QCM ne fournit pas au moins deux options sélectionnables.", "Ajouter des options distinctes et valides.");
-          if (!hasUsableText(block.explanation)) add(lessonIndex, chapterIndex, chapter, block, "P2", "feedback", "Le QCM ne contient pas d’explication pédagogique observable après réponse.", "Ajouter un feedback expliquant la réponse correcte et la raison des distracteurs.");
+          // Server-validated choices only release their answer key and
+          // explanation after a submission; this is still observable feedback
+          // and must not be reported as missing by a static scan.
+          if (!hasUsableText(block.explanation) && block.serverValidated !== true) add(lessonIndex, chapterIndex, chapter, block, "P2", "feedback", "Le QCM ne contient pas d’explication pédagogique observable après réponse.", "Ajouter un feedback expliquant la réponse correcte et la raison des distracteurs.");
         }
         if (block.type === "checkpoint") {
           if (!block.exerciseId) add(lessonIndex, chapterIndex, chapter, block, "P0", "verrouillage", "Le checkpoint obligatoire ne référence aucun exercice à rendre ou valider.", "Associer le checkpoint à un exerciseId existant et vérifiable.");
@@ -100,11 +112,16 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
         if (block.type === "cloud_exercise") {
           if (!hasUsableText(block.instructions) && !hasUsableText(block.assignment)) add(lessonIndex, chapterIndex, chapter, block, "P0", "énoncé", "Le TP ne précise pas clairement ce que l’apprenant doit réaliser.", "Ajouter une consigne détaillée, un résultat attendu et un exemple de preuve recevable.");
           if (!Array.isArray(block.steps) || !block.steps.length) add(lessonIndex, chapterIndex, chapter, block, "P1", "guidage", "Le TP ne contient aucune étape de réalisation structurée.", "Ajouter des étapes courtes, séquentielles et vérifiables.");
-          if (!hasUsableText(block.solution) && !hasUsableText(block.hint)) add(lessonIndex, chapterIndex, chapter, block, "P2", "feedback", "Le TP ne propose ni indice ni élément de correction observable.", "Ajouter au minimum un indice progressif et une correction pédagogique post-soumission.");
+          // A server-graded practical deliberately keeps its model correction
+          // private until submission. Its post-submission feedback is therefore
+          // available without exposing a solution in the course JSON.
+          if (!hasUsableText(block.solution) && !hasUsableText(block.hint) && typeof block.serverGradedAssessment !== "string") add(lessonIndex, chapterIndex, chapter, block, "P2", "feedback", "Le TP ne propose ni indice ni élément de correction observable.", "Ajouter au minimum un indice progressif et une correction pédagogique post-soumission.");
         }
         if (block.type === "ai_evaluation") {
           if (!hasUsableText(block.prompt)) add(lessonIndex, chapterIndex, chapter, block, "P0", "énoncé", "L’évaluation IA ne possède pas de consigne exploitable.", "Ajouter une consigne précise décrivant la production attendue.");
-          if (!Array.isArray(block.rubricCriteria) || !block.rubricCriteria.length) add(lessonIndex, chapterIndex, chapter, block, "P1", "évaluation", "L’évaluation IA ne fournit pas de critères structurés visibles et vérifiables.", "Ajouter des critères, descriptions, pondérations et seuil de réussite explicites.");
+          const hasStructuredRubric = Array.isArray(block.rubricCriteria) && block.rubricCriteria.length > 0;
+          const hasLegacyVisibleRubric = hasUsableText(block.rubric);
+          if (!hasStructuredRubric && !hasLegacyVisibleRubric) add(lessonIndex, chapterIndex, chapter, block, "P1", "évaluation", "L’évaluation IA ne fournit pas de critères structurés visibles et vérifiables.", "Ajouter des critères, descriptions, pondérations et seuil de réussite explicites.");
         }
         if (["matching", "bucket_sort", "ordering", "fill_blank", "terminal_sim", "code_repl"].includes(block.type) && !hasUsableText(block.instructions)) {
           add(lessonIndex, chapterIndex, chapter, block, "P1", "énoncé", "L’activité interactive ne comporte pas de consigne d’utilisation explicite.", "Préciser ce que l’apprenant doit sélectionner, déplacer, saisir ou exécuter, ainsi que le résultat attendu.");

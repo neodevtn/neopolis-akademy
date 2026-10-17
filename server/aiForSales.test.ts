@@ -7,10 +7,17 @@ describe("cours DataCamp L’IA pour les ventes", () => {
     const blocks = activities.flatMap((activity: any) => activity.blocks || []);
     expect(activities).toHaveLength(22);
     expect(blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length)).toHaveLength(9);
-    expect(blocks.filter((block: any) => block.type === "cloud_exercise")).toHaveLength(9);
+    // Le TP de balisage qui exigeait call_transcript.pdf a été transformé en
+    // contenu : aucun fichier source n'était disponible dans la médiathèque.
+    expect(blocks.filter((block: any) => block.type === "cloud_exercise")).toHaveLength(8);
     expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(2);
     expect(blocks.filter((block: any) => /choice_exercise/.test(block.type))).toHaveLength(2);
-    expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
+    const removedPracticalScreen = activities.find((activity: any) => activity.id === "dc_ch03_act05");
+    expect(removedPracticalScreen).toMatchObject({ type: "content", requiredBeforeAdvance: false });
+    expect(removedPracticalScreen.blocks).toEqual(expect.arrayContaining([
+      expect.objectContaining({ type: "content", remediation: expect.objectContaining({ sourcePreserved: true }) }),
+    ]));
+    expect(activities.filter((activity: any) => activity.id !== "dc_ch03_act05").every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
     expect(JSON.stringify(course)).not.toMatch(/https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com|\/manus-storage\//i);
   });
 });
