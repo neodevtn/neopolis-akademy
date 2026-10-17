@@ -1,38 +1,49 @@
 {
-  "formationId": "claude_certified_associate_foundations",
-  "initialIssueCount": 3,
-  "resolvedWithEvidence": 3,
-  "documentedRemoval": 0,
-  "stillOpen": 0,
-  "externallyUnverifiable": 0,
-  "currentQualityScore100": 100,
-  "keyOpenIssues": [],
-  "methodSummary": "Contre-revue en lecture seule des 3 signaux initiaux explicitement consignés dans formation_summary.static_signals_disposition du rapport initial (le rapport ne contient aucun élément dans les tableaux issues des 69 chapitres). Le manifeste formation-manifest.json identifie exactement les 8 JSON actifs : client/public/data/courses/claude_certified_associate_foundations__01.json à __08.json ; ils ont été relus. Les données actuelles ont été confrontées au rendu et à la progression dans LessonViewer.tsx, chapterProgress.ts, blockRegistry.ts et learningDesign.ts. LessonViewer rend les bucket_sort via MatchingExercise, les checkpoints via ExerciseRenderer, les cartes et QCM, et bloque la navigation tant que les interactions requises ne sont pas complétées (notamment lignes 887-998 et 1531-1623) ; chapterProgress.ts:121-140 aligne le verrou séquentiel. blockRegistry.ts définit les contrats de données des tris, QCM et checkpoints ; learningDesign.ts ne modifie que le thème/apparence. Le manifeste p0-p2-remediation-manifest.json ne contient aucune entrée pour cette formation : aucun retrait documenté. Les « objectifs formalisés » sont une limite répétée du rapport initial, explicitement non comptée comme anomalie initiale, et ne sont donc pas artificiellement transformés en constat résolu ou ouvert. Score de contre-revue strictement fondé sur les 3 signaux initiaux : 100 − aucune pénalité résiduelle (0 ouvert, 0 externe non vérifiable) = 100/100. Ce score mesure la clôture des constats initiaux, pas la vérification externe en session connectée (persistance de compte, réseau et technologies d’assistance restent hors périmètre).",
-  "issueClassifications": [
-    {
-      "issueId": "010-static-03-chapter-07-triage",
-      "initialSeverity": "signal statique",
-      "courseId": "claude_certified_associate_foundations__03",
-      "chapterId": "chapter_07",
-      "classification": "resolved_with_evidence",
-      "evidence": "Le JSON actuel client/public/data/courses/claude_certified_associate_foundations__03.json → lessons[0].chapters[id=chapter_07] contient deux bucket_sort opérationnels : triage_sortie_exercise_01 (4 catégories, 4 cartes, consigne FR explicite sur discernement/diligence et correction itemisée) et bucket_output_triage (4 catégories, 6 cartes, consigne et correction). Les chapitres antérieurs couvrent Discernement, Schémas d’échec, Vérification des faits et ancrage, Diligence et Édition pour le public. LessonViewer.tsx:950-967 passe titre, consigne, catégories, cartes et correction à MatchingExercise puis marque l’interaction complétée ; LessonViewer.tsx:1557-1560 interdit la suite jusqu’à complétion. Preuve positive de réalisation et de verrouillage, non inférée d’une absence d’écran."
-    },
-    {
-      "issueId": "010-static-04-chapter-10-workflow-redesign",
-      "initialSeverity": "signal statique",
-      "courseId": "claude_certified_associate_foundations__04",
-      "chapterId": "chapter_10",
-      "classification": "resolved_with_evidence",
-      "evidence": "Le JSON actuel client/public/data/courses/claude_certified_associate_foundations__04.json → lessons[0].chapters[id=chapter_10].blocks[id=reconcevoir_flux_de_travail_delegation] est un bucket_sort doté d’un objectif/titre, d’une consigne explicite (Automatiser, Humain, Collaboratif ; prévisibilité, risque, coût, jugement humain), de 3 catégories, 5 cartes et d’une correction bilingue. Les notions de délégation sont présentes dans les chapitres antérieurs du même module. LessonViewer.tsx:950-967 rend ce contrat dans MatchingExercise et LessonViewer.tsx:1557-1560 en exige la complétion avant navigation."
-    },
-    {
-      "issueId": "010-static-p0-08-chapter-02-checkpoint-reference",
-      "initialSeverity": "P0 signal",
-      "courseId": "claude_certified_associate_foundations__08",
-      "chapterId": "chapter_02",
-      "classification": "resolved_with_evidence",
-      "evidence": "Le checkpoint actuel client/public/data/courses/claude_certified_associate_foundations__08.json → lessons[0].chapters[id=chapter_02].blocks[type=checkpoint] référence ex_claude_certified_associate_foundations__08_001. Ce même JSON le résout dans exercises[] : interactionType=single_choice, prompt et instructions bilingues, 4 options dont b.correct=true, completionRequiresCorrectAnswer=true et correction détaillée. LessonViewer.tsx:887-915 résout exerciseId dans courseExercises et rend ExerciseRenderer ; ExerciseRenderer.tsx:620-632 ne complète pas un exercice dont completionRequiresCorrectAnswer est vrai si la sélection n’est pas correcte. LessonViewer.tsx:1492-1504 et 1533-1549 maintiennent ensuite la porte de checkpoint jusqu’à complétion."
-    }
+  "formation_id": "claude_certified_associate_foundations",
+  "index": 10,
+  "course_ids": [
+    "claude_certified_associate_foundations__01",
+    "claude_certified_associate_foundations__02",
+    "claude_certified_associate_foundations__03"
   ],
-  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/010-claude_certified_associate_foundations.json"
+  "reviewed_current_state": true,
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "title": "Tri d'évaluation du module 3 désormais réalisable et verrouillé",
+      "evidence": "Le constat antérieur 010-static-03-chapter-07-triage est confirmé corrigé dans current_courses.claude_certified_associate_foundations__03.lessons[0].chapters[id=chapter_07] : les bucket_sort triage_sortie_exercise_01 et bucket_output_triage ont chacun un titre, une consigne, 4 buckets, des cartes dont chaque correctBucket référence un bucket existant, et une correction bilingue. completionRule.requires contient contentViewed et requiredExercisesPassed ; les deux interactions sont donc présentes pour la porte requise.",
+      "course_id": "claude_certified_associate_foundations__03",
+      "chapter_id": "chapter_07"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Interaction verrouillante sans correction pédagogique déclarée",
+      "evidence": "Dans current_courses.claude_certified_associate_foundations__01.lessons[0].chapters[id=chapter_10], completionRule.requires contient requiredExercisesPassed. Son unique activité, bucket_sort id=choose_feature_for_task_v1, fournit titre, consigne, 4 buckets et 5 cartes avec correctBucket valides, mais aucun champ correction. Le passage requis est ainsi évaluable, sans retour explicatif déclaré pour étayer la correction ou le réessai.",
+      "course_id": "claude_certified_associate_foundations__01",
+      "chapter_id": "chapter_10"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Vidéos recommandées sans URL utilisable ni contexte de chapitre",
+      "evidence": "current_courses.claude_certified_associate_foundations__01.lessons[0].recommendedVideos déclare trois ressources (videoId EstrsAlmxd4, H7LZb20-fUY et TqC1qOfiVcQ), chacune limitée à videoId, title, channel, type et topics. Aucune URL ni association à un chapitre n'est fournie. Cela ne satisfait pas la règle du bundle selon laquelle une source vidéo doit avoir une URL utilisable et un contexte apprenant ; la liste est en outre placée au niveau de la leçon, sans moyen de vérifier la limite d'une vidéo par chapitre.",
+      "course_id": "claude_certified_associate_foundations__01"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Vidéos recommandées sans URL utilisable ni contexte de chapitre",
+      "evidence": "current_courses.claude_certified_associate_foundations__02.lessons[0].recommendedVideos déclare trois ressources (videoId IEouqolKqWs, 5i2Hn8OG94o et 0l5y-JM88EU), chacune limitée à videoId, title, channel, type et topics. Aucune URL ni association à un chapitre n'est fournie ; le même cours déclare aussi videoCount: 0. Ces éléments ne permettent pas d'accéder à une ressource vidéo annoncée ni de vérifier son contexte apprenant ou la limite d'une vidéo par chapitre imposée par le protocole.",
+      "course_id": "claude_certified_associate_foundations__02"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Vidéos recommandées sans URL utilisable ni contexte de chapitre",
+      "evidence": "current_courses.claude_certified_associate_foundations__03.lessons[0].recommendedVideos déclare trois ressources (videoId IEouqolKqWs, H7LZb20-fUY et EstrsAlmxd4), chacune limitée à videoId, title, channel, type et topics. Aucune URL ni association à un chapitre n'est fournie. La règle média du bundle exige pourtant une URL utilisable et un contexte apprenant pour une source vidéo, et la granularité de leçon ne permet pas de vérifier la limite d'une vidéo par chapitre.",
+      "course_id": "claude_certified_associate_foundations__03"
+    }
+  ]
 }

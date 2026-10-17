@@ -1,504 +1,214 @@
 {
-  "formationId": "claude_certified_architect_professional",
-  "initialIssueCount": 24,
-  "resolvedWithEvidence": 0,
-  "documentedRemoval": 0,
-  "stillOpen": 21,
-  "externallyUnverifiable": 3,
-  "currentQualityScore100": 21,
-  "keyOpenIssues": [
-    "client/public/data/courses/claude_certified_architect_professional__01.json → chapter_03 / chapter_07 / chapter_10 / chapter_13 / chapter_17 / chapter_23 : 10 bucket_sort sans correction visible après erreur.",
-    "client/public/data/courses/claude_certified_architect_professional__02.json → lessons[0].chapters[4].blocks[0] : bucket_sort cost_reliability_calculator_v1 sans correction visible.",
-    "client/src/pages/training/LessonViewer.tsx:1531-1549 : le gate checkpoint du pied de page reste limité aux chapitres type checkpoint/quiz.",
-    "client/public/data/courses/claude_certified_architect_professional__01.json → chapter_15 : checkpoint dans un chapitre teaching, contournable par Suivant.",
-    "client/public/data/courses/claude_certified_architect_professional__02.json → chapter_11 : checkpoint dans un chapitre exercise, contournable par Suivant.",
-    "client/public/data/courses/claude_certified_architect_professional__04.json → chapter_02 et __05.json → chapter_02 : checkpoints dans des chapitres exercise, contournables par Suivant.",
-    "client/public/data/courses/claude_certified_architect_professional__03.json → chapter_01_1/chapter_15 et __04/__05.json → introduction/clôture : thèmes affichés incompatibles avec sourceCourseTitle.",
-    "client/public/data/courses/claude_certified_architect_professional__01.json → chapter_19/chapter_25 et __03.json → chapter_12 : checkpoints anciens absents sans trace de retrait dans p0-p2-remediation-manifest.json."
+  "formation_id": "claude_certified_architect_professional",
+  "index": 9,
+  "course_ids": [
+    "claude_certified_architect_professional__01",
+    "claude_certified_architect_professional__02",
+    "claude_certified_architect_professional__03",
+    "claude_certified_architect_professional__04",
+    "claude_certified_architect_professional__05"
   ],
-  "methodSummary": "Contre-revue strictement en lecture seule des 24 constats explicites du rapport initial. Le manifeste formation-manifest.json désigne exactement cinq JSON actuels : client/public/data/courses/claude_certified_architect_professional__01.json à __05.json (5 leçons, 56 chapitres). Chaque identifiant de chapitre/bloc/exercice du rapport initial a été recherché dans ces données, puis confronté aux chemins de rendu/progression demandés : client/src/pages/training/LessonViewer.tsx, client/src/pages/training/chapterProgress.ts, shared/blockRegistry.ts et shared/learningDesign.ts; MatchingExercise.tsx a aussi été lu car il rend précisément les bucket_sort concernés. LessonViewer:887-917 masque toujours un checkpoint dont exerciseId ne se résout pas; 950-966 transmet uniquement correction à MatchingExercise; 1531-1549 réserve toujours le checkpoint gate du pied de page aux chapters quiz/checkpoint, tandis que 1557-1609 ajoute les autres gates. MatchingExercise:40-42 et 444-450 n’affiche une correction détaillée qu’en présence de correction; les 11 blocs concernés n’ont ni correction, ni feedback, ni successMessage. blockRegistry.ts:165-189 confirme que ces champs sont possibles, sans les créer; chapterProgress.ts:99-140 décrit la garde générique utilisée par la navigation compacte, mais le défaut initial concernait explicitement le pied de page et son chemin reste non corrigé. learningDesign.ts:1-80 ne traite que les thèmes visuels. Le manifeste p0-p2-remediation-manifest.json ne comporte aucune entrée pour cette formation : les trois checkpoints désormais absents (01/chapter_19, 01/chapter_25, 03/chapter_12) ne peuvent donc être assimilés ni à une résolution ni à un retrait documenté; ils sont externally_unverifiable. Tous les autres constats sont encore prouvables localement et restent still_open. Aucun constat ne reçoit de crédit sans preuve positive; aucune absence d’écran n’est interprétée comme correction. Score conservateur : base 100 moins la pénalité des constats non résolus ou non vérifiables (P0=10, P1=5, P2=2), soit 100 - (2×10 + 5×5 + 17×2) = 21/100. Les trois externally_unverifiable reçoivent la même pénalité qu’un constat ouvert car aucune preuve de remédiation n’existe.",
-  "issueClassifications": [
+  "reviewed_current_state": true,
+  "findings": [
     {
-      "issueId": "ped:009:01:chapter_03:bucket-2-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_03/platform_layers_sort",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort platform_layers_sort existe toujours dans lessons[0].chapters[2].blocks[2] sans champs correction, feedback ni successMessage. LessonViewer ne transmet que correction à MatchingExercise; MatchingExercise n’affiche une correction détaillée que si correction est non vide, sinon score et Réessayer.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Les quatre tris de la carte de plateforme ne donnent pas de rétroaction pédagogique par réponse",
+      "evidence": "Dans current_courses.claude_certified_architect_professional__01.lessons[0].chapters[2] (chapter_03), les blocs bucket_sort platform_layers_sort, behavior_properties_design_consequences, associer_elements_plateforme_couches et associer_primitives_roles ne déclarent que id, title, instructions, buckets et cards (avec correctBucket). Aucun champ feedback, explanation, correction ou équivalent n'est présent pour expliquer une erreur.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_03"
     },
     {
-      "issueId": "ped:009:01:chapter_03:bucket-5-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_03/behavior_properties_design_consequences",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort behavior_properties_design_consequences existe toujours dans lessons[0].chapters[2].blocks[5] sans correction, feedback ni successMessage. Le chemin actuel de rendu ne fournit donc pas de correction pédagogique visible après une erreur.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Les deux tris de décomposition ne donnent pas de rétroaction pédagogique par réponse",
+      "evidence": "Dans current_courses.claude_certified_architect_professional__01.lessons[0].chapters[6] (chapter_07), les blocs bucket_sort on_site_service_capabilities et decomposer_demande_brief_partenaire_001 contiennent catégories, cartes et correctBucket, sans feedback, explanation, correction ni justification associée à une mauvaise réponse.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_07"
     },
     {
-      "issueId": "ped:009:01:chapter_03:bucket-6-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_03/associer_elements_plateforme_couches",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort associer_elements_plateforme_couches existe toujours dans lessons[0].chapters[2].blocks[6] sans correction, feedback ni successMessage. LessonViewer:950-966 et MatchingExercise:40-42,444-450 n’ajoutent aucun retour visible en leur absence.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Le tri de critique d'orchestration ne donne pas de rétroaction pédagogique par réponse",
+      "evidence": "Dans current_courses.claude_certified_architect_professional__01.lessons[0].chapters[9] (chapter_10), bucket_sort critic_orchestration_design_v1 possède instructions, buckets, cards et correctBucket, sans feedback, explanation ni correction contextualisée pour une association erronée.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_10"
     },
     {
-      "issueId": "ped:009:01:chapter_03:bucket-7-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_03/associer_primitives_roles",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort associer_primitives_roles existe toujours dans lessons[0].chapters[2].blocks[7] sans correction, feedback ni successMessage; le composant actuel ne montre alors que le score, Réessayez et la catégorie attendue en sr-only.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Le tri de critique de diagramme ne donne pas de rétroaction pédagogique par réponse",
+      "evidence": "Dans current_courses.claude_certified_architect_professional__01.lessons[0].chapters[12] (chapter_13), bucket_sort critique_diagram_001 fournit catégories, cartes et correctBucket, mais aucun feedback, explanation ou correction associé aux erreurs.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_13"
     },
     {
-      "issueId": "ped:009:01:chapter_07:bucket-2-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_07/on_site_service_capabilities",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort on_site_service_capabilities reste dans lessons[0].chapters[3].blocks[2] sans correction, feedback ni successMessage. Les conditions de rendu actuelles de MatchingExercise laissent le feedback pédagogique absent après erreur.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Le tri du calculateur coût-latence ne donne pas de rétroaction pédagogique par réponse",
+      "evidence": "Dans current_courses.claude_certified_architect_professional__01.lessons[0].chapters[16] (chapter_17), bucket_sort cost_latency_calculator_fix_v1 contient instructions, buckets, cards et correctBucket, sans feedback, explanation ni correction ciblée pour une erreur.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_17"
     },
     {
-      "issueId": "ped:009:01:chapter_07:bucket-3-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_07/decomposer_demande_brief_partenaire_001",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort decomposer_demande_brief_partenaire_001 reste dans lessons[0].chapters[3].blocks[3] sans correction, feedback ni successMessage. LessonViewer ne transmet pas les deux derniers champs et MatchingExercise exige correction pour l’affichage détaillé.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Le tri sur le point d'entrée et le compromis ne donne pas de rétroaction pédagogique par réponse",
+      "evidence": "Dans current_courses.claude_certified_architect_professional__01.lessons[0].chapters[22] (chapter_23), bucket_sort choose_entry_point_tradeoff_v1 ne déclare que instructions, buckets, cards et correctBucket, sans feedback, explanation ou correction qui explique une association erronée.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_23"
     },
     {
-      "issueId": "ped:009:01:chapter_10:bucket-4-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_10/critic_orchestration_design_v1",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort critic_orchestration_design_v1 reste dans lessons[0].chapters[4].blocks[4] sans correction, feedback ni successMessage. Les comportements de LessonViewer et MatchingExercise qui fondaient le constat restent inchangés pour ce bloc.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P1",
+      "status": "fixed",
+      "title": "L'ancien checkpoint contournable du chapitre 15 n'est plus une validation active",
+      "evidence": "Le constat précédent visait ex_claude_certified_architect_professional__01_007 en chapter_15. Dans current_courses, chapter_15 est désormais teaching, ne contient que deux blocs content et porte completionRule {requires:[contentViewed]}; aucun bloc checkpoint, référence d'exercice ou requiredExercisesPassed n'y est déclaré.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_15"
     },
     {
-      "issueId": "ped:009:01:chapter_13:bucket-2-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_13/critique_diagram_001",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort critique_diagram_001 reste dans lessons[0].chapters[5].blocks[2] sans correction, feedback ni successMessage. Le composant courant ne peut donc pas afficher de correction pédagogique contextualisée après erreur.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P1",
+      "status": "fixed",
+      "title": "L'ancienne référence de checkpoint absente du chapitre 19 ne bloque plus la progression",
+      "evidence": "Le constat précédent visait ex_claude_certified_architect_professional__01_009. Dans current_courses, chapter_19 est teaching, contient seulement content et flip_cards, et sa completionRule est {requires:[contentViewed]}. Le cours courant déclare exercises:[] : aucune référence d'exercice absente n'est active dans ce chapitre.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_19"
     },
     {
-      "issueId": "ped:009:01:chapter_15:checkpoint-footer-bypass",
-      "initialSeverity": "P1",
-      "initialCategory": "verrouillage",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_15/ex_claude_certified_architect_professional__01_007",
-      "classification": "still_open",
-      "evidence": "chapter_15 est toujours type=teaching, non terminal, et conserve le checkpoint vers ex_claude_certified_architect_professional__01_007, qui se résout dans exercises[]. Dans LessonViewer:1531-1549, isGatedByExercises reste conditionné à chapter.type checkpoint/quiz; le bouton Suivant de pied de page utilise ce gate à 1609-1648. Le checkpoint reste donc contournable par ce contrôle.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts"
-      ],
-      "currentState": "L’exercice est rendu mais sa validation annoncée n’est toujours pas imposée par le pied de page.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P0",
+      "status": "fixed",
+      "title": "L'ancien blocage par checkpoint manquant du chapitre 25 a disparu",
+      "evidence": "Le constat précédent visait ex_claude_certified_architect_professional__01_011. Dans l'état courant, chapter_25 est checkpoint avec huit flip_cards et completionRule {requires:[contentViewed]}; exercises est vide et aucune référence à cet identifiant ni condition requiredExercisesPassed n'est déclarée. Le passage ne peut plus être bloqué par la référence manquante.",
+      "course_id": "claude_certified_architect_professional__01",
+      "chapter_id": "chapter_25"
     },
     {
-      "issueId": "ped:009:01:chapter_17:bucket-2-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_17/cost_latency_calculator_fix_v1",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort cost_latency_calculator_fix_v1 reste dans lessons[0].chapters[7].blocks[2] sans correction, feedback ni successMessage. La correction visible reste conditionnée à exercise.correction dans MatchingExercise.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Le tri coût-fiabilité ne donne pas de rétroaction pédagogique par réponse",
+      "evidence": "Dans current_courses.claude_certified_architect_professional__02.lessons[0].chapters[3] (chapter_04), bucket_sort cost_reliability_calculator_v1 contient cartes avec correctBucket et le chapitre exige requiredExercisesPassed, mais le bloc ne contient aucun feedback, explanation ou correction par carte. L'activité est déclarée et verrouillée, sans remédiation explicative après erreur.",
+      "course_id": "claude_certified_architect_professional__02",
+      "chapter_id": "chapter_04"
     },
     {
-      "issueId": "ped:009:01:chapter_19:checkpoint-ref-missing",
-      "initialSeverity": "P1",
-      "initialCategory": "activité/rendu",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_19/ex_claude_certified_architect_professional__01_009",
-      "classification": "externally_unverifiable",
-      "evidence": "La recherche actuelle ne trouve plus ni checkpoint portant exerciseId=ex_claude_certified_architect_professional__01_009 dans chapter_19, ni exercice de cet id dans exercises[]. p0-p2-remediation-manifest.json ne contient aucune entrée pour cette formation. LessonViewer:887-890 prouve qu’une référence non résolue serait masquée, mais l’absence actuelle du bloc ne prouve ni un retrait validé ni une correction équivalente.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/pedagogical-audit/p0-p2-remediation-manifest.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx"
-      ],
-      "currentState": "Ancienne activité absente sans trace de retrait; absence seule non comptée comme correction.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P1",
+      "status": "fixed",
+      "title": "L'ancien checkpoint contournable du chapitre 11 n'est plus une validation obligatoire active",
+      "evidence": "Le constat précédent visait ex_claude_certified_architect_professional__02_006. Dans current_courses, chapter_11 est un exercise composé de content et de six flip_cards avec completionRule {requires:[contentViewed]}; aucun bloc checkpoint, identifiant d'exercice référencé ni requiredExercisesPassed n'est déclaré.",
+      "course_id": "claude_certified_architect_professional__02",
+      "chapter_id": "chapter_11"
     },
     {
-      "issueId": "ped:009:01:chapter_23:bucket-2-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_23/choose_entry_point_tradeoff_v1",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort choose_entry_point_tradeoff_v1 reste dans lessons[0].chapters[9].blocks[2] sans correction, feedback ni successMessage. LessonViewer transmet correction seulement et MatchingExercise affiche sa correction détaillée seulement si celle-ci est renseignée.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "L'introduction du module 3 annonce un sujet incompatible avec le cours",
+      "evidence": "sourceCourseTitle est « Claude Certified Architect - Professional / Responsible AI, Safety & Risk for Architects ». Le content de chapter_01_1 affiche pourtant « Bienvenue au Module 03 : Orchestration multi-agents avancée », alors que les chapitres actuels portent sur Alignement, Garde-fous, Équité, routage et Conformité.",
+      "course_id": "claude_certified_architect_professional__03",
+      "chapter_id": "chapter_01_1"
     },
     {
-      "issueId": "ped:009:01:chapter_25:checkpoint-ref-missing-lock",
-      "initialSeverity": "P0",
-      "initialCategory": "verrouillage",
-      "initialLocation": "claude_certified_architect_professional__01/chapter_25/ex_claude_certified_architect_professional__01_011",
-      "classification": "externally_unverifiable",
-      "evidence": "chapter_25 reste type=checkpoint, mais sa liste de blocs ne contient plus le checkpoint exerciseId=ex_claude_certified_architect_professional__01_011 et exercises[] ne contient pas cet id. Aucune entrée correspondante n’existe dans p0-p2-remediation-manifest.json. Cette absence a pu supprimer le blocage, mais sans retrait documenté ni activité de remplacement elle ne constitue pas une résolution prouvée.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__01.json",
-        "/home/ubuntu/neopolis-akademy/pedagogical-audit/p0-p2-remediation-manifest.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx"
-      ],
-      "currentState": "Ancien checkpoint obligatoire absent sans trace de retrait; absence seule non comptée comme correction.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P1",
+      "status": "open",
+      "title": "Le checkpoint de conformité promet une validation sans activité évaluée ni verrouillage de réponse",
+      "evidence": "chapter_12 est de type checkpoint et son content indique « Vous ne validez que si les deux conditions sont réunies » avant de demander de choisir un contrôle et une justification. Ses seuls blocs sont content et cinq flip_cards; exercises est vide et completionRule vaut seulement {requires:[contentViewed]}. Aucune réponse saisissable, évaluable ou condition requiredExercisesPassed n'est déclarée : la validation annoncée est franchissable par simple consultation.",
+      "course_id": "claude_certified_architect_professional__03",
+      "chapter_id": "chapter_12"
     },
     {
-      "issueId": "ped:009:02:chapter_04:bucket-0-feedback",
-      "initialSeverity": "P2",
-      "initialCategory": "feedback",
-      "initialLocation": "claude_certified_architect_professional__02/chapter_04/cost_reliability_calculator_v1",
-      "classification": "still_open",
-      "evidence": "Le bloc bucket_sort cost_reliability_calculator_v1 existe toujours dans lessons[0].chapters[4].blocks[0] sans correction, feedback ni successMessage. Le contrat bucket_sort de blockRegistry autorise ces champs, mais les données et le rendu actuel ne les fournissent pas à l’apprenant après erreur.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__02.json",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx"
-      ],
-      "currentState": "Le défaut de feedback pédagogique visible après erreur est toujours présent.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P0",
+      "status": "fixed",
+      "title": "L'ancien blocage par référence de checkpoint manquante du chapitre 12 a disparu",
+      "evidence": "Le constat précédent visait ex_claude_certified_architect_professional__03_006. Dans current_courses, chapter_12 ne référence aucun exercice; exercises est vide et completionRule vaut {requires:[contentViewed]}. La référence absente ne peut donc plus bloquer le passage. Le défaut distinct de validation seulement déclarative est signalé séparément.",
+      "course_id": "claude_certified_architect_professional__03",
+      "chapter_id": "chapter_12"
     },
     {
-      "issueId": "ped:009:02:chapter_11:checkpoint-footer-bypass",
-      "initialSeverity": "P1",
-      "initialCategory": "verrouillage",
-      "initialLocation": "claude_certified_architect_professional__02/chapter_11/ex_claude_certified_architect_professional__02_006",
-      "classification": "still_open",
-      "evidence": "chapter_11 est toujours type=exercise, non terminal, conserve le checkpoint vers un exercice résolu. LessonViewer:1531-1549 ne verrouille le pied de page par checkpoint que si chapter.type est checkpoint/quiz; le type exercise demeure hors de cette condition.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__02.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts"
-      ],
-      "currentState": "Checkpoint rendu mais toujours contournable par le bouton Suivant du pied de page.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "La conclusion du module 3 annonce un sujet incompatible avec le cours",
+      "evidence": "sourceCourseTitle est « Responsible AI, Safety & Risk for Architects », tandis que le content de chapter_15 affirme : « Félicitations ! Vous avez terminé Orchestration multi-agents avancée ». La conclusion contredit le thème et le contenu courant du module.",
+      "course_id": "claude_certified_architect_professional__03",
+      "chapter_id": "chapter_15"
     },
     {
-      "issueId": "ped:009:03:chapter_01_1:module-introduction-title",
-      "initialSeverity": "P2",
-      "initialCategory": "cohérence pédagogique",
-      "initialLocation": "claude_certified_architect_professional__03/chapter_01_1/module-introduction-title",
-      "classification": "still_open",
-      "evidence": "Le premier bloc content de chapter_01_1 affiche toujours « Bienvenue au Module 03 : Orchestration multi-agents avancée », alors que sourceCourseTitle est « Claude Certified Architect - Professional / Responsible AI, Safety & Risk for Architects ». LessonViewer:498-530 rend le body localisé du bloc content; aucune transformation de thème n’est apportée par learningDesign.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__03.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ],
-      "currentState": "La contradiction de thème de l’introduction est encore dans les données rendues.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "L'introduction du module 4 annonce un sujet incompatible avec le cours",
+      "evidence": "sourceCourseTitle est « Claude Certified Architect - Professional / Stakeholder Engagement, Lifecycle & GTM », mais le content de chapter_01_1 affiche « Bienvenue au Module 04 : Optimisation des coûts et surveillance ». Cet écran énumère néanmoins l'engagement des parties prenantes, le cycle de vie et la stratégie de mise sur le marché comme apprentissage.",
+      "course_id": "claude_certified_architect_professional__04",
+      "chapter_id": "chapter_01_1"
     },
     {
-      "issueId": "ped:009:03:chapter_12:checkpoint-ref-missing-lock",
-      "initialSeverity": "P0",
-      "initialCategory": "verrouillage",
-      "initialLocation": "claude_certified_architect_professional__03/chapter_12/ex_claude_certified_architect_professional__03_006",
-      "classification": "externally_unverifiable",
-      "evidence": "chapter_12 reste type=checkpoint, mais les données actuelles ne contiennent plus le checkpoint vers ex_claude_certified_architect_professional__03_006 ni l’exercice correspondant. Le manifeste p0-p2-remediation-manifest.json ne trace aucun retrait pour ce cours. La disparition peut avoir évité le blocage initial, mais ne prouve ni une décision pédagogique documentée ni une activité de remplacement.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__03.json",
-        "/home/ubuntu/neopolis-akademy/pedagogical-audit/p0-p2-remediation-manifest.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx"
-      ],
-      "currentState": "Ancien checkpoint obligatoire absent sans trace de retrait; absence seule non comptée comme correction.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P1",
+      "status": "open",
+      "title": "L'exercice du module 4 est tronqué et ne déclare aucune interaction réalisable",
+      "evidence": "chapter_02 est intitulé « Exercice » mais ne contient qu'un bloc content. Son texte français fait 364 caractères et se termine littéralement par « Un design terminé dépend encore des parties prenantes : le disco ». Aucun bloc d'activité, donnée, ressource, consigne complète ou entrée exercises n'est déclaré; le cours courant a exercises:[]. L'activité annoncée n'est pas réalisable dans l'état fourni.",
+      "course_id": "claude_certified_architect_professional__04",
+      "chapter_id": "chapter_02"
     },
     {
-      "issueId": "ped:009:03:chapter_15:module-complete-title",
-      "initialSeverity": "P2",
-      "initialCategory": "cohérence pédagogique",
-      "initialLocation": "claude_certified_architect_professional__03/chapter_15/module-complete-title",
-      "classification": "still_open",
-      "evidence": "Le bloc content de chapter_15 indique toujours « Vous avez terminé Orchestration multi-agents avancée », incompatible avec sourceCourseTitle « Responsible AI, Safety & Risk for Architects ». LessonViewer rend ce body contenu; learningDesign ne le remplace pas.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__03.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ],
-      "currentState": "La contradiction de thème de la clôture est encore dans les données rendues.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P1",
+      "status": "fixed",
+      "title": "L'ancien checkpoint contournable du chapitre 2 n'est plus une validation active",
+      "evidence": "Le constat précédent visait ex_claude_certified_architect_professional__04_001. Dans current_courses, chapter_02 ne contient aucun bloc checkpoint, identifiant d'exercice ni completionRule/requiredExercisesPassed. Aucun verrou de checkpoint actif n'est donc contournable; le contenu tronqué du chapitre fait l'objet d'un constat séparé.",
+      "course_id": "claude_certified_architect_professional__04",
+      "chapter_id": "chapter_02"
     },
     {
-      "issueId": "ped:009:04:chapter_01_1:module-introduction-title",
-      "initialSeverity": "P2",
-      "initialCategory": "cohérence pédagogique",
-      "initialLocation": "claude_certified_architect_professional__04/chapter_01_1/module-introduction-title",
-      "classification": "still_open",
-      "evidence": "Le content de chapter_01_1 affiche toujours « Module 04 : Optimisation des coûts et surveillance », tandis que sourceCourseTitle porte « Stakeholder Engagement, Lifecycle & GTM ». LessonViewer rend ce body tel qu’il est localisé; aucune correction de thème n’est présente dans learningDesign.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__04.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ],
-      "currentState": "La contradiction de thème de l’introduction est encore dans les données rendues.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Le module 4 annonce des checkpoints et un quiz qui n'existent pas dans son état courant",
+      "evidence": "chapter_01_1 annonce « des points de contrôle » et « un quiz ». Or les six chapitres actuels du cours ont les types teaching (chapter_01_1, chapter_01, chapter_04, chapter_05, chapter_06) et exercise (chapter_02), sans chapitre checkpoint ni quiz et sans bloc d'activité évaluée. Chapter_05 renvoie en outre à « le point de contrôle pertinent » alors qu'aucun checkpoint n'est déclaré.",
+      "course_id": "claude_certified_architect_professional__04",
+      "chapter_id": "chapter_01_1"
     },
     {
-      "issueId": "ped:009:04:chapter_02:checkpoint-footer-bypass",
-      "initialSeverity": "P1",
-      "initialCategory": "verrouillage",
-      "initialLocation": "claude_certified_architect_professional__04/chapter_02/ex_claude_certified_architect_professional__04_001",
-      "classification": "still_open",
-      "evidence": "chapter_02 est toujours type=exercise, non terminal, avec un checkpoint qui résout ex_claude_certified_architect_professional__04_001. LessonViewer:1531-1549 exclut toujours ce type de chapitre du checkpoint gate de pied de page; le bouton Suivant reste donc contournable.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__04.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts"
-      ],
-      "currentState": "Checkpoint rendu mais toujours contournable par le bouton Suivant du pied de page.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "La conclusion du module 4 annonce un sujet incompatible avec le cours",
+      "evidence": "sourceCourseTitle indique « Stakeholder Engagement, Lifecycle & GTM », alors que le content de chapter_06 déclare : « Vous avez terminé Optimisation des coûts et surveillance ». Cette clôture ne correspond ni au titre du cours ni à son chapitre pédagogique.",
+      "course_id": "claude_certified_architect_professional__04",
+      "chapter_id": "chapter_06"
     },
     {
-      "issueId": "ped:009:04:chapter_06:module-complete-title",
-      "initialSeverity": "P2",
-      "initialCategory": "cohérence pédagogique",
-      "initialLocation": "claude_certified_architect_professional__04/chapter_06/module-complete-title",
-      "classification": "still_open",
-      "evidence": "Le content de chapter_06 indique encore « Optimisation des coûts et surveillance » alors que sourceCourseTitle reste « Stakeholder Engagement, Lifecycle & GTM ». LessonViewer rend ce contenu et learningDesign n’en modifie pas le thème.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__04.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ],
-      "currentState": "La contradiction de thème de la clôture est encore dans les données rendues.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "L'introduction du module 5 annonce un sujet incompatible avec le cours",
+      "evidence": "sourceCourseTitle est « Claude Certified Architect - Professional / Team Enablement & Operational Productivity », mais le content de chapter_01_1 affiche « Bienvenue au Module 05 : Préparation à l'examen ». Le même écran annonce pourtant l'autonomisation des équipes et la productivité opérationnelle comme sujet appris.",
+      "course_id": "claude_certified_architect_professional__05",
+      "chapter_id": "chapter_01_1"
     },
     {
-      "issueId": "ped:009:05:chapter_01_1:module-introduction-title",
-      "initialSeverity": "P2",
-      "initialCategory": "cohérence pédagogique",
-      "initialLocation": "claude_certified_architect_professional__05/chapter_01_1/module-introduction-title",
-      "classification": "still_open",
-      "evidence": "Le content de chapter_01_1 indique encore « Module 05 : Préparation à l’examen », tandis que sourceCourseTitle indique « Team Enablement & Operational Productivity ». LessonViewer rend le body localisé sans remappage sémantique par learningDesign.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__05.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ],
-      "currentState": "La contradiction de thème de l’introduction est encore dans les données rendues.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P1",
+      "status": "open",
+      "title": "L'exercice du module 5 est tronqué et ne déclare aucune interaction réalisable",
+      "evidence": "chapter_02 est intitulé « Exercice » mais ne contient qu'un bloc content. Son texte français fait 392 caractères et s'interrompt littéralement par « Le champion abso ». Aucun bloc d'activité, donnée, ressource, consigne complète ou entrée exercises n'est déclaré; le cours courant a exercises:[]. L'activité annoncée n'est pas réalisable dans l'état fourni.",
+      "course_id": "claude_certified_architect_professional__05",
+      "chapter_id": "chapter_02"
     },
     {
-      "issueId": "ped:009:05:chapter_02:checkpoint-footer-bypass",
-      "initialSeverity": "P1",
-      "initialCategory": "verrouillage",
-      "initialLocation": "claude_certified_architect_professional__05/chapter_02/ex_claude_certified_architect_professional__05_001",
-      "classification": "still_open",
-      "evidence": "chapter_02 est toujours type=exercise, non terminal, avec un checkpoint qui résout ex_claude_certified_architect_professional__05_001. LessonViewer:1531-1549 réserve encore le checkpoint gate de pied de page aux chapters quiz/checkpoint; le type exercise reste contournable.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__05.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts"
-      ],
-      "currentState": "Checkpoint rendu mais toujours contournable par le bouton Suivant du pied de page.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P1",
+      "status": "fixed",
+      "title": "L'ancien checkpoint contournable du chapitre 2 n'est plus une validation active",
+      "evidence": "Le constat précédent visait ex_claude_certified_architect_professional__05_001. Dans current_courses, chapter_02 ne contient aucun bloc checkpoint, identifiant d'exercice ni completionRule/requiredExercisesPassed. Aucun verrou de checkpoint actif n'est donc contournable; le contenu tronqué du chapitre fait l'objet d'un constat séparé.",
+      "course_id": "claude_certified_architect_professional__05",
+      "chapter_id": "chapter_02"
     },
     {
-      "issueId": "ped:009:05:chapter_06:module-complete-title",
-      "initialSeverity": "P2",
-      "initialCategory": "cohérence pédagogique",
-      "initialLocation": "claude_certified_architect_professional__05/chapter_06/module-complete-title",
-      "classification": "still_open",
-      "evidence": "Le content de chapter_06 indique encore « Préparation à l’examen », alors que sourceCourseTitle reste « Team Enablement & Operational Productivity ». Le body est rendu par LessonViewer et n’est pas corrigé par learningDesign.",
-      "evidencePaths": [
-        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_certified_architect_professional__05.json",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ],
-      "currentState": "La contradiction de thème de la clôture est encore dans les données rendues.",
-      "renderAndProgressChecked": [
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx",
-        "/home/ubuntu/neopolis-akademy/client/src/pages/training/chapterProgress.ts",
-        "/home/ubuntu/neopolis-akademy/shared/blockRegistry.ts",
-        "/home/ubuntu/neopolis-akademy/shared/learningDesign.ts"
-      ]
+      "severity": "P2",
+      "status": "open",
+      "title": "Le module 5 annonce des checkpoints et un quiz qui n'existent pas dans son état courant",
+      "evidence": "chapter_01_1 annonce « des points de contrôle » et « un quiz ». Or les six chapitres actuels du cours sont de type teaching (cinq) ou exercise (chapter_02), sans checkpoint, quiz ni bloc d'activité évaluée. Chapter_05 renvoie pourtant à « le point de contrôle pertinent », alors qu'aucun checkpoint n'est déclaré.",
+      "course_id": "claude_certified_architect_professional__05",
+      "chapter_id": "chapter_01_1"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "La conclusion du module 5 annonce un sujet incompatible avec le cours",
+      "evidence": "sourceCourseTitle indique « Team Enablement & Operational Productivity », alors que le content de chapter_06 déclare : « Vous avez terminé Préparation à l'examen ». La clôture est incohérente avec le thème du module courant.",
+      "course_id": "claude_certified_architect_professional__05",
+      "chapter_id": "chapter_06"
     }
-  ],
-  "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/009-claude_certified_architect_professional.json"
+  ]
 }

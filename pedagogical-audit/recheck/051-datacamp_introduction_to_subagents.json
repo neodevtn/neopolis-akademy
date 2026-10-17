@@ -4,175 +4,143 @@
   "course_ids": [
     "introduction_to_subagents__01"
   ],
-  "review_scope": {
-    "basis": "Contre-revue en lecture seule de l’état courant JSON, comparée au rapport initial et aux données d’audit statique.",
-    "formation_manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
-    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/051-datacamp_introduction_to_subagents.json",
-    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
-    "course_paths": [
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_subagents__01.json"
-    ],
-    "criteria": [
-      "objectifs et activités",
-      "faisabilité TP/fichiers/environnement",
-      "fausses soumissions ou gates",
-      "médias/téléchargements",
-      "duplications ou corruption",
-      "rendu/bilinguisme"
-    ],
-    "method_note": "Seuls les constats localisés et démontrés par les JSON courants, le rapport initial ou les données statiques sont retenus. Les médias valides et l’absence de duplication/corruption ne sont pas transformées en issues sans preuve contraire. Aucun cours n’a été modifié."
-  },
   "reviewed_current_state": true,
   "findings": [
     {
-      "severity": "P2",
-      "category": "verrouillage",
+      "severity": "P0",
+      "status": "fixed",
+      "title": "Retrait de la pratique Claude Code « Where do refunds live? »",
+      "evidence": "Le contenu actuel ne contient plus dc_ch01_act03 : current_courses.introduction_to_subagents__01.lessons[0].chapters ne liste que dc_ch01_act01, dc_ch01_act02, dc_ch01_act04 et dc_ch01_act05, sans bloc code_repl. La pratique non exécutable documentée dans previous_recheck.findings[3] n’est donc plus imposée à l’apprenant.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[0] (dc_ch01_act01) → blocks[id=dc_1_act_01_video]; clé de verrou vidéo relevée dans le rapport initial (LessonViewer.tsx, lignes 1558–1568).",
-      "description": "Le chapitre est obligatoire, mais l’identifiant MP4 dc_1_act_01_video excède la plage de longueur acceptée par la dérivation de clé documentée dans le rapport initial. Le visionnage ou le marquage manuel de la vidéo ne constitue donc pas un gate effectif.",
-      "recommendation": "Dériver la clé du verrou à partir de block.id sans filtre de longueur ou de mp4Url, puis ajouter un test couvrant les identifiants MP4 DataCamp.",
-      "status": "open"
-    },
-    {
-      "severity": "P1",
-      "category": "rendu/bilinguisme",
-      "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple] → question.fr, options[].text.fr, explanation.fr, hint.fr; datacampImport.sourceLanguage=fr-FR.",
-      "description": "Les champs apprenant français du QCM reprennent l’anglais, alors que la source est déclarée fr-FR. La question, les quatre options, l’explication et l’indice ne sont pas autonomes pour un apprenant francophone.",
-      "recommendation": "Traduire et relire les chaînes apprenant françaises en conservant inchangés les commandes, chemins et noms de produit nécessaires.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "rendu",
-      "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple] → correctAnswers=\"b\"; contradiction d’interface documentée avec MultiChoiceBlock.tsx lignes 56–60 et expectedAnswerCount.ts lignes 45–49.",
-      "description": "Une seule réponse est attendue, mais l’interface annonce les choix multiples et la sélection de toutes les bonnes réponses, en contradiction avec l’indicateur 1 réponse attendue.",
-      "recommendation": "Rendre le libellé et l’instruction conditionnels au nombre de réponses attendues.",
-      "status": "open"
+      "chapter_id": "dc_ch01_act03"
     },
     {
       "severity": "P0",
-      "category": "évaluation",
+      "status": "fixed",
+      "title": "Retrait de la pratique Claude Code « Spin up a code reviewer »",
+      "evidence": "Le contenu actuel ne contient plus dc_ch01_act06 : current_courses.introduction_to_subagents__01.lessons[0].chapters se termine à dc_ch01_act05 et aucun bloc code_repl n’est présent. La pratique non exécutable relevée dans previous_recheck.findings[7] ne bloque plus la progression.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[2] (dc_ch01_act03) → blocks[id=dc_1_act_03_code], requiredBeforeAdvance=true; validation documentée dans CodeReplBlock.tsx lignes 28–40 et shared/codeReplValidation.ts lignes 10–13.",
-      "description": "La pratique demande de lancer Claude Code, d’utiliser un sous-agent et de trouver le service/fonction des remboursements, mais le code_repl navigateur ne l’exécute pas. La vérification compare seulement le texte saisi à solutionCode, et le bloc ne participe pas au verrou de passage. Une copie de la solution peut donc être soumise sans exécuter la pratique.",
-      "recommendation": "Exécuter et valider réellement l’artefact dans un terminal/sandbox, ou réécrire l’activité en exercice autonome exécutable; inclure le bloc dans le gate uniquement après validation fiable.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "verrouillage",
-      "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[3] (dc_ch01_act04) → blocks[id=dc_1_act_04_video], requiredBeforeAdvance=true; clé documentée dans LessonViewer.tsx lignes 1558–1568.",
-      "description": "L’identifiant MP4 dc_1_act_04_video n’entre pas dans la plage de longueur acceptée par la clé de verrou documentée. Le chapitre obligatoire peut donc être quitté sans visionnage ou marquage effectif.",
-      "recommendation": "Corriger la dérivation de clé et tester les identifiants MP4 DataCamp sans modifier le média.",
-      "status": "open"
-    },
-    {
-      "severity": "P1",
-      "category": "rendu/bilinguisme",
-      "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple] → question.fr, options[].text.fr, explanation.fr, hint.fr.",
-      "description": "La question, les options, l’explication et l’indice français restent en anglais malgré sourceLanguage=fr-FR.",
-      "recommendation": "Localiser et relire toutes les chaînes apprenant françaises sans changer les identifiants de réponses.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "rendu",
-      "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple] → correctAnswers=\"b\"; MultiChoiceBlock.tsx lignes 56–60.",
-      "description": "Le QCM attend une réponse unique mais l’interface affiche les libellés pluriels de choix multiples.",
-      "recommendation": "Afficher Choix unique et Sélectionnez une réponse lorsqu’une seule réponse est attendue.",
-      "status": "open"
+      "chapter_id": "dc_ch01_act06"
     },
     {
       "severity": "P0",
-      "category": "évaluation",
+      "status": "fixed",
+      "title": "Retrait de la pratique Claude Code « Fix a weak subagent config »",
+      "evidence": "Le contenu actuel ne contient plus dc_ch02_act03 : current_courses.introduction_to_subagents__01.lessons[1].chapters liste dc_ch02_act01, dc_ch02_act02, dc_ch02_act04, dc_ch02_act05 et dc_ch02_act06, sans bloc code_repl. La pratique non exécutable signalée dans previous_recheck.findings[11] ne fait plus partie du parcours requis.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[5] (dc_ch01_act06) → blocks[id=dc_1_act_06_code], requiredBeforeAdvance=true; CodeReplBlock.tsx lignes 28–40 et codeReplValidation.ts lignes 10–13.",
-      "description": "La pratique demande le TUI /agents et l’enregistrement d’une configuration de projet, mais le code_repl navigateur n’exécute ni n’observe Claude Code. La validation exige seulement une copie textuelle exacte de solutionCode et le bloc est absent des verrous.",
-      "recommendation": "Valider réellement le fichier de configuration dans un environnement Claude Code, ou remplacer par un exercice exécutable et connecter sa validation fiable au gate.",
-      "status": "open"
+      "chapter_id": "dc_ch02_act03"
     },
     {
       "severity": "P2",
-      "category": "verrouillage",
+      "status": "open",
+      "title": "Le prérequis pratique conservé renvoie à des écrans qui ont été retirés",
+      "evidence": "Le bloc content neopolis_subagents_environment_preparation de lessons[0].chapters[0] demande Claude Code installé et connecté, puis indique : « Terminez chaque écran pratique et sa validation Neopolis ». Or le cours actuel ne compte que 9 activités (totalActivities:9) alors que datacampImport.expected.activities_extracted vaut 12, et ne contient aucun bloc code_repl. Aucun texte du contenu actuel n’explique le retrait des trois pratiques ni ne met à jour cette instruction.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[0] (dc_ch02_act01) → blocks[id=dc_2_act_01_video], requiredBeforeAdvance=true; clé documentée dans LessonViewer.tsx lignes 1558–1568.",
-      "description": "L’identifiant MP4 dc_2_act_01_video est trop long pour la dérivation de clé documentée; le verrou vidéo obligatoire est donc inopérant.",
-      "recommendation": "Dériver la clé depuis block.id sans filtre de longueur ou depuis mp4Url et ajouter un test.",
-      "status": "open"
+      "chapter_id": "dc_ch01_act01"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Le verrou de la vidéo « What are subagents » reste contournable",
+      "evidence": "Le chapitre actuel lessons[0].chapters[0] (dc_ch01_act01) conserve requiredBeforeAdvance:true et le bloc vidéo id=dc_1_act_01_video. previous_recheck.findings[0] documente que la dérivation de clé vidéo n’accepte que les block.id de 8 à 15 caractères ; cet id actuel en compte 17. Le paramétrage qui rend le verrou inopérant n’a pas changé dans le bundle.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch01_act01"
     },
     {
       "severity": "P1",
-      "category": "rendu/bilinguisme",
+      "status": "open",
+      "title": "Le QCM « What are subagents » reste non localisé en français",
+      "evidence": "current_courses.introduction_to_subagents__01.datacampImport.sourceLanguage vaut fr-FR. Dans lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple], question.fr, les quatre options[].text.fr, explanation.fr et hint.fr sont strictement identiques à leurs valeurs en. L’énoncé, les réponses et le feedback sont donc anglais dans le parcours français.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple] → question.fr, options[].text.fr, hint.fr; explanation.fr seule est traduite.",
-      "description": "La question, les quatre options et l’indice français restent en anglais; seule l’explication est localisée dans ce QCM fr-FR.",
-      "recommendation": "Traduire et relire question, options et indice français.",
-      "status": "open"
+      "chapter_id": "dc_ch01_act02"
     },
     {
       "severity": "P2",
-      "category": "rendu",
+      "status": "open",
+      "title": "Le QCM « What are subagents » annonce du choix multiple avec une seule réponse",
+      "evidence": "Le bloc actuel lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple] conserve correctAnswers:\"b\" et type:multi_choice_exercise. previous_recheck.findings[2] documente pour ce rendu les libellés inconditionnels « Choix multiples » et « Sélectionnez toutes les bonnes réponses ». Les données actuelles attendent toujours une seule réponse et n’apportent aucun correctif à cette contradiction.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple] → correctAnswers=\"b\"; MultiChoiceBlock.tsx lignes 56–60.",
-      "description": "Une réponse unique est attendue, mais les consignes rendues annoncent un choix multiple.",
-      "recommendation": "Rendre les libellés du composant conditionnels au nombre de réponses attendues.",
-      "status": "open"
-    },
-    {
-      "severity": "P0",
-      "category": "évaluation",
-      "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[2] (dc_ch02_act03) → blocks[id=dc_2_act_03_code], requiredBeforeAdvance=true; validation documentée dans CodeReplBlock.tsx, codeReplValidation.ts, chapterProgress.ts lignes 94–103.",
-      "description": "L’activité demande de modifier réellement .claude/agents/code-reviewer.md avec Claude Code, mais l’éditeur ne lance pas Claude Code ni ne vérifie le fichier. La soumission est une égalité textuelle à solutionCode et le code_repl est hors verrou.",
-      "recommendation": "Exécuter et vérifier le fichier produit dans un environnement réel, ou convertir l’activité en exercice autonome exécutable puis utiliser sa validation dans le gate.",
-      "status": "open"
+      "chapter_id": "dc_ch01_act02"
     },
     {
       "severity": "P2",
-      "category": "verrouillage",
+      "status": "open",
+      "title": "Le verrou de la vidéo « Creating a subagent » reste contournable",
+      "evidence": "Le chapitre actuel lessons[0].chapters[2] (dc_ch01_act04) conserve requiredBeforeAdvance:true et le bloc vidéo id=dc_1_act_04_video. previous_recheck.findings[4] établit que le verrou vidéo exclut les id hors de 8–15 caractères ; l’id actuel compte 17 caractères et le paramétrage est inchangé.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[3] (dc_ch02_act04) → blocks[id=dc_2_act_04_video], requiredBeforeAdvance=true; clé documentée dans LessonViewer.tsx lignes 1558–1568.",
-      "description": "L’identifiant MP4 dc_2_act_04_video excède la plage de longueur de la clé documentée; le chapitre obligatoire peut être franchi sans visionnage ou marquage effectif.",
-      "recommendation": "Corriger la dérivation de clé et la couvrir par un test d’identifiant MP4 DataCamp.",
-      "status": "open"
+      "chapter_id": "dc_ch01_act04"
     },
     {
       "severity": "P1",
-      "category": "rendu/bilinguisme",
+      "status": "open",
+      "title": "Le QCM « Creating a subagent » reste non localisé en français",
+      "evidence": "Dans lessons[0].chapters[3].blocks[id=dc_1_act_05_qcm_multiple], question.fr, les quatre options[].text.fr, explanation.fr et hint.fr sont identiques aux champs en correspondants, alors que le cours déclare sourceLanguage:fr-FR. L’activité obligatoire n’est pas autonome en français.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple] → question.fr, options[].text.fr, explanation.fr, hint.fr.",
-      "description": "La question, trois options sur quatre, l’explication et l’indice français reprennent l’anglais dans un parcours source fr-FR.",
-      "recommendation": "Traduire et relire toutes les chaînes apprenant françaises restantes.",
-      "status": "open"
+      "chapter_id": "dc_ch01_act05"
     },
     {
       "severity": "P2",
-      "category": "rendu",
+      "status": "open",
+      "title": "Le QCM « Creating a subagent » annonce du choix multiple avec une seule réponse",
+      "evidence": "Le bloc actuel lessons[0].chapters[3].blocks[id=dc_1_act_05_qcm_multiple] conserve correctAnswers:\"b\" et type:multi_choice_exercise. previous_recheck.findings[6] documente le rendu pluriel inconditionnel de ce type ; les données actuelles attendent toujours une seule réponse.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple] → correctAnswers=\"c\"; MultiChoiceBlock.tsx lignes 56–60.",
-      "description": "Une réponse correcte est attendue mais le rendu annonce Choix multiples et Sélectionnez toutes les bonnes réponses.",
-      "recommendation": "Employer le libellé et l’instruction singuliers pour une réponse unique.",
-      "status": "open"
+      "chapter_id": "dc_ch01_act05"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Le verrou de la vidéo « Designing effective subagents » reste contournable",
+      "evidence": "Le chapitre actuel lessons[1].chapters[0] (dc_ch02_act01) conserve requiredBeforeAdvance:true et le bloc vidéo id=dc_2_act_01_video. previous_recheck.findings[8] documente le filtre de clé vidéo de 8 à 15 caractères ; l’id actuel compte 17 caractères et reste donc exclu.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act01"
     },
     {
       "severity": "P1",
-      "category": "rendu/bilinguisme",
+      "status": "open",
+      "title": "Le QCM « Designing effective subagents » reste partiellement non localisé",
+      "evidence": "Dans lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple], question.fr, les quatre options[].text.fr et hint.fr sont identiques aux valeurs en ; seule explanation.fr est traduite. Cela contredit sourceLanguage:fr-FR et laisse l’action évaluée en anglais.",
       "course_id": "introduction_to_subagents__01",
-      "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort] → buckets[].fr et cards[].fr.",
-      "description": "Les deux catégories et les six cartes du tri reprennent l’anglais dans les valeurs françaises, alors que la consigne, l’indice et le feedback sont traduits.",
-      "recommendation": "Localiser les catégories et les six scénarios en conservant les acronymes et noms techniques nécessaires.",
-      "status": "open"
+      "chapter_id": "dc_ch02_act02"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Le QCM « Designing effective subagents » annonce du choix multiple avec une seule réponse",
+      "evidence": "Le bloc actuel lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple] conserve correctAnswers:\"b\" et type:multi_choice_exercise. previous_recheck.findings[10] documente que ce rendu annonce une sélection multiple ; l’activité actuelle n’a toujours qu’une réponse correcte.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act02"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Le verrou de la vidéo « Using subagents effectively » reste contournable",
+      "evidence": "Le chapitre actuel lessons[1].chapters[2] (dc_ch02_act04) conserve requiredBeforeAdvance:true et le bloc vidéo id=dc_2_act_04_video. previous_recheck.findings[12] documente que le verrou ignore les id vidéo hors de la plage 8–15 caractères ; l’id actuel compte 17 caractères et la condition persiste.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act04"
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "title": "Le QCM « Using subagents effectively » reste majoritairement non localisé",
+      "evidence": "Dans lessons[1].chapters[3].blocks[id=dc_2_act_05_qcm_multiple], question.fr, trois options[].text.fr sur quatre, explanation.fr et hint.fr sont identiques à en ; seule l’option c est française. Le cours est pourtant marqué sourceLanguage:fr-FR.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act05"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Le QCM « Using subagents effectively » annonce du choix multiple avec une seule réponse",
+      "evidence": "Le bloc actuel lessons[1].chapters[3].blocks[id=dc_2_act_05_qcm_multiple] conserve correctAnswers:\"c\" et type:multi_choice_exercise. previous_recheck.findings[14] documente le libellé de choix multiple inconditionnel ; la donnée actuelle conserve une seule réponse correcte.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act05"
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "title": "Le tri final conserve ses catégories et scénarios en anglais",
+      "evidence": "Dans lessons[1].chapters[4].blocks[id=dc_2_act_06_bucket_sort], instructions.fr est identique à instructions.en, les deux buckets[].label.fr sont identiques à en et les six cards[].text.fr sont identiques à en. Seuls feedback.fr et hint.fr sont français, malgré sourceLanguage:fr-FR ; l’interaction centrale de classement reste donc anglaise.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act06"
     }
-  ],
-  "summary": {
-    "issue_count": 16,
-    "p0": 3,
-    "p1": 5,
-    "p2": 8
-  }
+  ]
 }

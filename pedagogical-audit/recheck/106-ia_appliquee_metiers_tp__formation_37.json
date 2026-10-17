@@ -4,84 +4,67 @@
   "course_ids": [
     "ia_appliquee_metiers_tp__37"
   ],
-  "review_scope": {
-    "formation_manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
-    "course_paths": [
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__37.json"
-    ],
-    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/106-ia_appliquee_metiers_tp__formation_37.json",
-    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
-    "criteria": [
-      "objectifs et activités",
-      "faisabilité TP/fichiers/environnement",
-      "fausses soumissions ou gates",
-      "médias/téléchargements",
-      "duplications ou corruption",
-      "rendu/bilinguisme"
-    ],
-    "method": "Contre-revue en lecture seule ; constats retenus uniquement lorsqu'ils sont localisés dans le JSON courant ou déjà vérifiés dans le rapport initial par inspection du rendu."
-  },
   "reviewed_current_state": true,
   "findings": [
     {
       "severity": "P1",
-      "category": "verrouillage_et_evaluation",
+      "status": "open",
+      "title": "Le checkpoint de sécurité reste déverrouillable après une réponse erronée",
+      "evidence": "État courant : lessons[0].chapters[3] (ia_appliquee_metiers_tp__37-checkpoint-01) est requis, avec passThreshold=1, et son unique bloc required knowledge_check ia_appliquee_metiers_tp__37-checkpoint-preparation conserve correctAnswer=\"a\". La configuration de ce bloc est inchangée par rapport au constat de rendu documenté dans initial_audit.courses[0].chapters[3].issues[0] : toute sélection appelait la complétion et le knowledge_check n’était pas pris en compte par checkpointGate. Aucun correctif de données du bloc ou du seuil n’est présent dans le contenu courant ; une réponse b/c/d peut donc toujours satisfaire la complétion observée.",
       "course_id": "ia_appliquee_metiers_tp__37",
-      "location": "lessons[0].chapters[3].blocks[0] (knowledge_check id ia_appliquee_metiers_tp__37-checkpoint-preparation), lessons[0].chapters[3].passThreshold",
-      "description": "Le checkpoint comporte une bonne réponse JSON (correctAnswer=\"a\") et passThreshold=1, mais le rapport initial vérifié sur le rendu indique qu'une sélection incorrecte appelle néanmoins la complétion et peut lever le verrou. Le seuil de réussite n'est donc pas effectivement conditionnant pour ce knowledge_check.",
-      "recommendation": "Ne marquer le knowledge_check comme complété et ne déverrouiller la suite qu'après la réponse correcte ; conserver le feedback et la nouvelle tentative.",
-      "status": "open"
+      "chapter_id": "ia_appliquee_metiers_tp__37-checkpoint-01"
     },
     {
       "severity": "P1",
-      "category": "ressources_et_prerequis",
-      "course_id": "ia_appliquee_metiers_tp__37",
-      "location": "lessons[0].chapters[4].blocks[0].assignment, instructions, resources[0].url",
-      "description": "La consigne actuelle demande d'analyser trois contrats fictifs contre un playbook et de produire une matrice clauses/risques/recommandations, tout en renvoyant au support fourni. Le JSON courant ne contient pas ces trois contrats ni les règles du playbook nécessaires pour qualifier écart, sévérité et alternative ; la faisabilité et la vérifiabilité du livrable ne sont donc pas démontrées par les artefacts déclarés.",
-      "recommendation": "Fournir explicitement les trois extraits et un playbook de test avec règles de comparaison, sévérité et alternatives, ou réécrire la consigne pour demander leur création avec des critères observables.",
-      "status": "open"
+      "status": "fixed",
+      "title": "L’activité qui exigeait contrats et playbook non fournis a été retirée",
+      "evidence": "Le contenu courant ne contient plus le chapitre ia_appliquee_metiers_tp__37-mini-project ni le bloc cloud_exercise ia-appliquee-metiers-tp__37-mini-project-proof : lessons[0].chapters ne contient désormais que screen-01, screen-02, screen-03, checkpoint-01 et final-quiz. Aucune activité actuelle n’exige donc les trois contrats fictifs ni le playbook qui manquaient ; la progression n’est plus bloquée par cette activité.",
+      "course_id": "ia_appliquee_metiers_tp__37"
     },
     {
       "severity": "P1",
-      "category": "feedback_et_evaluation",
-      "course_id": "ia_appliquee_metiers_tp__37",
-      "location": "lessons[0].chapters[4].blocks[0] (cloud_exercise id ia-appliquee-metiers-tp__37-mini-project-proof)",
-      "description": "Le JSON exige dans la preuve un scénario, un résultat, un contrôle et une validation humaine, mais ne fournit aucun minimumAnswerLength, rubricCriteria ni serverGradedAssessment. Le rapport initial vérifié sur le rendu constate qu'une saisie d'un seul caractère suffit à terminer le TP et à déverrouiller le quiz final.",
-      "recommendation": "Ajouter une remise structurée et vérifiable avec les quatre rubriques, une longueur minimale adaptée et une grille affichée ; conditionner la suite à cette validation ou à une auto-évaluation explicite.",
-      "status": "open"
+      "status": "fixed",
+      "title": "La fausse validation de la preuve du mini-projet n’est plus dans le parcours",
+      "evidence": "Le bloc cloud_exercise ia-appliquee-metiers-tp__37-mini-project-proof, à l’origine de la remise validable avec un caractère, est absent du cours courant ; aucun bloc de type cloud_exercise n’est présent dans lessons[0].chapters. Il n’existe donc plus de remise de preuve à valider ni de verrou associé à cette interaction.",
+      "course_id": "ia_appliquee_metiers_tp__37"
     },
     {
       "severity": "P2",
-      "category": "clarte_et_localisation",
-      "course_id": "ia_appliquee_metiers_tp__37",
-      "location": "lessons[0].chapters[4].blocks[0].assignment, instructions, hint, solution, successMessage",
-      "description": "Dans le JSON courant, ces cinq champs du cloud_exercise sont des chaînes françaises simples, alors que le cours expose un mode anglais et que plusieurs champs voisins sont bilingues. Le TP n'est donc pas cohérent en anglais pour l'apprenant.",
-      "recommendation": "Fournir pour assignment, instructions, hint, solution et successMessage des valeurs fr/en, puis vérifier le rendu dans les deux langues.",
-      "status": "open"
+      "status": "fixed",
+      "title": "Les champs français non localisés du mini-projet ne sont plus visibles",
+      "evidence": "Les champs assignment, instructions, hint, solution et successMessage précédemment non localisés appartenaient au cloud_exercise ia-appliquee-metiers-tp__37-mini-project-proof. Ce bloc et son chapitre ont été retirés de lessons[0].chapters dans l’état courant.",
+      "course_id": "ia_appliquee_metiers_tp__37"
     },
     {
       "severity": "P2",
-      "category": "feedback_et_rendu",
+      "status": "open",
+      "title": "Le feedback pédagogique du tri final reste non rendu",
+      "evidence": "État courant : lessons[0].chapters[4].blocks[4] (bucket_sort ia-appliquee-metiers-tp__37-quiz-order) conserve un champ feedback bilingue, sans champ correction. Le constat de rendu précisément documenté dans initial_audit.courses[0].chapters[5].issues[0] établit que LessonViewer transmet l’exercice à MatchingExercise sans feedback, alors que MatchingExercise ne rend que correction. Aucun changement de données ne rend ce feedback atteignable dans l’état courant.",
       "course_id": "ia_appliquee_metiers_tp__37",
-      "location": "lessons[0].chapters[5].blocks[4] (bucket_sort id ia-appliquee-metiers-tp__37-quiz-order).feedback",
-      "description": "Le JSON courant contient un feedback bilingue pour le tri final, mais le rapport initial vérifié sur le rendu indique que ce feedback n'est pas transmis au composant de tri et n'est donc pas affiché après réussite.",
-      "recommendation": "Mapper explicitement feedback vers la propriété rendue après réussite, et ajouter un test de rendu du feedback post-réussite.",
-      "status": "open"
+      "chapter_id": "ia_appliquee_metiers_tp__37-final-quiz"
     },
     {
       "severity": "P2",
-      "category": "coherence_et_progression",
+      "status": "open",
+      "title": "La terminologie de la démarche enseignée et évaluée reste incohérente",
+      "evidence": "Dans lessons[0].chapters[2].blocks[0].items, la séquence est « Cadrer → Préparer → Tester → Contrôler ». Dans lessons[0].chapters[4].blocks[4].buckets, le tri final attendu est « Cadrer → Construire → Tester → Valider ». Aucun bloc intermédiaire n’explicite l’équivalence entre Préparer/Construire ni Contrôler/Valider.",
       "course_id": "ia_appliquee_metiers_tp__37",
-      "location": "lessons[0].chapters[2].blocks[0].items[1], items[3], lessons[0].chapters[5].blocks[4].buckets[1], buckets[3]",
-      "description": "La séquence enseignée emploie Cadrer → Préparer → Tester → Contrôler, tandis que le tri final emploie Cadrer → Construire → Tester → Valider. Cette terminologie différente n'est pas expliquée dans le JSON courant.",
-      "recommendation": "Harmoniser les quatre libellés entre séquence et évaluation, ou expliciter la correspondance Préparer/Construire et Contrôler/Valider avant le tri.",
-      "status": "open"
+      "chapter_id": "ia_appliquee_metiers_tp__37-final-quiz"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Le quiz final renvoie à un mini-projet retiré sans en conserver l’explication pédagogique",
+      "evidence": "Le cours courant ne contient plus de chapitre mini-projet ni de cloud_exercise. Pourtant lessons[0].chapters[4].blocks[0].question demande ce qui doit être conservé dans le mini-projet « Analyser trois contrats fictifs contre un playbook et produire une matrice clauses, risques, recommandations. ». Cette activité n’est ni proposée ni expliquée comme retirée dans les cinq chapitres actuels, ce qui crée une référence orpheline pour l’apprenant.",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "chapter_id": "ia_appliquee_metiers_tp__37-final-quiz"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Le mode anglais demeure partiellement en français",
+      "evidence": "Plusieurs champs en de la structure actuelle reproduisent le texte français : description.en (\"TP guidé pour Juriste contrats, legal operations, responsable conformité. Outils : n8n, Claude, Google Drive, Sheets.\"), lessons[0].chapters[0].title.en (\"Objectif du TP\"), lessons[0].chapters[1].title.en (\"Préparer l’environnement\") et lessons[0].chapters[2].title.en (\"Construire progressivement\"). Le parcours expose donc des repères de navigation français dans sa version anglaise.",
+      "course_id": "ia_appliquee_metiers_tp__37"
     }
-  ],
-  "summary": {
-    "issue_count": 6,
-    "p0": 0,
-    "p1": 3,
-    "p2": 3
-  }
+  ]
 }

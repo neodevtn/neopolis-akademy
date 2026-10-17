@@ -1,6 +1,6 @@
 # Contre-audit pédagogique — progression mesurée
 
-Généré le 2026-10-17T08:43:33.865Z.
+Généré le 2026-10-17T17:13:17.955Z.
 
 ## Méthode
 
@@ -12,7 +12,7 @@ Ce rapport compare l’audit qualitatif initial consolidé au contrôle structur
 |---|---:|---:|---:|
 | Formations couvertes | 116 | 116 | couverture maintenue |
 | Cours couverts | 180 | 180 | couverture maintenue |
-| Écrans / chapitres | 3563 | 3448 | -115 (restructurations tracées) |
+| Écrans / chapitres | 3563 | 3390 | -173 (restructurations tracées) |
 | Constats P0–P3 | 1960 | 0 | −100.00 % dans le contrôle statique |
 | Constats critiques P0–P2 | 1828 | 0 | −100.00 % dans le contrôle statique |
 | Cours avec constat courant | 180 de référence | 0 / 180 | 0 cours signalé |
@@ -30,11 +30,11 @@ Ce rapport compare l’audit qualitatif initial consolidé au contrôle structur
 
 | Statut de rapprochement | Constats | Part | Signification |
 |---|---:|---:|---|
-| Écran toujours présent et contrôle statique réussi | 1825 | 93.11 % | Le chapitre existe toujours et ne déclenche plus aucune règle du contre-contrôle. |
-| Retrait d’activité documenté | 8 | 0.41 % | Une activité irréalisable a été remplacée par le contenu source existant, sans verrou. |
-| Chapitre restructuré ou absent — trace individuelle requise | 127 | 6.48 % | Non assimilé automatiquement à une correction pédagogique vérifiée. |
+| Écran toujours présent et contrôle statique réussi | 1773 | 90.46 % | Le chapitre existe toujours et ne déclenche plus aucune règle du contre-contrôle. |
+| Retrait d’activité documenté | 155 | 7.91 % | Une activité irréalisable a été remplacée par le contenu source existant, sans verrou. |
+| Chapitre restructuré ou absent — trace individuelle requise | 32 | 1.63 % | Non assimilé automatiquement à une correction pédagogique vérifiée. |
 
-Les constats directement rapprochés d’un écran validé ou d’un retrait documenté représentent **93.52 %** du périmètre initial.
+Les constats directement rapprochés d’un écran validé ou d’un retrait documenté représentent **98.37 %** du périmètre initial.
 
 ## Catégories initiales les plus affectées
 
@@ -74,6 +74,7 @@ Ces activités ne promettent plus un fichier, jeu de données ou environnement q
 | prompt_engineering_with_the_openai_api__01 | dc_ch02_act14 | activity_removed_unverifiable_or_incomplete_source |
 | working_with_the_openai_api__01 | dc_ch01_act02 | activity_removed_unverifiable_or_incomplete_source |
 | working_with_the_openai_api__01 | dc_ch03_act05 | activity_removed_unverifiable_or_incomplete_source |
+| ai_for_sales__01 | dc_ch03_act03 | activity_removed_unverifiable_or_incomplete_source |
 
 ## Limites et prochaine preuve à produire
 
@@ -82,5 +83,5 @@ Ces activités ne promettent plus un fichier, jeu de données ou environnement q
 - Le score qualitatif 0–100 du premier audit n’est pas recalculé ici : sa méthode requiert une nouvelle appréciation pédagogique chapitre par chapitre, au-delà des critères mécaniques vérifiables.
 
 La progression mesurée est donc **100 % sur les critères structurels aujourd’hui contrôlés**, mais ne doit pas être présentée comme une validation E2E ou une relecture académique intégrale des vidéos et contenus externes.
-Les 127 constats liés à des écrans restructurés ou absents restent explicitement listés dans `08-counter-audit-trace-required.json` pour une prochaine revue de correspondance.
+Les 32 constats liés à des écrans restructurés ou absents restent explicitement listés dans `08-counter-audit-trace-required.json` pour une prochaine revue de correspondance.
 

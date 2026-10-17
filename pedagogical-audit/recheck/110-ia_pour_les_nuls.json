@@ -4,165 +4,61 @@
   "course_ids": [
     "ia_pour_les_nuls__01"
   ],
-  "review_scope": {
-    "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
-    "course_paths": [
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_pour_les_nuls__01.json"
-    ],
-    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/110-ia_pour_les_nuls.json",
-    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
-    "criteria": [
-      "objectifs et activités",
-      "faisabilité TP/fichiers/environnement",
-      "fausses soumissions ou gates",
-      "médias/téléchargements",
-      "duplications ou corruption",
-      "rendu/bilinguisme"
-    ],
-    "method": "Contre-revue du JSON de cours actuel, rapprochée du rapport initial et de l'entrée statique locale. Aucun cours ni code n'a été modifié. Les constats vidéo portent uniquement sur les champs JSON observables; aucune qualité factuelle ou accessibilité audiovisuelle n'est déduite."
-  },
   "reviewed_current_state": true,
   "findings": [
     {
-      "severity": "P2",
-      "category": "rendu",
+      "severity": "P1",
+      "status": "open",
+      "title": "Le checkpoint sur les types d’IA ne déclare aucune condition de réussite vérifiable",
+      "evidence": "Dans current_courses.ia_pour_les_nuls__01, lesson_00/chapter_03 contient le checkpoint ex_ia_pour_les_nuls__01_001. Cet exercice est required:true et propose une réponse correcte (option b), mais ne contient aucun des champs completionRequiresCorrectAnswer, serverCorrectionRequired, evaluation, passingScore ou autre règle de validation. La leçon a completionRule:'all_chapters' et le chapitre completionRule:'exercise'. La réussite correcte ne peut donc pas être vérifiée par les données actuelles avant le passage.",
       "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[0].chapters[0].blocks[0] (chapter_01_1)",
-      "description": "Le bloc d'amorce reste de type text avec le champ content. Le rapport initial et l'audit statique le signalent comme format historique non rendu par le lecteur courant; la structure est toujours présente dans le JSON actuel.",
-      "recommendation": "Migrer ce bloc vers le format de contenu rendu ou prendre en charge ce type dans le lecteur, sans perdre le texte bilingue.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[0].chapters[1].blocks[0] (chapter_01_1_video_2)",
-      "description": "La vidéo possède désormais objectiveBefore, mais le JSON actuel ne déclare ni questionsAfter, ni alternativeTextFr, ni transcript. Le défaut de contextualisation/réinvestissement reste donc partiellement ouvert; aucune indisponibilité de la vidéo n'est déduite.",
-      "recommendation": "Conserver l'objectif et ajouter un réinvestissement post-visionnage ainsi qu'une alternative textuelle ou transcription seulement si une ressource vérifiée est disponible.",
-      "status": "open"
+      "chapter_id": "chapter_03"
     },
     {
       "severity": "P1",
-      "category": "verrouillage",
+      "status": "open",
+      "title": "Le checkpoint sur les limites de l’IA ne déclare aucune condition de réussite vérifiable",
+      "evidence": "Dans current_courses.ia_pour_les_nuls__01, lesson_01/chapter_03_lesson_2_2 référence ex_ia_pour_les_nuls__01_002. L’exercice multi_choice est required:true, possède trois réponses correctes (a, c, d), mais ne déclare ni completionRequiresCorrectAnswer, ni serverCorrectionRequired, ni evaluation, passingScore ou règle comparant la sélection à l’ensemble attendu. Le chapitre a completionRule:'exercise' dans une leçon completionRule:'all_chapters'.",
       "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[0].chapters[4].blocks[1] et exercises[id=ex_ia_pour_les_nuls__01_001]",
-      "description": "Le checkpoint single_choice est required mais completionRequiresCorrectAnswer et serverCorrectionRequired sont null. Le rapport initial documente que la soumission peut donc être considérée comme complétée sans alignement fiable sur la bonne réponse.",
-      "recommendation": "Aligner la condition de déverrouillage sur une réponse correcte et préserver le feedback et la reprise après échec.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "rendu",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[1].chapters[0].blocks[0] (chapter_01_1_lesson_2_2)",
-      "description": "Le bloc d'amorce reste de type text avec le champ content et demeure exposé au défaut de rendu identifié dans le rapport initial et l'audit statique.",
-      "recommendation": "Migrer ce bloc vers le format de contenu rendu ou prendre en charge ce type dans le lecteur, sans perdre le texte bilingue.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[1].chapters[1].blocks[0] (chapter_01_1_video_2_lesson_2_2)",
-      "description": "La vidéo possède objectiveBefore, mais aucune questionAfter, alternativeTextFr ou transcript n'est déclarée dans le JSON actuel. Le manque de réinvestissement et d'alternative reste prouvé; l'accessibilité audiovisuelle réelle n'est pas conclue.",
-      "recommendation": "Ajouter un réinvestissement et une alternative textuelle ou transcription uniquement à partir d'une ressource vérifiée.",
-      "status": "open"
+      "chapter_id": "chapter_03_lesson_2_2"
     },
     {
       "severity": "P1",
-      "category": "verrouillage",
+      "status": "open",
+      "title": "Le scénario professionnel requis ne peut pas valider les critères annoncés avant le déverrouillage",
+      "evidence": "Dans current_courses.ia_pour_les_nuls__01, lesson_03/chapter_03_lesson_4_2 référence ex_ia_pour_les_nuls__01_004, required:true. La consigne demande trois tâches et, pour chacune, tâche/temps, aide IA et gain de temps; la rubrique exige « 3 tâches spécifiques avec solution IA et estimation de gain de temps ». Aucun inputSchema, evaluation, passingScore, completionRequiresCorrectAnswer ou serverCorrectionRequired n’est déclaré. Le chapitre conserve completionRule:'exercise'.",
       "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[1].chapters[4].blocks[1] et exercises[id=ex_ia_pour_les_nuls__01_002]",
-      "description": "Le checkpoint multi_choice est required mais completionRequiresCorrectAnswer et serverCorrectionRequired sont null. La condition déclarée ne prouve pas que l'ensemble exact des réponses correctes est requis.",
-      "recommendation": "Exiger l'ensemble correct avant déverrouillage, avec feedback et nouvelle tentative en cas d'erreur.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "rendu",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[2].chapters[0].blocks[0] (chapter_01_1_lesson_3_2)",
-      "description": "Le bloc d'amorce reste de type text avec le champ content; le défaut de rendu statiquement identifié reste présent.",
-      "recommendation": "Migrer ce bloc vers le format de contenu rendu ou prendre en charge ce type dans le lecteur, sans perdre le texte bilingue.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[2].chapters[1].blocks[0] (chapter_01_1_video_2_lesson_3_2)",
-      "description": "La vidéo a objectiveBefore, mais pas de questionsAfter, alternativeTextFr ou transcript dans l'état actuel. Le manque de réinvestissement/alternative reste ouvert sans conclusion sur la disponibilité de la vidéo.",
-      "recommendation": "Ajouter un réinvestissement et une alternative textuelle ou transcription uniquement à partir d'une ressource vérifiée.",
-      "status": "open"
+      "chapter_id": "chapter_03_lesson_4_2"
     },
     {
       "severity": "P1",
-      "category": "verrouillage",
+      "status": "open",
+      "title": "La checklist de sécurité requise ne déclare aucune validation de la sélection attendue",
+      "evidence": "Dans current_courses.ia_pour_les_nuls__01, lesson_04/chapter_03_lesson_5_2 référence ex_ia_pour_les_nuls__01_005, required:true. Ses options portent des indicateurs correct, mais l’exercice ne déclare ni completionRequiresCorrectAnswer, ni serverCorrectionRequired, ni evaluation, passingScore ou règle de comparaison de la sélection. Le chapitre a completionRule:'exercise' et la leçon completionRule:'all_chapters'.",
       "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[2].chapters[4].blocks[1] et exercises[id=ex_ia_pour_les_nuls__01_003]",
-      "description": "Le checkpoint free_text est required, mais completionRequiresCorrectAnswer et serverCorrectionRequired sont null et inputSchema.minWords est absent. La consigne demande 3–4 phrases et plusieurs critères, sans condition JSON de réussite correspondante.",
-      "recommendation": "Utiliser une condition de réussite adaptée à la consigne, ou rendre l'activité non bloquante si une correction automatique fiable n'est pas disponible.",
-      "status": "open"
+      "chapter_id": "chapter_03_lesson_5_2"
     },
     {
       "severity": "P2",
-      "category": "rendu",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[3].chapters[0].blocks[0] (chapter_01_1_lesson_4_2)",
-      "description": "Le bloc d'amorce reste de type text avec le champ content; le défaut de rendu statiquement identifié reste présent.",
-      "recommendation": "Migrer ce bloc vers le format de contenu rendu ou prendre en charge ce type dans le lecteur, sans perdre le texte bilingue.",
-      "status": "open"
+      "status": "open",
+      "title": "Les secondes vidéos de chaque leçon restent sans activité de réinvestissement ni alternative textuelle déclarée",
+      "evidence": "Les blocs vidéo uniques des chapitres chapter_01_1_video_2, chapter_01_1_video_2_lesson_2_2, chapter_01_1_video_2_lesson_3_2, chapter_01_1_video_2_lesson_4_2 et chapter_01_1_video_2_lesson_5_2 ont chacun watchUrl et objectiveBefore, mais aucun ne comporte questionsAfter, alternativeTextFr ou transcript. Les vidéos sont donc contextualisées avant lecture mais ne proposent dans les données actuelles ni réinvestissement interactionnel après lecture ni voie textuelle déclarée.",
+      "course_id": "ia_pour_les_nuls__01"
     },
     {
       "severity": "P2",
-      "category": "média",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[3].chapters[1].blocks[0] (chapter_01_1_video_2_lesson_4_2)",
-      "description": "La vidéo a objectiveBefore, mais aucune questionAfter, alternativeTextFr ou transcript n'est déclarée. Le réinvestissement et l'alternative restent non fournis dans les données actuelles.",
-      "recommendation": "Ajouter un réinvestissement et une alternative textuelle ou transcription uniquement à partir d'une ressource vérifiée.",
-      "status": "open"
+      "status": "fixed",
+      "title": "Les amorces vidéo utilisent désormais un bloc de contenu rendu",
+      "evidence": "Les cinq premières introductions vidéo précédemment signalées sont maintenant des blocs type:'content' avec body bilingue dans chapter_01_1, chapter_01_1_lesson_2_2, chapter_01_1_lesson_3_2, chapter_01_1_lesson_4_2 et chapter_01_1_lesson_5_2. Le format historique type:'text' avec champ content n’apparaît plus dans current_courses.",
+      "course_id": "ia_pour_les_nuls__01"
     },
     {
       "severity": "P1",
-      "category": "verrouillage",
+      "status": "fixed",
+      "title": "L’activité de rédaction de prompt non validable a été retirée sans bloquer la progression",
+      "evidence": "Le bundle antérieur documentait le checkpoint required ex_ia_pour_les_nuls__01_003 dans chapter_03_lesson_3_2. Dans l’état courant, ce chapitre conserve le contenu bilingue « Écrire de bons prompts (instructions) » mais ne contient plus de bloc checkpoint; la liste current_courses.ia_pour_les_nuls__01.exercises ne contient plus ex_ia_pour_les_nuls__01_003, et le chapitre n’a plus completionRule:'exercise'. Le retrait supprime ainsi le verrou non vérifiable tout en préservant l’explication pédagogique.",
       "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[3].chapters[4].blocks[1] et exercises[id=ex_ia_pour_les_nuls__01_004]",
-      "description": "Le checkpoint scenario est required mais completionRequiresCorrectAnswer et serverCorrectionRequired sont null. La réponse libre/scénario comporte une rubrique, sans mécanisme JSON déclaré permettant de vérifier l'atteinte avant le passage.",
-      "recommendation": "Définir une validation réellement vérifiable ou rendre l'activité non bloquante si elle reste évaluée qualitativement.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "rendu",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[4].chapters[0].blocks[0] (chapter_01_1_lesson_5_2)",
-      "description": "Le bloc d'amorce reste de type text avec le champ content; le défaut de rendu statiquement identifié reste présent.",
-      "recommendation": "Migrer ce bloc vers le format de contenu rendu ou prendre en charge ce type dans le lecteur, sans perdre le texte bilingue.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[4].chapters[1].blocks[0] (chapter_01_1_video_2_lesson_5_2)",
-      "description": "La vidéo a objectiveBefore, mais aucune questionAfter, alternativeTextFr ou transcript n'est déclarée. Le réinvestissement et l'alternative restent non fournis dans les données actuelles.",
-      "recommendation": "Ajouter un réinvestissement et une alternative textuelle ou transcription uniquement à partir d'une ressource vérifiée.",
-      "status": "open"
-    },
-    {
-      "severity": "P1",
-      "category": "verrouillage",
-      "course_id": "ia_pour_les_nuls__01",
-      "location": "lessons[4].chapters[4].blocks[1] et exercises[id=ex_ia_pour_les_nuls__01_005]",
-      "description": "Le checkpoint checklist est required mais completionRequiresCorrectAnswer et serverCorrectionRequired sont null. Les options portent des champs correct dans le JSON, mais le rapport initial et le code de rendu cités signalent que la sélection n'est pas utilisée comme condition de réussite fiable.",
-      "recommendation": "Comparer la sélection à l'ensemble attendu avant déverrouillage, avec feedback et reprise.",
-      "status": "open"
+      "chapter_id": "chapter_03_lesson_3_2"
     }
-  ],
-  "summary": {
-    "issue_count": 15,
-    "p0": 0,
-    "p1": 5,
-    "p2": 10
-  }
+  ]
 }

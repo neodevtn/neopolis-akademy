@@ -2,148 +2,136 @@
   "formation_id": "transformation_processus_ia",
   "index": 116,
   "course_ids": [
-    "transformation_processus_ia__01",
     "transformation_processus_ia__02",
     "transformation_processus_ia__03",
-    "transformation_processus_ia__04",
     "transformation_processus_ia__05"
   ],
-  "review_scope": {
-    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
-    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/116-transformation_processus_ia.json",
-    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
-    "course_paths": [
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/transformation_processus_ia__01.json",
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/transformation_processus_ia__02.json",
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/transformation_processus_ia__03.json",
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/transformation_processus_ia__04.json",
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/transformation_processus_ia__05.json"
-    ],
-    "criteria": [
-      "objectifs et activités",
-      "faisabilité TP/fichiers/environnement",
-      "fausses soumissions ou gates",
-      "médias/téléchargements",
-      "duplications ou corruption",
-      "rendu/bilinguisme"
-    ],
-    "method": "Contre-revue de l’état JSON courant, confronté aux constats du rapport initial et aux constats statiques localisés; aucune modification de cours."
-  },
   "reviewed_current_state": true,
   "findings": [
     {
       "severity": "P1",
-      "category": "activité et feedback",
-      "course_id": "transformation_processus_ia__01",
-      "location": "client/public/data/courses/transformation_processus_ia__01.json → lessons[1].chapters[1] : type=checkpoint, blocks=[content], exercises=[] et completionRule=view. LessonViewer.tsx ne rend un checkpoint comme exercice que pour un bloc type=checkpoint associé à un exerciseId trouvé dans courseExercises.",
-      "description": "Le chapitre est présenté comme un « Atelier pratique », mais ne rend aucun exercice : il ne contient qu’un texte d’introduction. L’apprenant ne dispose ni d’un cas d’organisation fictive, ni d’un support de réponse, ni de critères de réussite, ni de feedback. Il peut poursuivre après une simple consultation sans réaliser la compétence annoncée.",
-      "recommendation": "Créer un exercice réellement rendu et un retour pédagogique (auto-évaluation critériée, correction structurée ou revue), puis ne verrouiller qu’après l’action annoncée.",
-      "status": "open"
-    },
-    {
-      "severity": "P1",
-      "category": "verrouillage et feedback",
+      "status": "fixed",
+      "title": "Verrou de validation libre retiré — rubriques H, I et K",
+      "evidence": "current_courses.transformation_processus_ia__02.exercises est []; lessons[id=lesson_01].chapters[id=chapter_02] est désormais type=content, completionRule=view, avec un unique bloc content et aucun exerciseId. L’ancienne soumission free_text requise n’est plus présente.",
       "course_id": "transformation_processus_ia__02",
-      "location": "client/public/data/courses/transformation_processus_ia__02.json → exercises[id=ex_transformation_processus_ia__02_001] : required=true, interactionType=free_text. LessonViewer.tsx rend ce checkpoint avec ExerciseRenderer ; ExerciseRenderer.tsx → handleSubmit fixe selectedAnswersAreCorrect=true pour une réponse libre et appelle onComplete en l’absence de completionRequiresCorrectAnswer/serverCorrectionRequired. chapterProgress.ts déverrouille ensuite le checkpoint complété.",
-      "description": "Le checkpoint est annoncé comme une validation requise, mais une réponse libre non vide suffit à le terminer et à déverrouiller la suite. La qualité de la réponse n’est pas évaluée ; la correction est disponible seulement sur action volontaire. Le verrouillage ne garantit donc pas l’atteinte de la compétence que le chapitre prétend vérifier.",
-      "recommendation": "Ne plus assimiler une soumission non vide à une validation des acquis ; choisir et implémenter explicitement une auto-évaluation guidée ou une validation fondée sur des critères.",
-      "status": "open"
+      "chapter_id": "chapter_02"
     },
     {
       "severity": "P2",
-      "category": "feedback et données de scénario",
+      "status": "fixed",
+      "title": "Correction introduisant des données non fournies retirée — rubriques H, I et K",
+      "evidence": "current_courses.transformation_processus_ia__02.exercises est []; chapter_02 ne contient qu’un contenu explicatif sur les rubriques H, I et K. Il ne subsiste ni prompt de sinistre ni correction ajoutant photos de dommages ou ERP de paiement.",
       "course_id": "transformation_processus_ia__02",
-      "location": "client/public/data/courses/transformation_processus_ia__02.json → exercises[id=ex_transformation_processus_ia__02_001].prompt.fr et .correction.fr.",
-      "description": "La correction introduit des données non fournies par l’énoncé — notamment des photos de dommages (« possiblement ») et un ERP financier pour les paiements. L’apprenant ne peut pas les déduire de façon certaine, alors que l’activité lui demande de justifier le remplissage des rubriques I et les technologies proposées.",
-      "recommendation": "Supprimer les éléments supposés de la correction, ou compléter explicitement le scénario avant de demander une réponse déterminée.",
-      "status": "open"
+      "chapter_id": "chapter_02"
     },
     {
       "severity": "P1",
-      "category": "verrouillage et feedback",
+      "status": "fixed",
+      "title": "Verrou de validation libre retiré — exercice de documentation complète",
+      "evidence": "current_courses.transformation_processus_ia__02.exercises est []; chapter_03 a completionRule=view et son seul bloc est de type content, sans exerciseId. Aucune réponse libre n’est donc utilisée comme condition de déverrouillage.",
       "course_id": "transformation_processus_ia__02",
-      "location": "client/public/data/courses/transformation_processus_ia__02.json → exercises[id=ex_transformation_processus_ia__02_002] : required=true, interactionType=free_text. LessonViewer.tsx rend ce checkpoint avec ExerciseRenderer ; ExerciseRenderer.tsx → handleSubmit fixe selectedAnswersAreCorrect=true pour une réponse libre et appelle onComplete en l’absence de completionRequiresCorrectAnswer/serverCorrectionRequired. chapterProgress.ts déverrouille ensuite le checkpoint complété.",
-      "description": "Le checkpoint est annoncé comme une validation requise, mais une réponse libre non vide suffit à le terminer et à déverrouiller la suite. La qualité de la réponse n’est pas évaluée ; la correction est disponible seulement sur action volontaire. Le verrouillage ne garantit donc pas l’atteinte de la compétence que le chapitre prétend vérifier.",
-      "recommendation": "Ne plus assimiler une soumission non vide à une validation des acquis ; choisir et implémenter explicitement une auto-évaluation guidée ou une validation fondée sur des critères.",
-      "status": "open"
+      "chapter_id": "chapter_03"
     },
     {
       "severity": "P1",
-      "category": "énoncé et données de scénario",
+      "status": "fixed",
+      "title": "Correction chiffrant des inconnues retirée — exercice de documentation complète",
+      "evidence": "current_courses.transformation_processus_ia__02.exercises est vide. Le scénario et la correction antérieurs qui ajoutaient responsable, ETP, volumes, coûts, SLA et retards ne figurent plus dans les contenus actuels de chapter_03.",
       "course_id": "transformation_processus_ia__02",
-      "location": "client/public/data/courses/transformation_processus_ia__02.json → exercises[id=ex_transformation_processus_ia__02_002].prompt.fr (données disponibles) et .correction.fr (données ajoutées).",
-      "description": "L’exercice demande de compléter les 12 rubriques, mais le scénario ne donne qu’une partie des données. La correction transforme des inconnues en faits précis (responsable, 3 ETP, 50 managers, 2 000 dossiers/an, 45 minutes, coûts, SLA et 30 % de retards). L’apprenant ne sait donc pas quelles rubriques sont renseignables, estimables ou à investiguer.",
-      "recommendation": "Rendre le scénario complet si l’objectif est une fiche entièrement renseignée ; sinon transformer explicitement l’exercice en diagnostic des données manquantes et réécrire la correction en conséquence.",
-      "status": "open"
+      "chapter_id": "chapter_03"
     },
     {
       "severity": "P1",
-      "category": "verrouillage et feedback",
-      "course_id": "transformation_processus_ia__03",
-      "location": "client/public/data/courses/transformation_processus_ia__03.json → exercises[id=ex_transformation_processus_ia__03_001] : required=true, interactionType=free_text. LessonViewer.tsx rend ce checkpoint avec ExerciseRenderer ; ExerciseRenderer.tsx → handleSubmit fixe selectedAnswersAreCorrect=true pour une réponse libre et appelle onComplete en l’absence de completionRequiresCorrectAnswer/serverCorrectionRequired. chapterProgress.ts déverrouille ensuite le checkpoint complété.",
-      "description": "Le checkpoint est annoncé comme une validation requise, mais une réponse libre non vide suffit à le terminer et à déverrouiller la suite. La qualité de la réponse n’est pas évaluée ; la correction est disponible seulement sur action volontaire. Le verrouillage ne garantit donc pas l’atteinte de la compétence que le chapitre prétend vérifier.",
-      "recommendation": "Ne plus assimiler une soumission non vide à une validation des acquis ; choisir et implémenter explicitement une auto-évaluation guidée ou une validation fondée sur des critères.",
-      "status": "open"
+      "status": "open",
+      "title": "Atelier de documentation annoncé sans activité réalisable ni retour",
+      "evidence": "lessons[id=lesson_02] est titrée « Atelier pratique : Documenter un processus » et chapter_03 « Exercice de documentation complète », mais current_courses.transformation_processus_ia__02.exercises est []. chapter_03 (type=checkpoint, completionRule=view) ne contient que « Appliquez le cadre de documentation en 12 rubriques à un processus réel ou réaliste » : aucun formulaire, modèle, livrable attendu, critère de réussite, correction ou explication du retrait de l’activité n’est conservé.",
+      "course_id": "transformation_processus_ia__02",
+      "chapter_id": "chapter_03"
     },
     {
       "severity": "P2",
-      "category": "feedback et traçabilité du calcul",
+      "status": "open",
+      "title": "Ressources vidéo annoncées hors politique de contextualisation",
+      "evidence": "Les deux lessons déclarent chacune recommendedVideos avec 3 entrées, uniquement munies de videoId, title, channel, type et topics (sans URL ni rattachement à un chapitre). Cela ne fournit ni une URL utilisable dans le JSON ni une ressource unique contextualisée par chapitre, contrairement à review_protocol.media_policy.",
+      "course_id": "transformation_processus_ia__02"
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "title": "Verrou de validation libre retiré — potentiel IA global",
+      "evidence": "current_courses.transformation_processus_ia__03.exercises est []; chapter_01 est type=content, completionRule=view, avec un seul bloc content et sans exerciseId. La validation free_text antérieure n’existe plus.",
       "course_id": "transformation_processus_ia__03",
-      "location": "client/public/data/courses/transformation_processus_ia__03.json → exercises[id=ex_transformation_processus_ia__03_001].prompt.fr et .correction.fr ; le cas de notes de frais source est dans transformation_processus_ia__02.json → exercises[id=...02_002].",
-      "description": "La correction calcule le facteur de répétitivité avec une pondération « 60 % saisie, 40 % validation » qui n’apparaît ni dans l’énoncé ni dans le cas de référence du module 2. La note 3 est donc présentée comme calculée alors qu’une donnée déterminante manque.",
-      "recommendation": "Aligner le jeu de données du scénario et la formule de correction ; distinguer une hypothèse pédagogique d’une donnée observée.",
-      "status": "open"
+      "chapter_id": "chapter_01"
     },
     {
-      "severity": "P1",
-      "category": "verrouillage et feedback",
+      "severity": "P2",
+      "status": "fixed",
+      "title": "Calcul fondé sur une pondération non fournie retiré",
+      "evidence": "current_courses.transformation_processus_ia__03.exercises est vide. chapter_01 ne contient plus de scénario ni de correction calculant une répétitivité avec la pondération 60 % saisie / 40 % validation.",
       "course_id": "transformation_processus_ia__03",
-      "location": "client/public/data/courses/transformation_processus_ia__03.json → exercises[id=ex_transformation_processus_ia__03_002] : required=true, interactionType=free_text. LessonViewer.tsx rend ce checkpoint avec ExerciseRenderer ; ExerciseRenderer.tsx → handleSubmit fixe selectedAnswersAreCorrect=true pour une réponse libre et appelle onComplete en l’absence de completionRequiresCorrectAnswer/serverCorrectionRequired. chapterProgress.ts déverrouille ensuite le checkpoint complété.",
-      "description": "Le checkpoint est annoncé comme une validation requise, mais une réponse libre non vide suffit à le terminer et à déverrouiller la suite. La qualité de la réponse n’est pas évaluée ; la correction est disponible seulement sur action volontaire. Le verrouillage ne garantit donc pas l’atteinte de la compétence que le chapitre prétend vérifier.",
-      "recommendation": "Ne plus assimiler une soumission non vide à une validation des acquis ; choisir et implémenter explicitement une auto-évaluation guidée ou une validation fondée sur des critères.",
-      "status": "open"
+      "chapter_id": "chapter_01"
     },
     {
       "severity": "P1",
-      "category": "verrouillage et feedback",
+      "status": "fixed",
+      "title": "Verrou de validation libre retiré — technologies IA applicables",
+      "evidence": "current_courses.transformation_processus_ia__03.exercises est []; chapter_02 est type=content, completionRule=view, et n’a qu’un bloc content sans exerciseId. Aucune réponse libre ne peut valider la progression.",
       "course_id": "transformation_processus_ia__03",
-      "location": "client/public/data/courses/transformation_processus_ia__03.json → exercises[id=ex_transformation_processus_ia__03_003] : required=true, interactionType=free_text. LessonViewer.tsx rend ce checkpoint avec ExerciseRenderer ; ExerciseRenderer.tsx → handleSubmit fixe selectedAnswersAreCorrect=true pour une réponse libre et appelle onComplete en l’absence de completionRequiresCorrectAnswer/serverCorrectionRequired. chapterProgress.ts déverrouille ensuite le checkpoint complété.",
-      "description": "Le checkpoint est annoncé comme une validation requise, mais une réponse libre non vide suffit à le terminer et à déverrouiller la suite. La qualité de la réponse n’est pas évaluée ; la correction est disponible seulement sur action volontaire. Le verrouillage ne garantit donc pas l’atteinte de la compétence que le chapitre prétend vérifier.",
-      "recommendation": "Ne plus assimiler une soumission non vide à une validation des acquis ; choisir et implémenter explicitement une auto-évaluation guidée ou une validation fondée sur des critères.",
-      "status": "open"
+      "chapter_id": "chapter_02"
     },
     {
       "severity": "P1",
-      "category": "verrouillage et feedback",
-      "course_id": "transformation_processus_ia__05",
-      "location": "client/public/data/courses/transformation_processus_ia__05.json → exercises[id=ex_transformation_processus_ia__05_001] : required=true, interactionType=free_text. LessonViewer.tsx rend ce checkpoint avec ExerciseRenderer ; ExerciseRenderer.tsx → handleSubmit fixe selectedAnswersAreCorrect=true pour une réponse libre et appelle onComplete en l’absence de completionRequiresCorrectAnswer/serverCorrectionRequired. chapterProgress.ts déverrouille ensuite le checkpoint complété.",
-      "description": "Le checkpoint est annoncé comme une validation requise, mais une réponse libre non vide suffit à le terminer et à déverrouiller la suite. La qualité de la réponse n’est pas évaluée ; la correction est disponible seulement sur action volontaire. Le verrouillage ne garantit donc pas l’atteinte de la compétence que le chapitre prétend vérifier.",
-      "recommendation": "Ne plus assimiler une soumission non vide à une validation des acquis ; choisir et implémenter explicitement une auto-évaluation guidée ou une validation fondée sur des critères.",
-      "status": "open"
+      "status": "fixed",
+      "title": "Verrou de validation libre retiré — gains attendus et ROI",
+      "evidence": "current_courses.transformation_processus_ia__03.exercises est []; chapter_03 est type=content, completionRule=view, et n’a qu’un bloc content sans exerciseId. Aucune réponse libre ne peut valider la progression.",
+      "course_id": "transformation_processus_ia__03",
+      "chapter_id": "chapter_03"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Ressources vidéo annoncées hors politique de contextualisation",
+      "evidence": "lessons[id=lesson_01].recommendedVideos contient 3 entrées, chacune limitée à videoId, title, channel, type et topics; aucune URL ni association à un chapitre ne sont déclarées. Le bundle ne matérialise donc pas une vidéo unique, utilisable et contextualisée par chapitre exigée par review_protocol.media_policy.",
+      "course_id": "transformation_processus_ia__03"
     },
     {
       "severity": "P1",
-      "category": "verrouillage et feedback",
+      "status": "fixed",
+      "title": "Verrou de validation libre retiré — application Phase 1",
+      "evidence": "current_courses.transformation_processus_ia__05.exercises est []; chapter_02 (type=checkpoint) a completionRule=view et un seul bloc content, sans exerciseId. La soumission free_text requise antérieure n’est plus présente et ne bloque plus la progression.",
       "course_id": "transformation_processus_ia__05",
-      "location": "client/public/data/courses/transformation_processus_ia__05.json → exercises[id=ex_transformation_processus_ia__05_002] : required=true, interactionType=free_text. LessonViewer.tsx rend ce checkpoint avec ExerciseRenderer ; ExerciseRenderer.tsx → handleSubmit fixe selectedAnswersAreCorrect=true pour une réponse libre et appelle onComplete en l’absence de completionRequiresCorrectAnswer/serverCorrectionRequired. chapterProgress.ts déverrouille ensuite le checkpoint complété.",
-      "description": "Le checkpoint est annoncé comme une validation requise, mais une réponse libre non vide suffit à le terminer et à déverrouiller la suite. La qualité de la réponse n’est pas évaluée ; la correction est disponible seulement sur action volontaire. Le verrouillage ne garantit donc pas l’atteinte de la compétence que le chapitre prétend vérifier.",
-      "recommendation": "Ne plus assimiler une soumission non vide à une validation des acquis ; choisir et implémenter explicitement une auto-évaluation guidée ou une validation fondée sur des critères.",
-      "status": "open"
+      "chapter_id": "chapter_02"
     },
     {
       "severity": "P1",
-      "category": "énoncé et données de scénario",
+      "status": "fixed",
+      "title": "Verrou de validation libre retiré — application Phases 2 à 4",
+      "evidence": "current_courses.transformation_processus_ia__05.exercises est []; chapter_03 (type=checkpoint) a completionRule=view et un seul bloc content, sans exerciseId. La soumission free_text requise antérieure n’est plus présente et ne bloque plus la progression.",
       "course_id": "transformation_processus_ia__05",
-      "location": "client/public/data/courses/transformation_processus_ia__05.json → chapter_01 (données du cas), exercises[id=ex_transformation_processus_ia__05_002].prompt.fr et .correction.fr.",
-      "description": "Le cas final exige trois fiches Phase 2, trois évaluations Phase 3, trois fiches Phase 4, une matrice et un ordre de lancement, mais le cas BankMid ne fournit pas les données nécessaires pour compléter ces livrables. La correction attribue ensuite volumes, ETP, temps, scores, coûts, gains et durées précis sans que ces données soient présentes dans le cas. Le résultat attendu est donc impossible à reproduire de façon justifiée.",
-      "recommendation": "Publier un dossier de cas complet et une grille de rendu, ou réduire l’attendu à l’identification des informations à collecter et à une priorisation explicitement conditionnelle.",
-      "status": "open"
+      "chapter_id": "chapter_03"
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "title": "Application Phase 1 annoncée mais sans dispositif de réalisation",
+      "evidence": "chapter_02 est intitulé « Application Phase 1 : Référentiel des processus bancaires » et demande « Construisez un référentiel Niveaux 1-3 couvrant les 4 catégories ». Pourtant current_courses.transformation_processus_ia__05.exercises est [], le chapitre n’a qu’un bloc content sans exerciseId, completionRule=view, et ne donne ni modèle de référentiel, ni format de rendu, ni critères de contrôle, ni explicitation du retrait de l’activité.",
+      "course_id": "transformation_processus_ia__05",
+      "chapter_id": "chapter_02"
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "title": "Cas final insuffisamment spécifié pour les Phases 2 à 4",
+      "evidence": "chapter_01 exige de « documenter 3 processus prioritaires », « évaluer leur potentiel IA » et produire un portefeuille; les seules informations de cas sont les effectifs/agences/clients, 4 lignes métier, fonctions support, quatre irritants et trois systèmes. chapter_03 demande ensuite de documenter, évaluer et prioriser, mais current_courses.transformation_processus_ia__05.exercises est [] et il n’existe ni données de processus pour renseigner les 12 rubriques ni protocole pour distinguer faits, hypothèses et données à collecter. Cela contredit en outre chapter_04, qui prescrit des « mesures plutôt que des estimations » et des données réelles de volumes, temps et taux d’erreur.",
+      "course_id": "transformation_processus_ia__05",
+      "chapter_id": "chapter_03"
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "title": "Ressources vidéo annoncées hors politique de contextualisation",
+      "evidence": "lessons[id=lesson_01].recommendedVideos contient 3 entrées, chacune limitée à videoId, title, channel, type et topics; aucune URL ni association à un chapitre ne sont déclarées. Le bundle ne matérialise donc pas une vidéo unique, utilisable et contextualisée par chapitre exigée par review_protocol.media_policy.",
+      "course_id": "transformation_processus_ia__05"
     }
-  ],
-  "summary": {
-    "issue_count": 12,
-    "p0": 0,
-    "p1": 10,
-    "p2": 2
-  }
+  ]
 }

@@ -1,0 +1,1788 @@
+{
+  "formation": {
+    "index": 44,
+    "formation_id": "datacamp_introduction_to_agent_skills",
+    "formation_title": "Introduction aux Agent Skills",
+    "course_ids": [
+      "introduction_to_agent_skills__01"
+    ],
+    "report_path": "pedagogical-audit/recheck/044-datacamp_introduction_to_agent_skills.json"
+  },
+  "initial_audit": {
+    "formation_id": "datacamp_introduction_to_agent_skills",
+    "courses": [
+      {
+        "course_id": "introduction_to_agent_skills__01",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch01_act01",
+            "title": "Video: What are skills",
+            "score_100": 68,
+            "verified_dimensions": [
+              "Introduction de leçon et préparation matérielle explicites : environnement local, Claude Code, dossier jetable et règle de progression sont rendus avant la première activité.",
+              "La vidéo est contextualisée par le titre et la description de leçon ; une transcription textuelle complète est présente et rendue dans un panneau repliable.",
+              "La séquence ouvre logiquement sur la définition des skills avant le QCM puis la mise en pratique.",
+              "Score renormalisé sur les dimensions observables dans le JSON et les renderers : explication/contextualisation, progression, média textuel et UX de navigation."
+            ],
+            "unverified_dimensions": [
+              "Objectif pédagogique distinct et mesurable au niveau de cet écran : seule une promesse de leçon est fournie.",
+              "Qualité factuelle, lisibilité visuelle et lecture effective du MP4 : le média référencé via /api/assets n’a pas été visionné dans un navigateur.",
+              "Accessibilité effective des sous-titres et de la piste vidéo au runtime."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-001",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "dc_1_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "média",
+                "description": "Dans le parcours déclaré fr-FR, la vidéo obligatoire ne propose qu’une transcription et une piste de sous-titres anglaises. Un apprenant ayant choisi le français peut ouvrir la transcription affichée par LessonViewer, mais elle reste en anglais ; ce soutien textuel ne remplit donc pas son rôle d’alternative française.",
+                "current_content": "`transcript` commence par « Every time you explain your team's coding standards… » ; `subtitleUrlEn` est renseigné ; `subtitleUrlFr` est absent.",
+                "proposed_content": "Ajouter une transcription française fidèle et une piste `subtitleUrlFr` française, ou expliciter de façon visible que la ressource n’est disponible qu’en anglais avant le lancement. Conserver le média existant.",
+                "evidence": "client/public/data/courses/introduction_to_agent_skills__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] ; LessonViewer.tsx:670-686 rend directement `block.transcript` et 652-653 ne déclare une piste française que si `subtitleUrlFr` existe.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Prioriser une alternative française accessible pour cette vidéo requise, puis vérifier son affichage dans le lecteur réel."
+              },
+              {
+                "issue_id": "ped-044-002",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "LessonViewer.videoCompletionKey",
+                "content_type": "renderer_logic",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Le bouton principal « Suivant » ne verrouille pas les six vidéos locales requises de ce cours. Le lecteur marque une vidéo complétée avec son `block.id`, alors que le calcul du verrouillage de pied de page cherche `videoId`, puis `url`, puis seulement un `id` de 8 à 15 caractères. Les six ids locaux ont 17 caractères et n’ont ni `videoId` ni `url` : la liste des vidéos à valider devient vide et le passage est autorisé sans visionnage ni marquage manuel.",
+                "current_content": "Les vidéos utilisent par exemple `id: dc_1_act_01_video`, `mp4Url: /api/assets/...`, sans `videoId` ni `url`; `requiredBeforeAdvance` vaut `true` sur les écrans concernés.",
+                "proposed_content": "Dans tous les calculs de verrouillage vidéo, utiliser la même clé que le renderer local : `block.id || fallback`. Ajouter un test couvrant un MP4 avec un id long et sans `videoId`/`url`.",
+                "evidence": "JSON source : dc_1_act_01_video, dc_1_act_04_video, dc_2_act_01_video, dc_2_act_04_video, dc_3_act_01_video et dc_3_act_04_video ont tous un id de 17 caractères sans `videoId` ni `url`. LessonViewer.tsx:556-557 utilise `block.id` pour la complétion locale ; 1558-1568 calcule la clé de passage avec `videoId`/`url`/id 8-15 caractères ; 1637-1662 applique ce résultat au bouton principal.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Corriger la clé de complétion avant toute modification pédagogique : le verrouillage annoncé doit correspondre à l’action réellement demandée."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch01_act02",
+            "title": "What are skills",
+            "score_100": 82,
+            "verified_dimensions": [
+              "QCM cohérent avec la vidéo précédente : il vérifie le chargement différé du contenu des skills.",
+              "L’énoncé, quatre options, la réponse correcte, un indice et une explication sont présents.",
+              "MultiChoiceBlock affiche l’énoncé, exige le nombre attendu de réponses, montre l’état correct/incorrect, l’explication puis une action de nouvelle tentative.",
+              "Score renormalisé sur contenu d’activité, feedback et renderer observables."
+            ],
+            "unverified_dimensions": [
+              "Objectif pédagogique explicite propre à ce QCM.",
+              "Compréhension effective par un apprenant francophone ne maîtrisant pas l’anglais."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-003",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch01_act02",
+                "content_id": "dc_1_act_02_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "localisation",
+                "description": "Les champs français affichés au choix de langue français sont identiques aux champs anglais, y compris l’énoncé, les options, l’indice et le feedback. L’activité est donc réellement proposée en anglais dans une formation importée en fr-FR.",
+                "current_content": "`question.fr`, chaque `options[].text.fr`, `hint.fr` et `explanation.fr` reprennent les textes anglais, par exemple « How does Claude Code handle skill content…? ».",
+                "proposed_content": "Traduire l’énoncé, les quatre options, l’indice et l’explication dans les champs `fr`, sans modifier la réponse correcte `b` ni la logique du QCM.",
+                "evidence": "client/public/data/courses/introduction_to_agent_skills__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple] ; MultiChoiceBlock.tsx:16-24 sélectionne `block.question[lang]`, `block.explanation[lang]`, `block.hint[lang]` et `opt.text[lang]`.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Localiser ce QCM avant sa diffusion auprès d’un public francophone."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch01_act03",
+            "title": "Activating skills",
+            "score_100": 25,
+            "verified_dimensions": [
+              "La consigne source décrit une progression d’action intelligible : lancer Claude Code, lister les skills, demander un diagramme, identifier le skill activé et quitter.",
+              "Un indice contextualise précisément le mot déclencheur « diagram » et fournit des formulations de secours.",
+              "Le scénario fait suite à la définition et au QCM sur le chargement à la demande.",
+              "Score renormalisé sur les éléments visibles et la logique effective du bloc de code."
+            ],
+            "unverified_dimensions": [
+              "Exécution de Claude Code et accès au répertoire d’exercice dans un navigateur réel.",
+              "Objectif formulé explicitement pour l’activité."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-004",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "dc_1_act_03_code",
+                "content_type": "code_repl",
+                "severity": "P0",
+                "category": "activité_et_validation",
+                "description": "L’activité demande de piloter Claude Code dans un terminal, mais le composant présenté est un simple éditeur de texte Python : il n’exécute ni le code de départ ni les commandes `claude`. « Vérifier le code » ne contrôle que l’égalité exacte entre le texte de l’éditeur et le champ `solutionCode`, lequel contient des commentaires et des commandes shell de préparation/validation. L’apprenant ne peut donc pas faire évaluer l’action demandée ; il peut seulement reproduire la solution interne affichée.",
+                "current_content": "Instructions : « Start Claude Code with claude… » ; `language: python` ; `solutionCode` contient notamment « mkdir -p ~/.claude && cp ~/solutions/1_1/history.jsonl ~/.claude/. ».",
+                "proposed_content": "Remplacer ce bloc par une simulation de terminal ou un environnement de terminal réellement exécutable qui valide les traces attendues (lancement de Claude, demande avec « diagram », identification du skill). À défaut, transformer explicitement l’activité en analyse de transcript à réponses vérifiables ; ne pas présenter un éditeur Python comme un terminal fonctionnel.",
+                "evidence": "client/public/data/courses/introduction_to_agent_skills__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_code] ; CodeReplBlock.tsx:28-40 appelle uniquement `matchesCanonicalSolution(code, solutionCode)` ; shared/codeReplValidation.ts:10-13 exige une égalité textuelle normalisée.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Bloquer la publication de cette activité sous sa forme actuelle et choisir un renderer compatible avec la tâche terminale annoncée."
+              },
+              {
+                "issue_id": "ped-044-005",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "LessonViewer.codeReplGate",
+                "content_type": "renderer_logic",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Le passage à l’écran suivant n’est pas conditionné par la validation des blocs `code_repl`, alors que cette activité est marquée `requiredBeforeAdvance: true`. Le renderer enregistre bien une complétion si une égalité de texte est obtenue, mais aucune des listes de conditions de passage ne traite le type `code_repl`. Le même défaut affecte les cinq activités `code_repl` de ce cours.",
+                "current_content": "Activités concernées : `dc_1_act_03_code`, `dc_1_act_06_code`, `dc_2_act_03_code`, `dc_3_act_03_code`, `dc_3_act_06_code`; leurs chapitres ont `requiredBeforeAdvance: true`.",
+                "proposed_content": "Ajouter `code_repl` aux activités requises de `isSequentialActivityNavigationLocked` et aux calculs de verrouillage de pied de page, avec la même clé scoped que celle écrite par `CodeReplBlock`; ajouter des tests de navigation pour ces cinq chapitres.",
+                "evidence": "LessonViewer.tsx:1181-1183 écrit la complétion de `code_repl`; chapterProgress.ts:94-103 et LessonViewer.tsx:1537-1625 ne listent pas ce type parmi les blocages. Une recherche de `code_repl` dans ces règles ne trouve que l’analytics et le renderer.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Corriger la cohérence de verrouillage en même temps que le mécanisme de validation de l’exercice."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 3,
+            "chapter_id": "dc_ch01_act04",
+            "title": "Video: Creating your first skill",
+            "score_100": 68,
+            "verified_dimensions": [
+              "La vidéo poursuit logiquement la première mise en pratique et traite structure de SKILL.md, chargement et priorités.",
+              "Une transcription complète est disponible dans les données et le renderer l’expose à la demande.",
+              "Le QCM suivant porte bien sur la hiérarchie de priorité expliquée par la vidéo.",
+              "Score renormalisé sur contenu textuel, progression et rendu observables."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable au niveau de cet écran.",
+              "Qualité visuelle/factuelle du MP4 et disponibilité runtime de son URL."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-006",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch01_act04",
+                "content_id": "dc_1_act_04_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "média",
+                "description": "La vidéo obligatoire ne comporte ni sous-titres français ni transcription française, alors que la formation est déclarée `sourceLanguage: fr-FR`. Le transcript rendu reste anglais.",
+                "current_content": "`subtitleUrlEn` est renseigné, `subtitleUrlFr` est absent et `transcript` commence par « So, let's create a skill. ».",
+                "proposed_content": "Fournir une piste de sous-titres et une transcription françaises, ou annoncer clairement la disponibilité uniquement anglaise avant la lecture.",
+                "evidence": "JSON → lessons[0].chapters[3].blocks[id=dc_1_act_04_video] ; LessonViewer.tsx:652-653 et 670-686.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Créer et valider l’alternative française sans supposer que l’URL locale est absente."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 4,
+            "chapter_id": "dc_ch01_act05",
+            "title": "Creating your first skill",
+            "score_100": 82,
+            "verified_dimensions": [
+              "Le QCM vérifie directement la règle de priorité entreprise/personnel/projet/plugins introduite par la vidéo précédente.",
+              "Question à choix unique dans les faits, options plausibles, indice discriminant, explication et possibilité de réessai sont rendus.",
+              "Score renormalisé sur contenu et interaction vérifiés."
+            ],
+            "unverified_dimensions": [
+              "Objectif explicite d’écran.",
+              "Compréhension autonome pour un apprenant francophone ne lisant pas l’anglais."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-007",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch01_act05",
+                "content_id": "dc_1_act_05_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "localisation",
+                "description": "La question, les options, l’indice et l’explication affichés via les valeurs `fr` sont en anglais, ce qui rompt la continuité avec les descriptions françaises du parcours.",
+                "current_content": "Exemple : `question.fr` = « A personal skill and a project skill both have the name code-review… ».",
+                "proposed_content": "Renseigner les versions françaises des champs visibles sans changer les quatre options ni `correctAnswers: b`.",
+                "evidence": "JSON → lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple] ; MultiChoiceBlock.tsx:16-24.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Localiser ensemble consigne, distracteurs, indice et explication pour conserver leur cohérence pédagogique."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 5,
+            "chapter_id": "dc_ch01_act06",
+            "title": "Saving your PR format as a personal skill",
+            "score_100": 25,
+            "verified_dimensions": [
+              "L’action attendue est détaillée : emplacement, frontmatter, commande git, sections de sortie, vérification et redémarrage futur.",
+              "L’indice cible correctement la casse de `SKILL.md` et les éléments à conserver.",
+              "L’exercice met en pratique la vidéo et le QCM précédents.",
+              "Score renormalisé sur contenu et interaction effective observables."
+            ],
+            "unverified_dimensions": [
+              "Création effective du fichier et disponibilité de Claude Code dans l’environnement final.",
+              "Objectif explicite d’écran."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-008",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch01_act06",
+                "content_id": "dc_1_act_06_code",
+                "content_type": "code_repl",
+                "severity": "P0",
+                "category": "activité_et_validation",
+                "description": "La consigne demande une interaction terminale et la création d’un fichier SKILL.md, mais le renderer ne lance aucune commande et ne vérifie que la copie textuelle exacte de `solutionCode`. Le pseudo-code de solution contient des commandes shell de seed, non une réponse Python exécutable dans l’éditeur affiché.",
+                "current_content": "`language: python`; instruction « Démarrez Claude Code avec `claude` » ; `solutionCode` contient « cp ~/solutions/1_2/SKILL.md ~/.claude/skills/pr-description/SKILL.md ».",
+                "proposed_content": "Utiliser un terminal/sandbox qui vérifie le fichier créé, son frontmatter et les sections demandées, puis retourne un feedback sur ces critères. Ne conserver le bloc code_repl actuel que pour une véritable réponse textuelle/codée comparable.",
+                "evidence": "JSON → lessons[0].chapters[5].blocks[id=dc_1_act_06_code] ; CodeReplBlock.tsx:28-40 ; shared/codeReplValidation.ts:10-13.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Reconcevoir la modalité de réalisation et la validation avant de considérer cette activité comme obligatoire."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch02_act01",
+            "title": "Video: Configuration and multi-file skills",
+            "score_100": 68,
+            "verified_dimensions": [
+              "La leçon fait progresser des bases vers `allowed-tools`, les métadonnées et la divulgation progressive.",
+              "La transcription couvre les concepts réutilisés par le QCM et l’exercice suivants.",
+              "Score renormalisé sur contexte de leçon, progression et support textuel du média."
+            ],
+            "unverified_dimensions": [
+              "Objectif distinct de cet écran.",
+              "Qualité visuelle/factuelle de la vidéo, lecture et sous-titrage au runtime."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-009",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch02_act01",
+                "content_id": "dc_2_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "média",
+                "description": "La vidéo requise n’offre qu’une transcription anglaise et `subtitleUrlEn`; aucun équivalent français n’est renseigné pour le parcours fr-FR.",
+                "current_content": "`transcript` est en anglais (« A basic skill works with just a name and description… »), `subtitleUrlFr` est absent.",
+                "proposed_content": "Ajouter transcription et sous-titres français, ou signaler explicitement et avant lecture que le média est anglais uniquement.",
+                "evidence": "JSON → lessons[1].chapters[0].blocks[id=dc_2_act_01_video] ; LessonViewer.tsx:652-653, 670-686.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Prévoir une alternative française accessible sans qualifier la ressource référencée d’absente."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch02_act02",
+            "title": "Configuration and multi-file skills",
+            "score_100": 82,
+            "verified_dimensions": [
+              "Question ciblée sur l’avantage de contexte d’un script exécuté, exactement traité dans la vidéo précédente.",
+              "Options, bonne réponse, indice, explication et réessai sont définis et rendus.",
+              "Score renormalisé sur les dimensions vérifiables de l’activité."
+            ],
+            "unverified_dimensions": [
+              "Objectif explicite propre à l’écran.",
+              "Compréhension effective sans maîtrise de l’anglais."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-010",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch02_act02",
+                "content_id": "dc_2_act_02_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "localisation",
+                "description": "L’énoncé, les options et l’explication sont identiques en français et en anglais. L’indice est traduit, ce qui crée une activité bilingue incomplète plutôt qu’une activité française cohérente.",
+                "current_content": "`question.fr` est « What is the main efficiency advantage… » et `explanation.fr` est « Correct! A 200-line script… ».",
+                "proposed_content": "Traduire la question, les quatre options et l’explication dans les clés `fr`; conserver l’indice français déjà présent et la réponse correcte.",
+                "evidence": "JSON → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple] ; MultiChoiceBlock.tsx:16-24, 80, 114-123.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Finaliser la localisation avant de présenter ce contrôle dans l’interface française."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch02_act03",
+            "title": "Tightening the codebase-onboarding skill",
+            "score_100": 25,
+            "verified_dimensions": [
+              "La tâche attendue est précise : diagnostiquer SKILL.md, ajouter `allowed-tools`, déplacer une référence et créer un lien.",
+              "L’indice fournit la valeur attendue et distingue les outils à exclure, ce qui réduit l’ambiguïté.",
+              "L’activité applique les deux notions précédemment expliquées : restriction d’outils et divulgation progressive.",
+              "Score renormalisé sur contenu et renderer effectif."
+            ],
+            "unverified_dimensions": [
+              "Exécution réelle des modifications dans l’environnement d’exercice.",
+              "Objectif pédagogique explicite de l’écran."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-011",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch02_act03",
+                "content_id": "dc_2_act_03_code",
+                "content_type": "code_repl",
+                "severity": "P0",
+                "category": "activité_et_validation",
+                "description": "L’exercice pratique est rendu dans un éditeur Python sans exécution. Sa validation ne vérifie ni le champ `allowed-tools`, ni le déplacement de `Architecture Reference`, ni le lien créé : elle compare seulement le texte saisi au `solutionCode` interne contenant des commandes shell de seed.",
+                "current_content": "La consigne demande de modifier `~/.claude/skills/codebase-onboarding/SKILL.md`; `solutionCode` crée des dossiers et copie `~/solutions/1_3/...`.",
+                "proposed_content": "Proposer un terminal réel ou simulé avec contrôles explicites des deux critères de conception et feedback par critère; à défaut, recadrer l’exercice comme revue de fichier avec réponses vérifiables.",
+                "evidence": "JSON → lessons[1].chapters[2].blocks[id=dc_2_act_03_code] ; CodeReplBlock.tsx:28-40 ; shared/codeReplValidation.ts:10-13.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Remplacer la validation par égalité de texte par une validation compatible avec l’action annoncée."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 3,
+            "chapter_id": "dc_ch02_act04",
+            "title": "Video: Skills vs. other Claude Code features",
+            "score_100": 68,
+            "verified_dimensions": [
+              "La ressource compare skills, CLAUDE.md, sous-agents, hooks et MCP, puis prépare le QCM et le tri suivants.",
+              "Une transcription exploitable est fournie et rendue à l’apprenant.",
+              "Score renormalisé sur contenu textuel et progression observables."
+            ],
+            "unverified_dimensions": [
+              "Objectif propre à l’écran.",
+              "Qualité visuelle/factuelle du média et accessibilité effective de son URL au runtime."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-012",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch02_act04",
+                "content_id": "dc_2_act_04_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "média",
+                "description": "La vidéo obligatoire et son alternative textuelle sont uniquement en anglais; seule une piste de sous-titres anglais est déclarée dans un cours importé fr-FR.",
+                "current_content": "`transcript`: « Claude Code offers several customization options… » ; `subtitleUrlEn` présent, `subtitleUrlFr` absent.",
+                "proposed_content": "Ajouter sous-titres et transcription françaises ou signaler explicitement la limite linguistique avant la lecture.",
+                "evidence": "JSON → lessons[1].chapters[3].blocks[id=dc_2_act_04_video] ; LessonViewer.tsx:652-653, 670-686.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Rendre le média et son alternative accessibles dans la langue du parcours."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 4,
+            "chapter_id": "dc_ch02_act05",
+            "title": "Skills vs. other Claude Code features",
+            "score_100": 82,
+            "verified_dimensions": [
+              "Le scénario « lancer un linter à chaque sauvegarde » permet de distinguer un hook événementiel d’un skill piloté par demande.",
+              "L’indice, l’explication et les états de correction/reprise sont disponibles dans le renderer.",
+              "Score renormalisé sur l’activité et son feedback vérifiés."
+            ],
+            "unverified_dimensions": [
+              "Objectif explicite de chapitre.",
+              "Compréhension autonome de l’énoncé pour un apprenant ne lisant pas l’anglais."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-013",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch02_act05",
+                "content_id": "dc_2_act_05_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "localisation",
+                "description": "L’énoncé, les options et l’indice restent en anglais dans leurs champs français. Seule l’explication est localisée, ce qui laisse l’action attendue non localisée dans l’interface française.",
+                "current_content": "`question.fr`: « Your team wants Claude to automatically run a linter… »; `hint.fr`: « Ask yourself: should this fire… ».",
+                "proposed_content": "Renseigner les traductions françaises de la question, des options et de l’indice en préservant la distinction skills/hooks et la réponse correcte.",
+                "evidence": "JSON → lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple] ; MultiChoiceBlock.tsx:16-24, 80, 114-123.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Localiser l’énoncé avant l’explication afin que l’apprenant comprenne quoi sélectionner."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 5,
+            "chapter_id": "dc_ch02_act06",
+            "title": "Picking the right tool",
+            "score_100": 58,
+            "verified_dimensions": [
+              "Le tri demande une action claire et l’interface explique aussi l’alternative accessible au glisser-déposer : sélectionner une carte puis une catégorie.",
+              "Les quatre cartes et les deux catégories correspondent à la distinction CLAUDE.md/skill expliquée juste avant.",
+              "Le renderer bloque le passage tant que le tri n’est pas complété correctement et permet une réinitialisation après erreur.",
+              "Score renormalisé sur action, progression, feedback et renderer observables."
+            ],
+            "unverified_dimensions": [
+              "Objectif explicite de chapitre.",
+              "Compréhension effective des textes anglais par le public francophone."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-014",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch02_act06",
+                "content_id": "dc_2_act_06_bucket_sort",
+                "content_type": "bucket_sort",
+                "severity": "P1",
+                "category": "feedback",
+                "description": "Le feedback pédagogique rédigé dans le JSON n’est jamais transmis au renderer. LessonViewer passe seulement `correction`, qui vaut `null`; MatchingExercise n’affiche un commentaire détaillé qu’à partir de cette propriété. Après une erreur, l’apprenant obtient surtout un score « X/4 · Réessayez » et des marques correct/incorrect, sans explication visible de la règle CLAUDE.md versus skill pourtant fournie dans `feedback`.",
+                "current_content": "`feedback` : « Correct! CLAUDE.md is for always-on project standards… » ; `correction: null`; `successMessage: null`.",
+                "proposed_content": "Transmettre `feedback` au composant de tri et l’afficher comme explication après soumission, y compris après une erreur; ou renseigner `correction` avec une version qui explique la règle et les placements attendus. Prévoir une version française avec cette correction.",
+                "evidence": "JSON → lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort] ; LessonViewer.tsx:957-973 passe `correction: block.correction` mais pas `feedback`; MatchingExercise.tsx:40-42 et 444-450 n’affiche le détail que pour `exercise.correction`.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Rétablir un feedback explicatif visible avant de considérer le tri comme une évaluation formative suffisante."
+              },
+              {
+                "issue_id": "ped-044-015",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch02_act06",
+                "content_id": "dc_2_act_06_bucket_sort",
+                "content_type": "bucket_sort",
+                "severity": "P2",
+                "category": "localisation",
+                "description": "Les instructions, l’indice, le feedback et les quatre cartes affichent la même formulation anglaise pour `fr` et `en`. Les libellés de catégories sont identiques par nature, mais l’action et les situations à classer restent en anglais pour l’interface française.",
+                "current_content": "`instructions.fr`: « Drag each item into the correct bucket: CLAUDE.md or Skill. » ; les cartes `item_1` à `item_4` ont des `text.fr` anglais.",
+                "proposed_content": "Traduire les instructions, l’indice, le feedback et les cartes dans les champs `fr`, sans modifier les ids ni `correctBucket`.",
+                "evidence": "JSON → lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort] ; MatchingExercise.tsx:88-94, 227-240, 280 et 333 affichent les valeurs pour la langue active.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Localiser l’activité de tri au même niveau que le reste de l’interface française."
+              }
+            ]
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch03_act01",
+            "title": "Video: Sharing skills",
+            "score_100": 68,
+            "verified_dimensions": [
+              "La leçon prolonge la configuration par les modes de partage et prépare le conflit de priorité évalué ensuite.",
+              "La transcription est fournie et rendue comme alternative textuelle déroulable.",
+              "Score renormalisé sur les dimensions de média textuel et progression vérifiables."
+            ],
+            "unverified_dimensions": [
+              "Objectif d’écran mesurable.",
+              "Qualité du MP4 et accessibilité runtime de la piste audio/vidéo."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-016",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch03_act01",
+                "content_id": "dc_3_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "média",
+                "description": "La ressource obligatoire ne met à disposition que le support anglais : transcription anglaise et sous-titres anglais, sans piste ni alternative française renseignée.",
+                "current_content": "`transcript` commence par « Skills become more valuable when shared. »; `subtitleUrlEn` présent; `subtitleUrlFr` absent.",
+                "proposed_content": "Ajouter une transcription et des sous-titres français, ou annoncer distinctement la contrainte de langue avant l’activité.",
+                "evidence": "JSON → lessons[2].chapters[0].blocks[id=dc_3_act_01_video] ; LessonViewer.tsx:652-653, 670-686.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Fournir une alternative textuelle française pour le média requis."
+              }
+            ]
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch03_act02",
+            "title": "Sharing skills",
+            "score_100": 78,
+            "verified_dimensions": [
+              "Le scénario d’une skill personnelle et d’une skill entreprise de même nom évalue de façon pertinente la priorité introduite plus tôt.",
+              "Question, options, bonne réponse, explication et réessai sont définis et rendus.",
+              "Score renormalisé sur activité et feedback observables."
+            ],
+            "unverified_dimensions": [
+              "Objectif explicite au niveau de l’écran.",
+              "Compréhension intégrale de l’indice par un apprenant francophone, car il reste anglais."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-017",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch03_act02",
+                "content_id": "dc_3_act_02_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "localisation",
+                "description": "L’énoncé et l’explication sont localisés, mais l’indice affiché au besoin est identique en anglais dans les deux langues. Cela réduit l’utilité de l’aide précisément au moment où l’apprenant hésite.",
+                "current_content": "`hint.fr`: « Recall the four-level priority hierarchy: Enterprise, Personal, Project, Plugins. ».",
+                "proposed_content": "Traduire l’indice français en conservant la hiérarchie Enterprise → Personal → Project → Plugins et la précision qu’il n’y a pas de fusion des skills homonymes.",
+                "evidence": "JSON → lessons[2].chapters[1].blocks[id=dc_3_act_02_qcm_multiple] ; MultiChoiceBlock.tsx:17-18 et 114-118.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Localiser l’aide afin que le dispositif de remédiation soit réellement utilisable dans la langue sélectionnée."
+              }
+            ]
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch03_act03",
+            "title": "Wire skills into the frontend reviewer",
+            "score_100": 25,
+            "verified_dimensions": [
+              "Les étapes explicitent le déplacement de deux skills, la lecture du sous-agent, l’ajout de `skills:` et la justification demandée.",
+              "L’indice fournit la valeur exacte attendue et distingue sous-agents personnalisés et agents intégrés.",
+              "La tâche mobilise logiquement la leçon sur le partage et l’orchestration.",
+              "Score renormalisé sur consigne et mécanisme effectivement rendu."
+            ],
+            "unverified_dimensions": [
+              "Manipulation réelle des fichiers dans le dépôt fourni.",
+              "Objectif pédagogique explicite."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-018",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch03_act03",
+                "content_id": "dc_3_act_03_code",
+                "content_type": "code_repl",
+                "severity": "P0",
+                "category": "activité_et_validation",
+                "description": "La tâche demande des opérations terminales et une explication à Claude, mais le bloc `code_repl` affiche un éditeur Python sans terminal et valide uniquement une égalité textuelle avec une solution interne de commandes shell. Les compétences déplacées, le frontmatter du sous-agent et l’explication sur les agents intégrés ne sont donc pas réellement évalués.",
+                "current_content": "Instruction : déplacer les deux répertoires et ajouter `skills: accessibility-audit, performance-check`; `solutionCode` copie des fichiers depuis `~/solutions/2_2/`.",
+                "proposed_content": "Utiliser une simulation de terminal avec fichiers inspectables et validations distinctes (deux déplacements, champ de frontmatter, réponse de compréhension), avec feedback par critère. Ne pas utiliser la comparaison textuelle du code pour cette tâche.",
+                "evidence": "JSON → lessons[2].chapters[2].blocks[id=dc_3_act_03_code] ; CodeReplBlock.tsx:28-40 ; shared/codeReplValidation.ts:10-13.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Rebâtir l’activité autour de l’environnement annoncé avant de la rendre certificative ou bloquante."
+              }
+            ]
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 3,
+            "chapter_id": "dc_ch03_act04",
+            "title": "Video: Troubleshooting skills",
+            "score_100": 68,
+            "verified_dimensions": [
+              "La ressource introduit les échecs de chargement, de déclenchement, de conflits et de runtime avant l’évaluation diagnostique suivante.",
+              "La transcription complète est disponible dans le bloc et exposée par LessonViewer.",
+              "Score renormalisé sur le texte du média et la progression vérifiés."
+            ],
+            "unverified_dimensions": [
+              "Objectif explicite d’écran.",
+              "Qualité visuelle/factuelle de la vidéo et accessibilité runtime."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-019",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch03_act04",
+                "content_id": "dc_3_act_04_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "média",
+                "description": "Le support obligatoire est disponible avec transcription et sous-titres anglais uniquement; aucune alternative française n’est déclarée malgré le contexte fr-FR.",
+                "current_content": "`transcript`: « When skills don't work, the problem usually falls into… »; `subtitleUrlEn` renseigné; `subtitleUrlFr` absent.",
+                "proposed_content": "Ajouter une transcription française et une piste de sous-titres française, ou contextualiser explicitement l’anglais comme prérequis avant lecture.",
+                "evidence": "JSON → lessons[2].chapters[3].blocks[id=dc_3_act_04_video] ; LessonViewer.tsx:652-653, 670-686.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Rendre l’alternative textuelle du média utilisable pour le public français."
+              }
+            ]
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 4,
+            "chapter_id": "dc_ch03_act05",
+            "title": "Troubleshooting skills",
+            "score_100": 82,
+            "verified_dimensions": [
+              "Le diagnostic demandé est directement relié au cas présenté dans la vidéo : skill chargée mais non déclenchée par le vocabulaire employé.",
+              "Les quatre options, l’indice, l’explication et la possibilité de réessai sont définis et rendus.",
+              "Score renormalisé sur les dimensions de QCM observables."
+            ],
+            "unverified_dimensions": [
+              "Objectif explicite d’écran.",
+              "Compréhension autonome de l’énoncé et des options pour un apprenant qui ne lit pas l’anglais."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-020",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch03_act05",
+                "content_id": "dc_3_act_05_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "localisation",
+                "description": "L’énoncé et les quatre propositions sont identiques dans les versions française et anglaise, tandis que l’indice et l’explication ont été traduits. L’apprenant français reçoit donc une aide en français après avoir dû interpréter une question de diagnostic en anglais.",
+                "current_content": "`question.fr`: « A skill appears in the available skills list, but Claude never uses it… » ; les valeurs `options[].text.fr` sont également anglaises.",
+                "proposed_content": "Traduire l’énoncé et les quatre options dans les clés `fr`, sans changer le distracteur correct `b`, l’indice ni l’explication déjà localisés.",
+                "evidence": "JSON → lessons[2].chapters[4].blocks[id=dc_3_act_05_qcm_multiple] ; MultiChoiceBlock.tsx:16-24 et 80-123.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Compléter la localisation de la partie à résoudre, pas seulement celle de la remédiation."
+              }
+            ]
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 5,
+            "chapter_id": "dc_ch03_act06",
+            "title": "Why isn't my skill triggering?",
+            "score_100": 25,
+            "verified_dimensions": [
+              "Les instructions et l’indice formulent clairement le diagnostic attendu : lire le SKILL.md, comparer le vocabulaire au langage naturel et enrichir la description avec des déclencheurs.",
+              "La mise en pratique est cohérente avec le QCM immédiatement précédent.",
+              "Score renormalisé sur consigne et renderer effectivement analysables."
+            ],
+            "unverified_dimensions": [
+              "Réécriture effective de la description par Claude Code et comportement réel de déclenchement.",
+              "Objectif explicite de chapitre."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped-044-021",
+                "course_id": "introduction_to_agent_skills__01",
+                "chapter_id": "dc_ch03_act06",
+                "content_id": "dc_3_act_06_code",
+                "content_type": "code_repl",
+                "severity": "P0",
+                "category": "activité_et_validation",
+                "description": "L’interface proposée ne permet pas de réaliser ni d’évaluer le dépannage demandé dans Claude Code. Elle présente un éditeur Python et compare son contenu à une solution textuelle interne contenant des copies de fichiers; elle n’exécute ni `claude`, ni la lecture/réécriture de SKILL.md, ni un test de déclenchement sémantique.",
+                "current_content": "Consigne : lire `slow-code-finder/SKILL.md`, expliquer l’écart de vocabulaire et réécrire la description; `solutionCode` copie `~/solutions/2_3/slow-code-finder/SKILL.md`.",
+                "proposed_content": "Fournir un terminal/sandbox où l’apprenant peut observer la description initiale, la modifier et soumettre un test de demande; valider la présence de formulations de déclenchement et expliquer le résultat. Si ce runtime n’est pas disponible, convertir l’activité en exercice d’édition de frontmatter avec critères explicites.",
+                "evidence": "JSON → lessons[2].chapters[5].blocks[id=dc_3_act_06_code] ; CodeReplBlock.tsx:28-40 ; shared/codeReplValidation.ts:10-13.",
+                "confidence": "high",
+                "verification_status": "verified_source_and_renderer",
+                "recommended_action": "Traiter comme bloquant de conception : l’action annoncée et l’action validée doivent être les mêmes."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "formation_summary": "Audit exhaustif de 1 cours, 3 leçons, 18 chapitres et 18 activités/blocs principaux (6 vidéos, 6 QCM, 5 exercices code_repl, 1 tri). La progression conceptuelle vidéo → QCM → mise en pratique est cohérente et les QCM disposent d’indices, explications et tentatives. Vingt-et-un constats étayés ont été confirmés : P0=5 (les cinq activités de terminal sont rendues par un éditeur Python à comparaison textuelle, non compatible avec l’action demandée), P1=9 (verrouillage vidéo incohérent, verrouillage absent des code_repl, six médias requis sans alternative française, feedback de tri non rendu) et P2=7 (localisations françaises incomplètes). La priorité est de réaligner renderer, validation et verrouillage des activités pratiques ; puis de fournir des alternatives françaises et des feedbacks visibles.",
+    "limits": [
+      "Audit qualitatif limité à la formation datacamp_introduction_to_agent_skills et à son unique fichier source, conformément au manifest.",
+      "Les MP4, VTT et URLs /api/assets ont été identifiés mais non visionnés dans un navigateur ; ils ne sont donc pas considérés comme absents. La qualité visuelle, audio et factuelle des vidéos est non vérifiée.",
+      "Les constats de rendu et de verrouillage sont vérifiés par lecture de LessonViewer.tsx, chapterProgress.ts et des composants concernés ; aucun test de navigation interactif authentifié n’a été exécuté.",
+      "Les objectifs pédagogiques formalisés au niveau de chaque chapitre ne sont généralement pas fournis dans les JSON ; cette absence est déclarée comme dimension non vérifiable, pas comme défaut automatique.",
+      "Aucun contenu, média, code ou donnée source n’a été modifié ; seul ce rapport d’audit a été créé."
+    ]
+  },
+  "previous_recheck": {
+    "formation_id": "datacamp_introduction_to_agent_skills",
+    "index": 44,
+    "course_ids": [
+      "introduction_to_agent_skills__01"
+    ],
+    "review_scope": {
+      "criteria": [
+        "objectifs et activités",
+        "faisabilité TP/fichiers/environnement",
+        "fausses soumissions ou gates",
+        "médias/téléchargements",
+        "duplications ou corruption",
+        "rendu/bilinguisme"
+      ],
+      "sources": [
+        "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+        "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/044-datacamp_introduction_to_agent_skills.json",
+        "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_agent_skills__01.json"
+      ],
+      "method": "Contre-vérification des constats du rapport initial contre les champs et structures du cours actuel; aucun cours modifié."
+    },
+    "reviewed_current_state": true,
+    "findings": [
+      {
+        "severity": "P1",
+        "category": "média",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[0].chapters[0].blocks[id=dc_1_act_01_video]",
+        "description": "Dans le parcours déclaré fr-FR, la vidéo obligatoire ne propose qu’une transcription et une piste de sous-titres anglaises. Un apprenant ayant choisi le français peut ouvrir la transcription affichée par LessonViewer, mais elle reste en anglais ; ce soutien textuel ne remplit donc pas son rôle d’alternative française.",
+        "recommendation": "Prioriser une alternative française accessible pour cette vidéo requise, puis vérifier son affichage dans le lecteur réel.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[0].chapters[0] (LessonViewer.videoCompletionKey)",
+        "description": "Le bouton principal « Suivant » ne verrouille pas les six vidéos locales requises de ce cours. Le lecteur marque une vidéo complétée avec son `block.id`, alors que le calcul du verrouillage de pied de page cherche `videoId`, puis `url`, puis seulement un `id` de 8 à 15 caractères. Les six ids locaux ont 17 caractères et n’ont ni `videoId` ni `url` : la liste des vidéos à valider devient vide et le passage est autorisé sans visionnage ni marquage manuel.",
+        "recommendation": "Corriger la clé de complétion avant toute modification pédagogique : le verrouillage annoncé doit correspondre à l’action réellement demandée.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "localisation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple]",
+        "description": "Les champs français affichés au choix de langue français sont identiques aux champs anglais, y compris l’énoncé, les options, l’indice et le feedback. L’activité est donc réellement proposée en anglais dans une formation importée en fr-FR.",
+        "recommendation": "Localiser ce QCM avant sa diffusion auprès d’un public francophone.",
+        "status": "open"
+      },
+      {
+        "severity": "P0",
+        "category": "activité_et_validation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[0].chapters[2].blocks[id=dc_1_act_03_code]",
+        "description": "L’activité demande de piloter Claude Code dans un terminal, mais le composant présenté est un simple éditeur de texte Python : il n’exécute ni le code de départ ni les commandes `claude`. « Vérifier le code » ne contrôle que l’égalité exacte entre le texte de l’éditeur et le champ `solutionCode`, lequel contient des commentaires et des commandes shell de préparation/validation. L’apprenant ne peut donc pas faire évaluer l’action demandée ; il peut seulement reproduire la solution interne affichée.",
+        "recommendation": "Bloquer la publication de cette activité sous sa forme actuelle et choisir un renderer compatible avec la tâche terminale annoncée.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[0].chapters[2] (LessonViewer.codeReplGate)",
+        "description": "Le passage à l’écran suivant n’est pas conditionné par la validation des blocs `code_repl`, alors que cette activité est marquée `requiredBeforeAdvance: true`. Le renderer enregistre bien une complétion si une égalité de texte est obtenue, mais aucune des listes de conditions de passage ne traite le type `code_repl`. Le même défaut affecte les cinq activités `code_repl` de ce cours.",
+        "recommendation": "Corriger la cohérence de verrouillage en même temps que le mécanisme de validation de l’exercice.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "média",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[0].chapters[3].blocks[id=dc_1_act_04_video]",
+        "description": "La vidéo obligatoire ne comporte ni sous-titres français ni transcription française, alors que la formation est déclarée `sourceLanguage: fr-FR`. Le transcript rendu reste anglais.",
+        "recommendation": "Créer et valider l’alternative française sans supposer que l’URL locale est absente.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "localisation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple]",
+        "description": "La question, les options, l’indice et l’explication affichés via les valeurs `fr` sont en anglais, ce qui rompt la continuité avec les descriptions françaises du parcours.",
+        "recommendation": "Localiser ensemble consigne, distracteurs, indice et explication pour conserver leur cohérence pédagogique.",
+        "status": "open"
+      },
+      {
+        "severity": "P0",
+        "category": "activité_et_validation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[0].chapters[5].blocks[id=dc_1_act_06_code]",
+        "description": "La consigne demande une interaction terminale et la création d’un fichier SKILL.md, mais le renderer ne lance aucune commande et ne vérifie que la copie textuelle exacte de `solutionCode`. Le pseudo-code de solution contient des commandes shell de seed, non une réponse Python exécutable dans l’éditeur affiché.",
+        "recommendation": "Reconcevoir la modalité de réalisation et la validation avant de considérer cette activité comme obligatoire.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "média",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[1].chapters[0].blocks[id=dc_2_act_01_video]",
+        "description": "La vidéo requise n’offre qu’une transcription anglaise et `subtitleUrlEn`; aucun équivalent français n’est renseigné pour le parcours fr-FR.",
+        "recommendation": "Prévoir une alternative française accessible sans qualifier la ressource référencée d’absente.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "localisation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple]",
+        "description": "L’énoncé, les options et l’explication sont identiques en français et en anglais. L’indice est traduit, ce qui crée une activité bilingue incomplète plutôt qu’une activité française cohérente.",
+        "recommendation": "Finaliser la localisation avant de présenter ce contrôle dans l’interface française.",
+        "status": "open"
+      },
+      {
+        "severity": "P0",
+        "category": "activité_et_validation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[1].chapters[2].blocks[id=dc_2_act_03_code]",
+        "description": "L’exercice pratique est rendu dans un éditeur Python sans exécution. Sa validation ne vérifie ni le champ `allowed-tools`, ni le déplacement de `Architecture Reference`, ni le lien créé : elle compare seulement le texte saisi au `solutionCode` interne contenant des commandes shell de seed.",
+        "recommendation": "Remplacer la validation par égalité de texte par une validation compatible avec l’action annoncée.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "média",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[1].chapters[3].blocks[id=dc_2_act_04_video]",
+        "description": "La vidéo obligatoire et son alternative textuelle sont uniquement en anglais; seule une piste de sous-titres anglais est déclarée dans un cours importé fr-FR.",
+        "recommendation": "Rendre le média et son alternative accessibles dans la langue du parcours.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "localisation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple]",
+        "description": "L’énoncé, les options et l’indice restent en anglais dans leurs champs français. Seule l’explication est localisée, ce qui laisse l’action attendue non localisée dans l’interface française.",
+        "recommendation": "Localiser l’énoncé avant l’explication afin que l’apprenant comprenne quoi sélectionner.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "feedback",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort]",
+        "description": "Le feedback pédagogique rédigé dans le JSON n’est jamais transmis au renderer. LessonViewer passe seulement `correction`, qui vaut `null`; MatchingExercise n’affiche un commentaire détaillé qu’à partir de cette propriété. Après une erreur, l’apprenant obtient surtout un score « X/4 · Réessayez » et des marques correct/incorrect, sans explication visible de la règle CLAUDE.md versus skill pourtant fournie dans `feedback`.",
+        "recommendation": "Rétablir un feedback explicatif visible avant de considérer le tri comme une évaluation formative suffisante.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "localisation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort]",
+        "description": "Les instructions, l’indice, le feedback et les quatre cartes affichent la même formulation anglaise pour `fr` et `en`. Les libellés de catégories sont identiques par nature, mais l’action et les situations à classer restent en anglais pour l’interface française.",
+        "recommendation": "Localiser l’activité de tri au même niveau que le reste de l’interface française.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "média",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[2].chapters[0].blocks[id=dc_3_act_01_video]",
+        "description": "La ressource obligatoire ne met à disposition que le support anglais : transcription anglaise et sous-titres anglais, sans piste ni alternative française renseignée.",
+        "recommendation": "Fournir une alternative textuelle française pour le média requis.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "localisation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[2].chapters[1].blocks[id=dc_3_act_02_qcm_multiple]",
+        "description": "L’énoncé et l’explication sont localisés, mais l’indice affiché au besoin est identique en anglais dans les deux langues. Cela réduit l’utilité de l’aide précisément au moment où l’apprenant hésite.",
+        "recommendation": "Localiser l’aide afin que le dispositif de remédiation soit réellement utilisable dans la langue sélectionnée.",
+        "status": "open"
+      },
+      {
+        "severity": "P0",
+        "category": "activité_et_validation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[2].chapters[2].blocks[id=dc_3_act_03_code]",
+        "description": "La tâche demande des opérations terminales et une explication à Claude, mais le bloc `code_repl` affiche un éditeur Python sans terminal et valide uniquement une égalité textuelle avec une solution interne de commandes shell. Les compétences déplacées, le frontmatter du sous-agent et l’explication sur les agents intégrés ne sont donc pas réellement évalués.",
+        "recommendation": "Rebâtir l’activité autour de l’environnement annoncé avant de la rendre certificative ou bloquante.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "média",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[2].chapters[3].blocks[id=dc_3_act_04_video]",
+        "description": "Le support obligatoire est disponible avec transcription et sous-titres anglais uniquement; aucune alternative française n’est déclarée malgré le contexte fr-FR.",
+        "recommendation": "Rendre l’alternative textuelle du média utilisable pour le public français.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "localisation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[2].chapters[4].blocks[id=dc_3_act_05_qcm_multiple]",
+        "description": "L’énoncé et les quatre propositions sont identiques dans les versions française et anglaise, tandis que l’indice et l’explication ont été traduits. L’apprenant français reçoit donc une aide en français après avoir dû interpréter une question de diagnostic en anglais.",
+        "recommendation": "Compléter la localisation de la partie à résoudre, pas seulement celle de la remédiation.",
+        "status": "open"
+      },
+      {
+        "severity": "P0",
+        "category": "activité_et_validation",
+        "course_id": "introduction_to_agent_skills__01",
+        "location": "lessons[2].chapters[5].blocks[id=dc_3_act_06_code]",
+        "description": "L’interface proposée ne permet pas de réaliser ni d’évaluer le dépannage demandé dans Claude Code. Elle présente un éditeur Python et compare son contenu à une solution textuelle interne contenant des copies de fichiers; elle n’exécute ni `claude`, ni la lecture/réécriture de SKILL.md, ni un test de déclenchement sémantique.",
+        "recommendation": "Traiter comme bloquant de conception : l’action annoncée et l’action validée doivent être les mêmes.",
+        "status": "open"
+      }
+    ],
+    "summary": {
+      "issue_count": 21,
+      "p0": 5,
+      "p1": 9,
+      "p2": 7
+    }
+  },
+  "current_courses": {
+    "introduction_to_agent_skills__01": {
+      "courseId": "introduction_to_agent_skills__01",
+      "sourceCourseTitle": "Introduction to Agent Skills",
+      "datacampImport": {
+        "schemaVersion": "neopolis.datacamp_course.v1",
+        "sourceProvider": "DataCamp",
+        "sourceCourseSlug": "introduction-to-agent-skills",
+        "sourceLanguage": "fr-FR",
+        "expected": {
+          "chapters_expected": 3,
+          "chapters_extracted": 3,
+          "activities_expected_from_outline": 18,
+          "activities_extracted": 18,
+          "videos_expected_from_chapter_metadata": 6,
+          "videos_extracted": 6,
+          "exercise_types": {
+            "VideoExercise": 6,
+            "VisualExercise": 6,
+            "ConsoleExercise": 5,
+            "DragAndDropExercise": 1
+          },
+          "referenced_downloads_existing": 18,
+          "referenced_downloads_total": 18,
+          "referenced_downloaded_bytes": 2025195110,
+          "mp4_downloaded": 6,
+          "hls_downloaded": 6,
+          "vtt_downloaded": 6,
+          "slides_pdfs_downloaded": 0,
+          "video_transcripts_extracted": 6
+        },
+        "competencyTagging": "lesson_content_signals_v1"
+      },
+      "lessons": [
+        {
+          "id": "datacamp_ch01",
+          "title": {
+            "en": "Creating Your First Skill",
+            "fr": "Creating Your First Skill"
+          },
+          "description": {
+            "en": "Stop re-explaining yourself to Claude. Learn how skills work, create your first SKILL.md from scratch, and watch Claude\n  automatically apply it the moment your request matches . No slash commands, no reminders needed.",
+            "fr": "Arrêtez de vous réexpliquer à Claude. Découvrez comment fonctionnent les compétences, créez votre premier SKILL.md à partir de zéro et regardez Claude\n  l’appliquer automatiquement dès que votre demande correspond. Aucune commande slash, aucun rappel nécessaire."
+          },
+          "competencyTags": [
+            "ai_solution_design"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch01_act01",
+              "title": {
+                "en": "Video: What are skills",
+                "fr": "Video: What are skills"
+              },
+              "description": {
+                "en": "Stop re-explaining yourself to Claude. Learn how skills work, create your first SKILL.md from scratch, and watch Claude\n  automatically apply it the moment your request matches . No slash commands, no reminders needed.",
+                "fr": "Arrêtez de vous réexpliquer à Claude. Découvrez comment fonctionnent les compétences, créez votre premier SKILL.md à partir de zéro et regardez Claude\n  l’appliquer automatiquement dès que votre demande correspond. Aucune commande slash, aucun rappel nécessaire."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "content",
+                  "id": "neopolis_agent_skills_environment_preparation",
+                  "body": {
+                    "en": "## Before you start\n\nTo complete the practical Claude Code activities in this course, prepare a local working environment:\n\n1. Use a computer where you can open a terminal and a code editor.\n2. Install and sign in to Claude Code with an account that has access to the product.\n3. Open a small disposable project folder; the exercises may create or edit `SKILL.md` files.\n4. Keep the course open alongside your terminal so that you can reproduce each instruction and record your own observations.\n\n> **Your progress is evaluated in Neopolis.** Complete each activity in order, then use the completion action shown on the screen before moving on.",
+                    "fr": "## Avant de commencer\n\nPour réaliser les activités pratiques Claude Code de ce cours, préparez un environnement de travail local :\n\n1. Utilisez un ordinateur sur lequel vous pouvez ouvrir un terminal et un éditeur de code.\n2. Installez Claude Code et connectez-vous avec un compte ayant accès au produit.\n3. Ouvrez un petit dossier de projet jetable ; les exercices peuvent créer ou modifier des fichiers `SKILL.md`.\n4. Gardez le cours ouvert à côté du terminal afin de reproduire chaque consigne et de noter vos propres observations.\n\n> **Votre progression est évaluée dans Neopolis.** Réalisez chaque activité dans l’ordre, puis utilisez l’action de complétion affichée avant de poursuivre."
+                  }
+                },
+                {
+                  "type": "video",
+                  "id": "dc_1_act_01_video",
+                  "title": {
+                    "en": "Video: What are skills",
+                    "fr": "Video: What are skills"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex01_video_what_are_skills_c29a04fe.mp4",
+                  "subtitleUrlEn": "/api/assets/ch01_ex01_video_what_are_skills_en_15a812c7.vtt",
+                  "transcript": "1. Video: What are skills\nEvery time you explain your team's coding standards to Claude, you're repeating yourself. Every PR review, you redescribe how you want feedback structured. Every commit message, you remind Claude of your preferred format. And skills fix this. A skill is a markdown file that teaches Claude how to do something once, and Claude applies that knowledge automatically whenever it's relevant. Agent skills are folders of instructions, scripts, and resources that agents can discover and use to do things more accurately and efficiently. With Claude Code, we have the skill.md file. The description is how Claude decides whether to use the skill. When you ask Claude to review this PR, it matches your request against available skill descriptions and finds this one. Claude reads your request, compares it to all available skill descriptions, and activates the ones that match. You can store skills in a few places depending on who needs them. Personal skills go in the home directory .claude/skills and follow you across all your project. These are your preferences, your commit message style, your documentation format, how you like code explained. Project skills go in the .claude/skills inside of the root directory of your repository. Anyone who clones the repository gets these skills automatically. This is where team standards live, like your company's brand guidelines, preferred fonts, and colors that you use for web design. Claude Code has several ways to customize behavior. Skills are unique because they're automatic and task-specific. Claude.md files load into every conversation. If you want Claude to always use TypeScript strict mode, that goes in your CLAUDE.md file. Skills, on the other hand, load on demand when they match your request. It only loads in the name and description, so it doesn't fill up your entire context window. Your PR review checklist doesn't need to be in the context when you're debugging. It loads when you actually ask for a review. Slash commands require you to type them. Skills don't. Claude applies them when it recognizes the situation. Skills work best for specialized knowledge that applies to specific tasks. Code review standards your team follows, commit message formats that you prefer, brand guidelines of your organization. If you find yourself explaining the same thing to Claude repeatedly, well, that's a skill waiting to be written.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: What are skills",
+                      "text": "Every time you explain your team's coding standards to Claude, you're repeating yourself. Every PR review, you redescribe how you want feedback structured. Every commit message, you remind Claude of your preferred format. And skills fix this. A skill is a markdown file that teaches Claude how to do something once, and Claude applies that knowledge automatically whenever it's relevant. Agent skills are folders of instructions, scripts, and resources that agents can discover and use to do things more accurately and efficiently. With Claude Code, we have the skill.md file. The description is how Claude decides whether to use the skill. When you ask Claude to review this PR, it matches your request against available skill descriptions and finds this one. Claude reads your request, compares it to all available skill descriptions, and activates the ones that match. You can store skills in a few places depending on who needs them. Personal skills go in the home directory .claude/skills and follow you across all your project. These are your preferences, your commit message style, your documentation format, how you like code explained. Project skills go in the .claude/skills inside of the root directory of your repository. Anyone who clones the repository gets these skills automatically. This is where team standards live, like your company's brand guidelines, preferred fonts, and colors that you use for web design. Claude Code has several ways to customize behavior. Skills are unique because they're automatic and task-specific. Claude.md files load into every conversation. If you want Claude to always use TypeScript strict mode, that goes in your CLAUDE.md file. Skills, on the other hand, load on demand when they match your request. It only loads in the name and description, so it doesn't fill up your entire context window. Your PR review checklist doesn't need to be in the context when you're debugging. It loads when you actually ask for a review. Slash commands require you to type them. Skills don't. Claude applies them when it recognizes the situation. Skills work best for specialized knowledge that applies to specific tasks. Code review standards your team follows, commit message formats that you prefer, brand guidelines of your organization. If you find yourself explaining the same thing to Claude repeatedly, well, that's a skill waiting to be written."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act02",
+              "title": {
+                "en": "What are skills",
+                "fr": "What are skills"
+              },
+              "description": {
+                "en": "Stop re-explaining yourself to Claude. Learn how skills work, create your first SKILL.md from scratch, and watch Claude\n  automatically apply it the moment your request matches . No slash commands, no reminders needed.",
+                "fr": "Arrêtez de vous réexpliquer à Claude. Découvrez comment fonctionnent les compétences, créez votre premier SKILL.md à partir de zéro et regardez Claude\n  l’appliquer automatiquement dès que votre demande correspond. Aucune commande slash, aucun rappel nécessaire."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_1_act_02_qcm_multiple",
+                  "question": {
+                    "en": "Skills are reusable markdown files that teach Claude Code how to handle specific tasks automatically, so you stop repeating yourself and\nClaude gets it right every time.\n\nHow does Claude Code handle skill content to keep conversations efficient?",
+                    "fr": "Skills are reusable markdown files that teach Claude Code how to handle specific tasks automatically, so you stop repeating yourself and\nClaude gets it right every time.\n\nHow does Claude Code handle skill content to keep conversations efficient?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "It loads the full contents of every SKILL.md file into every conversation",
+                        "fr": "It loads the full contents of every SKILL.md file into every conversation"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "It loads only skill names and descriptions at startup; the full content loads only when a skill matches your request",
+                        "fr": "It loads only skill names and descriptions at startup; the full content loads only when a skill matches your request"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "It requires you to type a slash command each time to load a skill's instructions",
+                        "fr": "It requires you to type a slash command each time to load a skill's instructions"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "It caches full skill content in memory and clears it when Claude Code restarts",
+                        "fr": "It caches full skill content in memory and clears it when Claude Code restarts"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! This keeps context lean — your PR review checklist never appears while you're debugging, only when you actually ask for a review. The full instructions are read from disk on demand.",
+                    "fr": "Correct! This keeps context lean — your PR review checklist never appears while you're debugging, only when you actually ask for a review. The full instructions are read from disk on demand."
+                  },
+                  "hint": {
+                    "en": "Think about what Claude Code loads at startup versus what it loads when a skill actually matches your request.\n\nIf all skill content were in context all the time, your PR checklist would appear while you were debugging — even when you never asked for a review.",
+                    "fr": "Think about what Claude Code loads at startup versus what it loads when a skill actually matches your request.\n\nIf all skill content were in context all the time, your PR checklist would appear while you were debugging — even when you never asked for a review."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act03",
+              "title": {
+                "en": "Activating skills",
+                "fr": "Activating skills"
+              },
+              "description": {
+                "en": "Stop re-explaining yourself to Claude. Learn how skills work, create your first SKILL.md from scratch, and watch Claude\n  automatically apply it the moment your request matches . No slash commands, no reminders needed.",
+                "fr": "Arrêtez de vous répéter auprès de Claude. Découvrez comment fonctionnent les skills, créez votre premier SKILL.md à partir de zéro et regardez Claude l’appliquer automatiquement dès que votre demande correspond. Aucune commande slash, aucun rappel nécessaire."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "code_repl",
+                  "id": "dc_1_act_03_code",
+                  "title": {
+                    "en": "Activating skills",
+                    "fr": "Activating skills"
+                  },
+                  "language": "python",
+                  "instructions": {
+                    "en": "Start Claude Code with claude.\n\nAsk Claude what skills are currently available.\n\nAsk Claude to explain the process_order function in app.py with a diagram.\n\nAsk Claude which skill it just used and where on disk that skill lives (personal vs. project).\n\nType /exit to exit Claude Code.",
+                    "fr": "Start Claude Code with claude.\n\nAsk Claude what skills are currently available.\n\nAsk Claude to explain the process_order function in app.py with a diagram.\n\nAsk Claude which skill it just used and where on disk that skill lives (personal vs. project).\n\nType /exit to exit Claude Code."
+                  },
+                  "starterCode": "repl = connect('bash')\nrepl.run_command('cd /home/repl/order-app && rm -rf ~/.claude/skills && mkdir -p ~/.claude/skills && cp -r .skill-seeds/personal/* ~/.claude/skills/ && rm -f ~/.claude/history.jsonl && clear')",
+                  "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude to list the skills currently available.\n# 3. Ask Claude to explain `process_order` in `app.py` *with a diagram* so the `explain-with-diagrams` skill matches.\n# 4. Ask Claude which skill it just used and where on disk it lives (personal vs. project).\n# 5. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/1_1/history.jsonl ~/.claude/.",
+                  "expectedOutput": "",
+                  "hint": {
+                    "en": "The word diagram in step 3 is the key,it's what makes the request match one skill's description and not the other.\n\nIf you're unsure what to type, try: 'what skills do I have available?', then 'explain process_order in app.py with a diagram', then 'which skill did you just use and where does it live?'",
+                    "fr": "Le mot « diagram » à l’étape 3 est la clé : c’est ce qui fait correspondre la demande à la description d’un skill plutôt qu’à celle de l’autre.\n\nSi vous ne savez pas quoi saisir, essayez : « what skills do I have available? », puis « explain process_order in app.py with a diagram », puis « which skill did you just use and where does it live? »"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act04",
+              "title": {
+                "en": "Video: Creating your first skill",
+                "fr": "Video: Creating your first skill"
+              },
+              "description": {
+                "en": "Stop re-explaining yourself to Claude. Learn how skills work, create your first SKILL.md from scratch, and watch Claude\n  automatically apply it the moment your request matches . No slash commands, no reminders needed.",
+                "fr": "Arrêtez de vous répéter auprès de Claude. Découvrez comment fonctionnent les skills, créez votre premier SKILL.md à partir de zéro et regardez Claude l’appliquer automatiquement dès que votre demande correspond. Aucune commande slash, aucun rappel nécessaire."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_04_video",
+                  "title": {
+                    "en": "Video: Creating your first skill",
+                    "fr": "Video: Creating your first skill"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex04_video_creating_your_first_skill_f097d928.mp4",
+                  "subtitleUrlEn": "/api/assets/ch01_ex04_video_creating_your_first_skill_en_18b082af.vtt",
+                  "transcript": "1. Video: Creating your first skill\nSo, let's create a skill. This skill will teach Claude how we would like it to explain code using visual diagrams and analogies. Then, we'll look at what happens under the hood when Claude uses it. First, let's create a directory for your skill. We're going to be making a personal skill, so it'll live in many projects, so it will go in your home directory. Take into consideration that we're creating a directory with the skill name inside of the skills directory. Now create the skill. The name identifies your skill. The description tells Claude when to use it. This is the matching criteria. And then everything after the second dashes is the instructions that Claude follows. Claude Code loads skills at startup. So restart your session. Then verify it's available. You should see PR description in the list. Now test it. Make some changes on a branch and say, \"Write a PR description for my changes.\" Claude will then show you that it's using the PR description skill. After that, it'll check your diff and write a description following your template. Same format every single time. When Claude Code starts, it scans four locations for skills. Enterprise paths, your personal Claude skills, the project's Claude skills, and installed plugins. It loads only the name and description of each skill, not the full content. This is important later. When you send a request, Claude compares it to the descriptions of your skills. Explain what this function does matches a skill described as explain code with visual diagrams because the intent overlaps. It will then ask you to confirm loading up the skill. This confirmation step keeps you aware of what context Claude is using. After you confirm, Claude reads the complete file and follows its instructions. Now, let's say you clone a Git repository and have an overlapping skill name. Well, which one wins? Here's the priority list. The highest is enterprise, which lives in the manage settings. Two is the personal, which lives in your root directory configuration like we're doing right now. Three is the project which is the Claude directory inside of your repository. And the lowest is the plugins where you store your plugins that you got online. This lets organizations enforce standards while allowing individual customization through differently named skills. If your company has an enterprise code review skill and you create a personal code review skill, the enterprise version of that takes precedence. To avoid conflicts, use descriptive names. Instead of review, use front-end PR review or security review. To update a skill, edit it skill.md file. Simple. To remove one, delete its directory. Restart clock code after changes for them to take effect. Creating a skill means making a directory with a skill.md file containing metadata and instructions. Claude loads skill names and descriptions at startup. matches incoming requests against those descriptions and asks for confirmation before loading the full content. Priority rules handling name conflicts. Enterprise overrides personal personal overrides project overrides plugins. Edit the skill.md file to update a skill and restart Claude Code for changes to take effect.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Creating your first skill",
+                      "text": "So, let's create a skill. This skill will teach Claude how we would like it to explain code using visual diagrams and analogies. Then, we'll look at what happens under the hood when Claude uses it. First, let's create a directory for your skill. We're going to be making a personal skill, so it'll live in many projects, so it will go in your home directory. Take into consideration that we're creating a directory with the skill name inside of the skills directory. Now create the skill. The name identifies your skill. The description tells Claude when to use it. This is the matching criteria. And then everything after the second dashes is the instructions that Claude follows. Claude Code loads skills at startup. So restart your session. Then verify it's available. You should see PR description in the list. Now test it. Make some changes on a branch and say, \"Write a PR description for my changes.\" Claude will then show you that it's using the PR description skill. After that, it'll check your diff and write a description following your template. Same format every single time. When Claude Code starts, it scans four locations for skills. Enterprise paths, your personal Claude skills, the project's Claude skills, and installed plugins. It loads only the name and description of each skill, not the full content. This is important later. When you send a request, Claude compares it to the descriptions of your skills. Explain what this function does matches a skill described as explain code with visual diagrams because the intent overlaps. It will then ask you to confirm loading up the skill. This confirmation step keeps you aware of what context Claude is using. After you confirm, Claude reads the complete file and follows its instructions. Now, let's say you clone a Git repository and have an overlapping skill name. Well, which one wins? Here's the priority list. The highest is enterprise, which lives in the manage settings. Two is the personal, which lives in your root directory configuration like we're doing right now. Three is the project which is the Claude directory inside of your repository. And the lowest is the plugins where you store your plugins that you got online. This lets organizations enforce standards while allowing individual customization through differently named skills. If your company has an enterprise code review skill and you create a personal code review skill, the enterprise version of that takes precedence. To avoid conflicts, use descriptive names. Instead of review, use front-end PR review or security review. To update a skill, edit it skill.md file. Simple. To remove one, delete its directory. Restart clock code after changes for them to take effect. Creating a skill means making a directory with a skill.md file containing metadata and instructions. Claude loads skill names and descriptions at startup. matches incoming requests against those descriptions and asks for confirmation before loading the full content. Priority rules handling name conflicts. Enterprise overrides personal personal overrides project overrides plugins. Edit the skill.md file to update a skill and restart Claude Code for changes to take effect."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act05",
+              "title": {
+                "en": "Creating your first skill",
+                "fr": "Creating your first skill"
+              },
+              "description": {
+                "en": "Stop re-explaining yourself to Claude. Learn how skills work, create your first SKILL.md from scratch, and watch Claude\n  automatically apply it the moment your request matches . No slash commands, no reminders needed.",
+                "fr": "Arrêtez de vous répéter auprès de Claude. Découvrez comment fonctionnent les skills, créez votre premier SKILL.md à partir de zéro et regardez Claude l’appliquer automatiquement dès que votre demande correspond. Aucune commande slash, aucun rappel nécessaire."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_1_act_05_qcm_multiple",
+                  "question": {
+                    "en": "A personal skill and a project skill both have the name code-review. Which version does Claude Code use?",
+                    "fr": "A personal skill and a project skill both have the name code-review. Which version does Claude Code use?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "The project skill, because it lives closer to the current codebase",
+                        "fr": "The project skill, because it lives closer to the current codebase"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "The personal skill, because personal skills take higher priority than project skills",
+                        "fr": "The personal skill, because personal skills take higher priority than project skills"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "The most recently modified skill, regardless of where it lives",
+                        "fr": "The most recently modified skill, regardless of where it lives"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Claude prompts you to choose which skill to use each time",
+                        "fr": "Claude prompts you to choose which skill to use each time"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! The priority order is Enterprise → Personal → Project → Plugins. A personal skill always overrides a same-named project skill. To avoid the conflict, use a more descriptive name for one of them.",
+                    "fr": "Correct! The priority order is Enterprise → Personal → Project → Plugins. A personal skill always overrides a same-named project skill. To avoid the conflict, use a more descriptive name for one of them."
+                  },
+                  "hint": {
+                    "en": "Claude Code resolves name conflicts using a fixed priority hierarchy, not by looking at which repo you're currently in.\n\nThe four levels from highest to lowest are: Enterprise, Personal, Project, Plugins.",
+                    "fr": "Claude Code resolves name conflicts using a fixed priority hierarchy, not by looking at which repo you're currently in.\n\nThe four levels from highest to lowest are: Enterprise, Personal, Project, Plugins."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "datacamp_ch02",
+          "title": {
+            "en": "Skills Configuration & Claude Code Features",
+            "fr": "Skills Configuration & Claude Code Features"
+          },
+          "description": {
+            "en": "Go beyond the basics: restrict what Claude can do when a skill is active, keep large skills lean with progressive disclosure, and learn when to reach for a skill versus a CLAUDE.md file, a subagent, or a hook.",
+            "fr": "Allez au-delà des bases : limitez ce que Claude peut faire lorsqu’un skill est actif, gardez les skills volumineux concis grâce à la divulgation progressive, et apprenez quand utiliser un skill plutôt qu’un fichier CLAUDE.md, un sous-agent ou un hook."
+          },
+          "competencyTags": [
+            "ai_development",
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch02_act01",
+              "title": {
+                "en": "Video: Configuration and multi-file skills",
+                "fr": "Video: Configuration and multi-file skills"
+              },
+              "description": {
+                "en": "Go beyond the basics: restrict what Claude can do when a skill is active, keep large skills lean with progressive disclosure, and learn when to reach for a skill versus a CLAUDE.md file, a subagent, or a hook.",
+                "fr": "Allez au-delà des bases : limitez ce que Claude peut faire lorsqu’un skill est actif, gardez les skills volumineux concis grâce à la divulgation progressive, et apprenez quand utiliser un skill plutôt qu’un fichier CLAUDE.md, un sous-agent ou un hook."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_01_video",
+                  "title": {
+                    "en": "Video: Configuration and multi-file skills",
+                    "fr": "Video: Configuration and multi-file skills"
+                  },
+                  "mp4Url": "/api/assets/ch02_ex01_video_configuration_and_multi_file_skills_59444eab.mp4",
+                  "subtitleUrlEn": "/api/assets/ch02_ex01_video_configuration_and_multi_file_skills_en_ecdf4646.vtt",
+                  "transcript": "1. Video: Configuration and multi-file skills\nA basic skill works with just a name and description, but here are some other advanced tips that can make your skills really effective in Claude Code. The agentskills.io open standard has many available fields. We already went over the name, which identifies your skill, uses lowercase letters, numbers, and hyphens only. A maximum of 64 characters and should match your directory name. a description which is also required which tells Claude when to use the skill. This is a maximum of,024 characters and is the most important field. Claude uses this for matching. But we can also add other optional fields. One of them is the allowed tools field which restricts which tools Claude can use when the skill is active. The model field which specifies which cla model to use for the skill. Try to be explicit with your instructions. For example, if someone told me my job was to help with dogs, I wouldn't know what to do. So, we have to assume Claude would think the same way. A good description answers two questions. What does this skill do? And when should Claus use it? Now, if this job description was given to me, I feel a little bit more confident that I could get the job done. If your skill isn't triggering, add more keywords that match how you phrase requests. Sometimes you want a skill that can only read files, not modify them. This could be for security sensitive workflows, read only tasks or more. We have the allowed tools field to make this possible. When this skill is active, Claude can only use those tools without asking permission. No editing, no writing, no bash commands. If you omit allowed tools, the skill doesn't restrict anything. Claude uses its normal permission model. Skills share Claude's context window with your conversation. When Claude wants to use a skill, it will decide to load the contents of that skill into context. However, sometimes you'll need some references, examples, or some utility scripts that are required by the skill. But cramming it all into one 20,000 line text file means you take up a lot of space in the context window. And let's be real here, it's just not a lot of fun to maintain that. This is where progressive disclosure comes in. Put your essential instructions in skill.mmp and detailed reference material in separate files that Claude reads only when needed. The open standard also suggests having a scripts folder for executable code, references for additional documentation and assets for images, templates or other data files that would be relevant for that skill. Then in skill.md link to the supporting files. Here, Claude reads architecture.md only when someone asks about system design. If they're asking where to add a component, let's say, it just never loads. It's like having a table of contents in the context window rather than fitting the whole entire document in there. Keep skill.md under 500 lines. If you're exceeding that, then maybe consider should this be split up into different content. Scripts in your skill directory can run without loading their contents into context. The script executes and only the output consumes tokens. Tell Claude to run the script, not read it. This is very useful for environment validation, data transformations that need to be consistent, operations that are more reliable as tested code than generated code. Skills support metadata fields. Name and description which are required. Allowed tools restricts available tools and model specifies which Claude to use. Descriptions need specific actions and trigger phrases to match for reliability. For larger skills, use progressive disclosure. Keep your skill.md file under 500 lines and link to the supporting files that load only when needed. Scripts can execute without loading their contents, keeping context efficient.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Configuration and multi-file skills",
+                      "text": "A basic skill works with just a name and description, but here are some other advanced tips that can make your skills really effective in Claude Code. The agentskills.io open standard has many available fields. We already went over the name, which identifies your skill, uses lowercase letters, numbers, and hyphens only. A maximum of 64 characters and should match your directory name. a description which is also required which tells Claude when to use the skill. This is a maximum of,024 characters and is the most important field. Claude uses this for matching. But we can also add other optional fields. One of them is the allowed tools field which restricts which tools Claude can use when the skill is active. The model field which specifies which cla model to use for the skill. Try to be explicit with your instructions. For example, if someone told me my job was to help with dogs, I wouldn't know what to do. So, we have to assume Claude would think the same way. A good description answers two questions. What does this skill do? And when should Claus use it? Now, if this job description was given to me, I feel a little bit more confident that I could get the job done. If your skill isn't triggering, add more keywords that match how you phrase requests. Sometimes you want a skill that can only read files, not modify them. This could be for security sensitive workflows, read only tasks or more. We have the allowed tools field to make this possible. When this skill is active, Claude can only use those tools without asking permission. No editing, no writing, no bash commands. If you omit allowed tools, the skill doesn't restrict anything. Claude uses its normal permission model. Skills share Claude's context window with your conversation. When Claude wants to use a skill, it will decide to load the contents of that skill into context. However, sometimes you'll need some references, examples, or some utility scripts that are required by the skill. But cramming it all into one 20,000 line text file means you take up a lot of space in the context window. And let's be real here, it's just not a lot of fun to maintain that. This is where progressive disclosure comes in. Put your essential instructions in skill.mmp and detailed reference material in separate files that Claude reads only when needed. The open standard also suggests having a scripts folder for executable code, references for additional documentation and assets for images, templates or other data files that would be relevant for that skill. Then in skill.md link to the supporting files. Here, Claude reads architecture.md only when someone asks about system design. If they're asking where to add a component, let's say, it just never loads. It's like having a table of contents in the context window rather than fitting the whole entire document in there. Keep skill.md under 500 lines. If you're exceeding that, then maybe consider should this be split up into different content. Scripts in your skill directory can run without loading their contents into context. The script executes and only the output consumes tokens. Tell Claude to run the script, not read it. This is very useful for environment validation, data transformations that need to be consistent, operations that are more reliable as tested code than generated code. Skills support metadata fields. Name and description which are required. Allowed tools restricts available tools and model specifies which Claude to use. Descriptions need specific actions and trigger phrases to match for reliability. For larger skills, use progressive disclosure. Keep your skill.md file under 500 lines and link to the supporting files that load only when needed. Scripts can execute without loading their contents, keeping context efficient."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act02",
+              "title": {
+                "en": "Configuration and multi-file skills",
+                "fr": "Configuration and multi-file skills"
+              },
+              "description": {
+                "en": "Go beyond the basics: restrict what Claude can do when a skill is active, keep large skills lean with progressive disclosure, and learn when to reach for a skill versus a CLAUDE.md file, a subagent, or a hook.",
+                "fr": "Allez au-delà des bases : limitez ce que Claude peut faire lorsqu’un skill est actif, gardez les skills volumineux concis grâce à la divulgation progressive, et apprenez quand utiliser un skill plutôt qu’un fichier CLAUDE.md, un sous-agent ou un hook."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_2_act_02_qcm_multiple",
+                  "question": {
+                    "en": "What is the main efficiency advantage of telling Claude to run a script in your skill directory rather than read it?",
+                    "fr": "What is the main efficiency advantage of telling Claude to run a script in your skill directory rather than read it?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "The script's source code is loaded into context so Claude can verify it before running",
+                        "fr": "The script's source code is loaded into context so Claude can verify it before running"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Only the script's output consumes context tokens — the source code never enters the context window",
+                        "fr": "Only the script's output consumes context tokens — the source code never enters the context window"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "The script runs in an isolated subagent with its own context window",
+                        "fr": "The script runs in an isolated subagent with its own context window"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "The `allowed-tools` restriction is bypassed for scripts in the skill directory",
+                        "fr": "The `allowed-tools` restriction is bypassed for scripts in the skill directory"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! A 200-line script might produce only a few lines of output. Those few lines land in context; the source stays on disk. This is the same progressive disclosure principle applied to executable code.",
+                    "fr": "Correct! A 200-line script might produce only a few lines of output. Those few lines land in context; the source stays on disk. This is the same progressive disclosure principle applied to executable code."
+                  },
+                  "hint": {
+                    "en": "Think about what lands in the context window in each case: the full source code of a 200-line script, or just the few lines of output it produces.\n\nThis is the same principle behind progressive disclosure — keep the context window lean by loading only what's needed.",
+                    "fr": "Réfléchissez à ce qui arrive dans la fenêtre de contexte dans chaque cas : le code source complet d’un script de 200 lignes, ou seulement les quelques lignes de sortie qu’il produit.\n\nC’est le même principe que celui de la divulgation progressive : gardez la fenêtre de contexte légère en ne chargeant que ce qui est nécessaire."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act03",
+              "title": {
+                "en": "Tightening the codebase-onboarding skill",
+                "fr": "Tightening the codebase-onboarding skill"
+              },
+              "description": {
+                "en": "Go beyond the basics: restrict what Claude can do when a skill is active, keep large skills lean with progressive disclosure, and learn when to reach for a skill versus a CLAUDE.md file, a subagent, or a hook.",
+                "fr": "Allez au-delà des bases : limitez ce que Claude peut faire lorsqu’un skill est actif, gardez les skills volumineux concis grâce à la divulgation progressive, et apprenez quand utiliser un skill plutôt qu’un fichier CLAUDE.md, un sous-agent ou un hook."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "code_repl",
+                  "id": "dc_2_act_03_code",
+                  "title": {
+                    "en": "Tightening the codebase-onboarding skill",
+                    "fr": "Tightening the codebase-onboarding skill"
+                  },
+                  "language": "python",
+                  "instructions": {
+                    "en": "Start Claude Code with `claude`.\n\nAsk Claude to read `~/.claude/skills/codebase-onboarding/SKILL.md` and identify any design issues.\n\nAsk Claude to add an `allowed-tools` field to the frontmatter to restrict the skill to read-only discovery tools.\n\nAsk Claude to apply progressive disclosure by moving the architecture reference into `references/architecture.md` and replacing it with a link.\n\nType `/exit` to exit Claude Code.",
+                    "fr": "Démarrez Claude Code avec `claude`.\n\nDemandez à Claude de lire `~/.claude/skills/codebase-onboarding/SKILL.md` et d’identifier d’éventuels problèmes de conception.\n\nDemandez à Claude d’ajouter un champ `allowed-tools` au frontmatter afin de restreindre la skill aux outils de découverte en lecture seule.\n\nDemandez à Claude d’appliquer la divulgation progressive en déplaçant la référence d’architecture dans `references/architecture.md` et en la remplaçant par un lien.\n\nSaisissez `/exit` pour quitter Claude Code."
+                  },
+                  "starterCode": "repl = connect('bash')\nrepl.run_command('cd /home/repl/service-platform && rm -rf ~/.claude/skills && mkdir -p ~/.claude/skills && cp -r .skill-seeds/personal/* ~/.claude/skills/ && rm -f ~/.claude/history.jsonl && clear')",
+                  "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude to read the SKILL.md at `~/.claude/skills/codebase-onboarding/SKILL.md` and identify the two design problems.\n# 3. Ask Claude to add an `allowed-tools` field restricting the skill to read-only tools.\n# 4. Ask Claude to apply progressive disclosure: move the architecture reference to `references/architecture.md` and link to it.\n# 5. Type `/exit` to exit Claude Code.\n\n# Seeds session history and creates the expected skill files for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/1_3/history.jsonl ~/.claude/.\nmkdir -p ~/.claude/skills/codebase-onboarding/references\ncp ~/solutions/1_3/SKILL.md ~/.claude/skills/codebase-onboarding/SKILL.md\ncp ~/solutions/1_3/references/architecture.md ~/.claude/skills/codebase-onboarding/references/architecture.md",
+                  "expectedOutput": "",
+                  "hint": {
+                    "en": "The exact value of `allowed-tools` is `Read, Grep, Glob, Bash` — do not include `Edit` or `Write` at all.\n\nFor progressive disclosure, the goal is to move the `## Architecture Reference` section out of `SKILL.md` into `references/architecture.md`, then replace it with a single link.",
+                    "fr": "La valeur exacte de `allowed-tools` est `Read, Grep, Glob, Bash` — n’incluez pas du tout `Edit` ni `Write`.\n\nPour la divulgation progressive, l’objectif est de déplacer la section `## Architecture Reference` hors de `SKILL.md` vers `references/architecture.md`, puis de la remplacer par un lien unique."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act04",
+              "title": {
+                "en": "Video: Skills vs. other Claude Code features",
+                "fr": "Video: Skills vs. other Claude Code features"
+              },
+              "description": {
+                "en": "Go beyond the basics: limit what Claude can do when a skill is active, keep large skills lightweight through progressive disclosure, and learn when to use a skill rather than a `CLAUDE.md` file, a subagent, or a hook.",
+                "fr": "Allez au-delà des bases : limitez ce que Claude peut faire lorsqu’une skill est active, gardez les grandes skills légères grâce à la divulgation progressive et apprenez quand utiliser une skill plutôt qu’un fichier `CLAUDE.md`, un sous-agent ou un hook."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_04_video",
+                  "title": {
+                    "en": "Video: Skills vs. other Claude Code features",
+                    "fr": "Video: Skills vs. other Claude Code features"
+                  },
+                  "mp4Url": "/api/assets/ch02_ex04_video_skills_vs_other_claude_code_features_3190da98.mp4",
+                  "subtitleUrlEn": "/api/assets/ch02_ex04_video_skills_vs_other_claude_code_features_en_32661e2b.vtt",
+                  "transcript": "1. Video: Skills vs. other Claude Code features\nClaude Code offers several customization options. Skills, CLAUDE.md, subagents, hooks, MCP servers. They solve different problems. Knowing when to use each prevents you from building the wrong thing. So, let's run them down. Cloud.md loads into every conversation always. So, if you want claude to use TypeScript strict mode in this project, then put it in your cloud. MD file skills load on demand. When Claude matches a request, your PR review checklist doesn't need to be in the context when you're writing a new code. It activates when you ask for a review. So, use Claude MD for project-wise standards that always apply constraints like never modify the database schema, framework preferences, and coding style. Then use skills for task specific expertise, knowledge that's only relevant sometimes, and detailed procedures that would clutter every conversation. Skills add knowledge to your current conversation. When a skill activates, its instructions join the existing context. Sub aents run in a separate context. They receive a task, work on it independently, and return results. They're isolated from your main conversation. Use sub agents when you want to delegate a task to a separate execution context. You need different tool access that the main conversation does. You want isolation between delegated work and your main context. Use skills when you want to enhance cla's knowledge for the current task. The expertise applies throughout a Hooks fire on events. A hook might run a llinter every time Claude saves a file or validate input before certain tool calls. They're all event driven, while skills, they're request driven. They activate based on what you're asking. So use hooks for operations that should run on every file save, validation before specific tool calls, or automated side effects of clause actions. Then use skills for knowledge that informs how Claude handles requests, guidelines that affect clause reasoning. A typical setup might include a CLAUDE.md file for always on project standards, skills for task specific expertise, hooks for automated operations. Each handles its own specialty. Don't force everything into skills when another option fits best. You can use multiple at a time. Skills provide automatic task specific expertise. CloudMD is for always on instructions. Sub aents run in isolated context. Hooks fire on events. MCP provides external tools. Use skills when you have knowledge that Claude should apply automatically when the topic is relevant and combine them with other features for comprehensive customization.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Skills vs. other Claude Code features",
+                      "text": "Claude Code offers several customization options. Skills, CLAUDE.md, subagents, hooks, MCP servers. They solve different problems. Knowing when to use each prevents you from building the wrong thing. So, let's run them down. Cloud.md loads into every conversation always. So, if you want claude to use TypeScript strict mode in this project, then put it in your cloud. MD file skills load on demand. When Claude matches a request, your PR review checklist doesn't need to be in the context when you're writing a new code. It activates when you ask for a review. So, use Claude MD for project-wise standards that always apply constraints like never modify the database schema, framework preferences, and coding style. Then use skills for task specific expertise, knowledge that's only relevant sometimes, and detailed procedures that would clutter every conversation. Skills add knowledge to your current conversation. When a skill activates, its instructions join the existing context. Sub aents run in a separate context. They receive a task, work on it independently, and return results. They're isolated from your main conversation. Use sub agents when you want to delegate a task to a separate execution context. You need different tool access that the main conversation does. You want isolation between delegated work and your main context. Use skills when you want to enhance cla's knowledge for the current task. The expertise applies throughout a Hooks fire on events. A hook might run a llinter every time Claude saves a file or validate input before certain tool calls. They're all event driven, while skills, they're request driven. They activate based on what you're asking. So use hooks for operations that should run on every file save, validation before specific tool calls, or automated side effects of clause actions. Then use skills for knowledge that informs how Claude handles requests, guidelines that affect clause reasoning. A typical setup might include a CLAUDE.md file for always on project standards, skills for task specific expertise, hooks for automated operations. Each handles its own specialty. Don't force everything into skills when another option fits best. You can use multiple at a time. Skills provide automatic task specific expertise. CloudMD is for always on instructions. Sub aents run in isolated context. Hooks fire on events. MCP provides external tools. Use skills when you have knowledge that Claude should apply automatically when the topic is relevant and combine them with other features for comprehensive customization."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act05",
+              "title": {
+                "en": "Skills vs. other Claude Code features",
+                "fr": "Skills vs. other Claude Code features"
+              },
+              "description": {
+                "en": "Go beyond the basics: limit what Claude can do when a skill is active, keep large skills lightweight through progressive disclosure, and learn when to use a skill rather than a `CLAUDE.md` file, a subagent, or a hook.",
+                "fr": "Allez au-delà des bases : limitez ce que Claude peut faire lorsqu’une skill est active, gardez les grandes skills légères grâce à la divulgation progressive et apprenez quand utiliser une skill plutôt qu’un fichier `CLAUDE.md`, un sous-agent ou un hook."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_2_act_05_qcm_multiple",
+                  "question": {
+                    "en": "Your team wants Claude to automatically run a linter every time it saves a file.\n\nWhich Claude Code feature is the right fit?",
+                    "fr": "Your team wants Claude to automatically run a linter every time it saves a file.\n\nWhich Claude Code feature is the right fit?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "A skill with a description like \"run linter on file save\"",
+                        "fr": "A skill with a description like \"run linter on file save\""
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "A hook, because hooks are event-driven and fire on specific actions like file saves",
+                        "fr": "A hook, because hooks are event-driven and fire on specific actions like file saves"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "A CLAUDE.md instruction like \"always lint before saving\"",
+                        "fr": "A CLAUDE.md instruction like \"always lint before saving\""
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "An MCP server configured to watch the file system",
+                        "fr": "An MCP server configured to watch the file system"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! Hooks respond to events such as tool calls and file writes. That event-driven behavior is exactly what separates them from the request-driven nature of skills. Use hooks for automated side effects; use skills for knowledge that informs how Claude handles requests.",
+                    "fr": "Correct ! Les hooks réagissent à des événements tels que les appels d’outils et les écritures de fichiers. Ce comportement piloté par les événements est précisément ce qui les distingue de la nature pilotée par les requêtes des skills. Utilisez les hooks pour les effets secondaires automatisés ; utilisez les skills pour les connaissances qui guident la façon dont Claude traite les requêtes."
+                  },
+                  "hint": {
+                    "en": "Ask yourself: should this fire because of something the user said, or because of something that happened (a file was saved)?\n\nSkills are request-driven; hooks are event-driven.",
+                    "fr": "Ask yourself: should this fire because of something the user said, or because of something that happened (a file was saved)?\n\nSkills are request-driven; hooks are event-driven."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act06",
+              "title": {
+                "en": "Picking the right tool",
+                "fr": "Picking the right tool"
+              },
+              "description": {
+                "en": "Go beyond the basics: limit what Claude can do when a skill is active, keep large skills lightweight through progressive disclosure, and learn when to use a skill rather than a `CLAUDE.md` file, a sub-agent, or a hook.",
+                "fr": "Allez au-delà des bases : limitez ce que Claude peut faire lorsqu’une skill est active, gardez les grandes skills légères grâce à la divulgation progressive et apprenez quand utiliser une skill plutôt qu’un fichier `CLAUDE.md`, un sous-agent ou un hook."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "bucket_sort",
+                  "id": "dc_2_act_06_bucket_sort",
+                  "title": {
+                    "en": "Picking the right tool",
+                    "fr": "Picking the right tool"
+                  },
+                  "instructions": {
+                    "en": "Drag each item into the correct bucket: CLAUDE.md or Skill.",
+                    "fr": "Drag each item into the correct bucket: CLAUDE.md or Skill."
+                  },
+                  "buckets": [
+                    {
+                      "id": "claude_md",
+                      "label": {
+                        "en": "CLAUDE.md",
+                        "fr": "CLAUDE.md"
+                      }
+                    },
+                    {
+                      "id": "skill",
+                      "label": {
+                        "en": "Skill",
+                        "fr": "Skill"
+                      }
+                    }
+                  ],
+                  "cards": [
+                    {
+                      "id": "item_1",
+                      "text": {
+                        "en": "Always use TypeScript strict mode in this project.",
+                        "fr": "Always use TypeScript strict mode in this project."
+                      },
+                      "correctBucket": "claude_md"
+                    },
+                    {
+                      "id": "item_2",
+                      "text": {
+                        "en": "Never commit directly to main -- all changes go through a pull request.",
+                        "fr": "Never commit directly to main -- all changes go through a pull request."
+                      },
+                      "correctBucket": "claude_md"
+                    },
+                    {
+                      "id": "item_3",
+                      "text": {
+                        "en": "A step-by-step checklist for reviewing pull requests.",
+                        "fr": "A step-by-step checklist for reviewing pull requests."
+                      },
+                      "correctBucket": "skill"
+                    },
+                    {
+                      "id": "item_4",
+                      "text": {
+                        "en": "Instructions for writing commit messages in the team's preferred format.",
+                        "fr": "Instructions for writing commit messages in the team's preferred format."
+                      },
+                      "correctBucket": "skill"
+                    }
+                  ],
+                  "feedback": {
+                    "en": "Correct! CLAUDE.md is for always-on project standards -- things that should apply to every conversation without exception. Skills are for task-specific expertise that only needs to load when it is relevant.",
+                    "fr": "Correct! CLAUDE.md is for always-on project standards -- things that should apply to every conversation without exception. Skills are for task-specific expertise that only needs to load when it is relevant."
+                  },
+                  "hint": {
+                    "en": "Ask yourself: should this apply on every conversation, or only when a specific task is happening?",
+                    "fr": "Ask yourself: should this apply on every conversation, or only when a specific task is happening?"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "datacamp_ch03",
+          "title": {
+            "en": "Sharing & Troubleshooting Skills",
+            "fr": "Sharing & Troubleshooting Skills"
+          },
+          "description": {
+            "en": "Skills are most powerful when shared. Distribute them through Git, plugins, or enterprise settings, wire them into custom subagents, and quickly diagnose the two failure modes every skill builder runs into: the skill that never loads and the skill that never triggers.",
+            "fr": "Les skills sont plus puissantes lorsqu’elles sont partagées. Distribuez-les via Git, des plugins ou des paramètres d’entreprise, intégrez-les à des sous-agents personnalisés et diagnostiquez rapidement les deux modes d’échec auxquels se heurte tout créateur de skills : la skill qui ne se charge jamais et celle qui ne se déclenche jamais."
+          },
+          "competencyTags": [
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch03_act01",
+              "title": {
+                "en": "Video: Sharing skills",
+                "fr": "Video: Sharing skills"
+              },
+              "description": {
+                "en": "Skills are most powerful when shared. Distribute them through Git, plugins, or enterprise settings, wire them into custom subagents, and quickly diagnose the two failure modes every skill builder runs into: the skill that never loads and the skill that never triggers.",
+                "fr": "Les skills sont plus puissantes lorsqu’elles sont partagées. Distribuez-les via Git, des plugins ou des paramètres d’entreprise, intégrez-les à des sous-agents personnalisés et diagnostiquez rapidement les deux modes d’échec auxquels se heurte tout créateur de skills : la skill qui ne se charge jamais et celle qui ne se déclenche jamais."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_3_act_01_video",
+                  "title": {
+                    "en": "Video: Sharing skills",
+                    "fr": "Video: Sharing skills"
+                  },
+                  "mp4Url": "/api/assets/ch03_ex01_video_sharing_skills_2695f8d2.mp4",
+                  "subtitleUrlEn": "/api/assets/ch03_ex01_video_sharing_skills_en_fd492a38.vtt",
+                  "transcript": "1. Video: Sharing skills\nSkills become more valuable when shared. A PR review skill that only you use is helpful. The same skill shared across your team standardizes code review and provides a consistent experience amongst your organization which much better. Here are ways you can share your skills. Now the simplest sharing method is committing skills to your repository. Place them include/skills. Anyone who clones a repository gets these skills automatically. No extra installation. It's just what you're doing already. When you push update, everyone gets them on the next poll. This works well for team coding standards, project specific workflows, skills that reference your codebase structure. Another way you can distribute your skills is through plugins. Think of plugins as ways to extend Claude Code with custom functionality, but designed to be shared across teams and projects. In your plug-in project, create a directory called skills. This will then follow a similar file structure to the cloud directory in our project with the name of the skill with a skill.md file. And after you distribute your plugin to a marketplace, other users can download it into cloud codes for themselves to use. This is best if your skills have functionality that isn't too project specific and can be used by community members. Administrators can deploy skills organizationwide through managed settings. Enterprise skills take highest priority. Like we discussed before, they override personal project and plug-in skills with the same name. This is for mandatory standards, security requirements, compliance workflows, coding practices that must be consistent across the organization. Keyword must. Here's something that surprises people. Sub agents don't automatically see your skills. Yeah, when you delegate a task to a subagent, it starts with a fresh, clean context. Built-in agents like the explorer, plan, and verify can't access skills at all. Only custom sub agents you define can use them and only when you explicitly list them. To create a custom subagent with skills, add an agent.mmd file include/ aents. The skills field lists which skills to load. These skills are loaded when the subagents starts, not in demand like in the main conversation. So take that into consideration. First ensure the skills exist. Okay, it exists. Then create the subagent using the Claude Code subagents creator. If you have a subagent that you want to add these skills to already just go to the existing agent.md file. Then after that create the skills fields and add your skills. When you delegate to the subagent it has both skills loaded and applies them to every single review. Now this pattern works really well when you want isolated task delegation with specific expertise. Different sub agents need different skills. Front-end reviewer versus back-end reviewer. You want to enforce standards and delegated work without relying on prompts. Only list skills that are always relevant to the subage's purpose. Share skills through project directories for team access, plugins for cross repository distribution, or enterprise deployment for organizationwide standards. Sub agents don't inherit skills automatically, so list them explicitly in the sub agents skills field. Built-in agents can't access skills. Only custom sub agents can in your Claude/ agents. Skills load when the sub agents start, so only list skills that are always relevant to its purpose.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Sharing skills",
+                      "text": "Skills become more valuable when shared. A PR review skill that only you use is helpful. The same skill shared across your team standardizes code review and provides a consistent experience amongst your organization which much better. Here are ways you can share your skills. Now the simplest sharing method is committing skills to your repository. Place them include/skills. Anyone who clones a repository gets these skills automatically. No extra installation. It's just what you're doing already. When you push update, everyone gets them on the next poll. This works well for team coding standards, project specific workflows, skills that reference your codebase structure. Another way you can distribute your skills is through plugins. Think of plugins as ways to extend Claude Code with custom functionality, but designed to be shared across teams and projects. In your plug-in project, create a directory called skills. This will then follow a similar file structure to the cloud directory in our project with the name of the skill with a skill.md file. And after you distribute your plugin to a marketplace, other users can download it into cloud codes for themselves to use. This is best if your skills have functionality that isn't too project specific and can be used by community members. Administrators can deploy skills organizationwide through managed settings. Enterprise skills take highest priority. Like we discussed before, they override personal project and plug-in skills with the same name. This is for mandatory standards, security requirements, compliance workflows, coding practices that must be consistent across the organization. Keyword must. Here's something that surprises people. Sub agents don't automatically see your skills. Yeah, when you delegate a task to a subagent, it starts with a fresh, clean context. Built-in agents like the explorer, plan, and verify can't access skills at all. Only custom sub agents you define can use them and only when you explicitly list them. To create a custom subagent with skills, add an agent.mmd file include/ aents. The skills field lists which skills to load. These skills are loaded when the subagents starts, not in demand like in the main conversation. So take that into consideration. First ensure the skills exist. Okay, it exists. Then create the subagent using the Claude Code subagents creator. If you have a subagent that you want to add these skills to already just go to the existing agent.md file. Then after that create the skills fields and add your skills. When you delegate to the subagent it has both skills loaded and applies them to every single review. Now this pattern works really well when you want isolated task delegation with specific expertise. Different sub agents need different skills. Front-end reviewer versus back-end reviewer. You want to enforce standards and delegated work without relying on prompts. Only list skills that are always relevant to the subage's purpose. Share skills through project directories for team access, plugins for cross repository distribution, or enterprise deployment for organizationwide standards. Sub agents don't inherit skills automatically, so list them explicitly in the sub agents skills field. Built-in agents can't access skills. Only custom sub agents can in your Claude/ agents. Skills load when the sub agents start, so only list skills that are always relevant to its purpose."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch03_act02",
+              "title": {
+                "en": "Sharing skills",
+                "fr": "Sharing skills"
+              },
+              "description": {
+                "en": "Skills are most powerful when shared. Distribute them through Git, plugins, or enterprise settings, wire them into custom subagents, and quickly diagnose the two failure modes every skill builder runs into: the skill that never loads and the skill that never triggers.",
+                "fr": "Les skills sont plus puissantes lorsqu’elles sont partagées. Distribuez-les via Git, des plugins ou des paramètres d’entreprise, intégrez-les à des sous-agents personnalisés et diagnostiquez rapidement les deux modes d’échec auxquels se heurte tout créateur de skills : la skill qui ne se charge jamais et celle qui ne se déclenche jamais."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_3_act_02_qcm_multiple",
+                  "question": {
+                    "en": "You have a personal skill called `security-scan`, and then your company's administrator deploys an enterprise skill with exactly the same name.\n\nWhat are the implications?",
+                    "fr": "Vous disposez d’une skill personnelle appelée `security-scan`, puis l’administrateur de votre entreprise déploie une skill d’entreprise portant exactement le même nom.\n\nQuelles en sont les implications ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Claude uses both skills and combines their instructions",
+                        "fr": "Claude uses both skills and combines their instructions"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "The enterprise skill takes priority and your personal version is never used",
+                        "fr": "The enterprise skill takes priority and your personal version is never used"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Claude prompts you to choose which skill to activate each time",
+                        "fr": "Claude prompts you to choose which skill to activate each time"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Your personal skill is used for personal projects; the enterprise skill is used inside the company repo",
+                        "fr": "Your personal skill is used for personal projects; the enterprise skill is used inside the company repo"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! Enterprise sits at the top of the hierarchy — Enterprise → Personal → Project → Plugins. The enterprise version always wins when names conflict. The fix is to rename your personal skill to something more specific.",
+                    "fr": "Correct ! Enterprise se trouve tout en haut de la hiérarchie — Enterprise → Personal → Project → Plugins. La version d’entreprise l’emporte toujours en cas de conflit de noms. La solution consiste à renommer votre skill personnelle avec un nom plus spécifique."
+                  },
+                  "hint": {
+                    "en": "Recall the four-level priority hierarchy: Enterprise, Personal, Project, Plugins.\n\nWhen two skills share a name, Claude Code doesn't merge them — only one can win.",
+                    "fr": "Recall the four-level priority hierarchy: Enterprise, Personal, Project, Plugins.\n\nWhen two skills share a name, Claude Code doesn't merge them — only one can win."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch03_act03",
+              "title": {
+                "en": "Wire skills into the frontend reviewer",
+                "fr": "Wire skills into the frontend reviewer"
+              },
+              "description": {
+                "en": "Skills are most powerful when shared. Distribute them through Git, plugins, or enterprise settings, wire them into custom subagents, and quickly diagnose the two failure modes every skill builder runs into: the skill that never loads and the skill that never triggers.",
+                "fr": "Les skills sont plus puissantes lorsqu’elles sont partagées. Distribuez-les via Git, des plugins ou des paramètres d’entreprise, intégrez-les à des sous-agents personnalisés et diagnostiquez rapidement les deux modes d’échec auxquels se heurte tout créateur de skills : la skill qui ne se charge jamais et celle qui ne se déclenche jamais."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "code_repl",
+                  "id": "dc_3_act_03_code",
+                  "title": {
+                    "en": "Wire skills into the frontend reviewer",
+                    "fr": "Wire skills into the frontend reviewer"
+                  },
+                  "language": "python",
+                  "instructions": {
+                    "en": "Start Claude Code with `claude`.\n\nAsk Claude to move the two skill directories from `~/.claude/skills/` to `.claude/skills/` in this repository.\n\nAsk Claude to read the subagent configuration located at `.claude/agents/frontend-reviewer.md`.\n\nAsk Claude to add a `skills:` field to the subagent's frontmatter, listing the two skills.\n\nAsk Claude why a built-in agent such as Explore, Plan, or Verify could not use these skills.\n\nType `/exit` to exit Claude Code.",
+                    "fr": "Démarrez Claude Code avec `claude`.\n\nDemandez à Claude de déplacer les deux répertoires de compétences de `~/.claude/skills/` vers `.claude/skills/` dans ce dépôt.\n\nDemandez à Claude de lire la configuration du sous-agent située dans `.claude/agents/frontend-reviewer.md`.\n\nDemandez à Claude d’ajouter un champ `skills:` au frontmatter du sous-agent, en répertoriant les deux compétences.\n\nDemandez à Claude pourquoi un agent intégré tel que Explore, Plan ou Verify ne pourrait pas utiliser ces compétences.\n\nTapez `/exit` pour quitter Claude Code."
+                  },
+                  "starterCode": "repl = connect('bash')\nrepl.run_command('cd /home/repl/frontend-shop && rm -rf ~/.claude/skills && mkdir -p ~/.claude/skills && cp -r .skill-seeds/personal/* ~/.claude/skills/ && rm -f ~/.claude/history.jsonl && clear')",
+                  "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude to move not copy both skill directories from `~/.claude/skills/` into `.claude/skills/` inside this repo.\n# 3. Ask Claude to read the subagent config and confirm there is no `skills:` field.\n# 4. Ask Claude to add `skills: accessibility-audit, performance-check` to the subagent's frontmatter.\n# 5. Ask Claude to explain why built-in agents couldn't have used these skills.\n# 6. Type `/exit` to exit Claude Code.\n\n# Seeds session history and creates the expected skill and agent files for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_2/history.jsonl ~/.claude/.\nmkdir -p /home/repl/frontend-shop/.claude/skills/accessibility-audit\nmkdir -p /home/repl/frontend-shop/.claude/skills/performance-check\ncp ~/solutions/2_2/skills/accessibility-audit/SKILL.md /home/repl/frontend-shop/.claude/skills/accessibility-audit/SKILL.md\ncp ~/solutions/2_2/skills/performance-check/SKILL.md /home/repl/frontend-shop/.claude/skills/performance-check/SKILL.md\ncp ~/solutions/2_2/frontend-reviewer.md /home/repl/frontend-shop/.claude/agents/frontend-reviewer.md\nrm -rf ~/.claude/skills/accessibility-audit ~/.claude/skills/performance-check",
+                  "expectedOutput": "",
+                  "hint": {
+                    "en": "The exact line to add to the frontmatter is `skills: accessibility-audit, performance-check`.\n\nOnly custom subagents (the files in `.claude/agents/`) load skills at startup — built-in agents such as Explore, Plan, and Verify cannot use them at all.",
+                    "fr": "La ligne exacte à ajouter au frontmatter est `skills: accessibility-audit, performance-check`.\n\nSeuls les sous-agents personnalisés (les fichiers dans `.claude/agents/`) chargent les compétences au démarrage — les agents intégrés comme Explore, Plan et Verify ne peuvent pas les utiliser du tout."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch03_act04",
+              "title": {
+                "en": "Video: Troubleshooting skills",
+                "fr": "Video: Troubleshooting skills"
+              },
+              "description": {
+                "en": "Skills are most powerful when shared. Distribute them through Git, plugins, or enterprise settings, wire them into custom subagents, and quickly diagnose the two failure modes every skill builder runs into: the skill that never loads and the skill that never triggers.",
+                "fr": "Les compétences sont particulièrement puissantes lorsqu’elles sont partagées. Distribuez-les via Git, des plugins ou des paramètres d’entreprise, intégrez-les à des sous-agents personnalisés et diagnostiquez rapidement les deux modes de défaillance auxquels se heurte tout créateur de compétences : la compétence qui ne se charge jamais et celle qui ne se déclenche jamais."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_3_act_04_video",
+                  "title": {
+                    "en": "Video: Troubleshooting skills",
+                    "fr": "Video: Troubleshooting skills"
+                  },
+                  "mp4Url": "/api/assets/ch03_ex04_video_troubleshooting_skills_4a4a2770.mp4",
+                  "subtitleUrlEn": "/api/assets/ch03_ex04_video_troubleshooting_skills_en_26779af7.vtt",
+                  "transcript": "1. Video: Troubleshooting skills\nWhen skills don't work, the problem usually falls into one of a few categories. The skill doesn't trigger, doesn't load, has conflicts, or fails at runtime. But good news, most fixes are pretty straightforward. Here are some of them. First thing we can do is try the agent skills verifier command. Depending on your operating system, installation steps will differ, but we recommend using UV as it's the easiest way to get it installed fast. Once installed, either navigate to your skill directory or run this command from anywhere. Your skill exists, it passes the validator, but Claude isn't using it when expected. H well, the cause is almost always the description. Cloud uses semantic matching, so your request needs to overlap with the description's meaning. If there's not enough overlap, no match. Check your description against how you're phrasing requests. Add trigger phrases users would actually say, test with variations. Help me profile this. Why is this slow? Make this faster. If any fail to trigger, add those keywords to your description. If your skill doesn't appear when you ask Claude what skills are available, well, check these things. Skills must be in the right location with the right structure. The skill.md file must be inside of a name directory, not at a skills root. The file name must be exactly skill.md. All caps on the skill lowerase MD. Just crossing things off the list here. Okay, just crossing them off. Run claude-debug to see loading errors. Look for messages mentioning your skill name. Sometimes this will just solve the problem for you. If Claude uses the wrong skill or seems confused, your descriptions are probably too similar. Make them distinct. Remember, being as specific as possible doesn't just help with Claude deciding when to use your skill, but not conflicting with other similar sounding skills. If your personal skill is being ignored, an enterprise or higher priority skill might have the same name. So investigate that. If you see an enterprise code review and you also have a personal code review, well the enterprise one will win every time. So your solutions is to rename your skill to something a little bit more distinct. Talk to your admin about the enterprise skill, but you'll have a better chance with number one. Probably install the plugin but can't see it. Skills? Well, clear the cache. Restart Claude Code and reinstall. If skills still don't appear, the plug-in structure just might be wrong. This is when the validator tool makes sense. The skill loads but fails during execution. If your skill uses external packages, they must be installed. Add this info to your description. Scripts need execute permission. Use for slashes everywhere, even on Windows. So, here's a quick checklist. Not triggering? Well, improve your description and trigger phrases. Not loading? Check your path, file name, YAML syntax. Wrong skill used? Make your descriptions a little bit more distinct. Are you being shadowed? Check the priority and rename if needed. Plugins are missing. Clear your cache and reinstall. Runtime failure? Check dependencies, permissions, and pass.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Troubleshooting skills",
+                      "text": "When skills don't work, the problem usually falls into one of a few categories. The skill doesn't trigger, doesn't load, has conflicts, or fails at runtime. But good news, most fixes are pretty straightforward. Here are some of them. First thing we can do is try the agent skills verifier command. Depending on your operating system, installation steps will differ, but we recommend using UV as it's the easiest way to get it installed fast. Once installed, either navigate to your skill directory or run this command from anywhere. Your skill exists, it passes the validator, but Claude isn't using it when expected. H well, the cause is almost always the description. Cloud uses semantic matching, so your request needs to overlap with the description's meaning. If there's not enough overlap, no match. Check your description against how you're phrasing requests. Add trigger phrases users would actually say, test with variations. Help me profile this. Why is this slow? Make this faster. If any fail to trigger, add those keywords to your description. If your skill doesn't appear when you ask Claude what skills are available, well, check these things. Skills must be in the right location with the right structure. The skill.md file must be inside of a name directory, not at a skills root. The file name must be exactly skill.md. All caps on the skill lowerase MD. Just crossing things off the list here. Okay, just crossing them off. Run claude-debug to see loading errors. Look for messages mentioning your skill name. Sometimes this will just solve the problem for you. If Claude uses the wrong skill or seems confused, your descriptions are probably too similar. Make them distinct. Remember, being as specific as possible doesn't just help with Claude deciding when to use your skill, but not conflicting with other similar sounding skills. If your personal skill is being ignored, an enterprise or higher priority skill might have the same name. So investigate that. If you see an enterprise code review and you also have a personal code review, well the enterprise one will win every time. So your solutions is to rename your skill to something a little bit more distinct. Talk to your admin about the enterprise skill, but you'll have a better chance with number one. Probably install the plugin but can't see it. Skills? Well, clear the cache. Restart Claude Code and reinstall. If skills still don't appear, the plug-in structure just might be wrong. This is when the validator tool makes sense. The skill loads but fails during execution. If your skill uses external packages, they must be installed. Add this info to your description. Scripts need execute permission. Use for slashes everywhere, even on Windows. So, here's a quick checklist. Not triggering? Well, improve your description and trigger phrases. Not loading? Check your path, file name, YAML syntax. Wrong skill used? Make your descriptions a little bit more distinct. Are you being shadowed? Check the priority and rename if needed. Plugins are missing. Clear your cache and reinstall. Runtime failure? Check dependencies, permissions, and pass."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch03_act05",
+              "title": {
+                "en": "Troubleshooting skills",
+                "fr": "Troubleshooting skills"
+              },
+              "description": {
+                "en": "Skills are most powerful when shared. Distribute them through Git, plugins, or enterprise settings, wire them into custom subagents, and quickly diagnose the two failure modes every skill builder runs into: the skill that never loads and the skill that never triggers.",
+                "fr": "Les compétences sont particulièrement puissantes lorsqu’elles sont partagées. Distribuez-les via Git, des plugins ou des paramètres d’entreprise, intégrez-les à des sous-agents personnalisés et diagnostiquez rapidement les deux modes de défaillance auxquels se heurte tout créateur de compétences : la compétence qui ne se charge jamais et celle qui ne se déclenche jamais."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_3_act_05_qcm_multiple",
+                  "question": {
+                    "en": "A skill appears in the available skills list, but Claude never uses it when you ask to \"optimize this function\" or \"clean up the performance of this code.\"\n\nWhat is the most likely cause of this?",
+                    "fr": "A skill appears in the available skills list, but Claude never uses it when you ask to \"optimize this function\" or \"clean up the performance of this code.\"\n\nWhat is the most likely cause of this?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "The skill's SKILL.md body has a syntax error in the instructions",
+                        "fr": "The skill's SKILL.md body has a syntax error in the instructions"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "The description uses different vocabulary than the phrases you actually type, so the semantic match never fires",
+                        "fr": "The description uses different vocabulary than the phrases you actually type, so the semantic match never fires"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "A higher-priority skill with the same name is shadowing it",
+                        "fr": "A higher-priority skill with the same name is shadowing it"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "The skill is missing the optional `model` field in its frontmatter",
+                        "fr": "The skill is missing the optional `model` field in its frontmatter"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! Claude compares your request to the skill's description semantically. If the description says \"code refactoring heuristics\" but you type \"optimize\" or \"clean up performance,\" there isn't enough overlap to trigger a match. Add natural trigger phrases to the description.",
+                    "fr": "Correct ! Claude compare sémantiquement votre demande à la description de la compétence. Si la description indique « heuristiques de refactorisation de code », mais que vous tapez « optimiser » ou « améliorer les performances », le chevauchement n’est pas suffisant pour déclencher une correspondance. Ajoutez des formulations de déclenchement naturelles à la description."
+                  },
+                  "hint": {
+                    "en": "The skill loads fine — it appears in the list. So the problem is not structural (wrong path, wrong filename).\n\nClaude uses semantic matching between your request and the skill's description. What vocabulary does your description use compared to what you actually type?",
+                    "fr": "La compétence se charge correctement — elle apparaît dans la liste. Le problème n’est donc pas structurel (mauvais chemin, mauvais nom de fichier).\n\nClaude utilise une correspondance sémantique entre votre demande et la description de la compétence. Quel vocabulaire votre description utilise-t-elle par rapport à ce que vous tapez réellement ?"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "lessonCount": 3,
+      "chapterCount": 16,
+      "totalActivities": 16,
+      "exerciseCount": 10,
+      "videoCount": 6,
+      "downloadCount": 0
+    }
+  },
+  "review_protocol": {
+    "scope": "Current learner-visible course data only. Do not use external sources and do not modify course data.",
+    "rating": "P0 blocks a learner or makes the assessment invalid; P1 materially impairs learner success, correctness or progression; P2 is a clear pedagogical/UX weakness; P3 is minor.",
+    "resource_policy": "An activity requiring unavailable files, data or environment is invalid unless it was removed and its explanatory content remains.",
+    "progression_policy": "A required gate must have a rendered, answerable and verifiably evaluated activity. Informational content must not retain a phantom gate.",
+    "media_policy": "One video maximum per chapter; local/video sources need a usable URL and learner context.",
+    "output_schema": "Write a normalized recheck report: formation_id, index, course_ids, reviewed_current_state:true, findings:[{severity:P0|P1|P2|P3,status:open|fixed|false_positive, title, evidence, course_id, chapter_id?}]."
+  }
+}

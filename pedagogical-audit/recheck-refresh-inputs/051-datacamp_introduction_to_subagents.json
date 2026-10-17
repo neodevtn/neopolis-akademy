@@ -1,0 +1,1318 @@
+{
+  "formation": {
+    "index": 51,
+    "formation_id": "datacamp_introduction_to_subagents",
+    "formation_title": "Introduction aux sous-agents",
+    "course_ids": [
+      "introduction_to_subagents__01"
+    ],
+    "report_path": "pedagogical-audit/recheck/051-datacamp_introduction_to_subagents.json"
+  },
+  "initial_audit": {
+    "formation_id": "datacamp_introduction_to_subagents",
+    "courses": [
+      {
+        "course_id": "introduction_to_subagents__01",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch01_act01",
+            "title": "Video: What are subagents",
+            "score_100": 75,
+            "verified_dimensions": [
+              "Objectifs et contexte : le titre de l’écran et la description de leçon annoncent le thème et les acquis visés.",
+              "Progression : la vidéo introduit les notions mobilisées par le quiz ou la pratique suivante.",
+              "Média : le JSON fournit MP4, sous-titres FR/EN, transcription et PDF ; LessonViewer les rend avec lecteur, pistes, transcription repliable et lien documentaire.",
+              "Navigation : le lecteur montre le titre, l’état « vue » et l’action de marquage manuel ; la cohérence effective du verrou est auditée dans l’issue associée."
+            ],
+            "unverified_dimensions": [
+              "Visionnage navigateur, qualité visuelle du MP4/PDF et synchronisation réelle des sous-titres : non vérifiés. Les médias ne sont pas considérés absents : l’import déclare 4 MP4 valides, 8 VTT valides et 2 PDF valides."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch01_act01:dc_1_act_01_video:video-gate",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "dc_1_act_01_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "verrouillage",
+                "description": "Le chapitre est obligatoire et le lecteur offre « Marquer comme vue », mais le verrou de progression ignore cet identifiant MP4 : il ne retient block.id que si sa longueur est comprise entre 8 et 15 caractères. L’apprenant peut donc avancer sans regarder ni marquer la vidéo, contrairement au paramétrage du chapitre.",
+                "current_content": "Bloc vidéo MP4 id `dc_1_act_01_video` ; `requiredBeforeAdvance: true`.",
+                "proposed_content": "Dériver la clé du verrou MP4/HLS de block.id sans filtre de longueur, ou de mp4Url, afin d’appliquer réellement le visionnage ou son marquage manuel.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[0].requiredBeforeAdvance ; client/src/pages/training/LessonViewer.tsx, lignes 1558–1568 : la clé ignore mp4Url et n’accepte l’id que s’il fait ≤ 15 caractères ; `dc_1_act_01_video` est plus long.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Corriger la dérivation de clé et ajouter un test couvrant les identifiants MP4 DataCamp, sans modifier le média."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch01_act02",
+            "title": "What are subagents",
+            "score_100": 70,
+            "verified_dimensions": [
+              "Énoncé et action : question situationnelle, quatre options et indicateur « 1 réponse attendue » rendent le résultat visé identifiable.",
+              "Transition : le quiz suit immédiatement la vidéo qui fournit le concept mobilisé.",
+              "Feedback : indice avant soumission ; après soumission, options signalées, explication affichée et nouvelle tentative possible.",
+              "Progression : une réponse correcte marque le bloc complet et permet le passage."
+            ],
+            "unverified_dimensions": [
+              "Exécution en session apprenant : non vérifiée ; données et logique de rendu/progression vérifiées par lecture du code."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch01_act02:dc_1_act_02_qcm_multiple:fr-localization",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch01_act02",
+                "content_id": "dc_1_act_02_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P1",
+                "category": "énoncé",
+                "description": "En affichage français, des champs destinés à l’apprenant reprennent mot pour mot l’anglais. Comme l’import indique fr-FR et le lecteur privilégie fr, un débutant francophone reçoit une consigne et des réponses non localisées, ce qui empêche une compréhension autonome.",
+                "current_content": "`question.fr` : « You delegate an investigation to the built-in Explore subagent… » ; les quatre options, l’explication et l’indice fr sont également en anglais.",
+                "proposed_content": "Traduire et relire pédagogiquement toutes les valeurs fr citées ; conserver seulement les commandes, chemins et noms de produit qui doivent rester inchangés.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple].question/options/explanation/hint : les valeurs fr citées sont identiques à en. datacampImport.sourceLanguage vaut fr-FR.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Localiser les chaînes apprenant avant diffusion et vérifier le rendu français, sans changer les identifiants de réponses."
+              },
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch01_act02:dc_1_act_02_qcm_multiple:single-answer-ui-copy",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch01_act02",
+                "content_id": "dc_1_act_02_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "énoncé",
+                "description": "L’exercice n’accepte qu’une réponse correcte mais le composant annonce systématiquement « Choix multiples » et « Sélectionnez toutes les bonnes réponses ». L’indicateur voisin affiche pourtant « 1 réponse attendue » : les consignes d’interface se contredisent.",
+                "current_content": "`correctAnswers: \"b\"` (une seule réponse) ; en-tête rendu : « Choix multiples — Sélectionnez toutes les bonnes réponses ».",
+                "proposed_content": "Si une seule réponse est attendue, afficher « Choix unique » et « Sélectionnez une réponse » ; conserver le pluriel seulement au-delà d’une réponse.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple].correctAnswers ; client/src/components/blocks/MultiChoiceBlock.tsx, lignes 56–60, emploie les libellés pluriels sans condition ; shared/expectedAnswerCount.ts, lignes 45–49, affiche correctement « 1 réponse attendue ».",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Rendre le libellé et l’instruction conditionnels au nombre de réponses attendues et ajouter un test de rendu QCM à réponse unique."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch01_act03",
+            "title": "Where do refunds live?",
+            "score_100": 25,
+            "verified_dimensions": [
+              "Énoncé : les consignes indiquent l’environnement, les actions attendues et le résultat ou l’artefact visé ; un indice est disponible.",
+              "Ordre pédagogique : la pratique vient après la vidéo qui introduit le principe de sous-agent qu’elle mobilise.",
+              "Rendu : LessonViewer affiche la consigne, l’éditeur, le contrôle de vérification, la réinitialisation et l’accès à la solution."
+            ],
+            "unverified_dimensions": [
+              "Exécution en session apprenant et dans Claude Code réel : non vérifiée ; données et logique de rendu/progression vérifiées par lecture du code."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch01_act03:dc_1_act_03_code:non-executable-practical",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "dc_1_act_03_code",
+                "content_type": "code_repl",
+                "severity": "P0",
+                "category": "évaluation",
+                "description": "La pratique demande une session Claude Code réelle, mais l’écran est un éditeur navigateur. « Vérifier le code » n’exécute aucune commande et ne contrôle aucune trace de l’action : il compare seulement le texte saisi à solutionCode, lequel contient le script interne de préparation/correction. Une pratique réellement faite dans Claude Code ne peut donc pas être reconnue ; afficher puis recopier la solution suffit. code_repl ne participe pas non plus au verrou de passage, malgré le chapitre obligatoire.",
+                "current_content": "Consigne : lancer `claude`, demander à un sous-agent d’identifier le service et la fonction gérant les remboursements, puis `/exit`.",
+                "proposed_content": "Utiliser un terminal ou sandbox qui exécute réellement Claude Code et valide l’artefact attendu, historique ou fichier. À défaut, réécrire en exercice de code autonome avec une sortie déterministe exécutable dans le navigateur. Si obligatoire, ajouter code_repl aux conditions de passage après validation fiable.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_code] et requiredBeforeAdvance ; client/src/components/blocks/CodeReplBlock.tsx, lignes 28–40 : seule comparaison matchesCanonicalSolution(code, solutionCode) ; shared/codeReplValidation.ts, lignes 10–13 : égalité textuelle exacte ; client/src/pages/training/chapterProgress.ts, lignes 94–103, et LessonViewer.tsx, lignes 1583–1601 : code_repl est absent des verrous.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Remplacer la validation avant diffusion et couvrir par test l’exécution et la réussite de chaque pratique ; ne pas rendre l’achèvement dépendant de la copie de la solution révélée."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 3,
+            "chapter_id": "dc_ch01_act04",
+            "title": "Video: Creating a subagent",
+            "score_100": 75,
+            "verified_dimensions": [
+              "Objectifs et contexte : le titre de l’écran et la description de leçon annoncent le thème et les acquis visés.",
+              "Progression : la vidéo introduit la création d’un sous-agent avant le quiz et la pratique correspondants.",
+              "Média : MP4, sous-titres FR/EN, transcription et PDF sont présents dans le JSON et rendus par LessonViewer.",
+              "Navigation : le lecteur expose le marquage manuel de visionnage ; la cohérence du verrou est auditée dans l’issue associée."
+            ],
+            "unverified_dimensions": [
+              "Visionnage navigateur, qualité visuelle du MP4/PDF et synchronisation réelle des sous-titres : non vérifiés."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch01_act04:dc_1_act_04_video:video-gate",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch01_act04",
+                "content_id": "dc_1_act_04_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "verrouillage",
+                "description": "Le chapitre est obligatoire et le lecteur offre « Marquer comme vue », mais le verrou de progression ignore cet identifiant MP4 car il ne retient block.id que si sa longueur est comprise entre 8 et 15 caractères. L’apprenant peut donc avancer sans regarder ni marquer la vidéo.",
+                "current_content": "Bloc vidéo MP4 id `dc_1_act_04_video` ; `requiredBeforeAdvance: true`.",
+                "proposed_content": "Dériver la clé du verrou MP4/HLS de block.id sans filtre de longueur, ou de mp4Url, afin d’appliquer réellement le visionnage ou son marquage manuel.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[3].requiredBeforeAdvance ; LessonViewer.tsx, lignes 1558–1568 : cet id excède la longueur admise par le calcul de clé vidéo.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Corriger la dérivation de clé et ajouter un test couvrant les identifiants MP4 DataCamp, sans modifier le média."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 4,
+            "chapter_id": "dc_ch01_act05",
+            "title": "Creating a subagent",
+            "score_100": 70,
+            "verified_dimensions": [
+              "Énoncé et action : question situationnelle, quatre options et indicateur « 1 réponse attendue » rendent le résultat visé identifiable.",
+              "Transition : le quiz suit la vidéo qui explique le rôle du champ description et le déclenchement proactif.",
+              "Feedback : indice avant soumission ; correction, explication et nouvelle tentative après soumission.",
+              "Progression : une réponse correcte marque le bloc complet et permet le passage."
+            ],
+            "unverified_dimensions": [
+              "Exécution en session apprenant : non vérifiée ; données et logique de rendu/progression vérifiées par lecture du code."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch01_act05:dc_1_act_05_qcm_multiple:fr-localization",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch01_act05",
+                "content_id": "dc_1_act_05_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P1",
+                "category": "énoncé",
+                "description": "En affichage français, la question, les options, l’explication et l’indice restent en anglais alors que l’import est fr-FR. L’activité n’est donc pas autonome pour un apprenant francophone.",
+                "current_content": "`question.fr` : « You've built a documentation-writer subagent… » ; options, explication et indice fr en anglais.",
+                "proposed_content": "Traduire et relire pédagogiquement toutes les valeurs fr ; conserver seulement les commandes, chemins et noms de produit qui doivent rester inchangés.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple].question/options/explanation/hint : valeurs fr identiques à en. datacampImport.sourceLanguage vaut fr-FR.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Localiser les chaînes apprenant avant diffusion et vérifier le rendu français, sans changer les identifiants de réponses."
+              },
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch01_act05:dc_1_act_05_qcm_multiple:single-answer-ui-copy",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch01_act05",
+                "content_id": "dc_1_act_05_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "énoncé",
+                "description": "Une réponse correcte est attendue, mais l’interface annonce « Choix multiples » et « Sélectionnez toutes les bonnes réponses », en contradiction avec « 1 réponse attendue ».",
+                "current_content": "`correctAnswers: \"b\"` ; en-tête rendu : « Choix multiples — Sélectionnez toutes les bonnes réponses ».",
+                "proposed_content": "Si une seule réponse est attendue, afficher « Choix unique » et « Sélectionnez une réponse ».",
+                "evidence": "JSON du bloc ci-dessus ; MultiChoiceBlock.tsx, lignes 56–60, libellés pluriels inconditionnels ; expectedAnswerCount.ts, lignes 45–49, libellé singulier disponible.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Rendre le libellé et l’instruction conditionnels au nombre de réponses attendues et ajouter un test de rendu QCM à réponse unique."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 5,
+            "chapter_id": "dc_ch01_act06",
+            "title": "Spin up a code reviewer",
+            "score_100": 25,
+            "verified_dimensions": [
+              "Énoncé : les consignes précisent le flux /agents, la portée Project, l’agent à créer et les paramètres attendus ; un indice détaille la navigation TUI.",
+              "Ordre pédagogique : la pratique suit la vidéo consacrée à la création et à la configuration d’un sous-agent.",
+              "Rendu : le lecteur affiche consigne, éditeur, contrôle, réinitialisation et solution."
+            ],
+            "unverified_dimensions": [
+              "Exécution en session apprenant et dans Claude Code réel : non vérifiée ; données et logique de rendu/progression vérifiées par lecture du code."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch01_act06:dc_1_act_06_code:non-executable-practical",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch01_act06",
+                "content_id": "dc_1_act_06_code",
+                "content_type": "code_repl",
+                "severity": "P0",
+                "category": "évaluation",
+                "description": "La pratique demande de piloter le TUI réel /agents et d’enregistrer une configuration de projet, mais l’écran est un éditeur navigateur sans exécution ni observation de cet environnement. La validation ne fait qu’exiger une copie textuelle exacte de solutionCode, qui contient le script interne de correction ; code_repl n’est pas inclus dans les verrous malgré le chapitre obligatoire.",
+                "current_content": "Consigne : lancer /agents, créer et enregistrer dans le projet un agent de revue avec outils, Haiku et couleur, puis /exit.",
+                "proposed_content": "Utiliser un terminal ou sandbox qui exécute Claude Code et vérifie le fichier de configuration créé. À défaut, convertir en exercice autonome réellement exécutable, puis verrouiller le passage sur une validation fiable.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_code] ; CodeReplBlock.tsx, lignes 28–40 ; codeReplValidation.ts, lignes 10–13 ; chapterProgress.ts, lignes 94–103, et LessonViewer.tsx, lignes 1583–1601.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Remplacer la validation avant diffusion et couvrir par test l’exécution et la réussite de la pratique ; ne pas faire dépendre l’achèvement de la copie de la solution révélée."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch02_act01",
+            "title": "Video: Designing effective subagents",
+            "score_100": 75,
+            "verified_dimensions": [
+              "Objectifs et contexte : la seconde leçon annonce les modèles de conception et les choix de délégation à acquérir.",
+              "Progression : la vidéo réutilise la création de sous-agents de la leçon 1 avant le quiz et la pratique de configuration.",
+              "Média : MP4, sous-titres FR/EN, transcription et PDF sont présents et rendus par LessonViewer.",
+              "Navigation : le lecteur expose le marquage manuel de visionnage ; la cohérence du verrou est auditée dans l’issue associée."
+            ],
+            "unverified_dimensions": [
+              "Visionnage navigateur, qualité visuelle du MP4/PDF et synchronisation réelle des sous-titres : non vérifiés."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch02_act01:dc_2_act_01_video:video-gate",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch02_act01",
+                "content_id": "dc_2_act_01_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "verrouillage",
+                "description": "Le chapitre obligatoire peut être quitté sans voir ni marquer cette vidéo : la logique de verrou ignore son identifiant MP4, plus long que la plage admise de 8 à 15 caractères.",
+                "current_content": "Bloc vidéo MP4 id `dc_2_act_01_video` ; `requiredBeforeAdvance: true`.",
+                "proposed_content": "Dériver la clé du verrou MP4/HLS de block.id sans filtre de longueur, ou de mp4Url.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[0].requiredBeforeAdvance ; LessonViewer.tsx, lignes 1558–1568 : cet id ne satisfait pas le filtre de longueur.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Corriger la dérivation de clé et ajouter un test couvrant les identifiants MP4 DataCamp, sans modifier le média."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch02_act02",
+            "title": "Designing effective subagents",
+            "score_100": 70,
+            "verified_dimensions": [
+              "Énoncé et action : la question cible précisément l’usage du champ description, avec options et résultat attendu identifiables.",
+              "Transition : le quiz suit la vidéo qui explique que la description guide aussi le prompt transmis par l’agent principal.",
+              "Feedback : indice, explication après soumission et nouvelle tentative sont rendus par le composant.",
+              "Progression : une réponse correcte marque le bloc complet et permet le passage."
+            ],
+            "unverified_dimensions": [
+              "Exécution en session apprenant : non vérifiée ; données et logique de rendu/progression vérifiées par lecture du code."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch02_act02:dc_2_act_02_qcm_multiple:fr-localization",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch02_act02",
+                "content_id": "dc_2_act_02_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P1",
+                "category": "énoncé",
+                "description": "La question, les quatre options et l’indice en français restent en anglais ; seule l’explication est traduite. L’activité est donc partiellement incompréhensible dans le parcours fr-FR.",
+                "current_content": "`question.fr` : « Beyond deciding when to launch a subagent… » ; les options et l’indice fr sont en anglais, malgré une explication fr traduite.",
+                "proposed_content": "Traduire et relire pédagogiquement les valeurs fr de question, options et indice.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple].question/options/hint : valeurs fr identiques à en. datacampImport.sourceLanguage vaut fr-FR.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Localiser les chaînes apprenant avant diffusion et vérifier le rendu français, sans changer les identifiants de réponses."
+              },
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch02_act02:dc_2_act_02_qcm_multiple:single-answer-ui-copy",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch02_act02",
+                "content_id": "dc_2_act_02_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "énoncé",
+                "description": "Une réponse correcte est attendue, mais l’interface annonce « Choix multiples » et « Sélectionnez toutes les bonnes réponses », en contradiction avec l’indicateur « 1 réponse attendue ».",
+                "current_content": "`correctAnswers: \"b\"` ; en-tête rendu : « Choix multiples — Sélectionnez toutes les bonnes réponses ».",
+                "proposed_content": "Si une seule réponse est attendue, afficher « Choix unique » et « Sélectionnez une réponse ».",
+                "evidence": "JSON du bloc ci-dessus ; MultiChoiceBlock.tsx, lignes 56–60 ; expectedAnswerCount.ts, lignes 45–49.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Rendre le libellé et l’instruction conditionnels au nombre de réponses attendues et ajouter un test de rendu QCM à réponse unique."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch02_act03",
+            "title": "Fix a weak subagent config",
+            "score_100": 25,
+            "verified_dimensions": [
+              "Énoncé : les actions attendues, les sept sections à créer, les outils autorisés et les outils à retirer sont explicités ; l’indice précise la contrainte de libellé exact.",
+              "Ordre pédagogique : la pratique suit la vidéo qui introduit format de sortie, description spécifique et limitation d’outils.",
+              "Rendu : le lecteur affiche consigne, éditeur, contrôle, réinitialisation et solution."
+            ],
+            "unverified_dimensions": [
+              "Exécution en session apprenant et dans Claude Code réel : non vérifiée ; données et logique de rendu/progression vérifiées par lecture du code."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch02_act03:dc_2_act_03_code:non-executable-practical",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch02_act03",
+                "content_id": "dc_2_act_03_code",
+                "content_type": "code_repl",
+                "severity": "P0",
+                "category": "évaluation",
+                "description": "L’activité demande une modification réelle de `@.claude/agents/code-reviewer.md` par Claude Code, mais l’éditeur navigateur ne lance pas Claude Code ni ne vérifie le fichier. La vérification exige seulement la copie exacte de solutionCode, qui contient le script de correction interne ; code_repl reste hors du verrou malgré le caractère obligatoire du chapitre.",
+                "current_content": "Consigne : mettre à jour `@.claude/agents/code-reviewer.md`, créer sept sections et limiter les outils à Bash, Glob, Grep et Read.",
+                "proposed_content": "Utiliser un terminal ou sandbox qui exécute Claude Code et vérifie le fichier modifié. À défaut, convertir en exercice autonome réellement exécutable, puis verrouiller le passage sur une validation fiable.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[2].blocks[id=dc_2_act_03_code] ; CodeReplBlock.tsx, lignes 28–40 ; codeReplValidation.ts, lignes 10–13 ; chapterProgress.ts, lignes 94–103, et LessonViewer.tsx, lignes 1583–1601.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Remplacer la validation avant diffusion et couvrir par test l’exécution et la réussite de la pratique ; ne pas faire dépendre l’achèvement de la copie de la solution révélée."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 3,
+            "chapter_id": "dc_ch02_act04",
+            "title": "Video: Using subagents effectively",
+            "score_100": 75,
+            "verified_dimensions": [
+              "Objectifs et contexte : le titre et la description annoncent le choix entre délégation et maintien dans le fil principal.",
+              "Progression : cette synthèse intervient après les notions de création et de conception efficace.",
+              "Média : MP4, sous-titres FR/EN, transcription et PDF sont présents et rendus par LessonViewer.",
+              "Navigation : le lecteur expose le marquage manuel de visionnage ; la cohérence du verrou est auditée dans l’issue associée."
+            ],
+            "unverified_dimensions": [
+              "Visionnage navigateur, qualité visuelle du MP4/PDF et synchronisation réelle des sous-titres : non vérifiés."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch02_act04:dc_2_act_04_video:video-gate",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch02_act04",
+                "content_id": "dc_2_act_04_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "verrouillage",
+                "description": "Le chapitre obligatoire peut être quitté sans voir ni marquer cette vidéo : la logique de verrou ignore son identifiant MP4, plus long que la plage admise de 8 à 15 caractères.",
+                "current_content": "Bloc vidéo MP4 id `dc_2_act_04_video` ; `requiredBeforeAdvance: true`.",
+                "proposed_content": "Dériver la clé du verrou MP4/HLS de block.id sans filtre de longueur, ou de mp4Url.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[3].requiredBeforeAdvance ; LessonViewer.tsx, lignes 1558–1568 : cet id ne satisfait pas le filtre de longueur.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Corriger la dérivation de clé et ajouter un test couvrant les identifiants MP4 DataCamp, sans modifier le média."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 4,
+            "chapter_id": "dc_ch02_act05",
+            "title": "Using subagents effectively",
+            "score_100": 70,
+            "verified_dimensions": [
+              "Énoncé et action : le scénario cible la différence entre revue dans un contexte neuf et auto-revue du fil principal.",
+              "Transition : le quiz suit immédiatement la vidéo qui expose ce mécanisme de biais de contexte.",
+              "Feedback : indice, explication après soumission et nouvelle tentative sont rendus par le composant.",
+              "Progression : une réponse correcte marque le bloc complet et permet le passage."
+            ],
+            "unverified_dimensions": [
+              "Exécution en session apprenant : non vérifiée ; données et logique de rendu/progression vérifiées par lecture du code."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch02_act05:dc_2_act_05_qcm_multiple:fr-localization",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch02_act05",
+                "content_id": "dc_2_act_05_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P1",
+                "category": "énoncé",
+                "description": "La question, trois options sur quatre, l’explication et l’indice en français restent en anglais. Cette hétérogénéité gêne directement la compréhension de l’activité dans le parcours fr-FR.",
+                "current_content": "`question.fr` : « Why will a reviewer subagent likely produce sharper feedback… » ; trois options sur quatre, l’explication et l’indice fr sont en anglais.",
+                "proposed_content": "Traduire et relire pédagogiquement les valeurs fr restantes de question, options, explication et indice.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple] : les champs fr cités reprennent en alors qu’une seule option est localisée.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Localiser les chaînes apprenant avant diffusion et vérifier le rendu français, sans changer les identifiants de réponses."
+              },
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch02_act05:dc_2_act_05_qcm_multiple:single-answer-ui-copy",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch02_act05",
+                "content_id": "dc_2_act_05_qcm_multiple",
+                "content_type": "multi_choice_exercise",
+                "severity": "P2",
+                "category": "énoncé",
+                "description": "Une réponse correcte est attendue, mais l’interface annonce « Choix multiples » et « Sélectionnez toutes les bonnes réponses », en contradiction avec l’indicateur « 1 réponse attendue ».",
+                "current_content": "`correctAnswers: \"c\"` ; en-tête rendu : « Choix multiples — Sélectionnez toutes les bonnes réponses ».",
+                "proposed_content": "Si une seule réponse est attendue, afficher « Choix unique » et « Sélectionnez une réponse ».",
+                "evidence": "JSON du bloc ci-dessus ; MultiChoiceBlock.tsx, lignes 56–60 ; expectedAnswerCount.ts, lignes 45–49.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Rendre le libellé et l’instruction conditionnels au nombre de réponses attendues et ajouter un test de rendu QCM à réponse unique."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 5,
+            "chapter_id": "dc_ch02_act06",
+            "title": "Delegate or keep on the main thread?",
+            "score_100": 64,
+            "verified_dimensions": [
+              "Énoncé et action : classer six scénarios dans deux catégories nommées ; l’interface explique l’interaction clic ou glisser-déposer.",
+              "Transition : le tri suit la vidéo donnant le critère de décision — l’importance du travail intermédiaire.",
+              "Feedback : indice, correction carte par carte, score, nouvelle tentative et message synthétique sont fournis.",
+              "Verrouillage : MatchingExercise n’achève l’activité que si toutes les cartes sont correctes ; LessonViewer consomme cet état pour la progression."
+            ],
+            "unverified_dimensions": [
+              "Exécution en session apprenant : non vérifiée ; données et logique de rendu/progression vérifiées par lecture du code."
+            ],
+            "issues": [
+              {
+                "issue_id": "051:introduction_to_subagents__01:dc_ch02_act06:dc_2_act_06_bucket_sort:fr-localization",
+                "course_id": "introduction_to_subagents__01",
+                "chapter_id": "dc_ch02_act06",
+                "content_id": "dc_2_act_06_bucket_sort",
+                "content_type": "bucket_sort",
+                "severity": "P1",
+                "category": "énoncé",
+                "description": "Les deux catégories et les six cartes en français reprennent l’anglais. Malgré une consigne, un indice et un feedback traduits, l’action centrale de classification reste majoritairement non localisée dans le parcours fr-FR.",
+                "current_content": "Les deux catégories et les six cartes reprennent l’anglais dans fr, par exemple « Delegate to a subagent » et « Find where JWT validation happens in this unfamiliar repo ».",
+                "proposed_content": "Traduire les libellés de catégories et les six scénarios ; préserver les acronymes et noms techniques nécessaires, par exemple JWT et PR.",
+                "evidence": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort].buckets/cards : les valeurs fr des catégories et des six cartes sont identiques à en. datacampImport.sourceLanguage vaut fr-FR.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_logic",
+                "recommended_action": "Localiser les textes de l’activité avant diffusion et vérifier l’intégralité du tri dans le lecteur français."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "formation_summary": {
+      "coverage": "1 cours, 2 leçons, 12 chapitres et 12 activités source examinés individuellement : 4 vidéos, 4 QCM, 3 pratiques Claude Code rendues en code_repl et 1 tri.",
+      "confirmed_issues": 16,
+      "priority_distribution": {
+        "P0": 3,
+        "P1": 5,
+        "P2": 8,
+        "P3": 0
+      },
+      "overall_assessment": "La progression vidéo → vérification → pratique est cohérente et les vidéos/QCM disposent de transcriptions, indices et retours riches. Les défauts déterminants sont les trois pratiques Claude Code, impossibles à réaliser et à valider avec le composant livré ; s’y ajoutent une localisation française incomplète, une consigne QCM contradictoire et un verrou vidéo inopérant pour les identifiants MP4 DataCamp.",
+      "score_interpretation": "Scores qualitatifs par chapitre, fondés sur les dimensions réellement contrôlables dans le JSON et le code, avec dimensions non observables listées séparément."
+    },
+    "limits": [
+      "Périmètre limité au seul cours indiqué dans le manifest : introduction_to_subagents__01.json. Aucun contenu, base ou code n’a été modifié.",
+      "Les 4 vidéos, 8 sous-titres VTT et 2 PDF ne sont pas considérés absents : les métadonnées d’import les déclarent téléchargés et valides. Leur lecture audiovisuelle, la lisibilité des PDF et le comportement réseau réel n’ont pas été testés dans un navigateur.",
+      "Le rendu des données, feedbacks et verrouillages a été vérifié par LessonViewer, les composants d’activité, chapterProgress et les tests associés ; aucune session apprenant authentifiée ni environnement Claude Code réel n’a été exécuté.",
+      "Aucune source externe n’a été utilisée ; l’audit évalue la cohérence pédagogique interne des contenus disponibles, non leur exactitude factuelle externe."
+    ]
+  },
+  "previous_recheck": {
+    "formation_id": "datacamp_introduction_to_subagents",
+    "index": 51,
+    "course_ids": [
+      "introduction_to_subagents__01"
+    ],
+    "review_scope": {
+      "basis": "Contre-revue en lecture seule de l’état courant JSON, comparée au rapport initial et aux données d’audit statique.",
+      "formation_manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+      "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/051-datacamp_introduction_to_subagents.json",
+      "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+      "course_paths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/introduction_to_subagents__01.json"
+      ],
+      "criteria": [
+        "objectifs et activités",
+        "faisabilité TP/fichiers/environnement",
+        "fausses soumissions ou gates",
+        "médias/téléchargements",
+        "duplications ou corruption",
+        "rendu/bilinguisme"
+      ],
+      "method_note": "Seuls les constats localisés et démontrés par les JSON courants, le rapport initial ou les données statiques sont retenus. Les médias valides et l’absence de duplication/corruption ne sont pas transformées en issues sans preuve contraire. Aucun cours n’a été modifié."
+    },
+    "reviewed_current_state": true,
+    "findings": [
+      {
+        "severity": "P2",
+        "category": "verrouillage",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[0] (dc_ch01_act01) → blocks[id=dc_1_act_01_video]; clé de verrou vidéo relevée dans le rapport initial (LessonViewer.tsx, lignes 1558–1568).",
+        "description": "Le chapitre est obligatoire, mais l’identifiant MP4 dc_1_act_01_video excède la plage de longueur acceptée par la dérivation de clé documentée dans le rapport initial. Le visionnage ou le marquage manuel de la vidéo ne constitue donc pas un gate effectif.",
+        "recommendation": "Dériver la clé du verrou à partir de block.id sans filtre de longueur ou de mp4Url, puis ajouter un test couvrant les identifiants MP4 DataCamp.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "rendu/bilinguisme",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple] → question.fr, options[].text.fr, explanation.fr, hint.fr; datacampImport.sourceLanguage=fr-FR.",
+        "description": "Les champs apprenant français du QCM reprennent l’anglais, alors que la source est déclarée fr-FR. La question, les quatre options, l’explication et l’indice ne sont pas autonomes pour un apprenant francophone.",
+        "recommendation": "Traduire et relire les chaînes apprenant françaises en conservant inchangés les commandes, chemins et noms de produit nécessaires.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "rendu",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_qcm_multiple] → correctAnswers=\"b\"; contradiction d’interface documentée avec MultiChoiceBlock.tsx lignes 56–60 et expectedAnswerCount.ts lignes 45–49.",
+        "description": "Une seule réponse est attendue, mais l’interface annonce les choix multiples et la sélection de toutes les bonnes réponses, en contradiction avec l’indicateur 1 réponse attendue.",
+        "recommendation": "Rendre le libellé et l’instruction conditionnels au nombre de réponses attendues.",
+        "status": "open"
+      },
+      {
+        "severity": "P0",
+        "category": "évaluation",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[2] (dc_ch01_act03) → blocks[id=dc_1_act_03_code], requiredBeforeAdvance=true; validation documentée dans CodeReplBlock.tsx lignes 28–40 et shared/codeReplValidation.ts lignes 10–13.",
+        "description": "La pratique demande de lancer Claude Code, d’utiliser un sous-agent et de trouver le service/fonction des remboursements, mais le code_repl navigateur ne l’exécute pas. La vérification compare seulement le texte saisi à solutionCode, et le bloc ne participe pas au verrou de passage. Une copie de la solution peut donc être soumise sans exécuter la pratique.",
+        "recommendation": "Exécuter et valider réellement l’artefact dans un terminal/sandbox, ou réécrire l’activité en exercice autonome exécutable; inclure le bloc dans le gate uniquement après validation fiable.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "verrouillage",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[3] (dc_ch01_act04) → blocks[id=dc_1_act_04_video], requiredBeforeAdvance=true; clé documentée dans LessonViewer.tsx lignes 1558–1568.",
+        "description": "L’identifiant MP4 dc_1_act_04_video n’entre pas dans la plage de longueur acceptée par la clé de verrou documentée. Le chapitre obligatoire peut donc être quitté sans visionnage ou marquage effectif.",
+        "recommendation": "Corriger la dérivation de clé et tester les identifiants MP4 DataCamp sans modifier le média.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "rendu/bilinguisme",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple] → question.fr, options[].text.fr, explanation.fr, hint.fr.",
+        "description": "La question, les options, l’explication et l’indice français restent en anglais malgré sourceLanguage=fr-FR.",
+        "recommendation": "Localiser et relire toutes les chaînes apprenant françaises sans changer les identifiants de réponses.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "rendu",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_qcm_multiple] → correctAnswers=\"b\"; MultiChoiceBlock.tsx lignes 56–60.",
+        "description": "Le QCM attend une réponse unique mais l’interface affiche les libellés pluriels de choix multiples.",
+        "recommendation": "Afficher Choix unique et Sélectionnez une réponse lorsqu’une seule réponse est attendue.",
+        "status": "open"
+      },
+      {
+        "severity": "P0",
+        "category": "évaluation",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[0].chapters[5] (dc_ch01_act06) → blocks[id=dc_1_act_06_code], requiredBeforeAdvance=true; CodeReplBlock.tsx lignes 28–40 et codeReplValidation.ts lignes 10–13.",
+        "description": "La pratique demande le TUI /agents et l’enregistrement d’une configuration de projet, mais le code_repl navigateur n’exécute ni n’observe Claude Code. La validation exige seulement une copie textuelle exacte de solutionCode et le bloc est absent des verrous.",
+        "recommendation": "Valider réellement le fichier de configuration dans un environnement Claude Code, ou remplacer par un exercice exécutable et connecter sa validation fiable au gate.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "verrouillage",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[0] (dc_ch02_act01) → blocks[id=dc_2_act_01_video], requiredBeforeAdvance=true; clé documentée dans LessonViewer.tsx lignes 1558–1568.",
+        "description": "L’identifiant MP4 dc_2_act_01_video est trop long pour la dérivation de clé documentée; le verrou vidéo obligatoire est donc inopérant.",
+        "recommendation": "Dériver la clé depuis block.id sans filtre de longueur ou depuis mp4Url et ajouter un test.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "rendu/bilinguisme",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple] → question.fr, options[].text.fr, hint.fr; explanation.fr seule est traduite.",
+        "description": "La question, les quatre options et l’indice français restent en anglais; seule l’explication est localisée dans ce QCM fr-FR.",
+        "recommendation": "Traduire et relire question, options et indice français.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "rendu",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple] → correctAnswers=\"b\"; MultiChoiceBlock.tsx lignes 56–60.",
+        "description": "Une réponse unique est attendue, mais les consignes rendues annoncent un choix multiple.",
+        "recommendation": "Rendre les libellés du composant conditionnels au nombre de réponses attendues.",
+        "status": "open"
+      },
+      {
+        "severity": "P0",
+        "category": "évaluation",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[2] (dc_ch02_act03) → blocks[id=dc_2_act_03_code], requiredBeforeAdvance=true; validation documentée dans CodeReplBlock.tsx, codeReplValidation.ts, chapterProgress.ts lignes 94–103.",
+        "description": "L’activité demande de modifier réellement .claude/agents/code-reviewer.md avec Claude Code, mais l’éditeur ne lance pas Claude Code ni ne vérifie le fichier. La soumission est une égalité textuelle à solutionCode et le code_repl est hors verrou.",
+        "recommendation": "Exécuter et vérifier le fichier produit dans un environnement réel, ou convertir l’activité en exercice autonome exécutable puis utiliser sa validation dans le gate.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "verrouillage",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[3] (dc_ch02_act04) → blocks[id=dc_2_act_04_video], requiredBeforeAdvance=true; clé documentée dans LessonViewer.tsx lignes 1558–1568.",
+        "description": "L’identifiant MP4 dc_2_act_04_video excède la plage de longueur de la clé documentée; le chapitre obligatoire peut être franchi sans visionnage ou marquage effectif.",
+        "recommendation": "Corriger la dérivation de clé et la couvrir par un test d’identifiant MP4 DataCamp.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "rendu/bilinguisme",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple] → question.fr, options[].text.fr, explanation.fr, hint.fr.",
+        "description": "La question, trois options sur quatre, l’explication et l’indice français reprennent l’anglais dans un parcours source fr-FR.",
+        "recommendation": "Traduire et relire toutes les chaînes apprenant françaises restantes.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "rendu",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[4].blocks[id=dc_2_act_05_qcm_multiple] → correctAnswers=\"c\"; MultiChoiceBlock.tsx lignes 56–60.",
+        "description": "Une réponse correcte est attendue mais le rendu annonce Choix multiples et Sélectionnez toutes les bonnes réponses.",
+        "recommendation": "Employer le libellé et l’instruction singuliers pour une réponse unique.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "rendu/bilinguisme",
+        "course_id": "introduction_to_subagents__01",
+        "location": "client/public/data/courses/introduction_to_subagents__01.json → lessons[1].chapters[5].blocks[id=dc_2_act_06_bucket_sort] → buckets[].fr et cards[].fr.",
+        "description": "Les deux catégories et les six cartes du tri reprennent l’anglais dans les valeurs françaises, alors que la consigne, l’indice et le feedback sont traduits.",
+        "recommendation": "Localiser les catégories et les six scénarios en conservant les acronymes et noms techniques nécessaires.",
+        "status": "open"
+      }
+    ],
+    "summary": {
+      "issue_count": 16,
+      "p0": 3,
+      "p1": 5,
+      "p2": 8
+    }
+  },
+  "current_courses": {
+    "introduction_to_subagents__01": {
+      "courseId": "introduction_to_subagents__01",
+      "sourceCourseTitle": "Introduction to Subagents",
+      "datacampImport": {
+        "schemaVersion": "neopolis.datacamp_course.v1",
+        "sourceProvider": "DataCamp",
+        "sourceCourseSlug": "introduction-to-subagents",
+        "sourceLanguage": "fr-FR",
+        "expected": {
+          "chapters_expected": 2,
+          "chapters_extracted": 2,
+          "activities_expected_from_outline": 12,
+          "activities_extracted": 12,
+          "videos_expected_from_chapter_metadata": 4,
+          "videos_extracted": 4,
+          "exercise_types": {
+            "VideoExercise": 4,
+            "VisualExercise": 4,
+            "ConsoleExercise": 3,
+            "DragAndDropExercise": 1
+          },
+          "referenced_downloads_existing": 18,
+          "referenced_downloads_total": 18,
+          "referenced_downloaded_bytes": 1508097527,
+          "mp4_downloaded": 4,
+          "mp4_valid_video_audio": 4,
+          "mp4_invalid": 0,
+          "mp3_downloaded": 0,
+          "mp3_valid": 0,
+          "vtt_downloaded": 8,
+          "vtt_valid": 8,
+          "slides_pdfs_downloaded": 2,
+          "slides_pdfs_valid": 2,
+          "video_transcripts_extracted": 4
+        },
+        "competencyTagging": "lesson_content_signals_v1"
+      },
+      "lessons": [
+        {
+          "id": "datacamp_ch01",
+          "title": {
+            "en": "Introduction to Subagents",
+            "fr": "Introduction to Subagents"
+          },
+          "description": {
+            "en": " Discover how subagents keep your main context clean by working in isolated windows, meet Claude Code's built-in Explore and Plan agents, and spin up your first custom subagent using the /agents command.",
+            "fr": "Découvrez comment les sous-agents préservent la propreté de votre contexte principal en travaillant dans des fenêtres isolées, faites connaissance avec les agents intégrés Explore et Plan de Claude Code, et créez votre premier sous-agent personnalisé à l’aide de la commande /agents."
+          },
+          "competencyTags": [
+            "ai_development",
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch01_act01",
+              "title": {
+                "en": "Video: What are subagents",
+                "fr": "Video: What are subagents"
+              },
+              "description": {
+                "en": " Discover how subagents keep your main context clean by working in isolated windows, meet Claude Code's built-in Explore and Plan agents, and spin up your first custom subagent using the /agents command.",
+                "fr": "Découvrez comment les sous-agents préservent la propreté de votre contexte principal en travaillant dans des fenêtres isolées, faites connaissance avec les agents intégrés Explore et Plan de Claude Code, et créez votre premier sous-agent personnalisé à l’aide de la commande /agents."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "content",
+                  "id": "neopolis_subagents_environment_preparation",
+                  "body": {
+                    "en": "## Before you start\n\nSet up a contained Claude Code workspace before the hands-on subagent activities:\n\n1. Use a computer with a terminal, a code editor, and Claude Code installed and signed in.\n2. Create a small disposable repository or project folder; do not run the exercises in a production workspace.\n3. Confirm that you can open the `/agents` command and read local project files.\n4. Use only test files that you are authorized to let an agent inspect. Do not paste access tokens, customer data, or private source code into an exercise response.\n\n> **Follow the sequence.** Complete each practical screen and its Neopolis validation before starting the next activity.",
+                    "fr": "## Avant de commencer\n\nPréparez un espace de travail Claude Code isolé avant les activités pratiques sur les sous-agents :\n\n1. Utilisez un ordinateur avec un terminal, un éditeur de code, ainsi que Claude Code installé et connecté.\n2. Créez un petit dépôt ou dossier de projet jetable ; n’exécutez pas les exercices dans un espace de production.\n3. Vérifiez que vous pouvez ouvrir la commande `/agents` et lire les fichiers locaux du projet.\n4. Utilisez uniquement des fichiers de test que vous êtes autorisé à laisser inspecter par un agent. Ne copiez ni jeton d’accès, ni donnée client, ni code source privé dans une réponse d’exercice.\n\n> **Suivez la séquence.** Terminez chaque écran pratique et sa validation Neopolis avant de commencer l’activité suivante."
+                  }
+                },
+                {
+                  "type": "video",
+                  "id": "dc_1_act_01_video",
+                  "title": {
+                    "en": "Video: What are subagents",
+                    "fr": "Video: What are subagents"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex01_video_what_are_subagents_2766fb7e.mp4",
+                  "subtitleUrlFr": "/api/assets/ch01_ex01_video_what_are_subagents_fr_d457655e.vtt",
+                  "subtitleUrlEn": "/api/assets/ch01_ex01_video_what_are_subagents_en_839cabb5.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_c98a52d7.pdf",
+                  "transcript": "1. Video: What are subagents\nSubagents are specialized assistants that Claude Code can delegate tasks to. Each subagent runs in its own conversation contacts window with a custom system prompt that you define. When finished, it returns a summary to the main thread while all the intermediate work stays isolated. One of the main advantages of subagents is that they help manage context window usage. When you chat with Claude Code, you're adding context to the main context window. Every tool call and its results get stored in this main context window. And so when Claude uses a subagent, a separate window starts. The subagent receives two inputs, a custom system prompt from your configuration file and a task description written by the parent or parent agent based on what you ask for. The subagent then works autonomously when it reads files, edits files, or uses tools. None of these will appear in the main conversation. Just a summary is returned back. The entire subagents conversation then gets completely discarded. Consider a task like investigating how the payment system works in an unfamiliar codebase. Maybe you're trying to use Claude Code to figure out which service handles refunds. Well, without a subagent, Claude might read 15 files, run several searches, and trace through multiple function calls, all of that context fills your context window, even if you only needed one single fact. Which service handles refunds? With a subagent, you get the answer without the journey. The subagent explores, discovers the answer, and returns a focus summary, keeping your main context clean. But the main window loses visibility into how the subagent reaches its conclusions and what it discovered along the way. Claude Code includes several built-in subagents that you can use immediately like the general purpose subagent used for multi-step tasks that require both exploration and action. The explore subagents used for fast searching of code bases. The plan subagent used during plan mode for research and analysis of your codebase before presenting a plan. And you can also create your own subagents with custom system prompts and tool access. subagents let clock code break work into focused pieces, keep your main context window clean, and bring back just what you need.\n\n2. Let's practice!\nWhether you're using the built-in ones or creating your own, they're a practical way to get more out of longer Claude code sessions.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: What are subagents",
+                      "text": "Subagents are specialized assistants that Claude Code can delegate tasks to. Each subagent runs in its own conversation contacts window with a custom system prompt that you define. When finished, it returns a summary to the main thread while all the intermediate work stays isolated. One of the main advantages of subagents is that they help manage context window usage. When you chat with Claude Code, you're adding context to the main context window. Every tool call and its results get stored in this main context window. And so when Claude uses a subagent, a separate window starts. The subagent receives two inputs, a custom system prompt from your configuration file and a task description written by the parent or parent agent based on what you ask for. The subagent then works autonomously when it reads files, edits files, or uses tools. None of these will appear in the main conversation. Just a summary is returned back. The entire subagents conversation then gets completely discarded. Consider a task like investigating how the payment system works in an unfamiliar codebase. Maybe you're trying to use Claude Code to figure out which service handles refunds. Well, without a subagent, Claude might read 15 files, run several searches, and trace through multiple function calls, all of that context fills your context window, even if you only needed one single fact. Which service handles refunds? With a subagent, you get the answer without the journey. The subagent explores, discovers the answer, and returns a focus summary, keeping your main context clean. But the main window loses visibility into how the subagent reaches its conclusions and what it discovered along the way. Claude Code includes several built-in subagents that you can use immediately like the general purpose subagent used for multi-step tasks that require both exploration and action. The explore subagents used for fast searching of code bases. The plan subagent used during plan mode for research and analysis of your codebase before presenting a plan. And you can also create your own subagents with custom system prompts and tool access. subagents let clock code break work into focused pieces, keep your main context window clean, and bring back just what you need."
+                    },
+                    {
+                      "heading": "2. Let's practice!",
+                      "text": "Whether you're using the built-in ones or creating your own, they're a practical way to get more out of longer Claude code sessions."
+                    }
+                  ]
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch01_slides",
+                  "title": {
+                    "en": "Chapter 1 slides",
+                    "fr": "Chapter 1 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Official course slides provided for this course."
+                  },
+                  "url": "/api/assets/chapter_01_slides_c98a52d7.pdf",
+                  "filename": "chapter_01_slides.pdf"
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act02",
+              "title": {
+                "en": "What are subagents",
+                "fr": "What are subagents"
+              },
+              "description": {
+                "en": " Discover how subagents keep your main context clean by working in isolated windows, meet Claude Code's built-in Explore and Plan agents, and spin up your first custom subagent using the /agents command.",
+                "fr": "Découvrez comment les sous-agents préservent la propreté de votre contexte principal en travaillant dans des fenêtres isolées, faites connaissance avec les agents intégrés Explore et Plan de Claude Code, et créez votre premier sous-agent personnalisé à l’aide de la commande /agents."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_1_act_02_qcm_multiple",
+                  "question": {
+                    "en": "You delegate an investigation to the built-in Explore subagent. It reads 20 files, runs several searches, and returns a concise summary to your main thread.\n\nWhat did you give up to get that clean summary?",
+                    "fr": "You delegate an investigation to the built-in Explore subagent. It reads 20 files, runs several searches, and returns a concise summary to your main thread.\n\nWhat did you give up to get that clean summary?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "The subagent ran more slowly than if the main thread had done the work directly.",
+                        "fr": "The subagent ran more slowly than if the main thread had done the work directly."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "You can no longer see which files were read or how the subagent reached its answer.",
+                        "fr": "You can no longer see which files were read or how the subagent reached its answer."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "The subagent was unable to use tools like file search or code execution.",
+                        "fr": "The subagent was unable to use tools like file search or code execution."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "The summary returned by the subagent was also discarded along with its conversation.",
+                        "fr": "The summary returned by the subagent was also discarded along with its conversation."
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! The entire subagent conversation is discarded once it finishes. You get the answer without the journey, but you lose visibility into how that answer was reached.",
+                    "fr": "Correct! The entire subagent conversation is discarded once it finishes. You get the answer without the journey, but you lose visibility into how that answer was reached."
+                  },
+                  "hint": {
+                    "en": "Think about what lives in the subagent's context versus what comes back to your main thread. The entire subagent conversation is discarded once it finishes.",
+                    "fr": "Think about what lives in the subagent's context versus what comes back to your main thread. The entire subagent conversation is discarded once it finishes."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act04",
+              "title": {
+                "en": "Video: Creating a subagent",
+                "fr": "Video: Creating a subagent"
+              },
+              "description": {
+                "en": " Discover how subagents keep your main context clean by working in isolated windows, meet Claude Code's built-in Explore and Plan agents, and spin up your first custom subagent using the /agents command.",
+                "fr": "Découvrez comment les sous-agents préservent la propreté de votre contexte principal en travaillant dans des fenêtres isolées, faites connaissance avec les agents intégrés Explore et Plan de Claude Code, et créez votre premier sous-agent personnalisé à l’aide de la commande /agents."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_04_video",
+                  "title": {
+                    "en": "Video: Creating a subagent",
+                    "fr": "Video: Creating a subagent"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex04_video_creating_a_subagent_00f7a408.mp4",
+                  "subtitleUrlFr": "/api/assets/ch01_ex04_video_creating_a_subagent_fr_466fc5a2.vtt",
+                  "subtitleUrlEn": "/api/assets/ch01_ex04_video_creating_a_subagent_en_9634cc10.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_c98a52d7.pdf",
+                  "transcript": "1. Video: Creating a subagent\nIn the previous video, we covered what subagents are and how they work. Claude Code includes built-in subagents, but you can also create your own subagents that specialize in certain tasks. Custom subagents are markdown files with YAML front matter. These markdown files contain configuration that helps claude understand when to use the subagents and provides directions to the subagents itself. Now, the easiest way to create a subagent is with the /agents command. This panel is the main interface for managing your subagents. Once here, select create new agent. You'll then be asked if you want to create a subagents for the current project or a subagent that will be shared between all the projects on your machine. Next, you can create a subagents manually, but we recommend using Claude Code to automatically generate it for you. Our first subagent will be a code reviewer. I'll ask Claude to make a subagent that reviews code quality and security issues. Claude will use your input to generate a name, description, and system prompt for the subagent. We'll see those in a moment, but before we do, we get the opportunity to customize the tools that this subagent has access to. Now, given that our subagent is only responsible for reviewing code, you might decide to disallow tools for editing, but I'll leave an execution to allow the subagent to more easily identify pending changes. Next, you'll be prompted to select the model that powers this subagent. And finally, a color. This color is used in the UI to help you better identify the subagent. And it also just adds a little bit of personal flare. Now at the summary window, we see that the subagents config file will be saved into my current project at this path. Now let's open up that file to get a better idea of what's going on. The name field is a unique identifier. This is how you reference the subagent either by asking Claude directly or using @agent code-quality-reviewer in your message. The description controls when Claude decides to use the subagent. The description must be on a single line. Notice that there are escaped new line characters in there. If you want Claude to use the subagent automatically more often, add in the word proactively to the description. You can also add example conversations to help Claude understand when it should be using the subagent. The tools field lists which tools the subagent can access. The list of tools will match the tools we granted access to during the agent generation, but you can further edit the list of tools in this file if you want. The model field specifies which Claude model to use. Sonnet, opus, haiku or inherit. Use haiku for fast tasks. Opus for complex analysis and sonnet if you need something between the two. Inherit will use the same model as your main conversation. The body of the file contains the system prompt that is given to the subagents. The system prompt will provide guidance to the subagent, helping it understand how to complete its task and how it should return information back to the main agent. Now for the fun part. After creating your subagent, test it by making some code changes and asking Claude to review them. If the subagent isn't being used when you expect, check your description.\n\n2. Let's practice!\nAdding more specific examples helps Claude understand when to delegate.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Creating a subagent",
+                      "text": "In the previous video, we covered what subagents are and how they work. Claude Code includes built-in subagents, but you can also create your own subagents that specialize in certain tasks. Custom subagents are markdown files with YAML front matter. These markdown files contain configuration that helps claude understand when to use the subagents and provides directions to the subagents itself. Now, the easiest way to create a subagent is with the /agents command. This panel is the main interface for managing your subagents. Once here, select create new agent. You'll then be asked if you want to create a subagents for the current project or a subagent that will be shared between all the projects on your machine. Next, you can create a subagents manually, but we recommend using Claude Code to automatically generate it for you. Our first subagent will be a code reviewer. I'll ask Claude to make a subagent that reviews code quality and security issues. Claude will use your input to generate a name, description, and system prompt for the subagent. We'll see those in a moment, but before we do, we get the opportunity to customize the tools that this subagent has access to. Now, given that our subagent is only responsible for reviewing code, you might decide to disallow tools for editing, but I'll leave an execution to allow the subagent to more easily identify pending changes. Next, you'll be prompted to select the model that powers this subagent. And finally, a color. This color is used in the UI to help you better identify the subagent. And it also just adds a little bit of personal flare. Now at the summary window, we see that the subagents config file will be saved into my current project at this path. Now let's open up that file to get a better idea of what's going on. The name field is a unique identifier. This is how you reference the subagent either by asking Claude directly or using @agent code-quality-reviewer in your message. The description controls when Claude decides to use the subagent. The description must be on a single line. Notice that there are escaped new line characters in there. If you want Claude to use the subagent automatically more often, add in the word proactively to the description. You can also add example conversations to help Claude understand when it should be using the subagent. The tools field lists which tools the subagent can access. The list of tools will match the tools we granted access to during the agent generation, but you can further edit the list of tools in this file if you want. The model field specifies which Claude model to use. Sonnet, opus, haiku or inherit. Use haiku for fast tasks. Opus for complex analysis and sonnet if you need something between the two. Inherit will use the same model as your main conversation. The body of the file contains the system prompt that is given to the subagents. The system prompt will provide guidance to the subagent, helping it understand how to complete its task and how it should return information back to the main agent. Now for the fun part. After creating your subagent, test it by making some code changes and asking Claude to review them. If the subagent isn't being used when you expect, check your description."
+                    },
+                    {
+                      "heading": "2. Let's practice!",
+                      "text": "Adding more specific examples helps Claude understand when to delegate."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act05",
+              "title": {
+                "en": "Creating a subagent",
+                "fr": "Creating a subagent"
+              },
+              "description": {
+                "en": " Discover how subagents keep your main context clean by working in isolated windows, meet Claude Code's built-in Explore and Plan agents, and spin up your first custom subagent using the /agents command.",
+                "fr": "Découvrez comment les sous-agents préservent la propreté de votre contexte principal en travaillant dans des fenêtres isolées, faites connaissance avec les agents intégrés Explore et Plan de Claude Code, et créez votre premier sous-agent personnalisé à l’aide de la commande /agents."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_1_act_05_qcm_multiple",
+                  "question": {
+                    "en": "You've built a documentation-writer subagent. You want Claude to suggest using it whenever you finish writing a new function, without you having to ask.\n\nWhat is the most direct way to enable this behavior?",
+                    "fr": "You've built a documentation-writer subagent. You want Claude to suggest using it whenever you finish writing a new function, without you having to ask.\n\nWhat is the most direct way to enable this behavior?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Set model: inherit so the subagent always runs alongside the main conversation.",
+                        "fr": "Set model: inherit so the subagent always runs alongside the main conversation."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Add the word \"proactively\" to the subagent's `description` field.",
+                        "fr": "Add the word \"proactively\" to the subagent's `description` field."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Grant the subagent access to all available tool categories.",
+                        "fr": "Grant the subagent access to all available tool categories."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Change the subagent scope from Project to User so it is always available.",
+                        "fr": "Change the subagent scope from Project to User so it is always available."
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! Including \"proactively\" in the description signals to Claude that it should suggest or trigger this subagent on its own initiative, not just when you ask explicitly.",
+                    "fr": "Correct! Including \"proactively\" in the description signals to Claude that it should suggest or trigger this subagent on its own initiative, not just when you ask explicitly."
+                  },
+                  "hint": {
+                    "en": "The description field does more than describe what the subagent does — it also influences how Claude makes delegation decisions.",
+                    "fr": "The description field does more than describe what the subagent does — it also influences how Claude makes delegation decisions."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "datacamp_ch02",
+          "title": {
+            "en": "Designing and Using Effective Subagents",
+            "fr": "Designing and Using Effective Subagents"
+          },
+          "description": {
+            "en": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't.",
+            "fr": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't."
+          },
+          "competencyTags": [
+            "prompt_engineering",
+            "ai_development",
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch02_act01",
+              "title": {
+                "en": "Video: Designing effective subagents",
+                "fr": "Video: Designing effective subagents"
+              },
+              "description": {
+                "en": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't.",
+                "fr": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_01_video",
+                  "title": {
+                    "en": "Video: Designing effective subagents",
+                    "fr": "Video: Designing effective subagents"
+                  },
+                  "mp4Url": "/api/assets/ch02_ex01_video_designing_effective_subagents_93bc29a3.mp4",
+                  "subtitleUrlFr": "/api/assets/ch02_ex01_video_designing_effective_subagents_fr_9d490831.vtt",
+                  "subtitleUrlEn": "/api/assets/ch02_ex01_video_designing_effective_subagents_en_2b24ff98.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_55800c8f.pdf",
+                  "transcript": "1. Video: Designing effective subagents\nNow that you know how to create subagents, let's look at patterns that lead to effective subagents. First, let's get a better idea of how some of the data in the subagents config file is used. Whenever you send a message to the main context window agent, the name and description of each subagents is included in the system prompt. So, if you want to better control when the main agent launches a subagent automatically, you should modify the name and description. Next, remember that when a subagent is launched, the main agent writes an input prompt. When writing this input prompt, it uses the description as guidance. So, if you want to better control when the main agent launches a subagent automatically, you should modify the name and description. Let's consider our review subagent again. Right now, when the main agent runs this subagent, the subagent is given an input prompt telling it to use git diff to find the current changes. If we wanted the main agent to more reliably tell the subagent exactly which files to review, we would update the description. You must tell the agent precisely which files you want it to review. Now, if we ask Claude to run the code reviewer agent, we'll see a different input. You can also influence what the main thread tells a subagent through the description. So adding return sources that can be cited to a web search subagents description causes the main thread to include that instruction when delegating the task. The most important improvement that you can make is defining an output format in the system prompt. This creates natural stopping points for the subagents. Without a defined output format, subagents struggle to decide when enough research has been done and they tend to run much, much longer than subagents that are given an output format. When a subagent discovers a workaround to some issue like solving a dependency issue or finding that a certain command needs particular flags, these details should appear in the summary. Otherwise, the main thread has to rediscover the same solutions, obstacles encountered, any setup issues, workarounds discovered or environment quirks, commands that needed special flags or configuration, dependencies or imports that cause problems. Explicitly asking for obstacle reporting in the output format surfaces this information. A read-only subagents using just glob grep read cannot accidentally modify files. This constraint clarifies that the subagents role and prevents unintended side effects. So think about what subagents actually needs to do. If it's just researching it only needs to read files. So keep it read only. That way it can't accidentally modify anything while exploring. A reviewer needs to run git diff to see what changed, so give it bash access, but it still doesn't need to edit files. Only give edit and write to subagents that should actually change your code, like a styling agent applying CSS updates. This also helps clarify what each subagents is for when you have several of them.\n\n2. Let's practice!\nSo effective subagents use structured output report obstacles have specific descriptions and limit tool access.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Designing effective subagents",
+                      "text": "Now that you know how to create subagents, let's look at patterns that lead to effective subagents. First, let's get a better idea of how some of the data in the subagents config file is used. Whenever you send a message to the main context window agent, the name and description of each subagents is included in the system prompt. So, if you want to better control when the main agent launches a subagent automatically, you should modify the name and description. Next, remember that when a subagent is launched, the main agent writes an input prompt. When writing this input prompt, it uses the description as guidance. So, if you want to better control when the main agent launches a subagent automatically, you should modify the name and description. Let's consider our review subagent again. Right now, when the main agent runs this subagent, the subagent is given an input prompt telling it to use git diff to find the current changes. If we wanted the main agent to more reliably tell the subagent exactly which files to review, we would update the description. You must tell the agent precisely which files you want it to review. Now, if we ask Claude to run the code reviewer agent, we'll see a different input. You can also influence what the main thread tells a subagent through the description. So adding return sources that can be cited to a web search subagents description causes the main thread to include that instruction when delegating the task. The most important improvement that you can make is defining an output format in the system prompt. This creates natural stopping points for the subagents. Without a defined output format, subagents struggle to decide when enough research has been done and they tend to run much, much longer than subagents that are given an output format. When a subagent discovers a workaround to some issue like solving a dependency issue or finding that a certain command needs particular flags, these details should appear in the summary. Otherwise, the main thread has to rediscover the same solutions, obstacles encountered, any setup issues, workarounds discovered or environment quirks, commands that needed special flags or configuration, dependencies or imports that cause problems. Explicitly asking for obstacle reporting in the output format surfaces this information. A read-only subagents using just glob grep read cannot accidentally modify files. This constraint clarifies that the subagents role and prevents unintended side effects. So think about what subagents actually needs to do. If it's just researching it only needs to read files. So keep it read only. That way it can't accidentally modify anything while exploring. A reviewer needs to run git diff to see what changed, so give it bash access, but it still doesn't need to edit files. Only give edit and write to subagents that should actually change your code, like a styling agent applying CSS updates. This also helps clarify what each subagents is for when you have several of them."
+                    },
+                    {
+                      "heading": "2. Let's practice!",
+                      "text": "So effective subagents use structured output report obstacles have specific descriptions and limit tool access."
+                    }
+                  ]
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch02_slides",
+                  "title": {
+                    "en": "Chapter 2 slides",
+                    "fr": "Chapter 2 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Official course slides provided for this course."
+                  },
+                  "url": "/api/assets/chapter_02_slides_55800c8f.pdf",
+                  "filename": "chapter_02_slides.pdf"
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act02",
+              "title": {
+                "en": "Designing effective subagents",
+                "fr": "Designing effective subagents"
+              },
+              "description": {
+                "en": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't.",
+                "fr": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_2_act_02_qcm_multiple",
+                  "question": {
+                    "en": "Beyond deciding when to launch a subagent, what else does the main agent use the description field for?",
+                    "fr": "Beyond deciding when to launch a subagent, what else does the main agent use the description field for?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Setting the model that will power the subagent for this run.",
+                        "fr": "Setting the model that will power the subagent for this run."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Writing the input prompt it sends to the subagent when launching it.",
+                        "fr": "Writing the input prompt it sends to the subagent when launching it."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Determining which files the subagent is allowed to read.",
+                        "fr": "Determining which files the subagent is allowed to read."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Defining the structured output format the subagent will follow.",
+                        "fr": "Defining the structured output format the subagent will follow."
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct! The description has two jobs: it controls when the subagent  runs and shapes the input prompt the main agent writes when launching it.",
+                    "fr": "Correct ! La description a deux fonctions : elle détermine quand le sous-agent s’exécute et façonne le prompt d’entrée que l’agent principal rédige lorsqu’il le lance."
+                  },
+                  "hint": {
+                    "en": "When the main agent launches a subagent, it has to write an input prompt for it. Where does it look for guidance on what to include in that prompt?",
+                    "fr": "When the main agent launches a subagent, it has to write an input prompt for it. Where does it look for guidance on what to include in that prompt?"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act04",
+              "title": {
+                "en": "Video: Using subagents effectively",
+                "fr": "Video: Using subagents effectively"
+              },
+              "description": {
+                "en": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't.",
+                "fr": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_04_video",
+                  "title": {
+                    "en": "Video: Using subagents effectively",
+                    "fr": "Video: Using subagents effectively"
+                  },
+                  "mp4Url": "/api/assets/ch02_ex04_video_using_subagents_effectively_85b75935.mp4",
+                  "subtitleUrlFr": "/api/assets/ch02_ex04_video_using_subagents_effectively_fr_d03fbdef.vtt",
+                  "subtitleUrlEn": "/api/assets/ch02_ex04_video_using_subagents_effectively_en_fadaad5d.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_55800c8f.pdf",
+                  "transcript": "1. Video: Using subagents effectively\nYou know how to create subagents and design them well. Now let's cover when they actually help and when they get in the way. Simply put, the difference comes down to whether the intermediate work matters to your main thread. When exploration is separate from execution, subagents shine. When each step depends on what the previous step discovered, well, information gets lost in the handoff process. Subagents excel at research tasks where you just need an answer, not the journey. Consider investigating how authentication works in an unfamiliar codebase. Well, the main thread might need to know where is the JWT validated, but doesn't need to see every file that was searched. A research subagent can read dozens of files, trace through function calls, and explore different code paths. All that exploration stays in the subagent context. Your main thread receives JWT validation happens in middleware/offJS at line 42 called from the express router and route/API.js, or something like that. Claude reviews work more effectively when the code is presented as being authored by someone else. If you build a feature over many turns with your main thread, asking the main thread to then review it often doesn't give the best feedback. Claude was involved in creating it, so it has trouble seeing it with fresh eyes. A reviewer subagent sees the changes in a separate context. It runs git diff, reads the modified files, and applies its specialized review criteria without the history of how the code was written. And this separation also lets you encode project specific review standards in the subagents system prompt ensuring consistent review criteria across the team. Claude Code's default system prompt emphasizes concise code focused response and this works great for coding but not for everything. So one is a copywriting subagents with instructions about tone, audience and style. This will produce better marketing text than the main thread would. Claude Code's default prompt tends towards concise technical writing, which really isn't what you want for a landing page or email campaign, unless you want to put your customers to sleep. A copywriting subagent can have completely different instructions about voice and structure. A styling subagent that @ mentions your design system files will apply consistent CSS patterns. When the subagents runs, those files load into the context automatically. So, it knows your color variables, spacing conventions, and component patterns before it even starts writing any CSS. subagents that claim expertise rarely help. Prompts like you are a Python expert or you are a Kubernetes specialist add no value because Claude already has that knowledge. The overhead of launching a subagent, losing visibility into its work, and compressing its findings into a summary only makes sense when the subagent does something that the main thread can't, like applying a custom system prompt or keeping exploratory work isolated. Sequential subagent pipelines create problems. Consider a three agent flow. One to reproduce a bug, one to debug it, and one to fix it. Pipelines work when tasks are truly independent. They fail when each step depends on discoveries from the previous step. Test runner subagents tend to hide information you need. When tests fail, you want the full output to diagnose issues. A subagent that returns a test failed forces you to create additional debug scripts to get details that would have been visible in direct output. Testing has showed that the test runner pattern performed worse among all configurations. Across the series, we covered how subagents work as isolated threads that return summaries, how to create them with the /agents command, and how to design them with structured outputs and specific descriptions. Use them for research, reviews, and tasks needing custom system prompts, but avoid them for expert claims, multi-step pipelines, and test runners.\n\n2. Let's practice!\nThe key question, does the intermediate work matter? If not, then delegate it.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Using subagents effectively",
+                      "text": "You know how to create subagents and design them well. Now let's cover when they actually help and when they get in the way. Simply put, the difference comes down to whether the intermediate work matters to your main thread. When exploration is separate from execution, subagents shine. When each step depends on what the previous step discovered, well, information gets lost in the handoff process. Subagents excel at research tasks where you just need an answer, not the journey. Consider investigating how authentication works in an unfamiliar codebase. Well, the main thread might need to know where is the JWT validated, but doesn't need to see every file that was searched. A research subagent can read dozens of files, trace through function calls, and explore different code paths. All that exploration stays in the subagent context. Your main thread receives JWT validation happens in middleware/offJS at line 42 called from the express router and route/API.js, or something like that. Claude reviews work more effectively when the code is presented as being authored by someone else. If you build a feature over many turns with your main thread, asking the main thread to then review it often doesn't give the best feedback. Claude was involved in creating it, so it has trouble seeing it with fresh eyes. A reviewer subagent sees the changes in a separate context. It runs git diff, reads the modified files, and applies its specialized review criteria without the history of how the code was written. And this separation also lets you encode project specific review standards in the subagents system prompt ensuring consistent review criteria across the team. Claude Code's default system prompt emphasizes concise code focused response and this works great for coding but not for everything. So one is a copywriting subagents with instructions about tone, audience and style. This will produce better marketing text than the main thread would. Claude Code's default prompt tends towards concise technical writing, which really isn't what you want for a landing page or email campaign, unless you want to put your customers to sleep. A copywriting subagent can have completely different instructions about voice and structure. A styling subagent that @ mentions your design system files will apply consistent CSS patterns. When the subagents runs, those files load into the context automatically. So, it knows your color variables, spacing conventions, and component patterns before it even starts writing any CSS. subagents that claim expertise rarely help. Prompts like you are a Python expert or you are a Kubernetes specialist add no value because Claude already has that knowledge. The overhead of launching a subagent, losing visibility into its work, and compressing its findings into a summary only makes sense when the subagent does something that the main thread can't, like applying a custom system prompt or keeping exploratory work isolated. Sequential subagent pipelines create problems. Consider a three agent flow. One to reproduce a bug, one to debug it, and one to fix it. Pipelines work when tasks are truly independent. They fail when each step depends on discoveries from the previous step. Test runner subagents tend to hide information you need. When tests fail, you want the full output to diagnose issues. A subagent that returns a test failed forces you to create additional debug scripts to get details that would have been visible in direct output. Testing has showed that the test runner pattern performed worse among all configurations. Across the series, we covered how subagents work as isolated threads that return summaries, how to create them with the /agents command, and how to design them with structured outputs and specific descriptions. Use them for research, reviews, and tasks needing custom system prompts, but avoid them for expert claims, multi-step pipelines, and test runners."
+                    },
+                    {
+                      "heading": "2. Let's practice!",
+                      "text": "The key question, does the intermediate work matter? If not, then delegate it."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act05",
+              "title": {
+                "en": "Using subagents effectively",
+                "fr": "Using subagents effectively"
+              },
+              "description": {
+                "en": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't.",
+                "fr": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_2_act_05_qcm_multiple",
+                  "question": {
+                    "en": "Why will a reviewer subagent likely produce sharper feedback than asking your main thread to review the same code?",
+                    "fr": "Why will a reviewer subagent likely produce sharper feedback than asking your main thread to review the same code?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "The reviewer subagent is powered by a more capable model with stronger analytical skills.",
+                        "fr": "The reviewer subagent is powered by a more capable model with stronger analytical skills."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "The reviewer subagent runs git diff to find changes, which the main thread cannot do.",
+                        "fr": "The reviewer subagent runs git diff to find changes, which the main thread cannot do."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "The reviewer subagent starts in a fresh context with no memory of how the code was written, so it evaluates it without the bias of having helped create it.",
+                        "fr": "Le sous-agent de revue démarre dans un contexte vierge, sans souvenir de la manière dont le code a été écrit ; il l’évalue donc sans le biais d’avoir contribué à sa création."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "The main thread's context window fills up during long coding sessions and can no longer analyze new code accurately.",
+                        "fr": "The main thread's context window fills up during long coding sessions and can no longer analyze new code accurately."
+                      }
+                    }
+                  ],
+                  "correctAnswers": "c",
+                  "explanation": {
+                    "en": "Correct! A reviewer subagent sees only the finished diff, no  authoring history, so it evaluates the code without the bias of having helped write it.",
+                    "fr": "Correct! A reviewer subagent sees only the finished diff, no  authoring history, so it evaluates the code without the bias of having helped write it."
+                  },
+                  "hint": {
+                    "en": "Think about what Claude knows about the code on the main thread versus what a reviewer subagent knows about how that code came to exist.",
+                    "fr": "Think about what Claude knows about the code on the main thread versus what a reviewer subagent knows about how that code came to exist."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act06",
+              "title": {
+                "en": "Delegate or keep on the main thread?",
+                "fr": "Delegate or keep on the main thread?"
+              },
+              "description": {
+                "en": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't.",
+                "fr": "Apply four design patterns to build subagents that stay focused and finish on time, then learn which tasks are worth delegating: research, code reviews, and custom prompts; and which ones aren't."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "bucket_sort",
+                  "id": "dc_2_act_06_bucket_sort",
+                  "title": {
+                    "en": "Delegate or keep on the main thread?",
+                    "fr": "Delegate or keep on the main thread?"
+                  },
+                  "instructions": {
+                    "en": "Drag each scenario into the right bin: Delegate to a subagent or Keep on the main thread.",
+                    "fr": "Drag each scenario into the right bin: Delegate to a subagent or Keep on the main thread."
+                  },
+                  "buckets": [
+                    {
+                      "id": "delegate",
+                      "label": {
+                        "en": "Delegate to a subagent",
+                        "fr": "Delegate to a subagent"
+                      }
+                    },
+                    {
+                      "id": "keep",
+                      "label": {
+                        "en": "Keep on the main thread",
+                        "fr": "Keep on the main thread"
+                      }
+                    }
+                  ],
+                  "cards": [
+                    {
+                      "id": "delegate_1",
+                      "text": {
+                        "en": "Find where JWT validation happens in this unfamiliar repo",
+                        "fr": "Find where JWT validation happens in this unfamiliar repo"
+                      },
+                      "correctBucket": "delegate"
+                    },
+                    {
+                      "id": "delegate_2",
+                      "text": {
+                        "en": "Review my PR against the team's review checklist",
+                        "fr": "Review my PR against the team's review checklist"
+                      },
+                      "correctBucket": "delegate"
+                    },
+                    {
+                      "id": "delegate_3",
+                      "text": {
+                        "en": "Write landing-page copy in our brand voice",
+                        "fr": "Write landing-page copy in our brand voice"
+                      },
+                      "correctBucket": "delegate"
+                    },
+                    {
+                      "id": "keep_1",
+                      "text": {
+                        "en": "Run the test suite and tell me what's failing so I can fix it",
+                        "fr": "Run the test suite and tell me what's failing so I can fix it"
+                      },
+                      "correctBucket": "keep"
+                    },
+                    {
+                      "id": "keep_2",
+                      "text": {
+                        "en": "Reproduce a bug, then debug it, then fix it, across three handoffs",
+                        "fr": "Reproduce a bug, then debug it, then fix it, across three handoffs"
+                      },
+                      "correctBucket": "keep"
+                    },
+                    {
+                      "id": "keep_3",
+                      "text": {
+                        "en": "Use a \"Python expert\" to help write a list comprehension",
+                        "fr": "Use a \"Python expert\" to help write a list comprehension"
+                      },
+                      "correctBucket": "keep"
+                    }
+                  ],
+                  "feedback": {
+                    "en": "Nice triage. The rule that ties them all together: **does the intermediate work matter?** When you only need the answer, delegate. When you need to see every step (the failing test output, the debug trace, the bug-fix reasoning), stay on the main thread.",
+                    "fr": "Bon triage. La règle qui les relie tous : **le travail intermédiaire est-il important ?** Lorsque vous n’avez besoin que de la réponse, déléguez. Lorsque vous devez voir chaque étape (la sortie du test en échec, la trace de débogage, le raisonnement de correction du bug), restez dans le fil principal."
+                  },
+                  "hint": {
+                    "en": "Delegate for: research, code review, and tasks that need a custom system prompt.\n\nKeep on the main thread: expert-persona prompts, sequential pipelines, and test runners.",
+                    "fr": "Déléguez pour : la recherche, la revue de code et les tâches qui nécessitent un prompt système personnalisé.\n\nGardez dans le fil principal : les prompts de persona experte, les pipelines séquentiels et les exécuteurs de tests."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "lessonCount": 2,
+      "chapterCount": 9,
+      "totalActivities": 9,
+      "exerciseCount": 5,
+      "videoCount": 4,
+      "downloadCount": 2
+    }
+  },
+  "review_protocol": {
+    "scope": "Current learner-visible course data only. Do not use external sources and do not modify course data.",
+    "rating": "P0 blocks a learner or makes the assessment invalid; P1 materially impairs learner success, correctness or progression; P2 is a clear pedagogical/UX weakness; P3 is minor.",
+    "resource_policy": "An activity requiring unavailable files, data or environment is invalid unless it was removed and its explanatory content remains.",
+    "progression_policy": "A required gate must have a rendered, answerable and verifiably evaluated activity. Informational content must not retain a phantom gate.",
+    "media_policy": "One video maximum per chapter; local/video sources need a usable URL and learner context.",
+    "output_schema": "Write a normalized recheck report: formation_id, index, course_ids, reviewed_current_state:true, findings:[{severity:P0|P1|P2|P3,status:open|fixed|false_positive, title, evidence, course_id, chapter_id?}]."
+  }
+}

@@ -4,165 +4,100 @@
   "course_ids": [
     "intermediate_workflow_automation_with_n8n__01"
   ],
-  "review_scope": {
-    "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
-    "course_paths": [
-      "/home/ubuntu/neopolis-akademy/client/public/data/courses/intermediate_workflow_automation_with_n8n__01.json"
-    ],
-    "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/043-datacamp_intermediate_workflow_automation_with_n8n.json",
-    "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
-    "current_state_reviewed": "course JSON inspected; 4 lessons and 35 current chapters enumerated; video metadata, TP resources/gates, bilingual fields, and current structural IDs compared",
-    "criteria": [
-      "objectifs et activités",
-      "faisabilité TP/fichiers/environnement",
-      "fausses soumissions ou gates",
-      "médias/téléchargements",
-      "duplications ou corruption",
-      "rendu/bilinguisme"
-    ]
-  },
   "reviewed_current_state": true,
   "findings": [
     {
       "severity": "P1",
-      "category": "intégrité_structurelle_et_activités",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "datacampImport.expected.activities_expected_from_outline; lessons[*].chapters",
-      "description": "Le JSON courant déclare 35 chapitres alors que datacampImport.expected.activities_expected_from_outline vaut 40. Les chapter_id attendus dans le rapport initial mais absents du JSON courant sont: dc_ch01_act06, dc_ch01_act07, dc_ch01_act09, dc_ch01_act10, dc_ch04_act09. Les TP correspondants ne peuvent donc pas être réalisés ni évalués dans l’état courant.",
-      "recommendation": "Vérifier la source de génération et restaurer ou documenter explicitement ces activités avant de considérer la formation complète ; vérifier en particulier les ressources et gates de ces TP sans les inventer.",
-      "status": "open"
+      "status": "open",
+      "title": "Cinq activités attendues ont été retirées sans explication conservée",
+      "evidence": "current_courses...datacampImport.expected.activities_expected_from_outline vaut 40, tandis que chapterCount vaut 35. Les identifiants absents de lessons[].chapters sont dc_ch01_act06, dc_ch01_act07, dc_ch01_act09, dc_ch01_act10 et dc_ch04_act09. La seule remediation actuelle est celle de dc_ch04_act04 (reason=activity_removed_unverifiable_or_incomplete_source, sourcePreserved=true) ; le bundle ne conserve aucune explication de retrait pour les cinq activités absentes.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01"
     },
     {
       "severity": "P1",
-      "category": "objectifs_et_progression",
+      "status": "open",
+      "title": "Les quatre leçons ne déclarent toujours aucun objectif pédagogique",
+      "evidence": "Dans current_courses...lessons[0], lessons[1], lessons[2] et lessons[3], description vaut exactement {\"en\":\"\",\"fr\":\"\"}. Les titres et les consignes d’activités ne constituent pas un objectif de leçon déclaré dans les données courantes.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01"
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "title": "Le TP météo ne fournit pas la cible de la requête HTTP demandée",
+      "evidence": "dc_ch02_act02 demande d’« ajouter HTTP Request pour récupérer les données météo de Stockholm ». Sa seule ressource est /api/assets/courses/datacamp/intermediate-n8n/synthetic-data/stockholm_weather_680a1cb1.json, décrite comme une réponse JSON synthétique. Le bloc ne déclare aucune URL d’API ni modalité de simulation de la requête, alors que requiredBeforeAdvance=true.",
       "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[0].description, lessons[1].description, lessons[2].description, lessons[3].description",
-      "description": "Les quatre descriptions de leçon sont des chaînes vides en français et en anglais. Le contenu contient des consignes d’activité, mais aucun objectif de leçon n’est déclaré à cet emplacement.",
-      "recommendation": "Déclarer pour chaque leçon des objectifs bilingues observables et alignés sur les activités ; ne pas déduire ces objectifs du seul titre.",
-      "status": "open"
+      "chapter_id": "dc_ch02_act02"
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "title": "Le pack Berlin annoncé ne correspond pas à la ressource déclarée",
+      "evidence": "dc_ch02_act03 annonce le pack « météo Berlin », demande de charger le workflow associé et de remplacer la ville par Berlin. resources ne contient qu’un fichier intitulé « Données synthétiques — météo Stockholm », URL .../stockholm_weather_680a1cb1.json, décrit comme une réponse Stockholm ; aucun workflow ni jeu Berlin n’est déclaré. Le chapitre est requiredBeforeAdvance=true.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01",
+      "chapter_id": "dc_ch02_act03"
+    },
+    {
+      "severity": "P0",
+      "status": "open",
+      "title": "Le TP de lecture JavaScript exige un workflow Code non fourni",
+      "evidence": "dc_ch02_act05 ordonne d’ouvrir le workflow du pack, de l’exécuter sans modifier le nœud Code, puis d’en examiner entrée et sortie. Sa seule ressource déclarée est « Données synthétiques — météo Stockholm » ; aucun export de workflow ni code initial n’est déclaré. Le bloc est requiredBeforeAdvance=true.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01",
+      "chapter_id": "dc_ch02_act05"
+    },
+    {
+      "severity": "P0",
+      "status": "open",
+      "title": "Le TP de lecture Python exige un workflow Code non fourni",
+      "evidence": "dc_ch02_act06 demande d’ouvrir puis d’exécuter sans le modifier un workflow contenant Python Code et la séparation « Is Valid? ». resources ne contient que « Données synthétiques — validation de villes » ; aucun workflow, code Python initial ni configuration de séparation n’est déclaré. Le bloc est requiredBeforeAdvance=true.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01",
+      "chapter_id": "dc_ch02_act06"
+    },
+    {
+      "severity": "P0",
+      "status": "open",
+      "title": "Le TP de sous-workflow partagé annonce deux workflows absents de ses ressources",
+      "evidence": "dc_ch03_act09 demande d’ouvrir « le workflow principal et le sous-workflow du pack Neopolis ». Son unique ressource est « Données synthétiques — commandes à router », décrite comme des commandes JSON destinées à tester des sous-workflows construits par l’apprenant ; aucun workflow principal ni sous-workflow partagé n’est déclaré. Le bloc est requiredBeforeAdvance=true.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01",
+      "chapter_id": "dc_ch03_act09"
+    },
+    {
+      "severity": "P0",
+      "status": "open",
+      "title": "Le TP de routage vers deux calculateurs ne fournit pas les calculateurs annoncés",
+      "evidence": "dc_ch03_act10 demande d’enregistrer « les deux workflows calculateurs du pack Neopolis » et de les sélectionner dans deux nœuds Execute Sub-workflow. Sa seule ressource est « Données synthétiques — commandes à router », dont la description ne fournit que des commandes. Aucun export ni définition des deux calculateurs n’est déclaré ; le bloc est requiredBeforeAdvance=true.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01",
+      "chapter_id": "dc_ch03_act10"
+    },
+    {
+      "severity": "P0",
+      "status": "open",
+      "title": "Le TP de supervision réclame deux workflows absents de ses ressources",
+      "evidence": "dc_ch04_act03 annonce les packs « workflow fragile » et « surveillance des erreurs », puis demande d’activer le second comme Error Workflow du premier. resources ne contient que « Données synthétiques — événements d’erreur », décrite comme des événements de workflow. Aucun workflow fragile ni workflow de surveillance n’est déclaré ; le bloc est requiredBeforeAdvance=true.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01",
+      "chapter_id": "dc_ch04_act03"
+    },
+    {
+      "severity": "P0",
+      "status": "open",
+      "title": "Le TP de journalisation exige un workflow à checkpoints non fourni",
+      "evidence": "dc_ch04_act06 annonce le pack « workflow avec checkpoints » et demande des insertions après HTTP Request, Transform Data et Format Output. Sa seule ressource est « Données synthétiques — ingestion multi-étapes », décrite comme des enregistrements synthétiques ; elle ne déclare ni workflow ni les trois étapes préexistantes. Le bloc est requiredBeforeAdvance=true.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01",
+      "chapter_id": "dc_ch04_act06"
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "title": "Le TP d’évaluation annonce des sorties à évaluer mais joint des données de checkpoints",
+      "evidence": "dc_ch04_act07 annonce le pack « sorties à évaluer », puis demande un calcul de pass et de problèmes. Son unique ressource est « Données synthétiques — ingestion multi-étapes », décrite pour observer les checkpoints HTTP Request, Transform Data et Format Output. Le bundle ne déclare aucun jeu de sorties à évaluer ni les valeurs pass/problèmes attendues ; le bloc est requiredBeforeAdvance=true.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01",
+      "chapter_id": "dc_ch04_act07"
     },
     {
       "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[0].chapters[0].blocks[0] (chapter_id=dc_ch01_act01, content_id=dc_1_act_01_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[0].chapters[4].blocks[0] (chapter_id=dc_ch01_act05, content_id=dc_1_act_05_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[0].chapters[5].blocks[0] (chapter_id=dc_ch01_act08, content_id=dc_1_act_08_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[1].chapters[0].blocks[0] (chapter_id=dc_ch02_act01, content_id=dc_2_act_01_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[1].chapters[3].blocks[0] (chapter_id=dc_ch02_act04, content_id=dc_2_act_04_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[1].chapters[7].blocks[0] (chapter_id=dc_ch02_act08, content_id=dc_2_act_08_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[2].chapters[0].blocks[0] (chapter_id=dc_ch03_act01, content_id=dc_3_act_01_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[2].chapters[3].blocks[0] (chapter_id=dc_ch03_act04, content_id=dc_3_act_04_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[2].chapters[7].blocks[0] (chapter_id=dc_ch03_act08, content_id=dc_3_act_08_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[3].chapters[0].blocks[0] (chapter_id=dc_ch04_act01, content_id=dc_4_act_01_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[3].chapters[4].blocks[0] (chapter_id=dc_ch04_act05, content_id=dc_4_act_05_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[3].chapters[7].blocks[0] (chapter_id=dc_ch04_act08, content_id=dc_4_act_08_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
-    },
-    {
-      "severity": "P2",
-      "category": "média_accessibilité",
-      "course_id": "intermediate_workflow_automation_with_n8n__01",
-      "location": "lessons[3].chapters[8].blocks[0] (chapter_id=dc_ch04_act10, content_id=dc_4_act_10_video)",
-      "description": "Le bloc vidéo obligatoire dispose d’un objectifBefore bilingue, mais transcript est vide et questionsAfter est absent ; aucune alternative textuelle rendable ni activité de réinvestissement n’est déclarée dans le bloc.",
-      "recommendation": "Fournir une transcription ou alternative textuelle validée et une activité de réinvestissement liée au contenu réellement visible ; conserver l’objectifBefore existant.",
-      "status": "open"
+      "status": "fixed",
+      "title": "Les défauts antérieurs de contexte vidéo sont corrigés",
+      "evidence": "Les 13 blocs vidéo actuels (dc_1_act_01_video à dc_4_act_10_video) possèdent chacun un mp4Url local non vide et un objectiveBefore bilingue. Ils satisfont donc le media_policy actuel du bundle : URL utilisable et contexte apprenant ; aucune autre exigence de transcription ou de questions n’y est définie.",
+      "course_id": "intermediate_workflow_automation_with_n8n__01"
     }
-  ],
-  "summary": {
-    "issue_count": 15,
-    "p0": 0,
-    "p1": 2,
-    "p2": 13
-  }
+  ]
 }

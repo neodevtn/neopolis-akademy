@@ -2,83 +2,92 @@
   "formation_id": "claude_certified_architect_foundations",
   "index": 8,
   "course_ids": [
-    "claude_certified_architect_foundations__01",
-    "claude_certified_architect_foundations__02",
-    "claude_certified_architect_foundations__03",
-    "claude_certified_architect_foundations__04",
-    "claude_certified_architect_foundations__05",
-    "claude_certified_architect_foundations__06",
-    "claude_certified_architect_foundations__07"
-  ],
-  "review_scope": [
-    "État courant des sept payloads client/public/data/courses/claude_certified_architect_foundations__01.json à __07.json",
-    "Correctif scripts/remediate-priority-courses.mts, lu sans exécution modifiante",
-    "Règles de progression client/src/pages/training/chapterProgress.ts et rendu/verrouillage dans client/src/pages/training/LessonViewer.tsx",
-    "Rapport historique remplacé : pedagogical-audit/recheck/008-claude_certified_architect_foundations.json",
-    "Contrôles : checkpoints et clés de correction, références d'exercices, portes de progression orphelines, écrans multi-vidéos, métadonnées/URL de médias et téléchargements, contenu CSS/JavaScript sérialisé, et doublons exacts d'écrans/blocs"
+    "claude_certified_architect_foundations__01"
   ],
   "reviewed_current_state": true,
   "findings": [
     {
-      "severity": "P0",
-      "category": "checkpoint_non_verifiable",
-      "course_id": "claude_certified_architect_foundations__01",
-      "location": "exercises et lessons[0..14].chapters[*].blocks[*] des payloads __01 à __07 ; server/architectFoundationsCorrectionRegistry.ts ; server/architectFoundationsCheckpointService.ts",
-      "description": "Les 87 identifiants de checkpoints free_text signalés dans le rapport historique sont absents des sept payloads actuels. Les cours __02 à __07 ne contiennent plus ni exercice ni bloc checkpoint. Dans __01, les 19 exercices free_text restants ne sont référencés par aucun bloc checkpoint et le seul checkpoint publié (lessons[13].chapters[0].blocks[2]) est un single_choice ex_ai_fluency_certificate_completion avec la clé serveur correctOptionIds=[\"b\"]. Le service ferme désormais l'échec en l'absence de clé de sélection.",
-      "recommendation": "Conserver le retrait des checkpoints textuels non machine-évaluables et n'ajouter une porte checkpoint qu'avec une clé serveur vérifiable et un test associé.",
-      "status": "fixed"
-    },
-    {
       "severity": "P1",
-      "category": "porte_de_progression_fantome",
+      "status": "open",
+      "title": "Cohérence académique rompue entre la formation d’architecte annoncée et le parcours publié",
+      "evidence": "formation.formation_title est « Claude Certified Architect – Fondations », tandis que current_courses.claude_certified_architect_foundations__01.sourceCourseTitle est « AI Fluency: Framework & Foundations ». Le chapitre lesson_01/chapter_01_1 annonce « Architecture Fundamentals » et une certification, mais l’unique contenu pédagogique de cette leçon porte sur « A closer look at Delegation » et le parcours publié est structuré autour des 4D d’AI Fluency. Le bundle ne fournit aucun contenu, objectif ou évaluation spécifique à l’architecture Claude permettant de rendre cette promesse cohérente.",
       "course_id": "claude_certified_architect_foundations__01",
-      "location": "lessons[13].chapters[0] ; client/src/pages/training/chapterProgress.ts ; client/src/pages/training/LessonViewer.tsx",
-      "description": "Aucune règle requiredExercisesPassed ni aucun champ requiredExercisesPassed ne reste sans bloc d'évaluation correspondant dans les sept cours. L'unique règle restante, dans chapter_certificate_completion de __01, cible le checkpoint single_choice vérifiable. Les règles de navigation ne verrouillent que les types de blocs réellement présents et le correctif retire explicitement la règle lors du retrait d'un checkpoint.",
-      "recommendation": "Lors de tout retrait futur de bloc évaluatif, conserver ce contrôle d'orphelin de completionRule/requiredExercisesPassed dans la validation de données.",
-      "status": "fixed"
+      "chapter_id": "chapter_01_1"
     },
     {
       "severity": "P2",
-      "category": "media_video_supplementaire",
+      "status": "open",
+      "title": "Activité de réflexion annoncée avec un champ de réponse inexistant",
+      "evidence": "current_courses.claude_certified_architect_foundations__01.lessons[0].chapters[1] (chapter_02) demande de répondre « In the response field below » / « Dans le champ de réponse ci-dessous » et indique « Complete it before continuing ». Ses seuls blocs sont callout, content et download ; il n’y a ni bloc checkpoint, ni exercice référencé. La liste course.exercises ne contient qu’un single_choice rattaché à chapter_certificate_completion, pas à chapter_02. L’activité demandée ne peut donc pas être réalisée dans l’interface publiée.",
       "course_id": "claude_certified_architect_foundations__01",
-      "location": "lessons[0].chapters[*] ; scripts/remediate-priority-courses.mts:112-128",
-      "description": "Les six écrans de tutoriels Neopolis non contextualisés visés par le correctif (chapter_03 et chapter_03_video_2 à chapter_03_video_6) ne sont plus publiés. Les 11 vidéos restantes de __01 sont sur des écrans distincts ; l'inventaire des sept cours ne comporte aucun écran avec plus d'une vidéo. Les métadonnées des vidéos publiées portent une URL YouTube et une provenance/test de média.",
-      "recommendation": "Préserver la règle d'un média vidéo par écran et exiger une contextualisation pédagogique complète avant toute réintroduction d'un complément non officiel.",
-      "status": "fixed"
+      "chapter_id": "chapter_02"
     },
     {
       "severity": "P2",
-      "category": "telechargement_non_contextualise",
-      "course_id": "claude_certified_architect_foundations__02",
-      "location": "lessons[*].chapters[*].blocks[type=download] ; scripts/remediate-priority-courses.mts:129-140",
-      "description": "La leçon limitée au fichier 001_tools_008.ipynb a été retirée. Les 142 téléchargements encore publiés dans les sept cours possèdent chacun une download_url /api/assets/... consommée par LessonViewer ; aucun bloc download actuel n'est sans URL de rendu. Les données ne prouvent donc aucun téléchargement corrompu ou écran de téléchargement seul résiduel.",
-      "recommendation": "Maintenir une URL d'asset publiée et une description exploitable pour chaque futur téléchargement ; vérifier l'asset proxy au déploiement.",
-      "status": "fixed"
+      "status": "open",
+      "title": "Promesse locale d’exercices interactifs, checkpoints et quiz non tenue",
+      "evidence": "Dans current_courses.claude_certified_architect_foundations__01.lessons[5].chapters[0] (chapter_01_1), le texte annonce « Interactive exercises », « Checkpoints » et « A quiz at the end ». Cette leçon lesson_01 ne publie pourtant que quatre chapitres : content ; content/video/transcript ; content ; content/download/download. Aucun de ces chapitres ne contient checkpoint ni exercice, et le seul checkpoint de course.exercises est dans lesson_ai_fluency_certificate/chapter_certificate_completion. L’orientation et les interactions annoncées pour ce module ne correspondent donc pas au parcours effectivement rendu.",
+      "course_id": "claude_certified_architect_foundations__01",
+      "chapter_id": "chapter_01_1"
     },
     {
       "severity": "P2",
-      "category": "contenu_corrompu",
-      "course_id": "claude_certified_architect_foundations__05",
-      "location": "lessons[*].chapters[*] ; scripts/remediate-priority-courses.mts:141-159",
-      "description": "Les chapitres historiques « Exercise: Connecting your tools » et « Exercise: Enterprise search », qui contenaient des fragments CSS/JavaScript sérialisés, ne sont plus dans le payload actuel. Le contrôle des sept JSON ne relève plus de balise style/script ni de fragment CSS/JavaScript sérialisé dans le contenu publié.",
-      "recommendation": "Conserver une détection de sérialisation de code lors de l'import de contenu et retirer plutôt que réécrire sans source un chapitre corrompu.",
-      "status": "fixed"
+      "status": "open",
+      "title": "Appels répétés à déposer un retour sans canal utilisable",
+      "evidence": "Les contenus de lesson_09/chapter_01_lesson_4_2, lesson_08/chapter_01_lesson_9_2, lesson_04/chapter_01_lesson_10_2, lesson_13/chapter_01_lesson_11_2, lesson_03/chapter_01_lesson_12_2 et lesson_05/chapter_01_lesson_15_2 affichent « Share your feedback here » (et, lorsqu’elle est présente, la traduction « Partagez vos commentaires ici »). Dans chacun de ces chapitres, les blocs publiés sont uniquement content avec éventuellement video, transcript ou flip_cards : le texte ne porte aucun lien Markdown et aucun bloc de formulaire, de feedback ou de checkpoint n’est fourni. L’action annoncée est donc inexécutable.",
+      "course_id": "claude_certified_architect_foundations__01"
     },
     {
       "severity": "P3",
-      "category": "doublon_ecran",
-      "course_id": "claude_certified_architect_foundations__03",
-      "location": "lessons[*].chapters[*].blocks[*] des payloads __01 à __07",
-      "description": "Aucun doublon exact de chapitre, de bloc complet ou de corps de contenu n'est présent dans l'état actuel. Quelques noms de fichiers de téléchargement sont réemployés dans des leçons différentes, sans constituer un écran dupliqué ni une activité bloquante dupliquée.",
-      "recommendation": "Aucune correction requise ; conserver le contrôle par empreinte de chapitre/bloc dans les revues de publication.",
-      "status": "false_positive"
+      "status": "open",
+      "title": "Téléchargement annoncé sans description pédagogique",
+      "evidence": "Dans lesson_12/chapter_02_lesson_3_2, le bloc download « Framework_for_AI_Fluency_V_1.5.pdf » a bien download_url=/api/assets/03_Framework_for_AI_Fluency_V_1.5_109d82cc.pdf et des assetMeta, mais son champ description est la chaîne vide. La ressource est accessible, mais son rôle et son usage ne sont pas expliqués à l’apprenant dans le bloc de téléchargement.",
+      "course_id": "claude_certified_architect_foundations__01",
+      "chapter_id": "chapter_02_lesson_3_2"
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "title": "Checkpoint obligatoire désormais référencé et à choix unique",
+      "evidence": "L’état courant ne publie qu’un seul bloc checkpoint : lesson_ai_fluency_certificate/chapter_certificate_completion, avec exerciseId=ex_ai_fluency_certificate_completion. Cet exercice est required=true, interactionType=single_choice, comporte quatre options et serverCorrectionRequired=true. La règle de chapitre requires=[requiredExercisesPassed] cible donc une activité rendue et répondable ; les anciens checkpoints free_text ne figurent plus dans current_courses.",
+      "course_id": "claude_certified_architect_foundations__01",
+      "chapter_id": "chapter_certificate_completion"
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "title": "Aucune porte de progression orpheline détectée dans l’état actuel",
+      "evidence": "Les leçons utilisent requires=[allChaptersComplete] et les chapitres pédagogiques requires=[contentViewed]. L’unique règle requires=[requiredExercisesPassed] est celle de chapter_certificate_completion, qui contient le checkpoint lié à l’exercice obligatoire ex_ai_fluency_certificate_completion. Aucun autre chapitre ne conserve cette règle ni une référence requiredExercisesPassed sans activité associée.",
+      "course_id": "claude_certified_architect_foundations__01",
+      "chapter_id": "chapter_certificate_completion"
+    },
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "title": "Médias vidéo publiés avec URL, contexte et un seul média par chapitre",
+      "evidence": "Le cours actuel contient 11 blocs video dans 11 chapitres distincts. Chaque bloc comporte watchUrl et embedUrl YouTube, mediaMeta et objectiveBefore ; chaque videoId est associé à un bloc transcript dans le même chapitre. Aucun chapitre courant ne contient plus d’un bloc video.",
+      "course_id": "claude_certified_architect_foundations__01"
+    },
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "title": "Ressources téléchargeables rendues accessibles ; retrait documenté de l’ancienne leçon isolée",
+      "evidence": "Les 14 blocs download actuellement publiés dans le seul cours courant possèdent tous un download_url /api/assets/..., y compris les ressources de chapter_02, chapter_02_lesson_3_2 et les synthèses des 4D. La previous_recheck incluse dans le bundle documente le retrait de la leçon limitée à 001_tools_008.ipynb ; elle n’est plus présente dans current_courses et ne bloque plus la progression.",
+      "course_id": "claude_certified_architect_foundations__01"
+    },
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "title": "Aucun contenu CSS ou JavaScript sérialisé ne reste publié",
+      "evidence": "Le contrôle du payload current_courses ne relève aucune occurrence de <style, <script, function(, =>, className ou background-color dans le contenu publié. Les chapitres historiques signalés par previous_recheck comme contenant des fragments CSS/JavaScript ne font pas partie du cours courant.",
+      "course_id": "claude_certified_architect_foundations__01"
+    },
+    {
+      "severity": "P3",
+      "status": "false_positive",
+      "title": "Absence de doublon d’écran démontrée dans le cours actuellement publié",
+      "evidence": "La comparaison des 33 blocs content actuels ne trouve aucun corps bilingue identique, et aucun chapitre n’est dupliqué à l’identique. Les noms de ressources de synthèse éventuellement proches désignent des formats distincts (8.5x11 ou 16x9), sans écran répété ni activité redondante bloquante.",
+      "course_id": "claude_certified_architect_foundations__01"
     }
-  ],
-  "summary": {
-    "issue_count": 6,
-    "p0": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1
-  }
+  ]
 }

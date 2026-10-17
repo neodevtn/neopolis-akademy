@@ -6,18 +6,25 @@ const auditDir = path.join(root, "pedagogical-audit");
 const baselinePath = path.join(auditDir, "07-audit-data.json");
 const currentPath = path.join(auditDir, "static-audit-data.json");
 const remediationPath = path.join(auditDir, "p0-p2-remediation-manifest.json");
+const earlierRemediationPath = path.join(auditDir, "remediation-manifest.json");
+const staticRemediationPath = path.join(auditDir, "static-p0-p1-remediation-manifest.json");
+const orphanCheckpointPath = path.join(auditDir, "orphan-checkpoint-manifest.json");
 const coursesDir = path.join(root, "client/public/data/courses");
 const outputJson = path.join(auditDir, "08-counter-audit-progress.json");
 const outputMd = path.join(auditDir, "08-counter-audit-progress.md");
 const traceOutput = path.join(auditDir, "08-counter-audit-trace-required.json");
 
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
+const readOptionalJson = (file) => fs.existsSync(file) ? readJson(file) : {};
 const percent = (part, total) => total === 0 ? 100 : Math.round((part / total) * 10_000) / 100;
 const markdown = (value) => String(value ?? "").replaceAll("|", "\\|").replaceAll("\n", " ");
 
 const baseline = readJson(baselinePath);
 const current = readJson(currentPath);
 const remediation = readJson(remediationPath);
+const earlierRemediation = readOptionalJson(earlierRemediationPath);
+const staticRemediation = readOptionalJson(staticRemediationPath);
+const orphanCheckpointRemediation = readOptionalJson(orphanCheckpointPath);
 
 const courseChapters = new Map();
 for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith(".json"))) {
@@ -27,7 +34,35 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
   ));
 }
 
-const removals = new Map((remediation.convertedActivities || []).map((entry) => [`${entry.courseId}:${entry.chapterId}`, entry]));
+const documentedRemovals = [];
+const registerRemoval = (entry, source, reason) => {
+  if (!entry?.courseId || !entry?.chapterId) return;
+  documentedRemovals.push({
+    courseId: entry.courseId,
+    chapterId: entry.chapterId,
+    reason: entry.reason || reason,
+    source,
+  });
+};
+
+for (const entry of remediation.convertedActivities || []) {
+  registerRemoval(entry, "p0-p2-remediation", "activité retirée faute de ressource ou de correction vérifiable");
+}
+for (const entry of earlierRemediation.changedBlocks || []) {
+  registerRemoval(entry, "initial-remediation", "activité retirée faute de ressource ou de correction vérifiable");
+}
+for (const entry of staticRemediation.removedUnverifiableCheckpoints || []) {
+  registerRemoval(entry, "static-p0-p1-remediation", "checkpoint libre retiré sans correction machine-vérifiable");
+}
+for (const entry of orphanCheckpointRemediation.removed || []) {
+  registerRemoval(entry, "orphan-checkpoint-remediation", "checkpoint orphelin retiré sans activité de réponse fiable");
+}
+
+const removals = new Map();
+for (const entry of documentedRemovals) {
+  const key = `${entry.courseId}:${entry.chapterId}`;
+  if (!removals.has(key)) removals.set(key, entry);
+}
 const baselineIssues = [];
 const formationRows = [];
 
@@ -129,7 +164,7 @@ const report = {
   severity: severityRows,
   categories: categoryRows,
   formationProgress: formationRows.sort((a, b) => b.issues - a.issues || a.formationId.localeCompare(b.formationId)),
-  documentedActivityRemovals: remediation.convertedActivities || [],
+  documentedActivityRemovals: [...removals.values()],
   traceRequired,
   limitations: [
     "Le contrôle courant démontre l’absence de violation dans les règles structurelles actuelles ; il ne prouve pas à lui seul la qualité factuelle des vidéos, l’accès aux services tiers ou le rendu avec un compte apprenant réel.",
