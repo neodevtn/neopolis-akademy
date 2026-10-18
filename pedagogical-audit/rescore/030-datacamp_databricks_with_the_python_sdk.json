@@ -1,0 +1,115 @@
+{
+  "formation_id": "datacamp_databricks_with_the_python_sdk",
+  "index": 30,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch01_act01",
+      "score_100": 75,
+      "justification": "Écran introductif riche et contextualisé (audio, slides, transcription, sous-titres FR/EN et PDF internes vérifiés) avec objectif et transition explicites. L’extrait central d’authentification contient toutefois une erreur de syntaxe et désigne improprement os.environ comme une fonction, ce qui dégrade l’apprentissage d’un prérequis clé."
+    },
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch01_act03",
+      "score_100": 90,
+      "justification": "Présentation progressive et bien contextualisée des clusters, jobs et API, avec exemples, transcript et alternatives textuelles. La navigation, les ressources internes et la cohérence linguistique sont acquises; aucune évaluation n’est applicable à cet écran explicatif."
+    },
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch02_act01",
+      "score_100": 90,
+      "justification": "Introduction structurée aux foundation models, serving endpoints et rôles SYSTEM/USER, suivie d’une transition vers la pratique. Les médias, sous-titres, transcript et PDF sont présents et vérifiés côté plateforme; aucune évaluation n’est applicable à cet écran explicatif."
+    },
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch02_act02",
+      "score_100": 94,
+      "justification": "QCM ciblé sur le rôle SYSTEM, directement relié à l’écran précédent, avec trois choix, bonne réponse, indice et explication. La progression repose sur l’activité affichée et les invariants de plateforme confirment l’absence de porte fantôme; la dimension évaluation/feedback est donc pleinement observable."
+    },
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch02_act05",
+      "score_100": 90,
+      "justification": "Écran explicatif détaillé qui décompose la requête d’un modèle de chat (endpoint, messages, rôles, réponse, exemples), avec transcript et sous-titres. Les ressources internes et la navigation sont vérifiées; aucune activité évaluative n’est demandée sur cet écran."
+    },
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch02_act08",
+      "score_100": 78,
+      "justification": "Le chemin pédagogique du catalogue à l’agent SQL est explicite, illustré et accompagné de transcript, sous-titres et exemples. Un exemple affiche cependant une réponse sur la durée moyenne alors que la question demande le trajet le plus long (durée et distance), ce qui rend le résultat pédagogique incohérent."
+    },
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch03_act01",
+      "score_100": 89,
+      "justification": "Présentation complète des choix d’infrastructure et des opérations de clusters, avec exemples et progression vers la pratique. Les médias et alternatives textuelles sont disponibles et les invariants de navigation/langue sont acquis; il s’agit d’un écran explicatif sans évaluation applicable."
+    },
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch03_act04",
+      "score_100": 76,
+      "justification": "La séquence explique clairement les jobs, notebook paths, création, suppression et planification, avec un transcript complet. Deux défauts observables pénalisent toutefois les exemples: jobs.Task est utilisé sans import de jobs dans l’extrait de création, et l’exemple de 14:45 est incohérent avec la position des heures démontrée par le premier exemple cron."
+    },
+    {
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch03_act08",
+      "score_100": 88,
+      "justification": "Récapitulatif cohérent des endpoints, agents SQL, clusters et jobs, qui relie les acquis du cours et propose une mise en relation finale. Transcript, audio, sous-titres et ressources sont fournis; aucune évaluation n’est applicable à cet écran explicatif."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "exactitude_du_contenu",
+      "description": "La slide d’authentification par défaut concatène deux affectations os.environ avec un antislash au lieu d’un saut de ligne; l’extrait est donc syntaxiquement invalide s’il est copié. Le texte associé appelle en outre os.environ une « fonction .environ() », alors que le même écran l’emploie comme mapping de variables d’environnement.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[0].blocks[1].projectorSlides[number=7].content contient `os.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\\os.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"`; le script et transcript de cette même slide disent « fonction .environ() »."
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch02_act08",
+      "category": "exactitude_du_contenu",
+      "description": "L’exemple de création d’agent pose la question « What's the time and distance of the longest trip? », mais la sortie affichée répond seulement « The average trip takes approximately 15 minutes. ». La réponse ne traite ni le trajet le plus long ni la distance demandée.",
+      "evidence": "current_courses[0].current_data.lessons[1].chapters[3].blocks[0].projectorSlides[number=12].content: l’appel `agent.run(\"What's the time and distance of the longest trip?\")` est suivi de la sortie `The average trip takes approximately 15 minutes.`."
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch03_act04",
+      "category": "exactitude_du_contenu",
+      "description": "L’exemple présenté pour créer et exécuter un job appelle `jobs.Task` et `jobs.NotebookTask`, mais le seul import affiché est `from databricks.sdk import WorkspaceClient`; aucun import ou définition de `jobs` n’est fourni dans l’extrait. Le code de démonstration n’est donc pas autonome tel qu’affiché.",
+      "evidence": "current_courses[0].current_data.lessons[2].chapters[1].blocks[0].projectorSlides[number=4].content: import de `WorkspaceClient`, puis appels à `jobs.Task(...)` et `jobs.NotebookTask(...)`, sans import ou définition de `jobs` dans la slide."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch03_act04",
+      "category": "exactitude_du_contenu",
+      "description": "La slide de syntaxe cron associe « 14:45:00 chaque jour » à `0 45 2 * * ?`. Dans le modèle présenté sur la même slide, le troisième champ est l’heure (comme le montre l’exemple « 03:30:00 » → `0 30 3 * * ?`); la valeur 2 est donc incohérente avec 14:45.",
+      "evidence": "current_courses[0].current_data.lessons[2].chapters[1].blocks[0].projectorSlides[number=8].content: `03:30:00 chaque jour = 0 30 3 * * ?` et `14:45:00 chaque jour = 0 45 2 * * ?`."
+    }
+  ],
+  "mean_100": 85.56,
+  "median_100": 89,
+  "scored_chapters": 9,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 3,
+    "80_100": 6
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 3,
+    "P2": 1,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation limitée aux 9 écrans réellement présents dans l’état courant (8 écrans explicatifs et 1 QCM); les 15 activités historiques retirées ne sont ni notées ni pénalisées. Les invariants fournis établissent la disponibilité des assets internes, l’absence d’anomalie FR/EN, une vidéo au plus par écran et des verrous reliés aux activités affichées; les anciens constats de porte média/TP retiré ne sont donc pas reconduits. Les dimensions non vérifiables restent neutres. Moyenne arithmétique: 85.56/100; médiane: 89/100. Quatre constats ouverts, tous fondés sur le contenu courant: trois P1 d’exactitude et un P2 d’exactitude."
+}

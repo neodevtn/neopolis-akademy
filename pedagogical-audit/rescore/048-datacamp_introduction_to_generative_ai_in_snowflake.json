@@ -1,0 +1,103 @@
+{
+  "formation_id": "datacamp_introduction_to_generative_ai_in_snowflake",
+  "index": 48,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch01_act01",
+      "score_100": 90,
+      "justification": "Écran introductif explicite et riche (14 slides, audio, transcript, sous-titres FR/EN et PDF internes disponibles). La consigne de configuration contient toutefois la chaîne erronée « snowlfake-ml-python »."
+    },
+    {
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch01_act05",
+      "score_100": 100,
+      "justification": "Présentation structurée de complete() et AI_COMPLETE(), avec exemples Python/SQL, progression depuis summarize(), audio, transcript, sous-titres FR/EN et slides internes."
+    },
+    {
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch01_act08",
+      "score_100": 100,
+      "justification": "Explication contextualisée de classify_text(), du passage à l’échelle et de AI_SENTIMENT ; média complet (11 slides, audio, transcript, sous-titres FR/EN) et enchaînement cohérent."
+    },
+    {
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch02_act01",
+      "score_100": 100,
+      "justification": "Objectif et démonstration de translate() clairs, avec limites et relecture humaine ; audio, transcript français, sous-titre anglais et PDF interne fournissent des alternatives observables suffisantes."
+    },
+    {
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch02_act04",
+      "score_100": 100,
+      "justification": "Démonstration progressive et contextualisée de extract_answer(), score de confiance et seuil de revue ; audio, transcript français, sous-titre anglais et PDF interne sont présents."
+    },
+    {
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch02_act07",
+      "score_100": 100,
+      "justification": "Synthèse appliquée des fonctions Cortex dans un workflow multi-étapes, avec prérequis explicites et média complet (13 slides, audio, transcript, sous-titres FR/EN, PDF)."
+    },
+    {
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch02_act10",
+      "score_100": 100,
+      "justification": "Récapitulatif cohérent des compétences et des cas d’usage ; audio, transcript français, sous-titre anglais et PDF interne rendent la synthèse consultable par plusieurs modalités."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P1",
+      "status": "false_positive",
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "couverture_des_activités",
+      "description": "L’absence actuelle de CloudExercise ne constitue pas un défaut du parcours publié : aucun exercice n’est affiché ni obligatoire dans les sept écrans actuels. La règle de revue interdit de pénaliser une activité retirée.",
+      "evidence": "current_courses[0].current_data.exerciseCount = 0 ; les sept chapters ont sourceActivityType = \"VideoExercise\", requiredBeforeAdvance = false et leurs blocks ne contiennent que content, video et download. datacampImport.expected.exercise_types.CloudExercise relève de métadonnées d’import historiques, non d’une activité actuellement rendue."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "verrouillage_progression",
+      "description": "Le verrouillage incohérent signalé historiquement n’est plus constaté dans l’état courant : les écrans actuels ne requièrent pas de franchissement conditionnel et l’invariant de plateforme confirme que les verrous reposent sur les activités affichées.",
+      "evidence": "current_courses[0].current_data.lessons[*].chapters[*].requiredBeforeAdvance = false ; verified_platform_invariants.progression indique « les verrous reposent sur les activités réellement affichées » et « portes fantômes ... à 0 »."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "exactitude_de_la_consigne",
+      "description": "La slide de configuration demande de saisir « snowlfake-ml-python » au lieu de « snowflake-ml-python ». Cette coquille porte sur une chaîne que l’apprenant est invité à rechercher et peut entraver la préparation décrite.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[0].blocks[id=\"dc_1_act_01_video\"].projectorSlides[number=10].script contient exactement « snowlfake-ml-python »."
+    },
+    {
+      "severity": "P3",
+      "status": "false_positive",
+      "course_id": "introduction_to_generative_ai_in_snowflake__01",
+      "chapter_id": "dc_ch02_act01",
+      "category": "accessibilite_media",
+      "description": "L’absence de VTT français sur certaines vidéos ne prouve pas un défaut actuel : chacune fournit une transcription française structurée, qui est une alternative textuelle admise par la grille. La présence d’un sous-titre anglais additionnel ne retire pas cette alternative.",
+      "evidence": "dc_2_act_01_video, dc_2_act_04_video et dc_2_act_10_video ont chacun transcript et transcriptSegments en français ; verified_platform_invariants.language rapporte 0 anomalie FR/EN et verified_platform_invariants.assets confirme la disponibilité des assets internes."
+    }
+  ],
+  "mean_100": 98.57,
+  "median_100": 100,
+  "scored_chapters": 7,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 7
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation de l’état courant : 7 écrans réellement publiés et notés. Les activités historiques absentes ne sont pas pénalisées, les invariants de plateforme (assets, langue et progression) sont acquis, et un seul constat ouvert subsiste : une coquille dans la consigne de paquet de l’écran dc_ch01_act01."
+}

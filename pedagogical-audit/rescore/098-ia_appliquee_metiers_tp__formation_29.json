@@ -1,0 +1,73 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_29",
+  "index": 98,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-screen-01",
+      "score_100": 94,
+      "justification": "Objectif, public, niveau, durée et quatre compétences sont explicites ; le callout cadre correctement le TP en environnement de démonstration. Écran explicatif cohérent, sans activité ni média nécessitant une vérification supplémentaire."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-screen-02",
+      "score_100": 92,
+      "justification": "Les prérequis opérationnels, l’usage de données fictives, l’interdiction des secrets et la validation humaine sont clairement énoncés. L’écran prépare de façon directement exploitable un environnement personnel ou de démonstration."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-screen-03",
+      "score_100": 84,
+      "justification": "La timeline et le panneau « À faire / À éviter » donnent une démarche lisible, testable et prudente. La réutilisation de libellés différents dans le tri final (Préparer/Contrôler versus Construire/Valider) affaiblit légèrement la continuité pédagogique."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-mini-project",
+      "score_100": 85,
+      "justification": "L’objectif du mini-projet est clair et concret (cinq notes vocales vers des tâches Notion structurées). L’activité de preuve antérieure est explicitement retirée comme non vérifiable/non fournie : elle n’est donc ni exigée ni pénalisée ; l’écran courant reste toutefois très synthétique."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-final-quiz",
+      "score_100": 87,
+      "justification": "Les quatre QCM ont des réponses correctes et explications déclarées ; le tri demande une tentative complète, diagnostique les placements et autorise une nouvelle tentative. Son feedback pédagogique déclaré n’est pas transmis au composant rendu, et ses libellés divergent de la démarche enseignée."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-screen-03",
+      "category": "progression",
+      "description": "La démarche enseignée utilise « Cadrer, Préparer, Tester, Contrôler », tandis que le tri final évalue « Cadrer, Construire, Tester, Valider ». La correspondance conceptuelle est perceptible, mais le changement de deux libellés n’est pas expliqué et réduit la continuité entre apprentissage et évaluation.",
+      "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__29.json → lessons[0].chapters[2].blocks[0].items[0..3] : Cadrer, Préparer, Tester, Contrôler ; lessons[0].chapters[4].blocks[4].buckets[0..3] : Cadrer, Construire, Tester, Valider."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-final-quiz",
+      "category": "feedback",
+      "description": "Le tri annonce qu’une correction est disponible après une tentative complète et contient un feedback pédagogique, mais ce champ n’est pas rendu. L’apprenant reçoit le score et les cartes correctes/incorrectes, sans l’explication de démarche déclarée dans le contenu.",
+      "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__29.json → lessons[0].chapters[4].blocks[4].instructions et .feedback ; client/src/pages/training/LessonViewer.tsx:950-966 transmet block.correction à MatchingExercise, pas block.feedback ; client/src/components/MatchingExercise.tsx:420-466 n’affiche le détail que via exercise.correction."
+    }
+  ],
+  "mean_100": 88.4,
+  "median_100": 87,
+  "scored_chapters": 5,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 5
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 2,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation de l’état courant : 5 écrans présents ont été notés. La moyenne est de 88,4/100 et la médiane de 87/100. Deux améliorations P2 restent ouvertes (continuité des libellés de démarche et rendu du feedback du tri). L’activité de preuve retirée et documentée au mini-projet n’est pas pénalisée ; les invariants de plateforme fournis sont considérés acquis."
+}

@@ -1,0 +1,118 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_12",
+  "index": 81,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-screen-01",
+      "score_100": 92,
+      "justification": "L’ouverture explicite le métier cible, le niveau, la durée, les quatre acquis et le cadre d’usage en environnement de démonstration. C’est un écran explicatif : évaluation et feedback ne sont pas applicables ; les invariants de navigation sont acquis."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-screen-02",
+      "score_100": 91,
+      "justification": "Les prérequis opérationnels et de sécurité sont précis (sandbox, données fictives, absence de secrets, validation humaine). La ressource est clairement présentée avec une action de consultation ; son contenu et sa disponibilité externes restent neutres car non vérifiables."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-screen-03",
+      "score_100": 90,
+      "justification": "La progression Cadrer–Préparer–Tester–Contrôler et le panneau À faire / À éviter rendent concrets les actions et garde-fous avant le TP. Cet écran explicatif n’appelle pas de dimension évaluation/feedback ; la navigation standard est acquise."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-mini-project",
+      "score_100": 82,
+      "justification": "Le mini-projet est contextualisé, guidé, doté d’une ressource interne disponible, d’un indice, d’une correction et de garde-fous explicites. La preuve demandée ne comporte toutefois aucun critère ni seuil de contenu configuré dans le JSON courant, ce qui affaiblit substantiellement l’évaluation de cette activité centrale."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-final-quiz",
+      "score_100": 94,
+      "justification": "Les quatre questions et l’activité de tri proposent des consignes, réponses attendues et explications cohérentes avec les étapes préparées. Le seuil de réussite et les activités affichées assurent une évaluation finale structurée ; les invariants de progression et de rendu sont acquis."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P3",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-screen-01",
+      "category": "ux_navigation",
+      "description": "Le constat historique relatif au quiz intermédiaire automatique n’est pas retenu comme défaut courant. Les invariants de plateforme fournis pour cette passe sont acquis, notamment l’absence d’anomalie structurelle et des verrous fondés sur les activités réellement affichées.",
+      "evidence": "/home/ubuntu/neopolis-akademy/pedagogical-audit/rescore-inputs-index/081.json → verified_platform_invariants.static_audit (P0=0, P1=0, P2=0, P3=0) et progression ; le constat historique figure dans baseline.chapter_scores[0], [1] et [2].issues."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-screen-02",
+      "category": "verrouillage",
+      "description": "La confirmation de consultation est une activité visible et réalisable avec le lien affiché. Elle ne constitue pas, dans l’état courant, une prétention à évaluer la maîtrise du contenu externe ; le contenu de cette ressource reste non vérifiable et neutre.",
+      "evidence": "/home/ubuntu/neopolis-akademy/pedagogical-audit/rescore-inputs-index/081.json → current_courses[0].current_data.lessons[0].chapters[1].requiredBeforeAdvance=false et blocks[1] (resource_review avec instructions, resourceUrl et resourceLabel) ; rubrique « dimensions non vérifiables » et verified_platform_invariants.progression."
+    },
+    {
+      "severity": "P3",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-screen-02",
+      "category": "ux_rendu",
+      "description": "Le défaut historique de rendu Markdown n’est pas comptabilisé dans la contre-évaluation : le contrôle Markdown et langue de la passe courante est un invariant acquis et ne signale aucune anomalie.",
+      "evidence": "/home/ubuntu/neopolis-akademy/pedagogical-audit/rescore-inputs-index/081.json → verified_platform_invariants.language (« audit de structure Markdown ... 0 anomalie ») ; le constat antérieur figure dans baseline.chapter_scores[1].issues."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-checkpoint-01",
+      "category": "verrouillage",
+      "description": "Le checkpoint interactif historique n’est plus un chapitre présent dans l’état actuel. Il n’est donc ni évalué comme activité ni pénalisé ; aucun verrou portant sur cette activité retirée ne participe à la progression courante.",
+      "evidence": "/home/ubuntu/neopolis-akademy/pedagogical-audit/rescore-inputs-index/081.json → current_courses[0].current_data.lessons[0].chapters : cinq chapitres présents (screen-01, screen-02, screen-03, mini-project, final-quiz), sans checkpoint-01 ; le constat historique figure dans baseline.chapter_scores[3].issues."
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-mini-project",
+      "category": "évaluation",
+      "description": "La preuve du mini-projet demande quatre éléments identifiables, mais le bloc courant ne configure ni minimumAnswerLength, ni rubricCriteria, ni learnerCriteria, ni évaluation associée. L’activité centrale manque ainsi de critères observables permettant d’apprécier la preuve demandée.",
+      "evidence": "/home/ubuntu/neopolis-akademy/pedagogical-audit/rescore-inputs-index/081.json → current_courses[0].current_data.lessons[0].chapters[3].blocks[0] : instructions impose scénario, résultat, contrôle et validation humaine ; les champs minimumAnswerLength, rubricCriteria, learnerCriteria et serverGradedAssessment sont absents de ce bloc."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-mini-project",
+      "category": "localisation",
+      "description": "Le constat historique de localisation n’est pas maintenu : l’audit strict FR/EN communiqué pour l’état courant est un invariant acquis et ne signale aucune anomalie linguistique.",
+      "evidence": "/home/ubuntu/neopolis-akademy/pedagogical-audit/rescore-inputs-index/081.json → verified_platform_invariants.language (« audit strict FR/EN ... 0 anomalie ») ; le constat antérieur figure dans baseline.chapter_scores[4].issues."
+    },
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-final-quiz",
+      "category": "feedback",
+      "description": "Le constat historique relatif au feedback du tri n’est pas retenu dans l’état courant : le contrôle structurel de la passe est un invariant acquis sans anomalie P0–P3. Le JSON courant fournit en outre une consigne et un feedback contextualisés pour l’activité affichée.",
+      "evidence": "/home/ubuntu/neopolis-akademy/pedagogical-audit/rescore-inputs-index/081.json → verified_platform_invariants.static_audit ; current_courses[0].current_data.lessons[0].chapters[4].blocks[4].instructions et feedback ; le constat antérieur figure dans baseline.chapter_scores[5].issues."
+    }
+  ],
+  "mean_100": 89.8,
+  "median_100": 91,
+  "scored_chapters": 5,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 5
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 0,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation réalisée sur les cinq chapitres réellement présents dans le JSON courant. Le checkpoint historique a été retiré et ne reçoit aucune pénalité. Un constat P1 reste ouvert : le mini-projet demande une preuve structurée sans critères ni seuil de contenu configurés. Les dimensions externes non vérifiables sont restées neutres ; les invariants de plateforme, de langue, de ressources internes et de progression fournis par le dossier ont été tenus pour acquis."
+}

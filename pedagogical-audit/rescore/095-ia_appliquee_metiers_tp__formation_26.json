@@ -1,0 +1,73 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_26",
+  "index": 95,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-screen-01",
+      "score_100": 94,
+      "justification": "Objectifs, public, niveau, durée et cadre de démonstration sont explicites ; l’écran explicatif est clair et cohérent avec la préparation qui suit."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-screen-02",
+      "score_100": 91,
+      "justification": "La préparation concrète, l’usage de données fictives et la validation humaine sont clairement prescrits ; la revue de ressource affiche l’action attendue. La disponibilité externe reste non vérifiable et neutre."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-screen-03",
+      "score_100": 86,
+      "justification": "La démarche et le panneau de vérifications structurent utilement l’action ; la terminologie « Préparer/Contrôler » diffère toutefois de « Construire/Valider » employée par l’activité finale."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-mini-project",
+      "score_100": 90,
+      "justification": "L’écran actuel présente clairement le résultat métier du mini-projet. L’activité pratique retirée est documentée comme supprimée ; elle n’est donc ni évaluée ni pénalisée."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-final-quiz",
+      "score_100": 85,
+      "justification": "Les QCM et le tri ont des consignes, réponses et possibilités de réessai cohérentes ; le feedback auteur du tri n’est pas transmis au composant qui rend la correction détaillée."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-final-quiz",
+      "category": "feedback",
+      "description": "Le feedback pédagogique défini pour le tri n’est pas affiché après tentative : le JSON renseigne `feedback`, tandis que le renderer de `bucket_sort` transmet et affiche uniquement `correction`. L’apprenant ne reçoit donc que le score, les retours visuels et l’invitation à réessayer.",
+      "evidence": "Dossier d’entrée 095.json, current_courses[0].current_data.lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__26-quiz-order].feedback ; vérification lecture seule : client/src/pages/training/LessonViewer.tsx (branche bucket_sort : `correction: block.correction`) et client/src/components/MatchingExercise.tsx (correction détaillée conditionnée à `exercise.correction`)."
+    },
+    {
+      "severity": "P3",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-screen-03",
+      "category": "progression",
+      "description": "La séquence de référence emploie « Cadrer / Préparer / Tester / Contrôler », mais le tri final utilise « Cadrer / Construire / Tester / Valider » sans expliciter la correspondance. Cette variation peut créer une hésitation terminologique pour un débutant.",
+      "evidence": "Dossier d’entrée 095.json, current_courses[0].current_data.lessons[0].chapters[2].blocks[type=sequence_visual].items (titres) et chapters[4].blocks[id=ia_appliquee_metiers_tp__26-quiz-order].buckets (libellés)."
+    }
+  ],
+  "mean_100": 89.2,
+  "median_100": 90,
+  "scored_chapters": 5,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 5
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "P3": 1
+  },
+  "summary": "État courant revu : 5 écrans présents et notés. Aucun P0/P1 ouvert. Les invariants de plateforme fournis sont acquis ; les ressources externes et les dimensions non vérifiables sont restées neutres. Le mini-projet retiré de manière documentée n’est pas pénalisé. Deux améliorations ouvertes subsistent : feedback du tri non rendu (P2) et vocabulaire de démarche non harmonisé entre la séquence et le tri final (P3)."
+}

@@ -1,0 +1,67 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_23",
+  "index": 92,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-screen-01",
+      "score_100": 93,
+      "justification": "Objectifs, public, niveau, durée et quatre acquis sont explicités; le cadre de démonstration et les limites de sécurité ouvrent clairement le TP. Écran explicatif sans activité à évaluer; navigation et langue sont acquises par invariant."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-screen-02",
+      "score_100": 90,
+      "justification": "Les prérequis actionnables (sandbox, données fictives, absence de secrets, validation humaine) précèdent une revue de ressource avec consigne et confirmation. Le contenu et la disponibilité réels de la source externe restent non vérifiés et ne sont pas pénalisés."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-screen-03",
+      "score_100": 87,
+      "justification": "La timeline et le panneau à faire/à éviter rendent la démarche, les tests et le contrôle humain concrets avant le quiz. La progression est solide; le référentiel de ses phases diverge toutefois des libellés de l’activité finale (constat P2)."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-final-quiz",
+      "score_100": 78,
+      "justification": "Quatre QCM ont options, bonne réponse, explication et réessai, et le tri impose une tentative complète. Le feedback textuel promis au tri n’est pas rendu et ses phases emploient deux libellés différents de la timeline précédente (constats P2)."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-final-quiz",
+      "category": "feedback",
+      "description": "Le tri annonce une correction après tentative complète, mais le feedback pédagogique renseigné pour ce bloc n’est pas transmis comme correction au composant. Après un échec, l’apprenant a le comptage et Réessayer, sans la correction textuelle annoncée.",
+      "evidence": "Dossier courant: current_courses[0].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__23-final-quiz].blocks[id=ia_appliquee_metiers_tp__23-quiz-order] contient instructions.fr « La correction est disponible après une tentative complète » et feedback.fr, sans champ correction. Rendu courant: LessonViewer transmet correction: block.correction à MatchingExercise; MatchingExercise n’affiche le texte correctif que si exercise.correction est présent."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-final-quiz",
+      "category": "progression",
+      "description": "Le tri final utilise les phases « Cadrer, Construire, Tester, Valider », alors que la timeline préparatoire enseigne « Cadrer, Préparer, Tester, Contrôler », sans correspondance explicite. Cela affaiblit la continuité du référentiel de démarche.",
+      "evidence": "Dossier courant: current_courses[0].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__23-screen-03].blocks[type=sequence_visual].items a les titres Cadrer, Préparer, Tester, Contrôler; le bloc bucket_sort id=ia_appliquee_metiers_tp__23-quiz-order du chapitre final a les buckets Cadrer, Construire, Tester, Valider."
+    }
+  ],
+  "mean_100": 87.0,
+  "median_100": 88.5,
+  "scored_chapters": 4,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 1,
+    "80_100": 3
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 2,
+    "P3": 0
+  },
+  "summary": "État courant réévalué: 4 écrans présents et notés (les anciens checkpoint et mini-projet retirés ne sont pas comptés). Moyenne de 87.00/100; aucun constat ouvert P0 ou P1. Deux améliorations P2 demeurent dans le quiz final: correction textuelle du tri non rendue et libellés de phases non harmonisés."
+}

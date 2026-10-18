@@ -1,0 +1,58 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_25",
+  "index": 94,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-screen-01",
+      "score_100": 100,
+      "justification": "Écran d’ouverture explicite : public, niveau, durée, quatre acquis et cadre de démonstration sont indiqués. Écran explicatif sans activité ; l’évaluation est donc non applicable et les dimensions observables satisfont la grille."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-screen-02",
+      "score_100": 100,
+      "justification": "Les consignes de préparation sont concrètes et proportionnées (sandbox, données fictives, absence de secrets et validation humaine). L’écran est explicatif, sans activité obligatoire ni dépendance externe à franchir ; les dimensions non applicables sont renormalisées."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-screen-03",
+      "score_100": 100,
+      "justification": "La frise Cadrer–Préparer–Tester–Contrôler et le panneau à faire/à éviter rendent la démarche, les contrôles et la transition vers l’évaluation lisibles. Aucun média ni activité supplémentaire n’est nécessaire au dispositif présenté."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-final-quiz",
+      "score_100": 84,
+      "justification": "Les quatre QCM et le tri final ont des consignes, réponses possibles et réponses attendues ; les QCM ont une explication. Le feedback pédagogique déclaré pour le tri n’est toutefois pas transmis au composant rendu, qui n’affiche donc qu’un score générique et les états des cartes."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-final-quiz",
+      "category": "feedback",
+      "description": "Le tri final possède un feedback pédagogique déclaré, mais le lecteur ne le transmet pas au composant de tri. Après une tentative, l’apprenant reçoit le score générique et le marquage des cartes, sans le rappel pédagogique prévu sur la séquence complète.",
+      "evidence": "/home/ubuntu/neopolis-akademy/pedagogical-audit/rescore-inputs-index/094.json → current_courses[0].current_data.lessons[0].chapters[3].blocks[id=ia_appliquee_metiers_tp__25-quiz-order].feedback ; /home/ubuntu/neopolis-akademy/client/src/pages/training/LessonViewer.tsx:950-966 transmet title, instructions, buckets, cards et correction à MatchingExercise, mais pas feedback ; /home/ubuntu/neopolis-akademy/client/src/components/MatchingExercise.tsx:420-466 n’affiche une correction détaillée que depuis exercise.correction."
+    }
+  ],
+  "mean_100": 96,
+  "median_100": 100,
+  "scored_chapters": 4,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 4
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "P3": 0
+  },
+  "summary": "État courant revu intégralement : 4 écrans présents et notés. Les anciens écrans de checkpoint et de mini-projet ne sont plus présents ; conformément à la grille, leur retrait documenté n’est pas pénalisé et leurs constats historiques ne sont pas repris. Un P2 ouvert subsiste : le feedback déclaré du tri final n’est pas rendu. Les dimensions non vérifiables ont été laissées neutres et les invariants de plateforme fournis ont été considérés acquis."
+}

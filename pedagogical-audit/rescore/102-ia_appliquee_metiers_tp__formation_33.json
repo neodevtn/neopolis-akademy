@@ -1,0 +1,79 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_33",
+  "index": 102,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-screen-01",
+      "score_100": 95,
+      "justification": "Écran d’ouverture explicite : public, niveau, durée, quatre compétences opérationnelles et cadre de démonstration sont rendus par des blocs standardisés. Écran explicatif ; l’évaluation n’est pas applicable."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-screen-02",
+      "score_100": 92,
+      "justification": "Les prérequis, données fictives, restrictions sur les secrets et validation humaine sont précis. La revue de ressource fournit une action et une confirmation ; le contenu de l’URL externe reste non vérifiable et est donc neutre."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-screen-03",
+      "score_100": 90,
+      "justification": "La frise Cadrer–Préparer–Tester–Contrôler et le panneau à faire/à éviter donnent une progression intelligible et cohérente avec les garde-fous. Écran explicatif ; l’évaluation n’est pas applicable."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-checkpoint-01",
+      "score_100": 92,
+      "justification": "Le chapitre actuel rend une note de cadrage sous forme de question sur la pratique attendue. L’activité de checkpoint historique est explicitement retirée (remediation.activity_removed_unverifiable_or_unprovided) : elle n’est ni affichée ni verrouillante et ne reçoit aucune pénalité."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-mini-project",
+      "score_100": 90,
+      "justification": "Le chapitre actuel présente clairement le résultat visé (assistant SQL lecture seule, base fictive, journalisation et refus des opérations risquées). L’activité et la preuve historiques sont explicitement retirées : aucune absence d’évaluation ou de ressource n’est imputée à l’état actuel."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-final-quiz",
+      "score_100": 82,
+      "justification": "Les quatre QCM et le tri sont rendus, corrigés et rejouables ; les QCM et le tri ne complètent la progression qu’après réponse correcte. Deux défauts non bloquants subsistent : un énoncé QCM ne cible pas le contrôle décrit par sa réponse correcte, et le feedback du tri n’est pas transmis au composant de rendu."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-final-quiz",
+      "category": "alignement_évaluation",
+      "description": "Le troisième QCM annonce l’évaluation de la lecture du schéma avant génération de SQL, tandis que la réponse correcte vérifie la comparaison d’un résultat de test à un critère métier et la documentation d’un écart. Les deux formulations portent sur des contrôles utiles, mais pas sur le même objectif.",
+      "evidence": "État courant : current_courses[0].current_data.lessons[0].chapters[5].blocks[2] : question.fr = « Quel contrôle aide à vérifier l’objectif “Lire le schéma d'une base avant de générer du SQL” ? », correctAnswer = « a », dont options[0].text.fr = « Comparer le résultat du test au critère métier défini puis documenter l’écart. »."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-final-quiz",
+      "category": "feedback",
+      "description": "Le feedback pédagogique renseigné dans les données du tri final n’est pas affiché après soumission. L’apprenant reçoit le score, le marquage des cartes et la possibilité de réessayer, mais pas le rappel de la démarche fourni dans le JSON.",
+      "evidence": "État courant : current_courses[0].current_data.lessons[0].chapters[5].blocks[4].feedback est renseigné. Rendu actuel : client/src/pages/training/LessonViewer.tsx, cas bucket_sort, transmet uniquement block.correction à MatchingExercise ; client/src/components/MatchingExercise.tsx affiche une correction détaillée seulement si exercise.correction est défini."
+    }
+  ],
+  "mean_100": 90.17,
+  "median_100": 91,
+  "scored_chapters": 6,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 6
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 2,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation de l’état courant de 6 chapitres. Les invariants de plateforme fournis sont acquis. Les deux anciennes activités désormais matérialisées par des notes avec remediation.activity_removed_unverifiable_or_unprovided ne sont pas pénalisées, conformément à la grille. Les seules constatations ouvertes, toutes deux P2 et circonscrites au quiz final, concernent l’alignement d’un QCM et l’absence de rendu du feedback déjà disponible dans les données."
+}

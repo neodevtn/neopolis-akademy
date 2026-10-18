@@ -1,0 +1,664 @@
+{
+  "formation_id": "datacamp_deploying_ai_into_production_with_fastapi",
+  "index": 31,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act01",
+      "score_100": 92,
+      "justification": "Introduction explicite, vidéo, sous-titres FR et support interne disponibles ; l’exemple `return {…}, 201` ne produit pas le statut HTTP 201 annoncé dans FastAPI (P2)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act04",
+      "score_100": 94,
+      "justification": "Explication progressive et médias internes disponibles ; le code renvoie `predicted_species` alors que la sortie illustrée annonce `prediction` et `confidence` (P2)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act08",
+      "score_100": 100,
+      "justification": "Objectif et progression explicites ; exemples Pydantic et requête/réponse cohérents, média interne disponible."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act01",
+      "score_100": 70,
+      "justification": "Objectif clair et support interne disponible, mais l’exemple textuel appelle `comment.lower()` sur le modèle Pydantic et sa liste concatène `free` et `fake`, contrairement à la sortie affichée (P1)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act04",
+      "score_100": 94,
+      "justification": "Le dispositif explique les validateurs avec exemple valide/invalide ; l’extrait du validateur mélange une tabulation et des espaces, empêchant sa réutilisation directe (P2)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act08",
+      "score_100": 92,
+      "justification": "Explication structurée du chargement et du contrôle de santé ; l’exemple `load_model()` mélange tabulation et espaces avant `print`, donc n’est pas exécutable tel qu’affiché (P2)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act11",
+      "score_100": 97,
+      "justification": "Le modèle de requête/réponse et le scénario d’échec sont utiles ; la sortie d’`HTTPException(500)` ajoute à tort `status_code` dans le corps JSON illustré (P3)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act01",
+      "score_100": 92,
+      "justification": "Présentation et tests d’authentification cohérents dans l’ensemble ; les extraits alternent entre `API_SECRET_KEY` et `API_KEY`, ce qui casse la continuité du code (P2)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act04",
+      "score_100": 60,
+      "justification": "Le scénario de limitation est contextualisé, mais le constructeur déclare `requests_per_min` puis est appelé avec `requests_per_minute`; le contrat tuple de `is_rate_limited()` est aussi contredit par `return False` et l’appel qui le déstructure (P1)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act07",
+      "score_100": 70,
+      "justification": "Les notions async et tâches de fond sont exposées ; l’exemple de timeout transmet l’appel synchrone `sentiment_model(comment.text)` à `asyncio.wait_for`, qui attend un awaitable (P1)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act01",
+      "score_100": 100,
+      "justification": "Explication progressive du versionnage et de la documentation, avec exemples cohérents et support interne disponible."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act02",
+      "score_100": 85,
+      "justification": "Énoncé, cartes, deux réponses possibles, correction par carte et nouvelle tentative sont présents ; l’indice et le feedback déclarés ne sont toutefois pas transmis au composant rendu et aucune correction détaillée n’est fournie (P2)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act05",
+      "score_100": 85,
+      "justification": "L’exemple couvre les modèles imbriqués et le gestionnaire global ; le validateur lève `RequestValidationError` avec une chaîne au lieu d’une erreur de validation Pydantic adaptée, et la sortie associée est donc pédagogiquement imprécise (P2)."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act09",
+      "score_100": 100,
+      "justification": "Chaîne de logging, middleware et endpoint de santé clairement présentés ; média interne disponible."
+    },
+    {
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act13",
+      "score_100": 100,
+      "justification": "Conclusion qui récapitule les quatre leçons de façon cohérente ; média interne disponible."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "exactitude_technique",
+      "description": "L’exemple POST retourne `({\"message\": ...}, 201)`. Dans FastAPI, cette valeur est sérialisée comme contenu ; elle ne fixe pas le statut de réponse à 201, contrairement au statut annoncé plus haut pour cet endpoint.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[0].chapters[0].blocks[1].projectorSlides[11].content : `return {\"message\": f\"Created {item.name}\"}, 201`; projectorSlides[9].content annonce `@app.post(\"/items\", status_code=201)`."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act04",
+      "category": "exactitude_technique",
+      "description": "L’endpoint illustré retourne uniquement la clé `predicted_species`, tandis que la sortie de test affichée montre les clés `prediction` et `confidence`. Le résultat attendu n’est donc pas produit par le code présenté.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[0].chapters[1].blocks[0].projectorSlides[4].content (`return {\"predicted_species\": prediction}`) et projectorSlides[6].content (sortie `prediction` / `confidence`)."
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act01",
+      "category": "exactitude_technique",
+      "description": "Dans l’exemple d’analyse textuelle, `comment` est typé `CommentText` avec le champ `content`, mais le code appelle `comment.lower()`. La liste `forbidden` omet aussi la virgule entre `\"free\"` et `\"fake\"`, ce qui concatène ces deux valeurs ; le code ne peut donc pas produire la sortie annoncée.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[1].chapters[0].blocks[0].projectorSlides[3].content définit `class CommentText(BaseModel): content: str`; projectorSlides[5].content contient `\"free\" \"fake\"` et `text_lower = comment.lower()` avec la sortie attendue."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act04",
+      "category": "exactitude_technique",
+      "description": "L’extrait du validateur place `age: int` avec une tabulation alors que les autres lignes de classe utilisent des espaces. Le mélange d’indentation rend l’extrait Python non réutilisable tel qu’affiché.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[1].chapters[1].blocks[0].projectorSlides[7].content : ligne `\\tage: int` dans la définition de `User` indentée par espaces."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act08",
+      "category": "exactitude_technique",
+      "description": "Dans `load_model()`, la ligne `print(\"Model loaded successfully\")` est indentée par tabulation après des lignes indentées par espaces. L’exemple mélange les modes d’indentation Python et n’est pas exécutable tel qu’affiché.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[1].chapters[2].blocks[0].projectorSlides[4].content : fonction `load_model()` et ligne `\\tprint(\"Model loaded successfully\")`."
+    },
+    {
+      "severity": "P3",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act11",
+      "category": "exactitude_technique",
+      "description": "La sortie présentée après `HTTPException(status_code=500, detail=\"Prediction failed\")` place `status_code` dans le corps JSON. Sans gestionnaire personnalisé déclaré, FastAPI retourne le détail et porte le 500 dans le statut HTTP, non dans ce champ de corps.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[1].chapters[3].blocks[0].projectorSlides[4].content : `raise HTTPException(status_code=500, detail=\"Prediction failed\")` et sortie incluant `\"status_code\": 500`."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act01",
+      "category": "exactitude_technique",
+      "description": "La démonstration définit `API_SECRET_KEY` puis la fonction suivante compare avec `API_KEY`, qui n’est pas défini dans la continuité du code affiché. L’exemple d’authentification échoue tel qu’il est présenté.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[2].chapters[0].blocks[0].projectorSlides[4].content définit `API_SECRET_KEY`; projectorSlides[5].content utilise `if api_key != API_KEY`."
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act04",
+      "category": "exactitude_technique",
+      "description": "Le constructeur est déclaré avec `requests_per_min` mais instancié avec `requests_per_minute`, ce qui déclenche une erreur d’argument. De plus, `is_rate_limited()` est annoncé comme retournant `tuple[bool, int]` mais retourne `False` seul, alors que l’exemple suivant le déstructure en deux valeurs.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[2].chapters[1].blocks[0].projectorSlides[6].content (`__init__(..., requests_per_min)`), projectorSlides[9].content (`RateLimiter(requests_per_minute=10)`), projectorSlides[8].content (`return False`), projectorSlides[10].content (`_, requests_remaining = rate_limiter.is_rate_limited(...)`)."
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act07",
+      "category": "exactitude_technique",
+      "description": "L’exemple de gestion du délai passe directement l’inférence synchrone `sentiment_model(comment.text)` à `asyncio.wait_for`, qui attend un awaitable. L’appel illustré ne peut donc pas appliquer le timeout annoncé à cette inférence telle qu’elle est définie à l’écran précédent.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[2].chapters[2].blocks[0].projectorSlides[3].content appelle `sentiment_model(comment.text)` sans `await`; projectorSlides[5].content contient `await asyncio.wait_for(sentiment_model(comment.text), timeout=5.0)`."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act02",
+      "category": "feedback",
+      "description": "L’activité permet la correction par carte et une nouvelle tentative, mais l’indice et le feedback déclarés dans le JSON ne sont pas transmis au composant rendu. Aucun texte de correction détaillée n’est déclaré, donc l’apprenant voit le score et doit deviner le principe pour chaque erreur.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[3].chapters[1].blocks[0] contient `hint` et `feedback` sans `correction`; LessonViewer.tsx:950-966 transmet seulement id, title, instructions, buckets, cards et correction à MatchingExercise; MatchingExercise.tsx:420-465 rend le score, la correction seulement si déclarée, et le bouton de nouvelle tentative."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act05",
+      "category": "exactitude_technique",
+      "description": "Le validateur Pydantic illustré lève `RequestValidationError` avec une simple chaîne pour un invariant de modèle. Cette exception FastAPI représente normalement des erreurs de requête structurées ; l’exemple et le JSON d’erreur associé ne donnent pas le mécanisme de validation Pydantic approprié à réemployer.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[3].chapters[2].blocks[0].projectorSlides[3].content importe et lève `RequestValidationError(\"No items in order!\")` dans `@model_validator(mode=\"after\")`, puis affiche `{ \"detail\": \"No items in order!\" }`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act02",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch01_act02`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act03",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch01_act03`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act04",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act05",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch01_act05`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act06",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch01_act06`."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act07",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch01_act07`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act08",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act09",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch01_act09`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch01_act10",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch01_act10`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act01",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act02",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act02`."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act03",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act03`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act04",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act05",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act05`."
+    },
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act05",
+      "category": "énoncé",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : L’objectif annonce 5 à 50 caractères pour username, alors que consigne, code, indice et correction imposent une longueur maximale de 20.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act05`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act06",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act06`."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act07",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act07`."
+    },
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act07",
+      "category": "énoncé",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La consigne demande un e-mail invalide mais la commande fournie utilise `jane@mode360.com`, domaine présenté juste avant comme valide; le résultat attendu est ambigu.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act07`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act08",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act09",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act09`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act09",
+      "category": "correction",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La correction emploie `SentmentAnalyzer`, tandis que l’énoncé annonce `SentimentAnalyzer`; le nom de la classe est incohérent.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act09`."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act10",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act10`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act11",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act12",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act12`."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act13",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch02_act13`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act01",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act02",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act02`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act02",
+      "category": "correction",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La correction déclare `API_SECRET_KEY` mais compare avec `API_KEY`; `API_KEY` n’y est pas défini.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act02`."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act03",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act03`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act04",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act05",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act05`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act05",
+      "category": "correction",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le scénario limite à cinq requêtes par minute mais le test strict `>` avant ajout autorise une sixième requête.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act05`."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act06",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act06`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act07",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act08",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act08`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act09",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act09`."
+    },
+    {
+      "severity": "P0",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act10",
+      "category": "évaluation",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : La validation est bloquante et hors sujet : elle compare le texte saisi à une référence générique d’éditeur (« Edit the YAML… greeter.py »), non au code FastAPI demandé. L’écran ne fournit ni terminal ni exécution alors que la consigne demande souvent de lancer un serveur ou curl.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch03_act10`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act01",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act03",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act03`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act04",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act04`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act05",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act06",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act06`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act07",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act07`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act07",
+      "category": "correction",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Pour rejeter une quantité négative, la correction appelle `len(self.quantity)` alors que quantity est un entier; elle échoue au lieu d’appliquer la règle métier.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act07`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act08",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act08`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act09",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act10",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act10`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act11",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act11`."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act12",
+      "category": "verrouillage",
+      "description": "Constat historique désormais non applicable : l’activité concernée n’est plus un écran du cours courant et ne participe plus au passage. Aucun effet sur la note de l’état actuel.",
+      "evidence": "031.json → baseline.chapter_scores (constat historique : Le passage est présenté comme une validation de TP, mais une réponse non vide suffit à soumettre, révéler la correction et déverrouiller la suite. Aucun barème, seuil, évaluation serveur ni longueur minimale explicite ne contrôle la compétence.); current_courses[0].current_data inventorie 15 chapitres et ne contient pas `dc_ch04_act12`."
+    },
+    {
+      "severity": "P2",
+      "status": "false_positive",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch04_act13",
+      "category": "média",
+      "description": "Le signal historique de média/localisation n’est pas retenu dans cette contre-évaluation : la langue est un invariant de plateforme déclaré conforme pour l’état courant. Il ne pénalise pas cet écran.",
+      "evidence": "031.json → baseline.chapter_scores (signal historique : Le titre est français, mais la transcription et les scripts de la ressource sont anglais; aucune piste de sous-titres français ni alternative textuelle française n’est déclarée.); verified_platform_invariants.language : audit strict FR/EN à 0 anomalie."
+    }
+  ],
+  "summary": "État courant revu : 15 écrans effectivement présents (14 vidéos et 1 activité de tri). Les invariants fournis de ressources internes, structure, langue et progression sont acquis. Les 31 écrans historiques absents ne sont pas notés et leurs constats sont documentés comme corrigés par retrait ; les anciens signaux média/localisation ne sont pas retenus conformément à l’invariant de langue. Restent 0 P0, 3 P1, 7 P2 et 1 P3 ouverts, principalement des incohérences dans des exemples de code affichés et le feedback détaillé de l’activité de tri.",
+  "mean_100": 88.73,
+  "median_100": 92,
+  "scored_chapters": 15,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 3,
+    "80_100": 12
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 3,
+    "P2": 7,
+    "P3": 1
+  }
+}

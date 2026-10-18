@@ -1,0 +1,88 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_09",
+  "index": 78,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-screen-01",
+      "score_100": 93,
+      "justification": "L’ouverture identifie clairement le public, le niveau, la durée, les compétences visées et le cadre de démonstration avec contrôle humain ; écran explicatif structuré, sans dimension d’activité applicable."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-screen-02",
+      "score_100": 89,
+      "justification": "Les consignes d’environnement, de données fictives et de validation humaine sont concrètes ; la revue de ressource indique l’action et le retour attendus. Le contenu de la ressource externe demeure neutre car non vérifiable."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-screen-03",
+      "score_100": 86,
+      "justification": "La frise et le panneau de vérifications rendent la démarche et ses garde-fous lisibles. Une légère divergence de libellés avec le tri final diminue la cohérence éditoriale, sans bloquer la progression."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-checkpoint-01",
+      "score_100": 84,
+      "justification": "L’écran conserve une question de cadrage claire sur la pratique attendue. L’activité évaluative antérieure est documentée comme retirée et l’écran n’est plus verrouillant : aucune pénalité d’évaluation ou de franchissement ne s’applique."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-mini-project",
+      "score_100": 85,
+      "justification": "La note présente de façon concise le résultat pratique attendu et sa version anglaise. La collecte de preuve antérieure est documentée comme retirée et l’écran n’est plus verrouillant : elle ne peut pas être pénalisée comme activité absente."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-final-quiz",
+      "score_100": 80,
+      "justification": "Les quatre QCM et le tri ont des consignes, réponses attendues et retentatives ; ils récapitulent les garde-fous essentiels. Le feedback déclaré du tri n’est pas rendu et les feedbacks des QCM restent génériques, ce qui limite la qualité de la remédiation."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P3",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-screen-03",
+      "category": "progression",
+      "description": "La frise de la démarche emploie « Préparer » puis « Contrôler », tandis que le tri final emploie « Construire » puis « Valider ». Les actions restent rapprochables, mais la correspondance n’est pas explicitée.",
+      "evidence": "current_courses[course_id=ia_appliquee_metiers_tp__09].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__09-screen-03].blocks[type=sequence_visual].items, comparé à chapters[id=ia_appliquee_metiers_tp__09-final-quiz].blocks[id=ia_appliquee_metiers_tp__09-quiz-order].buckets."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-final-quiz",
+      "category": "feedback",
+      "description": "Le tri contient un champ feedback et annonce une correction après tentative complète, mais le rendu du bucket_sort transmet uniquement correction au composant. Comme le bloc ne contient pas correction, aucun feedback pédagogique déclaré n’est affiché après soumission.",
+      "evidence": "current_courses[course_id=ia_appliquee_metiers_tp__09].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__09-final-quiz].blocks[id=ia_appliquee_metiers_tp__09-quiz-order].feedback ; client/src/pages/training/LessonViewer.tsx, case bucket_sort, transmet correction: block.correction ; client/src/components/MatchingExercise.tsx, shouldShowDetailedCorrection et affichage conditionné à exercise.correction."
+    },
+    {
+      "severity": "P3",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-final-quiz",
+      "category": "feedback",
+      "description": "Les quatre QCM affichent exactement la même explication générale après tentative. Elle rappelle utilement le cadre, mais ne fournit pas de justification spécifique au contrôle métier demandé par la question 3 ni à la protection des secrets demandée par la question 4.",
+      "evidence": "current_courses[course_id=ia_appliquee_metiers_tp__09].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__09-final-quiz].blocks[id=ia_appliquee_metiers_tp__09-quiz-01 à ia_appliquee_metiers_tp__09-quiz-04].explanation."
+    }
+  ],
+  "mean_100": 86.17,
+  "median_100": 85.5,
+  "scored_chapters": 6,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 6
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "P3": 2
+  },
+  "summary": "Contre-évaluation de l’état courant des six écrans : moyenne 86,17/100 et médiane 85,5/100. Les activités précédemment présentes au checkpoint et au mini-projet ont été retirées de manière documentée ; elles ne sont plus verrouillantes et n’ont reçu aucune pénalité. Les invariants de plateforme fournis sont considérés acquis. Trois constats ouverts, tous non bloquants, concernent la cohérence de libellés et la qualité de feedback du quiz final."
+}

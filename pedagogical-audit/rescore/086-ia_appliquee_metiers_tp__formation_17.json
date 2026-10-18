@@ -1,0 +1,73 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_17",
+  "index": 86,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-screen-01",
+      "score_100": 100,
+      "justification": "Le hero explicite le métier visé, le niveau, la durée et quatre acquis observables ; le callout cadre correctement l’exercice en environnement de démonstration. Cet écran informatif ne comporte ni activité ni évaluation à noter."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-screen-02",
+      "score_100": 100,
+      "justification": "Les prérequis de sandbox, données fictives, absence de secrets et validation humaine sont explicites. La revue de ressource donne une action et une intention de lecture claires ; le contenu et l’accessibilité de la ressource externe restent non vérifiés, donc neutres."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-screen-03",
+      "score_100": 92,
+      "justification": "La frise de quatre étapes et le panneau de vérifications donnent une démarche claire et directement exploitable. La continuité est toutefois minorée par des libellés différents de ceux du tri final (Préparer/Contrôler versus Construire/Valider)."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-mini-project",
+      "score_100": 100,
+      "justification": "L’écran courant présente clairement l’objectif du mini-projet. L’ancienne activité de preuve est explicitement retirée dans l’état courant ; aucune action, évaluation ou porte associée n’est donc à noter ni à pénaliser."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-final-quiz",
+      "score_100": 92,
+      "justification": "Les quatre QCM et le tri disposent d’énoncés, de réponses correctes et, pour les QCM, d’explications. Le feedback pédagogique déclaré pour le tri n’est toutefois pas celui transmis au composant de rendu, ce qui retire une synthèse utile après tentative."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-screen-03",
+      "category": "progression",
+      "description": "La démarche enseignée emploie « Cadrer / Préparer / Tester / Contrôler », alors que le tri final emploie « Cadrer / Construire / Tester / Valider ». Les actions restent proches, mais le changement de repères intervient au moment de la validation finale.",
+      "evidence": "086.json → current_courses[0].current_data.lessons[0].chapters[2].blocks[type=sequence_visual].items (Cadrer, Préparer, Tester, Contrôler) ; chapters[4].blocks[id=ia_appliquee_metiers_tp__17-quiz-order].buckets (Cadrer, Construire, Tester, Valider)."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-final-quiz",
+      "category": "feedback",
+      "description": "Le tri annonce une correction après tentative et déclare un feedback pédagogique, mais le champ affiché par le rendu est correction, absent du bloc. La synthèse de la démarche n’est donc pas disponible après la tentative.",
+      "evidence": "086.json → current_courses[0].current_data.lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__17-quiz-order].feedback est renseigné tandis que correction est absent ; le rendu bucket_sort transmet block.correction à MatchingExercise, qui utilise exercise.correction pour l’explication détaillée."
+    }
+  ],
+  "mean_100": 96.8,
+  "median_100": 100,
+  "scored_chapters": 5,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 5
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 2,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation de l’état courant : 5 chapitres effectivement présents ont été notés. Les activités de checkpoint et de preuve détaillée visibles dans l’historique ne sont plus des activités actuelles ; elles ne sont pas pénalisées. Aucun P0 ni P1 n’est observé. Deux améliorations P2 restent ouvertes : harmoniser les libellés de démarche entre l’enseignement et le tri final, et rendre le feedback déjà déclaré pour ce tri."
+}

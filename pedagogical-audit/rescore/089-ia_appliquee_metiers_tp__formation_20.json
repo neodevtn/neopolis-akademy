@@ -1,0 +1,59 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_20",
+  "index": 89,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-screen-01",
+      "score_100": 96,
+      "justification": "Écran d’entrée très clair : contexte métier, niveau, durée, objectifs opérationnels et cadre pratique sont explicitement présentés. Aucun dispositif d’évaluation n’est applicable à cet écran explicatif ; la navigation et la langue relèvent des invariants acquis de plateforme."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-screen-02",
+      "score_100": 98,
+      "justification": "Les prérequis de sécurité, les outils, les données fictives et la validation humaine sont précis ; la revue de ressource indique une action et des éléments à repérer. Le contenu de l’URL externe n’est pas vérifiable et est donc neutre, sans pénalité."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-screen-03",
+      "score_100": 96,
+      "justification": "La séquence Cadrer–Préparer–Tester–Contrôler et le panneau À faire/À éviter donnent un guidage cohérent, concret et réemployable. Il s’agit d’un écran explicatif : l’évaluation n’y est pas applicable ; les invariants de navigation sont acquis."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-final-quiz",
+      "score_100": 95,
+      "justification": "Le quiz évalue explicitement les principes annoncés, avec options, bonnes réponses et explications pour les QCM. Le tri présente une lacune de feedback détaillé : il annonce une correction après tentative mais ne contient pas de champ correction ; amélioration P2 non bloquante."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-final-quiz",
+      "category": "feedback",
+      "description": "L’activité de tri annonce qu’une correction est disponible après une tentative complète, mais le bloc courant ne fournit pas de champ correction détaillant la répartition attendue. Le champ feedback seul ne porte qu’un rappel général ; cela réduit le feedback actionnable après erreur sans empêcher la réalisation du quiz.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[3].blocks[4] : instructions.fr/en annoncent une correction après tentative ; feedback.fr/en est présent ; aucun champ correction n’est défini. La note historique documente que le rendu de bucket_sort transmet block.correction au composant de correction détaillée.",
+      "recommendation": "Ajouter un champ correction décrivant explicitement la répartition attendue de chaque carte, puis vérifier son affichage après une tentative erronée."
+    }
+  ],
+  "mean_100": 96.25,
+  "median_100": 96.0,
+  "scored_chapters": 4,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 4
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation réalisée exclusivement sur l’état courant : 4 chapitres présents ont été notés. Les anciens checkpoint et mini-projet ne sont plus dans le JSON courant et ne sont donc ni notés ni pénalisés. Les dépendances externes non vérifiables sont restées neutres et les invariants de plateforme ont été considérés acquis. Un seul constat ouvert subsiste : le feedback détaillé promis par le tri final n’est pas renseigné."
+}

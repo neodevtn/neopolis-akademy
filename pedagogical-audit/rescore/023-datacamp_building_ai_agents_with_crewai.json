@@ -1,0 +1,82 @@
+{
+  "formation_id": "datacamp_building_ai_agents_with_crewai",
+  "index": 23,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch01_act01",
+      "score_100": 75,
+      "justification": "Écran d’accueil clair, avec contexte, prérequis, vidéo Projector, transcript et PDF internes. Aucune activité évaluée n’est affichée, donc cette dimension est non applicable et renormalisée. La progression est toutefois fortement incomplète dans l’état courant : l’introduction annonce agents, tâches, équipes et flux, mais l’écran suivant réellement présent est directement la conclusion. Le transcript du média reste en anglais dans un écran français. Les invariants courants rendent les ressources et la navigation disponibles, sans pénalité de plateforme."
+    },
+    {
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch02_act04",
+      "score_100": 59,
+      "justification": "Le média de conclusion, ses slides, son transcript et son PDF sont présents ; aucune activité évaluée n’est affichée, donc l’évaluation/feedback est non applicable et renormalisée. Mais cet écran récapitule comme acquis des réalisations qui ne sont enseignées ni pratiquées dans aucun écran actuel entre l’accueil et la conclusion, ce qui affaiblit nettement son intention et sa valeur pédagogique. Son transcript est en anglais malgré le parcours français. Les invariants courants neutralisent toute pénalité de verrouillage, d’accès aux assets ou de porte fantôme."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "completude_et_progression",
+      "description": "Le parcours apprenant courant ne contient que l’accueil puis la conclusion. L’accueil annonce la création d’un agent, l’attribution de tâches, la constitution d’équipes et les flux, alors que la conclusion les présente comme déjà réalisés. Cinq activités pratiques de type LocalEnvironmentExercise sont déclarées comme extraites, mais aucun chapitre ou bloc apprenant correspondant n’est présent et exerciseCount vaut 0. Aucune suppression documentée ne permet de traiter cette absence comme une activité retirée non pénalisable.",
+      "evidence": "023.json → current_courses[0].current_data.datacampImport.expected : activities_expected_from_outline=7, activities_extracted=7 et exercise_types.LocalEnvironmentExercise=5 ; current_data.lessons ne contient que dc_ch01_act01 puis dc_ch02_act04 ; current_data.exerciseCount=0. dc_ch01_act01.blocks[video id=dc_1_act_01_video].transcript annonce agent, tâches, équipes et flux ; dc_ch02_act04.blocks[video id=dc_2_act_04_video].transcript les récapitule comme accomplis."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "langue_et_accessibilite",
+      "description": "L’écran est titré et préparé en français, mais la narration retranscrite de son unique média pédagogique est en anglais. Aucun sous-titre français ni alternative textuelle française n’est déclaré pour ce média ; cela réduit la cohérence linguistique observable du parcours français.",
+      "evidence": "023.json → current_courses[0].current_data.lessons[0].chapters[0] : title.fr et le bloc content.body.fr sont en français ; blocks[id=dc_1_act_01_video].transcript et transcriptSegments[*].text sont en anglais ; aucun champ de sous-titrage ou d’alternative française n’est présent."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch02_act04",
+      "category": "langue_et_accessibilite",
+      "description": "La conclusion est affichée sous un titre français, mais la narration retranscrite de son seul média est en anglais. Aucun sous-titre français ni alternative textuelle française n’est déclaré, alors que ce média porte l’intégralité de la synthèse de la leçon.",
+      "evidence": "023.json → current_courses[0].current_data.lessons[1].chapters[0] : title.fr est « Félicitations ! » ; blocks[id=dc_2_act_04_video].transcript et transcriptSegments[*].text sont en anglais ; aucun champ de sous-titrage ou d’alternative française n’est présent."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "verrouillage",
+      "description": "Le défaut historique de verrouillage du média obligatoire n’est pas retenu dans l’état actuel : le contrôle de plateforme fourni pour cette passe établit que les verrous reposent sur les activités réellement affichées et que les portes fantômes sont nulles. Il n’affecte donc pas la note courante.",
+      "evidence": "023.json → verified_platform_invariants.progression : « les verrous reposent sur les activités réellement affichées » et « les checkpoints orphelins et les portes fantômes sont à 0 » ; verified_platform_invariants.static_audit rapporte P1=0 au contrôle structurel courant."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch02_act04",
+      "category": "verrouillage",
+      "description": "Le défaut historique de verrouillage du média obligatoire de conclusion n’est pas retenu dans l’état actuel pour la même raison : l’invariant de progression courant confirme des verrous alignés sur les activités affichées, sans porte fantôme. Il n’affecte donc pas la note courante.",
+      "evidence": "023.json → verified_platform_invariants.progression : « les verrous reposent sur les activités réellement affichées » et « les checkpoints orphelins et les portes fantômes sont à 0 » ; verified_platform_invariants.static_audit rapporte P1=0 au contrôle structurel courant."
+    }
+  ],
+  "mean_100": 67,
+  "median_100": 67,
+  "scored_chapters": 2,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 1,
+    "60_79": 1,
+    "80_100": 0
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 2,
+    "P3": 0
+  },
+  "summary": "État courant revu sur les 2 écrans effectivement présents. Moyenne 67/100 et médiane 67/100 (scores 75 et 59). Les dimensions d’activité/évaluation sont non applicables, car aucun exercice ni question n’est affiché, et les garanties de plateforme disponibles neutralisent les défauts historiques de verrouillage, d’assets et de navigation. Le défaut ouvert majeur est la rupture entre une introduction qui promet un parcours pratique et une conclusion qui le suppose achevé, sans les cinq activités pratiques pourtant déclarées extraites ni preuve de leur retrait documenté. Deux défauts P2 ouverts concernent la transcription anglaise des deux médias dans un parcours français. Aucune qualité perceptuelle des médias n’a été inférée au-delà des données courantes fournies."
+}

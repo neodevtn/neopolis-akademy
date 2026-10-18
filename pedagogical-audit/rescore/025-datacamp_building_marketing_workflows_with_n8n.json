@@ -1,0 +1,91 @@
+{
+  "formation_id": "datacamp_building_marketing_workflows_with_n8n",
+  "index": 25,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch01_act01",
+      "score_100": 98,
+      "justification": "Écran explicatif actuel clairement titré et contextualisé, avec objectif avant vidéo, média local, sous-titres FR/EN et slides. Aucune activité pratique n’est affichée ; l’évaluation est donc non applicable. Progression et ressources internes sont acquises par les invariants de plateforme ; seul le libellé générique de durée est mineur."
+    },
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch01_act02",
+      "score_100": 98,
+      "justification": "Écran vidéo actuel avec titre, description, objectif avant visionnage et sous-titres FR/EN. Il ne présente aucune activité à réaliser ni évaluation, dimensions non applicables ou non vérifiables sans pénalité. Le verrou vidéo, les ressources internes et la progression sont acquis ; le badge de durée reste une finition mineure."
+    },
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch02_act01",
+      "score_100": 98,
+      "justification": "L’objectif de chaîne d’agents et de boucle de rétroaction est explicite dans le titre et la description ; objectif de visionnage, vidéo et sous-titres FR/EN sont présents. Écran explicatif sans activité affichée : évaluation non applicable. Les invariants confirment les médias et la progression ; seule la durée affichée est imprécise."
+    },
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch02_act05",
+      "score_100": 98,
+      "justification": "Écran de transition effectivement présent, doté d’un titre, d’une description de leçon, d’un objectif avant média et de sous-titres FR/EN. Il ne comporte pas d’activité ni d’évaluation à noter. Les ressources et le verrou du média relèvent des invariants acquis ; le badge « min de lecture » constitue une réserve éditoriale P3."
+    },
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch02_act08",
+      "score_100": 98,
+      "justification": "Écran de transition actuel dont le sujet et l’intention sont visibles avant la vidéo, accompagnée de sous-titres FR/EN. Sans activité affichée, aucune faisabilité pratique ni feedback ne peut être exigé. Médias, navigation et progression sont couverts par les invariants ; seule l’étiquette de durée reste mineure."
+    },
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch03_act01",
+      "score_100": 98,
+      "justification": "Titre et description détaillent le scénario de génération de leads, les lots et les flux parallèles ; l’écran ajoute objectif, vidéo et sous-titres FR/EN. Il est purement explicatif dans l’état courant, donc sans évaluation applicable. Les invariants valident ressources et progression ; le badge de durée est le seul défaut mineur observé."
+    },
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch03_act05",
+      "score_100": 98,
+      "justification": "Écran de transition présent avec intitulé cohérent, contexte de leçon, objectif avant média et sous-titres FR/EN. Aucune activité n’y est proposée, donc ni correction ni nouvelle tentative ne sont attendues. Ressources internes et progression sont acquises ; le libellé de durée générique justifie seulement une réserve P3."
+    },
+    {
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch03_act08",
+      "score_100": 98,
+      "justification": "Écran final actuel clairement identifiable, contextualisé par la description de leçon, avec objectif de visionnage, vidéo et sous-titres FR/EN. Aucune activité ni évaluation ne figure à l’écran, sans pénalité. Les invariants garantissent média et progression ; seule l’étiquette de durée imprécise est mineure."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P3",
+      "status": "open",
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "ux",
+      "description": "Le lecteur affiche « 1 min de lecture » pour cet écran uniquement vidéo ; la même logique s’applique aux huit écrans actuels du cours. Ce libellé décrit une durée de lecture calculée sur les seuls blocs content, absents ici, et non la durée du média.",
+      "evidence": "client/src/pages/training/LessonViewer.tsx:227-240 calcule la durée à partir des seuls blocks de type content avec un minimum d’une minute ; lignes 1266-1272 l’affichent comme « min de lecture ». Le chapitre dc_ch01_act01 ne contient qu’un block video et un block download dans current_courses[0].current_data.lessons[0].chapters[0].blocks."
+    },
+    {
+      "severity": "P1",
+      "status": "false_positive",
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch01_act02",
+      "category": "activité_et_progression",
+      "description": "L’ancien constat relatif à 23 activités absentes n’est pas retenu contre l’état courant : les huit écrans effectivement servis sont tous des écrans d’enseignement vidéo et aucune activité retirée n’est affichée, requise ou utilisée pour le verrouillage actuel.",
+      "evidence": "025.json current_courses[0].current_data indique chapterCount: 8, totalActivities: 8, exerciseCount: 0 et des chapters tous de type teaching ; verified_platform_invariants.progression indique que les verrous reposent sur les activités réellement affichées et que les portes fantômes sont à 0. La règle de la grille précise qu’un élément supprimé de manière documentée n’est pas pénalisé."
+    }
+  ],
+  "mean_100": 98,
+  "median_100": 98,
+  "scored_chapters": 8,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 8
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0,
+    "P3": 1
+  },
+  "summary": "Contre-évaluation de l’état courant : 8/8 écrans réellement présents et notés. Ce sont des écrans d’enseignement vidéo contextualisés, avec objectif avant visionnage et sous-titres FR/EN ; les dimensions d’évaluation propres à une activité ne s’appliquent pas lorsqu’aucune activité n’est affichée. Les invariants de plateforme acquis confirment ressources internes, langue et progression. Le seul constat ouvert est un libellé mineur de durée (« min de lecture ») appliqué aux écrans vidéo. L’ancien reproche portant sur des activités supprimées est classé false_positive conformément à la règle de non-pénalisation des éléments retirés."
+}

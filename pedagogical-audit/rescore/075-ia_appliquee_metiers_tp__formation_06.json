@@ -1,0 +1,91 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_06",
+  "index": 75,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-screen-01",
+      "score_100": 89,
+      "justification": "Écran d’ouverture clair : métier, niveau, durée, acquis et cadre de contrôle humain sont explicitement rendus. Les invariants de navigation, progression et langues sont acquis."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-screen-02",
+      "score_100": 83,
+      "justification": "La préparation prescrit sandbox, données fictives et validation humaine ; la revue de ressource fournit une consigne et une confirmation réalisable. Le contenu de la vidéo externe demeure non vérifiable et neutre."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-screen-03",
+      "score_100": 82,
+      "justification": "La démarche Cadrer–Préparer–Tester–Contrôler et le panneau À faire/À éviter structurent correctement la transition vers l’évaluation. Écran explicatif sans activité : l’évaluation et le feedback ne sont pas applicables."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-mini-project",
+      "score_100": 89,
+      "justification": "L’écran actuel ne contient plus qu’une note de mini-projet, avec remediation.sourcePreserved et le motif activity_removed_unverifiable_or_unprovided. L’activité historique retirée n’est plus évaluée ni pénalisée ; le libellé de l’objectif demeure explicite."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-final-quiz",
+      "score_100": 84,
+      "justification": "Le quiz fournit quatre QCM et un tri, avec énoncés, réponses attendues, feedback, tentatives et seuil de réussite ; les invariants de verrouillage sont acquis. Les explications des quatre QCM restent identiques et peu diagnostiques."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-checkpoint-01",
+      "category": "verrouillage",
+      "description": "Constat historique clôturé : le checkpoint n’est plus présent dans les chapitres courants ; le verrouillage qui validait une réponse incorrecte n’est donc plus exposé à l’apprenant ni pris en compte dans la progression actuelle.",
+      "evidence": "baseline.chapter_scores contient ia_appliquee_metiers_tp__06-checkpoint-01 et son issue pedagogical:ia_appliquee_metiers_tp__06:lesson_01:checkpoint_01:incorrect-answer-unlocks ; current_courses[0].current_data.lessons[0].chapters ne contient pas cet identifiant."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-mini-project",
+      "category": "guidage",
+      "description": "Constat historique clôturé : le bloc cloud_exercise qui demandait la proposition, le ROI et l’e-mail a été retiré de l’état courant. Son retrait est documenté ; il n’y a plus d’activité présentée dont le guidage ou les intrants seraient à évaluer.",
+      "evidence": "baseline issue pedagogical:ia_appliquee_metiers_tp__06:lesson_01:mini_project:missing-brief-roi-inputs-and-steps ; current_courses[0].current_data.lessons[0].chapters[3].blocks ne contient qu’un bloc content, avec remediation.sourcePreserved: true et remediation.reason: activity_removed_unverifiable_or_unprovided."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-mini-project",
+      "category": "verrouillage",
+      "description": "Constat historique clôturé : le bloc cloud_exercise et sa soumission par un seul caractère ne sont plus présents. L’écran courant n’affiche aucune activité de preuve ni verrou associé.",
+      "evidence": "baseline issue pedagogical:ia_appliquee_metiers_tp__06:lesson_01:mini_project:one-character-completion ; current_courses[0].current_data.lessons[0].chapters[3] a requiredBeforeAdvance: false et son unique bloc est de type content, sans mécanisme de soumission."
+    },
+    {
+      "severity": "P3",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-final-quiz",
+      "category": "feedback",
+      "description": "Les quatre QCM affichent la même explication générale. Le feedback, la réponse correcte et la nouvelle tentative sont disponibles, mais l’explication ne distingue pas les raisons d’écarter les distracteurs propres à chaque question.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[4].blocks[0..3].explanation.fr vaut dans chaque cas « La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle. »"
+    }
+  ],
+  "summary": "État courant revu : 5 écrans présents et notés. Le checkpoint historique et le mécanisme de mini-projet ont été retirés de manière vérifiable ; ils ne sont pas pénalisés. Un seul constat ouvert subsiste, P3, sur le caractère générique du feedback des QCM finaux.",
+  "mean_100": 85.4,
+  "median_100": 84.0,
+  "scored_chapters": 5,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 5
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0,
+    "P3": 1
+  }
+}

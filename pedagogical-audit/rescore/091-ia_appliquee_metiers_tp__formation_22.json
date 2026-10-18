@@ -1,0 +1,64 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_22",
+  "index": 91,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "chapter_id": "ia_appliquee_metiers_tp__22-screen-01",
+      "score_100": 91,
+      "justification": "Objectifs, public, niveau, durée et quatre acquis attendus sont explicites ; le cadre pratique pose les limites d’usage. Écran explicatif cohérent et rendu par des blocs standards ; évaluation et médias non applicables."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "chapter_id": "ia_appliquee_metiers_tp__22-screen-02",
+      "score_100": 88,
+      "justification": "Les prérequis, données fictives, absence de secrets et validation humaine sont clairement formulés avant les exercices. La revue de ressource a une consigne et une confirmation affichées ; le contenu effectif de la vidéo externe reste neutre, non vérifié."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "chapter_id": "ia_appliquee_metiers_tp__22-screen-03",
+      "score_100": 86,
+      "justification": "La séquence Cadrer–Préparer–Tester–Contrôler et le panneau À faire/À éviter offrent une progression claire, contextualisée et opérationnelle. Il s’agit d’un écran explicatif sans média ni évaluation applicable."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "chapter_id": "ia_appliquee_metiers_tp__22-mini-project",
+      "score_100": 88,
+      "justification": "L’écran actuel conserve une note concise et explicite sur le résultat attendu du mini-projet. L’ancienne activité interactive est documentée comme retirée et n’est ni affichée comme activité à accomplir ni utilisée pour le verrouillage : faisabilité et évaluation de cette activité sont donc non applicables, sans pénalité."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "chapter_id": "ia_appliquee_metiers_tp__22-final-quiz",
+      "score_100": 87,
+      "justification": "Les quatre QCM et le tri réinvestissent les garde-fous enseignés ; leurs réponses attendues, explications, nouvelle tentative et complétions requises sont rendues. Le feedback pédagogique renseigné pour le tri n’est toutefois pas transmis à son composant d’affichage."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "chapter_id": "ia_appliquee_metiers_tp__22-final-quiz",
+      "category": "feedback",
+      "description": "Le feedback pédagogique configuré pour l’activité de tri n’est pas affiché après une tentative. L’apprenant reçoit le score et les états juste/faux, mais pas l’explication de la démarche correcte présente dans les données courantes.",
+      "evidence": "Données courantes : current_courses[0].current_data.lessons[0].chapters[4].blocks[4].feedback. Rendu actuel : client/src/pages/training/LessonViewer.tsx, branche bucket_sort, lignes 950-968, transmet seulement block.correction à MatchingExercise ; client/src/components/MatchingExercise.tsx, lignes 420-451, n’affiche le détail que via exercise.correction."
+    }
+  ],
+  "mean_100": 88,
+  "median_100": 88,
+  "scored_chapters": 5,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 5
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation de l’état courant : 5 écrans réellement présents ont été notés. Les invariants de plateforme fournis sont acquis et les dimensions externes/non vérifiables sont neutres. Les deux constats P1 historiques ne s’appliquent plus aux activités retirées ; le seul constat ouvert vérifié dans l’état courant est un P2 de feedback non rendu dans le tri final."
+}

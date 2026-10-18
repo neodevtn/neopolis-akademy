@@ -1,0 +1,67 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_02",
+  "index": 71,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-screen-01",
+      "score_100": 96,
+      "justification": "Objectif, public débutant, durée et quatre acquis sont explicités ; le cadre de démonstration et de sécurité est clair. Écran explicatif cohérent, sans activité ni média à évaluer."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-screen-02",
+      "score_100": 94,
+      "justification": "Les prérequis, l’usage exclusif de données fictives et la validation humaine sont actionnables. La consultation de la ressource est réalisable et reliée à un verrou affiché ; la qualité du contenu externe n’est pas vérifiable et reste neutre."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-screen-03",
+      "score_100": 96,
+      "justification": "La démarche Cadrer–Préparer–Tester–Contrôler et le panneau À faire / À éviter structurent nettement la progression, les tests et les garde-fous. Écran explicatif sans activité obligatoire ni média."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-final-quiz",
+      "score_100": 86,
+      "justification": "Les quatre QCM et le tri sont rendus, corrigibles et exigent des réponses correctes pour terminer. L’évaluation ne couvre toutefois pas directement trois acquis annoncés, et le feedback propre au tri est configuré mais non transmis à son composant de rendu."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-final-quiz",
+      "category": "évaluation",
+      "description": "Le quiz final évalue les garde-fous, le test et l’ordre de démarche, mais ne vérifie pas directement la définition de critères de qualification, la production d’une sortie JSON CRM fiable ni le choix d’actions selon chaud/tiède/froid, alors que ces trois acquis sont déclarés pour la formation.",
+      "evidence": "current_courses[0].current_data.metadata.acquiredSkills[1..3] ; current_courses[0].current_data.lessons[0].chapters[3].blocks[0..4] : aucun item ne demande d’identifier des critères de qualification, une structure JSON CRM ou une action par catégorie de lead."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-final-quiz",
+      "category": "feedback",
+      "description": "Le feedback pédagogique du tri est présent dans les données actuelles, mais le visualiseur transmet uniquement block.correction au composant MatchingExercise. Le champ feedback du bloc n’est donc pas rendu après la tentative.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[3].blocks[4].feedback ; client/src/pages/training/LessonViewer.tsx:950-966 transmet correction: block.correction sans transmettre feedback ; MatchingExercise affiche uniquement exercise.correction dans son feedback détaillé."
+    }
+  ],
+  "mean_100": 93,
+  "median_100": 95,
+  "scored_chapters": 4,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 4
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 2,
+    "P3": 0
+  },
+  "summary": "État courant réévalué : 4 écrans présents et notés. Les anciens checkpoint et mini-projet ne sont plus présents ; ils ne sont ni notés ni pénalisés. Les invariants de plateforme fournis sont acquis. Deux améliorations P2 demeurent sur le quiz final ; aucun constat P0, P1 ou P3 n’est ouvert."
+}

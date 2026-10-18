@@ -1,0 +1,76 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_35",
+  "index": 104,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-screen-01",
+      "score_100": 96,
+      "justification": "Écran d’ouverture très clair : public, niveau, durée et quatre acquis sont explicites, avec un cadre de sécurité cohérent. C’est un écran explicatif ; l’évaluation est donc non applicable et les invariants actuels couvrent la navigation et le rendu standard."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-screen-02",
+      "score_100": 88,
+      "justification": "Les prérequis, limites de sécurité et l’action de consultation sont clairs et réalisables dans l’interface. La ressource externe est non vérifiée, donc neutre. La confirmation obligatoire n’apporte toutefois ni réponse exploitable ni feedback sur les éléments que l’apprenant doit repérer."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-screen-03",
+      "score_100": 94,
+      "justification": "La frise Cadrer–Préparer–Tester–Contrôler et le panneau à faire/à éviter rendent la démarche et les garde-fous lisibles. Écran explicatif cohérent avec les objectifs ; aucune activité évaluative n’y est requise et les invariants de plateforme sont acquis."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-final-quiz",
+      "score_100": 72,
+      "justification": "Les QCM et le tri sont rendables, disposent de réponses, de correction et de nouvelle tentative ; le seuil de 4 bonnes réponses et le tri sont des mécanismes actifs. En revanche, les activités finales vérifient surtout la sécurité et une démarche générale, sans établir les quatre acquis RAG annoncés ; les quatre QCM ont aussi le même feedback générique."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-screen-02",
+      "category": "évaluation et feedback",
+      "description": "La revue de ressource demande de repérer le résultat métier, les entrées, les sorties et les contrôles, mais la seule action requise est une auto-confirmation de consultation. Aucun élément à répondre ni feedback ne permet de vérifier ou de corriger ce repérage.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[1].blocks[1] : type resource_review ; instructions.fr demande de repérer quatre éléments ; resourceUrl est présent ; aucun champ de question, réponse attendue, critère ou feedback n’est déclaré."
+    },
+    {
+      "severity": "P1",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-final-quiz",
+      "category": "alignement de l’évaluation",
+      "description": "Le quiz final à verrouillage actif n’établit pas les quatre acquis annoncés par la formation : ingestion/chunking, embeddings et recherche vectorielle, réponse documentée, et rapport Google Docs. Les quatre QCM portent principalement sur les données fictives, le contrôle humain et les secrets ; le tri porte sur une démarche générale. La réussite finale peut donc ne démontrer que le cadre de prudence.",
+      "evidence": "current_courses[0].current_data.metadata.acquiredSkills contient les quatre acquis RAG ; lessons[0].chapters[3].blocks[0..3] sont des QCM sécurité/cadre, et blocks[4] est un bucket_sort Cadrer/Construire/Tester/Valider ; chapters[3].passThreshold vaut 4."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-final-quiz",
+      "category": "feedback",
+      "description": "Les quatre QCM déclarent mot pour mot la même explication générale. Le feedback et la reprise sont présents, mais la correction ne traite pas la logique propre de chaque item, notamment celui présenté comme lié à l’ingestion et au chunking.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[3].blocks[0..3].explanation.fr a la même valeur : « La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle. »"
+    }
+  ],
+  "mean_100": 87.5,
+  "median_100": 91,
+  "scored_chapters": 4,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 1,
+    "80_100": 3
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 2,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation de l’état courant uniquement : 4 écrans présents ont été notés. Moyenne 87,5/100 et médiane 91/100. Les invariants de plateforme fournis sont acquis ; les ressources externes et les aspects non vérifiables sont restés neutres. Les chapitres historiques absents du JSON courant ne sont ni notés ni signalés comme défauts. Le principal écart ouvert est l’alignement insuffisant du quiz final avec les acquis RAG annoncés."
+}

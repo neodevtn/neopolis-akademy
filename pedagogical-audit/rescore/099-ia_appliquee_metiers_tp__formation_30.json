@@ -1,0 +1,127 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_30",
+  "index": 99,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-screen-01",
+      "score_100": 100,
+      "justification": "Écran d’ouverture clair : métier cible, niveau, durée, objectifs concrets et cadre de démonstration/sécurité sont visibles. Écran explicatif sans évaluation applicable ; aucune anomalie courante observable."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-screen-02",
+      "score_100": 100,
+      "justification": "Préparation concrète (sandbox, données fictives, accès de test et validation humaine) suivie d’une revue de ressource contextualisée. La ressource externe est non vérifiée, non considérée absente, et les invariants de progression sont acquis."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-screen-03",
+      "score_100": 95,
+      "justification": "Démarche en quatre étapes et vérifications utilisables, avec bon enchaînement vers le projet. Les six items du comparison_panel restent toutefois en français dans leurs valeurs en, ce qui dégrade la cohérence de l’interface anglaise."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-mini-project",
+      "score_100": 100,
+      "justification": "L’écran présent expose clairement l’objectif du mini-projet en fr/en. L’ancien cloud_exercise a été retiré de manière documentée (remediation.activity_removed_unverifiable_or_unprovided) : aucune activité, porte ou évaluation retirée ne peut être pénalisée."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-final-quiz",
+      "score_100": 94,
+      "justification": "Les quatre QCM actuels ont énoncé, options, réponse correcte et explication ; l’évaluation est cohérente avec les apprentissages. Trois options en conservent toutefois une valeur française dans leur champ en, ce qui crée une incohérence localisée pour lang=en."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-screen-03",
+      "category": "ux_localisation",
+      "description": "Les six libellés d’items du panneau « Vérifications avant utilisation » ont une valeur en identique à la valeur française. Avec lang=en, le contenu du panneau est donc affiché en français.",
+      "evidence": "099.json → current_courses[0].current_data.lessons[0].chapters[2].blocks[1].columns[0].items[0..2].en et columns[1].items[0..2].en : chaînes françaises (« Utiliser des données fictives. », « Exposer un secret… », etc.)."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-final-quiz",
+      "category": "ux_localisation",
+      "description": "Trois options de QCM utilisent une chaîne française dans leur champ en ; l’interface anglaise mélange donc ponctuellement les langues au sein du quiz.",
+      "evidence": "099.json → current_courses[0].current_data.lessons[0].chapters[4].blocks[0].options[2].text.en = « Une action finale déclenchée sans relecture. » ; blocks[1].options[1].text.en = « Faux : l’automatisation dispense toujours de tout contrôle. » ; blocks[3].options[2].text.en = « Le statut de test « à vérifier ». »."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-checkpoint-01",
+      "category": "verrouillage",
+      "description": "Le knowledge_check historique susceptible de déverrouiller après une réponse incorrecte n’est plus un chapitre du cours courant ; aucun verrou de cette activité retirée n’est présent.",
+      "evidence": "099.json → current_courses[0].current_data.lessons[0].chapters : cinq chapitres présents, sans ia_appliquee_metiers_tp__30-checkpoint-01 ni bloc knowledge_check."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-mini-project",
+      "category": "guidage",
+      "description": "Le cloud_exercise historique sans étapes structurées a été retiré et remplacé par un écran de contenu ; l’activité retirée ne participe plus à une évaluation ou à une progression.",
+      "evidence": "099.json → current_courses[0].current_data.lessons[0].chapters[3].blocks[0] : type=content et remediation.reason=activity_removed_unverifiable_or_unprovided ; aucun cloud_exercise ni propriété steps."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-mini-project",
+      "category": "evaluation",
+      "description": "La preuve de réalisation historique qui pouvait être validée par une saisie minimale a été retirée avec le cloud_exercise ; aucune évaluation de preuve n’est affichée ni verrouillée dans l’état courant.",
+      "evidence": "099.json → current_courses[0].current_data.lessons[0].chapters[3] : unique bloc type=content, sans zone de réponse, validation, minimumAnswerLength ni mécanisme de complétion d’exercice."
+    },
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-mini-project",
+      "category": "ux_localisation",
+      "description": "Les textes du mini-projet encore affichés sont correctement fournis en fr/en ; les chaînes monolingues de l’ancien cloud_exercise ne sont plus dans le cours courant.",
+      "evidence": "099.json → current_courses[0].current_data.lessons[0].chapters[3].blocks[0].title et body contiennent chacun des objets fr/en ; aucun cloud_exercise n’est présent."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-final-quiz",
+      "category": "feedback",
+      "description": "Le bucket_sort historique annonçant un feedback non rendu a été retiré ; le quiz courant ne contient que quatre single_choice_exercise, chacun avec une explication.",
+      "evidence": "099.json → current_courses[0].current_data.lessons[0].chapters[4].blocks : quatre blocs, tous type=single_choice_exercise avec propriété explanation ; aucun bucket_sort, feedback ou correction de tri."
+    },
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-final-quiz",
+      "category": "progression",
+      "description": "La discontinuité de libellés relevée sur le tri final historique n’est plus applicable : le tri et ses buckets ont été retirés du cours courant.",
+      "evidence": "099.json → current_courses[0].current_data.lessons[0].chapters[4].blocks : aucun bloc bucket_sort ni libellés Cadrer/Construire/Tester/Valider de ce tri."
+    }
+  ],
+  "mean_100": 97.8,
+  "median_100": 100,
+  "scored_chapters": 5,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 5
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 2,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation de l’état courant : 5/5 chapitres réellement présents ont été notés. Les anciens défauts de checkpoint, de cloud_exercise et de bucket_sort sont clos car les activités concernées ne sont plus affichées ; leur retrait documenté ne reçoit aucune pénalité. Restent deux incohérences localisées de langue dans des valeurs en : le panneau de vérifications et trois options du quiz final. Les dimensions non vérifiables (notamment la ressource source externe) sont neutres et les invariants de plateforme fournis sont acquis."
+}

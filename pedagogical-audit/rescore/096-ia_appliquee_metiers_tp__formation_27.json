@@ -1,0 +1,109 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_27",
+  "index": 96,
+  "reviewed_current_state": true,
+  "chapter_scores": [
+    {
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-screen-01",
+      "score_100": 96,
+      "justification": "Écran d’orientation clair : public, niveau, durée, quatre acquis attendus et cadre de démonstration avec contrôles métier et de sécurité sont explicitement présentés."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-screen-02",
+      "score_100": 95,
+      "justification": "Les prérequis de démonstration, données fictives, interdiction des secrets et validation humaine sont précis ; la ressource externe est contextualisée mais reste non vérifiée, sans pénalité."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-screen-03",
+      "score_100": 95,
+      "justification": "La démarche Cadrer–Préparer–Tester–Contrôler et le panneau À faire/À éviter relient clairement préparation, tests, limites d’automatisation et revue humaine."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-mini-project",
+      "score_100": 93,
+      "justification": "L’écran expose de façon concise le résultat attendu du mini-projet. L’ancienne activité de preuve n’est plus affichée et est documentée comme retirée ; elle n’est donc pas pénalisée."
+    },
+    {
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-final-quiz",
+      "score_100": 89,
+      "justification": "Les quatre QCM et le tri évaluent de manière cohérente les règles enseignées, avec réponses possibles et reprise ; le feedback explicatif du tri défini dans les données n’est pas transmis au rendu."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-screen-02",
+      "category": "verrouillage",
+      "description": "Le constat historique relatif à une auto-attestation de consultation n’est plus applicable : l’activité resource_review et son verrou ne sont plus présents à l’écran courant.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__27-screen-02].blocks : deux blocs content seulement ; le second porte remediation.reason=activity_removed_unverifiable_or_unprovided ; requiredBeforeAdvance=false."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-checkpoint-01",
+      "category": "verrouillage",
+      "description": "Le checkpoint historique n’est plus un écran de la formation actuelle ; son ancien déverrouillage sur réponse incorrecte ne peut plus affecter la progression.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters contient cinq écrans : screen-01, screen-02, screen-03, mini-project et final-quiz ; aucun chapitre checkpoint-01 ni bloc knowledge_check n’est présent."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-mini-project",
+      "category": "guidage",
+      "description": "Le défaut historique de séquence de réalisation non structurée ne s’applique plus à une activité : le cloud_exercise concerné a été retiré de l’écran courant de manière documentée.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__27-mini-project].blocks ne contient qu’un bloc content, avec remediation.reason=activity_removed_unverifiable_or_unprovided ; aucun cloud_exercise ni steps n’est affiché."
+    },
+    {
+      "severity": "P1",
+      "status": "fixed",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-mini-project",
+      "category": "évaluation",
+      "description": "Le défaut historique de soumission d’une preuve non évaluée ne s’applique plus : il n’existe plus de champ de preuve ni de complétion de cloud_exercise sur l’écran actuel.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__27-mini-project].blocks : seul contenu informatif conservé ; aucune activité de soumission, grille ou porte associée n’est présente."
+    },
+    {
+      "severity": "P2",
+      "status": "open",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-final-quiz",
+      "category": "feedback",
+      "description": "Le tri final possède un message de feedback pédagogique dans les données, mais le rendu courant lui transmet uniquement correction ; faute de propriété correction sur ce bloc, l’explication ne peut pas être affichée après la tentative.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[id=ia_appliquee_metiers_tp__27-final-quiz].blocks[id=ia_appliquee_metiers_tp__27-quiz-order].feedback est renseigné sans correction ; vérification du rendu courant : LessonViewer construit MatchingExercise avec correction: block.correction."
+    },
+    {
+      "severity": "P3",
+      "status": "false_positive",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-final-quiz",
+      "category": "clarté linguistique",
+      "description": "Le constat historique de traduction ne constitue pas un constat ouvert dans cette contre-évaluation : la cohérence FR/EN est un invariant de plateforme déclaré acquis pour cette passe.",
+      "evidence": "verified_platform_invariants.language : « L’audit strict FR/EN et l’audit de structure Markdown retournent chacun 0 anomalie. »"
+    }
+  ],
+  "mean_100": 93.6,
+  "median_100": 95,
+  "scored_chapters": 5,
+  "distribution": {
+    "0_39": 0,
+    "40_59": 0,
+    "60_79": 0,
+    "80_100": 5
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "P3": 0
+  },
+  "summary": "Contre-évaluation de l’état courant : 5 écrans réellement présents ont été notés. Les activités et le checkpoint retirés de manière documentée ne sont pas pénalisés. Un seul constat ouvert subsiste : le feedback pédagogique du tri final est renseigné mais non transmis au composant de rendu."
+}
