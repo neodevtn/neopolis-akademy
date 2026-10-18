@@ -1,0 +1,55 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_18",
+  "index": 87,
+  "course_ids": ["ia_appliquee_metiers_tp__18"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "chapter_id": "ia_appliquee_metiers_tp__18-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__18-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Le knowledge check obligatoire ne garantit pas une validation correcte : une réponse erronée est enregistrée comme interaction terminée et déverrouille la suite. Aucun actif déclaré ne permet de corriger fiablement ce gate dans le périmètre de la décision ; retirer l’activité tout en conservant l’explication de sécurité comme contenu non bloquant sur l’écran.",
+      "evidence": "current_recheck.findings P1 verrouillage ; initial_audit issue pedagogical:ia_appliquee_metiers_tp__18:checkpoint-wrong-answer-unlocks ; bloc réel lessons[0].chapters[3].blocks[id=ia_appliquee_metiers_tp__18-checkpoint-preparation], requiredBeforeAdvance=true, passThreshold=1."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "chapter_id": "ia_appliquee_metiers_tp__18-checkpoint-01",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou de chapitre associé au checkpoint supprimé afin qu’aucune réussite de cette activité non fiable ne soit requise pour avancer.",
+      "evidence": "current_recheck.findings P1 verrouillage ; chapitre réel ia_appliquee_metiers_tp__18-checkpoint-01 avec requiredBeforeAdvance=true et passThreshold=1."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "chapter_id": "ia_appliquee_metiers_tp__18-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__18-mini-project-proof",
+      "exercise_id": "ia_appliquee_metiers_tp__18-mini-project-proof",
+      "reason": "Le cloud exercise obligatoire accepte une saisie d’un seul caractère non blanc et déverrouille la suite sans vérifier les quatre preuves demandées. Retirer l’activité et conserver sa consigne utile (scénario, procédure, résultat, contrôle et validation humaine) sous forme de contenu informatif non bloquant.",
+      "evidence": "current_recheck.findings P1 évaluation ; initial_audit issue pedagogical:ia_appliquee_metiers_tp__18:mini-project-proof-unverified-unlock ; bloc réel lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__18-mini-project-proof], type cloud_exercise, sans minimumAnswerLength, rubricCriteria ni serverGradedAssessment."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "chapter_id": "ia_appliquee_metiers_tp__18-mini-project",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou du chapitre du mini-projet supprimé afin que la progression ne dépende pas d’une preuve libre non évaluable de manière fiable.",
+      "evidence": "current_recheck.findings P1 évaluation ; chapitre réel ia_appliquee_metiers_tp__18-mini-project et complétion du bloc mini-project-proof documentée comme déverrouillant le quiz final."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__18",
+      "chapter_id": "ia_appliquee_metiers_tp__18-screen-02",
+      "block_id": "ia_appliquee_metiers_tp__18-source-review",
+      "exercise_id": null,
+      "reason": "Supprimer uniquement le lien Markdown obsolète de la consigne ; le bouton resourceUrl déclaré reste le moyen d’ouverture valide et le verrou de consultation n’est pas retiré.",
+      "evidence": "current_recheck.findings P3 ux_rendu ; bloc réel resource_review ia_appliquee_metiers_tp__18-source-review avec instructions Markdown et resourceUrl séparé ; initial_audit markdown-rendering."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux activités P1 obligatoires dont la correction machine-évaluable n’est pas garantie sont retirées : le checkpoint est supprimé et son verrou levé ; la preuve du mini-projet est convertie en contenu non bloquant et son verrou levé. Le lien Markdown redondant de la ressource est aussi nettoyé. Aucun constat historique stillOpen n’existe ; unresolved P0/P1 = 0."
+}

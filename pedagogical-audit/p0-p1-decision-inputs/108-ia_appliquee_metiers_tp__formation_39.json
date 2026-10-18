@@ -1,0 +1,984 @@
+{
+  "formation": {
+    "index": 108,
+    "formation_id": "ia_appliquee_metiers_tp__formation_39",
+    "title": {
+      "fr": "Analyse automatique des risques d'un contrat PDF",
+      "en": "Analyse automatique des risques d'un contrat PDF"
+    },
+    "course_ids": [
+      "ia_appliquee_metiers_tp__39"
+    ]
+  },
+  "current_open_p0_p1_findings": [
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/3; client/src/components/blocks/GenericLearningBlocks.tsx; client/src/pages/training/LessonViewer.tsx; client/src/pages/training/checkpointGate.ts",
+      "description": "Le chapitre checkpoint obligatoire déclare passThreshold=1 et contient un knowledge_check requis avec correctAnswer='a'. Le rapport initial fournit la preuve localisée que la complétion de l’interaction est enregistrée même si isCorrect=false et que la logique de checkpoint ne filtre que les blocs type checkpoint, pas knowledge_check; une réponse fausse peut donc déverrouiller la suite. L’entrée du cours dans static-audit-data.json indique issue_count=0, mais ce pré-audit statique ne contredit pas cette preuve de logique/rendu.",
+      "recommendation": "Ne déverrouiller le chapitre suivant qu’après isCorrect=true, ou inclure explicitement knowledge_check dans l’évaluation du checkpoint; tester les réponses b/c/d (bloquées) et a (autorisée).",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/4/blocks/0; client/src/components/CloudExerciseBlock.tsx; client/src/components/blocks/cloudExerciseValidation.ts",
+      "description": "Le mini-projet obligatoire demande une preuve du scénario, du résultat, d’un contrôle et de la validation humaine, mais le cloud_exercise ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment. Le rapport initial localise la validation par défaut à une réponse non vide d’un caractère, suffisante pour terminer et déverrouiller le quiz sans preuve exploitable.",
+      "recommendation": "Configurer des critères visibles et une validation proportionnée (gabarit/auto-évaluation bloquante ou évaluation), avec longueur minimale décidée pédagogiquement; vérifier qu’une saisie comme ‘x’ ne permet pas de continuer.",
+      "status": "open"
+    }
+  ],
+  "legacy_open_count_requiring_normalization": 0,
+  "current_recheck": {
+    "formation_id": "ia_appliquee_metiers_tp__formation_39",
+    "index": 108,
+    "course_ids": [
+      "ia_appliquee_metiers_tp__39"
+    ],
+    "review_scope": {
+      "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+      "course_paths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__39.json"
+      ],
+      "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/108-ia_appliquee_metiers_tp__formation_39.json",
+      "static_audit_data": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+      "criteria": [
+        "objectifs et activités",
+        "faisabilité TP/fichiers/environnement",
+        "fausses soumissions ou gates",
+        "médias/téléchargements",
+        "duplications ou corruption",
+        "rendu/bilinguisme"
+      ],
+      "method": "Contre-revue du JSON de cours actuel, du rapport initial et de l’entrée correspondante de static-audit-data.json; aucun cours ni code n’a été modifié. Les constats runtime non prouvés par JSON/code local n’ont pas été déduits."
+    },
+    "reviewed_current_state": true,
+    "findings": [
+      {
+        "severity": "P2",
+        "category": "verrouillage",
+        "course_id": "ia_appliquee_metiers_tp__39",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/1/blocks/1; client/src/pages/training/LessonViewer.tsx (preuve citée dans le rapport initial)",
+        "description": "La resource_review demande d’ouvrir la ressource puis de confirmer, mais le JSON ne porte qu’une resourceUrl et une consigne; le rapport initial localise le rendu où le bouton de confirmation est indépendant de l’ouverture du lien. Une auto-attestation peut donc compléter l’étape sans preuve de consultation.",
+        "recommendation": "Si la consultation doit être obligatoire, conditionner la confirmation à une ouverture/retour observable ou demander une micro-trace structurée (résultat métier, entrée, sortie, contrôle); sinon documenter explicitement qu’il s’agit d’une auto-attestation.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "évaluation",
+        "course_id": "ia_appliquee_metiers_tp__39",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/3; client/src/components/blocks/GenericLearningBlocks.tsx; client/src/pages/training/LessonViewer.tsx; client/src/pages/training/checkpointGate.ts",
+        "description": "Le chapitre checkpoint obligatoire déclare passThreshold=1 et contient un knowledge_check requis avec correctAnswer='a'. Le rapport initial fournit la preuve localisée que la complétion de l’interaction est enregistrée même si isCorrect=false et que la logique de checkpoint ne filtre que les blocs type checkpoint, pas knowledge_check; une réponse fausse peut donc déverrouiller la suite. L’entrée du cours dans static-audit-data.json indique issue_count=0, mais ce pré-audit statique ne contredit pas cette preuve de logique/rendu.",
+        "recommendation": "Ne déverrouiller le chapitre suivant qu’après isCorrect=true, ou inclure explicitement knowledge_check dans l’évaluation du checkpoint; tester les réponses b/c/d (bloquées) et a (autorisée).",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "ia_appliquee_metiers_tp__39",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/4/blocks/0; client/src/components/CloudExerciseBlock.tsx; client/src/components/blocks/cloudExerciseValidation.ts",
+        "description": "Le mini-projet obligatoire demande une preuve du scénario, du résultat, d’un contrôle et de la validation humaine, mais le cloud_exercise ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment. Le rapport initial localise la validation par défaut à une réponse non vide d’un caractère, suffisante pour terminer et déverrouiller le quiz sans preuve exploitable.",
+        "recommendation": "Configurer des critères visibles et une validation proportionnée (gabarit/auto-évaluation bloquante ou évaluation), avec longueur minimale décidée pédagogiquement; vérifier qu’une saisie comme ‘x’ ne permet pas de continuer.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "accessibilité linguistique",
+        "course_id": "ia_appliquee_metiers_tp__39",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/4/blocks/0",
+        "description": "Le cours expose des champs fr/en pour ses textes structurés, mais les champs centraux du cloud_exercise assignment, instructions, hint, solution et successMessage sont des chaînes simples. L’état JSON actuel ne fournit donc pas de variante anglaise pour ces contenus de l’activité, alors que la locale anglaise est déclarée au niveau du cours; le rendu peut conserver ces chaînes françaises.",
+        "recommendation": "Fournir des variantes {fr,en} pour ces cinq champs apprenant et vérifier le rendu dans les deux locales, sans changer les identifiants ni les exigences de sécurité.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "énoncé",
+        "course_id": "ia_appliquee_metiers_tp__39",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__39.json#/lessons/0/chapters/5/blocks/2",
+        "description": "La troisième question du quiz final vise explicitement l’objectif ‘Recevoir un contrat PDF depuis un formulaire’, mais sa réponse correcte est le contrôle générique du résultat contre un critère métier et la documentation d’un écart. Le JSON ne nomme pas de signal observable de réception; l’explication est également le rappel générique utilisé par les autres questions. L’alignement objectif–activité reste donc partiel.",
+        "recommendation": "Définir la trace de réception réellement observable dans le workflow, puis aligner énoncé, bonne réponse, distracteurs et explication sur cette trace; ne pas inventer de nœud ou de règle non présent dans le support.",
+        "status": "open"
+      }
+    ],
+    "summary": {
+      "issue_count": 5,
+      "p0": 0,
+      "p1": 2,
+      "p2": 3
+    }
+  },
+  "initial_audit": {
+    "formation_id": "ia_appliquee_metiers_tp__formation_39",
+    "courses": [
+      {
+        "course_id": "ia_appliquee_metiers_tp__39",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "ia_appliquee_metiers_tp__39-screen-01",
+            "title": "Objectif du TP",
+            "score_100": 90,
+            "verified_dimensions": [
+              "Les objectifs sont rendus dans un bloc learning_section : le métier cible, le niveau, la durée et quatre compétences opérationnelles sont explicitement annoncés.",
+              "Le cadre pratique relie le TP à un environnement de démonstration et rappelle que la ressource source ne remplace pas les contrôles métier et de sécurité.",
+              "Le composant LearningSectionBlock rend le titre, le texte et la liste d’objectifs ; aucun bloc déclaré de cette page n’est ignoré par LessonViewer.",
+              "Aucun média, activité ou verrouillage propre à ce chapitre n’est déclaré ; le passage ne dépend donc pas d’une ressource non contextualisée."
+            ],
+            "unverified_dimensions": [
+              "La compréhension sur navigateur et sur petits écrans n’a pas été observée dans une session apprenant authentifiée.",
+              "L’adéquation factuelle des quatre compétences avec un workflow n8n/Gemini réellement exécuté n’est pas vérifiable sans exécuter le TP."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 1,
+            "chapter_id": "ia_appliquee_metiers_tp__39-screen-02",
+            "title": "Préparer l’environnement",
+            "score_100": 87,
+            "verified_dimensions": [
+              "Les prérequis de sécurité sont explicites avant l’activité pratique : sandbox ou comptes de démonstration, données fictives, absence de secrets et validation humaine des actions à impact.",
+              "La ressource est contextualisée par une consigne précise : repérer le résultat métier, les entrées, les sorties et les étapes de contrôle, puis revenir confirmer la consultation.",
+              "Le bloc resource_review est rendu par LessonViewer avec titre, consigne, bouton d’ouverture et bouton de confirmation ; son énoncé est donc visible et l’action attendue identifiable.",
+              "La page précède logiquement la démarche de construction, le checkpoint et le mini-projet."
+            ],
+            "unverified_dimensions": [
+              "Le contenu, la disponibilité effective, l’accessibilité et la pertinence pédagogique de la ressource externe ne sont pas inférés de son URL ; le chemin /manus-storage du support fictif n’est pas présent dans les fichiers statiques inspectés mais peut être servi par un mécanisme applicatif non audité.",
+              "L’ouverture effective d’un nouvel onglet par un navigateur et le comportement mobile du lien n’ont pas été testés."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-39-CH02-001",
+                "course_id": "ia_appliquee_metiers_tp__39",
+                "chapter_id": "ia_appliquee_metiers_tp__39-screen-02",
+                "content_id": "ia_appliquee_metiers_tp__39-source-review",
+                "content_type": "resource_review",
+                "severity": "P2",
+                "category": "verrouillage",
+                "description": "La consultation requise peut être déclarée sans ouverture de la ressource. L’apprenant peut donc déverrouiller l’étape sans réaliser l’observation demandée ; le verrouillage ne correspond qu’à une auto-attestation, alors que le message de passage indique « Ouvrez puis confirmez ». ",
+                "current_content": "Consigne affichée : « Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation. »",
+                "proposed_content": "Conserver la consigne, mais distinguer explicitement l’auto-attestation de la preuve de consultation. Si la consultation doit être obligatoire, n’activer « J’ai consulté cette ressource » qu’après l’événement d’ouverture suivi d’un retour au module, ou demander une très courte trace structurée : « résultat métier / entrée / sortie / contrôle repéré » avant déverrouillage.",
+                "evidence": "JSON : lessons[0].chapters[1].blocks[1] contient resourceUrl et la consigne. Rendu : LessonViewer.tsx, case resource_review, lignes 1083-1088, place le lien et le bouton de confirmation dans deux actions indépendantes ; le onClick du bouton ajoute directement reviewId aux complétions sans contrôler l’ouverture du lien. Le verrou de navigation se contente ensuite de cette complétion (lignes 1583-1586).",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_code",
+                "recommended_action": "Décider si une auto-attestation est suffisante. Si non, implémenter une condition de consultation observable ou une micro-réponse structurée et tester qu’elle est exigée avant le bouton Suivant."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 2,
+            "chapter_id": "ia_appliquee_metiers_tp__39-screen-03",
+            "title": "Construire progressivement",
+            "score_100": 88,
+            "verified_dimensions": [
+              "La séquence rendue présente un ordre cohérent — cadrer, préparer, tester, contrôler — avec une courte description à chaque étape.",
+              "Le panneau comparatif « À faire / À éviter » rend explicites les garde-fous avant utilisation : données fictives, contrôle humain, cas limites, secrets, action finale et vérification métier.",
+              "Les composants SequenceVisualBlock et ComparisonPanelBlock affichent titres, descriptions et listes ; l’information pédagogique déclarée est rendue par LessonViewer.",
+              "La page prépare les compétences sollicitées par le checkpoint et le mini-projet sans prérequis inversé confirmé."
+            ],
+            "unverified_dimensions": [
+              "La capacité de cette vue d’ensemble à permettre la configuration technique détaillée des outils ne peut pas être déduite sans consulter la ressource et le support de TP.",
+              "Aucune observation utilisateur ne permet de mesurer si la distinction visuelle entre les deux panneaux est suffisamment accessible."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 3,
+            "chapter_id": "ia_appliquee_metiers_tp__39-checkpoint-01",
+            "title": "Checkpoint : environnement et sécurité",
+            "score_100": 72,
+            "verified_dimensions": [
+              "L’activité knowledge_check rend une question contextualisée, quatre réponses, une réponse correcte et une explication ; l’action attendue est claire.",
+              "Le feedback est visible après choix, précise « Bonne réponse » ou « Réponse incorrecte », affiche l’explication et propose « Réessayer ».",
+              "La question vérifie des garde-fous enseignés aux chapitres précédents (sandbox, données fictives et validation humaine)."
+            ],
+            "unverified_dimensions": [
+              "Le ressenti de l’apprenant face au feedback n’a pas été testé en navigateur ; le défaut de seuil ci-dessous est toutefois démontré par le code de rendu et de progression.",
+              "Aucune validité psychométrique de cette unique question n’est revendiquée."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-39-CH04-001",
+                "course_id": "ia_appliquee_metiers_tp__39",
+                "chapter_id": "ia_appliquee_metiers_tp__39-checkpoint-01",
+                "content_id": "ia_appliquee_metiers_tp__39-checkpoint-preparation",
+                "content_type": "knowledge_check",
+                "severity": "P1",
+                "category": "évaluation",
+                "description": "Le checkpoint annonce passThreshold: 1, mais une réponse incorrecte est suffisante pour déverrouiller le chapitre suivant. La tentative est mémorisée comme interaction terminée quel que soit isCorrect, tandis que la logique spécifique des checkpoints ne compte que les blocs de type checkpoint, absents ici. Le score de passage n’est donc pas appliqué à cette activité obligatoire.",
+                "current_content": "Chapitre obligatoire avec passThreshold: 1 ; activité multiple_choice dont correctAnswer est « a ». Le feedback invite à réessayer en cas d’erreur.",
+                "proposed_content": "Conserver la question et son feedback, mais faire dépendre la complétion du checkpoint d’une réponse correcte. Après une erreur, laisser l’explication et « Réessayer » visibles, sans rendre le bouton Suivant disponible ; comptabiliser explicitement le knowledge_check dans le seuil de passage du chapitre.",
+                "evidence": "JSON : lessons[0].chapters[3] est requiredBeforeAdvance:true, passThreshold:1 et contient seulement le knowledge_check id ia_appliquee_metiers_tp__39-checkpoint-preparation. GenericLearningBlocks.tsx, ligne 57, transmet isCorrect ; LessonViewer.tsx, lignes 484-489, ajoute néanmoins l’identifiant à completedNovasavoInteractions dans les deux cas. checkpointGate.ts, lignes 18-21, filtre exclusivement block.type === 'checkpoint', donc retourne zéro question pour ce chapitre. evaluationRules.ts, lignes 7-10, ne verrouille pas un ensemble de zéro question ; LessonViewer.tsx, lignes 1539-1556, emploie cet état.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_code",
+                "recommended_action": "Adapter la logique de checkpoint pour inclure knowledge_check (ou convertir ce bloc vers le type de checkpoint attendu), puis ajouter un test : réponse b, c ou d => passage verrouillé ; réponse a => passage autorisé."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 4,
+            "chapter_id": "ia_appliquee_metiers_tp__39-mini-project",
+            "title": "Mini-projet et preuve de réalisation",
+            "score_100": 64,
+            "verified_dimensions": [
+              "L’objectif affiché est explicite : analyser cinq contrats PDF fictifs et ne signaler que ceux dépassant le seuil de risque.",
+              "Les instructions visibles demandent de décrire le scénario testé, le résultat, un contrôle effectué et l’étape restant soumise à validation humaine ; l’environnement et les garde-fous sont également rendus dans des panneaux repliables.",
+              "Le bloc cloud_exercise rend un objectif, les instructions, les prérequis, la ressource, un indice, une zone de preuve, une correction post-remise et un message de succès.",
+              "La correction réaffirme les données fictives, la validation humaine, l’observation d’un résultat et un test ; l’activité suit le checkpoint de sécurité."
+            ],
+            "unverified_dimensions": [
+              "Le contenu et l’accessibilité réelle du support fictif associé ne sont pas établis : il est référencé par /manus-storage mais aucun fichier statique correspondant n’a été trouvé. Cette absence dans le répertoire statique ne permet pas de conclure à une ressource indisponible au runtime.",
+              "La réalisation effective du workflow, le paramétrage des outils, l’analyse réelle des clauses et le déclenchement d’alerte ne sont pas vérifiables sans environnement de démonstration.",
+              "La lisibilité en navigateur des panneaux repliables et des liens de ressource n’a pas été testée."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-39-CH05-001",
+                "course_id": "ia_appliquee_metiers_tp__39",
+                "chapter_id": "ia_appliquee_metiers_tp__39-mini-project",
+                "content_id": "ia_appliquee_metiers_tp__39-mini-project-proof",
+                "content_type": "cloud_exercise",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "La remise du mini-projet obligatoire est validée dès qu’un seul caractère non vide est saisi. Aucune grille, longueur minimale significative, évaluation serveur ou auto-évaluation obligatoire n’est configurée ; la plateforme affiche alors la correction et déverrouille le quiz final. Une preuve ne peut donc pas être distinguée d’une saisie non exploitable.",
+                "current_content": "L’activité demande une preuve comportant « le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine », mais ne définit ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment.",
+                "proposed_content": "Afficher quatre critères de preuve et rendre leur validation obligatoire : 1) scénario fictif et contrat testé ; 2) résultat/alerte observé ; 3) contrôle ou écart documenté ; 4) action qui demeure sous validation humaine. La zone de remise peut proposer le gabarit réutilisable : « Scénario testé : … / Résultat observé : … / Contrôle ou écart : … / Validation humaine restante : … ». Ne déverrouiller qu’après une vérification de ces critères ou une auto-évaluation explicite correspondante.",
+                "evidence": "JSON : lessons[0].chapters[4].blocks[0] est un cloud_exercise requiredBeforeAdvance sans minimumAnswerLength, rubricCriteria, serverGradedAssessment ni requirePostRevealReflection. CloudExerciseBlock.tsx, lignes 117-125, en déduit usesTrackedRubric:false et reflectionIsRequired:false ; lignes 153-161, toute réponse satisfaisant le minimum termine et appelle onComplete ; resolveAssessmentMinimumLength (shared/assessmentSubmissionGuidance.ts, lignes 134-139) renvoie 1 hors évaluation suivie ; hasRequiredAnswerLength vérifie seulement la longueur non vide. LessonViewer.tsx, lignes 1588-1592, enlève ensuite le verrou lorsque ce onComplete a été reçu.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_code",
+                "recommended_action": "Configurer des critères visibles et une validation de preuve proportionnée au mini-projet (rubrique/évaluation ou auto-évaluation bloquante), puis tester que « x » ne permet pas de continuer et qu’une preuve structurée conforme le permet."
+              },
+              {
+                "issue_id": "PED-39-CH05-002",
+                "course_id": "ia_appliquee_metiers_tp__39",
+                "chapter_id": "ia_appliquee_metiers_tp__39-mini-project",
+                "content_id": "ia_appliquee_metiers_tp__39-mini-project-proof",
+                "content_type": "cloud_exercise",
+                "severity": "P2",
+                "category": "guidage",
+                "description": "Bien que le parcours se présente comme un « TP guidé », le mini-projet ne fournit aucune étape structurée dans le champ steps. Les quatre puces décrivent des résultats à atteindre, pas une progression de réalisation et de contrôle. Pour un apprenant intermédiaire, le passage de la démarche générale au workflow concret reste insuffisamment guidé dans l’écran du TP.",
+                "current_content": "Le champ steps est absent. Les instructions listent : recevoir un PDF, détecter les risques et protections absentes, attribuer un score et une sévérité, puis déclencher une alerte au-delà d’un seuil.",
+                "proposed_content": "Ajouter, avant la zone de preuve, les étapes réutilisables suivantes : « 1. Dans un environnement de démonstration, préparez cinq contrats PDF fictifs et le formulaire de dépôt. 2. Configurez la réception du contrat dans le workflow. 3. Analysez le document pour relever clauses risquées et protections absentes, puis attribuez un score et une sévérité. 4. Configurez une alerte uniquement au-delà du seuil de risque, en la maintenant en brouillon ou derrière une validation humaine. 5. Exécutez au moins un cas fictif, consignez le résultat et l’écart éventuel dans votre preuve. » Ces étapes ne présument ni seuil chiffré, ni règle juridique, ni configuration technique non présente dans les données.",
+                "evidence": "JSON : lessons[0].chapters[4].blocks[0] contient assignment, instructions, environmentGuide, resources, hint et solution, mais aucun tableau steps. CloudExerciseBlock.tsx, lignes 278-296, n’affiche des étapes numérotées que si tpSteps.length > 0. La page précédente fournit seulement la démarche générale « Cadrer / Préparer / Tester / Contrôler ».",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_code",
+                "recommended_action": "Ajouter ces étapes ou un guidage équivalent validé par le métier, puis vérifier que chaque étape reste alignée avec le support fictif effectivement fourni."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 5,
+            "chapter_id": "ia_appliquee_metiers_tp__39-final-quiz",
+            "title": "Quiz final : valider la démarche",
+            "score_100": 80,
+            "verified_dimensions": [
+              "Les quatre QCM rendent chacun un énoncé, des options, une réponse correcte et une explication ; SingleChoiceExercise n’enregistre la complétion qu’après une bonne réponse.",
+              "Le tri final a un titre, une consigne, quatre catégories et quatre cartes cohérentes avec la démarche annoncée. MatchingExercise affiche les placements corrects/incorrects, permet la réinitialisation et ne marque la complétion qu’en cas de tri entièrement correct.",
+              "Le seuil de quatre bonnes réponses est cohérent avec les quatre QCM : LessonViewer calcule le seuil sur ces quatre questions ; le tri est, en plus, une activité obligatoire. Le quiz final ne présente donc pas le défaut de seuil constaté au checkpoint.",
+              "La séquence finale reprend les principes réellement introduits : données fictives, validation humaine, traçabilité des tests et déroulé cadrer/construire/tester/valider."
+            ],
+            "unverified_dimensions": [
+              "Le comportement visuel de glisser-déposer, du clavier et du lecteur d’écran n’a pas été testé en navigateur, bien que des libellés et alternatives clic/clavier existent dans le composant.",
+              "L’efficacité des distracteurs et la difficulté réelle de l’évaluation n’ont pas été mesurées auprès d’apprenants."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-39-CH06-001",
+                "course_id": "ia_appliquee_metiers_tp__39",
+                "chapter_id": "ia_appliquee_metiers_tp__39-final-quiz",
+                "content_id": "ia_appliquee_metiers_tp__39-quiz-03",
+                "content_type": "single_choice_exercise",
+                "severity": "P2",
+                "category": "énoncé",
+                "description": "La troisième question annonce vérifier l’objectif « Recevoir un contrat PDF depuis un formulaire », mais sa bonne réponse — comparer le résultat du test à un critère métier et documenter l’écart — n’identifie aucun contrôle observable de réception du PDF. Elle évalue une pratique de test générale plutôt que l’objectif nommé. Son explication réutilise en outre le rappel générique du cadre du TP sans lever cette ambiguïté.",
+                "current_content": "Question : « Quel contrôle aide à vérifier l’objectif “Recevoir un contrat PDF depuis un formulaire” ? » Réponse correcte : « Comparer le résultat du test au critère métier défini puis documenter l’écart. » Explication : « La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle. »",
+                "proposed_content": "Après validation du signal de réception réellement observable dans le workflow, reformuler la question pour le nommer et aligner le feedback. Énoncé réutilisable sans inventer de nœud précis : « Après avoir envoyé un contrat PDF fictif via le formulaire, quel contrôle vous permet de vérifier que l’étape de réception a fonctionné avant l’analyse ? » La bonne option doit décrire la trace réellement disponible dans le workflow ; l’explication doit dire pourquoi cette trace confirme la réception et non seulement rappeler les règles générales de sécurité.",
+                "evidence": "JSON : lessons[0].chapters[5].blocks[2] lie explicitement la question à l’objectif de réception, mais l’option a correcte reste générique et l’explication est identique à celles des questions 1, 2 et 4. Le rendu SingleChoiceExercise dans LessonViewer.tsx, lignes 977-1004, affiche directement question, options et explanation ; aucune contextualisation supplémentaire ne corrige l’écart.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_render_code",
+                "recommended_action": "Définir avec l’équipe métier la trace de réception attendue, puis mettre à jour ensemble énoncé, bonne réponse, distracteurs et explication ; conserver les règles de données fictives et de validation humaine dans les questions qui les évaluent directement."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "formation_summary": {
+      "scope": "Revue qualitative exhaustive de la seule formation demandée : 1 cours, 1 leçon, 6 chapitres et 8 activités déclarées et rendables (1 consultation de ressource, 1 knowledge check, 1 cloud exercise, 4 QCM et 1 tri). Trois évaluations génériques sont aussi susceptibles d’être injectées après les chapitres d’enseignement par LessonViewer ; aucune banque de questions n’existe pour ce cours dans lessonQuizzes.json, donc elles se ferment automatiquement et ne constituent pas des activités apprenant supplémentaires.",
+      "scoring_method": "Les scores sur 100 sont des appréciations qualitatives par chapitre, renormalisées sur les dimensions inspectables dans les JSON et le code de rendu/progression. Les ressources externes ou servies hors des fichiers statiques, l’exécution des outils et les tests navigateur ne sont ni notés artificiellement ni assimilés à des absences.",
+      "overall_score_100": 80,
+      "confirmed_issue_counts": {
+        "total": 5,
+        "P0": 0,
+        "P1": 2,
+        "P2": 3,
+        "P3": 0
+      },
+      "key_findings": [
+        "Le parcours est globalement lisible et progressif : objectifs, préparation sûre, démarche, checkpoint, mini-projet et évaluation finale. Les garde-fous relatifs aux données fictives et à la validation humaine sont cohérents et répétés à bon escient.",
+        "Le checkpoint de sécurité est bien énoncé et corrigé, mais son seuil de passage ne s’applique pas au type knowledge_check rendu : une réponse fausse déverrouille le passage. C’est le principal défaut de cohérence entre évaluation et verrouillage.",
+        "Le mini-projet a un objectif et un cadre de preuve clairs, mais il n’est ni suffisamment séquencé pour un TP annoncé comme guidé, ni réellement vérifié : une réponse d’un caractère le termine.",
+        "Le quiz final est globalement cohérent, entièrement corrigé et correctement verrouillé ; une seule question doit être recentrée sur un contrôle observable de réception du PDF.",
+        "Aucun média vidéo ou illustration n’est déclaré dans les JSON du cours. Les ressources non inspectables sont traitées comme non vérifiées, jamais comme absentes."
+      ],
+      "positive_findings": [
+        "Les objectifs de début de formation sont spécifiques au métier, au niveau et aux résultats attendus.",
+        "Les activités possèdent toutes un énoncé visible ; aucun énoncé absent ou abscons n’a été confirmé.",
+        "Les feedbacks du knowledge check, des QCM et du tri proposent une correction ou une reprise ; la correction du mini-projet est accessible après remise.",
+        "Le tri final propose à la fois glisser-déposer et interaction par clic/clavier, et n’est validé qu’après un classement correct."
+      ]
+    },
+    "limits": [
+      "Audit strictement sans modification des JSON de cours, du code, des ressources ni d’une base de données.",
+      "Les données de formation, le registre des blocs, LessonViewer, les composants d’activité et chapterProgress/checkpointGate ont été lus. Aucune session navigateur authentifiée, exécution n8n/Gemini, soumission réelle ni test sur appareil n’a été effectué.",
+      "La ressource source externe et le support fictif référencé via /manus-storage n’ont pas été consultés ni déclarés absents. Leur disponibilité runtime, leur contenu et leur accessibilité restent non vérifiés.",
+      "Aucune source externe n’a été utilisée. Les constats sur le rendu sont limités aux chemins de code inspectés et aux données effectivement référencées par le manifest.",
+      "L’exactitude juridique de la détection des clauses, la qualité du modèle Gemini et la pertinence de règles de risque réelles sont hors périmètre faute de scénario exécutable et de corpus de contrats inspectable."
+    ]
+  },
+  "current_courses": {
+    "ia_appliquee_metiers_tp__39": {
+      "courseId": "ia_appliquee_metiers_tp__39",
+      "id": "ia_appliquee_metiers_tp__39",
+      "title": {
+        "fr": "Analyse automatique des risques d'un contrat PDF",
+        "en": "Analyse automatique des risques d'un contrat PDF"
+      },
+      "description": {
+        "fr": "TP guidé pour Juriste junior, analyste risque, responsable achat. Outils : n8n, Gemini, Google Sheets, Slack.",
+        "en": "TP guidé pour Juriste junior, analyste risque, responsable achat. Outils : n8n, Gemini, Google Sheets, Slack."
+      },
+      "sourceReference": {
+        "sourceType": "n8n workflow",
+        "sourceUrl": "https://n8n.io/workflows/13671-review-pdf-contract-risks-with-a-form-google-gemini-sheets-and-slack/",
+        "language": "EN"
+      },
+      "metadata": {
+        "canonicalTutorialId": "39-analyse-automatique-des-risques-d-un-contrat-pdf",
+        "canonicalOrder": 39,
+        "targetJob": "Juriste junior, analyste risque, responsable achat",
+        "level": "Intermédiaire",
+        "duration": "3 h",
+        "tools": [
+          "n8n",
+          "Gemini",
+          "Google Sheets",
+          "Slack",
+          "formulaire de dépôt",
+          "contrats PDF fictifs"
+        ],
+        "acquiredSkills": [
+          "Recevoir un contrat PDF depuis un formulaire",
+          "Détecter clauses risquées et protections absentes",
+          "Attribuer un score et une sévérité",
+          "Déclencher une alerte quand le seuil est dépassé"
+        ],
+        "skillTags": [
+          "ia-appliquee-metiers",
+          "juridique-contrats-conformite",
+          "n8n",
+          "gemini",
+          "google-sheets",
+          "slack",
+          "intermédiaire"
+        ]
+      },
+      "lessons": [
+        {
+          "id": "ia_appliquee_metiers_tp__39-lesson-01",
+          "title": {
+            "fr": "Analyse automatique des risques d'un contrat PDF",
+            "en": "Analyse automatique des risques d'un contrat PDF"
+          },
+          "competencyTags": [
+            "ai_governance",
+            "ai_orchestration",
+            "prompt_engineering",
+            "ai_business"
+          ],
+          "recommendedVideosManaged": false,
+          "recommendedVideos": [],
+          "chapters": [
+            {
+              "id": "ia_appliquee_metiers_tp__39-screen-01",
+              "type": "teaching",
+              "title": {
+                "fr": "Objectif du TP",
+                "en": "Objectif du TP"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "learning_section",
+                  "sectionKind": "hero",
+                  "eyebrow": {
+                    "fr": "Juridique, contrats & conformité · TP 39/40",
+                    "en": "Juridique, contrats & conformité · TP 39/40"
+                  },
+                  "title": {
+                    "fr": "Analyse automatique des risques d'un contrat PDF",
+                    "en": "Analyse automatique des risques d'un contrat PDF"
+                  },
+                  "body": {
+                    "fr": "Métier cible : Juriste junior, analyste risque, responsable achat. Niveau : Intermédiaire. Durée indicative : 3 h.",
+                    "en": "Métier cible : Juriste junior, analyste risque, responsable achat. Niveau : Intermédiaire. Durée indicative : 3 h."
+                  },
+                  "items": [
+                    {
+                      "fr": "Recevoir un contrat PDF depuis un formulaire",
+                      "en": "Recevoir un contrat PDF depuis un formulaire"
+                    },
+                    {
+                      "fr": "Détecter clauses risquées et protections absentes",
+                      "en": "Détecter clauses risquées et protections absentes"
+                    },
+                    {
+                      "fr": "Attribuer un score et une sévérité",
+                      "en": "Attribuer un score et une sévérité"
+                    },
+                    {
+                      "fr": "Déclencher une alerte quand le seuil est dépassé",
+                      "en": "Déclencher une alerte quand le seuil est dépassé"
+                    }
+                  ]
+                },
+                {
+                  "type": "callout",
+                  "variant": "info",
+                  "title": {
+                    "fr": "Cadre pratique",
+                    "en": "Cadre pratique"
+                  },
+                  "body": {
+                    "fr": "Vous reproduisez un cas d’usage dans votre propre environnement de démonstration. La ressource source reste consultable ; elle ne remplace pas les contrôles métier et de sécurité.",
+                    "en": "You reproduce a use case in your own demonstration environment. The source resource remains available for consultation; it does not replace business and security checks."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__39-screen-02",
+              "type": "teaching",
+              "title": {
+                "fr": "Préparer l’environnement",
+                "en": "Préparer l’environnement"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "content",
+                  "body": {
+                    "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Gemini, Google Sheets, Slack, formulaire de dépôt, contrats PDF fictifs.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
+                    "en": "## Environment Setup\n\nWork in a **personal sandbox**, a local draft, or demonstration accounts. Prepare only fictional data and test access.\n\n- Planned tools: n8n, Gemini, Google Sheets, Slack, submission form, fictional PDF contracts.\n- Do not enter any key, password, or real personal data in the practical exercise or in its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with human impact, keep an **explicit human validation** before the final action.\n\nThis learning path does not require any provider-hosted lab: adapt the steps to your local or demonstration environment."
+                  }
+                },
+                {
+                  "type": "resource_review",
+                  "id": "ia_appliquee_metiers_tp__39-source-review",
+                  "title": {
+                    "fr": "Ressource source",
+                    "en": "Ressource source"
+                  },
+                  "instructions": {
+                    "fr": "Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation.\n\n[Ouvrir la ressource source](https://n8n.io/workflows/13671-review-pdf-contract-risks-with-a-form-google-gemini-sheets-and-slack/)",
+                    "en": "Open the source resource in a new tab. Identify the business outcome, inputs, outputs, and control steps. Then return here to confirm that you consulted it.\n\n[Open the source resource](https://n8n.io/workflows/13671-review-pdf-contract-risks-with-a-form-google-gemini-sheets-and-slack/)"
+                  },
+                  "resourceUrl": "https://n8n.io/workflows/13671-review-pdf-contract-risks-with-a-form-google-gemini-sheets-and-slack/",
+                  "resourceLabel": {
+                    "fr": "Ouvrir la ressource source",
+                    "en": "Ouvrir la ressource source"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__39-screen-03",
+              "type": "teaching",
+              "title": {
+                "fr": "Construire progressivement",
+                "en": "Construire progressivement"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "sequence_visual",
+                  "title": {
+                    "fr": "Démarche de réalisation",
+                    "en": "Démarche de réalisation"
+                  },
+                  "layout": "timeline",
+                  "items": [
+                    {
+                      "title": {
+                        "fr": "Cadrer",
+                        "en": "Cadrer"
+                      },
+                      "description": {
+                        "fr": "Définissez le cas d’usage pour Juriste junior, analyste risque, responsable achat et les limites d’automatisation.",
+                        "en": "Define the use case for a junior legal counsel, risk analyst, procurement manager, and the limits of automation."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Préparer",
+                        "en": "Préparer"
+                      },
+                      "description": {
+                        "fr": "Créez des données fictives adaptées aux outils : n8n, Gemini, Google Sheets.",
+                        "en": "Create fictional data suited to the tools: n8n, Gemini, Google Sheets."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Tester",
+                        "en": "Tester"
+                      },
+                      "description": {
+                        "fr": "Exécutez des scénarios de test, relisez les sorties et consignez les écarts.",
+                        "en": "Run test scenarios, review the outputs, and document discrepancies."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Contrôler",
+                        "en": "Contrôler"
+                      },
+                      "description": {
+                        "fr": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne.",
+                        "en": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "comparison_panel",
+                  "title": {
+                    "fr": "Vérifications avant utilisation",
+                    "en": "Vérifications avant utilisation"
+                  },
+                  "columns": [
+                    {
+                      "title": {
+                        "fr": "À faire",
+                        "en": "À faire"
+                      },
+                      "items": [
+                        {
+                          "fr": "Utiliser des données fictives.",
+                          "en": "Utiliser des données fictives."
+                        },
+                        {
+                          "fr": "Définir un contrôle humain.",
+                          "en": "Définir un contrôle humain."
+                        },
+                        {
+                          "fr": "Tester les cas limites.",
+                          "en": "Tester les cas limites."
+                        }
+                      ]
+                    },
+                    {
+                      "title": {
+                        "fr": "À éviter",
+                        "en": "À éviter"
+                      },
+                      "items": [
+                        {
+                          "fr": "Exposer un secret ou une donnée personnelle.",
+                          "en": "Exposer un secret ou une donnée personnelle."
+                        },
+                        {
+                          "fr": "Déclencher une action finale sans validation.",
+                          "en": "Déclencher une action finale sans validation."
+                        },
+                        {
+                          "fr": "Déduire une décision sans vérification métier.",
+                          "en": "Déduire une décision sans vérification métier."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__39-checkpoint-01",
+              "type": "checkpoint",
+              "title": {
+                "fr": "Checkpoint : environnement et sécurité",
+                "en": "Checkpoint : environnement et sécurité"
+              },
+              "requiredBeforeAdvance": true,
+              "passThreshold": 1,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__39-checkpoint-preparation",
+                  "type": "knowledge_check",
+                  "mode": "multiple_choice",
+                  "prompt": {
+                    "fr": "Avant de relier n8n au workflow de « Analyse automatique des risques d'un contrat PDF », quelle pratique est attendue ?",
+                    "en": "Before connecting n8n to the “Automatic PDF Contract Risk Analysis” workflow, what practice is expected?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Utiliser une sandbox, des données fictives et prévoir une validation humaine pour toute action sensible.",
+                        "en": "Use a sandbox, fictional data, and plan for human validation for any sensitive action."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Copier les données réelles de production pour obtenir un résultat plus représentatif.",
+                        "en": "Copy real production data to obtain a more representative result."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Mettre une clé API dans le workflow partagé pour que les autres puissent la réutiliser.",
+                        "en": "Put an API key in the shared workflow so that others can reuse it."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Activer directement les envois et modifications définitives avant les essais.",
+                        "en": "Activer directement les envois et modifications définitives avant les essais."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "Le TP doit être testé dans un environnement maîtrisé, avec données fictives et contrôle humain des actions à impact.",
+                    "en": "The practical exercise must be tested in a controlled environment, with fictional data and human oversight of actions with impact."
+                  },
+                  "competencyPoints": 1.5,
+                  "required": true
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__39-mini-project",
+              "type": "exercise",
+              "title": {
+                "fr": "Mini-projet et preuve de réalisation",
+                "en": "Mini-projet et preuve de réalisation"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__39-mini-project-proof",
+                  "type": "cloud_exercise",
+                  "title": {
+                    "fr": "Mini-projet pratique",
+                    "en": "Mini-projet pratique"
+                  },
+                  "assignment": "Créer un workflow qui analyse cinq contrats PDF fictifs et signale uniquement ceux dépassant le seuil de risque.",
+                  "instructions": "Réalisez le mini-projet dans un environnement personnel de démonstration. Utilisez le support fictif fourni, puis décrivez dans la zone de preuve : le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine.\n\n- Recevoir un contrat PDF depuis un formulaire\n- Détecter clauses risquées et protections absentes\n- Attribuer un score et une sévérité\n- Déclencher une alerte quand le seuil est dépassé",
+                  "environmentGuide": {
+                    "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Gemini, Google Sheets, Slack, formulaire de dépôt, contrats PDF fictifs.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
+                    "en": "## Environment Setup\n\nWork in a **personal sandbox**, a local draft, or demonstration accounts. Prepare only fictional data and test access.\n\n- Planned tools: n8n, Gemini, Google Sheets, Slack, submission form, fictional PDF contracts.\n- Do not enter any key, password, or real personal data in the practical exercise or in its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with human impact, keep an **explicit human validation** before the final action.\n\nThis learning path does not require any provider-hosted lab: adapt the steps to your local or demonstration environment."
+                  },
+                  "resources": [
+                    {
+                      "title": {
+                        "fr": "Support fictif de TP 39",
+                        "en": "Support fictif de TP 39"
+                      },
+                      "description": {
+                        "fr": "Données de démonstration sans secret ni information réelle.",
+                        "en": "Données de démonstration sans secret ni information réelle."
+                      },
+                      "url": "/manus-storage/39-39-analyse-automatique-des-risques-d-un-contrat-pdf-support-fictif_5709cb95.md"
+                    }
+                  ],
+                  "hint": "Commencez par un seul cas fictif et conservez l’action finale en brouillon ou derrière une validation humaine.",
+                  "solution": "## Correction et auto-vérification\n\nUne preuve complète décrit le scénario fictif, le workflow ou la procédure réalisée, le résultat observé et le contrôle humain prévu.\n\n### Erreurs fréquentes\n\n- Introduire des données réelles, identifiants ou clés dans l’exercice.\n- Déclencher un envoi, une publication ou une décision sans étape de validation.\n- Confondre une sortie IA avec une validation métier.\n\n### Vérification\n\nRelisez votre preuve : elle doit être cohérente avec l’objectif « Créer un workflow qui analyse cinq contrats PDF fictifs et signale uniquement ceux dépassant le seuil de risque. » et montrer au moins un test avec données fictives.\n\n### Extension\n\nAjoutez un journal d’exécution, un cas limite supplémentaire et une règle d’escalade humaine.",
+                  "successMessage": "Preuve enregistrée. Vous pouvez maintenant consulter la correction et terminer le quiz final.",
+                  "steps": [
+                    {
+                      "fr": "Relisez la consigne et identifiez le résultat attendu pour « Mini-projet et preuve de réalisation ».",
+                      "en": "Review the instructions and identify the expected outcome for “Mini-projet et preuve de réalisation”."
+                    },
+                    {
+                      "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
+                      "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
+                    },
+                    {
+                      "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
+                      "en": "Check your work against the stated criteria before submitting it."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__39-final-quiz",
+              "type": "quiz",
+              "title": {
+                "fr": "Quiz final : valider la démarche",
+                "en": "Quiz final : valider la démarche"
+              },
+              "requiredBeforeAdvance": true,
+              "passThreshold": 4,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__39-quiz-01",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Quel élément doit être conservé dans le mini-projet « Créer un workflow qui analyse cinq contrats PDF fictifs et signale uniquement ceux dépassant le seuil de risque. » ?",
+                    "en": "What element must be retained in the mini-project “Create a workflow that analyzes five fictional PDF contracts and flags only those exceeding the risk threshold.”?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Une preuve de test avec des données fictives et un résultat vérifiable.",
+                        "en": "Test evidence using fictional data and a verifiable result."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Un mot de passe de production directement dans le workflow.",
+                        "en": "A production password directly in the workflow."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Une action finale déclenchée sans relecture.",
+                        "en": "Une action finale déclenchée sans relecture."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Un export de données personnelles non anonymisées.",
+                        "en": "An export of non-anonymized personal data."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical assignment: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__39-quiz-02",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Vrai ou faux : un brouillon ou une validation humaine doit précéder toute action sensible générée par le workflow.",
+                    "en": "True or false: a draft or human validation must precede any sensitive action generated by the workflow."
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Vrai : les actions sensibles exigent un contrôle humain explicite.",
+                        "en": "True: sensitive actions require explicit human oversight."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Faux : l’automatisation dispense toujours de tout contrôle.",
+                        "en": "Faux : l’automatisation dispense toujours de tout contrôle."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical assignment: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__39-quiz-03",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Quel contrôle aide à vérifier l’objectif « Recevoir un contrat PDF depuis un formulaire » ?",
+                    "en": "Which check helps verify the objective “Receive a PDF contract from a form”?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Comparer le résultat du test au critère métier défini puis documenter l’écart.",
+                        "en": "Compare the test result with the defined business criterion, then document the discrepancy."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Considérer toute sortie du modèle comme correcte sans la relire.",
+                        "en": "Consider every model output correct without reviewing it."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Supprimer les journaux et les traces de test avant la vérification.",
+                        "en": "Delete logs and test traces before verification."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Remplacer le jeu de données fictif par une exportation client.",
+                        "en": "Replace the fictional dataset with a client export."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__39-quiz-04",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Question de vigilance : parmi ces outils prévus — n8n, Gemini, Google Sheets, Slack, formulaire de dépôt, contrats PDF fictifs — quelle donnée ne doit jamais être saisie dans le support ou le commentaire de preuve ?",
+                    "en": "Vigilance question: among these planned tools—n8n, Gemini, Google Sheets, Slack, a submission form, fictional PDF contracts—which data must never be entered in the support material or proof comment?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Une clé API, un mot de passe ou un identifiant réel.",
+                        "en": "An API key, a password, or a real credential."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Le nom fictif du dossier de démonstration.",
+                        "en": "The fictional name of the demonstration file."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Le statut de test « à vérifier ».",
+                        "en": "Le statut de test « à vérifier »."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Une note indiquant qu’une validation humaine est requise.",
+                        "en": "Une note indiquant qu’une validation humaine est requise."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__39-quiz-order",
+                  "type": "bucket_sort",
+                  "title": {
+                    "fr": "Ordonnez la démarche de réalisation",
+                    "en": "Put the implementation process in order"
+                  },
+                  "instructions": {
+                    "fr": "Placez chaque action dans son étape. La correction est disponible après une tentative complète.",
+                    "en": "Place each action in its step. The correction is available after a complete attempt."
+                  },
+                  "buckets": [
+                    {
+                      "id": "1",
+                      "label": {
+                        "fr": "1. Cadrer",
+                        "en": "1. Cadrer"
+                      }
+                    },
+                    {
+                      "id": "2",
+                      "label": {
+                        "fr": "2. Construire",
+                        "en": "2. Construire"
+                      }
+                    },
+                    {
+                      "id": "3",
+                      "label": {
+                        "fr": "3. Tester",
+                        "en": "3. Tester"
+                      }
+                    },
+                    {
+                      "id": "4",
+                      "label": {
+                        "fr": "4. Valider",
+                        "en": "4. Valider"
+                      }
+                    }
+                  ],
+                  "cards": [
+                    {
+                      "id": "cadrer",
+                      "text": {
+                        "fr": "Définir le résultat métier, les données fictives et les limites d’action.",
+                        "en": "Define the business outcome, the fictional data, and the action limits."
+                      },
+                      "correctBucket": "1"
+                    },
+                    {
+                      "id": "construire",
+                      "text": {
+                        "fr": "Configurer le workflow dans un environnement de démonstration.",
+                        "en": "Configure the workflow in a demonstration environment."
+                      },
+                      "correctBucket": "2"
+                    },
+                    {
+                      "id": "tester",
+                      "text": {
+                        "fr": "Exécuter des cas fictifs, journaliser les sorties et relever les écarts.",
+                        "en": "Run fictional cases, log the outputs, and identify discrepancies."
+                      },
+                      "correctBucket": "3"
+                    },
+                    {
+                      "id": "valider",
+                      "text": {
+                        "fr": "Faire relire les actions sensibles avant toute utilisation réelle.",
+                        "en": "Faire relire les actions sensibles avant toute utilisation réelle."
+                      },
+                      "correctBucket": "4"
+                    }
+                  ],
+                  "feedback": {
+                    "fr": "La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés.",
+                    "en": "The correct approach goes from safe scoping to human validation, after documented testing."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "policy": {
+    "publication_gate": "No P0; every P1 must be fixed or explicitly verified false positive; every mandatory media/file/exercise must be learner-usable; no required activity may depend on unprovided external access, dataset, workflow or environment; navigation gates must correspond to rendered activities.",
+    "remediation_rule": "If an activity cannot be made reliably correctable quickly using only its current declared assets, preserve any explanatory source text as a content block, remove the activity, remove its completion gate and remove orphan exercise definitions. Never invent a file, dataset, API, workflow, answer key, source or external access.",
+    "review_scope": "Inspect current learner-visible course JSON and current report. Produce exact block-level decisions only; do not modify course files."
+  }
+}

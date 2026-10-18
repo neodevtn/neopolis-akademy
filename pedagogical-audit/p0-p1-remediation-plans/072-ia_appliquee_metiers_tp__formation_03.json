@@ -1,0 +1,28 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_03",
+  "index": 72,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__03"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "chapter_id": "ia_appliquee_metiers_tp__03-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__03-checkpoint-preparation",
+      "reason": "Activité obligatoire P1 non fiable : le verrou accepte une réponse erronée, car la complétion est enregistrée quelle que soit la valeur de isCorrect. Les seuls actifs déclarés ne permettent pas de corriger ce comportement de progression ; retirer l’activité bloquante tout en conservant l’énoncé, les choix et l’explication comme contenu non bloquant.",
+      "evidence": "Le dossier courant constate passThreshold: 1 et requiredBeforeAdvance: true, mais le callback knowledge_check ajoute l’interaction même quand isCorrect est faux ; la réponse incorrecte permet donc d’avancer. Bloc réel : ia_appliquee_metiers_tp__03-checkpoint-preparation."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__03",
+      "chapter_id": "ia_appliquee_metiers_tp__03-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__03-mini-project-proof",
+      "reason": "Activité obligatoire P1 non fiable : sans minimumAnswerLength, rubricCriteria, passingScore ni serverGradedAssessment, toute réponse non vide, même d’un caractère, déverrouille la suite. Une correction fiable exigerait un mécanisme d’évaluation ou une validation humaine non déclaré ; retirer le bloc comme activité bloquante et conserver ses consignes, critères et précautions comme contenu non bloquant.",
+      "evidence": "Le dossier courant indique cloud_exercise sans paramètres d’évaluation ; cloudExerciseValidation fixe alors un minimum à 1 caractère et CloudExerciseBlock appelle onComplete sans évaluation. Bloc réel : ia_appliquee_metiers_tp__03-mini-project-proof."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux constats P1 actuels concernent des activités obligatoires dont le verrouillage n’est pas fiablement corrigeable avec les seuls actifs déclarés. Les deux blocs réels sont donc convertis en contenu non bloquant, en conservant leurs explications et consignes. Aucun constat P0/P1 ne reste non résolu ; le compteur historique legacy_open est nul et aucun stillOpen historique supplémentaire n’est reporté."
+}

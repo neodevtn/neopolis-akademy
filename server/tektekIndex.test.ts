@@ -119,13 +119,14 @@ describe("index TekTek", () => {
     expect(source?.submissionGuidance?.criteria[0]).toContain("prompt needs to mention use-cases");
   });
 
-  it("traite les blocs ai_evaluation hérités comme des évaluations avec une remise explicite", () => {
+  it("n’indexe pas comme évaluation l’ancien prompting retiré faute de correction vérifiable", () => {
     const indexed = getTekTekTrainingSources("datacamp_ai_assisted_coding_for_developers", "fr");
-    const source = indexed?.sources.find((candidate) => candidate.blockId === "dc_1_act_05_prompting");
+    const removed = indexed?.sources.find((candidate) => candidate.blockId === "dc_1_act_05_prompting");
+    const learningNote = indexed?.sources.find((candidate) => candidate.blockId === "dc_1_act_05_prompting_learning_note");
 
-    expect(source?.assessment).toBe(true);
-    expect(source?.submissionGuidance?.mode).toBe("prompt");
-    expect(source?.submissionGuidance?.instruction).toContain("invite exacte");
-    expect(source?.submissionGuidance?.criteria.join(" ")).toContain("cas d’usage de tarification dynamique");
+    expect(removed).toBeUndefined();
+    expect(learningNote).toMatchObject({ assessment: false });
+    expect(learningNote?.text.trim().length).toBeGreaterThan(0);
+    expect(learningNote?.submissionGuidance).toBeUndefined();
   });
 });

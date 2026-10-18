@@ -1,0 +1,30 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_26",
+  "index": 95,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__26"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__26-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Le knowledge_check obligatoire n’est pas une base de verrouillage fiable : le rendu enregistre la complétion même après une réponse fausse et le calcul de checkpoint ne le recense pas. Retirer l’activité enlève le verrou défectueux tout en conservant l’explication déjà affichée par l’écran comme contenu non bloquant.",
+      "evidence": "current_open_p0_p1_findings[0] et initial_audit issue PED-095-001 : bloc réel lessons[0].chapters[3].blocks[0], type knowledge_check, required=true, correctAnswer=\"a\" ; le rapport confirme qu’une réponse fausse peut déverrouiller la suite et que le passThreshold ne garantit pas la correction."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__26",
+      "chapter_id": "ia_appliquee_metiers_tp__26-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__26-mini-project-proof",
+      "exercise_id": null,
+      "reason": "Le cloud_exercise obligatoire accepte une réponse non vide sans vérifier les quatre éléments de preuve demandés ; il ne peut donc pas être corrigé rapidement de manière fiable avec les seuls actifs déclarés. Convertir ce bloc en contenu non bloquant retire l’activité et son verrou, tout en conservant la consigne et la correction utiles comme explication.",
+      "evidence": "current_open_p0_p1_findings[1] et initial_audit issue PED-095-002 : bloc réel lessons[0].chapters[4].blocks[0], type cloud_exercise ; aucune minimumAnswerLength, learnerCriteria/rubricCriteria, serverGradedAssessment ou requirePostRevealReflection, et le rapport confirme qu’une preuve symbolique peut valider et déverrouiller la suite."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux constats P1 confirmés concernent des activités obligatoires dont la validation n’est pas fiable avec les actifs et mécanismes déclarés. Le checkpoint est retiré ; le mini-projet est converti en contenu explicatif non bloquant afin de conserver sa consigne et sa correction. Aucun constat P0 ni historique stillOpen à normaliser ; les constats P2/P3 ne sont pas des P0/P1 et restent hors de ce plan."
+}

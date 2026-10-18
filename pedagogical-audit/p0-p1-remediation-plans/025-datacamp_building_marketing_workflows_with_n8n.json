@@ -1,0 +1,37 @@
+{
+  "formation_id": "datacamp_building_marketing_workflows_with_n8n",
+  "index": 25,
+  "course_ids": [
+    "building_marketing_workflows_with_n8n__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch01_act02",
+      "block_id": "dc_1_act_02_video",
+      "reason": "Le média est valide et doit être conservé, mais ses explications annoncent des exercices, une interface d’exercice et des fichiers JSON qui ne sont pas présents dans le cours courant. Retirer uniquement ces références de pratique non livrée, sans supprimer les explications conceptuelles ni créer d’activité, est la correction textuelle rapide possible.",
+      "evidence": "Le bloc vidéo réel dc_1_act_02_video est dans dc_ch01_act02. Les constats historiques normalisés et ses sous-titres FR signalent « instance n8n ... dans les exercices », « étapes de l’exercice sur la gauche », « ouvrez simplement l’exercice » et des fichiers JSON organisés par chapitre et numéro d’exercice, tandis que current_courses indique exerciseCount=0 et aucun bloc exercise/cloud_exercise/QCM/activité interactive."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Les 23 activités attendues ne sont pas livrées dans le cours courant",
+      "evidence": "datacampImport.expected.activities_expected_from_outline=23, mais exerciseCount=0 et totalActivities=8; les 11 blocs réels sont uniquement 8 vidéos et 3 téléchargements. Aucun bloc exercise, cloud_exercise, QCM, activité interactive, consigne, ressource d’exercice, solution, critère ou feedback n’est présent. La progression valide le visionnage, pas la pratique annoncée.",
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch01_act02",
+      "reason_not_rapidly_remediable": "Les seuls actifs déclarés ne contiennent ni les 23 énoncés, ni environnement de départ, ni datasets/configurations, ni réponses, critères ou corrections permettant de reconstituer fidèlement ces activités. Les vidéos et téléchargements valides sont conservés; la référence textuelle identifiable est neutralisée, mais l’écart structurel et le champ d’attendu restent non corrigeables sans source d’activité supplémentaire."
+    },
+    {
+      "severity": "P3",
+      "title": "Durée affichée comme « 1 min de lecture » pour les huit vidéos",
+      "evidence": "Les huit blocs vidéo n’ont pas de durationSeconds ni bloc content; LessonViewer calcule donc Math.max(1, ...) et affiche le badge « 1 min de lecture », alors que les sous-titres observés couvrent environ 1,1 à 4,3 minutes.",
+      "course_id": "building_marketing_workflows_with_n8n__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "La correction fiable nécessite une modification de la règle de rendu ou des métadonnées de durée média; aucun actif déclaré ne fournit ces métadonnées dans le JSON du cours."
+    }
+  ],
+  "summary": "Relecture de l’état courant effectuée sans modifier le cours. Une référence textuelle réelle aux exercices absents est à retirer du bloc vidéo dc_1_act_02_video tout en conservant la vidéo et ses explications utiles. Le défaut structurel P1 (23 activités promises mais aucune activité livrée) et le défaut historique P3 de durée vidéo restent ouverts, faute d’actifs permettant une correction fiable."
+}

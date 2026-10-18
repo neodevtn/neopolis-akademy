@@ -35,7 +35,7 @@ describe("trainingSearch", () => {
 
   it("retrouve le cours DataCamp sur les systèmes agentiques évolutifs", () => {
     const courseResults = searchTrainingContent(searchIndex as TrainingSearchEntry[], "systèmes agentiques", { limit: 20 });
-    const protocolResults = searchTrainingContent(searchIndex as TrainingSearchEntry[], "MCP", { limit: 20 });
+    const protocolResults = searchTrainingContent(searchIndex as TrainingSearchEntry[], "Model Context Protocol", { limit: 20 });
     const course = courseResults.find((entry) => entry.kind === "course" && entry.href.includes("building_scalable_agentic_systems"));
     const chapter = protocolResults.find((entry) => entry.kind === "chapter" && entry.title.includes("MCP") && entry.href.includes("building_scalable_agentic_systems"));
     expect(course?.href).toBe("/training/datacamp_building_scalable_agentic_systems/building_scalable_agentic_systems__01");

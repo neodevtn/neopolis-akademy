@@ -1,0 +1,82 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_12",
+  "index": 81,
+  "course_ids": ["ia_appliquee_metiers_tp__12"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__12-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire n’est pas rapidement corrigeable de manière fiable avec les seuls actifs déclarés : une réponse incorrecte enregistre néanmoins la complétion et le verrou du checkpoint est contournable. Retirer l’activité obligatoire ; le cadrage et l’explication de sécurité existent déjà dans les écrans précédents.",
+      "evidence": "Le bloc réel est lessons[0].chapters[3].blocks[0], type knowledge_check, required=true, correctAnswer=a ; GenericLearningBlocks enregistre onComplete après toute sélection et le gate contrôle seulement la complétion."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__12-checkpoint-preparation",
+      "reason": "Retirer le verrou associé au checkpoint supprimé afin qu’une activité non fiable ne bloque plus la progression.",
+      "evidence": "Le chapitre réel définit requiredBeforeAdvance=true et passThreshold=1 pour le bloc knowledge_check identifié ci-dessus."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-mini-project",
+      "block_id": "ia-appliquee_metiers_tp__12-mini-project-proof",
+      "reason": "La preuve du mini-projet est obligatoire mais n’est pas rapidement évaluable de manière fiable : un seul caractère non blanc suffit et la soumission déverrouille le quiz. Conserver l’objectif, les consignes, la ressource fictive, l’indice et la correction comme contenu non bloquant.",
+      "evidence": "Le bloc réel cloud_exercise contient assignment/instructions/resources/hint/solution mais aucun minimumAnswerLength, critère ou évaluation suivie ; submit fixe submitted=true et appelle onComplete()."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__12-mini-project-proof",
+      "reason": "Le mini-projet converti en contenu ne doit plus conditionner la progression.",
+      "evidence": "Le chapitre réel définit requiredBeforeAdvance=true et LessonViewer déverrouille la suite via completedCloudExercises pour ce block_id."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia-appliquee_metiers_tp__12-screen-02",
+      "block_id": "ia-appliquee_metiers_tp__12-source-review",
+      "reason": "La consultation obligatoire repose sur une auto-attestation sans contrôle d’ouverture ni d’acquis. La consigne et la ressource déclarée sont utiles ; les conserver comme contenu non bloquant plutôt que créer un faux prérequis.",
+      "evidence": "Le bloc réel resource_review a requiredBeforeAdvance au niveau du chapitre ; le bouton ajoute directement reviewId à completedExercises sans vérifier l’ouverture de resourceUrl."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-screen-02",
+      "block_id": "ia-appliquee_metiers_tp__12-source-review",
+      "reason": "Le contenu conservé ne doit plus bloquer l’accès à la suite.",
+      "evidence": "Le chapitre réel screen-02 est requiredBeforeAdvance=true et le verrou de ressource repose sur completedExercises[reviewId]."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia_appliquee_metiers_tp__12-final-quiz",
+      "block_id": "ia-appliquee_metiers_tp__12-quiz-order",
+      "reason": "Supprimer la promesse non tenue de correction après tentative complète ; le bloc garde son activité, son score, ses couleurs et la possibilité de réessayer.",
+      "evidence": "Le bloc réel bucket_sort contient feedback mais pas correction ; les instructions promettent pourtant que la correction est disponible, alors que le renderer ne transmet que block.correction."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Localisation anglaise absente du mini-projet conservé comme contenu",
+      "evidence": "Dans le bloc réel ia-appliquee_metiers_tp__12-mini-project-proof, assignment, instructions, hint, solution et successMessage sont des chaînes françaises ; le résolveur affiche une chaîne telle quelle en locale EN.",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "chapter_id": "ia-appliquee_metiers_tp__12-mini-project",
+      "reason_not_rapidly_remediable": "Après conversion, le texte doit rester fidèle au contenu déclaré ; aucune version anglaise déclarée de ces champs n’existe dans les actifs et une traduction ne doit pas être inventée dans ce plan."
+    },
+    {
+      "severity": "P3",
+      "title": "Quiz de chapitre vide auto-validé sur les écrans teaching",
+      "evidence": "Aucune clé ia_appliquee_metiers_tp__12 n’existe dans lessonQuizzes.json ; LessonViewer ouvre néanmoins ChapterQuiz pour les chapitres teaching et ChapterQuiz appelle onPass() lorsque la liste de questions est vide, pour screen-01, screen-02 et screen-03.",
+      "course_id": "ia_appliquee_metiers_tp__12",
+      "reason_not_rapidly_remediable": "Il s’agit d’une injection et d’une règle de rendu applicatives, pas d’un bloc d’activité réel dans le bundle de cours ; aucune suppression de bloc réel ne peut corriger ce comportement sans modifier le code."
+    }
+  ],
+  "summary": "7 actions : retrait du checkpoint non fiable, conversion en contenu non bloquant du mini-projet et de la revue de ressource, retrait de leurs verrous, et suppression de la promesse de correction non rendue. 2 constats restent ouverts : localisation EN non déclarée du contenu conservé et quiz teaching vide auto-validé relevant du code de rendu."
+}

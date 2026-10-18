@@ -1,0 +1,1376 @@
+{
+  "formation": {
+    "index": 36,
+    "formation_id": "datacamp_gemini_in_google_docs",
+    "title": {
+      "en": "Gemini in Google Docs",
+      "fr": "Gemini dans Google Docs"
+    },
+    "course_ids": [
+      "gemini_in_google_docs__01"
+    ]
+  },
+  "current_open_p0_p1_findings": [
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "content_type": "video",
+        "evidence": "client/public/data/courses/gemini_in_google_docs__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] ; sourceLanguage = fr-FR. LessonViewer.tsx lignes 555 et 598-620 rend le titre localisé, les sous-titres et la transcription. Vérification locale : MP4 206 video/mp4 et sous-titre 206 text/vtt."
+      },
+      "description": "Dans le parcours français, le titre, la transcription et le seul sous-titre disponible de cette vidéo sont en anglais. Le lecteur sélectionne la valeur fr puis retombe sur en lorsqu’elle est identique ou non traduite : l’apprenant francophone ne reçoit donc pas une version française exploitable de l’introduction.",
+      "recommendation": "Prioriser la localisation complète des éléments visibles et des alternatives textuelles de cette vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act01",
+        "content_id": "dc_1_act_01_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557 utilise block.id pour mp4Key ; lignes 1557-1568 n’ajoutent block.id que si sa longueur est comprise entre 8 et 15 ; dc_1_act_01_video a 17 caractères. ChapterQuiz.tsx lignes 48-52 et 75-79 charge une banque absente puis appelle onPass()."
+      },
+      "description": "La vidéo officielle peut être contournée alors que le chapitre est requis avant avancement. Le lecteur MP4 enregistre sa complétion sous l’identifiant dc_1_act_01_video, mais le calcul du verrouillage ne retient un id de bloc qu’entre 8 et 15 caractères. Cet identifiant fait 17 caractères, la liste des vidéos à exiger est donc vide. En plus, aucun quiz de chapitre n’est configuré : ChapterQuiz passe automatiquement lorsque la banque est vide.",
+      "recommendation": "Corriger la clé de gate MP4 puis tester que le bouton Suivant reste indisponible avant visionnage ou marquage explicite de la vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_video",
+        "content_type": "video",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_video] ; LessonViewer.tsx lignes 555 et 670-686 applique le repli vers en. Vérification locale : MP4 et VTT répondent 206, le VTT est de langue anglaise."
+      },
+      "description": "Les explications détaillées, le titre affiché, la transcription et le sous-titre disponible restent en anglais quand le parcours est consulté en français. Cette lacune porte sur l’écran qui introduit les actions concrètes Help me write et Insert.",
+      "recommendation": "Localiser entièrement cet écran avant de le présenter comme contenu français.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act02",
+        "content_id": "dc_1_act_02_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; lessonQuizzes.json ne possède pas de clé gemini_in_google_docs__01."
+      },
+      "description": "Le passage peut s’effectuer sans visionner ni marquer la vidéo, malgré requiredBeforeAdvance. L’identifiant MP4 dc_1_act_02_video (17 caractères) est exclu de chapterVideoKeys par le filtre de longueur ; le contrôle de chapitre qui s’ouvre ensuite est auto-validé faute de banque de questions pour ce cours.",
+      "recommendation": "Corriger la condition de sélection des clés vidéo et ajouter un test de non-contournement pour les id MP4 de plus de 15 caractères.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_video",
+        "content_type": "video",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_video] ; LessonViewer.tsx lignes 555, 598-620 et 670-686."
+      },
+      "description": "Cet écran de démonstration dense n’offre pas de version française : son titre, sa transcription et son seul sous-titre sont en anglais, malgré le paramétrage source fr-FR et l’interface française de la plateforme.",
+      "recommendation": "Localiser les alternatives textuelles de cette vidéo avant diffusion française.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act03",
+        "content_id": "dc_1_act_03_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557, 1557-1568 et 1636-1649 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; id de 17 caractères dans le JSON du chapitre."
+      },
+      "description": "La vidéo peut être ignorée tout en permettant de poursuivre. dc_1_act_03_video est une clé de 17 caractères, ignorée lors de la construction de chapterVideoKeys ; l’écran est ensuite auto-validé par ChapterQuiz sans banque dédiée.",
+      "recommendation": "Réparer le verrouillage vidéo et couvrir ce cas d’identifiant MP4 par un test automatisé.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_video",
+        "content_type": "video",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_video] ; LessonViewer.tsx lignes 555 et 670-686 rend les champs localisés/repliés."
+      },
+      "description": "La séquence qui explique Proofread ne propose aucun contenu pédagogique français : titre, transcription et sous-titres disponibles sont anglais. Cela réduit la compréhension des gestes et notions de relecture pour le public du parcours français.",
+      "recommendation": "Rendre cet écran réellement bilingue avant publication française.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act04",
+        "content_id": "dc_1_act_04_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; lessonQuizzes.json ne contient pas gemini_in_google_docs__01."
+      },
+      "description": "La vidéo de relecture peut être contournée malgré requiredBeforeAdvance. Son id de 17 caractères est ignoré par la condition de longueur de chapterVideoKeys, puis le contrôle générique sans question valide l’écran automatiquement.",
+      "recommendation": "Rétablir la cohérence du verrouillage et tester le parcours sans marquage vidéo.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_video",
+        "content_type": "video",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_video] ; transcript : \"Now it's your turn…\" ; LessonViewer.tsx lignes 555 et 670-686."
+      },
+      "description": "La transition essentielle vers la pratique est en anglais dans le titre, la vidéo transcrite et le seul sous-titre fourni. L’apprenant francophone risque d’aborder la suite sans comprendre le scénario et l’action attendue.",
+      "recommendation": "Localiser cette transition avant l’activité pratique.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act05",
+        "content_id": "dc_1_act_05_video",
+        "content_type": "video",
+        "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; id de 17 caractères dans le JSON."
+      },
+      "description": "L’écran de préparation de l’activité peut être passé sans la vidéo. dc_1_act_05_video a 17 caractères et n’est pas retenu comme clé de vidéo obligatoire ; le ChapterQuiz sans banque passe ensuite automatiquement.",
+      "recommendation": "Corriger ce verrouillage avant de s’appuyer sur cette vidéo comme prérequis de l’activité pratique.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_resource",
+        "content_type": "resource_review",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_resource] ; PDF local /api/assets/chapter_01_slides_6a295357.pdf, HTTP 200, texte extrait : \"Generate a Blog Post\" et \"Let's practice!\" ; LessonViewer.tsx lignes 1068-1092."
+      },
+      "description": "Le chapitre resource_review est affiché dans l’interface française avec un titre et une consigne en anglais. Le PDF auquel il renvoie est lui aussi constitué de titres et de cartes \"Let's practice!\" en anglais.",
+      "recommendation": "Fournir une ressource et une consigne françaises cohérentes avec la langue choisie.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "énoncé_et_action_attendue",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act06",
+        "content_id": "dc_1_act_06_resource",
+        "content_type": "resource_review",
+        "evidence": "JSON → lessons[0].chapters[5].blocks[0].instructions.fr ; texte extrait du PDF local : uniquement les titres de séquences et \"Let's practice!\". LessonViewer.tsx lignes 1083-1088 : le lien ouvre la ressource et le bouton ajoute directement reviewId aux complétions, sans contrôle d’ouverture ni production apprenante. La transcription précédente (chapitre 4) est la seule source du scénario Cymbal Retail et des actions generate/refine."
+      },
+      "description": "L’écran intitulé \"Generate a Blog Post\" ne donne pour toute consigne que \"View the PDF before continuing.\" Le PDF ne contient que les titres des cinq séquences et \"Let's practice!\" : il ne fournit ni étapes, ni action à réaliser dans Docs, ni résultat attendu, ni critère de réussite. Le bouton \"J’ai consulté cette ressource\" déverrouille l’avancement sans vérifier l’ouverture du PDF ou la réalisation du billet.",
+      "recommendation": "Remplacer la simple attestation de consultation par une activité guidée avec consigne, étapes et critère de réussite ; ne verrouiller la progression qu’après une action proportionnée et vérifiable.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act07",
+        "content_id": "dc_1_act_07_qcm",
+        "content_type": "single_choice_exercise",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[6].title.fr et blocks[id=dc_1_act_07_qcm].options ; LessonViewer.tsx lignes 977-1004 sélectionne option.text.fr quand lang=fr."
+      },
+      "description": "Bien que la question, l’indice et l’explication soient français, trois réponses sur quatre sont uniquement en anglais et le titre du chapitre reste anglais. Le QCM mélange ainsi deux langues dans une évaluation destinée au parcours fr-FR.",
+      "recommendation": "Compléter la version française de toutes les réponses avant d’utiliser ce QCM dans le parcours français.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act08",
+        "content_id": "dc_1_act_08_qcm",
+        "content_type": "single_choice_exercise",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[7], block[id=dc_1_act_08_qcm] ; LessonViewer.tsx lignes 977-1004 rend explicitement les champs fr quand ils existent."
+      },
+      "description": "Dans la version française, la question, les quatre options, l’explication de correction et le titre de chapitre sont en anglais ; seul l’indice est français. Cette incohérence rend l’évaluation moins accessible au public visé par le sourceLanguage fr-FR.",
+      "recommendation": "Corriger la localisation de l’énoncé et du feedback avant diffusion à des apprenants francophones.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "localisation",
+      "course_id": "gemini_in_google_docs__01",
+      "location": {
+        "chapter_id": "dc_ch01_act09",
+        "content_id": "dc_1_act_09_qcm",
+        "content_type": "single_choice_exercise",
+        "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[8], block[id=dc_1_act_09_qcm] ; SingleChoiceExercise.tsx lignes 42-45 et 204-223 affiche l’explication localisée fournie par LessonViewer."
+      },
+      "description": "La question et l’indice sont français, mais le titre, les quatre propositions et l’explication post-réponse sont anglais. Le dernier contrôle obligatoire change donc de langue au moment où l’apprenant doit interpréter les réponses et le feedback.",
+      "recommendation": "Compléter la localisation du QCM final pour préserver la cohérence linguistique du parcours.",
+      "status": "open"
+    }
+  ],
+  "legacy_open_count_requiring_normalization": 0,
+  "current_recheck": {
+    "formation_id": "datacamp_gemini_in_google_docs",
+    "index": 36,
+    "course_ids": [
+      "gemini_in_google_docs__01"
+    ],
+    "review_scope": {
+      "course_paths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/gemini_in_google_docs__01.json"
+      ],
+      "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/036-datacamp_gemini_in_google_docs.json",
+      "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+      "criteria": [
+        "objectifs et activités",
+        "faisabilité TP/fichiers/environnement",
+        "fausses soumissions ou gates",
+        "médias/téléchargements",
+        "duplications ou corruption",
+        "rendu/bilinguisme"
+      ],
+      "current_state_source": "/home/ubuntu/neopolis-akademy/client/public/data/courses/gemini_in_google_docs__01.json",
+      "static_course_result": {
+        "issue_count": 0,
+        "lesson_count": 1,
+        "chapter_count": 9
+      },
+      "method_note": "Contre-revue fondée uniquement sur les JSON locaux et les preuves localisées du rapport initial ; aucune modification de cours effectuée."
+    },
+    "reviewed_current_state": true,
+    "findings": [
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act01",
+          "content_id": "dc_1_act_01_video",
+          "content_type": "video",
+          "evidence": "client/public/data/courses/gemini_in_google_docs__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] ; sourceLanguage = fr-FR. LessonViewer.tsx lignes 555 et 598-620 rend le titre localisé, les sous-titres et la transcription. Vérification locale : MP4 206 video/mp4 et sous-titre 206 text/vtt."
+        },
+        "description": "Dans le parcours français, le titre, la transcription et le seul sous-titre disponible de cette vidéo sont en anglais. Le lecteur sélectionne la valeur fr puis retombe sur en lorsqu’elle est identique ou non traduite : l’apprenant francophone ne reçoit donc pas une version française exploitable de l’introduction.",
+        "recommendation": "Prioriser la localisation complète des éléments visibles et des alternatives textuelles de cette vidéo.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act01",
+          "content_id": "dc_1_act_01_video",
+          "content_type": "video",
+          "evidence": "LessonViewer.tsx lignes 554-557 utilise block.id pour mp4Key ; lignes 1557-1568 n’ajoutent block.id que si sa longueur est comprise entre 8 et 15 ; dc_1_act_01_video a 17 caractères. ChapterQuiz.tsx lignes 48-52 et 75-79 charge une banque absente puis appelle onPass()."
+        },
+        "description": "La vidéo officielle peut être contournée alors que le chapitre est requis avant avancement. Le lecteur MP4 enregistre sa complétion sous l’identifiant dc_1_act_01_video, mais le calcul du verrouillage ne retient un id de bloc qu’entre 8 et 15 caractères. Cet identifiant fait 17 caractères, la liste des vidéos à exiger est donc vide. En plus, aucun quiz de chapitre n’est configuré : ChapterQuiz passe automatiquement lorsque la banque est vide.",
+        "recommendation": "Corriger la clé de gate MP4 puis tester que le bouton Suivant reste indisponible avant visionnage ou marquage explicite de la vidéo.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act02",
+          "content_id": "dc_1_act_02_video",
+          "content_type": "video",
+          "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_video] ; LessonViewer.tsx lignes 555 et 670-686 applique le repli vers en. Vérification locale : MP4 et VTT répondent 206, le VTT est de langue anglaise."
+        },
+        "description": "Les explications détaillées, le titre affiché, la transcription et le sous-titre disponible restent en anglais quand le parcours est consulté en français. Cette lacune porte sur l’écran qui introduit les actions concrètes Help me write et Insert.",
+        "recommendation": "Localiser entièrement cet écran avant de le présenter comme contenu français.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act02",
+          "content_id": "dc_1_act_02_video",
+          "content_type": "video",
+          "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; lessonQuizzes.json ne possède pas de clé gemini_in_google_docs__01."
+        },
+        "description": "Le passage peut s’effectuer sans visionner ni marquer la vidéo, malgré requiredBeforeAdvance. L’identifiant MP4 dc_1_act_02_video (17 caractères) est exclu de chapterVideoKeys par le filtre de longueur ; le contrôle de chapitre qui s’ouvre ensuite est auto-validé faute de banque de questions pour ce cours.",
+        "recommendation": "Corriger la condition de sélection des clés vidéo et ajouter un test de non-contournement pour les id MP4 de plus de 15 caractères.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act03",
+          "content_id": "dc_1_act_03_video",
+          "content_type": "video",
+          "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_video] ; LessonViewer.tsx lignes 555, 598-620 et 670-686."
+        },
+        "description": "Cet écran de démonstration dense n’offre pas de version française : son titre, sa transcription et son seul sous-titre sont en anglais, malgré le paramétrage source fr-FR et l’interface française de la plateforme.",
+        "recommendation": "Localiser les alternatives textuelles de cette vidéo avant diffusion française.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act03",
+          "content_id": "dc_1_act_03_video",
+          "content_type": "video",
+          "evidence": "LessonViewer.tsx lignes 554-557, 1557-1568 et 1636-1649 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; id de 17 caractères dans le JSON du chapitre."
+        },
+        "description": "La vidéo peut être ignorée tout en permettant de poursuivre. dc_1_act_03_video est une clé de 17 caractères, ignorée lors de la construction de chapterVideoKeys ; l’écran est ensuite auto-validé par ChapterQuiz sans banque dédiée.",
+        "recommendation": "Réparer le verrouillage vidéo et couvrir ce cas d’identifiant MP4 par un test automatisé.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act04",
+          "content_id": "dc_1_act_04_video",
+          "content_type": "video",
+          "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_video] ; LessonViewer.tsx lignes 555 et 670-686 rend les champs localisés/repliés."
+        },
+        "description": "La séquence qui explique Proofread ne propose aucun contenu pédagogique français : titre, transcription et sous-titres disponibles sont anglais. Cela réduit la compréhension des gestes et notions de relecture pour le public du parcours français.",
+        "recommendation": "Rendre cet écran réellement bilingue avant publication française.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act04",
+          "content_id": "dc_1_act_04_video",
+          "content_type": "video",
+          "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; lessonQuizzes.json ne contient pas gemini_in_google_docs__01."
+        },
+        "description": "La vidéo de relecture peut être contournée malgré requiredBeforeAdvance. Son id de 17 caractères est ignoré par la condition de longueur de chapterVideoKeys, puis le contrôle générique sans question valide l’écran automatiquement.",
+        "recommendation": "Rétablir la cohérence du verrouillage et tester le parcours sans marquage vidéo.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act05",
+          "content_id": "dc_1_act_05_video",
+          "content_type": "video",
+          "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_video] ; transcript : \"Now it's your turn…\" ; LessonViewer.tsx lignes 555 et 670-686."
+        },
+        "description": "La transition essentielle vers la pratique est en anglais dans le titre, la vidéo transcrite et le seul sous-titre fourni. L’apprenant francophone risque d’aborder la suite sans comprendre le scénario et l’action attendue.",
+        "recommendation": "Localiser cette transition avant l’activité pratique.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act05",
+          "content_id": "dc_1_act_05_video",
+          "content_type": "video",
+          "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; id de 17 caractères dans le JSON."
+        },
+        "description": "L’écran de préparation de l’activité peut être passé sans la vidéo. dc_1_act_05_video a 17 caractères et n’est pas retenu comme clé de vidéo obligatoire ; le ChapterQuiz sans banque passe ensuite automatiquement.",
+        "recommendation": "Corriger ce verrouillage avant de s’appuyer sur cette vidéo comme prérequis de l’activité pratique.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act06",
+          "content_id": "dc_1_act_06_resource",
+          "content_type": "resource_review",
+          "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_resource] ; PDF local /api/assets/chapter_01_slides_6a295357.pdf, HTTP 200, texte extrait : \"Generate a Blog Post\" et \"Let's practice!\" ; LessonViewer.tsx lignes 1068-1092."
+        },
+        "description": "Le chapitre resource_review est affiché dans l’interface française avec un titre et une consigne en anglais. Le PDF auquel il renvoie est lui aussi constitué de titres et de cartes \"Let's practice!\" en anglais.",
+        "recommendation": "Fournir une ressource et une consigne françaises cohérentes avec la langue choisie.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "énoncé_et_action_attendue",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act06",
+          "content_id": "dc_1_act_06_resource",
+          "content_type": "resource_review",
+          "evidence": "JSON → lessons[0].chapters[5].blocks[0].instructions.fr ; texte extrait du PDF local : uniquement les titres de séquences et \"Let's practice!\". LessonViewer.tsx lignes 1083-1088 : le lien ouvre la ressource et le bouton ajoute directement reviewId aux complétions, sans contrôle d’ouverture ni production apprenante. La transcription précédente (chapitre 4) est la seule source du scénario Cymbal Retail et des actions generate/refine."
+        },
+        "description": "L’écran intitulé \"Generate a Blog Post\" ne donne pour toute consigne que \"View the PDF before continuing.\" Le PDF ne contient que les titres des cinq séquences et \"Let's practice!\" : il ne fournit ni étapes, ni action à réaliser dans Docs, ni résultat attendu, ni critère de réussite. Le bouton \"J’ai consulté cette ressource\" déverrouille l’avancement sans vérifier l’ouverture du PDF ou la réalisation du billet.",
+        "recommendation": "Remplacer la simple attestation de consultation par une activité guidée avec consigne, étapes et critère de réussite ; ne verrouiller la progression qu’après une action proportionnée et vérifiable.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act07",
+          "content_id": "dc_1_act_07_qcm",
+          "content_type": "single_choice_exercise",
+          "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[6].title.fr et blocks[id=dc_1_act_07_qcm].options ; LessonViewer.tsx lignes 977-1004 sélectionne option.text.fr quand lang=fr."
+        },
+        "description": "Bien que la question, l’indice et l’explication soient français, trois réponses sur quatre sont uniquement en anglais et le titre du chapitre reste anglais. Le QCM mélange ainsi deux langues dans une évaluation destinée au parcours fr-FR.",
+        "recommendation": "Compléter la version française de toutes les réponses avant d’utiliser ce QCM dans le parcours français.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act08",
+          "content_id": "dc_1_act_08_qcm",
+          "content_type": "single_choice_exercise",
+          "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[7], block[id=dc_1_act_08_qcm] ; LessonViewer.tsx lignes 977-1004 rend explicitement les champs fr quand ils existent."
+        },
+        "description": "Dans la version française, la question, les quatre options, l’explication de correction et le titre de chapitre sont en anglais ; seul l’indice est français. Cette incohérence rend l’évaluation moins accessible au public visé par le sourceLanguage fr-FR.",
+        "recommendation": "Corriger la localisation de l’énoncé et du feedback avant diffusion à des apprenants francophones.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "localisation",
+        "course_id": "gemini_in_google_docs__01",
+        "location": {
+          "chapter_id": "dc_ch01_act09",
+          "content_id": "dc_1_act_09_qcm",
+          "content_type": "single_choice_exercise",
+          "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[8], block[id=dc_1_act_09_qcm] ; SingleChoiceExercise.tsx lignes 42-45 et 204-223 affiche l’explication localisée fournie par LessonViewer."
+        },
+        "description": "La question et l’indice sont français, mais le titre, les quatre propositions et l’explication post-réponse sont anglais. Le dernier contrôle obligatoire change donc de langue au moment où l’apprenant doit interpréter les réponses et le feedback.",
+        "recommendation": "Compléter la localisation du QCM final pour préserver la cohérence linguistique du parcours.",
+        "status": "open"
+      }
+    ],
+    "summary": {
+      "issue_count": 15,
+      "p0": 0,
+      "p1": 15,
+      "p2": 0
+    }
+  },
+  "initial_audit": {
+    "formation_id": "datacamp_gemini_in_google_docs",
+    "courses": [
+      {
+        "course_id": "gemini_in_google_docs__01",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch01_act01",
+            "title": "Introduction to Gemini in Google Docs",
+            "score_100": 70,
+            "verified_dimensions": [
+              "Objectif et cadrage : la transcription annonce les fonctions étudiées, la pratique à venir et les limites d’usage de Gemini.",
+              "Progression : l’introduction précède les écrans de création, de raffinement, de relecture puis la mise en pratique.",
+              "Média : le MP4, le sous-titre anglais, la transcription et le PDF référencé répondent localement ; la transcription est rendue dans un panneau dépliable par LessonViewer.",
+              "Verrouillage : le code de LessonViewer et la banque de quiz ont été examinés ; la vidéo ne déclenche pas le verrouillage attendu (issue PED-GDOC-GATE-01)."
+            ],
+            "unverified_dimensions": [
+              "Qualité pédagogique des images, démonstrations et audio de la vidéo : l’audit s’appuie sur la transcription, sans appréciation image par image.",
+              "Accessibilité effective au lecteur dans tous les navigateurs et avec lecteur d’écran.",
+              "Disponibilité réelle des fonctions Gemini selon l’édition Workspace et les politiques administrateur de l’apprenant."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-01",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "dc_1_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "Dans le parcours français, le titre, la transcription et le seul sous-titre disponible de cette vidéo sont en anglais. Le lecteur sélectionne la valeur fr puis retombe sur en lorsqu’elle est identique ou non traduite : l’apprenant francophone ne reçoit donc pas une version française exploitable de l’introduction.",
+                "current_content": "title.fr = \"Introduction to Gemini in Google Docs\" ; transcript en anglais ; subtitleUrlEn renseigné, sans subtitleUrlFr.",
+                "proposed_content": "Fournir un titre, une transcription et des sous-titres français révisés ; conserver la version anglaise comme alternative de langue. Ajouter, avant lecture, un bref objectif français si la vidéo demeure en anglais.",
+                "evidence": "client/public/data/courses/gemini_in_google_docs__01.json → lessons[0].chapters[0].blocks[id=dc_1_act_01_video] ; sourceLanguage = fr-FR. LessonViewer.tsx lignes 555 et 598-620 rend le titre localisé, les sous-titres et la transcription. Vérification locale : MP4 206 video/mp4 et sous-titre 206 text/vtt.",
+                "confidence": "high",
+                "verification_status": "verified_data_code_and_local_asset",
+                "recommended_action": "Prioriser la localisation complète des éléments visibles et des alternatives textuelles de cette vidéo."
+              },
+              {
+                "issue_id": "PED-GDOC-GATE-01",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "dc_1_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "La vidéo officielle peut être contournée alors que le chapitre est requis avant avancement. Le lecteur MP4 enregistre sa complétion sous l’identifiant dc_1_act_01_video, mais le calcul du verrouillage ne retient un id de bloc qu’entre 8 et 15 caractères. Cet identifiant fait 17 caractères, la liste des vidéos à exiger est donc vide. En plus, aucun quiz de chapitre n’est configuré : ChapterQuiz passe automatiquement lorsque la banque est vide.",
+                "current_content": "requiredBeforeAdvance = true ; video.id = \"dc_1_act_01_video\" ; MP4 local présent ; aucune entrée gemini_in_google_docs__01 dans lessonQuizzes.json.",
+                "proposed_content": "Utiliser systématiquement block.id comme clé de verrouillage pour les vidéos MP4/HLS, sans filtre de longueur, et réemployer exactement cette clé pour le rendu et la persistance. Prévoir une validation pédagogique explicite si un contrôle après vidéo est requis ; sinon ne pas présenter une étape automatique comme validation.",
+                "evidence": "LessonViewer.tsx lignes 554-557 utilise block.id pour mp4Key ; lignes 1557-1568 n’ajoutent block.id que si sa longueur est comprise entre 8 et 15 ; dc_1_act_01_video a 17 caractères. ChapterQuiz.tsx lignes 48-52 et 75-79 charge une banque absente puis appelle onPass().",
+                "confidence": "high",
+                "verification_status": "verified_code_and_data",
+                "recommended_action": "Corriger la clé de gate MP4 puis tester que le bouton Suivant reste indisponible avant visionnage ou marquage explicite de la vidéo."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch01_act02",
+            "title": "Create Content with Gemini",
+            "score_100": 72,
+            "verified_dimensions": [
+              "Explication et prérequis : la transcription décrit l’accès à Docs et à Help me write, des cas d’usage et des exemples d’invites avant les questions de contrôle.",
+              "Transition : elle annonce explicitement que le raffinement sera traité dans l’écran suivant.",
+              "Média : MP4, sous-titre anglais et transcription sont renseignés et répondent localement.",
+              "Verrouillage : le mécanisme applicable à la vidéo a été vérifié et ne bloque pas effectivement cet écran (issue PED-GDOC-GATE-02)."
+            ],
+            "unverified_dimensions": [
+              "Exactitude visuelle de la démonstration dans l’interface Google Docs actuelle.",
+              "Accessibilité effective au lecteur dans tous les navigateurs et avec lecteur d’écran.",
+              "Disponibilité réelle de Help me write pour l’édition Workspace de l’apprenant."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-02",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act02",
+                "content_id": "dc_1_act_02_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "Les explications détaillées, le titre affiché, la transcription et le sous-titre disponible restent en anglais quand le parcours est consulté en français. Cette lacune porte sur l’écran qui introduit les actions concrètes Help me write et Insert.",
+                "current_content": "title.fr = \"Create Content with Gemini\" ; transcript en anglais ; subtitleUrlEn seulement.",
+                "proposed_content": "Traduire et réviser les éléments destinés à l’apprenant : titre, transcription et sous-titres français ; garder la terminologie produit affichée dans Google Docs lorsque nécessaire et l’expliciter en français.",
+                "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[1].blocks[id=dc_1_act_02_video] ; LessonViewer.tsx lignes 555 et 670-686 applique le repli vers en. Vérification locale : MP4 et VTT répondent 206, le VTT est de langue anglaise.",
+                "confidence": "high",
+                "verification_status": "verified_data_code_and_local_asset",
+                "recommended_action": "Localiser entièrement cet écran avant de le présenter comme contenu français."
+              },
+              {
+                "issue_id": "PED-GDOC-GATE-02",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act02",
+                "content_id": "dc_1_act_02_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Le passage peut s’effectuer sans visionner ni marquer la vidéo, malgré requiredBeforeAdvance. L’identifiant MP4 dc_1_act_02_video (17 caractères) est exclu de chapterVideoKeys par le filtre de longueur ; le contrôle de chapitre qui s’ouvre ensuite est auto-validé faute de banque de questions pour ce cours.",
+                "current_content": "requiredBeforeAdvance = true ; video.id = \"dc_1_act_02_video\" ; aucune entrée de banque de quiz pour le course_id.",
+                "proposed_content": "Appliquer la même clé block.id au suivi et au verrouillage de toutes les vidéos locales, puis décider explicitement si une question de validation est nécessaire et la fournir si oui.",
+                "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; lessonQuizzes.json ne possède pas de clé gemini_in_google_docs__01.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_data",
+                "recommended_action": "Corriger la condition de sélection des clés vidéo et ajouter un test de non-contournement pour les id MP4 de plus de 15 caractères."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch01_act03",
+            "title": "Edit Prompts and Refine Text",
+            "score_100": 72,
+            "verified_dimensions": [
+              "Explication : la transcription part d’un prompt trop général, montre sa réécriture, puis présente des options de raffinement et leurs effets.",
+              "Progression : les prérequis Help me write et Insert proviennent de l’écran précédent ; les possibilités Shorten et Proofread préparent les écrans suivants.",
+              "Média : MP4, sous-titre anglais et transcription sont renseignés et disponibles localement.",
+              "Verrouillage : le mécanisme prévu n’exige pas effectivement la vidéo (issue PED-GDOC-GATE-03)."
+            ],
+            "unverified_dimensions": [
+              "Exactitude visuelle de la démonstration dans l’interface Google Docs actuelle.",
+              "Accessibilité effective au lecteur dans tous les navigateurs et avec lecteur d’écran.",
+              "Pertinence de chaque exemple au profil réel des apprenants."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-03",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "dc_1_act_03_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "Cet écran de démonstration dense n’offre pas de version française : son titre, sa transcription et son seul sous-titre sont en anglais, malgré le paramétrage source fr-FR et l’interface française de la plateforme.",
+                "current_content": "title.fr = \"Edit Prompts and Refine Text\" ; transcript en anglais ; subtitleUrlEn seulement.",
+                "proposed_content": "Fournir une transcription et des sous-titres français synchronisés, ainsi qu’un titre français. Préserver les noms de boutons anglais uniquement lorsqu’ils correspondent à l’interface montrée, avec une équivalence française au premier emploi.",
+                "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_video] ; LessonViewer.tsx lignes 555, 598-620 et 670-686.",
+                "confidence": "high",
+                "verification_status": "verified_data_code_and_local_asset",
+                "recommended_action": "Localiser les alternatives textuelles de cette vidéo avant diffusion française."
+              },
+              {
+                "issue_id": "PED-GDOC-GATE-03",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "dc_1_act_03_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "La vidéo peut être ignorée tout en permettant de poursuivre. dc_1_act_03_video est une clé de 17 caractères, ignorée lors de la construction de chapterVideoKeys ; l’écran est ensuite auto-validé par ChapterQuiz sans banque dédiée.",
+                "current_content": "requiredBeforeAdvance = true ; video.id = \"dc_1_act_03_video\" ; banque de quiz absente pour gemini_in_google_docs__01.",
+                "proposed_content": "Supprimer le filtre de longueur pour les id des vidéos MP4/HLS et garantir que la clé de suivi est la même dans le lecteur et dans le gate. Configurer un contrôle explicite seulement s’il est réellement attendu.",
+                "evidence": "LessonViewer.tsx lignes 554-557, 1557-1568 et 1636-1649 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; id de 17 caractères dans le JSON du chapitre.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_data",
+                "recommended_action": "Réparer le verrouillage vidéo et couvrir ce cas d’identifiant MP4 par un test automatisé."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 3,
+            "chapter_id": "dc_ch01_act04",
+            "title": "Proofread Documents",
+            "score_100": 70,
+            "verified_dimensions": [
+              "Explication : la transcription définit les contrôles de Proofread, les actions Accept/Dismiss, les filtres et les paramètres.",
+              "Progression : cet écran complète les actions de génération et raffinement présentées précédemment et alimente le QCM final sur la relecture.",
+              "Média : MP4, sous-titre anglais et transcription sont référencés et disponibles localement.",
+              "Verrouillage : le code examiné ne rend pas la vidéo effectivement obligatoire (issue PED-GDOC-GATE-04)."
+            ],
+            "unverified_dimensions": [
+              "Exactitude visuelle de la démonstration dans l’interface Google Docs actuelle.",
+              "Accessibilité effective au lecteur dans tous les navigateurs et avec lecteur d’écran.",
+              "Disponibilité réelle de Proofread selon l’édition Workspace et les politiques administrateur."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-04",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act04",
+                "content_id": "dc_1_act_04_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "La séquence qui explique Proofread ne propose aucun contenu pédagogique français : titre, transcription et sous-titres disponibles sont anglais. Cela réduit la compréhension des gestes et notions de relecture pour le public du parcours français.",
+                "current_content": "title.fr = \"Proofread Documents\" ; transcript en anglais ; subtitleUrlEn renseigné, subtitleUrlFr absent.",
+                "proposed_content": "Ajouter une version française révisée du titre, de la transcription et des sous-titres ; expliciter les noms de commandes affichées lorsque l’interface de la démonstration reste anglaise.",
+                "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[3].blocks[id=dc_1_act_04_video] ; LessonViewer.tsx lignes 555 et 670-686 rend les champs localisés/repliés.",
+                "confidence": "high",
+                "verification_status": "verified_data_code_and_local_asset",
+                "recommended_action": "Rendre cet écran réellement bilingue avant publication française."
+              },
+              {
+                "issue_id": "PED-GDOC-GATE-04",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act04",
+                "content_id": "dc_1_act_04_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "La vidéo de relecture peut être contournée malgré requiredBeforeAdvance. Son id de 17 caractères est ignoré par la condition de longueur de chapterVideoKeys, puis le contrôle générique sans question valide l’écran automatiquement.",
+                "current_content": "requiredBeforeAdvance = true ; video.id = \"dc_1_act_04_video\" ; aucune banque de quiz de chapitre propre au cours.",
+                "proposed_content": "Calculer les clés de vidéos locales à partir de block.id sans condition de longueur, puis aligner le suivi de complétion et le bouton Suivant sur cette clé unique.",
+                "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; lessonQuizzes.json ne contient pas gemini_in_google_docs__01.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_data",
+                "recommended_action": "Rétablir la cohérence du verrouillage et tester le parcours sans marquage vidéo."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 4,
+            "chapter_id": "dc_ch01_act05",
+            "title": "Activity Explained",
+            "score_100": 65,
+            "verified_dimensions": [
+              "Transition théorie-vers-pratique : la transcription annonce le rôle Cymbal Retail, le billet de blog, la génération d’un brouillon et son raffinement avant l’écran ressource.",
+              "Progression : le scénario réutilise les actions Help me write et Refine enseignées aux écrans 2 et 3.",
+              "Média : MP4, sous-titre anglais et transcription sont référencés et disponibles localement.",
+              "Verrouillage : la vidéo annoncée comme étape préalable n’est pas effectivement exigée (issue PED-GDOC-GATE-05)."
+            ],
+            "unverified_dimensions": [
+              "Qualité pédagogique des éléments visuels de la vidéo.",
+              "Capacité de l’apprenant à réaliser le scénario dans son propre environnement Gemini, faute de session Workspace de test.",
+              "Critères de réussite de l’activité pratique suivante : ils ne sont pas fournis dans les données."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-05",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act05",
+                "content_id": "dc_1_act_05_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "La transition essentielle vers la pratique est en anglais dans le titre, la vidéo transcrite et le seul sous-titre fourni. L’apprenant francophone risque d’aborder la suite sans comprendre le scénario et l’action attendue.",
+                "current_content": "title.fr = \"Activity Explained\" ; transcript en anglais ; subtitleUrlEn seulement.",
+                "proposed_content": "Traduire le titre, la transcription et les sous-titres. Conserver dans la version française le scénario Cymbal Retail, l’action de génération du brouillon et l’action de raffinement, qui sont explicitement présents dans la source.",
+                "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_video] ; transcript : \"Now it's your turn…\" ; LessonViewer.tsx lignes 555 et 670-686.",
+                "confidence": "high",
+                "verification_status": "verified_data_code_and_local_asset",
+                "recommended_action": "Localiser cette transition avant l’activité pratique."
+              },
+              {
+                "issue_id": "PED-GDOC-GATE-05",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act05",
+                "content_id": "dc_1_act_05_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "L’écran de préparation de l’activité peut être passé sans la vidéo. dc_1_act_05_video a 17 caractères et n’est pas retenu comme clé de vidéo obligatoire ; le ChapterQuiz sans banque passe ensuite automatiquement.",
+                "current_content": "requiredBeforeAdvance = true ; video.id = \"dc_1_act_05_video\" ; absence de clé de banque de quiz gemini_in_google_docs__01.",
+                "proposed_content": "Faire du block.id la clé inconditionnelle du gate des médias locaux et, si un contrôle de compréhension est souhaité, fournir une question effective plutôt qu’une validation automatique.",
+                "evidence": "LessonViewer.tsx lignes 554-557 et 1557-1568 ; ChapterQuiz.tsx lignes 48-52 et 75-79 ; id de 17 caractères dans le JSON.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_data",
+                "recommended_action": "Corriger ce verrouillage avant de s’appuyer sur cette vidéo comme prérequis de l’activité pratique."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 5,
+            "chapter_id": "dc_ch01_act06",
+            "title": "Generate a Blog Post",
+            "score_100": 30,
+            "verified_dimensions": [
+              "Rendu : resource_review affiche le titre, un lien vers le PDF et un bouton de confirmation ; le PDF est accessible localement (HTTP 200, application/pdf) et contient les cartes de slides de ce chapitre.",
+              "Verrouillage : le bouton Suivant est bloqué jusqu’à la confirmation, mais le code permet de confirmer sans ouverture enregistrée de la ressource ni réalisation de la tâche.",
+              "Prérequis disponibles avant cet écran : la vidéo précédente présente le rôle Cymbal Retail, le billet de blog, la génération et le raffinement."
+            ],
+            "unverified_dimensions": [
+              "Exécution réelle dans Google Docs et évaluation du résultat, faute d’environnement Workspace authentifié.",
+              "Critères de réussite, produit concerné, étapes opératoires détaillées et correction attendue : ils ne sont pas fournis par la source.",
+              "Qualité visuelle détaillée du PDF ; son texte a été extrait, sans analyse graphique page par page."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-06",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act06",
+                "content_id": "dc_1_act_06_resource",
+                "content_type": "resource_review",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "Le chapitre resource_review est affiché dans l’interface française avec un titre et une consigne en anglais. Le PDF auquel il renvoie est lui aussi constitué de titres et de cartes \"Let's practice!\" en anglais.",
+                "current_content": "title.fr = \"Generate a Blog Post\" ; instructions.fr = \"View the PDF before continuing.\" ; PDF : titres anglais et \"Let's practice!\".",
+                "proposed_content": "Traduire le titre, la consigne, le libellé de ressource et les slides, ou annoncer explicitement que le support est anglais et fournir un résumé français équivalent.",
+                "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[5].blocks[id=dc_1_act_06_resource] ; PDF local /api/assets/chapter_01_slides_6a295357.pdf, HTTP 200, texte extrait : \"Generate a Blog Post\" et \"Let's practice!\" ; LessonViewer.tsx lignes 1068-1092.",
+                "confidence": "high",
+                "verification_status": "verified_data_code_and_local_asset",
+                "recommended_action": "Fournir une ressource et une consigne françaises cohérentes avec la langue choisie."
+              },
+              {
+                "issue_id": "PED-GDOC-ACT-06",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act06",
+                "content_id": "dc_1_act_06_resource",
+                "content_type": "resource_review",
+                "severity": "P1",
+                "category": "énoncé_et_action_attendue",
+                "description": "L’écran intitulé \"Generate a Blog Post\" ne donne pour toute consigne que \"View the PDF before continuing.\" Le PDF ne contient que les titres des cinq séquences et \"Let's practice!\" : il ne fournit ni étapes, ni action à réaliser dans Docs, ni résultat attendu, ni critère de réussite. Le bouton \"J’ai consulté cette ressource\" déverrouille l’avancement sans vérifier l’ouverture du PDF ou la réalisation du billet.",
+                "current_content": "Titre : \"Generate a Blog Post\". Consigne : \"View the PDF before continuing.\". Ressource : chapter_01_slides_6a295357.pdf.",
+                "proposed_content": "Énoncé réutilisable fondé sur les données disponibles : \"Dans Google Docs, jouez le rôle d’un représentant commercial de Cymbal Retail. À l’aide de Gemini, créez un brouillon de billet de blog sur le nouveau produit de l’entreprise, puis affinez le texte généré. Consultez le support avant de confirmer la fin de l’activité.\" Les critères de réussite, le produit précis et les étapes de raffinement doivent être fournis par l’équipe source avant d’ajouter une évaluation ou une correction.",
+                "evidence": "JSON → lessons[0].chapters[5].blocks[0].instructions.fr ; texte extrait du PDF local : uniquement les titres de séquences et \"Let's practice!\". LessonViewer.tsx lignes 1083-1088 : le lien ouvre la ressource et le bouton ajoute directement reviewId aux complétions, sans contrôle d’ouverture ni production apprenante. La transcription précédente (chapitre 4) est la seule source du scénario Cymbal Retail et des actions generate/refine.",
+                "confidence": "high",
+                "verification_status": "verified_data_code_and_local_asset",
+                "recommended_action": "Remplacer la simple attestation de consultation par une activité guidée avec consigne, étapes et critère de réussite ; ne verrouiller la progression qu’après une action proportionnée et vérifiable."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 6,
+            "chapter_id": "dc_ch01_act07",
+            "title": "Quiz Question 1",
+            "score_100": 70,
+            "verified_dimensions": [
+              "Énoncé et action : le QCM demande explicitement de choisir la meilleure invite parmi quatre propositions dans un scénario cohérent avec la création de contenu enseignée auparavant.",
+              "Feedback : un indice détaillé est disponible avant réponse ; après réponse, le bon choix est mis en évidence, une explication est affichée et une nouvelle tentative est possible.",
+              "Verrouillage : le QCM est correctement requis avant de poursuivre ; LessonViewer enregistre la réussite sur dc_1_act_07_qcm.",
+              "Cohérence : les critères de spécificité, produit, catégorie et bénéfices mobilisent les principes présentés dans la vidéo Create Content with Gemini."
+            ],
+            "unverified_dimensions": [
+              "Compréhension et performance d’un panel d’apprenants débutants.",
+              "Accessibilité effective au clavier et avec technologies d’assistance au-delà de la lecture du composant.",
+              "Objectif pédagogique de chapitre formulé dans un écran dédié : aucun champ objectif distinct n’est fourni."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-07",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act07",
+                "content_id": "dc_1_act_07_qcm",
+                "content_type": "single_choice_exercise",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "Bien que la question, l’indice et l’explication soient français, trois réponses sur quatre sont uniquement en anglais et le titre du chapitre reste anglais. Le QCM mélange ainsi deux langues dans une évaluation destinée au parcours fr-FR.",
+                "current_content": "options[a].text.fr, options[c].text.fr et options[d].text.fr sont identiques aux textes anglais ; title.fr = \"Quiz Question 1\".",
+                "proposed_content": "Traduire le titre et les trois options françaises manquantes, sans modifier la logique de réponse correcte ni l’indice déjà exploitable.",
+                "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[6].title.fr et blocks[id=dc_1_act_07_qcm].options ; LessonViewer.tsx lignes 977-1004 sélectionne option.text.fr quand lang=fr.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_code",
+                "recommended_action": "Compléter la version française de toutes les réponses avant d’utiliser ce QCM dans le parcours français."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 7,
+            "chapter_id": "dc_ch01_act08",
+            "title": "Quiz Question 2",
+            "score_100": 60,
+            "verified_dimensions": [
+              "Action attendue : le QCM demande quel outil utiliser pour rendre un document plus concis.",
+              "Feedback : un indice français, la mise en évidence de la bonne réponse, une explication et un bouton Réessayer sont rendus par SingleChoiceExercise.",
+              "Cohérence : la notion Shorten a été expliquée dans la démonstration précédente de raffinement.",
+              "Verrouillage : la réussite de ce QCM est requise avant l’écran suivant."
+            ],
+            "unverified_dimensions": [
+              "Compréhension et performance d’un panel d’apprenants débutants.",
+              "Accessibilité effective au clavier et avec technologies d’assistance au-delà de la lecture du composant.",
+              "Objectif pédagogique de chapitre formulé dans un écran dédié : aucun champ objectif distinct n’est fourni."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-08",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act08",
+                "content_id": "dc_1_act_08_qcm",
+                "content_type": "single_choice_exercise",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "Dans la version française, la question, les quatre options, l’explication de correction et le titre de chapitre sont en anglais ; seul l’indice est français. Cette incohérence rend l’évaluation moins accessible au public visé par le sourceLanguage fr-FR.",
+                "current_content": "question.fr, options[*].text.fr, explanation.fr et title.fr contiennent les mêmes libellés anglais que la version en.",
+                "proposed_content": "Traduire en français la question, les quatre options, l’explication et le titre ; conserver \"Shorten\" entre parenthèses si c’est le libellé exact de l’interface montrée.",
+                "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[7], block[id=dc_1_act_08_qcm] ; LessonViewer.tsx lignes 977-1004 rend explicitement les champs fr quand ils existent.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_code",
+                "recommended_action": "Corriger la localisation de l’énoncé et du feedback avant diffusion à des apprenants francophones."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 8,
+            "chapter_id": "dc_ch01_act09",
+            "title": "Quiz Question 3",
+            "score_100": 65,
+            "verified_dimensions": [
+              "Action attendue : le QCM demande d’identifier une suggestion plausible de Proofread dans un scénario professionnel.",
+              "Feedback : indice détaillé avant réponse, signalement visuel du bon choix, explication après réponse et possibilité de réessayer sont vérifiés dans les données et le composant.",
+              "Cohérence : le choix correct Use active voice correspond à la liste des vérifications Proofread introduite au chapitre 3.",
+              "Verrouillage final : la fin de leçon ne devient disponible qu’après la réussite du QCM, ce qui est cohérent pour cette activité évaluative."
+            ],
+            "unverified_dimensions": [
+              "Compréhension et performance d’un panel d’apprenants débutants.",
+              "Accessibilité effective au clavier et avec technologies d’assistance au-delà de la lecture du composant.",
+              "Objectif pédagogique de chapitre formulé dans un écran dédié : aucun champ objectif distinct n’est fourni."
+            ],
+            "issues": [
+              {
+                "issue_id": "PED-GDOC-LOC-09",
+                "course_id": "gemini_in_google_docs__01",
+                "chapter_id": "dc_ch01_act09",
+                "content_id": "dc_1_act_09_qcm",
+                "content_type": "single_choice_exercise",
+                "severity": "P1",
+                "category": "localisation",
+                "description": "La question et l’indice sont français, mais le titre, les quatre propositions et l’explication post-réponse sont anglais. Le dernier contrôle obligatoire change donc de langue au moment où l’apprenant doit interpréter les réponses et le feedback.",
+                "current_content": "title.fr = \"Quiz Question 3\" ; options[*].text.fr et explanation.fr sont anglais ; question.fr et hint.fr sont français.",
+                "proposed_content": "Traduire le titre, toutes les options et l’explication de correction. Conserver les termes de commande de l’interface lorsque nécessaire, accompagnés d’une formulation française explicite.",
+                "evidence": "gemini_in_google_docs__01.json → lessons[0].chapters[8], block[id=dc_1_act_09_qcm] ; SingleChoiceExercise.tsx lignes 42-45 et 204-223 affiche l’explication localisée fournie par LessonViewer.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_code",
+                "recommended_action": "Compléter la localisation du QCM final pour préserver la cohérence linguistique du parcours."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "formation_summary": {
+      "scope": "Audit qualitatif exhaustif de 1 cours, 1 leçon, 9 chapitres et 9 activités source : 5 vidéos, 1 ressource requise et 3 QCM ; le téléchargement de slides du premier écran a aussi été examiné.",
+      "confirmed_issues": 15,
+      "severity_counts": {
+        "P0": 0,
+        "P1": 15,
+        "P2": 0,
+        "P3": 0
+      },
+      "priority_summary": "Priorité 1 : rétablir le verrouillage des cinq vidéos officielles, aujourd’hui contournable du fait du filtre d’identifiant MP4 et de l’auto-validation sans banque de questions. Priorité 2 : transformer l’écran Generate a Blog Post en véritable activité avec consigne, action et critère de réussite. Priorité 3 : localiser systématiquement les contenus et feedbacks affichés en mode français.",
+      "pedagogical_findings": "Les cinq vidéos forment une progression intelligible : introduction, création, raffinement, relecture puis scénario pratique. Les trois QCM disposent chacun d’une action claire, d’un indice, d’une réponse correcte configurée, d’un feedback et d’une nouvelle tentative ; les signaux statiques de manque de contexte sur ces QCM ne sont donc pas retenus. Le défaut de l’écran pratique est confirmé après lecture du PDF : la transition vidéo fournit un scénario minimal, mais l’écran et son support ne fournissent ni la tâche opératoire, ni le résultat attendu, ni une validation pédagogique.",
+      "scoring_method": "Les scores par chapitre sont qualitatifs, sur 100, et renormalisés sur les dimensions effectivement vérifiables dans les données, les composants de rendu, la logique de progression et les actifs locaux. Les dimensions non observables ne reçoivent pas de note artificielle."
+    },
+    "limits": [
+      "Les cinq MP4, leurs VTT anglais et le PDF ont été vérifiés disponibles via le service local ; aucune ressource référencée n’a été considérée absente. La disponibilité de production à long terme n’a pas été testée.",
+      "La qualité visuelle, sonore, factuelle et la synchronisation fine des vidéos n’ont pas été évaluées image par image ; l’analyse pédagogique des vidéos repose sur leurs transcriptions intégrées.",
+      "Aucun compte Google Workspace ni configuration administrateur n’a été utilisé : l’exécution réelle de Gemini dans Google Docs, les droits d’édition et les variations par édition restent non vérifiés.",
+      "Le rendu et les gates ont été vérifiés par lecture des composants LessonViewer, ChapterQuiz, SingleChoiceExercise et chapterProgress, ainsi que par contrôle HTTP local ; un test utilisateur manuel multi-navigateurs et avec technologies d’assistance reste à mener.",
+      "L’absence de champ objectif détaillé par chapitre est consignée comme dimension non vérifiable et non comme anomalie automatique."
+    ]
+  },
+  "current_courses": {
+    "gemini_in_google_docs__01": {
+      "courseId": "gemini_in_google_docs__01",
+      "sourceCourseTitle": "Gemini in Google Docs",
+      "datacampImport": {
+        "schemaVersion": "neopolis.datacamp_course.v1",
+        "sourceProvider": "DataCamp",
+        "sourceCourseSlug": "gemini-in-google-docs",
+        "sourceLanguage": "fr-FR",
+        "expected": {
+          "chapters_expected": 1,
+          "chapters_extracted": 1,
+          "activities_expected_from_outline": 9,
+          "activities_extracted": 9,
+          "videos_expected_from_chapter_metadata": 5,
+          "videos_extracted": 5,
+          "exercise_types": {
+            "VideoExercise": 5,
+            "VisualExercise": 1,
+            "PureMultipleChoiceExercise": 3
+          }
+        },
+        "competencyTagging": "lesson_content_signals_v1"
+      },
+      "lessons": [
+        {
+          "id": "datacamp_ch01",
+          "title": {
+            "en": "Gemini in Google Docs",
+            "fr": "Gemini in Google Docs"
+          },
+          "description": {
+            "en": "Learn about the key features of Gemini in Google Docs.",
+            "fr": "Learn about the key features of Gemini in Google Docs."
+          },
+          "competencyTags": [
+            "ai_business"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch01_act01",
+              "title": {
+                "en": "Introduction to Gemini in Google Docs",
+                "fr": "Introduction to Gemini in Google Docs"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_01_video",
+                  "title": {
+                    "en": "Introduction to Gemini in Google Docs",
+                    "fr": "Introduction to Gemini in Google Docs"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex01_introduction_to_gemini_in_google_docs_fdb983b8.mp4",
+                  "audioUrl": "/api/assets/ch01_ex01_introduction_to_gemini_in_google_docs_bfb7ea4b.mp3",
+                  "subtitleUrlEn": "/api/assets/ch01_ex01_introduction_to_gemini_in_google_docs_en_28bd1e6e.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_6a295357.pdf",
+                  "transcript": "1. Introduction to Gemini in Google Docs\nHello and welcome to Gemini in Google Docs, a course in our Google Workspace with Gemini series.\n\nThis course introduces you to the specific Docs features included in Google Workspace with Gemini.\n\nYou learn how to use Gemini in Docs to write new text, or refine existing text.\n\nYou also explore how to use proofread to check your grammar and spelling or get stylistic suggestions.\n\nYou then complete a hands-on activity acting as a sales representative for Cymbal Retail, writing a blog post about the new product.\n\nGemini in Google Docs uses generative AI to help you work more efficiently.\n\nRemember, generative AI tools, including Gemini, might suggest inaccurate or inappropriate information.\n\nDon't rely on Gemini features as medical, legal, financial, or other professional advice.\n\nIt's also important to remember that the Gemini feature suggestions don't represent Google's views, and should not be attributed to Google.\n\nYou might find that some features aren't available in your Google Workspace edition or other features might be restricted by administrative policies.\n\nIf you have questions, contact your Google Workspace Administrator.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Introduction to Gemini in Google Docs",
+                      "text": "Hello and welcome to Gemini in Google Docs, a course in our Google Workspace with Gemini series.\n\nThis course introduces you to the specific Docs features included in Google Workspace with Gemini.\n\nYou learn how to use Gemini in Docs to write new text, or refine existing text.\n\nYou also explore how to use proofread to check your grammar and spelling or get stylistic suggestions.\n\nYou then complete a hands-on activity acting as a sales representative for Cymbal Retail, writing a blog post about the new product.\n\nGemini in Google Docs uses generative AI to help you work more efficiently.\n\nRemember, generative AI tools, including Gemini, might suggest inaccurate or inappropriate information.\n\nDon't rely on Gemini features as medical, legal, financial, or other professional advice.\n\nIt's also important to remember that the Gemini feature suggestions don't represent Google's views, and should not be attributed to Google.\n\nYou might find that some features aren't available in your Google Workspace edition or other features might be restricted by administrative policies.\n\nIf you have questions, contact your Google Workspace Administrator."
+                    }
+                  ]
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch01_slides",
+                  "title": {
+                    "en": "Chapter 1 slides",
+                    "fr": "Chapter 1 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Official course slides provided for this course."
+                  },
+                  "url": "/api/assets/chapter_01_slides_6a295357.pdf",
+                  "filename": "chapter_01_slides.pdf"
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act02",
+              "title": {
+                "en": "Create Content with Gemini",
+                "fr": "Create Content with Gemini"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_02_video",
+                  "title": {
+                    "en": "Create Content with Gemini",
+                    "fr": "Create Content with Gemini"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex02_create_content_with_gemini_7ccc38f3.mp4",
+                  "audioUrl": "/api/assets/ch01_ex02_create_content_with_gemini_1ab5b626.mp3",
+                  "subtitleUrlEn": "/api/assets/ch01_ex02_create_content_with_gemini_en_39c30551.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_6a295357.pdf",
+                  "transcript": "1. Create Content with Gemini\nYou can access Gemini in Docs by opening a Google Docs document on your desktop.\n\nIf you haven't already, visit docs.google.com in your browser.\n\nTo edit an existing Google Docs document, select the document.\n\nTo create a new document, select the Blank template in the template gallery.\n\nYou can also create a new document by typing docs.new into your desktop browser.\n\nIn this lesson, you learn how to use the \"Help me write\" feature to create text-based content.\n\nWhen you open a new document, you may be prompted with multiple options to quickly get started writing.\n\nSelect Help me write.\n\nIf you're working on an existing document, you can access the Help me write prompt options from the left margin of your document.\n\nA text input will open where you can enter your prompt.\n\nSuppose you work in marketing for the athletic footwear division and would like some inspiration for an upcoming social campaign.\n\nYou can use \"Help me write\" in Docs to help you brainstorm a captivating tagline or draft social media posts by providing\n\na prompt like: \"Generate 3 social media posts that highlight the benefits of our athletic shoes with a focus on comfort and performance.\"\n\nIf you work in sales, you can use Gemini to help you prepare for a meeting with a high-profile client.\n\nFor example, you can ask Gemini to write 5 thoughtful questions to ask a VP of Merchandising about their strategy for the upcoming year.\n\nOr maybe you're in human resources and want to revamp the new employee onboarding experience for financial analysts.\n\nAsk Gemini to create an onboarding checklist for the Finance team to quickly develop an important part of the new training program.\n\nIf you're in customer support, consider asking Gemini to summarize a transcript saved as a Google Docs document.\n\nGemini can help you quickly summarize the troubleshooting steps already taken and provide a bulleted list of action items.\n\nAfter you type your prompt, click Create.\n\nYou might need to wait a few moments for Gemini to generate a response.\n\nIf you like what's suggested, click Insert to add it to your document.\n\nIf you want to improve the generated response, you can choose to refine the generated text or update the prompt you provided.\n\nYou learn more about refining generated responses in the next lesson.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Create Content with Gemini",
+                      "text": "You can access Gemini in Docs by opening a Google Docs document on your desktop.\n\nIf you haven't already, visit docs.google.com in your browser.\n\nTo edit an existing Google Docs document, select the document.\n\nTo create a new document, select the Blank template in the template gallery.\n\nYou can also create a new document by typing docs.new into your desktop browser.\n\nIn this lesson, you learn how to use the \"Help me write\" feature to create text-based content.\n\nWhen you open a new document, you may be prompted with multiple options to quickly get started writing.\n\nSelect Help me write.\n\nIf you're working on an existing document, you can access the Help me write prompt options from the left margin of your document.\n\nA text input will open where you can enter your prompt.\n\nSuppose you work in marketing for the athletic footwear division and would like some inspiration for an upcoming social campaign.\n\nYou can use \"Help me write\" in Docs to help you brainstorm a captivating tagline or draft social media posts by providing\n\na prompt like: \"Generate 3 social media posts that highlight the benefits of our athletic shoes with a focus on comfort and performance.\"\n\nIf you work in sales, you can use Gemini to help you prepare for a meeting with a high-profile client.\n\nFor example, you can ask Gemini to write 5 thoughtful questions to ask a VP of Merchandising about their strategy for the upcoming year.\n\nOr maybe you're in human resources and want to revamp the new employee onboarding experience for financial analysts.\n\nAsk Gemini to create an onboarding checklist for the Finance team to quickly develop an important part of the new training program.\n\nIf you're in customer support, consider asking Gemini to summarize a transcript saved as a Google Docs document.\n\nGemini can help you quickly summarize the troubleshooting steps already taken and provide a bulleted list of action items.\n\nAfter you type your prompt, click Create.\n\nYou might need to wait a few moments for Gemini to generate a response.\n\nIf you like what's suggested, click Insert to add it to your document.\n\nIf you want to improve the generated response, you can choose to refine the generated text or update the prompt you provided.\n\nYou learn more about refining generated responses in the next lesson."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act03",
+              "title": {
+                "en": "Edit Prompts and Refine Text",
+                "fr": "Edit Prompts and Refine Text"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_03_video",
+                  "title": {
+                    "en": "Edit Prompts and Refine Text",
+                    "fr": "Edit Prompts and Refine Text"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex03_edit_prompts_and_refine_text_659e60a4.mp4",
+                  "audioUrl": "/api/assets/ch01_ex03_edit_prompts_and_refine_text_5bb4cf52.mp3",
+                  "subtitleUrlEn": "/api/assets/ch01_ex03_edit_prompts_and_refine_text_en_dd149fe5.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_6a295357.pdf",
+                  "transcript": "1. Edit Prompts and Refine Text\nIn this demo, you explore how you can use Gemini in Docs to quickly brainstorm new ideas and draft documents.\n\nYou learn how to edit a prompt, and refine generated text.\n\nImagine you're an IT employee at a company with a hybrid work environment.\n\nYou're interested in using Gemini to generate a list of frequently asked questions about technical problems that can arise when working from home.\n\nFirst, create content by using Gemini in Docs.\n\nOpen a new Google Docs document, and select \"Help me write.\"\n\nType the prompt.\n\nYou can choose something like: \"Write an FAQ document about challenges working from home.\"\n\nThen, click Create.\n\nIf you like the message, select Insert.\n\nOtherwise, you can change the original prompt to help generate a new response that better meets your expectations.\n\nThe original prompt was \"Write an FAQ document about challenges working from home.\"\n\nGemini created a list of broad concerns that are not specific to technical issues.\n\nHowever, the goal was to help employees troubleshoot and resolve common technical issues.\n\nRewrite the prompt to clarify to provide Gemini with more context.\n\nClick the \"Refine with a prompt\" input box, and type a new prompt.\n\nChange the prompt to: \"Write 10 frequently asked questions and answers about technology issues when working from home.\"\n\nThen press Enter.\n\nNotice how Gemini has created a more appropriate list.\n\nYou can fine-tune your prompts if the results don't meet your expectation or if you believe there's room for improvement.\n\nAt the top of the prompt box, use the arrow keys to move between your different prompts and results.\n\nInsert the result that best matches your requirement.\n\nRegardless of your role, it's important to provide a descriptive prompt to help Gemini understand what you're looking for.\n\nTo help Gemini to better understand your expectations, avoid using jargon or technical language.\n\nAlso, you can provide examples of the type of content you're looking for.\n\nNext, refine a draft.\n\nGemini in Docs can refine text, including text that you already wrote or text that was previously created with \"Help me write.\"\n\nSelect the draft text you want to refine.\n\nIn this example, select the entire document.\n\nAt the end of the selected text, select Refine.\n\nTo make specific changes, type an instruction in the \"Modify with a prompt\" input box and press Enter.\n\nAlternatively, use the predefined refinement options.\n\nIf you want to change the word choice in something you already wrote, select Rephrase.\n\nYou can also use the Rephrase option to change the wording of text generated by Gemini that you've already inserted into your document.\n\nIf the text is too long, select Shorten to reduce the length of the existing text.\n\nHowever, if you want to make the text more detailed, select Elaborate.\n\nTo change the tone of the text to be more appropriate for a formal audience, select More formal.\n\nSelect Shorten to reduce the amount of text in this draft.\n\nRefinement options are also available from the prompt box.\n\nIn addition to the options already discussed, Gemini can make the draft more casual, create a\n\nbulleted list, and generate a summary of the entire document or a section of the document.\n\nIf you want to generate a new draft based on the original prompt, select Retry.\n\nSelect Bulletize to generate a bullet list of the current draft.\n\nEither replace the current draft with the bulleted list, or insert it after the current draft.\n\nThe bulleted list has been inserted after the original draft.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Edit Prompts and Refine Text",
+                      "text": "In this demo, you explore how you can use Gemini in Docs to quickly brainstorm new ideas and draft documents.\n\nYou learn how to edit a prompt, and refine generated text.\n\nImagine you're an IT employee at a company with a hybrid work environment.\n\nYou're interested in using Gemini to generate a list of frequently asked questions about technical problems that can arise when working from home.\n\nFirst, create content by using Gemini in Docs.\n\nOpen a new Google Docs document, and select \"Help me write.\"\n\nType the prompt.\n\nYou can choose something like: \"Write an FAQ document about challenges working from home.\"\n\nThen, click Create.\n\nIf you like the message, select Insert.\n\nOtherwise, you can change the original prompt to help generate a new response that better meets your expectations.\n\nThe original prompt was \"Write an FAQ document about challenges working from home.\"\n\nGemini created a list of broad concerns that are not specific to technical issues.\n\nHowever, the goal was to help employees troubleshoot and resolve common technical issues.\n\nRewrite the prompt to clarify to provide Gemini with more context.\n\nClick the \"Refine with a prompt\" input box, and type a new prompt.\n\nChange the prompt to: \"Write 10 frequently asked questions and answers about technology issues when working from home.\"\n\nThen press Enter.\n\nNotice how Gemini has created a more appropriate list.\n\nYou can fine-tune your prompts if the results don't meet your expectation or if you believe there's room for improvement.\n\nAt the top of the prompt box, use the arrow keys to move between your different prompts and results.\n\nInsert the result that best matches your requirement.\n\nRegardless of your role, it's important to provide a descriptive prompt to help Gemini understand what you're looking for.\n\nTo help Gemini to better understand your expectations, avoid using jargon or technical language.\n\nAlso, you can provide examples of the type of content you're looking for.\n\nNext, refine a draft.\n\nGemini in Docs can refine text, including text that you already wrote or text that was previously created with \"Help me write.\"\n\nSelect the draft text you want to refine.\n\nIn this example, select the entire document.\n\nAt the end of the selected text, select Refine.\n\nTo make specific changes, type an instruction in the \"Modify with a prompt\" input box and press Enter.\n\nAlternatively, use the predefined refinement options.\n\nIf you want to change the word choice in something you already wrote, select Rephrase.\n\nYou can also use the Rephrase option to change the wording of text generated by Gemini that you've already inserted into your document.\n\nIf the text is too long, select Shorten to reduce the length of the existing text.\n\nHowever, if you want to make the text more detailed, select Elaborate.\n\nTo change the tone of the text to be more appropriate for a formal audience, select More formal.\n\nSelect Shorten to reduce the amount of text in this draft.\n\nRefinement options are also available from the prompt box.\n\nIn addition to the options already discussed, Gemini can make the draft more casual, create a\n\nbulleted list, and generate a summary of the entire document or a section of the document.\n\nIf you want to generate a new draft based on the original prompt, select Retry.\n\nSelect Bulletize to generate a bullet list of the current draft.\n\nEither replace the current draft with the bulleted list, or insert it after the current draft.\n\nThe bulleted list has been inserted after the original draft."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act04",
+              "title": {
+                "en": "Proofread Documents",
+                "fr": "Proofread Documents"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_04_video",
+                  "title": {
+                    "en": "Proofread Documents",
+                    "fr": "Proofread Documents"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex04_proofread_documents_e8aa6003.mp4",
+                  "audioUrl": "/api/assets/ch01_ex04_proofread_documents_b29f0404.mp3",
+                  "subtitleUrlEn": "/api/assets/ch01_ex04_proofread_documents_en_06546ef8.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_6a295357.pdf",
+                  "transcript": "1. Proofread Documents\nYou can use Proofread as your personal editor to ensure that your document is polished and professional before you share it with others.\n\nAside from grammar and spelling suggestions, Proofread evaluates your word choice, use of active voice, conciseness, and sentence structure.\n\nTo use Proofread, open the document you want to review and click Proofread this document in the toolbar.\n\nYou can also access Proofread from the tools menu.\n\nAfter the panel is open, you can review each suggestion and decide whether you want to approve or reject it.\n\nTo approve a change, select Accept suggestion.\n\nTo reject it, select Dismiss suggestion.\n\nIf you want to focus on one area of improvement at a time, you can filter suggestions according to the issue category.\n\nTo manage what Proofread checks for, open the proofread settings menu.\n\nBy default, all checks are enabled, but you can choose to clear any options that you want.\n\nNote: If you change your Proofread settings, those updates apply to all of your documents.\n\nAfter you have finished reviewing the suggestions, you can click the Close button to exit the panel.\n\nEven if the panel is closed, Proofread continues working in the background.\n\nIf issues in your writing are detected, the icon will include a blue dot to indicate that proofread suggestions are available.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Proofread Documents",
+                      "text": "You can use Proofread as your personal editor to ensure that your document is polished and professional before you share it with others.\n\nAside from grammar and spelling suggestions, Proofread evaluates your word choice, use of active voice, conciseness, and sentence structure.\n\nTo use Proofread, open the document you want to review and click Proofread this document in the toolbar.\n\nYou can also access Proofread from the tools menu.\n\nAfter the panel is open, you can review each suggestion and decide whether you want to approve or reject it.\n\nTo approve a change, select Accept suggestion.\n\nTo reject it, select Dismiss suggestion.\n\nIf you want to focus on one area of improvement at a time, you can filter suggestions according to the issue category.\n\nTo manage what Proofread checks for, open the proofread settings menu.\n\nBy default, all checks are enabled, but you can choose to clear any options that you want.\n\nNote: If you change your Proofread settings, those updates apply to all of your documents.\n\nAfter you have finished reviewing the suggestions, you can click the Close button to exit the panel.\n\nEven if the panel is closed, Proofread continues working in the background.\n\nIf issues in your writing are detected, the icon will include a blue dot to indicate that proofread suggestions are available."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act05",
+              "title": {
+                "en": "Activity Explained",
+                "fr": "Activity Explained"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_05_video",
+                  "title": {
+                    "en": "Activity Explained",
+                    "fr": "Activity Explained"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex05_activity_explained_50930530.mp4",
+                  "audioUrl": "/api/assets/ch01_ex05_activity_explained_f38cffd4.mp3",
+                  "subtitleUrlEn": "/api/assets/ch01_ex05_activity_explained_en_ab55e9be.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_6a295357.pdf",
+                  "transcript": "1. Activity Explained\nNow it's your turn to give it a try.\n\nIn the following activity, you act as a sales representative for Cymbal Retail.\n\nYou're assigned to write a blog post about the company's newest product.\n\nPractice how to use Gemini in Docs to generate a draft blog post and refine the generated text.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Activity Explained",
+                      "text": "Now it's your turn to give it a try.\n\nIn the following activity, you act as a sales representative for Cymbal Retail.\n\nYou're assigned to write a blog post about the company's newest product.\n\nPractice how to use Gemini in Docs to generate a draft blog post and refine the generated text."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act06",
+              "title": {
+                "en": "Generate a Blog Post",
+                "fr": "Generate a Blog Post"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "resource",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "resource_review",
+                  "id": "dc_1_act_06_resource",
+                  "title": {
+                    "en": "Generate a Blog Post",
+                    "fr": "Generate a Blog Post"
+                  },
+                  "instructions": {
+                    "en": "View the PDF before continuing.",
+                    "fr": "View the PDF before continuing."
+                  },
+                  "resourceUrl": "/api/assets/chapter_01_slides_6a295357.pdf",
+                  "resourceLabel": {
+                    "en": "Open the local PDF resource",
+                    "fr": "Open the local PDF resource"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act07",
+              "title": {
+                "en": "Quiz Question 1",
+                "fr": "Quiz Question 1"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "single_choice_exercise",
+                  "id": "dc_1_act_07_qcm",
+                  "question": {
+                    "en": "You are working on a new product launch for an organic green juice named Cymbal Green. You have conducted market research and have a good understanding of consumer needs and preferences. You want to use Gemini to develop compelling product descriptions that convey the benefits of the new beverage.\n\nWhich of the following is the best prompt?",
+                    "fr": "Vous travaillez au lancement d’un nouveau produit : un jus vert biologique appelé Cymbal Green. Vous avez mené une étude de marché et vous comprenez bien les besoins et les préférences des consommateurs. Vous souhaitez utiliser Gemini pour élaborer des descriptions de produit convaincantes qui communiquent les avantages de la nouvelle boisson.\n\nLaquelle des invites suivantes est la meilleure ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Generate product descriptions that appeal to active individuals who seek a natural and effective energy boost.",
+                        "fr": "Generate product descriptions that appeal to active individuals who seek a natural and effective energy boost."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Create a product description for Cymbal Green that resonates with consumers seeking a convenient and portable way to stay energized throughout the day.",
+                        "fr": "Créez une description de produit pour Cymbal Green qui trouve un écho auprès des consommateurs à la recherche d’un moyen pratique et facile à transporter de rester dynamiques tout au long de la journée."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Craft a product description for a new organic green juice called Cymbal Green that highlights the juice’s ability to boost energy levels and enhance performance.",
+                        "fr": "Craft a product description for a new organic green juice called Cymbal Green that highlights the juice’s ability to boost energy levels and enhance performance."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Write a product description for a new organic green juice called Cymbal Green.",
+                        "fr": "Write a product description for a new organic green juice called Cymbal Green."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "c",
+                  "explanation": {
+                    "en": "This answer is correct. This prompt provides clear direction to the AI, and specifies the product's key attributes and the desired tone of the descriptions.",
+                    "fr": "Cette réponse est correcte. Cette invite donne des indications claires à l’IA et précise les principales caractéristiques du produit ainsi que le ton souhaité pour les descriptions."
+                  },
+                  "hint": {
+                    "en": "Specificity matters: the best prompt should name the product, describe what it is, AND state the key benefits you want emphasized\n\nCompare prompts that include concrete details (product name + category + benefits) against those missing crucial information like what the product actually is\n\nStrong prompts guide the AI toward your research findings by specifying desired attributes rather than leaving it to generate generic descriptions",
+                    "fr": "La précision est importante : la meilleure invite doit nommer le produit, décrire ce qu’il est ET indiquer les principaux avantages que vous souhaitez mettre en avant.\n\nComparez les invites qui incluent des détails concrets (nom du produit + catégorie + avantages) à celles auxquelles il manque des informations cruciales, comme ce qu’est réellement le produit.\n\nLes invites efficaces orientent l’IA vers les conclusions de votre étude en précisant les caractéristiques souhaitées plutôt qu’en la laissant générer des descriptions génériques."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act08",
+              "title": {
+                "en": "Quiz Question 2",
+                "fr": "Quiz Question 2"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "single_choice_exercise",
+                  "id": "dc_1_act_08_qcm",
+                  "question": {
+                    "en": "You have written a document that is too long and wordy. You want to make it more concise and easy to read. Which option should you use?",
+                    "fr": "You have written a document that is too long and wordy. You want to make it more concise and easy to read. Which option should you use?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Retry",
+                        "fr": "Retry"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Rephrase",
+                        "fr": "Rephrase"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Summarize",
+                        "fr": "Summarize"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Shorten",
+                        "fr": "Shorten"
+                      }
+                    }
+                  ],
+                  "correctAnswer": "d",
+                  "explanation": {
+                    "en": "This answer is correct. This option reduces the length of your blog post by removing unnecessary words and phrases.",
+                    "fr": "This answer is correct. This option reduces the length of your blog post by removing unnecessary words and phrases."
+                  },
+                  "hint": {
+                    "en": "Look for the option specifically designed to reduce length by eliminating unnecessary words and phrases\n\nConsider which tool actively removes content versus which ones reorganize or reword existing text\n\n\"Summarize\" creates an overview separate from the original, while the correct answer modifies the document itself to be more concise",
+                    "fr": "Recherchez l’option spécialement conçue pour réduire la longueur en éliminant les mots et expressions inutiles\n\nRéfléchissez à l’outil qui supprime activement du contenu, par opposition à ceux qui réorganisent ou reformulent le texte existant\n\n« Résumer » crée une vue d’ensemble distincte de l’original, tandis que la bonne réponse modifie le document lui-même pour le rendre plus concis"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act09",
+              "title": {
+                "en": "Quiz Question 3",
+                "fr": "Quiz Question 3"
+              },
+              "description": {
+                "en": "Learn about the key features of Gemini in Google Docs.",
+                "fr": "Learn about the key features of Gemini in Google Docs."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "single_choice_exercise",
+                  "id": "dc_1_act_09_qcm",
+                  "question": {
+                    "en": "You are a financial analyst at a bank and you are writing a report on economic trends. You want to ensure that the report is polished, so you decide to use Gemini's Proofread feature. Which of the following is a suggestion that Proofread might make to improve your report?",
+                    "fr": "Vous êtes analyste financier dans une banque et vous rédigez un rapport sur les tendances économiques. Vous souhaitez vous assurer que le rapport est soigné, vous décidez donc d’utiliser la fonctionnalité de relecture de Gemini. Laquelle des suggestions suivantes la relecture pourrait-elle faire pour améliorer votre rapport ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Elaborate.",
+                        "fr": "Elaborate."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use more jargon.",
+                        "fr": "Use more jargon."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Use casual language.",
+                        "fr": "Use casual language."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Use active voice.",
+                        "fr": "Use active voice."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "d",
+                  "explanation": {
+                    "en": "This answer is correct. Proofread can help you identify passive voice and suggest ways to make your writing more active.",
+                    "fr": "This answer is correct. Proofread can help you identify passive voice and suggest ways to make your writing more active."
+                  },
+                  "hint": {
+                    "en": "Proofread focuses on writing quality improvements like clarity, tone, and grammar—think about which suggestion relates to making sentences more direct and impactful\n\nConsider what a professional banking report needs: formal tone, conciseness, and clarity—which option aligns with strengthening sentence structure rather than changing word count or adding terminology?\n\nPassive voice (like \"The report was written\") weakens professional writing; active voice (\"I wrote the report\") is a common writing improvement tool",
+                    "fr": "La relecture vise à améliorer la qualité de l’écriture, notamment la clarté, le ton et la grammaire ; réfléchissez à la suggestion qui consiste à rendre les phrases plus directes et plus percutantes\n\nRéfléchissez à ce dont un rapport bancaire professionnel a besoin : un ton formel, de la concision et de la clarté. Quelle option vise à renforcer la structure des phrases plutôt qu’à modifier le nombre de mots ou à ajouter de la terminologie ?\n\nLa voix passive (comme « Le rapport a été rédigé ») affaiblit l’écriture professionnelle ; la voix active (« J’ai rédigé le rapport ») est un outil courant d’amélioration de l’écriture"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "policy": {
+    "publication_gate": "No P0; every P1 must be fixed or explicitly verified false positive; every mandatory media/file/exercise must be learner-usable; no required activity may depend on unprovided external access, dataset, workflow or environment; navigation gates must correspond to rendered activities.",
+    "remediation_rule": "If an activity cannot be made reliably correctable quickly using only its current declared assets, preserve any explanatory source text as a content block, remove the activity, remove its completion gate and remove orphan exercise definitions. Never invent a file, dataset, API, workflow, answer key, source or external access.",
+    "review_scope": "Inspect current learner-visible course JSON and current report. Produce exact block-level decisions only; do not modify course files."
+  }
+}

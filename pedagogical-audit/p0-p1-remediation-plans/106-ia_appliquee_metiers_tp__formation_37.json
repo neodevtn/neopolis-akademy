@@ -1,0 +1,57 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_37",
+  "index": 106,
+  "course_ids": ["ia_appliquee_metiers_tp__37"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "chapter_id": "ia_appliquee_metiers_tp__37-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__37-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire peut être complété après une réponse erronée dans l’état courant ; il n’est pas fiablement corrigeable avec les seuls actifs déclarés. La question et son explication restent utiles comme contenu non bloquant.",
+      "evidence": "current_recheck.findings[0] : chapitre requis, passThreshold=1, bloc required knowledge_check avec correctAnswer=\"a\" ; toute sélection appelle la complétion et checkpointGate ne prend pas ce bloc en compte. Bloc réel : ia_appliquee_metiers_tp__37-checkpoint-preparation."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "chapter_id": "ia_appliquee_metiers_tp__37-checkpoint-01",
+      "reason": "Retirer le verrou du checkpoint après conversion de son activité obligatoire en contenu non bloquant.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__37-checkpoint-01 est requiredBeforeAdvance=true et son passThreshold=1 dépend du knowledge_check défaillant décrit dans current_recheck.findings[0]."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "chapter_id": "ia_appliquee_metiers_tp__37-final-quiz",
+      "block_id": "ia-appliquee-metiers-tp__37-quiz-01",
+      "reason": "La question du quiz renvoie encore au mini-projet supprimé ; retirer cette référence obsolète à partir du texte existant, sans supprimer le quiz valide.",
+      "evidence": "current_recheck.findings[5] : lessons[0].chapters[4].blocks[0].question mentionne le mini-projet \"Analyser trois contrats fictifs contre un playbook...\" alors qu’aucun chapitre mini-projet ni cloud_exercise n’existe dans l’état courant."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Le feedback pédagogique du tri final reste non rendu",
+      "evidence": "Le bloc bucket_sort ia-appliquee-metiers-tp__37-quiz-order conserve feedback, mais LessonViewer ne le transmet pas à MatchingExercise, qui ne rend que correction.",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "chapter_id": "ia_appliquee_metiers_tp__37-final-quiz",
+      "reason_not_rapidly_remediable": "Défaut de rendu et de mapping dans le code, sans correctif exécutable ni actif déclaré de remplacement ; supprimer l’activité valide ne corrigerait pas fiablement le comportement."
+    },
+    {
+      "severity": "P2",
+      "title": "La terminologie de la démarche et du tri final reste incohérente",
+      "evidence": "La séquence enseigne Cadrer → Préparer → Tester → Contrôler, tandis que le tri attend Cadrer → Construire → Tester → Valider, sans équivalence explicitée.",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "chapter_id": "ia-appliquee-metiers-tp__37-final-quiz",
+      "reason_not_rapidly_remediable": "Le bundle ne fournit pas une correction éditoriale déjà définie ni un mécanisme d’édition ; aucune suppression d’activité valide n’est justifiée par cette incohérence de terminologie."
+    },
+    {
+      "severity": "P2",
+      "title": "Le mode anglais reste partiellement en français",
+      "evidence": "description.en et plusieurs titres de chapitres/blocs en de la structure courante reproduisent encore le français, notamment \"Objectif du TP\", \"Préparer l’environnement\" et \"Construire progressivement\".",
+      "course_id": "ia_appliquee_metiers_tp__37",
+      "reason_not_rapidly_remediable": "Il s’agit d’un défaut de localisation éditoriale nécessitant une modification du cours ; aucune action de localisation n’est disponible dans le plan et aucun contenu de cours ne doit être modifié par cette revue."
+    }
+  ],
+  "summary": "Revue de l’état courant terminée : le checkpoint obligatoire non fiable est converti en contenu non bloquant et son verrou est retiré ; la référence au mini-projet supprimé est signalée pour retrait. Trois constats P2 restent ouverts car ils relèvent du rendu code, d’une harmonisation éditoriale ou de la localisation, sans correction fiable fondée uniquement sur les actifs déclarés."
+}

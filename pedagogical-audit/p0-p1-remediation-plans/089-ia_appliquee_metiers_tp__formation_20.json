@@ -1,0 +1,66 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_20",
+  "index": 89,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__20"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__20-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Retirer le checkpoint obligatoire : son mécanisme actuel enregistre la complétion après une réponse correcte ou incorrecte, donc l’activité n’est pas fiable et ne peut pas être corrigée rapidement avec les seuls actifs déclarés.",
+      "evidence": "current_open_p0_p1_findings[0] et current_recheck.findings[1] : knowledge_check required=true, passThreshold=1, correctAnswer=\"a\" ; le parcours documenté appelle onComplete même après une réponse incorrecte. Le bloc comporte déjà une explication, donc remove_block est préféré à convert_block_to_content."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__20-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Retirer le verrou de progression associé au checkpoint supprimé afin qu’il ne reste pas de condition de complétion orpheline.",
+      "evidence": "current_recheck.findings[1] : le chapitre ia_appliquee_metiers_tp__20-checkpoint-01 est traversé par le gate via la complétion du knowledge_check ; requiredBeforeAdvance est vrai dans l’état courant du cours."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__20-mini-project-proof",
+      "exercise_id": null,
+      "reason": "Retirer la preuve obligatoire du mini-projet : une réponse non vide suffit actuellement à valider et révéler la correction, sans critères visibles, seuil explicite ni évaluation structurée ; elle n’est donc pas rapidement corrigeable de manière fiable avec les actifs déclarés.",
+      "evidence": "current_open_p0_p1_findings[1] et current_recheck.findings[2] : cloud_exercise obligatoire, sans minimumAnswerLength, rubricCriteria/learnerCriteria ni serverGradedAssessment ; la validation documentée accepte answer.trim().length >= 1. Le bloc contient déjà assignment, instructions, steps, hint et solution, donc remove_block est préféré à convert_block_to_content."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__20-mini-project-proof",
+      "exercise_id": null,
+      "reason": "Retirer le verrou de progression du mini-projet supprimé afin d’éviter une exigence de complétion orpheline.",
+      "evidence": "current_recheck.findings[2] : le chapitre ia_appliquee_metiers_tp__20-mini-project est requiredBeforeAdvance=true et la preuve cloud_exercise est l’unique bloc de l’écran ; la suppression du bloc doit donc s’accompagner du retrait de ce verrou."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__20",
+      "chapter_id": "ia_appliquee_metiers_tp__20-final-quiz",
+      "block_id": "ia_appliquee_metiers_tp__20-quiz-order",
+      "exercise_id": null,
+      "reason": "Supprimer la promesse non tenue de correction détaillée plutôt que retirer l’activité valide : le bloc fournit déjà feedback et les cartes colorées, mais aucun champ correction n’est consommé par le renderer.",
+      "evidence": "current_recheck.findings[3] : instructions du bucket_sort annoncent « La correction est disponible après une tentative complète », tandis que le bloc réel ne contient que feedback et aucun champ correction ; le composant consulte exercise.correction pour la correction détaillée."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P3",
+      "title": "Objectifs anglais partiellement en français",
+      "evidence": "current_recheck.findings[0] : learning_section du chapitre ia_applique_metiers_tp__20-screen-01, items[1] et [3] en français malgré l’interface anglaise.",
+      "course_id": "ia_applique_metiers_tp__20",
+      "chapter_id": "ia_applique_metiers_tp__20-screen-01",
+      "reason_not_rapidly_remediable": "Le périmètre de cette décision ne prévoit pas d’action d’édition/localisation ; aucune suppression de contenu valide n’est justifiée par ce constat P3."
+    }
+  ],
+  "summary": "Les deux activités obligatoires P1 non fiables sont retirées avec leurs exigences de progression ; la promesse de correction absente du tri final est supprimée sans retirer l’activité valide. Le seul constat restant est la localisation P3 de deux objectifs anglais."
+}

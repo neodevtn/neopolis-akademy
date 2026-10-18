@@ -1,0 +1,59 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_11",
+  "index": 80,
+  "course_ids": ["ia_appliquee_metiers_tp__11"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "chapter_id": "ia_appliquee_metiers_tp__11-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__11-checkpoint-preparation",
+      "reason": "Le checkpoint obligatoire est franchissable après une réponse fausse : le rendu marque l’interaction complétée quelle que soit la correction, malgré requiredBeforeAdvance et passThreshold. Il n’existe dans les seuls actifs déclarés aucun mécanisme fiable permettant de corriger rapidement le gate ; retirer le bloc supprime donc le verrou défaillant.",
+      "evidence": "current_open_p0_p1_findings[0] et current_recheck.findings : bloc knowledge_check requis, correctAnswer « a », passThreshold 1, et le rapport vérifie que toute réponse appelle la complétion ; initial_audit issue incorrect-answer-unlocks confirme le comportement dans GenericLearningBlocks/LessonViewer."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "chapter_id": "ia_appliquee_metiers_tp__11-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__11-mini-project-proof",
+      "reason": "La preuve du mini-projet obligatoire est validée avec un seul caractère, sans minimumAnswerLength, critères observables, rubricCriteria, learnerCriteria ni serverGradedAssessment. Aucun actif déclaré ne permet une correction rapide et fiable de cette validation ; convertir le bloc en contenu conserve la consigne, l’indice et la correction comme contenu non bloquant et retire le verrou.",
+      "evidence": "current_open_p0_p1_findings[1] et current_recheck.findings : cloud_exercise sans mécanisme de validation ; initial_audit issue one-character-completion indique que CloudExerciseBlock applique la valeur par défaut 1 et déclenche onComplete dès qu’un caractère est saisi. Le texte existant demande déjà le scénario, le résultat, le contrôle et la validation humaine."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Terminologie de démarche incohérente entre séquence et tri final",
+      "evidence": "Dans ia_appliquee_metiers_tp__11-screen-03, la séquence emploie « Cadrer → Préparer → Tester → Contrôler », tandis que ia_appliquee_metiers_tp__11-quiz-order emploie « Cadrer → Construire → Tester → Valider » ; le constat est présent deux fois dans current_recheck.findings et initial_audit.",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "chapter_id": "ia_appliquee_metiers_tp__11-screen-03",
+      "reason_not_rapidly_remediable": "L’alignement exige de modifier plusieurs contenus liés (séquence, catégories du tri, consigne et feedback) ; il ne s’agit pas d’une suppression de l’activité obligatoire et le bundle ne permet pas de choisir sans arbitrage quel vocabulaire de référence conserver."
+    },
+    {
+      "severity": "P2",
+      "title": "Champs centraux du mini-projet non localisés en anglais",
+      "evidence": "assignment, instructions, hint, solution et successMessage de ia_appliquee_metiers_tp__11-mini-project-proof sont des chaînes françaises, alors que environmentGuide et resources ont des variantes fr/en ; constat localisé dans current_recheck et initial_audit english-path-french-core-instructions.",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "chapter_id": "ia_appliquee_metiers_tp__11-mini-project",
+      "reason_not_rapidly_remediable": "Après conversion en contenu non bloquant, la traduction complète de plusieurs champs reste une modification éditoriale distincte ; aucune version anglaise existante n’est déclarée dans le bundle et il ne faut pas l’inventer."
+    },
+    {
+      "severity": "P2",
+      "title": "Correction du tri final non rendue",
+      "evidence": "ia_appliquee_metiers_tp__11-quiz-order contient feedback mais pas correction ; current_recheck et initial_audit indiquent que LessonViewer transmet seulement block.correction à MatchingExercise, donc le feedback et la destination attendue des cartes erronées ne sont pas affichés après tentative.",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "chapter_id": "ia_appliquee_metiers_tp__11-final-quiz",
+      "reason_not_rapidly_remediable": "La résolution nécessite un changement de mapping/composant ou une nouvelle structure de correction par carte ; aucun mécanisme déclaré dans les actifs du cours ne permet de l’appliquer de façon fiable par simple décision de retrait."
+    },
+    {
+      "severity": "P2",
+      "title": "Ressource support fictif non résolue",
+      "evidence": "initial_audit.limits indique que la ressource « Support fictif de TP 11 » référencée sous /manus-storage/ n’est pas résolue comme fichier local dans le périmètre audité, sans que son existence ou son contenu puisse être considéré absent.",
+      "course_id": "ia_appliquee_metiers_tp__11",
+      "chapter_id": "ia_appliquee_metiers_tp__11-mini-project",
+      "reason_not_rapidly_remediable": "Le bundle ne démontre ni absence ni contenu exploitable ; supprimer ou remplacer cette ressource imposerait d’inventer un fichier ou un dataset, ce qui est interdit."
+    }
+  ],
+  "summary": "Deux activités obligatoires P1 ne sont pas fiablement validables avec les actifs déclarés : le checkpoint défaillant est retiré et la preuve du mini-projet devient un contenu non bloquant, en conservant ses consignes. Quatre constats P2 restent ouverts car ils exigent des modifications éditoriales ou de rendu non déductibles sans invention."
+}

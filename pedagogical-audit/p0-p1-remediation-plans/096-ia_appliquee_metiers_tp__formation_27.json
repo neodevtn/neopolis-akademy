@@ -1,0 +1,53 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_27",
+  "index": 96,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__27"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-screen-02",
+      "block_id": "ia_appliquee_metiers_tp__27-source-review",
+      "reason": "La consultation obligatoire est une auto-attestation non vérifiable : le bouton peut être activé sans ouverture effective du lien. Conserver la ressource et sa consigne comme contenu informatif, mais retirer le verrou d’activité.",
+      "evidence": "current_recheck findings P2; initial_audit PED-096-27-001; le bloc resource_review ajoute directement son identifiant aux complétions et isGatedByResourceReview ne vérifie pas l’ouverture du lien."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__27-checkpoint-preparation",
+      "reason": "Le checkpoint obligatoire n’est pas corrigeable rapidement de manière fiable avec les actifs déclarés : toute sélection appelle la complétion, y compris une réponse fausse, et le verrou ne teste pas isCorrect. Retirer l’activité et son verrou ; les explications de sécurité existent déjà dans les écrans précédents.",
+      "evidence": "current_recheck findings P1; initial_audit PED-096-27-002; correctAnswer=\"a\", passThreshold=1, mais KnowledgeCheckBlock/LessonViewer enregistrent toute interaction comme complétée."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__27-mini-project-proof",
+      "reason": "Le mini-projet obligatoire ne peut pas être validé de façon fiable avec les seuls actifs déclarés : aucune grille, longueur minimale suffisante ou évaluation serveur ne contrôle les quatre éléments de preuve, et une réponse d’un caractère termine l’activité. Conserver l’objectif, les instructions, les garde-fous et la structure de preuve comme contenu non bloquant, sans prétendre fournir une preuve évaluée.",
+      "evidence": "current_recheck findings P1 guidage et évaluation; initial_audit PED-096-27-003/004; le cloud_exercise ne configure ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment et submit() complète dès une réponse non vide."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Feedback du tri final non rendu",
+      "evidence": "current_recheck finding P2; block ia_appliquee_metiers_tp__27-quiz-order possède feedback.fr/en, tandis que LessonViewer transmet block.correction et le bloc ne possède pas correction.",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-final-quiz",
+      "reason_not_rapidly_remediable": "Le constat concerne le câblage du renderer, pas une activité obligatoire non fiable ; aucune action de correction de mapping n’est disponible dans le périmètre de ce plan et le tri reste une activité valide."
+    },
+    {
+      "severity": "P3",
+      "title": "Traductions anglaises incomplètes du quiz final",
+      "evidence": "current_recheck finding P3; plusieurs options, catégories et cartes du tri conservent du français dans les champs en, notamment les catégories Cadrer/Construire/Tester/Valider et la carte de validation humaine.",
+      "course_id": "ia_appliquee_metiers_tp__27",
+      "chapter_id": "ia_appliquee_metiers_tp__27-final-quiz",
+      "reason_not_rapidly_remediable": "Il s’agit d’une correction éditoriale bilingue non liée à une activité impossible à corriger avec les actifs déclarés ; aucune action de traduction dédiée n’est prévue ici."
+    }
+  ],
+  "summary": "Trois activités obligatoires reposant sur des verrous ou une validation non fiables sont neutralisées : la revue de ressource et le mini-projet deviennent du contenu non bloquant, et le checkpoint défectueux est retiré. Le tri final valide est conservé ; son feedback non rendu et les traductions anglaises incomplètes restent ouverts."
+}

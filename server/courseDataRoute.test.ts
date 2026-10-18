@@ -1,11 +1,50 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import type { AddressInfo } from "node:net";
 import os from "node:os";
 import path from "node:path";
+import express from "express";
 import { afterEach, describe, expect, it } from "vitest";
-import { COURSE_DATA_ROUTE_PATHS, getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset, sanitizeCourseDataForLearner } from "./courseDataRoute";
+import { COURSE_DATA_ROUTE_PATHS, getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset, registerCourseDataRoute, sanitizeCourseDataForLearner } from "./courseDataRoute";
 import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
 
 const temporaryDirectories: string[] = [];
+const courseDataDirectory = path.resolve(import.meta.dirname, "..", "client", "public", "data", "courses");
+
+function normalizeKey(key: string): string {
+  return key.replace(/[^a-z0-9]/gi, "").toLowerCase();
+}
+
+function isLeakedCorrectionKey(key: string): boolean {
+  const normalized = normalizeKey(key);
+  return normalized === "answer" || normalized === "answers"
+    || normalized.startsWith("correct")
+    || normalized.startsWith("answerkey")
+    || normalized.startsWith("solution")
+    || normalized.startsWith("correction")
+    || normalized.startsWith("sampleanswer")
+    || normalized.startsWith("modelanswer")
+    || normalized.startsWith("expectedanswer")
+    || normalized.startsWith("expectedvalue")
+    || normalized.startsWith("expectedevidence")
+    || normalized.startsWith("expectedoutput")
+    || normalized.startsWith("expectedresult")
+    || normalized.startsWith("expectedresponse")
+    || normalized.startsWith("explanation")
+    || normalized.startsWith("feedback")
+    || normalized.startsWith("rationale")
+    || normalized.startsWith("rubric")
+    || normalized.startsWith("evaluation")
+    || normalized.startsWith("grading");
+}
+
+function findLeakedCorrectionKeys(value: unknown, pathPrefix = "$"): string[] {
+  if (Array.isArray(value)) return value.flatMap((item, index) => findLeakedCorrectionKeys(item, `${pathPrefix}[${index}]`));
+  if (!value || typeof value !== "object") return [];
+  return Object.entries(value as Record<string, unknown>).flatMap(([key, nestedValue]) => [
+    ...(isLeakedCorrectionKey(key) ? [`${pathPrefix}.${key}`] : []),
+    ...findLeakedCorrectionKeys(nestedValue, `${pathPrefix}.${key}`),
+  ]);
+}
 
 afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map(directory => rm(directory, { recursive: true, force: true })));
@@ -50,70 +89,101 @@ describe("course data route", () => {
     await expect(readCourseDataAsset("course_02", [emptyDirectory, validDirectory])).resolves.toBe('{"lessons":[{"id":"chapter"}]}');
   });
 
-  it("masks any accidental sensitive single-choice answer from learner data", () => {
+  it("removes recursively every correction-key convention while retaining rendering metadata", () => {
     const raw = JSON.stringify({
+      courseId: "projection_fixture",
+      datacampImport: { expected: { courseCount: 1 } },
       lessons: [{ chapters: [{ blocks: [{
-        id: "server_checked_choice",
+        id: "nested_answers",
         type: "single_choice_exercise",
         serverValidated: true,
+        completionRequiresCorrectAnswer: true,
+        minimumAnswerLength: 12,
         correctAnswer: "b",
+        correct_answer: "b",
+        correct_option: "b",
+        correct_option_index: 1,
+        correctOptionIds: ["b"],
+        answerKey: { selected: "b" },
+        answer_key: "b",
+        solution: "Server-only solution",
+        correction: { fr: "Correction privée" },
         explanation: { en: "Server explanation", fr: "Explication serveur" },
-      }, {
-        id: "standard_choice",
-        type: "single_choice_exercise",
-        correctAnswer: "a",
+        feedback: { fr: "Feedback à retourner seulement après soumission" },
+        nested: {
+          model_answer: "nested model answer",
+          rubricCriteria: [{ expectedEvidence: "nested expected evidence" }],
+          options: [{ id: "a", correct: false }, { id: "b", correct: true }],
+        },
       }] }] }],
-    });
-
-    const learnerData = JSON.parse(sanitizeCourseDataForLearner(raw));
-    expect(learnerData.lessons[0].chapters[0].blocks[0]).toMatchObject({ id: "server_checked_choice", serverValidated: true });
-    expect(learnerData.lessons[0].chapters[0].blocks[0]).not.toHaveProperty("correctAnswer");
-    expect(learnerData.lessons[0].chapters[0].blocks[0]).not.toHaveProperty("explanation");
-    expect(learnerData.lessons[0].chapters[0].blocks[1].correctAnswer).toBe("a");
-  });
-
-  it("masks server-graded practical correction material while retaining learner-facing criteria", () => {
-    const raw = JSON.stringify({
-      lessons: [{ chapters: [{ blocks: [{
-        id: "secured_practical",
-        type: "cloud_exercise",
-        serverGradedAssessment: "source_verified",
-        learnerCriteria: ["Describe the test result"],
-        solution: "Server-only correction",
-        evaluationPrompt: "Server-only grading prompt",
-        rubricCriteria: [{ label: "Server-only rubric" }],
-      }] }] }],
-    });
-
-    const learnerBlock = JSON.parse(sanitizeCourseDataForLearner(raw)).lessons[0].chapters[0].blocks[0];
-    expect(learnerBlock).toMatchObject({ id: "secured_practical", serverGradedAssessment: "source_verified", learnerCriteria: ["Describe the test result"] });
-    expect(learnerBlock).not.toHaveProperty("solution");
-    expect(learnerBlock).not.toHaveProperty("evaluationPrompt");
-    expect(learnerBlock).not.toHaveProperty("rubricCriteria");
-  });
-
-  it("masks server-owned legacy checkpoint corrections and choice keys", () => {
-    const raw = JSON.stringify({
-      lessons: [],
       exercises: [{
-        id: "secured_checkpoint",
+        id: "legacy_checkpoint",
         serverCorrectionRequired: true,
+        completionRequiresCorrectAnswer: true,
         prompt: { fr: "Question visible" },
         correction: { fr: "Correction privée" },
-        rubric: { keyPoints: [{ fr: "Critère privé" }] },
         options: [{ id: "a", correct: true }, { id: "b", correct: false }],
-      }, {
-        id: "public_legacy_exercise",
-        correction: { fr: "Conservation rétrocompatible" },
       }],
     });
 
     const learnerData = JSON.parse(sanitizeCourseDataForLearner(raw));
-    expect(learnerData.exercises[0]).toMatchObject({ id: "secured_checkpoint", serverCorrectionRequired: true, prompt: { fr: "Question visible" } });
-    expect(learnerData.exercises[0]).not.toHaveProperty("correction");
-    expect(learnerData.exercises[0]).not.toHaveProperty("rubric");
-    expect(learnerData.exercises[0].options).toEqual([{ id: "a" }, { id: "b" }]);
-    expect(learnerData.exercises[1].correction).toEqual({ fr: "Conservation rétrocompatible" });
+    const learnerBlock = learnerData.lessons[0].chapters[0].blocks[0];
+    expect(findLeakedCorrectionKeys(learnerData)).toEqual([]);
+    expect(learnerBlock).toMatchObject({
+      id: "nested_answers",
+      type: "single_choice_exercise",
+      serverValidated: true,
+      completionRequiresCorrectAnswer: true,
+      minimumAnswerLength: 12,
+      nested: { options: [{ id: "a" }, { id: "b" }] },
+    });
+    expect(learnerData.exercises[0]).toMatchObject({
+      id: "legacy_checkpoint",
+      serverCorrectionRequired: true,
+      completionRequiresCorrectAnswer: true,
+      prompt: { fr: "Question visible" },
+      options: [{ id: "a" }, { id: "b" }],
+    });
+    expect(learnerData.datacampImport).toEqual({ expected: { courseCount: 1 } });
+  });
+
+  it("sanitizes all 180 course assets without changing their learner-visible structure", async () => {
+    const filenames = (await readdir(courseDataDirectory)).filter(filename => filename.endsWith(".json")).sort();
+    expect(filenames).toHaveLength(180);
+
+    for (const filename of filenames) {
+      const raw = await readFile(path.join(courseDataDirectory, filename), "utf8");
+      const source = JSON.parse(raw);
+      const learner = JSON.parse(sanitizeCourseDataForLearner(raw));
+      expect(findLeakedCorrectionKeys(learner), filename).toEqual([]);
+      expect(learner.courseId, filename).toBe(source.courseId);
+      expect(learner.lessons, filename).toHaveLength(source.lessons.length);
+      expect(learner.lessons[0]?.chapters?.length, filename).toBe(source.lessons[0]?.chapters?.length);
+    }
+  });
+
+  it("serves the legacy public course URL through the sanitized projection", async () => {
+    const app = express();
+    registerCourseDataRoute(app);
+    const server = await new Promise<ReturnType<typeof app.listen>>((resolve) => {
+      const listener = app.listen(0, "127.0.0.1", () => resolve(listener));
+    });
+    try {
+      const courseId = "advanced_ai_assisted_coding_for_developers__01";
+      const raw = await readFile(path.join(courseDataDirectory, `${courseId}.json`), "utf8");
+      expect(raw).toContain('"correctAnswer"');
+      const port = (server.address() as AddressInfo).port;
+      const response = await fetch(`http://127.0.0.1:${port}/data/courses/${courseId}.json`);
+      const learner = await response.json();
+      expect(response.status).toBe(200);
+      expect(response.headers.get("content-type")).toBe("application/json; charset=utf-8");
+      expect(response.headers.get("cache-control")).toBe("no-store, max-age=0");
+      expect(findLeakedCorrectionKeys(learner)).toEqual([]);
+      expect(learner.courseId).toBe(courseId);
+      expect(learner.lessons).toHaveLength(JSON.parse(raw).lessons.length);
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
   });
 
   it("keeps the Developer 3 sensitive answer key in the server-only registry", () => {

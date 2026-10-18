@@ -1,0 +1,100 @@
+{
+  "formation_id": "datacamp_gemini_in_google_meet",
+  "index": 38,
+  "course_ids": [
+    "gemini_in_google_meet__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act01",
+      "block_id": "dc_1_act_01_video",
+      "exercise_id": null,
+      "reason": "Le MP4 et son transcript sont des contenus valides, mais le verrou obligatoire dépend d’une résolution de clé de média défaillante qui ne peut pas être corrigée de façon fiable avec les seuls actifs déclarés. Retirer l’obligation conserve la vidéo et son explication sans gate incohérent.",
+      "evidence": "current_recheck.findings P1 verrouillage; chapitre dc_ch01_act01 requiredBeforeAdvance=true; bloc réel dc_1_act_01_video avec mp4Url, audioUrl et transcript."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act02",
+      "block_id": "dc_1_act_02_video",
+      "exercise_id": null,
+      "reason": "Le MP4 de démonstration est valide, mais son gate obligatoire n’est pas fiable à cause de la résolution de clé. Conserver le contenu et retirer uniquement l’exigence de complétion.",
+      "evidence": "initial_audit PAG-038-LOCK-01-02; chapitre dc_ch01_act02 requiredBeforeAdvance=true; bloc réel dc_1_act_02_video avec mp4Url et transcript."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act03",
+      "block_id": "dc_1_act_03_video",
+      "exercise_id": null,
+      "reason": "Le contenu vidéo est conservable, mais le verrou obligatoire n’est pas fiable avec l’identifiant média actuel. Retirer la contrainte plutôt que supprimer la vidéo.",
+      "evidence": "initial_audit PAG-038-LOCK-01-03; chapitre dc_ch01_act03 requiredBeforeAdvance=true; bloc réel dc_1_act_03_video avec mp4Url et transcript."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act04",
+      "block_id": "dc_1_act_04_video",
+      "exercise_id": null,
+      "reason": "Le MP4 et l’explication sur la prise de notes restent utiles; seule l’obligation de complétion est retirée car le gate ne reconnaît pas de manière fiable cet actif local.",
+      "evidence": "initial_audit PAG-038-LOCK-01-04; chapitre dc_ch01_act04 requiredBeforeAdvance=true; bloc réel dc_1_act_04_video avec mp4Url et transcript."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act05",
+      "block_id": "dc_1_act_05_video",
+      "exercise_id": null,
+      "reason": "La vidéo d’explication de l’activité est un contenu valide à conserver, mais son verrou obligatoire est incohérent et non fiable avec les actifs déclarés. Retirer le gate sans retirer le contenu.",
+      "evidence": "initial_audit PAG-038-LOCK-01-05; chapitre dc_ch01_act05 requiredBeforeAdvance=true; bloc réel dc_1_act_05_video avec mp4Url et transcript annonçant les trois actions."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act06",
+      "block_id": "dc_1_act_06_resource",
+      "exercise_id": null,
+      "reason": "Le bundle ne fournit ni activité Meet exécutable, ni production attendue, ni preuve fiable. Conserver le PDF et sa consigne comme contenu de référence non bloquant, en retirant la fausse obligation de consultation vérifiée.",
+      "evidence": "current_recheck P1 objectifs et activités; bloc réel resource_review dc_1_act_06_resource contenant uniquement View the PDF before continuing et resourceUrl vers chapter_01_slides_8dfb536c.pdf; LessonViewer rend un lien et une auto-confirmation indépendante."
+    },
+    {
+      "action": "mark_false_positive",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": null,
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Normalisation du constat historique déjà démontré comme faux positif; aucune duplication ni corruption n’est signalée par l’entrée static-audit ciblée.",
+      "evidence": "current_recheck finding category duplication/corruption, status=false_positive; static-audit ciblée issue_count=0, lesson_count=1, chapter_count=10."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Localisation française incomplète",
+      "evidence": "sourceLanguage=fr-FR, mais titres, descriptions, transcripts, options et explications comportent encore des valeurs anglaises; aucun actif déclaré ne fournit les traductions françaises manquantes.",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act07",
+      "reason_not_rapidly_remediable": "Une traduction complète de nombreux champs pédagogiques est nécessaire; elle ne peut pas être déduite ni inventée à partir des seuls actifs déclarés."
+    },
+    {
+      "severity": "P2",
+      "title": "Faisabilité de l’environnement Meet non démontrée",
+      "evidence": "Les transcripts demandent un navigateur desktop et meet.google.com, mais aucune session autorisée, alternative simulée ou preuve de réalisation n’est déclarée.",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act02",
+      "reason_not_rapidly_remediable": "La faisabilité dépend de droits et configurations Google Workspace non présents dans le bundle; inventer un compte, un workflow ou une preuve serait interdit."
+    },
+    {
+      "severity": "P2",
+      "title": "Accès et qualité effective des médias non testés",
+      "evidence": "Les MP4, audios, VTT et PDF ont des chemins déclarés, mais leur ouverture, lecture et qualité navigateur n’ont pas été vérifiées.",
+      "course_id": "gemini_in_google_meet__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "Aucune défaillance d’actif n’est prouvée et aucun test navigateur n’est disponible dans le bundle; aucune suppression de contenu valide ne peut être justifiée."
+    }
+  ],
+  "summary": "Les cinq vidéos valides sont conservées mais leurs gates obligatoires non fiables sont retirés. L’activité annoncée au chapitre 6 est convertie en contenu PDF non bloquant faute d’action ou de preuve déclarée. Le faux positif historique est normalisé; trois constats P2 restent ouverts car ils exigent traduction ou vérification d’environnement/médias absente du bundle."
+}

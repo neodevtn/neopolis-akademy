@@ -1,34 +1,165 @@
-import { describe, expect, it } from "vitest";
-import course from "../client/public/data/courses/ai_for_data_analysts__01.json";
 import catalog from "../client/src/data/trainingIndex.json";
+import course from "../client/public/data/courses/ai_for_data_analysts__01.json";
+import { describe, expect, it } from "vitest";
 
-describe("cours DataCamp L’IA pour les data analysts", () => {
-  const activities = course.lessons.flatMap((lesson: any) => lesson.chapters);
+const courseId = "ai_for_data_analysts__01";
+const interactiveBlockTypes = new Set([
+  "exercise",
+  "single_choice_exercise",
+  "multi_choice_exercise",
+  "multi_choice",
+  "matching",
+  "bucket_sort",
+  "fill_blank",
+  "code_repl",
+  "terminal_sim",
+  "ai_evaluation",
+  "ordering",
+  "cloud_exercise",
+  "resource_review",
+]);
+const practicalBlockTypes = new Set([
+  "cloud_exercise",
+  "code_repl",
+  "ai_evaluation",
+  "terminal_sim",
+]);
+const hasText = (value: unknown) =>
+  typeof value === "string" && value.trim().length > 0;
+const isLocalAsset = (value: unknown) =>
+  typeof value === "string" && value.startsWith("/api/assets/");
+
+function derivedMetrics(activities: any[], blocks: any[]) {
+  const downloadableUrls = new Set<string>();
+  let downloadsWithoutUrl = 0;
+
+  for (const block of blocks) {
+    const urls = [
+      block.url,
+      block.downloadUrl,
+      block.fileUrl,
+      block.slidesPdf,
+      ...(Array.isArray(block.resources)
+        ? block.resources.map((resource: any) => resource?.url)
+        : []),
+      ...(Array.isArray(block.downloads)
+        ? block.downloads.map((download: any) => download?.url || download)
+        : []),
+    ].filter(
+      (url): url is string => typeof url === "string" && url.trim().length > 0
+    );
+    urls.forEach(url => downloadableUrls.add(url));
+    if (
+      (block.type === "download" || block.type === "file_download") &&
+      urls.length === 0
+    )
+      downloadsWithoutUrl += 1;
+  }
+
+  return {
+    lessonCount: course.lessons.length,
+    chapterCount: activities.length,
+    totalActivities: activities.length,
+    exerciseCount: blocks.filter((block: any) =>
+      interactiveBlockTypes.has(block.type)
+    ).length,
+    videoCount: blocks.filter((block: any) => block.type === "video").length,
+    downloadCount: downloadableUrls.size + downloadsWithoutUrl,
+  };
+}
+
+describe("Cours : L’IA pour les data analysts", () => {
+  const activities = course.lessons.flatMap(
+    (lesson: any) => lesson.chapters || []
+  );
   const blocks = activities.flatMap((activity: any) => activity.blocks || []);
 
-  it("synchronise les compteurs dérivés après les deux retraits canoniquement justifiés", () => {
-    const certification = catalog.certifications.find((entry: any) => entry.id === "datacamp_ai_for_data_analysts");
-    const courseIndex = catalog.courses.find((entry: any) => entry.id === "ai_for_data_analysts__01");
-    expect(certification).toMatchObject({ group: "bi_data_analytics", totalLessons: 4, totalActivities: 37, totalVideos: 11, totalExercises: 26, totalDownloads: 4 });
-    expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 37, videoCount: 11, exerciseCount: 26 });
-    expect(activities).toHaveLength(37);
+  it("synchronise le catalogue avec les métriques dérivées du JSON livré", () => {
+    const metrics = derivedMetrics(activities, blocks);
+    const courseIndex = catalog.courses.find(
+      (entry: any) => entry.id === courseId
+    );
+
+    expect(courseIndex).toMatchObject({ id: courseId, ...metrics });
+    const certification = catalog.certifications.find(
+      (entry: any) => entry.id === courseIndex?.certId
+    );
+    expect(certification).toMatchObject({
+      totalLessons: metrics.lessonCount,
+      totalActivities: metrics.totalActivities,
+      totalVideos: metrics.videoCount,
+      totalExercises: metrics.exerciseCount,
+      totalDownloads: metrics.downloadCount,
+    });
   });
 
-  it("préserve les Projector et les formats interactifs réellement reproductibles", () => {
-    const projectorVideos = blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length);
-    expect(projectorVideos).toHaveLength(11);
-    expect(projectorVideos.every((block: any) => (block.mp4Url || block.audioUrl) && block.slidesPdf && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "VisualExercise")).toHaveLength(19);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "DragAndDropExercise")).toHaveLength(4);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "PureMultipleChoiceExercise")).toHaveLength(3);
-    expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
+  it("conserve chaque média vidéo importé sous une forme locale exploitable", () => {
+    const videos = blocks.filter((block: any) => block.type === "video");
+    const expectedVideoCount =
+      course.datacampImport?.expected?.videos_extracted;
+
+    expect(expectedVideoCount).toBeGreaterThan(0);
+    expect(videos).toHaveLength(expectedVideoCount);
+    expect(new Set(videos.map((video: any) => video.id)).size).toBe(
+      videos.length
+    );
+    expect(
+      videos.every(
+        (video: any) =>
+          video.projectorSlides?.length > 0 &&
+          (hasText(video.audioUrl) || hasText(video.mp4Url)) &&
+          video.projectorTimings?.length > 0 &&
+          video.transcriptSegments?.length > 0
+      )
+    ).toBe(true);
+    const mediaPaths = videos.flatMap((video: any) =>
+      [
+        video.audioUrl,
+        video.mp4Url,
+        video.slidesPdf,
+        video.subtitleUrlFr,
+        video.subtitleUrlEn,
+      ].filter(Boolean)
+    );
+    expect(mediaPaths).not.toHaveLength(0);
+    expect(mediaPaths.every(isLocalAsset)).toBe(true);
   });
 
-  it("ne publie ni URL, libellé fournisseur, XP ni chemin de stockage direct", () => {
-    const serialized = JSON.stringify(course);
-    const visibleBlocks = JSON.stringify(blocks);
-    expect(serialized).not.toMatch(/https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com/i);
-    expect(serialized).not.toContain("/manus-storage/");
-    expect(visibleBlocks).not.toMatch(/DataCamp|\bXP\b/i);
+  it("ne rend obligatoire aucune pratique sans correction locale et vérifiable", () => {
+    const requiredPracticalBlocks = activities
+      .filter((activity: any) => activity.requiredBeforeAdvance)
+      .flatMap((activity: any) =>
+        (activity.blocks || []).filter((block: any) =>
+          practicalBlockTypes.has(block.type)
+        )
+      );
+
+    expect(
+      requiredPracticalBlocks.every(
+        (block: any) =>
+          Array.isArray(block.rubricCriteria) &&
+          block.rubricCriteria.length > 0 &&
+          hasText(block.evaluationPrompt) &&
+          !/https?:\/\/|\/manus-storage\//i.test(JSON.stringify(block))
+      )
+    ).toBe(true);
+  });
+
+  it("n’expose ni DataLab ni XP, ni URL fournisseur ou stockage direct aux apprenants", () => {
+    // `xp` est une métadonnée legacy non rendue : on contrôle la charge utile apprenant,
+    // à laquelle le lecteur de leçon accède, plutôt que de confondre stockage et exposition.
+    const learnerFacingActivities = activities.map((activity: any) => ({
+      ...activity,
+      blocks: (activity.blocks || []).map(
+        ({ xp: _xp, ...block }: any) => block
+      ),
+    }));
+    const learnerFacingContent = JSON.stringify(learnerFacingActivities);
+
+    expect(learnerFacingContent).not.toMatch(/datalab|\bXP\b/i);
+    expect(learnerFacingContent).not.toMatch(
+      /https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com/i
+    );
+    expect(learnerFacingContent).not.toContain("/manus-storage/");
   });
 });

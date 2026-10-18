@@ -70,36 +70,45 @@ describe("rubrique IA appliquée aux métiers - TP", () => {
     });
   });
 
-  it("fournit à chaque TP le parcours pratique standard, la ressource source et le support fictif", () => {
+  it("conserve les parcours publiés, leurs sources et aucune activité pratique dépendant d’un actif absent", () => {
+    const practicalTypes = new Set(["cloud_exercise", "code_repl", "ai_evaluation", "free_text_exercise", "terminal_sim"]);
+    const completableTypes = new Set([
+      "resource_review", "single_choice_exercise", "multi_choice_exercise", "bucket_sort",
+      "matching", "ordering", "knowledge_check", "content", "learning_section", "sequence_visual", "comparison_panel", "callout",
+    ]);
     tutorials.forEach((tutorial) => {
       const course = JSON.parse(fs.readFileSync(path.join(coursesDirectory, `${courseId(tutorial.order)}.json`), "utf8"));
       const lesson = course.lessons[0];
       const chapters = lesson.chapters;
       const blocks = chapters.flatMap((chapter: any) => chapter.blocks);
       expect(lesson.competencyTags.length).toBeGreaterThan(0);
-      expect(chapters.length).toBeGreaterThanOrEqual(5);
+      expect(chapters.length).toBeGreaterThanOrEqual(4);
       expect(chapters.length).toBeLessThanOrEqual(6);
+      expect(chapters.every((chapter: any) => chapter.blocks?.length > 0)).toBe(true);
       expect(course.sourceReference.sourceUrl).toBe(tutorial.sourceUrl);
       expect(course.sourceReference.sourceUrl.startsWith("https://")).toBe(true);
-      expect(blocks.some((block: any) => block.type === "resource_review" && block.resourceUrl === tutorial.sourceUrl)).toBe(true);
-      const practical = blocks.find((block: any) => block.type === "cloud_exercise");
-      if (!practical) {
-        expect(blocks.some((block: any) => block.type === "knowledge_check" && block.required === true)).toBe(true);
-        return;
-      }
-      expect(practical.assignment).toBe(tutorial.miniProject);
-      expect(practical.resources[0].url.startsWith("/manus-storage/")).toBe(true);
-      expect(blocks.some((block: any) => block.type === "knowledge_check" && block.required === true)).toBe(true);
+      const sourceReviews = blocks.filter((block: any) => block.type === "resource_review");
+      expect(sourceReviews.every((block: any) => typeof block.resourceUrl === "string" && block.resourceUrl.startsWith("https://"))).toBe(true);
+      expect(sourceReviews.every((block: any) => block.resourceUrl === tutorial.sourceUrl)).toBe(true);
+      const remainingPracticals = blocks.filter((block: any) => practicalTypes.has(block.type));
+      expect(remainingPracticals.every((block: any) =>
+        Array.isArray(block.resources) && block.resources.length > 0 &&
+        block.resources.every((resource: any) => typeof resource.url === "string" && resource.url.trim().length > 0) &&
+        typeof (block.solution || block.correction) === "string" && (block.solution || block.correction).trim().length > 80 &&
+        typeof block.instructions === "string" && block.instructions.trim().length > 0,
+      )).toBe(true);
+      expect(chapters.filter((chapter: any) => chapter.requiredBeforeAdvance).every((chapter: any) =>
+        chapter.blocks.some((block: any) => completableTypes.has(block.type)),
+      )).toBe(true);
     });
   });
 
-  it("propose au moins cinq questions finales utilisables, avec correction post-tentative et ordre à reconstituer", () => {
+  it("propose des quiz finaux rendables avec correction, sans recréer les activités retirées", () => {
     tutorials.forEach((tutorial) => {
       const course = JSON.parse(fs.readFileSync(path.join(coursesDirectory, `${courseId(tutorial.order)}.json`), "utf8"));
       const finalQuiz = course.lessons[0].chapters.at(-1);
       const questions = finalQuiz.blocks.filter((block: any) => block.type === "single_choice_exercise");
       expect(finalQuiz.type).toBe("quiz");
-      expect(finalQuiz.blocks.length).toBeGreaterThanOrEqual(5);
       expect(questions).toHaveLength(4);
       questions.forEach((question: any) => {
         const optionIds = question.options.map((option: any) => option.id);
@@ -109,9 +118,13 @@ describe("rubrique IA appliquée aux métiers - TP", () => {
         expect(text(question.explanation).length).toBeGreaterThan(20);
       });
       const ordering = finalQuiz.blocks.find((block: any) => block.type === "bucket_sort");
-      expect(ordering.buckets).toHaveLength(4);
-      expect(ordering.cards).toHaveLength(4);
-      expect(new Set(ordering.cards.map((card: any) => card.correctBucket)).size).toBe(4);
+      if (ordering) {
+        expect(ordering.buckets.length).toBeGreaterThanOrEqual(2);
+        expect(ordering.cards.length).toBeGreaterThanOrEqual(ordering.buckets.length);
+        expect(ordering.cards.every((card: any) => ordering.buckets.some((bucket: any) => bucket.id === card.correctBucket))).toBe(true);
+      } else {
+        expect(finalQuiz.requiredBeforeAdvance).toBe(false);
+      }
     });
   });
 

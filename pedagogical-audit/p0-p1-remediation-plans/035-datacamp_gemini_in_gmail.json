@@ -1,0 +1,58 @@
+{
+  "formation_id": "datacamp_gemini_in_gmail",
+  "index": 35,
+  "course_ids": ["gemini_in_gmail__01"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_gmail__01",
+      "chapter_id": "dc_ch01_act01",
+      "block_id": "dc_1_act_01_video",
+      "reason": "La vidéo MP4 est un contenu valide, mais son verrou obligatoire n’est pas fiable avec l’identifiant média déclaré et ne peut pas être réparé à partir des seuls actifs du bundle ; conserver la vidéo comme contenu non bloquant.",
+      "evidence": "Le chapitre réel dc_ch01_act01 porte requiredBeforeAdvance:true et son bloc vidéo réel dc_1_act_01_video utilise mp4Url sans clé reconnue par les contrôles de navigation ; constat P1 confirmé dans current_recheck et initial_audit."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_gmail__01",
+      "chapter_id": "dc_ch01_act02",
+      "block_id": "dc_1_act_02_video",
+      "reason": "La vidéo MP4 est valide mais son verrou obligatoire est contournable avec l’identifiant déclaré ; la rendre non bloquante plutôt que d’inventer une clé ou un correctif applicatif.",
+      "evidence": "Le chapitre réel dc_ch01_act02 porte requiredBeforeAdvance:true ; le bloc réel dc_1_act_02_video est un MP4 sans videoId/URL YouTube et le P1 de verrouillage est confirmé."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_gmail__01",
+      "chapter_id": "dc_ch01_act03",
+      "block_id": "dc_1_act_03_video",
+      "reason": "La vidéo MP4 est un contenu valide, mais le verrou annoncé n’est pas fiable pour sa clé déclarée ; conserver l’explication comme contenu non bloquant.",
+      "evidence": "Le chapitre réel dc_ch01_act03 porte requiredBeforeAdvance:true et le bloc réel dc_1_act_03_video est stocké sous une clé MP4 non reconnue par les chemins de navigation ; constat P1 confirmé."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_gmail__01",
+      "chapter_id": "dc_ch01_act04",
+      "block_id": "dc_1_act_04_video",
+      "reason": "La vidéo de transition est valide mais son verrou obligatoire est contournable avec l’identifiant MP4 déclaré ; la conserver comme explication non bloquante.",
+      "evidence": "Le chapitre réel dc_ch01_act04 porte requiredBeforeAdvance:true et contient le bloc réel dc_1_act_04_video ; le P1 confirme que l’état MP4 n’est pas reconnu par la navigation."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "gemini_in_gmail__01",
+      "chapter_id": "dc_ch01_act05",
+      "block_id": "dc_1_act_05_resource",
+      "reason": "L’activité obligatoire n’est pas réalisable ni corrigeable de manière fiable avec les seuls actifs déclarés : le bloc ne demande que de consulter un PDF de titres et ne fournit ni scénario complet, ni production, ni critères, ni correction. Le texte explicatif de l’activité reste déjà conservé dans la vidéo précédente dc_1_act_04_video.",
+      "evidence": "Le bloc réel dc_1_act_05_resource contient uniquement resource_review, l’instruction ‘View the PDF before continuing’ et le PDF chapter_01_slides_2f3ca926.pdf ; le constat P1 missing-hands-on-activity confirme l’absence de brief, étapes, livrable et feedback."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_gmail__01",
+      "chapter_id": "dc_ch01_act05",
+      "block_id": "dc_1_act_05_resource",
+      "reason": "Après retrait de l’activité resource_review déficiente, supprimer aussi le verrou du chapitre afin qu’aucune auto-attestation de consultation ne bloque la progression.",
+      "evidence": "Le chapitre réel dc_ch01_act05 porte requiredBeforeAdvance:true et son unique bloc réel est dc_1_act_05_resource ; le P1 exige de ne pas conserver ce chapitre comme exigence de progression sans activité et validation fiables."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les quatre vidéos MP4 valides restent accessibles mais leurs verrous non fiables sont retirés. L’unique activité pratique non implémentée est supprimée avec son verrou ; son explication utile reste portée par la vidéo de transition précédente. Aucun constat historique stillOpen à normaliser et aucun P0/P1 non résolu."
+}

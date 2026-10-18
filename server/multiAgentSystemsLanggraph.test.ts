@@ -5,10 +5,17 @@ describe("cours DataCamp Systèmes multi-agents avec LangGraph", () => {
   const activities = course.lessons.flatMap((lesson: any) => lesson.chapters);
   const blocks = activities.flatMap((activity: any) => activity.blocks ?? []);
 
-  it("conserve les quatre Projector et retire les DataLab sans rubrique", () => {
+  it("conserve les quatre Projector locaux et rend non bloquants les écrans après retrait des DataLab", () => {
+    const projectors = blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length);
     expect(activities).toHaveLength(4);
-    expect(blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length)).toHaveLength(4);
-    expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
+    expect(projectors).toHaveLength(4);
+    expect(projectors.every((block: any) =>
+      block.audioUrl?.startsWith("/api/assets/")
+      && block.slidesPdf?.startsWith("/api/assets/")
+      && block.projectorTimings?.length > 0
+      && block.transcriptSegments?.length > 0,
+    )).toBe(true);
+    expect(activities.every((activity: any) => activity.requiredBeforeAdvance === false)).toBe(true);
   });
 
   it("ne crée pas de TP libre ni de dépendance média DataCamp", () => {

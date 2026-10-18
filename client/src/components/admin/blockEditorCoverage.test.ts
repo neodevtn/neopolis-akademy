@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { getBlockDef } from "@shared/blockRegistry";
+import { BLOCK_REGISTRY, getBlockDef } from "@shared/blockRegistry";
 import { getEditorFields, hydrateBlockForEditor } from "./blockEditorParity";
 
 const INTERNAL_KEYS = new Set(["type", "id", "label", "source_page", "order", "mediaUnavailable", "optionalMediaUnavailable"]);
@@ -33,6 +33,11 @@ describe("production block editor coverage", () => {
         expect(fieldKeys.has(key), `${block.type}.${key}`).toBe(true);
       }
     }
-    expect(seenTypes.size).toBeGreaterThanOrEqual(30);
+    expect(seenTypes.size).toBeGreaterThan(0);
+    const registeredProductionTypes = BLOCK_REGISTRY
+      .filter((definition) => seenTypes.has(definition.type))
+      .map((definition) => definition.type)
+      .sort();
+    expect(registeredProductionTypes).toEqual([...seenTypes].sort());
   });
 });

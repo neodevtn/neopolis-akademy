@@ -1,0 +1,55 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_13",
+  "index": 82,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__13"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "chapter_id": "ia_appliquee_metiers_tp__13-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__13-mini-project-proof",
+      "exercise_id": null,
+      "reason": "Le mini-projet obligatoire demande quatre capacités distinctes mais ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés : aucun barème, critère apprenant, seuil minimal ou évaluation serveur ; le rendu accepte une réponse non vide. Le bloc doit cesser d’être une activité bloquante tout en conservant sa consigne, ses garde-fous, ses ressources, son indice et sa correction comme contenu non bloquant.",
+      "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__13.json, lessons[0].chapters[4].blocks[0] : type cloud_exercise, resources/hint/solution présents, mais aucun minimumAnswerLength, rubricCriteria, learnerCriteria ou serverGradedAssessment ; le bundle documente l’acceptation par réponse non vide."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "chapter_id": "ia_appliquee_metiers_tp__13-mini-project",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou du chapitre puisque la preuve du mini-projet n’est pas rapidement corrigeable de manière fiable avec les actifs déclarés ; le contenu explicatif reste consultable sans bloquer la progression.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__13-mini-project déclare requiredBeforeAdvance=true et contient le bloc obligatoire ia_appliquee_metiers_tp__13-mini-project-proof ; le bundle confirme l’absence de validation fiable."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Localisation anglaise incomplète du héros",
+      "evidence": "lessons[0].chapters[0].blocks[0].items[0..2].en reprennent les chaînes françaises (« Mettre en place… », « Limiter… », « Créer… ») ; body.en est également en français.",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "chapter_id": "ia_appliquee_metiers_tp__13-screen-01",
+      "reason_not_rapidly_remediable": "La correction nécessite une modification de contenu bilingue non représentée par une action de décision autorisée ; aucune suppression sûre ne corrigerait la traduction sans retirer un contenu valide."
+    },
+    {
+      "severity": "P2",
+      "title": "Vocabulaire de progression incohérent",
+      "evidence": "La frise du chapitre ia_appliquee_metiers_tp__13-screen-03 enseigne Cadrer → Préparer → Tester → Contrôler, tandis que ia_appliquee_metiers_tp__13-quiz-order attend Cadrer → Construire → Tester → Valider.",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "chapter_id": "ia_appliquee_metiers_tp__13-screen-03",
+      "reason_not_rapidly_remediable": "La résolution exige d’harmoniser ou d’expliciter plusieurs libellés pédagogiques et ceux du tri ; supprimer un bloc valide ne serait pas une correction fiable."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback du tri non rendu",
+      "evidence": "Le bloc ia_appliquee_metiers_tp__13-quiz-order déclare feedback.fr et feedback.en mais pas correction ; le bundle indique que LessonViewer ne transmet que block.correction au composant de tri.",
+      "course_id": "ia_appliquee_metiers_tp__13",
+      "chapter_id": "ia_appliquee_metiers_tp__13-final-quiz",
+      "reason_not_rapidly_remediable": "La correction fiable requiert soit une modification du mapping du renderer, soit un champ de correction compatible ; aucune action autorisée de suppression ou de normalisation ne peut réparer ce rendu sans toucher au code ou au contenu du cours."
+    }
+  ],
+  "summary": "Le mini-projet obligatoire n’est pas fiablement évaluable avec les seuls actifs déclarés : il est converti en contenu non bloquant et le verrou de son chapitre est retiré. Les trois constats P2 (localisation anglaise, vocabulaire de progression, feedback du tri) restent ouverts car leur correction exige une édition de contenu ou du renderer non couverte par une action de décision sûre. Aucun constat historique stillOpen à normaliser."
+}

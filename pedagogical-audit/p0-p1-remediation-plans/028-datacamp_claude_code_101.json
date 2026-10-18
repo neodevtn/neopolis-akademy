@@ -1,0 +1,216 @@
+{
+  "formation_id": "datacamp_claude_code_101",
+  "index": 28,
+  "course_ids": [
+    "claude_code_101__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch01_act02",
+      "block_id": "dc_1_act_02_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[0].chapters[1].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch01_act02",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[0].chapters[1].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch01_act03",
+      "block_id": "dc_1_act_03_qcm_multiple",
+      "reason": "Référence à un article/ressource non déclaré(e) et non rendu(e) ; supprimer uniquement cette injonction obsolète du texte, sans retirer le contenu pédagogique valide.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[0].chapters[2].blocks[0].question.fr` contient toujours « en lisant cet article ». Les seules clés du bloc sont `type`, `id`, `question`, `options`, `correctAnswers`, `explanation`, `hint` : aucune clé URL/lien ni ressource. `LessonViewer.tsx:1183-1185` rend ce bloc avec `MultiChoiceBlock`; aucune ressource n’est injectée par ce chemin."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch02_act02",
+      "block_id": "dc_2_act_02_visual_content",
+      "reason": "Référence à un article/ressource non déclaré(e) et non rendu(e) ; supprimer uniquement cette injonction obsolète du texte, sans retirer le contenu pédagogique valide.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[1].blocks[0]` contient toujours le texte FR demandant de lire « l’article » et `optionalMediaUnavailable: true`; ses seules clés sont `type`, `id`, `body`, `optionalMediaUnavailable`, donc ni URL ni bloc `resource_review`. `LessonViewer.tsx:498-550` rend un `content` uniquement via `PageContent`; `chapterProgress.ts:121-139` ne confère une porte de ressource qu’au type `resource_review`, absent ici."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch02_act03",
+      "block_id": "dc_2_act_03_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[2].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch02_act03",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[2].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch02_act05",
+      "block_id": "dc_2_act_05_visual_content",
+      "reason": "Référence à un article/ressource non déclaré(e) et non rendu(e) ; supprimer uniquement cette injonction obsolète du texte, sans retirer le contenu pédagogique valide.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[4].blocks[0]` contient toujours le texte FR demandant de lire « l’article » et `optionalMediaUnavailable: true`; ses seules clés sont `type`, `id`, `body`, `optionalMediaUnavailable`, donc ni URL ni bloc `resource_review`. `LessonViewer.tsx:498-550` rend un `content` uniquement via `PageContent`; `chapterProgress.ts:121-139` ne confère une porte de ressource qu’au type `resource_review`, absent ici."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch02_act06",
+      "block_id": "dc_2_act_06_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[5].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch02_act06",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[5].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch02_act07",
+      "block_id": "dc_2_act_07_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[6].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch02_act07",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[1].chapters[6].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch03_act03",
+      "block_id": "dc_3_act_03_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[2].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch03_act03",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[2].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch03_act06",
+      "block_id": "dc_3_act_06_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[5].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch03_act06",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[5].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch03_act09",
+      "block_id": "dc_3_act_09_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[8].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch03_act09",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[2].chapters[8].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act03",
+      "block_id": "dc_4_act_03_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[2].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act03",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[2].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act06",
+      "block_id": "dc_4_act_06_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[5].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act06",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[5].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act09",
+      "block_id": "dc_4_act_09_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[8].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act09",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[8].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act12",
+      "block_id": "dc_4_act_12_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[11].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act12",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[11].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act15",
+      "block_id": "dc_4_act_15_code",
+      "reason": "Activité obligatoire non corrigeable rapidement avec les actifs déclarés : le bloc code_repl ne fait aucune exécution ni validation fiable. Retirer l’activité bloquante tout en conservant ses consignes comme contenu informatif non bloquant.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[14].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_code_101__01",
+      "chapter_id": "dc_ch04_act15",
+      "reason": "Le chapitre porte requiredBeforeAdvance=true alors que son unique activité code_repl n’est pas exécutable ; la progression ne doit plus dépendre de cette activité retirée.",
+      "evidence": "`client/public/data/courses/claude_code_101__01.json → lessons[3].chapters[14].blocks[0]` est toujours de type `code_repl` et contient `instructions` avec `claude`, `starterCode` et `solutionCode`; le chapitre porte toujours `requiredBeforeAdvance: true`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` appelle uniquement `matchesCanonicalSolution(code, solutionCode)`, puis marque le bloc complété; `shared/codeReplValidation.ts:1-13` normalise les chaînes et les compare par égalité, sans exécution. Le rendu `LessonViewer.tsx:1174-1176` délègue au même composant, mais les portes de navigation `LessonViewer.tsx:1561-1609`, le bouton de fin `:1486-1504` et `chapterProgress.ts:121-139` ne listent pas `code_repl` parmi les types verrouillants. `shared/blockRegistry.ts:331-352` le décrit encore comme éditeur exécutable, ce que le composant ne réalise pas."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Revue de l’état courant et normalisation des 15 constats historiques stillOpen : 12 activités code_repl non exécutables sont converties en contenu non bloquant et leurs exigences de complétion retirées ; 3 références à des articles/ressources absents sont supprimées du texte. Aucun constat P0/P1 ne reste non résolu."
+}

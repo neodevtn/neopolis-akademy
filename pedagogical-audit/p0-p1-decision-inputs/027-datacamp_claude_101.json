@@ -1,0 +1,1886 @@
+{
+  "formation": {
+    "index": 27,
+    "formation_id": "datacamp_claude_101",
+    "title": {
+      "en": "Claude 101",
+      "fr": "Claude 101"
+    },
+    "course_ids": [
+      "claude_101__01"
+    ]
+  },
+  "current_open_p0_p1_findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[0] (dc_ch01_act01), blocks[0] (dc_1_act_01_prompting)",
+      "description": "Le chapitre est déclaré requiredBeforeAdvance et contient une ai_evaluation, mais le rapport initial vérifie que LessonViewer n’intègre pas ce type de bloc dans les conditions de navigation : la pratique peut être franchie sans soumission ni réussite.",
+      "recommendation": "Corriger génériquement le verrouillage des blocs ai_evaluation et ajouter un test de non-contournement.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[2] (dc_ch01_act03), blocks[0] (dc_1_act_03_video)",
+      "description": "La vidéo obligatoire du parcours français déclare subtitleUrlEn et une transcription anglaise, sans subtitleUrlFr ni alternative textuelle française ; le contenu théorique est donc insuffisamment accessible aux apprenants francophones non anglophones.",
+      "recommendation": "Fournir des sous-titres et une transcription françaises fidèles, ou annoncer explicitement l’anglais et fournir un résumé français couvrant le cadre de prompt.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[2] (dc_ch01_act03), blocks[0] (dc_1_act_03_video)",
+      "description": "La vidéo MP4 obligatoire peut être franchie via la navigation basse : le rapport initial localise l’usage d’une clé vidéo filtrée par longueur, alors que l’identifiant dc_1_act_03_video est utilisé par le rendu mais exclu du calcul de la navigation.",
+      "recommendation": "Utiliser systématiquement block.id pour les vidéos MP4/HLS/audio et tester le verrouillage avec un identifiant long.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[4] (dc_ch01_act05), blocks[0] (dc_1_act_05_prompting)",
+      "description": "Cette ai_evaluation est dans un chapitre requiredBeforeAdvance, mais sa complétion n’est pas prise en compte par les règles de passage ; l’exercice de rédaction peut être quitté sans soumission ni réussite.",
+      "recommendation": "Inclure ai_evaluation et sa clé de complétion dans les conditions de progression et couvrir le cas par un test.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[0].chapters[6] (dc_ch01_act07), blocks[0] (dc_1_act_07_prompting)",
+      "description": "L’exercice d’itération de prompt est déclaré obligatoire mais le type ai_evaluation est omis du mécanisme de passage ; il peut donc être quitté sans soumission ni réussite.",
+      "recommendation": "Verrouiller le passage jusqu’à la réussite de l’évaluation IA, ou rendre explicitement l’exercice facultatif.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "média",
+      "course_id": "claude_101__01",
+      "location": "lessons[1].chapters[0] (dc_ch02_act01), blocks[0] (dc_2_act_01_video)",
+      "description": "La vidéo théorique obligatoire de Projects ne déclare que des sous-titres et une transcription anglaise dans une formation affichée en français ; elle porte les prérequis évalués ensuite.",
+      "recommendation": "Ajouter des sous-titres et une transcription françaises, ou annoncer l’anglais et fournir un résumé français couvrant Projects, la base de connaissances, les instructions et les droits.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "claude_101__01",
+      "location": "lessons[1].chapters[0] (dc_ch02_act01), blocks[0] (dc_2_act_01_video)",
+      "description": "La vidéo MP4 requiredBeforeAdvance peut être passée sans action : l’identifiant dc_2_act_01_video est rendu et marqué, mais n’est pas retenu par le calcul de clé de la navigation basse.",
+      "recommendation": "Résoudre la clé de toute vidéo MP4/HLS/audio par block.id, sans filtre de longueur, et ajouter un test de régression.",
+      "status": "open"
+    }
+  ],
+  "legacy_open_count_requiring_normalization": 0,
+  "current_recheck": {
+    "formation_id": "datacamp_claude_101",
+    "index": 27,
+    "course_ids": [
+      "claude_101__01"
+    ],
+    "review_scope": {
+      "current_state_sources": [
+        "/home/ubuntu/neopolis-akademy/formation-manifest.json",
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/claude_101__01.json",
+        "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/027-datacamp_claude_101.json",
+        "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json"
+      ],
+      "criteria": [
+        "objectifs et activités",
+        "faisabilité TP/fichiers/environnement",
+        "fausses soumissions ou gates",
+        "médias/téléchargements",
+        "duplications ou corruption",
+        "rendu/bilinguisme"
+      ],
+      "coverage": "1 cours, 4 leçons, 19 chapitres, 20 activités et 21 blocs ; comparaison du JSON actuel, du rapport initial et du pré-audit statique. Les constats non prouvés localement (qualité factuelle, disponibilité effective des assets via API, exécution du service IA, rendu navigateur) ne sont pas transformés en findings."
+    },
+    "reviewed_current_state": true,
+    "findings": [
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "claude_101__01",
+        "location": "lessons[0].chapters[0] (dc_ch01_act01), blocks[0] (dc_1_act_01_prompting)",
+        "description": "Le chapitre est déclaré requiredBeforeAdvance et contient une ai_evaluation, mais le rapport initial vérifie que LessonViewer n’intègre pas ce type de bloc dans les conditions de navigation : la pratique peut être franchie sans soumission ni réussite.",
+        "recommendation": "Corriger génériquement le verrouillage des blocs ai_evaluation et ajouter un test de non-contournement.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "média",
+        "course_id": "claude_101__01",
+        "location": "lessons[0].chapters[2] (dc_ch01_act03), blocks[0] (dc_1_act_03_video)",
+        "description": "La vidéo obligatoire du parcours français déclare subtitleUrlEn et une transcription anglaise, sans subtitleUrlFr ni alternative textuelle française ; le contenu théorique est donc insuffisamment accessible aux apprenants francophones non anglophones.",
+        "recommendation": "Fournir des sous-titres et une transcription françaises fidèles, ou annoncer explicitement l’anglais et fournir un résumé français couvrant le cadre de prompt.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "claude_101__01",
+        "location": "lessons[0].chapters[2] (dc_ch01_act03), blocks[0] (dc_1_act_03_video)",
+        "description": "La vidéo MP4 obligatoire peut être franchie via la navigation basse : le rapport initial localise l’usage d’une clé vidéo filtrée par longueur, alors que l’identifiant dc_1_act_03_video est utilisé par le rendu mais exclu du calcul de la navigation.",
+        "recommendation": "Utiliser systématiquement block.id pour les vidéos MP4/HLS/audio et tester le verrouillage avec un identifiant long.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "claude_101__01",
+        "location": "lessons[0].chapters[4] (dc_ch01_act05), blocks[0] (dc_1_act_05_prompting)",
+        "description": "Cette ai_evaluation est dans un chapitre requiredBeforeAdvance, mais sa complétion n’est pas prise en compte par les règles de passage ; l’exercice de rédaction peut être quitté sans soumission ni réussite.",
+        "recommendation": "Inclure ai_evaluation et sa clé de complétion dans les conditions de progression et couvrir le cas par un test.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "claude_101__01",
+        "location": "lessons[0].chapters[6] (dc_ch01_act07), blocks[0] (dc_1_act_07_prompting)",
+        "description": "L’exercice d’itération de prompt est déclaré obligatoire mais le type ai_evaluation est omis du mécanisme de passage ; il peut donc être quitté sans soumission ni réussite.",
+        "recommendation": "Verrouiller le passage jusqu’à la réussite de l’évaluation IA, ou rendre explicitement l’exercice facultatif.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "média",
+        "course_id": "claude_101__01",
+        "location": "lessons[1].chapters[0] (dc_ch02_act01), blocks[0] (dc_2_act_01_video)",
+        "description": "La vidéo théorique obligatoire de Projects ne déclare que des sous-titres et une transcription anglaise dans une formation affichée en français ; elle porte les prérequis évalués ensuite.",
+        "recommendation": "Ajouter des sous-titres et une transcription françaises, ou annoncer l’anglais et fournir un résumé français couvrant Projects, la base de connaissances, les instructions et les droits.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "claude_101__01",
+        "location": "lessons[1].chapters[0] (dc_ch02_act01), blocks[0] (dc_2_act_01_video)",
+        "description": "La vidéo MP4 requiredBeforeAdvance peut être passée sans action : l’identifiant dc_2_act_01_video est rendu et marqué, mais n’est pas retenu par le calcul de clé de la navigation basse.",
+        "recommendation": "Résoudre la clé de toute vidéo MP4/HLS/audio par block.id, sans filtre de longueur, et ajouter un test de régression.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "feedback",
+        "course_id": "claude_101__01",
+        "location": "lessons[1].chapters[4] (dc_ch02_act06), blocks[0] (dc_2_act_06_bucket_sort).feedback",
+        "description": "Le feedback pédagogique JSON sur la complémentarité Projects/Skills existe, mais le rapport initial vérifie qu’il n’est pas transmis au composant rendu ; après réussite, l’apprenant voit « Parfait ! » sans la consolidation conceptuelle prévue.",
+        "recommendation": "Mapper block.feedback vers la propriété de correction/feedback rendue et tester sa visibilité après réussite.",
+        "status": "open"
+      }
+    ],
+    "summary": {
+      "issue_count": 8,
+      "p0": 0,
+      "p1": 7,
+      "p2": 1
+    }
+  },
+  "initial_audit": {
+    "formation_id": "datacamp_claude_101",
+    "courses": [
+      {
+        "course_id": "claude_101__01",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch01_act01",
+            "title": "Premiers pas avec Claude !",
+            "score_100": 63,
+            "verified_dimensions": [
+              "L’énoncé de pratique est rendu, contextualisé (Verde Solutions), précise l’action attendue (demander trois noms), le résultat attendu et comporte un exemple de réponse.",
+              "Le composant d’évaluation IA rend les critères déduits des éléments mis en évidence, le minimum de cinq mots, une zone de réponse, la possibilité de réessayer et l’exemple de réponse.",
+              "Le titre, la description de chapitre et le support de diapositives sont rendus par LessonViewer."
+            ],
+            "unverified_dimensions": [
+              "Un objectif mesurable propre à ce chapitre n’est pas déclaré ; la description visible est l’objectif global de la leçon.",
+              "La qualité du jugement produit par le service d’évaluation IA n’a pas été exécutée en session authentifiée."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped:claude_101__01:dc_ch01_act01:dc_1_act_01_prompting:gate",
+                "course_id": "claude_101__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "dc_1_act_01_prompting",
+                "content_type": "ai_evaluation",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "La première pratique de prompt peut être contournée : bien que le chapitre soit déclaré requiredBeforeAdvance, la navigation ne considère pas les blocs ai_evaluation parmi les activités bloquantes. L’apprenant peut donc passer au chapitre suivant sans soumettre ni réussir sa première invite.",
+                "current_content": "Chapitre de type exercise avec requiredBeforeAdvance: true et bloc ai_evaluation dc_1_act_01_prompting.",
+                "proposed_content": "Aucun texte à réécrire. Ajouter ai_evaluation aux activités de validation de chapitre et utiliser la clé de complétion scoppée de ce bloc avant d’activer « Suivant ».",
+                "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[0] (requiredBeforeAdvance: true; bloc ai_evaluation); client/src/pages/training/LessonViewer.tsx → renderBlock ajoute la complétion, mais les calculs isTopActivityNavigationLocked et isGatedBy… ne testent jamais ai_evaluation.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_content",
+                "recommended_action": "Corriger la règle de verrouillage de manière générique pour les blocs ai_evaluation, puis ajouter un test de non-contournement sur ce chapitre."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch01_act02",
+            "title": "What is Claude?",
+            "score_100": 81,
+            "verified_dimensions": [
+              "La question présente un scénario, une action identifiable, quatre options, une réponse configurée, un indice et une explication après soumission.",
+              "Le rendu précise « 1 réponse attendue », affiche la bonne réponse et autorise une nouvelle tentative ; le passage est verrouillé jusqu’à la réponse correcte.",
+              "Le chapitre s’appuie sur l’introduction et la première activité de la leçon."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique au chapitre non déclaré ; la description affichée est l’objectif général de la leçon.",
+              "Exactitude fonctionnelle de Claude hors du contenu fourni non auditée."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch01_act03",
+            "title": "Vidéo : Votre première conversation avec Claude",
+            "score_100": 55,
+            "verified_dimensions": [
+              "Le titre et la description contextualisent la vidéo ; le lecteur, un lien vers les diapositives, les sous-titres déclarés et une transcription dépliable sont rendus par LessonViewer.",
+              "La transcription traite explicitement de la première conversation, du cadre de prompt en trois parties et de l’usage de Claude ; elle prépare le QCM suivant sur ce cadre.",
+              "La source est déclarée comme MP4 locale avec sous-titres et transcription ; aucune ressource API n’a été présumée absente."
+            ],
+            "unverified_dimensions": [
+              "La lisibilité effective des images, de l’audio et des diapositives du MP4 n’a pas été contrôlée par lecture navigateur.",
+              "Objectif mesurable de ce seul écran non déclaré."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped:claude_101__01:dc_ch01_act03:dc_1_act_03_video:language-access",
+                "course_id": "claude_101__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "dc_1_act_03_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "média",
+                "description": "Dans le parcours français, la vidéo obligatoire ne propose que des sous-titres anglais et une transcription anglaise. Le contenu théorique qui introduit le cadre de prompt est donc difficilement accessible à un apprenant francophone non anglophone.",
+                "current_content": "mp4Url déclaré ; subtitleUrlEn déclaré ; transcript et transcriptSegments en anglais ; aucun subtitleUrlFr ni alternative textuelle française.",
+                "proposed_content": "Fournir un fichier VTT français et une transcription française fidèle, puis les déclarer dans subtitleUrlFr et transcript/transcriptSegments. À défaut, signaler explicitement avant lecture que le média est en anglais et donner un résumé français couvrant les trois éléments du cadre de prompt.",
+                "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[2].blocks[0] (subtitleUrlEn uniquement ; transcription commençant par « Imagine this »); client/src/pages/training/LessonViewer.tsx → le lecteur expose ces champs aux apprenants.",
+                "confidence": "high",
+                "verification_status": "verified_content_and_renderer",
+                "recommended_action": "Priorité accessibilité : localiser les sous-titres et la transcription avant de conserver cette vidéo comme séquence requise du parcours français."
+              },
+              {
+                "issue_id": "ped:claude_101__01:dc_ch01_act03:dc_1_act_03_video:gate",
+                "course_id": "claude_101__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "dc_1_act_03_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Le bouton principal « Suivant » ne verrouille pas cette vidéo officielle : pour un MP4, il ne récupère pas l’identifiant du bloc et ignore son id parce qu’il dépasse 15 caractères. La liste des vidéos à terminer devient vide et le passage est actif sans visionnage ni marquage manuel.",
+                "current_content": "Chapitre teaching avec requiredBeforeAdvance: true ; vidéo MP4 id « dc_1_act_03_video ».",
+                "proposed_content": "Aucun texte à réécrire. Dans le calcul de chapterVideoKeys, utiliser systématiquement block.id pour mp4Url/hlsUrl/audioUrl, comme le fait déjà le raccourci clavier, sans filtre de longueur destiné aux identifiants YouTube.",
+                "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[2] (requiredBeforeAdvance: true; mp4Url et id dc_1_act_03_video); client/src/pages/training/LessonViewer.tsx → lignes de rendu vidéo utilisent block.id pour MP4, alors que la navigation basse ne l’accepte que si sa longueur est comprise entre 8 et 15 caractères.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_content",
+                "recommended_action": "Corriger la collecte des clés vidéo et ajouter un test de régression pour un id MP4 long ; conserver le bouton manuel « marquer comme vue » comme choix explicite, pas comme contournement silencieux."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 3,
+            "chapter_id": "dc_ch01_act04",
+            "title": "Votre première conversation avec Claude",
+            "score_100": 82,
+            "verified_dimensions": [
+              "Le QCM applique directement le cadre de prompt présenté dans la vidéo précédente : l’action et le résultat attendu sont explicites.",
+              "Une réponse est attendue, l’indice rappelle les trois éléments, l’explication justifie la bonne option et l’activité doit être réussie pour avancer.",
+              "La distinction quiz et le compteur de progression sont rendus."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "La compréhension de la vidéo par un apprenant francophone reste limitée par l’absence de version française confirmée."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 4,
+            "chapter_id": "dc_ch01_act05",
+            "title": "Le titre, pas le roman",
+            "score_100": 65,
+            "verified_dimensions": [
+              "L’activité de prompt est contextualisée et précise les éléments à mobiliser : rôle, contexte, destinataire, ton et limite de 150 mots.",
+              "Le composant rend les critères visibles issus de l’énoncé, la zone de remise, le minimum de mots, l’exemple et la possibilité de réessayer.",
+              "La pratique fait suite au contenu sur le cadre de prompt."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable de chapitre non déclaré.",
+              "La fiabilité, l’équité et la précision du retour généré par le service d’évaluation IA n’ont pas été testées par soumission réelle."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped:claude_101__01:dc_ch01_act05:dc_1_act_05_prompting:gate",
+                "course_id": "claude_101__01",
+                "chapter_id": "dc_ch01_act05",
+                "content_id": "dc_1_act_05_prompting",
+                "content_type": "ai_evaluation",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Cette pratique obligatoire de rédaction de prompt est contournable. Le bloc peut signaler sa complétion après évaluation, mais cette complétion n’est pas utilisée par les règles qui désactivent « Suivant » pour un chapitre de type exercise.",
+                "current_content": "requiredBeforeAdvance: true ; ai_evaluation dc_1_act_05_prompting demandant un prompt structuré pour un courriel de direction.",
+                "proposed_content": "Aucun texte à réécrire. Inclure ai_evaluation dans les conditions de passage, avec l’id dc_1_act_05_prompting et la clé de complétion de l’écran courant.",
+                "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[4]; client/src/pages/training/LessonViewer.tsx → AiEvaluationBlock appelle setCompletedExercises, mais les ensembles d’activités vérifiés pour isGated et isSequentialActivityNavigationLocked excluent ai_evaluation.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_content",
+                "recommended_action": "Appliquer la correction générique de verrouillage et couvrir ce cas dans les tests de navigation séquentielle."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 5,
+            "chapter_id": "dc_ch01_act06",
+            "title": "Obtenir de meilleurs résultats",
+            "score_100": 81,
+            "verified_dimensions": [
+              "Le scénario cible clairement le discernement, compétence annoncée dans la description de leçon.",
+              "La question, les quatre options, l’indice définissant les 4D, l’explication pédagogique, le résultat attendu et la reprise sont rendus.",
+              "La bonne réponse est requise avant la poursuite."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable propre au chapitre non déclaré.",
+              "La couverture exhaustive des quatre compétences 4D hors de ce contrôle ponctuel n’est pas vérifiable à partir d’un champ objectif dédié."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 6,
+            "chapter_id": "dc_ch01_act07",
+            "title": "Adieu la voix corporate !",
+            "score_100": 65,
+            "verified_dimensions": [
+              "L’activité donne le brouillon à utiliser, identifie précisément les défauts à corriger et demande une longueur et un ton cibles ; l’action attendue est donc réutilisable sans ambiguïté.",
+              "L’interface rend l’exemple de réponse, la remise textuelle, le retour IA et une nouvelle tentative.",
+              "La pratique prolonge le prompt structuré et le contrôle du ton travaillés dans les activités précédentes."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable de chapitre non déclaré.",
+              "Qualité effective du feedback généré par IA non exécutée dans cet audit."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped:claude_101__01:dc_ch01_act07:dc_1_act_07_prompting:gate",
+                "course_id": "claude_101__01",
+                "chapter_id": "dc_ch01_act07",
+                "content_id": "dc_1_act_07_prompting",
+                "content_type": "ai_evaluation",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "L’exercice d’itération de prompt est étiqueté obligatoire mais peut être quitté sans soumission ni réussite, car le mécanisme de passage omet le type ai_evaluation.",
+                "current_content": "requiredBeforeAdvance: true ; ai_evaluation dc_1_act_07_prompting avec consigne de réviser le brouillon sous 150 mots et dans un ton plus conversationnel.",
+                "proposed_content": "Aucun texte à réécrire. Verrouiller le passage jusqu’à la réussite de l’évaluation IA, ou modifier explicitement le statut pédagogique de l’exercice s’il doit rester facultatif.",
+                "evidence": "client/public/data/courses/claude_101__01.json → lessons[0].chapters[6]; client/src/pages/training/LessonViewer.tsx → le callback de complétion existe, mais ai_evaluation n’apparaît dans aucune condition de isGated/isSequentialActivityNavigationLocked.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_content",
+                "recommended_action": "Appliquer le correctif générique de verrouillage, vérifier l’état de réussite avant progression et couvrir cette activité par un test de régression."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 7,
+            "chapter_id": "dc_ch01_act08",
+            "title": "Application de bureau Claude : Chat, Cowork, Code",
+            "score_100": 80,
+            "verified_dimensions": [
+              "Le scénario est concret, l’action attendue est explicite et les trois options correspondent aux modes mentionnés dans la description et la transcription de la leçon.",
+              "L’indice oriente vers les critères de choix et le feedback explique le rôle de Cowork ; la validation correcte verrouille la progression.",
+              "Le parcours fait une transition cohérente depuis le contenu vidéo sur les modes et usages de Claude."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable propre au chapitre non déclaré.",
+              "La compréhension de la présentation vidéo précédente par un apprenant non anglophone n’est pas entièrement vérifiable."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch02_act01",
+            "title": "Vidéo : Introduction à Projects",
+            "score_100": 55,
+            "verified_dimensions": [
+              "Le titre et la description donnent le thème de la vidéo ; le lecteur rend la vidéo, les diapositives, les sous-titres déclarés et une transcription dépliable.",
+              "La transcription couvre les Projects, la base de connaissances, les instructions, les droits d’accès et fournit les prérequis aux QCM et au tri qui suivent.",
+              "La source MP4, le VTT et le PDF sont déclarés dans le JSON ; leur indisponibilité n’a pas été inférée."
+            ],
+            "unverified_dimensions": [
+              "Lisibilité effective du support vidéo et des diapositives non contrôlée par lecture navigateur.",
+              "Objectif mesurable de ce seul chapitre non déclaré."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped:claude_101__01:dc_ch02_act01:dc_2_act_01_video:language-access",
+                "course_id": "claude_101__01",
+                "chapter_id": "dc_ch02_act01",
+                "content_id": "dc_2_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "média",
+                "description": "La vidéo de théorie requise dans une formation affichée en français n’offre que sous-titres et transcription en anglais. Elle porte pourtant les prérequis de Projects, des droits et de la base de connaissances évalués ensuite.",
+                "current_content": "mp4Url déclaré ; subtitleUrlEn déclaré ; transcript en anglais ; aucun subtitleUrlFr, transcript français ou alternativeTextFr.",
+                "proposed_content": "Ajouter sous-titres VTT et transcription française fidèles. En attente, annoncer explicitement la langue anglaise et ajouter un résumé français couvrant Project knowledge, instructions et droits d’accès.",
+                "evidence": "client/public/data/courses/claude_101__01.json → lessons[1].chapters[0].blocks[0] (subtitleUrlEn uniquement et transcription anglaise) ; client/src/pages/training/LessonViewer.tsx rend le champ transcript et le lien de sous-titres disponibles.",
+                "confidence": "high",
+                "verification_status": "verified_content_and_renderer",
+                "recommended_action": "Localiser l’alternative textuelle avant de conserver ce contenu théorique comme séquence obligatoire du parcours français."
+              },
+              {
+                "issue_id": "ped:claude_101__01:dc_ch02_act01:dc_2_act_01_video:gate",
+                "course_id": "claude_101__01",
+                "chapter_id": "dc_ch02_act01",
+                "content_id": "dc_2_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "La navigation basse permet de passer cette vidéo MP4 sans action. Son id dépasse la longueur admise par le calcul de clé vidéo, qui ne traite pas non plus mp4Url ; la condition de visionnage devient donc vide.",
+                "current_content": "Chapitre teaching requiredBeforeAdvance: true ; vidéo MP4 id « dc_2_act_01_video ».",
+                "proposed_content": "Aucun texte à réécrire. Résoudre l’identifiant de toute vidéo MP4/HLS/audio par block.id sans condition de longueur et tester le verrouillage sur cet id.",
+                "evidence": "client/public/data/courses/claude_101__01.json → lessons[1].chapters[0] ; client/src/pages/training/LessonViewer.tsx → le lecteur marque block.id comme vu, mais le calcul de chapterVideoKeys de la navigation basse ne garde block.id que pour une longueur 8–15.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_content",
+                "recommended_action": "Corriger la résolution des clés vidéo et ajouter un test spécifique à une vidéo MP4 dont l’id est long."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch02_act02",
+            "title": "Introduction à Projects",
+            "score_100": 82,
+            "verified_dimensions": [
+              "Le QCM demande une décision opérationnelle précise sur la base de connaissances d’un Project, avec quatre options clairement distinctes.",
+              "Indice, explication, résultat attendu, mise en évidence de la correction et nouvelle tentative sont rendus ; la réponse correcte est nécessaire à la progression.",
+              "Le concept évalué est expliqué dans la transcription de la vidéo immédiatement précédente."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "Accessibilité linguistique complète du prérequis vidéo non confirmée."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch02_act04",
+            "title": "Création avec Artifacts",
+            "score_100": 82,
+            "verified_dimensions": [
+              "Le scénario de partage externe d’un artefact, l’action attendue et le critère de réussite sont clairs.",
+              "Le QCM comporte quatre options, un indice, une explication de la publication, un feedback de correction et une reprise ; il est cohérent avec les possibilités d’Artifacts annoncées dans la leçon.",
+              "Le verrouillage de la réponse correcte est confirmé dans le composant de QCM."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "La démonstration vidéo détaillée d’Artifacts n’est pas distinctement identifiable dans les données du chapitre."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 3,
+            "chapter_id": "dc_ch02_act05",
+            "title": "Travailler avec Skills",
+            "score_100": 82,
+            "verified_dimensions": [
+              "Le scénario présente un besoin métier et la question demande explicitement la méthode recommandée pour créer un Skill.",
+              "Les options, l’indice, le feedback explicatif et la reprise sont présents, et le passage reste verrouillé jusqu’à la bonne réponse.",
+              "L’activité prépare le tri suivant en distinguant un processus réutilisable d’une ressource de connaissance."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "La démonstration pratique de création d’un Skill dans l’outil source n’a pas été exécutée."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 4,
+            "chapter_id": "dc_ch02_act06",
+            "title": "Skills et Projects",
+            "score_100": 86,
+            "verified_dimensions": [
+              "Le tri indique clairement l’action (« Rangez chaque élément »), les deux catégories et le principe de distinction connaissances/processus.",
+              "Les six cartes, le feedback immédiat carte par carte, la remise, la reprise et le verrouillage jusqu’au tri correct sont rendus.",
+              "L’activité synthétise de façon cohérente les notions Projects et Skills traitées dans les chapitres précédents."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "La persistance locale des tentatives n’a pas été testée dans un navigateur avec stockage réel."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped:claude_101__01:dc_ch02_act06:dc_2_act_06_bucket_sort:feedback",
+                "course_id": "claude_101__01",
+                "chapter_id": "dc_ch02_act06",
+                "content_id": "dc_2_act_06_bucket_sort",
+                "content_type": "bucket_sort",
+                "severity": "P2",
+                "category": "feedback",
+                "description": "Le feedback pédagogique rédigé dans les données — qui explique la complémentarité entre Projects et Skills — n’est pas transmis au composant rendu. Après réussite, l’apprenant voit « Parfait ! », mais pas la consolidation conceptuelle prévue.",
+                "current_content": "feedback: « Bravo ! Projects contiennent ce que Claude doit savoir ; Skills définissent comment Claude doit fonctionner. Les deux se complètent. »",
+                "proposed_content": "Conserver le texte existant et le transmettre au rendu de correction : « Bravo ! Projects contiennent ce que Claude doit savoir ; Skills définissent comment Claude doit fonctionner. Les deux se complètent. »",
+                "evidence": "client/public/data/courses/claude_101__01.json → lessons[1].chapters[4].blocks[0].feedback ; client/src/pages/training/LessonViewer.tsx → MatchingExercise reçoit correction: block.correction, pas block.feedback ; client/src/components/MatchingExercise.tsx → seul exercise.correction est affiché dans la bannière de résultat.",
+                "confidence": "high",
+                "verification_status": "verified_code_and_content",
+                "recommended_action": "Mapper block.feedback vers la propriété rendue de correction/feedback (ou adapter MatchingExercise), puis tester la visibilité du feedback après une réussite correcte."
+              }
+            ]
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch03_act01",
+            "title": "Connexion de vos outils",
+            "score_100": 80,
+            "verified_dimensions": [
+              "Le scénario traite un risque d’autorisation concret ; les options donnent des interprétations distinctes et l’action attendue est compréhensible.",
+              "Indice, correction explicitant l’accès limité, reprise et exigence de réponse correcte avant passage sont rendus.",
+              "La description de leçon annonce les connecteurs et le respect des autorisations, ce qui cadre la question."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "Le comportement réel de connecteurs externes n’a pas été testé et n’est pas déduit du seul contenu de cours."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch03_act02",
+            "title": "Enterprise search",
+            "score_100": 80,
+            "verified_dimensions": [
+              "La question compare deux tâches et demande explicitement laquelle relève d’Enterprise Search.",
+              "L’indice et l’explication distinguent information interne et recherche web ; le QCM affiche la correction et permet de réessayer.",
+              "La réponse correcte est cohérente avec le thème Enterprise Search présenté par la description de leçon et exigée pour continuer."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "Exécution réelle d’Enterprise Search non auditée."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 2,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch03_act03",
+            "title": "Research mode pour des analyses approfondies",
+            "score_100": 80,
+            "verified_dimensions": [
+              "Le scénario énonce sources multiples, synthèse et rapport avec citations ; l’action de sélectionner la fonctionnalité adaptée est nette.",
+              "L’indice, le feedback explicatif, la correction visuelle, la reprise et le verrouillage de réponse sont rendus.",
+              "La progression distingue clairement Research, recherche web, réflexion étendue et connecteurs."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "Qualité et disponibilité réelles du mode Research hors contenu fourni non vérifiées."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 3,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch04_act01",
+            "title": "Claude en action - cas d'utilisation par rôle",
+            "score_100": 80,
+            "verified_dimensions": [
+              "Le scénario commercial, l’action attendue et la distinction avec les autres cas d’usage sont explicites.",
+              "L’indice et l’explication relient la réponse à la préparation d’un rendez-vous, avec correction et reprise visibles.",
+              "La question est alignée sur l’objectif de leçon d’associer rôle, tâche et cas d’usage."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "Mise en pratique dans un environnement Claude réel non observée."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 3,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch04_act02",
+            "title": "Autres façons de travailler avec Claude",
+            "score_100": 80,
+            "verified_dimensions": [
+              "Le problème de tableur est concret ; la question demande un choix de produit Claude clairement identifiable.",
+              "Les options, l’indice sur les environnements spécialisés, l’explication, la correction et la reprise sont rendus.",
+              "La réponse est requise pour poursuivre et s’aligne sur la compétence d’associer la tâche à la surface Claude appropriée."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "Fonctionnalités réelles de Claude for Excel non vérifiées dans cet audit de contenu."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 3,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch04_act03",
+            "title": "What's next?",
+            "score_100": 78,
+            "verified_dimensions": [
+              "Le contenu rendu félicite l’apprenant, annonce une récapitulation et une orientation vers la suite ; il fonctionne comme clôture de formation.",
+              "Aucune activité requise ne bloque indûment la terminaison de la leçon à cet écran.",
+              "Le champ optionalMediaUnavailable est explicite ; aucune ressource non accessible n’a été qualifiée d’absente."
+            ],
+            "unverified_dimensions": [
+              "Objectif mesurable spécifique non déclaré.",
+              "Le média optionnel signalé indisponible et les ressources de poursuite évoquées ne sont pas détaillés dans ce JSON ; leur nature et leur accessibilité ne sont donc pas vérifiables."
+            ],
+            "issues": []
+          }
+        ]
+      }
+    ],
+    "formation_summary": {
+      "scope": "Audit qualitatif, sans modification, du seul cours claude_101__01 de la formation datacamp_claude_101.",
+      "coverage": {
+        "courses_reviewed": 1,
+        "lessons_reviewed": 4,
+        "chapters_reviewed": 19,
+        "activities_reviewed": 20,
+        "blocks_reviewed": 21,
+        "activity_types_reviewed": {
+          "ai_evaluation": 3,
+          "multi_choice_exercise": 12,
+          "video": 2,
+          "bucket_sort": 1,
+          "closing_content": 1,
+          "download": 2
+        }
+      },
+      "score_100": 76,
+      "score_method": "Notes par chapitre fondées uniquement sur les dimensions vérifiées dans le JSON et dans le rendu/les règles LessonViewer ; les dimensions non vérifiables ne reçoivent pas de note implicite.",
+      "confirmed_issues": 8,
+      "severity_counts": {
+        "P0": 0,
+        "P1": 7,
+        "P2": 1,
+        "P3": 0
+      },
+      "key_findings": [
+        "Les 12 QCM sont globalement clairs, disposent d’indices, d’explications, de correction et d’une exigence de réponse correcte ; le tri Projects/Skills est également actionnable et corrigé.",
+        "Les trois pratiques ai_evaluation sont pédagogiquement explicites, mais leur caractère obligatoire n’est pas appliqué par la navigation.",
+        "Les deux vidéos théoriques ont transcript, diapositives et sous-titres déclarés, mais les alternatives déclarées sont anglaises dans une expérience française ; elles peuvent en outre être franchies via la navigation basse sans action de visionnage.",
+        "Le pré-audit statique a signalé 19 manques de progression et trois évaluations IA sans critères structurés ; après lecture complète et vérification du rendu, ces signaux ne sont pas tous confirmés : questions, indices, exemples, critères visibles dérivés des consignes, explications et transitions pertinentes sont effectivement rendus."
+      ],
+      "priority_summary": "P1 : restaurer le verrouillage des trois pratiques IA et des deux vidéos MP4, puis rendre les deux vidéos accessibles en français. P2 : afficher le feedback conceptuel déjà rédigé pour le tri Projects/Skills."
+    },
+    "limits": [
+      "Audit limité aux données du cours, au registre de blocs et au code de rendu/progression ; aucun contenu, code, base ou asset n’a été modifié.",
+      "Les MP4, PDF et VTT sont référencés via /api/assets et le manifest indique des téléchargements réussis ; faute de lecture navigateur de ces URLs API, leur disponibilité effective, leur qualité audiovisuelle et la lisibilité de leurs diapositives restent non vérifiées et ne sont pas assimilées à une absence.",
+      "Le service d’évaluation IA et les services Claude externes n’ont pas été exécutés : qualité factuelle, cohérence des scores et comportement authentifié de leurs retours ne sont pas conclusifs.",
+      "Les objectifs explicites et mesurables ne sont pas fournis comme champs dédiés par chapitre ; les descriptions de leçon visibles ont été reconnues comme contexte, sans les traiter comme objectifs de chapitre vérifiés.",
+      "L’évaluation factuelle ou produit de Claude, Projects, Skills, connecteurs, Research et intégrations n’entre pas dans ce contrôle pédagogique interne."
+    ]
+  },
+  "current_courses": {
+    "claude_101__01": {
+      "courseId": "claude_101__01",
+      "sourceCourseTitle": "Claude 101",
+      "datacampImport": {
+        "schemaVersion": "neopolis.datacamp_course.v1",
+        "sourceProvider": "DataCamp",
+        "sourceCourseSlug": "claude-101",
+        "sourceLanguage": "fr-FR",
+        "expected": {
+          "chapters_expected": 4,
+          "chapters_extracted": 4,
+          "activities_expected_from_outline": 20,
+          "activities_extracted": 20,
+          "videos_expected_from_chapter_metadata": 2,
+          "videos_extracted": 2,
+          "exercise_types": {
+            "PromptingExercise": 3,
+            "VisualExercise": 13,
+            "VideoExercise": 2,
+            "DragAndDropExercise": 2
+          },
+          "downloads_total": 8,
+          "downloads_ok": 8,
+          "downloaded_bytes": 588943477,
+          "mp4_downloaded": 2,
+          "hls_downloaded": 2,
+          "vtt_downloaded": 2,
+          "slides_pdfs_downloaded": 2,
+          "video_transcripts_extracted": 2
+        },
+        "competencyTagging": "lesson_content_signals_v1"
+      },
+      "lessons": [
+        {
+          "id": "datacamp_ch01",
+          "title": {
+            "en": "Meet Claude",
+            "fr": "Meet Claude"
+          },
+          "description": {
+            "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+            "fr": "Mettez la main à la pâte avec Claude, l'assistant IA d'Anthropic pour l'écriture, la recherche et le raisonnement. Entraînez-vous avec vos premiers prompts sur des scénarios commerciaux réels, apprenez un cadre de prompt en trois parties et les compétences 4D pour la maîtrise de l'IA, et améliorez vos brouillons par itération. Comparez Claude sur le web avec les modes Chat, Cowork et Code de l'application de bureau."
+          },
+          "competencyTags": [
+            "prompt_engineering",
+            "ai_development",
+            "ai_business"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch01_act01",
+              "title": {
+                "en": "Getting started with Claude!",
+                "fr": "Premiers pas avec Claude !"
+              },
+              "description": {
+                "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+                "fr": "Mettez la main à la pâte avec Claude, l'assistant IA d'Anthropic pour l'écriture, la recherche et le raisonnement. Entraînez-vous avec vos premiers prompts sur des scénarios commerciaux réels, apprenez un cadre de prompt en trois parties et les compétences 4D pour la maîtrise de l'IA, et améliorez vos brouillons par itération. Comparez Claude sur le web avec les modes Chat, Cowork et Code de l'application de bureau."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "ai_evaluation",
+                  "id": "dc_1_act_01_prompting",
+                  "title": {
+                    "en": "Getting started with Claude!",
+                    "fr": "Premiers pas avec Claude !"
+                  },
+                  "prompt": {
+                    "en": "Welcome to the Claude 101 course! In this course, you'll learn how to use Anthropic's AI Assistant Claude from scratch—writing your first prompt all the way to organizing work with projects and skills, connecting Claude to your tools and data, and putting it all together across real business roles.\n\nVerde Solutions is launching a new biodegradable snack container. The packaging team needs catchy product names before the big reveal.\n\n- Ask Claude for **3 product name ideas** for Verde's new biodegradable snack container.\n- Optional: mention you want names that sound **friendly** or **eco-conscious**.",
+                    "fr": "Bienvenue au cours Claude 101 ! Dans ce cours, vous apprendrez à utiliser l'assistant IA Claude d'Anthropic depuis le début — rédiger votre premier prompt jusqu'à organiser le travail avec Projects et Skills, connecter Claude à vos outils et à vos données, et tout mettre en place pour de vrais rôles en entreprise.\n\nVerde Solutions lance un nouveau contenant biodégradable pour en-cas. L'équipe packaging a besoin de noms de produit accrocheurs avant la grande révélation.\n\n- Demandez à Claude **3 idées de noms de produit** pour le nouveau contenant biodégradable de Verde.\n- Optionnel : indiquez que vous souhaitez des noms qui sonnent **conviviaux** ou **éco-responsables**."
+                  },
+                  "rubric": "task: ask Claude to suggest or generate product names; request multiple name ideas or a specific number of names\ncontext: mention snack container, packaging, biodegradable, or Verde Solutions",
+                  "maxScore": 10,
+                  "sampleAnswer": {
+                    "en": "Suggest 3 catchy product names for a new biodegradable snack container we're launching at Verde Solutions. Friendly and eco-conscious vibe, please.",
+                    "fr": "Suggérez 3 noms de produit accrocheurs pour un nouveau contenant biodégradable pour en-cas que nous lançons chez Verde Solutions. Ton convivial et éco-responsable, s'il vous plaît."
+                  },
+                  "minWords": 5,
+                  "hint": {
+                    "en": "",
+                    "fr": ""
+                  }
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch01_slides",
+                  "title": {
+                    "en": "Chapter 1 slides",
+                    "fr": "Chapter 1 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Diapositives officielles du cours fournies pour ce cours."
+                  },
+                  "url": "/api/assets/chapter_01_slides_1e910b29.pdf",
+                  "filename": "chapter_01_slides.pdf"
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act02",
+              "title": {
+                "en": "What is Claude?",
+                "fr": "What is Claude?"
+              },
+              "description": {
+                "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+                "fr": "Mettez la main à la pâte avec Claude, l'assistant IA d'Anthropic pour l'écriture, la recherche et le raisonnement. Entraînez-vous avec vos premiers prompts sur des scénarios commerciaux réels, apprenez un cadre de prompt en trois parties et les compétences 4D pour la maîtrise de l'IA, et améliorez vos brouillons par itération. Comparez Claude sur le web avec les modes Chat, Cowork et Code de l'application de bureau."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_1_act_02_qcm_multiple",
+                  "question": {
+                    "en": "Take a moment to learn about Claude, then consider the following scenario.\n\nVerde Solutions is evaluating AI tools for their operations team. They've asked you to explain what sets Claude apart from a basic chatbot.\n\nWhich of the following best describes Claude's core design philosophy?",
+                    "fr": "Prenez un moment pour en apprendre davantage sur Claude, puis considérez le scénario suivant.\n\nVerde Solutions évalue des outils d'IA pour son équipe des opérations. Ils vous ont demandé d'expliquer ce qui distingue Claude d'un simple chatbot.\n\nLaquelle des affirmations suivantes décrit le mieux la philosophie de conception fondamentale de Claude ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "A specialized search engine that retrieves and summarizes web pages faster than traditional tools.",
+                        "fr": "Un moteur de recherche spécialisé qui récupère et résume les pages web plus rapidement que les outils traditionnels."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "A coding assistant built specifically for software developers who need help writing and debugging code.",
+                        "fr": "Un assistant de programmation conçu spécifiquement pour les développeurs qui ont besoin d'aide pour écrire et déboguer du code."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "A steerable thinking partner built to be helpful, harmless, and honest across writing, research, and reasoning. ",
+                        "fr": "Un partenaire de réflexion pilotable conçu pour être utile, inoffensif et honnête dans la rédaction, la recherche et le raisonnement."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "A rule-based chatbot that follows a fixed decision tree to answer frequently asked questions.",
+                        "fr": "Un chatbot à règles qui suit un arbre de décision fixe pour répondre aux questions fréquemment posées."
+                      }
+                    }
+                  ],
+                  "correctAnswers": "c",
+                  "explanation": {
+                    "en": "You've got it! Claude is designed to be steerable and collaborative, making it a thinking partner for complex work rather than a simple Q&A tool.",
+                    "fr": "Exactement ! Claude est conçu pour être pilotable et collaboratif, ce qui en fait un partenaire de réflexion pour les travaux complexes plutôt qu'un simple outil de questions-réponses."
+                  },
+                  "hint": {
+                    "en": "Unlike the transactional interactions with a search engine, Claude can be treated as a thought partner for conversations, writing assistance, research, analysis, and creating files.",
+                    "fr": "Contrairement aux interactions transactionnelles avec un moteur de recherche, Claude peut être considéré comme un partenaire de réflexion pour les conversations, l'aide à la rédaction, la recherche, l'analyse et la création de fichiers."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act03",
+              "title": {
+                "en": "Video: Your first conversation with Claude",
+                "fr": "Vidéo : Votre première conversation avec Claude"
+              },
+              "description": {
+                "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+                "fr": "Mettez-vous en situation avec Claude, l'assistant IA d'Anthropic pour la rédaction, la recherche et le raisonnement. Entraînez-vous avec vos premiers prompts sur des scénarios commerciaux réels, apprenez un cadre de prompt en trois parties et les compétences 4D pour la maîtrise de l'IA, et améliorez des brouillons par itération. Comparez Claude sur le web aux modes Chat, Cowork et Code de l'application de bureau."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_03_video",
+                  "title": {
+                    "en": "Video: Your first conversation with Claude",
+                    "fr": "Vidéo : Votre première conversation avec Claude"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex03_video_your_first_conversation_with_claude_a9a1dd6c.mp4",
+                  "subtitleUrlEn": "/api/assets/ch01_ex03_video_your_first_conversation_with_claude_en_1ad3af98.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_1e910b29.pdf",
+                  "transcript": "1. Video: Your first conversation with Claude\nImagine this, you're looking at a blank page, wrestling with a big complex project, and not sure where to start. What if you had a partner who could help you break it down? Claude is a powerful, intelligent collaborator that amplifies your capabilities across all of your work. Claude brings AI intelligence, but you bring the context and expertise that makes the work meaningful. Let's explore chatting with Claude, beginning with a sidebar. Here you will encounter icons for creating new chats and jumping back into old ones. There are options for projects where you can organize your conversations with persistent context and custom instructions. And then artifacts, which allow you to turn ideas into shareable apps, tools, or content. No matter what you hope to accomplish, Claude offers support to achieve your goals. Simple interactions with Claude begin with a prompt, and these prompts, combined with other context, impact its response. The best approach when speaking to Claude is like you would a coworker, naturally, concisely, and conversationally. But you may ask, what is a good prompt? Before your next conversation with Claude, consider a few things. 1. Setting the stage. What is your role and what are your objectives? Is there context about your work that Claude should know about? 2. Defining the task. What action do you want Claude to take? 3. Specifying rules. What's the style or tone you want Claude to use? Are there examples that you can attach to show Claude? Let's review this prompt below. First, we're setting the stage by telling Claude this is for an investor pitch deck for a new indie streaming app. That's the context and the objective. Then we define the task clearly by providing relative details. Finally, we specify the rules by using current web research with citations, structuring it as a professional report which tells Claude exactly what style and format we need. Perfect! With your basic prompt in place, now comes the real power move, adding your specific context to make Claude's response truly tailored to your needs. When you upload relevant documents or background information into a specific chat, Claude considers that context in its response, whether that's company documents, project files, or background research. Think of it as a shortcut so that Claude can understand what your needs are. Claude can intake and output many file types such as PDF, CSV, Docs, and more. In the search and tools menu, you can level up your experience yet again by giving Claude access to more tools to pull in more context and will pull in these tools as needed while solving your request. You might toggle on options like web search to let Claude research current market data, or use connected data sources to pull from Google Drive, allowing access to real-time information. Claude will choose the right approach. While those options directly impact the information Claude has access to, there are a few more ways to customize how Claude responds. You can choose the best Claude model for your task. To use the model selector, start chatting with Claude or open an existing chat. The selected model will appear under your text input. To change it, click on the model name and choose which model of Claude you'd like to chat with instead. Changing the model will result in a new chat. Claude currently supports numerous models with distinct capabilities intended to meet specific users' needs. Use the Claude Opus model for your most complex tasks. It's the largest scale model with hybrid reasoning capabilities. For example, running a multi-step financial analysis, Claude Sonnet is the best choice for everyday users and is our recommended default mode. It balances sophisticated capabilities with cost-effectiveness. Think of it like choosing the right tool for the job. You can always switch models based on what you're trying to accomplish. Extended Thinking Mode is particularly valuable for complex thinking and analysis, though it increases latency and may not be necessary for simple questions and everyday conversations. To get the fastest output for more straightforward tasks, you can start with Sonnet models and leave Thinking Mode off. If you need more support, you can change the model or turn on Thinking Mode. Research enables Claude to conduct systematic multi-angle investigations by automatically breaking down complex questions and exploring hundreds of sources to deliver comprehensive, cited reports in 5 to 45 minutes. Claude does the research for you while you focus on other high-value work. Now just wait as Claude delivers to you a well-crafted response that effectively accomplishes your task. But the real power of Claude comes with continued and frequent communication, not just one-off prompts. The more you interact with Claude, the better it becomes at understanding your communication style and preferences for future conversations. Working with Claude, you have a great partner and a powerful, intelligent collaborator that amplifies your capabilities across everything you work on. Claude brings AI intelligence to your work. You bring the context and expertise that makes the work meaningful.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Your first conversation with Claude",
+                      "text": "Imagine this, you're looking at a blank page, wrestling with a big complex project, and not sure where to start. What if you had a partner who could help you break it down? Claude is a powerful, intelligent collaborator that amplifies your capabilities across all of your work. Claude brings AI intelligence, but you bring the context and expertise that makes the work meaningful. Let's explore chatting with Claude, beginning with a sidebar. Here you will encounter icons for creating new chats and jumping back into old ones. There are options for projects where you can organize your conversations with persistent context and custom instructions. And then artifacts, which allow you to turn ideas into shareable apps, tools, or content. No matter what you hope to accomplish, Claude offers support to achieve your goals. Simple interactions with Claude begin with a prompt, and these prompts, combined with other context, impact its response. The best approach when speaking to Claude is like you would a coworker, naturally, concisely, and conversationally. But you may ask, what is a good prompt? Before your next conversation with Claude, consider a few things. 1. Setting the stage. What is your role and what are your objectives? Is there context about your work that Claude should know about? 2. Defining the task. What action do you want Claude to take? 3. Specifying rules. What's the style or tone you want Claude to use? Are there examples that you can attach to show Claude? Let's review this prompt below. First, we're setting the stage by telling Claude this is for an investor pitch deck for a new indie streaming app. That's the context and the objective. Then we define the task clearly by providing relative details. Finally, we specify the rules by using current web research with citations, structuring it as a professional report which tells Claude exactly what style and format we need. Perfect! With your basic prompt in place, now comes the real power move, adding your specific context to make Claude's response truly tailored to your needs. When you upload relevant documents or background information into a specific chat, Claude considers that context in its response, whether that's company documents, project files, or background research. Think of it as a shortcut so that Claude can understand what your needs are. Claude can intake and output many file types such as PDF, CSV, Docs, and more. In the search and tools menu, you can level up your experience yet again by giving Claude access to more tools to pull in more context and will pull in these tools as needed while solving your request. You might toggle on options like web search to let Claude research current market data, or use connected data sources to pull from Google Drive, allowing access to real-time information. Claude will choose the right approach. While those options directly impact the information Claude has access to, there are a few more ways to customize how Claude responds. You can choose the best Claude model for your task. To use the model selector, start chatting with Claude or open an existing chat. The selected model will appear under your text input. To change it, click on the model name and choose which model of Claude you'd like to chat with instead. Changing the model will result in a new chat. Claude currently supports numerous models with distinct capabilities intended to meet specific users' needs. Use the Claude Opus model for your most complex tasks. It's the largest scale model with hybrid reasoning capabilities. For example, running a multi-step financial analysis, Claude Sonnet is the best choice for everyday users and is our recommended default mode. It balances sophisticated capabilities with cost-effectiveness. Think of it like choosing the right tool for the job. You can always switch models based on what you're trying to accomplish. Extended Thinking Mode is particularly valuable for complex thinking and analysis, though it increases latency and may not be necessary for simple questions and everyday conversations. To get the fastest output for more straightforward tasks, you can start with Sonnet models and leave Thinking Mode off. If you need more support, you can change the model or turn on Thinking Mode. Research enables Claude to conduct systematic multi-angle investigations by automatically breaking down complex questions and exploring hundreds of sources to deliver comprehensive, cited reports in 5 to 45 minutes. Claude does the research for you while you focus on other high-value work. Now just wait as Claude delivers to you a well-crafted response that effectively accomplishes your task. But the real power of Claude comes with continued and frequent communication, not just one-off prompts. The more you interact with Claude, the better it becomes at understanding your communication style and preferences for future conversations. Working with Claude, you have a great partner and a powerful, intelligent collaborator that amplifies your capabilities across everything you work on. Claude brings AI intelligence to your work. You bring the context and expertise that makes the work meaningful."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act04",
+              "title": {
+                "en": "Your first conversation with Claude",
+                "fr": "Votre première conversation avec Claude"
+              },
+              "description": {
+                "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+                "fr": "Mettez-vous en situation avec Claude, l'assistant IA d'Anthropic pour la rédaction, la recherche et le raisonnement. Entraînez-vous avec vos premiers prompts sur des scénarios commerciaux réels, apprenez un cadre de prompt en trois parties et les compétences 4D pour la maîtrise de l'IA, et améliorez des brouillons par itération. Comparez Claude sur le web aux modes Chat, Cowork et Code de l'application de bureau."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_1_act_04_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions is onboarding employees to Claude. A training coordinator is explaining the three-part prompt framework.\n\nWhich element of the framework tells Claude the tone, style, and format you want in the response?",
+                    "fr": "Verde Solutions intègre des employés à Claude. Un coordinateur de formation explique le cadre de demande en trois parties.\n\nQuel élément du cadre indique à Claude le ton, le style et le format que vous souhaitez dans la réponse ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Specifying rules",
+                        "fr": "Specifying rules"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Setting the stage",
+                        "fr": "Setting the stage"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Defining the task",
+                        "fr": "Defining the task"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Adding context",
+                        "fr": "Adding context"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "a",
+                  "explanation": {
+                    "en": "Correct. Specifying rules tells Claude the style, tone, and examples you want, such as asking for a formal report or a conversational summary.",
+                    "fr": "C'est exact. Spécifier des règles indique à Claude le style, le ton et les exemples que vous souhaitez, par exemple en demandant un rapport formel ou un résumé conversationnel."
+                  },
+                  "hint": {
+                    "en": "The three elements are setting the stage, defining the task, and specifying rules.",
+                    "fr": "Les trois éléments sont : poser le contexte, définir la tâche et spécifier les règles."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act05",
+              "title": {
+                "en": "The headline, not the novel",
+                "fr": "Le titre, pas le roman"
+              },
+              "description": {
+                "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+                "fr": "Prenez en main Claude, l'assistant IA d'Anthropic pour l'écriture, la recherche et le raisonnement. Exercez-vous avec vos premiers prompts sur des cas d'entreprise réels, apprenez un cadre de demande en trois parties et les compétences 4D pour la maîtrise de l'IA, et peaufinez vos brouillons par itération. Comparez Claude sur le web aux modes Chat, Cowork et Code de l'application de bureau."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "ai_evaluation",
+                  "id": "dc_1_act_05_prompting",
+                  "title": {
+                    "en": "The headline, not the novel",
+                    "fr": "Le titre, pas le roman"
+                  },
+                  "prompt": {
+                    "en": "You're a project manager at Verde Solutions. The quarterly review just wrapped: production costs are down 12% and two new biodegradable product lines launched on schedule. Senior leadership wants a summary email by end of day.\n\nWrite a prompt for Claude using the three-part framework from this lesson: setting the stage, defining the task, and specifying rules.\n\n- Ask Claude to **draft a summary email** for **senior leadership** about the quarterly review.\n- Set the stage by providing your **role at Verde Solutions** and **context about what the review covered**.\n- Specify rules: ask for a **professional tone** and a maximum of **150 words**.",
+                    "fr": "Vous êtes chef de projet chez Verde Solutions. La revue trimestrielle vient de se terminer : les coûts de production ont diminué de 12 % et deux nouvelles lignes de produits biodégradables ont été lancées selon le calendrier. La direction souhaite un courriel récapitulatif d'ici la fin de journée.\n\nRédigez une consigne pour Claude en utilisant le cadre en trois parties de cette leçon : poser le contexte, définir la tâche et spécifier les règles.\n\n- Demandez à Claude de **rédiger un courriel récapitulatif** pour la **direction** au sujet de la revue trimestrielle.\n- Posez le contexte en indiquant votre **rôle chez Verde Solutions** et le **contexte sur ce que la revue a couvert**.\n- Spécifiez les règles : demandez un **ton professionnel** et un maximum de **150 mots**."
+                  },
+                  "rubric": "task: ask Claude to write or draft a summary email; mention senior leadership or leadership as the recipient\ncontext: mention the quarterly review or team outcomes; include a role such as project manager or company context; specify a professional tone or a word limit or length constraint",
+                  "maxScore": 10,
+                  "sampleAnswer": {
+                    "en": "I'm a project manager at Verde Solutions, a sustainable packaging company. Our team just completed our quarterly review — we reduced production costs by 12% and launched two new biodegradable product lines. Please draft a summary email to senior leadership highlighting the key outcomes. Keep it professional and under 150 words.",
+                    "fr": "Je suis chef de projet chez Verde Solutions, une entreprise d'emballages durables. Notre équipe vient de terminer la revue trimestrielle — nous avons réduit les coûts de production de 12 % et lancé deux nouvelles lignes de produits biodégradables. Veuillez rédiger un courriel récapitulatif destiné à la direction mettant en avant les résultats clés. Adoptez un ton professionnel et ne dépassez pas 150 mots."
+                  },
+                  "minWords": 5,
+                  "hint": {
+                    "en": "",
+                    "fr": ""
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act06",
+              "title": {
+                "en": "Getting better results",
+                "fr": "Obtenir de meilleurs résultats"
+              },
+              "description": {
+                "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+                "fr": "Prenez en main Claude, l'assistant IA d'Anthropic pour l'écriture, la recherche et le raisonnement. Exercez-vous avec vos premiers prompts sur des cas d'entreprise réels, apprenez un cadre de demande en trois parties et les compétences 4D pour la maîtrise de l'IA, et peaufinez vos brouillons par itération. Comparez Claude sur le web aux modes Chat, Cowork et Code de l'application de bureau."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_1_act_06_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions is rolling out Claude across their operations team. A team member reviews Claude's executive report draft, checking accuracy, tone, and completeness before sharing it with leadership.\n\nWhich competency of the 4D Framework for AI Fluency are they demonstrating?",
+                    "fr": "Verde Solutions déploie Claude au sein de son équipe opérations. Un membre de l'équipe passe en revue le brouillon du rapport exécutif de Claude, vérifiant l'exactitude, le ton et l'exhaustivité avant de le partager avec la direction.\n\nQuelle compétence du Cadre 4D pour la maîtrise de l'IA démontrent-ils ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Delegation",
+                        "fr": "Delegation"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Discernment",
+                        "fr": "Discernment"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Description",
+                        "fr": "Description"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Diligence",
+                        "fr": "Diligence"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct. Discernment is the skill of thoughtfully evaluating AI outputs for quality, accuracy, and appropriateness, which is exactly what the team member is doing before using the draft.",
+                    "fr": "Correct. Le discernement est la compétence qui consiste à évaluer avec réflexion les productions de l'IA en termes de qualité, d'exactitude et de pertinence, ce que fait exactement le membre de l'équipe avant d'utiliser le brouillon."
+                  },
+                  "hint": {
+                    "en": "The 4D Framework covers Delegation, Description, Discernment, and Diligence.\n\nThink about which competency involves critically evaluating AI outputs for quality and accuracy.",
+                    "fr": "Le Cadre 4D couvre la Délégation, la Description, le Discernement et la Diligence.\n\nRéfléchissez à laquelle de ces compétences implique d'évaluer de manière critique les productions de l'IA en termes de qualité et d'exactitude."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act07",
+              "title": {
+                "en": "Corporate voice, begone!",
+                "fr": "Adieu la voix corporate !"
+              },
+              "description": {
+                "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+                "fr": "Mettez la main à la pâte avec Claude, l'assistant IA d'Anthropic pour la rédaction, la recherche et le raisonnement. Entraînez-vous avec vos premiers prompts sur des cas d'entreprise réels, apprenez un cadre de prompt en trois parties et les compétences 4D pour la maîtrise de l'IA, et peaufinez des brouillons par itération. Comparez Claude sur le web aux modes Chat, Cowork et Code de l'application de bureau."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "ai_evaluation",
+                  "id": "dc_1_act_07_prompting",
+                  "title": {
+                    "en": "Corporate voice, begone!",
+                    "fr": "Adieu la voix corporate !"
+                  },
+                  "prompt": {
+                    "en": "You're back at Verde Solutions. Here's the draft Claude produced:\n\nSubject: Q3 Review Highlights — Verde Solutions.\n\nDear Leadership Team, I wanted to share a brief recap of our quarterly review outcomes. This quarter the Verde Solutions packaging team achieved two significant milestones: a 12% reduction in production costs and the launch of two new biodegradable product lines. Both reflect our continued commitment to sustainable innovation and operational efficiency. These results position us well heading into Q4, and I look forward to discussing next steps with the team. Best regards, [Your Name]\n\nGood on the facts — but it's over 200 words and reads too formally for this audience. Paste the draft into the prompt box and tell Claude exactly what to fix.\n\n- **Paste the draft** from above into the prompt box, then tell Claude what to fix: a **target length** (under 150 words) and the **tone** you want (e.g., more conversational).\n- Say what's wrong and how to fix it — not just \"make it better.\"",
+                    "fr": "Vous êtes de retour chez Verde Solutions. Voici le brouillon que Claude a produit :\n\nObjet : Points forts du T3 — Verde Solutions.\n\nChère équipe de direction, Je souhaitais partager un bref récapitulatif des résultats de notre revue trimestrielle. Ce trimestre, l'équipe packaging de Verde Solutions a atteint deux jalons importants : une réduction de 12 % des coûts de production et le lancement de deux nouvelles gammes de produits biodégradables. Les deux témoignent de notre engagement continu en faveur de l'innovation durable et de l'efficacité opérationnelle. Ces résultats nous placent bien à l'approche du T4, et j'ai hâte de discuter des prochaines étapes avec l'équipe. Cordialement, [Your Name]\n\nLes faits sont corrects — mais c'est plus de 200 mots et le ton est trop formel pour ce public. Collez le brouillon dans la zone de prompt et dites précisément à Claude ce qu'il faut corriger.\n\n- **Collez le brouillon** ci‑dessous dans la zone de prompt, puis indiquez à Claude ce qu'il faut corriger : une **longueur cible** (moins de 150 mots) et le **ton** souhaité (par exemple, plus conversationnel).\n- Dites ce qui ne va pas et comment le corriger — pas seulement « améliore-le »."
+                  },
+                  "rubric": "task: ask Claude to revise, edit, or shorten the email draft\ncontext: specify a length target such as under 150 words or shorter; mention a tone change such as conversational, less formal, or friendlier",
+                  "maxScore": 10,
+                  "sampleAnswer": {
+                    "en": "Here's a draft I need you to revise: \"Subject: Q3 Review Highlights — Verde Solutions. Dear Leadership Team, I wanted to share a brief recap of our quarterly review outcomes. This quarter the Verde Solutions packaging team achieved two significant milestones: a 12% reduction in production costs and the launch of two new biodegradable product lines. Both reflect our continued commitment to sustainable innovation and operational efficiency. These results position us well heading into Q4, and I look forward to discussing next steps with the team. Best regards, [Your Name]\"\n\nIt's too long and too formal. Please cut it to under 150 words and make the tone more conversational — it should feel like a friendly update, not a formal report.",
+                    "fr": "Voici un brouillon que j'ai besoin que vous révisiez : \"Objet : Points forts du T3 — Verde Solutions. Chère équipe de direction, Je souhaitais partager un bref récapitulatif des résultats de notre revue trimestrielle. Ce trimestre, l'équipe packaging de Verde Solutions a atteint deux jalons importants : une réduction de 12 % des coûts de production et le lancement de deux nouvelles gammes de produits biodégradables. Les deux témoignent de notre engagement continu en faveur de l'innovation durable et de l'efficacité opérationnelle. Ces résultats nous placent bien à l'approche du T4, et j'ai hâte de discuter des prochaines étapes avec l'équipe. Cordialement, [Your Name]\"\n\nC'est trop long et trop formel. Veuillez le réduire à moins de 150 mots et rendre le ton plus conversationnel — il doit ressembler à une mise à jour amicale, pas à un rapport formel."
+                  },
+                  "minWords": 5,
+                  "hint": {
+                    "en": "",
+                    "fr": ""
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act08",
+              "title": {
+                "en": "Claude desktop app: Chat, Cowork, Code",
+                "fr": "Application de bureau Claude : Chat, Cowork, Code"
+              },
+              "description": {
+                "en": "Get hands-on with Claude, Anthropic's AI assistant for writing, research, and reasoning. Practice your first prompts on real business scenarios, learn a three-part prompt framework and the 4D skills for AI fluency, and refine drafts through iteration. Compare Claude on the web with the desktop app's Chat, Cowork, and Code modes.",
+                "fr": "Mettez la main à la pâte avec Claude, l'assistant IA d'Anthropic pour la rédaction, la recherche et le raisonnement. Entraînez-vous avec vos premiers prompts sur des cas d'entreprise réels, apprenez un cadre de prompt en trois parties et les compétences 4D pour la maîtrise de l'IA, et peaufinez des brouillons par itération. Comparez Claude sur le web aux modes Chat, Cowork et Code de l'application de bureau."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_1_act_08_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions is using the Claude desktop app. A team member needs to analyze competitor packaging across 20 company websites, cross-reference the findings with internal product specs, and deliver a market brief by end of day.\n\nWhich Claude desktop app mode is best suited for this task?",
+                    "fr": "Verde Solutions utilise l'application de bureau Claude. Un membre de l'équipe doit analyser l'emballage des concurrents sur 20 sites d'entreprise, recouper les résultats avec les spécifications internes du produit et livrer un rapport de marché d'ici la fin de la journée.\n\nQuel mode de l'application de bureau Claude est le mieux adapté à cette tâche ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Claude Chat",
+                        "fr": "Claude Chat"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Claude Code",
+                        "fr": "Claude Code"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Claude Cowork",
+                        "fr": "Claude Cowork"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "c",
+                  "explanation": {
+                    "en": "Correct. Cowork is built for complex, multi-source work. It can browse websites, read local documents, and produce a finished deliverable like a structured report.",
+                    "fr": "Correct. Cowork est conçu pour des travaux complexes provenant de multiples sources. Il peut parcourir des sites web, consulter des documents locaux et produire un livrable final comme un rapport structuré."
+                  },
+                  "hint": {
+                    "en": "The lesson describes one mode as built for \"work that takes real effort: pulling information from many sources, making sense of it, and producing something finished.\"\n\nThink about what the task requires: browsing multiple websites, reading internal files, and delivering a finished report",
+                    "fr": "La leçon décrit un mode comme conçu pour \"travail qui demande un véritable effort : rassembler des informations provenant de nombreuses sources, en donner du sens et produire quelque chose de fini.\"\n\nRéfléchissez à ce que la tâche exige : parcourir plusieurs sites web, lire des fichiers internes et livrer un rapport final."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "datacamp_ch02",
+          "title": {
+            "en": "Organizing Your Work and Knowledge",
+            "fr": "Organiser votre travail et vos connaissances"
+          },
+          "description": {
+            "en": "Organize ongoing work in Claude Projects with shared knowledge bases and custom instructions that shape every chat. Create interactive artifacts such as reports and dashboards, then publish or share them outside your project. Build reusable Skills so Claude follows your team's workflows without repeating setup each time.",
+            "fr": "Organisez le travail en cours dans Claude Projects avec des bases de connaissances partagées et des instructions personnalisées qui façonnent chaque conversation. Créez des éléments interactifs tels que rapports et tableaux de bord, puis publiez-les ou partagez-les en dehors de votre projet. Construisez des Skills réutilisables afin que Claude suive les flux de travail de votre équipe sans répéter la configuration à chaque fois."
+          },
+          "competencyTags": [
+            "prompt_engineering",
+            "rag_knowledge",
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch02_act01",
+              "title": {
+                "en": "Video: Introduction to projects",
+                "fr": "Vidéo : Introduction à Projects"
+              },
+              "description": {
+                "en": "Organize ongoing work in Claude Projects with shared knowledge bases and custom instructions that shape every chat. Create interactive artifacts such as reports and dashboards, then publish or share them outside your project. Build reusable Skills so Claude follows your team's workflows without repeating setup each time.",
+                "fr": "Organisez le travail en cours dans Claude Projects avec des bases de connaissances partagées et des instructions personnalisées qui façonnent chaque conversation. Créez des éléments interactifs tels que rapports et tableaux de bord, puis publiez-les ou partagez-les en dehors de votre projet. Construisez des Skills réutilisables afin que Claude suive les flux de travail de votre équipe sans répéter la configuration à chaque fois."
+              },
+              "type": "teaching",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_01_video",
+                  "title": {
+                    "en": "Video: Introduction to projects",
+                    "fr": "Vidéo : Introduction à Projects"
+                  },
+                  "mp4Url": "/api/assets/ch02_ex01_video_introduction_to_projects_22d2c0b2.mp4",
+                  "subtitleUrlEn": "/api/assets/ch02_ex01_video_introduction_to_projects_en_a59723f3.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_8eaa09be.pdf",
+                  "transcript": "1. Video: Introduction to projects\nWhat are projects and how do they improve working with Claude? With projects, Claude users can create self-contained environments with their own chat histories, specific knowledge bases, and customized settings. We are going to provide an overview of projects, what they are used for, how to create them, and some advanced features. Let's talk about a few of the key features of projects. Project knowledge enhances Claude's understanding by allowing you to upload relevant documents within each project. Every time you chat with Claude inside of a project, this knowledge is automatically considered alongside your prompt. This contextual information enables Claude to deliver more informed, project-specific responses that align with your team's goals, terminology, and background. Projects can handle much more content without running into limits. Projects with lots of information are automatically processed using retrieval augmented generation, enabling Claude to use more context to help you. When setting up a project, you can define project instructions for each project to further tailor Claude's responses. Like context, these are considered every time you chat with Claude. It's a good space to guide the way Claude responds. For example, you can ask Claude to use a more formal tone or answer questions from a specific perspective, targeting a specific industry. If you're on a Claude for work plan, you can share projects with other members of your organization, enabling powerful collaboration and knowledge sharing capabilities. For example, a brand team can create a project with voice and tone guidelines that helps any one of their company write like a marketer. Okay, let's get started by creating your first project in three simple steps. Click New Project and give it a name. Next, describe your project and what you are hoping to achieve. Like, I would like to make brand guidelines to write a series of case study blogs for my flower business. Click Create Project. To the right of the project title, you see a few menu items. You can star this project for quicker access and edit project details and archive or delete the project. Provide Claude with relevant instructions and information for the chats within the project. This will work alongside user preferences and the selected style. Choose visibility for your project. You can choose private for personal use or public for team collaboration. From here, provide project instructions and information for the chats within the project. This will work alongside the user preferences and the selected style. Click on instructions to define how Claude should respond. Within this space, you can specify tone, expertise level, response style, and desired outcomes, or simply give more context on what you're trying to achieve with this project. For instance, when providing the brand guidelines, explain the thought process and highlight tone and brand application. Once done providing instructions, click Save Instructions. This will apply to every chat in the project. You'll find the files menu on the right side of your project's main page. Anything you upload to this space will be used across all of your chats within this project. Click on the plus button to add content to the project. You can upload PDFs, documents, CSVs, text files, or connect to Google Drive. Now Claude can instantly reference this content in any conversation. Claude will process this information and use it as context in your chats within the project. For example, if you are working on creating new brand guidelines for a specific client, you can upload their existing branded materials and Claude will reference that file in its response. Note that context is not shared across disparate chats within a project unless the information is added into the project knowledge base. Sometimes your project knowledge will approach the context window limit. Claude will automatically enable rag mode to expand your project's capacity. Once your project is set up, you can initiate chats with Claude within the project. You can learn more about best practices for chatting and Claude by reviewing one of our other videos. You can make chats public so teammates can view and build onto your work. There are three permission levels that control who can do what in your projects. Can view members can view project contents, access knowledge, and chat, but can't make changes. Think read-only access with discussion rights. Can edit members have full collaboration power. They can modify instructions, update knowledge, manage members, and actively contribute to the project. Project creators control everything, plus they decide who sees the project. They can share with specific people or make private projects visible to the entire organization. The right permissions keep your project secure while enabling smooth collaboration, so pick the options that work best for your team. Here are some of Claude's collaboration features. Check out the shared with me tab to easily find projects that others have shared with you. You will receive email notifications when someone shares a project with you and project creators can modify permissions or remove access as needed. Multiple members can contribute documents create chats and work together within the same project environment making projects ideal for team collaboration. Sometimes you need to use content without adding it to your project's knowledge base. No problem. Simply upload it during the conversation and it stays separate from your project knowledge. It's a perfect way to share context or examples without cluttering the knowledge base. Here are some examples of projects you can create. You can create a new product for market like managing the development process of a new product from ideation to launch like an eco-friendly water bottle. Useful for keeping all product related information in one place, using Claude for creative ideation, and tracking the evolution of the product design. Claude can streamline the content creation process by generating content ideas, providing writing assistance, and maintaining consistency across platforms. You can design and develop an educational course like Anthropics AI Fluency Coursework. In projects you can organize course materials, use Claude to help explain complex concepts, and iteratively improve the course content. You can create a project to track, analyze, and plan personal finances for your personal financial goals and budget. Keeping all financial information in one secure place, Claude can analyze spending patterns and help with financial calculations and planning. Or you can plan and manage a home renovation like updating a kitchen space. Centralize all project information, use Claude to help with the design idea and budget calculations, and keep track of all decisions and communications. These examples demonstrate the flexibility of what can be done with projects in Claude. Whether you're working on professional tasks, personal goals, or collaborative efforts, projects can help you organize information, generate ideas, and streamline your work process. Remember, you can customize each project to fit your specific needs and workflow. For more information on getting started with projects, check out our Help Center article.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Video: Introduction to projects",
+                      "text": "What are projects and how do they improve working with Claude? With projects, Claude users can create self-contained environments with their own chat histories, specific knowledge bases, and customized settings. We are going to provide an overview of projects, what they are used for, how to create them, and some advanced features. Let's talk about a few of the key features of projects. Project knowledge enhances Claude's understanding by allowing you to upload relevant documents within each project. Every time you chat with Claude inside of a project, this knowledge is automatically considered alongside your prompt. This contextual information enables Claude to deliver more informed, project-specific responses that align with your team's goals, terminology, and background. Projects can handle much more content without running into limits. Projects with lots of information are automatically processed using retrieval augmented generation, enabling Claude to use more context to help you. When setting up a project, you can define project instructions for each project to further tailor Claude's responses. Like context, these are considered every time you chat with Claude. It's a good space to guide the way Claude responds. For example, you can ask Claude to use a more formal tone or answer questions from a specific perspective, targeting a specific industry. If you're on a Claude for work plan, you can share projects with other members of your organization, enabling powerful collaboration and knowledge sharing capabilities. For example, a brand team can create a project with voice and tone guidelines that helps any one of their company write like a marketer. Okay, let's get started by creating your first project in three simple steps. Click New Project and give it a name. Next, describe your project and what you are hoping to achieve. Like, I would like to make brand guidelines to write a series of case study blogs for my flower business. Click Create Project. To the right of the project title, you see a few menu items. You can star this project for quicker access and edit project details and archive or delete the project. Provide Claude with relevant instructions and information for the chats within the project. This will work alongside user preferences and the selected style. Choose visibility for your project. You can choose private for personal use or public for team collaboration. From here, provide project instructions and information for the chats within the project. This will work alongside the user preferences and the selected style. Click on instructions to define how Claude should respond. Within this space, you can specify tone, expertise level, response style, and desired outcomes, or simply give more context on what you're trying to achieve with this project. For instance, when providing the brand guidelines, explain the thought process and highlight tone and brand application. Once done providing instructions, click Save Instructions. This will apply to every chat in the project. You'll find the files menu on the right side of your project's main page. Anything you upload to this space will be used across all of your chats within this project. Click on the plus button to add content to the project. You can upload PDFs, documents, CSVs, text files, or connect to Google Drive. Now Claude can instantly reference this content in any conversation. Claude will process this information and use it as context in your chats within the project. For example, if you are working on creating new brand guidelines for a specific client, you can upload their existing branded materials and Claude will reference that file in its response. Note that context is not shared across disparate chats within a project unless the information is added into the project knowledge base. Sometimes your project knowledge will approach the context window limit. Claude will automatically enable rag mode to expand your project's capacity. Once your project is set up, you can initiate chats with Claude within the project. You can learn more about best practices for chatting and Claude by reviewing one of our other videos. You can make chats public so teammates can view and build onto your work. There are three permission levels that control who can do what in your projects. Can view members can view project contents, access knowledge, and chat, but can't make changes. Think read-only access with discussion rights. Can edit members have full collaboration power. They can modify instructions, update knowledge, manage members, and actively contribute to the project. Project creators control everything, plus they decide who sees the project. They can share with specific people or make private projects visible to the entire organization. The right permissions keep your project secure while enabling smooth collaboration, so pick the options that work best for your team. Here are some of Claude's collaboration features. Check out the shared with me tab to easily find projects that others have shared with you. You will receive email notifications when someone shares a project with you and project creators can modify permissions or remove access as needed. Multiple members can contribute documents create chats and work together within the same project environment making projects ideal for team collaboration. Sometimes you need to use content without adding it to your project's knowledge base. No problem. Simply upload it during the conversation and it stays separate from your project knowledge. It's a perfect way to share context or examples without cluttering the knowledge base. Here are some examples of projects you can create. You can create a new product for market like managing the development process of a new product from ideation to launch like an eco-friendly water bottle. Useful for keeping all product related information in one place, using Claude for creative ideation, and tracking the evolution of the product design. Claude can streamline the content creation process by generating content ideas, providing writing assistance, and maintaining consistency across platforms. You can design and develop an educational course like Anthropics AI Fluency Coursework. In projects you can organize course materials, use Claude to help explain complex concepts, and iteratively improve the course content. You can create a project to track, analyze, and plan personal finances for your personal financial goals and budget. Keeping all financial information in one secure place, Claude can analyze spending patterns and help with financial calculations and planning. Or you can plan and manage a home renovation like updating a kitchen space. Centralize all project information, use Claude to help with the design idea and budget calculations, and keep track of all decisions and communications. These examples demonstrate the flexibility of what can be done with projects in Claude. Whether you're working on professional tasks, personal goals, or collaborative efforts, projects can help you organize information, generate ideas, and streamline your work process. Remember, you can customize each project to fit your specific needs and workflow. For more information on getting started with projects, check out our Help Center article."
+                    }
+                  ]
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch02_slides",
+                  "title": {
+                    "en": "Chapter 2 slides",
+                    "fr": "Chapter 2 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Diapositives officielles du cours fournies pour ce cours."
+                  },
+                  "url": "/api/assets/chapter_02_slides_8eaa09be.pdf",
+                  "filename": "chapter_02_slides.pdf"
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act02",
+              "title": {
+                "en": "Introduction to Projects",
+                "fr": "Introduction à Projects"
+              },
+              "description": {
+                "en": "Organize ongoing work in Claude Projects with shared knowledge bases and custom instructions that shape every chat. Create interactive artifacts such as reports and dashboards, then publish or share them outside your project. Build reusable Skills so Claude follows your team's workflows without repeating setup each time.",
+                "fr": "Organisez le travail en cours dans Claude Projects avec des bases de connaissances partagées et des instructions personnalisées qui structurent chaque conversation. Créez des éléments interactifs tels que des rapports et des tableaux de bord, puis publiez-les ou partagez-les en dehors de votre projet. Développez des Skills réutilisables afin que Claude suive les flux de travail de votre équipe sans répéter la configuration à chaque fois."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_2_act_02_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions is building a project hub for their Q4 product launch. The project manager wants the brand guidelines document to be available in every new chat within the project, without re-uploading it each time.\n\nWhat is the correct way to achieve this?",
+                    "fr": "Verde Solutions construit un hub de projet pour leur lancement produit du Q4. Le chef de projet souhaite que le document de directives de marque soit disponible dans chaque nouvelle conversation du projet, sans avoir à le téléverser à chaque fois.\n\nQuelle est la bonne manière d'y parvenir ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Add the document to the project knowledge base",
+                        "fr": "Ajouter le document à la base de connaissances du projet"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Upload the document at the start of each new conversation",
+                        "fr": "Téléverser le document au début de chaque nouvelle conversation"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Paste the document contents into the project instructions field",
+                        "fr": "Coller le contenu du document dans le champ d'instructions du projet"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Pin the document to the project so it appears in the sidebar",
+                        "fr": "Épingler le document au projet pour qu'il apparaisse dans la barre latérale"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "a",
+                  "explanation": {
+                    "en": "Correct. Documents added to the project knowledge base are available automatically in every chat within the project, with no re-uploading needed.",
+                    "fr": "Correct. Les documents ajoutés à la base de connaissances du projet sont disponibles automatiquement dans chaque conversation du projet, sans besoin de téléversement répété."
+                  },
+                  "hint": {
+                    "en": "Think about the difference between uploading a file in a single conversation and adding it to the project knowledge base.\n\nThe lesson describes one approach that makes documents available across all project chats automatically.",
+                    "fr": "Réfléchissez à la différence entre téléverser un fichier dans une seule conversation et l'ajouter à la base de connaissances du projet.\n\nLa leçon décrit une approche qui rend les documents disponibles automatiquement dans tous les chats du projet."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act04",
+              "title": {
+                "en": "Creating with Artifacts",
+                "fr": "Création avec Artifacts"
+              },
+              "description": {
+                "en": "Organize ongoing work in Claude Projects with shared knowledge bases and custom instructions that shape every chat. Create interactive artifacts such as reports and dashboards, then publish or share them outside your project. Build reusable Skills so Claude follows your team's workflows without repeating setup each time.",
+                "fr": "Organisez le travail en cours dans Claude Projects avec des bases de connaissances partagées et des instructions personnalisées qui façonnent chaque conversation. Créez des artefacts interactifs tels que des rapports et des tableaux de bord, puis publiez-les ou partagez-les en dehors de votre projet. Créez des Skills réutilisables afin que Claude suive les flux de travail de votre équipe sans répéter la configuration à chaque fois."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_2_act_04_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions project manager has created a competitive analysis report as an artifact. A colleague outside the project wants to review it and potentially adapt it for another client.\n\nHow can the project manager share it with them?",
+                    "fr": "Le chef de projet de Verde Solutions a créé un rapport d'analyse concurrentielle en tant qu'artefact. Un collègue extérieur au projet souhaite le consulter et éventuellement l'adapter pour un autre client.\n\nComment le chef de projet peut-il le partager avec eux ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Share the artifact within the Claude project — project members can then forward access to outside colleagues.",
+                        "fr": "Partager l'artefact au sein du Claude project — les membres du projet peuvent ensuite transmettre l'accès à des collègues externes."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Publish the artifact — this generates a shareable link anyone can open, and the colleague can remix it in their own Claude.",
+                        "fr": "Publier l'artefact — cela génère un lien partageable que n'importe qui peut ouvrir, et le collègue peut le remixer dans son propre Claude."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Copy the artifact text and send it by email — the colleague can paste it back into Claude to work with it.",
+                        "fr": "Copier le texte de l'artefact et l'envoyer par e-mail — le collègue peut le coller dans Claude pour travailler dessus."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Download the artifact file and share it directly — the colleague receives the full artifact with all Claude features intact.",
+                        "fr": "Télécharger le fichier de l'artefact et le partager directement — le collègue reçoit l'artefact complet avec toutes les fonctionnalités de Claude intactes."
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct. Publishing creates a public link the project manager can send to anyone. The colleague can view the report and open it in their own Claude conversation to adapt it.",
+                    "fr": "Correct. La publication crée un lien public que le chef de projet peut envoyer à n'importe qui. Le collègue peut consulter le rapport et l'ouvrir dans sa propre conversation Claude pour l'adapter."
+                  },
+                  "hint": {
+                    "en": "The lesson covers three sharing options for artifacts. One of them is specifically designed for sharing outside a project.\n\nThink about what each option enables for the person receiving access.",
+                    "fr": "La leçon couvre trois options de partage pour les artefacts. L'une d'elles est spécifiquement conçue pour un partage en dehors d'un projet.\n\nRéfléchissez à ce que chaque option permet à la personne qui reçoit l'accès."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act05",
+              "title": {
+                "en": "Working with Skills",
+                "fr": "Travailler avec Skills"
+              },
+              "description": {
+                "en": "Organize ongoing work in Claude Projects with shared knowledge bases and custom instructions that shape every chat. Create interactive artifacts such as reports and dashboards, then publish or share them outside your project. Build reusable Skills so Claude follows your team's workflows without repeating setup each time.",
+                "fr": "Organisez le travail en cours dans Claude Projects avec des bases de connaissances partagées et des instructions personnalisées qui façonnent chaque conversation. Créez des artefacts interactifs tels que des rapports et des tableaux de bord, puis publiez-les ou partagez-les en dehors de votre projet. Créez des Skills réutilisables afin que Claude suive les flux de travail de votre équipe sans répéter la configuration à chaque fois."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_2_act_05_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions wants to build a custom Skill that applies their brand guidelines every time Claude drafts a client presentation. A team member is ready to create it but is not sure how to start.\n\nWhat is the recommended way to create a custom Skill in Claude?",
+                    "fr": "Verde Solutions veut créer un Skill personnalisé qui applique ses directives de marque chaque fois que Claude rédige une présentation client. Un membre de l'équipe est prêt à le créer mais ne sait pas comment commencer.\n\nQuelle est la manière recommandée pour créer un Skill personnalisé dans Claude ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Start a new chat, describe the Skill you want to create, and let Claude interview you and generate it",
+                        "fr": "Démarrez un nouveau chat, décrivez le Skill que vous souhaitez créer, et laissez Claude vous interroger puis le générer"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Write the Skill scripts manually and upload a ZIP file directly to Settings",
+                        "fr": "Écrivez manuellement les scripts du Skill et téléversez un fichier ZIP directement dans Settings"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Browse the Skills directory and fork an existing Anthropic Skill to modify",
+                        "fr": "Parcourez le répertoire Skills et forkez un Anthropic Skill existant pour le modifier"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Submit a request to your organization admin, who builds the Skill in the Admin panel",
+                        "fr": "Soumettez une demande à l'administrateur de votre organisation, qui crée le Skill dans l'Admin panel"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "a",
+                  "explanation": {
+                    "en": "Correct. Claude walks you through the workflow, asks clarifying questions, and produces a downloadable ZIP file you then upload in Settings.",
+                    "fr": "Correct. Claude vous guide à travers le flux de travail, pose des questions de clarification et produit un fichier ZIP téléchargeable que vous téléversez ensuite dans Settings."
+                  },
+                  "hint": {
+                    "en": "The lesson describes a specific method for creating custom Skills that does not require writing any code.\n\nThink about what tool you use to build the Skill itself.",
+                    "fr": "La leçon décrit une méthode spécifique pour créer des Skills personnalisés qui ne nécessite pas d'écrire de code.\n\nRéfléchissez à l'outil que vous utilisez pour construire le Skill lui‑même."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act06",
+              "title": {
+                "en": "Skills vs. Projects",
+                "fr": "Skills et Projects"
+              },
+              "description": {
+                "en": "Organize ongoing work in Claude Projects with shared knowledge bases and custom instructions that shape every chat. Create interactive artifacts such as reports and dashboards, then publish or share them outside your project. Build reusable Skills so Claude follows your team's workflows without repeating setup each time.",
+                "fr": "Organisez le travail en cours dans Claude Projects avec des bases de connaissances partagées et des instructions personnalisées qui façonnent chaque chat. Créez des éléments interactifs tels que des rapports et des tableaux de bord, puis publiez‑les ou partagez‑les en dehors de votre projet. Construisez des Skills réutilisables afin que Claude suive les flux de travail de votre équipe sans répéter la configuration à chaque fois."
+              },
+              "type": "exercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "bucket_sort",
+                  "id": "dc_2_act_06_bucket_sort",
+                  "title": {
+                    "en": "Skills vs. Projects",
+                    "fr": "Skills et Projects"
+                  },
+                  "instructions": {
+                    "en": "Sort each item into either Projects or Skills based on whether it stores knowledge or defines a process.",
+                    "fr": "Rangez chaque élément dans Projects ou Skills selon qu'il stocke des connaissances ou définit un processus."
+                  },
+                  "buckets": [
+                    {
+                      "id": "projects",
+                      "label": {
+                        "en": "Projects",
+                        "fr": "Projects"
+                      }
+                    },
+                    {
+                      "id": "skills",
+                      "label": {
+                        "en": "Skills",
+                        "fr": "Skills"
+                      }
+                    }
+                  ],
+                  "cards": [
+                    {
+                      "id": "item_1",
+                      "text": {
+                        "en": "Brand guidelines and past client campaign examples",
+                        "fr": "Directives de marque et exemples de campagnes clients précédentes"
+                      },
+                      "correctBucket": "projects"
+                    },
+                    {
+                      "id": "item_2",
+                      "text": {
+                        "en": "Customer survey results and user research reports",
+                        "fr": "Résultats d'enquêtes clients et rapports de recherche utilisateur"
+                      },
+                      "correctBucket": "projects"
+                    },
+                    {
+                      "id": "item_3",
+                      "text": {
+                        "en": "Q4 product launch specs and competitive analysis documents",
+                        "fr": "Spécifications de lancement de produit pour le Q4 et documents d'analyse concurrentielle"
+                      },
+                      "correctBucket": "projects"
+                    },
+                    {
+                      "id": "item_4",
+                      "text": {
+                        "en": "A step-by-step workflow for structuring weekly status reports",
+                        "fr": "Un flux de travail étape par étape pour structurer les rapports d'avancement hebdomadaires"
+                      },
+                      "correctBucket": "skills"
+                    },
+                    {
+                      "id": "item_5",
+                      "text": {
+                        "en": "Instructions for applying brand tone and formatting to every presentation",
+                        "fr": "Instructions pour appliquer le ton de la marque et la mise en forme à chaque présentation"
+                      },
+                      "correctBucket": "skills"
+                    },
+                    {
+                      "id": "item_6",
+                      "text": {
+                        "en": "A process for analyzing sales data and surfacing key trends",
+                        "fr": "Un processus d'analyse des données de vente et de mise en évidence des tendances clés"
+                      },
+                      "correctBucket": "skills"
+                    }
+                  ],
+                  "feedback": {
+                    "en": "Well done! Projects hold what Claude needs to know; Skills define how Claude should work. The two complement each other.",
+                    "fr": "Bravo ! Projects contiennent ce que Claude doit savoir ; Skills définissent comment Claude doit fonctionner. Les deux se complètent."
+                  },
+                  "hint": {
+                    "en": "Projects store knowledge — documents, reports, and reference materials Claude draws on in conversations.\n\nSkills encode processes — step-by-step workflows and methodologies Claude executes consistently.",
+                    "fr": "Projects stockent des connaissances — documents, rapports et documents de référence sur lesquels Claude s'appuie dans les conversations.\n\nSkills codifient des processus — flux de travail étape par étape et méthodologies que Claude exécute de manière cohérente."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "datacamp_ch03",
+          "title": {
+            "en": "Expanding Claude's Reach",
+            "fr": "Étendre la portée de Claude"
+          },
+          "description": {
+            "en": "Connect Claude to tools you already use, including Google Drive and Slack, with scoped access that respects your existing permissions. Use Enterprise Search to find answers across your organization's internal data, and Research mode for multi-source investigations with cited reports. Learn when to choose connectors, search, or research for the task at hand.",
+            "fr": "Connectez Claude aux outils que vous utilisez déjà, y compris Google Drive et Slack, avec un accès restreint qui respecte vos autorisations existantes. Utilisez Enterprise Search pour trouver des réponses dans les données internes de votre organisation, et Research mode pour des investigations multisources avec des rapports cités. Apprenez quand choisir des connecteurs, la recherche ou Research mode pour la tâche à accomplir."
+          },
+          "competencyTags": [
+            "ai_solution_design"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch03_act01",
+              "title": {
+                "en": "Connecting your tools",
+                "fr": "Connexion de vos outils"
+              },
+              "description": {
+                "en": "Connect Claude to tools you already use, including Google Drive and Slack, with scoped access that respects your existing permissions. Use Enterprise Search to find answers across your organization's internal data, and Research mode for multi-source investigations with cited reports. Learn when to choose connectors, search, or research for the task at hand.",
+                "fr": "Connectez Claude aux outils que vous utilisez déjà, y compris Google Drive et Slack, avec un accès restreint qui respecte vos autorisations existantes. Utilisez Enterprise Search pour trouver des réponses dans les données internes de votre organisation, et Research mode pour des investigations multisources avec des rapports cités. Apprenez quand choisir des connecteurs, la recherche ou Research mode pour la tâche à accomplir."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_3_act_01_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions has connected Claude to their company's Google Drive, which contains both shared project folders and a restricted HR documents folder that most employees cannot access.\n\nA team member is worried that Claude might be able to read the restricted HR files through the connector.\n\nIs this concern valid?",
+                    "fr": "Verde Solutions a connecté Claude au Google Drive de son entreprise, qui contient à la fois des dossiers de projet partagés et un dossier restreint de documents RH auquel la plupart des employés n'ont pas accès.\n\nUn membre de l'équipe craint que Claude puisse lire les fichiers RH restreints via le connecteur.\n\nCette inquiétude est-elle fondée ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Yes. Connecting Google Drive gives Claude full access to everything in the account, including restricted folders.",
+                        "fr": "Oui. Connecter Google Drive donne à Claude un accès complet à tout ce qui se trouve dans le compte, y compris les dossiers restreints."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Partially. Claude can read restricted files but will not include them in responses unless asked directly.",
+                        "fr": "Partiellement. Claude peut lire les fichiers restreints mais ne les inclura pas dans ses réponses sauf si on le lui demande directement."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "It depends on which permissions the organization admin grants to Claude during setup.",
+                        "fr": "Cela dépend des autorisations que l'administrateur de l'organisation accorde à Claude lors de la configuration."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "No. Connectors use scoped access: Claude can only see data the user already has permission to access.",
+                        "fr": "Non. Les connecteurs utilisent un accès limité (scoped access) : Claude ne peut voir que les données auxquelles l'utilisateur a déjà droit."
+                      }
+                    }
+                  ],
+                  "correctAnswers": "d",
+                  "explanation": {
+                    "en": "Correct. Connectors do not grant Claude any new permissions. Claude sees exactly what you see: restricted files stay restricted, and access can be revoked at any time.",
+                    "fr": "C'est exact. Les connecteurs n'accordent aucune nouvelle autorisation à Claude. Claude voit exactement ce que vous voyez : les fichiers restreints restent restreints, et l'accès peut être révoqué à tout moment."
+                  },
+                  "hint": {
+                    "en": "The lesson explains how connectors handle data access and what permissions Claude inherits when connected to a service.\n\nThink about whether connectors grant Claude new permissions or work within the permissions you already have.",
+                    "fr": "La leçon explique comment les connecteurs gèrent l'accès aux données et quelles autorisations Claude hérite lorsqu'il est connecté à un service.\n\nRéfléchissez à la question suivante : les connecteurs accordent-ils de nouvelles autorisations à Claude ou fonctionnent-ils dans le cadre des autorisations que vous possédez déjà ?"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch03_act02",
+              "title": {
+                "en": "Enterprise search",
+                "fr": "Enterprise search"
+              },
+              "description": {
+                "en": "Connect Claude to tools you already use, including Google Drive and Slack, with scoped access that respects your existing permissions. Use Enterprise Search to find answers across your organization's internal data, and Research mode for multi-source investigations with cited reports. Learn when to choose connectors, search, or research for the task at hand.",
+                "fr": "Connectez Claude aux outils que vous utilisez déjà, y compris Google Drive et Slack, avec un accès limité qui respecte vos autorisations existantes. Utilisez Enterprise Search pour trouver des réponses dans les données internes de votre organisation, et Research mode pour des investigations multi‑sources avec rapports cités. Apprenez quand choisir des connecteurs, Enterprise Search ou Research mode selon la tâche à accomplir."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_3_act_02_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions has both Enterprise Search and Research mode available. A project manager has two tasks: finding out what was decided in last week's product review meeting, and researching packaging industry trends for a competitor analysis report.\n\nWhich task is Enterprise Search designed for?",
+                    "fr": "Verde Solutions dispose à la fois d'Enterprise Search et de Research mode. Un chef de projet a deux tâches : découvrir ce qui a été décidé lors de la réunion d'examen produit de la semaine dernière, et rechercher les tendances du secteur de l'emballage pour un rapport d'analyse concurrentielle.\n\nPour quelle tâche Enterprise Search est‑il conçu ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Researching packaging industry trends for a competitor analysis",
+                        "fr": "Rechercher les tendances du secteur de l'emballage pour une analyse concurrentielle"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Both tasks equally: Enterprise Search handles internal and external sources",
+                        "fr": "Les deux tâches également : Enterprise Search gère les sources internes et externes"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Neither: both tasks require a general Claude chat with connectors enabled",
+                        "fr": "Aucune : les deux tâches nécessitent une conversation générale avec Claude et les connecteurs activés"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Finding what was decided in last week's product review meeting",
+                        "fr": "Trouver ce qui a été décidé lors de la réunion d'examen produit de la semaine dernière"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "d",
+                  "explanation": {
+                    "en": "Enterprise Search is designed for internal org knowledge, synthesizing information from Slack, email, documents, and other connected tools. A meeting decision lives inside the company's systems.",
+                    "fr": "Enterprise Search est conçu pour la connaissance interne de l'organisation, synthétisant l'information provenant de Slack, des e‑mails, des documents et d'autres outils connectés. Une décision de réunion se trouve dans les systèmes de l'entreprise."
+                  },
+                  "hint": {
+                    "en": "Enterprise Search is built for questions that span your organization's internal tools and data sources.\n\nThink about where the answer to each task lives: inside the company, or across the web.",
+                    "fr": "Enterprise Search est conçu pour les questions qui couvrent les outils internes et les sources de données de votre organisation.\n\nRéfléchissez à l'endroit où se trouve la réponse pour chaque tâche : à l'intérieur de l'entreprise, ou répartie sur le web."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch03_act03",
+              "title": {
+                "en": "Research mode for deep dives",
+                "fr": "Research mode pour des analyses approfondies"
+              },
+              "description": {
+                "en": "Connect Claude to tools you already use, including Google Drive and Slack, with scoped access that respects your existing permissions. Use Enterprise Search to find answers across your organization's internal data, and Research mode for multi-source investigations with cited reports. Learn when to choose connectors, search, or research for the task at hand.",
+                "fr": "Connectez Claude aux outils que vous utilisez déjà, y compris Google Drive et Slack, avec un accès limité qui respecte vos autorisations existantes. Utilisez Enterprise Search pour trouver des réponses dans les données internes de votre organisation, et Research mode pour des investigations multi‑sources avec rapports cités. Apprenez quand choisir des connecteurs, Enterprise Search ou Research mode selon la tâche à accomplir."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_3_act_03_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions is evaluating three packaging suppliers. A project manager needs to compare their pricing, sustainability certifications, and customer reviews from across the web, then compile a structured report with citations.\n\nWhich Claude feature is best suited for this task?",
+                    "fr": "Verde Solutions évalue trois fournisseurs d'emballages. Un chef de projet doit comparer leurs prix, leurs certifications en matière de durabilité et les avis clients trouvés sur le web, puis rédiger un rapport structuré avec des citations.\n\nQuelle fonctionnalité de Claude est la mieux adaptée à cette tâche ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Extended thinking",
+                        "fr": "Extended thinking"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Research",
+                        "fr": "Research"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Web search toggle",
+                        "fr": "Web search toggle"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "A connector",
+                        "fr": "A connector"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "b",
+                  "explanation": {
+                    "en": "Correct. Research is designed for exactly this: multi-source investigations that require synthesizing information across the web and producing a structured report with citations.",
+                    "fr": "Correct. Research est conçu pour cela précisément : des enquêtes multi-sources qui nécessitent de synthétiser des informations provenant du web et de produire un rapport structuré avec des citations."
+                  },
+                  "hint": {
+                    "en": "The lesson describes three tools for finding information: Research, web search, and extended thinking. Each is designed for a different type of task.\n\nThink about what this task requires: multiple sources, synthesis, and a structured output with citations.",
+                    "fr": "La leçon décrit trois outils pour trouver de l'information : Research, web search et extended thinking. Chacun est conçu pour un type de tâche différent.\n\nRéfléchissez à ce que cette tâche exige : sources multiples, synthèse et un résultat structuré avec des citations."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "datacamp_ch04",
+          "title": {
+            "en": "Putting It All Together",
+            "fr": "Tout rassembler"
+          },
+          "description": {
+            "en": "Apply Claude to everyday work across sales, marketing, and project management, from deal prep and campaign analysis to stakeholder updates. Go beyond claude.ai with Claude in Excel, Chrome, Slack, and other surfaces built for spreadsheets, browsing, and team chat. Match role-based use cases to the right Claude product for the job.",
+            "fr": "Appliquez Claude au travail quotidien dans les équipes commerciales, marketing et de gestion de projet, de la préparation des deals et de l'analyse des campagnes aux comptes rendus pour les parties prenantes. Allez au-delà de claude.ai avec Claude dans Excel, Chrome, Slack et d'autres surfaces conçues pour les feuilles de calcul, la navigation et la messagerie d'équipe. Associez les cas d'utilisation par rôle au produit Claude approprié pour la tâche."
+          },
+          "competencyTags": [
+            "ai_solution_design",
+            "ai_business"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch04_act01",
+              "title": {
+                "en": "Claude in action- use-cases by role",
+                "fr": "Claude en action - cas d'utilisation par rôle"
+              },
+              "description": {
+                "en": "Apply Claude to everyday work across sales, marketing, and project management, from deal prep and campaign analysis to stakeholder updates. Go beyond claude.ai with Claude in Excel, Chrome, Slack, and other surfaces built for spreadsheets, browsing, and team chat. Match role-based use cases to the right Claude product for the job.",
+                "fr": "Appliquez Claude au travail quotidien dans les équipes commerciales, marketing et de gestion de projet, de la préparation des deals et de l'analyse des campagnes aux comptes rendus pour les parties prenantes. Allez au-delà de claude.ai avec Claude dans Excel, Chrome, Slack et d'autres surfaces conçues pour les feuilles de calcul, la navigation et la messagerie d'équipe. Associez les cas d'utilisation par rôle au produit Claude approprié pour la tâche."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_4_act_01_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions is preparing for a key Q4 client pitch. A sales team member needs to research the prospect and organize their talking points before the meeting.\n\nWhich use case from the lesson applies to this task?",
+                    "fr": "Verde Solutions se prépare pour une présentation client clé au Q4. Un membre de l'équipe commerciale doit étudier le prospect et organiser ses points de discussion avant la réunion.\n\nQuel cas d'utilisation de la leçon s'applique à cette tâche ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Build a battle card library",
+                        "fr": "Créer une bibliothèque de battle cards"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Generate project status reports",
+                        "fr": "Générer des rapports d'état de projet"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Prepare for sales deals",
+                        "fr": "Préparer des transactions commerciales"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Analyze campaign performance",
+                        "fr": "Analyser les performances des campagnes"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "c",
+                  "explanation": {
+                    "en": "Correct. Preparing for sales deals is about researching prospects and organizing talking points before important meetings, which is exactly what the team member needs.",
+                    "fr": "Exact. La préparation des transactions commerciales consiste à rechercher les prospects et à organiser les points de discussion avant des réunions importantes, ce dont le membre de l'équipe a précisément besoin."
+                  },
+                  "hint": {
+                    "en": "The lesson organizes use cases by professional role. Think about which role and which specific task this scenario maps to.\n\nThere are two sales use cases in the lesson. Focus on what the task actually involves: preparation for a specific meeting, not building competitive resources.",
+                    "fr": "La leçon organise les cas d'utilisation par rôle professionnel. Réfléchissez au rôle et à la tâche spécifique auxquels ce scénario correspond.\n\nIl y a deux cas d'utilisation liés aux ventes dans la leçon. Concentrez-vous sur ce que la tâche implique réellement : la préparation d'une réunion spécifique, et non la création de ressources concurrentielles."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch04_act02",
+              "title": {
+                "en": "Other ways to work with Claude",
+                "fr": "Autres façons de travailler avec Claude"
+              },
+              "description": {
+                "en": "Apply Claude to everyday work across sales, marketing, and project management, from deal prep and campaign analysis to stakeholder updates. Go beyond claude.ai with Claude in Excel, Chrome, Slack, and other surfaces built for spreadsheets, browsing, and team chat. Match role-based use cases to the right Claude product for the job.",
+                "fr": "Appliquez Claude au travail quotidien dans les ventes, le marketing et la gestion de projet, de la préparation des affaires et l'analyse de campagnes aux comptes rendus pour les parties prenantes. Allez au‑delà de claude.ai avec Claude in Excel, Chrome, Slack et d'autres surfaces conçues pour les feuilles de calcul, la navigation et la messagerie d'équipe. Associez les cas d'utilisation par rôle au produit Claude adapté à la tâche."
+              },
+              "type": "quiz",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "multi_choice_exercise",
+                  "id": "dc_4_act_02_qcm_multiple",
+                  "question": {
+                    "en": "Verde Solutions has a finance analyst working on a multi-tab budget model. They keep running into a #REF! error that traces across multiple sheets and cannot find the source.\n\nWhich Claude product is built for this task?",
+                    "fr": "Verde Solutions a un analyste financier qui travaille sur un modèle budgétaire à plusieurs onglets. Il rencontre régulièrement une erreur #REF! qui se répercute sur plusieurs feuilles et ne parvient pas à en trouver la source.\n\nQuel produit Claude est conçu pour cette tâche ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Claude for Chrome",
+                        "fr": "Claude for Chrome"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Claude in Slack",
+                        "fr": "Claude in Slack"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Claude Code",
+                        "fr": "Claude Code"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Claude for Excel",
+                        "fr": "Claude for Excel"
+                      }
+                    }
+                  ],
+                  "correctAnswers": "d",
+                  "explanation": {
+                    "en": "Correct. Claude for Excel is specifically designed for spreadsheet work, including tracing and fixing errors like #REF! and #VALUE! across multi-tab workbooks.",
+                    "fr": "Exact. Claude for Excel est spécialement conçu pour le travail sur tableur, y compris le traçage et la correction d'erreurs comme #REF! et #VALUE! dans des classeurs à plusieurs onglets."
+                  },
+                  "hint": {
+                    "en": "The lesson introduces four specialized Claude products beyond claude.ai, each designed for a specific environment.\n\nThink about where the analyst is doing their work and what kind of problem they are solving.",
+                    "fr": "La leçon présente quatre produits Claude spécialisés au-delà de claude.ai, chacun conçu pour un environnement spécifique.\n\nRéfléchissez à l'endroit où l'analyste effectue son travail et au type de problème qu'il essaie de résoudre."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dc_ch04_act03",
+              "title": {
+                "en": "What's next?",
+                "fr": "What's next?"
+              },
+              "description": {
+                "en": "Apply Claude to everyday work across sales, marketing, and project management, from deal prep and campaign analysis to stakeholder updates. Go beyond claude.ai with Claude in Excel, Chrome, Slack, and other surfaces built for spreadsheets, browsing, and team chat. Match role-based use cases to the right Claude product for the job.",
+                "fr": "Appliquez Claude au travail quotidien dans les ventes, le marketing et la gestion de projet, de la préparation des affaires et l'analyse de campagnes aux comptes rendus pour les parties prenantes. Allez au‑delà de claude.ai avec Claude in Excel, Chrome, Slack et d'autres surfaces conçues pour les feuilles de calcul, la navigation et la messagerie d'équipe. Associez les cas d'utilisation par rôle au produit Claude adapté à la tâche."
+              },
+              "type": "resource",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "content",
+                  "id": "dc_4_act_03_visual_content",
+                  "body": {
+                    "en": "Congratulations on completing Claude 101! You've built a solid foundation for working with Claude effectively. Let's recap what you've learned and point you toward resources for continued growth.",
+                    "fr": "Félicitations pour avoir terminé Claude 101 ! Vous avez bâti une base solide pour travailler efficacement avec Claude. Récapitulons ce que vous avez appris et orientons-vous vers des ressources pour poursuivre votre progression."
+                  },
+                  "optionalMediaUnavailable": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exerciseCount": 16,
+      "videoCount": 2,
+      "downloadCount": 2,
+      "chapterCount": 19,
+      "totalActivities": 19
+    }
+  },
+  "policy": {
+    "publication_gate": "No P0; every P1 must be fixed or explicitly verified false positive; every mandatory media/file/exercise must be learner-usable; no required activity may depend on unprovided external access, dataset, workflow or environment; navigation gates must correspond to rendered activities.",
+    "remediation_rule": "If an activity cannot be made reliably correctable quickly using only its current declared assets, preserve any explanatory source text as a content block, remove the activity, remove its completion gate and remove orphan exercise definitions. Never invent a file, dataset, API, workflow, answer key, source or external access.",
+    "review_scope": "Inspect current learner-visible course JSON and current report. Produce exact block-level decisions only; do not modify course files."
+  }
+}

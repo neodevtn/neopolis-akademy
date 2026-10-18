@@ -1,0 +1,943 @@
+{
+  "formation": {
+    "index": 85,
+    "formation_id": "ia_appliquee_metiers_tp__formation_16",
+    "title": {
+      "fr": "Piloter Shopify directement par conversation",
+      "en": "Piloter Shopify directement par conversation"
+    },
+    "course_ids": [
+      "ia_appliquee_metiers_tp__16"
+    ]
+  },
+  "current_open_p0_p1_findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "location": "lessons[0].chapters[3] (ia_appliquee_metiers_tp__16-checkpoint-01), blocks[0] (ia_appliquee_metiers_tp__16-checkpoint-preparation)",
+      "description": "Le checkpoint obligatoire est de type knowledge_check et configure correctAnswer « a », required: true et passThreshold: 1 au niveau du chapitre. Le rapport initial documente, avec les composants de rendu/progression cités, que toute sélection appelle la complétion sans vérifier isCorrect et que le seuil ne comptabilise que les blocs de type checkpoint ; une réponse incorrecte peut donc déverrouiller le chapitre et l’accès au mini-projet.",
+      "recommendation": "Faire dépendre la complétion de la réponse correcte, ou employer un bloc dont la réussite est effectivement imposée, puis tester explicitement le cas réponse incorrecte suivie d’une tentative de passage.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "évaluation",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "location": "lessons[0].chapters[4] (ia_appliquee_metiers_tp__16-mini-project), blocks[0] (ia_appliquee_metiers_tp__16-mini-project-proof)",
+      "description": "Le cloud_exercise demande dans instructions une preuve comprenant scénario testé, résultat obtenu, contrôle effectué et étape restant soumise à validation humaine, mais le JSON ne configure ni minimumAnswerLength, ni learnerCriteria/rubricCriteria, ni serverGradedAssessment. Le rapport initial localise le comportement du composant : pour un exercice non évalué, la longueur minimale par défaut est 1 et la soumission peut marquer le TP comme validé et déverrouiller le quiz final avec une saisie non probante.",
+      "recommendation": "Configurer une preuve structurée et une validation bloquante reprenant les quatre éléments déjà demandés ; empêcher au minimum une soumission symbolique, sans retirer l’indice ni la correction.",
+      "status": "open"
+    }
+  ],
+  "legacy_open_count_requiring_normalization": 0,
+  "current_recheck": {
+    "formation_id": "ia_appliquee_metiers_tp__formation_16",
+    "index": 85,
+    "course_ids": [
+      "ia_appliquee_metiers_tp__16"
+    ],
+    "review_scope": {
+      "manifest_entry": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json (index 85)",
+      "course_paths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__16.json"
+      ],
+      "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/085-ia_appliquee_metiers_tp__formation_16.json",
+      "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+      "criteria": [
+        "objectifs et activités",
+        "faisabilité TP/fichiers/environnement",
+        "fausses soumissions ou gates",
+        "médias/téléchargements",
+        "duplications ou corruption",
+        "rendu/bilinguisme"
+      ],
+      "method": "Contre-revue localisée du JSON actuel, comparée au rapport initial et au pré-audit statique ; aucun cours, code ou donnée source n’a été modifié. Les constats non démontrés par le JSON local ou les éléments cités dans le rapport initial ne sont pas ajoutés."
+    },
+    "reviewed_current_state": true,
+    "findings": [
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "ia_appliquee_metiers_tp__16",
+        "location": "lessons[0].chapters[3] (ia_appliquee_metiers_tp__16-checkpoint-01), blocks[0] (ia_appliquee_metiers_tp__16-checkpoint-preparation)",
+        "description": "Le checkpoint obligatoire est de type knowledge_check et configure correctAnswer « a », required: true et passThreshold: 1 au niveau du chapitre. Le rapport initial documente, avec les composants de rendu/progression cités, que toute sélection appelle la complétion sans vérifier isCorrect et que le seuil ne comptabilise que les blocs de type checkpoint ; une réponse incorrecte peut donc déverrouiller le chapitre et l’accès au mini-projet.",
+        "recommendation": "Faire dépendre la complétion de la réponse correcte, ou employer un bloc dont la réussite est effectivement imposée, puis tester explicitement le cas réponse incorrecte suivie d’une tentative de passage.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "évaluation",
+        "course_id": "ia_appliquee_metiers_tp__16",
+        "location": "lessons[0].chapters[4] (ia_appliquee_metiers_tp__16-mini-project), blocks[0] (ia_appliquee_metiers_tp__16-mini-project-proof)",
+        "description": "Le cloud_exercise demande dans instructions une preuve comprenant scénario testé, résultat obtenu, contrôle effectué et étape restant soumise à validation humaine, mais le JSON ne configure ni minimumAnswerLength, ni learnerCriteria/rubricCriteria, ni serverGradedAssessment. Le rapport initial localise le comportement du composant : pour un exercice non évalué, la longueur minimale par défaut est 1 et la soumission peut marquer le TP comme validé et déverrouiller le quiz final avec une saisie non probante.",
+        "recommendation": "Configurer une preuve structurée et une validation bloquante reprenant les quatre éléments déjà demandés ; empêcher au minimum une soumission symbolique, sans retirer l’indice ni la correction.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "feedback",
+        "course_id": "ia_appliquee_metiers_tp__16",
+        "location": "lessons[0].chapters[5] (ia_appliquee_metiers_tp__16-final-quiz), blocks[id=ia_appliquee_metiers_tp__16-quiz-order] (bucket_sort)",
+        "description": "Le JSON actuel configure le champ feedback « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. », sans champ correction. Le rapport initial localise que LessonViewer transmet uniquement block.correction à MatchingExercise et que ce composant rend le texte détaillé uniquement depuis exercise.correction : le feedback configuré n’est donc pas rendu après soumission. L’apprenant ne voit que le score/état de placement et peut réessayer.",
+        "recommendation": "Transmettre et afficher le feedback existant pour bucket_sort, ou le placer explicitement dans le champ consommé par le renderer, en conservant la reprise et les marqueurs de placement.",
+        "status": "open"
+      }
+    ],
+    "summary": {
+      "issue_count": 3,
+      "p0": 0,
+      "p1": 2,
+      "p2": 1
+    }
+  },
+  "initial_audit": {
+    "formation_id": "ia_appliquee_metiers_tp__formation_16",
+    "courses": [
+      {
+        "course_id": "ia_appliquee_metiers_tp__16",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "ia_appliquee_metiers_tp__16-screen-01",
+            "title": "Objectif du TP",
+            "score_100": 94,
+            "verified_dimensions": [
+              "Objectifs : le bloc hero nomme le métier cible, le niveau et la durée, puis énumère quatre compétences observables (opérations conversationnelles, choix de l’outil selon l’intention, contexte, restrictions par rôle).",
+              "Clarté et contextualisation : le callout précise qu’il s’agit d’un environnement de démonstration et que la ressource source ne remplace pas les contrôles métier et de sécurité.",
+              "UX/rendu : LessonViewer rend learning_section et callout avant la navigation ; le type ÉNSEIGNEMENT et le titre de chapitre sont affichés.",
+              "Progression : l’écran précède logiquement la préparation, le checkpoint, le mini-projet et le quiz final."
+            ],
+            "unverified_dimensions": [
+              "Médias : aucun bloc vidéo ou illustration n’est déclaré dans ce chapitre ; la pertinence et l’accessibilité de médias ne sont donc pas applicables.",
+              "La compréhension en situation par de vrais apprenants n’a pas été testée dans une session navigateur."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 1,
+            "chapter_id": "ia_appliquee_metiers_tp__16-screen-02",
+            "title": "Préparer l’environnement",
+            "score_100": 91,
+            "verified_dimensions": [
+              "Prérequis et sécurité : le contenu impose sandbox/comptes de démonstration, données fictives, absence de secrets et validation humaine des actions à impact.",
+              "Action attendue : resource_review indique d’ouvrir la ressource, de repérer résultat métier, entrées, sorties et contrôles, puis de confirmer la consultation.",
+              "Cohérence de verrouillage : le bouton « J’ai consulté cette ressource » est rendu et bloque la progression tant qu’il n’a pas été activé ; le libellé de passage est affiché dans LessonViewer.",
+              "Transition : la préparation fournit les garde-fous repris dans le checkpoint, le mini-projet et le quiz."
+            ],
+            "unverified_dimensions": [
+              "Le contenu, la disponibilité et l’accessibilité réelle de la ressource source externe ne sont pas vérifiés ici ; son URL configurée et son bouton de rendu sont présents, sans que la ressource soit considérée absente.",
+              "Médias : aucun bloc vidéo ou illustration n’est déclaré.",
+              "La confirmation de consultation atteste une action déclarative ; elle ne permet pas de vérifier ce qui a effectivement été retenu de la ressource."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 2,
+            "chapter_id": "ia_appliquee_metiers_tp__16-screen-03",
+            "title": "Construire progressivement",
+            "score_100": 90,
+            "verified_dimensions": [
+              "Progression : la frise présente un enchaînement explicite « Cadrer → Préparer → Tester → Contrôler » avant les évaluations et le TP.",
+              "Préparation à l’action : chaque étape indique une action concrète, notamment les scénarios fictifs, la relecture des sorties, la consignation des écarts et la revue humaine.",
+              "Complétude : le panneau « À faire / À éviter » traduit la démarche en vérifications de sécurité immédiatement exploitables.",
+              "UX/rendu : SequenceVisualBlock et ComparisonPanelBlock rendent les titres, étapes, descriptions et les deux colonnes dans l’ordre déclaré."
+            ],
+            "unverified_dimensions": [
+              "Médias : aucun bloc vidéo ou illustration n’est déclaré.",
+              "La validité fonctionnelle d’un workflow Shopify/n8n réel n’entre pas dans le périmètre de cet audit de contenu."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 3,
+            "chapter_id": "ia_appliquee_metiers_tp__16-checkpoint-01",
+            "title": "Checkpoint : environnement et sécurité",
+            "score_100": 72,
+            "verified_dimensions": [
+              "Énoncé et action : la question à choix multiple est explicite, les quatre options sont exploitables et la bonne réponse ainsi qu’une explication sont configurées.",
+              "Cohérence : l’évaluation porte sur les règles de sandbox, données fictives et validation humaine expliquées dans les deux écrans précédents.",
+              "Feedback : KnowledgeCheckBlock affiche « Bonne réponse » ou « Réponse incorrecte », l’explication, et un bouton « Réessayer ».",
+              "UX/rendu : KnowledgeCheckBlock est rendu par LessonViewer et le checkpoint est signalé comme tel dans l’en-tête de chapitre."
+            ],
+            "unverified_dimensions": [
+              "Médias : aucun bloc vidéo ou illustration n’est déclaré.",
+              "Le ressenti d’utilisateurs réels face au libellé et aux distracteurs n’a pas fait l’objet d’un test utilisateur."
+            ],
+            "issues": [
+              {
+                "issue_id": "pedagogical:ia_appliquee_metiers_tp__16:checkpoint-01:incorrect-answer-unlocks",
+                "course_id": "ia_appliquee_metiers_tp__16",
+                "chapter_id": "ia_appliquee_metiers_tp__16-checkpoint-01",
+                "content_id": "ia_appliquee_metiers_tp__16-checkpoint-preparation",
+                "content_type": "knowledge_check",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Le checkpoint obligatoire peut être quitté après une réponse incorrecte. Le composant de rendu enregistre toute sélection du knowledge_check comme interaction terminée, quel que soit isCorrect ; le verrouillage de navigation ne teste ensuite que cette complétion. Le passThreshold: 1 du chapitre ne s’applique qu’aux blocs de type checkpoint, alors que le bloc présent est de type knowledge_check. L’apprenant peut donc accéder au mini-projet sans avoir validé la règle de sécurité évaluée.",
+                "current_content": "Question configurée avec correctAnswer: « a », required: true et explication sur la sandbox, les données fictives et le contrôle humain ; chapitre configuré avec requiredBeforeAdvance: true et passThreshold: 1.",
+                "proposed_content": "Conserver l’énoncé et son explication, mais faire dépendre la complétion exigée de la réponse correcte : une réponse erronée doit afficher le feedback et permettre « Réessayer » sans déverrouiller le chapitre. Le seuil de réussite doit être relié au type de bloc effectivement employé.",
+                "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__16.json → lessons[0].chapters[3] (knowledge_check, correctAnswer « a », passThreshold: 1) ; client/src/components/blocks/GenericLearningBlocks.tsx → KnowledgeCheckBlock.select appelle onComplete pour toute option ; client/src/pages/training/LessonViewer.tsx → callback knowledge_check ajoute systématiquement l’identifiant à completedNovasavoInteractions ; isGatedByNovasavoInteraction ne contrôle pas isCorrect ; client/src/pages/training/checkpointGate.ts → seuls blocks[type=checkpoint] sont comptabilisés.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_code",
+                "recommended_action": "Corriger la règle de complétion du knowledge_check (ou employer un bloc d’évaluation dont la réussite est déjà imposée) et ajouter un test couvrant explicitement le cas « réponse incorrecte puis tentative de passage » pour ce checkpoint."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 4,
+            "chapter_id": "ia_appliquee_metiers_tp__16-mini-project",
+            "title": "Mini-projet et preuve de réalisation",
+            "score_100": 72,
+            "verified_dimensions": [
+              "Objectif et action : l’objectif visible demande de construire un assistant Shopify capable de rechercher un produit, consulter une commande et préparer une modification soumise à validation ; l’instruction précise les quatre éléments attendus dans la preuve.",
+              "Prérequis : l’environnement, les données fictives, la validation humaine et la ressource de démonstration sont explicitement rappelés avant et dans le TP.",
+              "Aides et feedback : l’indice, le support fictif configuré, la correction déverrouillée après soumission et le message de succès sont tous rendus par CloudExerciseBlock.",
+              "UX/rendu : les zones « Préparation & Instructions », « Prérequis et préparation de l’environnement » et « Ressources pour ce TP » sont clairement libellées, même si elles sont repliées par défaut."
+            ],
+            "unverified_dimensions": [
+              "Le contenu et la disponibilité effective du support fictif référencé par /manus-storage/... ne sont pas vérifiables depuis l’arborescence publique locale ; le lien est configuré et rendu comme ressource, il n’est donc pas traité comme une ressource absente.",
+              "L’adaptation concrète du TP à chaque sandbox personnelle, compte de démonstration et serveur MCP n’a pas été exécutée.",
+              "Médias : aucun bloc vidéo ou illustration n’est déclaré."
+            ],
+            "issues": [
+              {
+                "issue_id": "pedagogical:ia_appliquee_metiers_tp__16:mini-project:one-character-completion",
+                "course_id": "ia_appliquee_metiers_tp__16",
+                "chapter_id": "ia_appliquee_metiers_tp__16-mini-project",
+                "content_id": "ia_appliquee_metiers_tp__16-mini-project-proof",
+                "content_type": "cloud_exercise",
+                "severity": "P1",
+                "category": "évaluation",
+                "description": "La preuve demandée est pédagogique­ment précise, mais aucune contrainte de format, aucun critère d’évaluation ni longueur minimale spécifique ne sont configurés. Pour ce cloud_exercise non évalué côté serveur, le composant applique la longueur minimale par défaut de 1 caractère, marque alors le TP « Validé ! » et déverrouille le quiz final. Une saisie non probante peut donc satisfaire le verrouillage sans démontrer le scénario, le résultat, le contrôle et la validation humaine explicitement demandés.",
+                "current_content": "L’instruction demande de décrire « le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine ». Le bloc ne contient ni minimumAnswerLength, ni learnerCriteria/rubricCriteria, ni serverGradedAssessment.",
+                "proposed_content": "Rendre obligatoire une preuve structurée reprenant uniquement les éléments déjà demandés : 1. scénario fictif testé ; 2. résultat observé ; 3. contrôle effectué ; 4. étape restant soumise à validation humaine. Exiger la présence de ces quatre rubriques avant validation et, si le verrouillage doit attester la qualité, les évaluer par une grille explicite plutôt que par la seule longueur du texte.",
+                "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__16.json → lessons[0].chapters[4].blocks[0] (instructions et absence des champs de validation) ; client/src/components/CloudExerciseBlock.tsx → submit marque submitted et appelle onComplete lorsque le bloc n’est pas évalué ; client/src/components/blocks/cloudExerciseValidation.ts → valeur par défaut minimumAnswerLength = 1 ; client/src/components/blocks/assessmentSubmissionGuidance.ts → une activité non suivie sans minimum explicite conserve ce minimum de 1.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_code",
+                "recommended_action": "Configurer un format de preuve et une validation bloquante correspondant aux quatre critères déjà formulés ; au minimum, empêcher la soumission d’un contenu symbolique. Conserver l’indice et la correction comme aide à la reprise après une tentative insuffisante."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 5,
+            "chapter_id": "ia_appliquee_metiers_tp__16-final-quiz",
+            "title": "Quiz final : valider la démarche",
+            "score_100": 86,
+            "verified_dimensions": [
+              "Clarté des activités : les quatre QCM et l’activité de tri indiquent l’action attendue, des options distinctes et, pour le tri, une instruction d’interface explicite complétée par le composant (« cliquez sur une carte… puis sur une catégorie »).",
+              "Cohérence : les questions et les cartes réinvestissent les données fictives, la revue humaine, les opérations conversationnelles et les quatre étapes travaillées auparavant.",
+              "Feedback et reprise : les QCM révèlent la bonne réponse, l’explication et un bouton de nouvelle tentative ; le tri montre les placements corrects/incorrects, le score et une reprise possible.",
+              "Verrouillage : passThreshold: 4 impose les quatre réponses QCM correctes et le tri doit aussi être entièrement correct avant de pouvoir terminer la leçon ; ces contrôles sont vérifiés dans LessonViewer, evaluationRules et MatchingExercise.",
+              "Médias : aucun bloc vidéo ou illustration n’est déclaré ; aucune dépendance à un média non contextualisé n’a été constatée."
+            ],
+            "unverified_dimensions": [
+              "L’efficacité psychométrique des distracteurs et le temps réel de réalisation n’ont pas été mesurés avec des apprenants.",
+              "La disponibilité en production des interfaces utilisateur n’a pas été testée dans un navigateur connecté."
+            ],
+            "issues": [
+              {
+                "issue_id": "pedagogical:ia_appliquee_metiers_tp__16:final-quiz:bucket-feedback-not-rendered",
+                "course_id": "ia_appliquee_metiers_tp__16",
+                "chapter_id": "ia_appliquee_metiers_tp__16-final-quiz",
+                "content_id": "ia_appliquee_metiers_tp__16-quiz-order",
+                "content_type": "bucket_sort",
+                "severity": "P2",
+                "category": "feedback",
+                "description": "Le feedback pédagogique configuré pour l’activité de tri n’est pas transmis au composant qui la rend. Après une réussite, l’apprenant voit « 4/4 · Parfait ! », mais pas le rappel prévu sur la démarche allant du cadrage sécurisé à la validation humaine. Après erreur, il reçoit seulement le nombre de cartes bien placées et peut réessayer ; aucune explication configurée n’est affichée.",
+                "current_content": "Champ feedback configuré : « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. » ; aucun champ correction n’est configuré.",
+                "proposed_content": "Afficher après une réussite le feedback déjà présent : « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. » Pour une tentative incorrecte, afficher au moins ce rappel avant la reprise ; une justification par carte ne doit être ajoutée que si elle est rédigée et validée séparément.",
+                "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__16.json → lessons[0].chapters[5].blocks[id=ia_appliquee_metiers_tp__16-quiz-order] (feedback renseigné, correction absent) ; client/src/pages/training/LessonViewer.tsx → branche bucket_sort transmet uniquement block.correction à MatchingExercise ; client/src/components/MatchingExercise.tsx → le texte détaillé est rendu uniquement depuis exercise.correction, tandis que feedback n’existe pas dans son interface.",
+                "confidence": "high",
+                "verification_status": "verified_data_and_code",
+                "recommended_action": "Faire passer feedback au renderer de bucket_sort et l’afficher après soumission, ou déplacer explicitement ce texte dans le champ correction actuellement consommé. Préserver le bouton de réessai et les marqueurs de placement existants."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "formation_summary": {
+      "title": "Piloter Shopify directement par conversation",
+      "score_100": 84,
+      "score_method": "Scores de chapitre établis sur les dimensions vérifiables dans les JSON et les composants de rendu/progression ; les médias inexistants sont non applicables et les ressources gérées ou externes non inspectées ne sont pas assimilées à des absences.",
+      "coverage": {
+        "courses_reviewed": 1,
+        "lessons_reviewed": 1,
+        "chapters_reviewed": 6,
+        "activities_reviewed": 8,
+        "activities_by_type": {
+          "resource_review": 1,
+          "knowledge_check": 1,
+          "cloud_exercise": 1,
+          "single_choice_exercise": 4,
+          "bucket_sort": 1
+        },
+        "content_and_code_review": "Tous les chapitres et activités du seul cours déclaré au manifest ont été lus. Le rendu LessonViewer, les composants des activités concernées, les règles de checkpoint et de progression séquentielle ont été examinés."
+      },
+      "confirmed_issues": 3,
+      "priority_distribution": {
+        "P0": 0,
+        "P1": 2,
+        "P2": 1,
+        "P3": 0
+      },
+      "confirmed_strengths": [
+        "Le parcours annonce clairement les compétences, le public, le niveau et la durée, puis ordonne préparation sécurisée, démarche, checkpoint, mise en pratique et contrôle final.",
+        "Les consignes de confidentialité, de données fictives et de validation humaine sont cohérentes et reprises dans les activités.",
+        "Les énoncés des huit activités sont présents, concrets et adaptés aux actions des interfaces rendues ; le pré-audit sur l’absence d’explication dans les chapitres d’activité n’est pas confirmé.",
+        "Les QCM, le tri et le TP disposent d’aides ou de correction ; le quiz final applique un verrouillage cohérent, à l’exception du feedback de tri non rendu."
+      ],
+      "priority_summary": "Priorité 1 : rendre le checkpoint réellement conditionné à une réponse correcte et empêcher qu’une preuve symbolique valide le mini-projet. Priorité 2 : rendre le feedback déjà rédigé pour le tri final."
+    },
+    "limits": [
+      "Audit qualitatif réalisé sans modification des contenus, de la base de données ni du code.",
+      "La revue couvre les données locales et le comportement déductible des composants/règles de progression. Elle ne comprend pas de test navigateur connecté, de test utilisateur ni de soumission réelle d’activité.",
+      "La ressource source externe n8n n’a pas été consultée ni citée. Son URL est bien configurée et rendue dans resource_review ; sa disponibilité, son contenu et son accessibilité réels restent non vérifiés et ne sont pas considérés comme absents.",
+      "Le support fictif du mini-projet est référencé dans un stockage géré via /manus-storage/ ; le fichier n’est pas présent dans l’arborescence publique locale inspectée. Son lien est déclaré et rendu, mais sa disponibilité effective n’a pas été vérifiée ; aucune absence de ressource n’est conclue.",
+      "Aucune vidéo ni illustration n’est déclarée dans ce cours ; les contrôles de pertinence, transcription, légendes et accessibilité de tels médias sont donc non applicables."
+    ]
+  },
+  "current_courses": {
+    "ia_appliquee_metiers_tp__16": {
+      "courseId": "ia_appliquee_metiers_tp__16",
+      "id": "ia_appliquee_metiers_tp__16",
+      "title": {
+        "fr": "Piloter Shopify directement par conversation",
+        "en": "Piloter Shopify directement par conversation"
+      },
+      "description": {
+        "fr": "TP guidé pour Shopify store manager, e-commerce operations, assistant commercial. Outils : n8n, OpenAI, Shopify, MCP.",
+        "en": "TP guidé pour Shopify store manager, e-commerce operations, assistant commercial. Outils : n8n, OpenAI, Shopify, MCP."
+      },
+      "sourceReference": {
+        "sourceType": "n8n workflow",
+        "sourceUrl": "https://n8n.io/workflows/9014-manage-shopify-store-via-conversational-openai-assistant-with-smartcommerce/",
+        "language": "EN"
+      },
+      "metadata": {
+        "canonicalTutorialId": "16-piloter-shopify-directement-par-conversation",
+        "canonicalOrder": 16,
+        "targetJob": "Shopify store manager, e-commerce operations, assistant commercial",
+        "level": "Avancé",
+        "duration": "3 h",
+        "tools": [
+          "n8n",
+          "Shopify sandbox",
+          "OpenAI",
+          "serveur MCP compatible",
+          "catalogue produit de test"
+        ],
+        "acquiredSkills": [
+          "Exposer les opérations Shopify comme outils conversationnels",
+          "Choisir le bon outil selon l'intention utilisateur",
+          "Conserver le contexte de conversation",
+          "Limiter les actions autorisées par rôle"
+        ],
+        "skillTags": [
+          "ia-appliquee-metiers",
+          "support-client-e-commerce",
+          "n8n",
+          "openai",
+          "shopify",
+          "mcp",
+          "avancé"
+        ]
+      },
+      "lessons": [
+        {
+          "id": "ia_appliquee_metiers_tp__16-lesson-01",
+          "title": {
+            "fr": "Piloter Shopify directement par conversation",
+            "en": "Piloter Shopify directement par conversation"
+          },
+          "competencyTags": [
+            "ai_business",
+            "ai_orchestration",
+            "prompt_engineering",
+            "ai_governance"
+          ],
+          "recommendedVideosManaged": false,
+          "recommendedVideos": [],
+          "chapters": [
+            {
+              "id": "ia_appliquee_metiers_tp__16-screen-01",
+              "type": "teaching",
+              "title": {
+                "fr": "Objectif du TP",
+                "en": "Objectif du TP"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "learning_section",
+                  "sectionKind": "hero",
+                  "eyebrow": {
+                    "fr": "Support client & E-commerce · TP 16/40",
+                    "en": "Support client & E-commerce · TP 16/40"
+                  },
+                  "title": {
+                    "fr": "Piloter Shopify directement par conversation",
+                    "en": "Piloter Shopify directement par conversation"
+                  },
+                  "body": {
+                    "fr": "Métier cible : Shopify store manager, e-commerce operations, assistant commercial. Niveau : Avancé. Durée indicative : 3 h.",
+                    "en": "Métier cible : Shopify store manager, e-commerce operations, assistant commercial. Niveau : Avancé. Durée indicative : 3 h."
+                  },
+                  "items": [
+                    {
+                      "fr": "Exposer les opérations Shopify comme outils conversationnels",
+                      "en": "Exposer les opérations Shopify comme outils conversationnels"
+                    },
+                    {
+                      "fr": "Choisir le bon outil selon l'intention utilisateur",
+                      "en": "Choisir le bon outil selon l'intention utilisateur"
+                    },
+                    {
+                      "fr": "Conserver le contexte de conversation",
+                      "en": "Conserver le contexte de conversation"
+                    },
+                    {
+                      "fr": "Limiter les actions autorisées par rôle",
+                      "en": "Limiter les actions autorisées par rôle"
+                    }
+                  ]
+                },
+                {
+                  "type": "callout",
+                  "variant": "info",
+                  "title": {
+                    "fr": "Cadre pratique",
+                    "en": "Cadre pratique"
+                  },
+                  "body": {
+                    "fr": "Vous reproduisez un cas d’usage dans votre propre environnement de démonstration. La ressource source reste consultable ; elle ne remplace pas les contrôles métier et de sécurité.",
+                    "en": "You will reproduce a use case in your own demonstration environment. The source resource remains available for consultation; it does not replace business and security controls."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__16-screen-02",
+              "type": "teaching",
+              "title": {
+                "fr": "Préparer l’environnement",
+                "en": "Préparer l’environnement"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "content",
+                  "body": {
+                    "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Shopify sandbox, OpenAI, serveur MCP compatible, catalogue produit de test.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
+                    "en": "## Environment preparation\n\nWork in a **personal sandbox**, a local draft, or demonstration accounts. Prepare only fictional data and test access.\n\n- Planned tools: n8n, Shopify sandbox, OpenAI, compatible MCP server, test product catalog.\n- Do not enter any key, password, or real personal data in the practical exercise or its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with human impact, retain **explicit human validation** before the final action.\n\nThis learning path does not require a provider-hosted lab: adapt the steps to your local or demonstration environment."
+                  }
+                },
+                {
+                  "type": "resource_review",
+                  "id": "ia_appliquee_metiers_tp__16-source-review",
+                  "title": {
+                    "fr": "Ressource source",
+                    "en": "Ressource source"
+                  },
+                  "instructions": {
+                    "fr": "Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation.\n\n[Ouvrir la ressource source](https://n8n.io/workflows/9014-manage-shopify-store-via-conversational-openai-assistant-with-smartcommerce/)",
+                    "en": "Open the source resource in a new tab. Identify the business outcome, inputs, outputs, and control steps. Then return here to confirm that you reviewed it.\n\n[Open the source resource](https://n8n.io/workflows/9014-manage-shopify-store-via-conversational-openai-assistant-with-smartcommerce/)"
+                  },
+                  "resourceUrl": "https://n8n.io/workflows/9014-manage-shopify-store-via-conversational-openai-assistant-with-smartcommerce/",
+                  "resourceLabel": {
+                    "fr": "Ouvrir la ressource source",
+                    "en": "Ouvrir la ressource source"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__16-screen-03",
+              "type": "teaching",
+              "title": {
+                "fr": "Construire progressivement",
+                "en": "Construire progressivement"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "sequence_visual",
+                  "title": {
+                    "fr": "Démarche de réalisation",
+                    "en": "Démarche de réalisation"
+                  },
+                  "layout": "timeline",
+                  "items": [
+                    {
+                      "title": {
+                        "fr": "Cadrer",
+                        "en": "Cadrer"
+                      },
+                      "description": {
+                        "fr": "Définissez le cas d’usage pour Shopify store manager, e-commerce operations, assistant commercial et les limites d’automatisation.",
+                        "en": "Define the use case for Shopify store manager, e-commerce operations, sales assistant, and automation limits."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Préparer",
+                        "en": "Préparer"
+                      },
+                      "description": {
+                        "fr": "Créez des données fictives adaptées aux outils : n8n, Shopify sandbox, OpenAI.",
+                        "en": "Create fictitious data suited to the tools: n8n, Shopify sandbox, OpenAI."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Tester",
+                        "en": "Tester"
+                      },
+                      "description": {
+                        "fr": "Exécutez des scénarios de test, relisez les sorties et consignez les écarts.",
+                        "en": "Run test scenarios, review the outputs, and record any discrepancies."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Contrôler",
+                        "en": "Contrôler"
+                      },
+                      "description": {
+                        "fr": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne.",
+                        "en": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "comparison_panel",
+                  "title": {
+                    "fr": "Vérifications avant utilisation",
+                    "en": "Vérifications avant utilisation"
+                  },
+                  "columns": [
+                    {
+                      "title": {
+                        "fr": "À faire",
+                        "en": "À faire"
+                      },
+                      "items": [
+                        {
+                          "fr": "Utiliser des données fictives.",
+                          "en": "Utiliser des données fictives."
+                        },
+                        {
+                          "fr": "Définir un contrôle humain.",
+                          "en": "Définir un contrôle humain."
+                        },
+                        {
+                          "fr": "Tester les cas limites.",
+                          "en": "Tester les cas limites."
+                        }
+                      ]
+                    },
+                    {
+                      "title": {
+                        "fr": "À éviter",
+                        "en": "À éviter"
+                      },
+                      "items": [
+                        {
+                          "fr": "Exposer un secret ou une donnée personnelle.",
+                          "en": "Exposer un secret ou une donnée personnelle."
+                        },
+                        {
+                          "fr": "Déclencher une action finale sans validation.",
+                          "en": "Déclencher une action finale sans validation."
+                        },
+                        {
+                          "fr": "Déduire une décision sans vérification métier.",
+                          "en": "Déduire une décision sans vérification métier."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__16-checkpoint-01",
+              "type": "checkpoint",
+              "title": {
+                "fr": "Checkpoint : environnement et sécurité",
+                "en": "Checkpoint : environnement et sécurité"
+              },
+              "requiredBeforeAdvance": true,
+              "passThreshold": 1,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__16-checkpoint-preparation",
+                  "type": "knowledge_check",
+                  "mode": "multiple_choice",
+                  "prompt": {
+                    "fr": "Avant de relier n8n au workflow de « Piloter Shopify directement par conversation », quelle pratique est attendue ?",
+                    "en": "Before connecting n8n to the “Manage Shopify directly through conversation” workflow, which practice is expected?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Utiliser une sandbox, des données fictives et prévoir une validation humaine pour toute action sensible.",
+                        "en": "Use a sandbox and fictitious data, and plan for human validation for any sensitive action."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Copier les données réelles de production pour obtenir un résultat plus représentatif.",
+                        "en": "Copy real production data to obtain a more representative result."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Mettre une clé API dans le workflow partagé pour que les autres puissent la réutiliser.",
+                        "en": "Put an API key in the shared workflow so others can reuse it."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Activer directement les envois et modifications définitives avant les essais.",
+                        "en": "Activer directement les envois et modifications définitives avant les essais."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "Le TP doit être testé dans un environnement maîtrisé, avec données fictives et contrôle humain des actions à impact.",
+                    "en": "The practical exercise must be tested in a controlled environment, with fictitious data and human oversight of actions with an impact."
+                  },
+                  "competencyPoints": 1.5,
+                  "required": true
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__16-mini-project",
+              "type": "exercise",
+              "title": {
+                "fr": "Mini-projet et preuve de réalisation",
+                "en": "Mini-projet et preuve de réalisation"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__16-mini-project-proof",
+                  "type": "cloud_exercise",
+                  "title": {
+                    "fr": "Mini-projet pratique",
+                    "en": "Mini-projet pratique"
+                  },
+                  "assignment": "Construire un assistant Shopify capable de rechercher un produit, consulter une commande et préparer une modification en attente de validation.",
+                  "instructions": "Réalisez le mini-projet dans un environnement personnel de démonstration. Utilisez le support fictif fourni, puis décrivez dans la zone de preuve : le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine.\n\n- Exposer les opérations Shopify comme outils conversationnels\n- Choisir le bon outil selon l'intention utilisateur\n- Conserver le contexte de conversation\n- Limiter les actions autorisées par rôle",
+                  "environmentGuide": {
+                    "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Shopify sandbox, OpenAI, serveur MCP compatible, catalogue produit de test.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
+                    "en": "## Environment preparation\n\nWork in a **personal sandbox**, a local draft, or demo accounts. Prepare only fictitious data and test access.\n\n- Planned tools: n8n, Shopify sandbox, OpenAI, compatible MCP server, test product catalog.\n- Do not enter any key, password, or real personal data in the practical exercise or in its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with a human impact, maintain **explicit human validation** before the final action.\n\nThis course does not require any provider-hosted lab: adapt the steps to your local or demo environment."
+                  },
+                  "resources": [
+                    {
+                      "title": {
+                        "fr": "Support fictif de TP 16",
+                        "en": "Support fictif de TP 16"
+                      },
+                      "description": {
+                        "fr": "Données de démonstration sans secret ni information réelle.",
+                        "en": "Données de démonstration sans secret ni information réelle."
+                      },
+                      "url": "/manus-storage/16-16-piloter-shopify-directement-par-conversation-support-fictif_6a60e665.md"
+                    }
+                  ],
+                  "hint": "Commencez par un seul cas fictif et conservez l’action finale en brouillon ou derrière une validation humaine.",
+                  "solution": "## Correction et auto-vérification\n\nUne preuve complète décrit le scénario fictif, le workflow ou la procédure réalisée, le résultat observé et le contrôle humain prévu.\n\n### Erreurs fréquentes\n\n- Introduire des données réelles, identifiants ou clés dans l’exercice.\n- Déclencher un envoi, une publication ou une décision sans étape de validation.\n- Confondre une sortie IA avec une validation métier.\n\n### Vérification\n\nRelisez votre preuve : elle doit être cohérente avec l’objectif « Construire un assistant Shopify capable de rechercher un produit, consulter une commande et préparer une modification en attente de validation. » et montrer au moins un test avec données fictives.\n\n### Extension\n\nAjoutez un journal d’exécution, un cas limite supplémentaire et une règle d’escalade humaine.",
+                  "successMessage": "Preuve enregistrée. Vous pouvez maintenant consulter la correction et terminer le quiz final.",
+                  "steps": [
+                    {
+                      "fr": "Relisez la consigne et identifiez le résultat attendu pour « Mini-projet et preuve de réalisation ».",
+                      "en": "Review the instructions and identify the expected outcome for “Mini-projet et preuve de réalisation”."
+                    },
+                    {
+                      "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
+                      "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
+                    },
+                    {
+                      "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
+                      "en": "Check your work against the stated criteria before submitting it."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__16-final-quiz",
+              "type": "quiz",
+              "title": {
+                "fr": "Quiz final : valider la démarche",
+                "en": "Quiz final : valider la démarche"
+              },
+              "requiredBeforeAdvance": true,
+              "passThreshold": 4,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__16-quiz-01",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Quel élément doit être conservé dans le mini-projet « Construire un assistant Shopify capable de rechercher un produit, consulter une commande et préparer une modification en attente de validation. » ?",
+                    "en": "What must be retained in the mini-project “Build a Shopify assistant capable of searching for a product, viewing an order, and preparing a modification pending validation.”?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Une preuve de test avec des données fictives et un résultat vérifiable.",
+                        "en": "Test evidence using fictitious data and a verifiable result."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Un mot de passe de production directement dans le workflow.",
+                        "en": "A production password directly in the workflow."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Une action finale déclenchée sans relecture.",
+                        "en": "Une action finale déclenchée sans relecture."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Un export de données personnelles non anonymisées.",
+                        "en": "An export of non-anonymized personal data."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__16-quiz-02",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Vrai ou faux : un brouillon ou une validation humaine doit précéder toute action sensible générée par le workflow.",
+                    "en": "True or false: a draft or human validation must precede any sensitive action generated by the workflow."
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Vrai : les actions sensibles exigent un contrôle humain explicite.",
+                        "en": "True: sensitive actions require explicit human oversight."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Faux : l’automatisation dispense toujours de tout contrôle.",
+                        "en": "Faux : l’automatisation dispense toujours de tout contrôle."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__16-quiz-03",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Quel contrôle aide à vérifier l’objectif « Exposer les opérations Shopify comme outils conversationnels » ?",
+                    "en": "Which check helps verify the objective “Expose Shopify operations as conversational tools”?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Comparer le résultat du test au critère métier défini puis documenter l’écart.",
+                        "en": "Compare the test result with the defined business criterion, then document the discrepancy."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Considérer toute sortie du modèle comme correcte sans la relire.",
+                        "en": "Consider every model output correct without reviewing it."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Supprimer les journaux et les traces de test avant la vérification.",
+                        "en": "Delete logs and test traces before verification."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Remplacer le jeu de données fictif par une exportation client.",
+                        "en": "Replace the fictional dataset with a customer export."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__16-quiz-04",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Question de vigilance : parmi ces outils prévus — n8n, Shopify sandbox, OpenAI, serveur MCP compatible, catalogue produit de test — quelle donnée ne doit jamais être saisie dans le support ou le commentaire de preuve ?",
+                    "en": "Vigilance question: among these planned tools — n8n, Shopify sandbox, OpenAI, compatible MCP server, test product catalog — which data must never be entered in the support or proof comment?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Une clé API, un mot de passe ou un identifiant réel.",
+                        "en": "An API key, a password, or a real identifier."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Le nom fictif du dossier de démonstration.",
+                        "en": "The fictional name of the demonstration file."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Le statut de test « à vérifier ».",
+                        "en": "Le statut de test « à vérifier »."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Une note indiquant qu’une validation humaine est requise.",
+                        "en": "Une note indiquant qu’une validation humaine est requise."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The answer key reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__16-quiz-order",
+                  "type": "bucket_sort",
+                  "title": {
+                    "fr": "Ordonnez la démarche de réalisation",
+                    "en": "Put the implementation approach in order"
+                  },
+                  "instructions": {
+                    "fr": "Placez chaque action dans son étape. La correction est disponible après une tentative complète.",
+                    "en": "Place each action in its corresponding step. The answer key is available after a complete attempt."
+                  },
+                  "buckets": [
+                    {
+                      "id": "1",
+                      "label": {
+                        "fr": "1. Cadrer",
+                        "en": "1. Cadrer"
+                      }
+                    },
+                    {
+                      "id": "2",
+                      "label": {
+                        "fr": "2. Construire",
+                        "en": "2. Construire"
+                      }
+                    },
+                    {
+                      "id": "3",
+                      "label": {
+                        "fr": "3. Tester",
+                        "en": "3. Tester"
+                      }
+                    },
+                    {
+                      "id": "4",
+                      "label": {
+                        "fr": "4. Valider",
+                        "en": "4. Valider"
+                      }
+                    }
+                  ],
+                  "cards": [
+                    {
+                      "id": "cadrer",
+                      "text": {
+                        "fr": "Définir le résultat métier, les données fictives et les limites d’action.",
+                        "en": "Define the business outcome, the fictional data, and the action limits."
+                      },
+                      "correctBucket": "1"
+                    },
+                    {
+                      "id": "construire",
+                      "text": {
+                        "fr": "Configurer le workflow dans un environnement de démonstration.",
+                        "en": "Configure the workflow in a demonstration environment."
+                      },
+                      "correctBucket": "2"
+                    },
+                    {
+                      "id": "tester",
+                      "text": {
+                        "fr": "Exécuter des cas fictifs, journaliser les sorties et relever les écarts.",
+                        "en": "Run fictional cases, log the outputs, and identify discrepancies."
+                      },
+                      "correctBucket": "3"
+                    },
+                    {
+                      "id": "valider",
+                      "text": {
+                        "fr": "Faire relire les actions sensibles avant toute utilisation réelle.",
+                        "en": "Faire relire les actions sensibles avant toute utilisation réelle."
+                      },
+                      "correctBucket": "4"
+                    }
+                  ],
+                  "feedback": {
+                    "fr": "La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés.",
+                    "en": "The correct approach moves from safe scoping to human validation, after documented testing."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "policy": {
+    "publication_gate": "No P0; every P1 must be fixed or explicitly verified false positive; every mandatory media/file/exercise must be learner-usable; no required activity may depend on unprovided external access, dataset, workflow or environment; navigation gates must correspond to rendered activities.",
+    "remediation_rule": "If an activity cannot be made reliably correctable quickly using only its current declared assets, preserve any explanatory source text as a content block, remove the activity, remove its completion gate and remove orphan exercise definitions. Never invent a file, dataset, API, workflow, answer key, source or external access.",
+    "review_scope": "Inspect current learner-visible course JSON and current report. Produce exact block-level decisions only; do not modify course files."
+  }
+}

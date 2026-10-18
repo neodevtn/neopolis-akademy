@@ -1,0 +1,51 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_01",
+  "index": 70,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "chapter_id": "ia_appliquee_metiers_tp__01-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__01-checkpoint-preparation",
+      "reason": "Retirer l’activité obligatoire dont le verrou ne dépend pas de la justesse : une réponse incorrecte peut être enregistrée comme complétée. Conserver son énoncé, sa réponse correcte et son explication comme contenu non bloquant sur l’écran.",
+      "evidence": "Le constat P1 current_recheck indique que le knowledge_check avec correctAnswer=\"a\" et passThreshold=1 est complété pour toute sélection via KnowledgeCheckBlock/LessonViewer ; l’état actuel confirme le bloc réel ia_appliquee_metiers_tp__01-checkpoint-preparation dans ia_appliquee_metiers_tp__01-checkpoint-01."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "chapter_id": "ia_appliquee_metiers_tp__01-checkpoint-01",
+      "reason": "Retirer le verrou de chapitre associé à l’activité supprimée afin qu’aucune validation non fiable ne bloque la progression.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__01-checkpoint-01 est marqué requiredBeforeAdvance=true dans l’état actuel ; le constat P1 de verrouillage documente que la complétion utilisée par le gate ne vérifie pas la réponse correcte."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "chapter_id": "ia_appliquee_metiers_tp__01-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__01-mini-project-proof",
+      "reason": "Retirer la preuve obligatoire dont une saisie quelconque non vide suffit à lever le verrou, sans contrôle fiable des quatre éléments demandés. Conserver l’objectif, les instructions, les étapes, l’indice et la correction comme contenu non bloquant sur l’écran.",
+      "evidence": "Le bloc réel ia_appliquee_metiers_tp__01-mini-project-proof est de type cloud_exercise et le constat P1 current_recheck confirme l’absence de minimumAnswerLength, learnerCriteria, rubricCriteria, serverGradedAssessment et requirePostRevealReflection ; CloudExerciseBlock peut donc terminer sur une valeur non vide."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "chapter_id": "ia_appliquee_metiers_tp__01-mini-project",
+      "reason": "Retirer le verrou de chapitre associé à la preuve supprimée afin d’éviter un blocage fondé sur une soumission non vérifiable.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__01-mini-project est marqué requiredBeforeAdvance=true et son unique bloc obligatoire est ia_appliquee_metiers_tp__01-mini-project-proof, dont la complétude des éléments demandés n’est pas contrôlée."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Feedback du tri final non rendu comme correction détaillée",
+      "evidence": "Le bloc réel ia_appliquee_metiers_tp__01-quiz-order contient feedback mais pas correction ; le constat current_recheck indique que LessonViewer transmet correction à MatchingExercise sans transmettre feedback, si bien que le texte explicatif n’est pas affiché après erreur.",
+      "course_id": "ia_appliquee_metiers_tp__01",
+      "chapter_id": "ia_appliquee_metiers_tp__01-final-quiz",
+      "reason_not_rapidly_remediable": "Ce constat ne concerne pas une activité obligatoire non corrigeable par les seuls actifs déclarés et ne justifie pas de retirer le tri valide ; sa correction nécessite une modification de rendu ou un remappage explicite du champ correction, qui n’est pas réalisé dans ce plan de suppression."
+    }
+  ],
+  "summary": "Deux activités obligatoires P1 non fiables sont retirées et leurs verrous de chapitre supprimés ; leurs explications et consignes restent non bloquantes. Le tri final valide est conservé. Un constat P2 de feedback non rendu reste ouvert."
+}

@@ -1,0 +1,49 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_38",
+  "index": 107,
+  "course_ids": ["ia_appliquee_metiers_tp__38"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__38",
+      "chapter_id": "ia_appliquee_metiers_tp__38-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__38-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire peut être marqué complété après toute sélection, y compris une réponse incorrecte; il ne constitue donc pas une validation fiable avec les seuls actifs déclarés. Le chapitre sera rendu non bloquant; les explications de sécurité existent déjà dans le chapitre précédent.",
+      "evidence": "current_recheck.findings P1; current_courses...chapters[3].blocks[0] est le knowledge_check réel, required=true, correctAnswer=\"a\"; le chemin de rendu/progression documenté appelle onComplete sans condition sur isCorrect."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__38",
+      "chapter_id": "ia_appliquee_metiers_tp__38-checkpoint-01",
+      "reason": "Retirer le verrou de progression associé au checkpoint supprimé afin qu’aucune validation non fiable ne bloque l’apprenant.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__38-checkpoint-01 déclare requiredBeforeAdvance=true et ne contient que le bloc knowledge_check visé."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__38",
+      "chapter_id": "ia_appliquee_metiers_tp__38-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__38-mini-project-proof",
+      "reason": "La preuve obligatoire est validable avec un seul caractère et peut déverrouiller le quiz final sans évaluation structurée. Convertir le bloc en contenu informatif conserve la consigne, l’objectif et les éléments de preuve demandés, sans présenter une soumission non vérifiable comme réussie.",
+      "evidence": "current_recheck.findings P1; current_courses...chapters[4].blocks[0] est le cloud_exercise réel ia_appliquee_metiers_tp__38-mini-project-proof; aucun minimumAnswerLength, learnerCriteria, rubricCriteria ou serverGradedAssessment n’est déclaré, et le chemin documenté applique un seuil d’un caractère puis onComplete."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__38",
+      "chapter_id": "ia_appliquee_metiers_tp__38-mini-project",
+      "reason": "Retirer le verrou de progression du mini-projet après conversion de l’activité en contenu non bloquant; aucune preuve minimale ne doit déverrouiller le quiz final.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__38-mini-project est la source du cloud_exercise P1 et précède le quiz final; la progression documentée dépend de l’identifiant complété du bloc."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Feedback du tri final non rendu",
+      "evidence": "Le bloc réel ia_appliquee_metiers_tp__38-quiz-order définit feedback.fr et feedback.en mais pas correction; la revue documente que LessonViewer ne transmet que block.correction à MatchingExercise.",
+      "course_id": "ia_appliquee_metiers_tp__38",
+      "chapter_id": "ia_appliquee_metiers_tp__38-final-quiz",
+      "reason_not_rapidly_remediable": "La correction exige une modification du chemin de rendu applicatif ou du modèle de bloc, pas une suppression/conversion fiable d’une activité à partir des seuls actifs déclarés; aucune action de cours ne doit inventer ce changement."
+    }
+  ],
+  "summary": "Les deux activités obligatoires P1 non fiablement validables sont neutralisées: le checkpoint est retiré et le mini-projet est converti en contenu non bloquant; les verrous de leurs chapitres sont retirés. Les explications et consignes utiles restent accessibles. Le feedback P2 du tri final reste ouvert car il dépend du rendu applicatif."
+}

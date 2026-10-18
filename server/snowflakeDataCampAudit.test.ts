@@ -9,11 +9,8 @@ describe("cours DataCamp Introduction à l’IA générative dans Snowflake", ()
   it("conserve uniquement les sept activités vidéo reproductibles après retrait des TP cloud non rubricés", () => {
     expect(activities).toHaveLength(7);
     expect(activities.every((activity: any) => activity.sourceActivityType === "VideoExercise")).toBe(true);
-    expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
-    expect(activities.map((activity: any) => activity.id)).not.toEqual(expect.arrayContaining([
-      "dc_ch01_act02", "dc_ch01_act03", "dc_ch01_act04", "dc_ch01_act06", "dc_ch01_act07", "dc_ch01_act09", "dc_ch01_act10",
-      "dc_ch02_act02", "dc_ch02_act03", "dc_ch02_act05", "dc_ch02_act06", "dc_ch02_act08", "dc_ch02_act09",
-    ]));
+    expect(activities.every((activity: any) => activity.requiredBeforeAdvance === false && activity.blocks?.length > 0)).toBe(true);
+    expect(blocks.filter((block: any) => ["cloud_exercise", "code_repl", "ai_evaluation", "free_text_exercise", "terminal_sim"].includes(block.type))).toHaveLength(0);
   });
 
   it("conserve les sept médias locaux et publie des métriques catalogue cohérentes", () => {

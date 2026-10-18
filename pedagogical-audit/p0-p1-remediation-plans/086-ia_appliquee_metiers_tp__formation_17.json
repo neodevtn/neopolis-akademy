@@ -1,0 +1,57 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_17",
+  "index": 86,
+  "course_ids": ["ia_appliquee_metiers_tp__17"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__17-checkpoint-preparation",
+      "reason": "Activité obligatoire non fiable : le rapport courant documente qu’une réponse incorrecte peut être enregistrée comme terminée et déverrouiller la suite, alors que les choix incorrects encouragent des pratiques dangereuses. Aucun correctif fiable n’est disponible dans les seuls actifs déclarés ; retirer l’activité et conserver son rappel de sécurité comme contenu non bloquant.",
+      "evidence": "current_open_p0_p1_findings[0] et current_recheck.findings[1] : requiredBeforeAdvance=true, passThreshold=1, correctAnswer=a, mais la logique de rendu/progression accepte toute sélection ; chapitre ia_appliquee_metiers_tp__17-checkpoint-01, bloc réel ia_appliquee_metiers_tp__17-checkpoint-preparation."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-checkpoint-01",
+      "reason": "Retirer le verrou du checkpoint supprimé afin qu’aucune complétion fantôme ne bloque la progression.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__17-checkpoint-01 déclare requiredBeforeAdvance=true et son unique bloc obligatoire est le knowledge_check supprimé."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__17-mini-project-proof",
+      "reason": "Activité obligatoire non rapidement corrigeable de manière fiable avec les actifs déclarés : le jeu complet de 20 justificatifs/transactions n’est pas fourni et la preuve accepte une réponse non vide sans critères vérifiables. Convertir la consigne, l’objectif et la correction existants en contenu non bloquant, sans prétendre valider une réalisation.",
+      "evidence": "current_open_p0_p1_findings[1-2] et current_recheck.findings[2-3] : bloc cloud_exercise réel ia_appliquee_metiers_tp__17-mini-project-proof, absence de jeu complet déclaré, minimumAnswerLength, rubricCriteria et serverGradedAssessment ; la ressource locale ne fournit qu’un support fictif et un exemple."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-mini-project",
+      "reason": "Le mini-projet converti en contenu ne doit plus conditionner l’accès au quiz final.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__17-mini-project contient le cloud_exercise obligatoire et sa complétion déverrouille le chapitre suivant ; après conversion, cette exigence doit être retirée."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Libellés de démarche non harmonisés dans le tri final",
+      "evidence": "current_recheck.findings[0] / PED-IA17-001 : l’écran screen-03 emploie Cadrer/Préparer/Tester/Contrôler tandis que ia_appliquee_metiers_tp__17-quiz-order emploie Cadrer/Construire/Tester/Valider.",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-screen-03",
+      "reason_not_rapidly_remediable": "Constat P2 conservé hors du périmètre des suppressions de verrous ; une harmonisation éditoriale reste à appliquer sans inventer de nouveau contenu."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback global du tri final non rendu",
+      "evidence": "current_recheck.findings[4] / PED-IA17-005 : le bloc réel ia_appliquee_metiers_tp__17-quiz-order déclare feedback mais pas correction, alors que le rendu transmet correction.",
+      "course_id": "ia_appliquee_metiers_tp__17",
+      "chapter_id": "ia_appliquee_metiers_tp__17-final-quiz",
+      "reason_not_rapidly_remediable": "Constat P2 de rendu nécessitant une modification de mapping/composant ; aucune suppression d’activité ni correction locale fiable n’est déclarée ici."
+    }
+  ],
+  "summary": "Les trois constats P1 sont traités sans inventer d’actifs : le checkpoint non fiable est retiré avec son verrou, et le mini-projet non évaluable est converti en contenu non bloquant avec son verrou retiré. Les deux constats P2 éditorial/rendu restent signalés."
+}

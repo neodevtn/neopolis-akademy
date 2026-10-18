@@ -1,0 +1,157 @@
+{
+  "formation_id": "datacamp_model_context_protocol_advanced_topics",
+  "index": 54,
+  "course_ids": [
+    "model_context_protocol_advanced_topics__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch01_act05",
+      "block_id": "dc_1_act_05_tp",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : aucun mécanisme d’évaluation technique fiable n’est configuré et toute réponse non vide déclenche la complétion, révèle la correction et déverrouille la suite. Convertir ce bloc en contenu non bloquant conserve la consigne, le contexte, l’indice et la correction tout en retirant le verrou et la fausse validation de compétence.",
+      "evidence": "client/public/data/courses/model_context_protocol_advanced_topics__01.json → lessons[0].chapters[4].blocks[id=dc_1_act_05_tp] ; client/src/components/CloudExerciseBlock.tsx lignes 122-161 applique une longueur minimale par défaut de 1 puis appelle onComplete sans évaluation quand il n’y a ni rubrique ni serveur ; LessonViewer.tsx lignes 1587-1592 déverrouille sur cette complétion."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch01_act09",
+      "block_id": "dc_1_act_09_tp",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : aucun mécanisme d’évaluation technique fiable n’est configuré et toute réponse non vide déclenche la complétion, révèle la correction et déverrouille la suite. Convertir ce bloc en contenu non bloquant conserve la consigne, le contexte, l’indice et la correction tout en retirant le verrou et la fausse validation de compétence.",
+      "evidence": "JSON → lessons[0].chapters[8].blocks[id=dc_1_act_09_tp] ; CloudExerciseBlock.tsx lignes 153-161 valide sans évaluation une réponse de longueur minimale 1 ; LessonViewer.tsx lignes 1587-1592 fonde le verrouillage sur onComplete."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch01_act13",
+      "block_id": "dc_1_act_13_tp",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : aucun mécanisme d’évaluation technique fiable n’est configuré et toute réponse non vide déclenche la complétion, révèle la correction et déverrouille la suite. Convertir ce bloc en contenu non bloquant conserve la consigne, le contexte, l’indice et la correction tout en retirant le verrou et la fausse validation de compétence.",
+      "evidence": "JSON → lessons[0].chapters[12].blocks[id=dc_1_act_13_tp] ; CloudExerciseBlock.tsx lignes 153-161 et LessonViewer.tsx lignes 1587-1592 établissent la validation/déverrouillage sans test du code en l’absence de configuration d’évaluation."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch01_act14",
+      "block_id": "dc_1_act_14_tp",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : aucun mécanisme d’évaluation technique fiable n’est configuré et toute réponse non vide déclenche la complétion, révèle la correction et déverrouille la suite. Convertir ce bloc en contenu non bloquant conserve la consigne, le contexte, l’indice et la correction tout en retirant le verrou et la fausse validation de compétence.",
+      "evidence": "JSON → lessons[0].chapters[13].blocks[id=dc_1_act_14_tp] ; CloudExerciseBlock.tsx lignes 122-161 applique la complétion sans validation technique quand les champs d’évaluation sont absents."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act04",
+      "block_id": "dc_2_act_04_tp",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : aucun mécanisme d’évaluation technique fiable n’est configuré et toute réponse non vide déclenche la complétion, révèle la correction et déverrouille la suite. Convertir ce bloc en contenu non bloquant conserve la consigne, le contexte, l’indice et la correction tout en retirant le verrou et la fausse validation de compétence.",
+      "evidence": "JSON → lessons[1].chapters[3].blocks[id=dc_2_act_04_tp] ; CloudExerciseBlock.tsx lignes 153-161 complète sans évaluation si aucun mécanisme suivi n’est configuré ; LessonViewer.tsx lignes 1587-1592 lie cette complétion au passage."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Après une réponse erronée, l’interface colore les choix mais affiche aussi l’explication stockée, qui commence par « Correct ! ». Le feedback textuel contredit donc le résultat de l’apprenant au lieu d’annoncer explicitement l’erreur et la réponse attendue.",
+      "evidence": "client/public/data/courses/model_context_protocol_advanced_topics__01.json → lessons[0].chapters[2].blocks[id=dc_1_act_03_qcm_multiple].explanation ; client/src/components/blocks/MultiChoiceBlock.tsx lignes 120-123 rend la même explication après toute soumission, y compris quand isAllCorrect est faux.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch01_act03",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "Le texte de correction positif est rendu également après une mauvaise réponse, sans expliciter l’échec dans le feedback textuel.",
+      "evidence": "JSON → lessons[0].chapters[6].blocks[id=dc_1_act_07_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 rend explanation sans distinguer isAllCorrect.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch01_act07",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "Après une erreur, le composant affiche aussi l’explication commençant par « Correct ! », sans message textuel d’échec.",
+      "evidence": "JSON → lessons[0].chapters[10].blocks[id=dc_1_act_11_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 affiche ce champ après toute soumission.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch01_act11",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "L’explication positive est affichée après une réponse erronée comme après une réponse correcte.",
+      "evidence": "JSON → lessons[1].chapters[1].blocks[id=dc_2_act_02_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 ne conditionne pas l’explication au succès.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act02",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "Le tri possède un feedback pédagogique utile dans le JSON, mais LessonViewer ne le transmet pas à MatchingExercise. À la réussite, seul « 6/6 · Parfait ! » est visible ; après erreur, seule la proportion correcte est affichée.",
+      "evidence": "JSON → lessons[1].chapters[2].blocks[id=dc_2_act_03_bucket_sort].feedback ; LessonViewer.tsx lignes 957-974 passe block.correction mais pas block.feedback ; MatchingExercise.tsx lignes 420-466 n’affiche qu’une correction fournie dans exercise.correction.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act03",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "L’explication affirmative est affichée également en cas de sélection erronée.",
+      "evidence": "JSON → lessons[1].chapters[5].blocks[id=dc_2_act_06_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123 affiche ce même texte après toute soumission.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act06",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "Le retour textuel utilise « Correct ! » même si l’apprenant a répondu faux.",
+      "evidence": "JSON → lessons[1].chapters[7].blocks[id=dc_2_act_08_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act08",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "Le composant affiche le texte « Correct ! » même après une réponse incorrecte.",
+      "evidence": "JSON → lessons[1].chapters[9].blocks[id=dc_2_act_10_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act10",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "L’explication positive est utilisée après les réponses correctes comme erronées, ce qui atténue la signalisation textuelle de l’échec.",
+      "evidence": "JSON → lessons[1].chapters[10].blocks[id=dc_2_act_11_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act11",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "La justification commence par « Correct ! » et est affichée après une soumission incorrecte comme correcte.",
+      "evidence": "JSON → lessons[1].chapters[12].blocks[id=dc_2_act_13_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act13",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "Après une mauvaise réponse, l’apprenant reçoit le même texte débutant par « Correct ! » que dans l’état de réussite.",
+      "evidence": "JSON → lessons[1].chapters[13].blocks[id=dc_2_act_14_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act14",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "Le texte de succès « Correct ! » est également rendu pour une réponse erronée.",
+      "evidence": "JSON → lessons[1].chapters[15].blocks[id=dc_2_act_16_qcm_multiple].explanation ; MultiChoiceBlock.tsx lignes 120-123.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act16",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    },
+    {
+      "severity": "P2",
+      "title": "Le feedback de synthèse sur le compromis stateless est présent dans le JSON mais ne parvient pas au composant de tri. L’apprenant ne voit donc pas l’explication de consolidation prévue après réussite.",
+      "evidence": "JSON → lessons[1].chapters[16].blocks[id=dc_2_act_17_bucket_sort].feedback ; LessonViewer.tsx lignes 957-974 ne passe pas feedback ; MatchingExercise.tsx lignes 420-466 ne rend que correction.",
+      "course_id": "model_context_protocol_advanced_topics__01",
+      "chapter_id": "dc_ch02_act17",
+      "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le comportement de composants applicatifs partagés (feedback conditionnel ou transmission de feedback), et ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés dans ce bundle sans modifier le code de l’application."
+    }
+  ],
+  "summary": "Les cinq TPs cloud obligatoires sans évaluation fiable sont convertis en contenu non bloquant, en conservant leurs consignes et corrections. Les treize constats P2 de feedback/rendu restent ouverts car ils exigent une modification des composants applicatifs partagés. Aucun constat historique supplémentaire n’est à normaliser (legacy_open_count_requiring_normalization = 0)."
+}

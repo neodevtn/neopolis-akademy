@@ -1,0 +1,74 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_08",
+  "index": 77,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__08"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "chapter_id": "ia_appliquee_metiers_tp__08-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__08-checkpoint-preparation",
+      "reason": "Activité obligatoire non fiable avec les seuls actifs déclarés : le knowledge_check est placé dans un chapitre checkpoint, mais la logique de progression ne le compte pas comme checkpoint et enregistre la complétion même après une réponse incorrecte. Conserver l’énoncé, les options et l’explication comme contenu non bloquant, sans activité ni verrou.",
+      "evidence": "Le bloc réel ia_appliquee_metiers_tp__08-checkpoint-preparation est de type knowledge_check dans le chapitre ia_appliquee_metiers_tp__08-checkpoint-01, requiredBeforeAdvance=true et passThreshold=1. Le dossier courant confirme que checkpointGate filtre les blocs de type checkpoint et que la complétion du knowledge_check est enregistrée quelle que soit la justesse de la réponse ; aucune correction de code n’est disponible parmi les actifs déclarés."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "chapter_id": "ia_appliquee_metiers_tp__08-checkpoint-01",
+      "reason": "Retirer le verrou du chapitre après conversion de son unique activité en contenu non bloquant.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__08-checkpoint-01 déclare requiredBeforeAdvance=true et son seul bloc est ia_appliquee_metiers_tp__08-checkpoint-preparation."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "chapter_id": "ia_appliquee_metiers_tp__08-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__08-mini-project-proof",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : le cloud_exercise demande l’analyse de 200 commentaires et 20 idées, mais ne définit ni critères structurés, ni longueur minimale, ni évaluation serveur ; une réponse d’un caractère suffit actuellement. Conserver la consigne, le guide, la ressource, l’indice et la correction comme contenu non bloquant.",
+      "evidence": "Le bloc réel ia_appliquee_metiers_tp__08-mini-project-proof est de type cloud_exercise et ne contient ni minimumAnswerLength, ni learnerCriteria, ni rubricCriteria, ni serverGradedAssessment. Le dossier courant confirme la complétion sur texte non vide et le déverrouillage du quiz final."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "chapter_id": "ia_appliquee_metiers_tp__08-mini-project",
+      "reason": "Retirer le verrou du chapitre après conversion de la preuve non fiable en contenu non bloquant.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__08-mini-project déclare requiredBeforeAdvance=true et son bloc unique est ia_appliquee_metiers_tp__08-mini-project-proof."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "chapter_id": "ia_appliquee_metiers_tp__08-final-quiz",
+      "block_id": "ia_appliquee_metiers_tp__08-quiz-order",
+      "reason": "Activité obligatoire non rapidement corrigeable avec les seuls actifs déclarés : le bucket_sort fournit un feedback mais le renderer ne le transmet pas comme correction et n’affiche pas la catégorie attendue pour les cartes erronées. Conserver les instructions, les catégories, les cartes et le feedback comme contenu explicatif non bloquant.",
+      "evidence": "Le bloc réel ia_appliquee_metiers_tp__08-quiz-order est de type bucket_sort, contient feedback mais pas correction ; le dossier courant confirme que LessonViewer ne transmet que block.correction et que le composant n’affiche donc pas le feedback pédagogique détaillé."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "chapter_id": "ia_appliquee_metiers_tp__08-final-quiz",
+      "reason": "Retirer le verrou associé au tri converti en contenu non bloquant ; les quatre QCM valides restent inchangés.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__08-final-quiz déclare requiredBeforeAdvance=true et contient le bloc réel ia_appliquee_metiers_tp__08-quiz-order parmi ses activités."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "chapter_id": "ia_appliquee_metiers_tp__08-screen-02",
+      "block_id": "ia_appliquee_metiers_tp__08-source-review",
+      "reason": "Supprimer le lien Markdown redondant des instructions ; la ressource YouTube et le bouton resourceUrl déclarés restent valides et ne doivent pas être retirés.",
+      "evidence": "Le bloc réel resource_review possède resourceUrl et resourceLabel, tandis que instructions contient aussi le lien Markdown vers la même URL. Le rendu place instructions dans un paragraphe sans interprétation Markdown, exposant le libellé littéral en doublon du bouton fonctionnel."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Vocabulaire incohérent entre la séquence et le tri final",
+      "evidence": "La séquence du bloc ia_appliquee_metiers_tp__08-screen-03 enseigne Cadrer, Préparer, Tester, Contrôler, alors que le bloc ia_appliquee_metiers_tp__08-quiz-order utilise Cadrer, Construire, Tester, Valider, sans transition définie dans les données du cours.",
+      "course_id": "ia_appliquee_metiers_tp__08",
+      "chapter_id": "ia_appliquee_metiers_tp__08-final-quiz",
+      "reason_not_rapidly_remediable": "La correction nécessite de choisir et harmoniser les libellés dans plusieurs contenus pédagogiques ou d’ajouter une transition explicative ; ce n’est pas une suppression sûre d’une activité obligatoire ni une simple référence obsolète, et aucun choix éditorial n’est démontré par le bundle."
+    }
+  ],
+  "summary": "Les trois activités P1 obligatoires dont la validation ou le rendu n’est pas fiable avec les actifs et le renderer déclarés sont converties en contenu non bloquant, avec retrait explicite des verrous de leurs chapitres. La référence Markdown redondante du resource_review est supprimée sans retirer la vidéo valide. Le constat P2 de vocabulaire reste ouvert faute de choix éditorial démontré."
+}

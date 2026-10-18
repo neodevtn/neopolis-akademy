@@ -286,6 +286,10 @@ for (const fname of files) {
   if (!Array.isArray(data.lessons)) {
     fileIssues.push({ level: 'error', type: 'missing_field', msg: 'Missing or invalid "lessons" array' });
   }
+  if (JSON.stringify(data).includes('/manus-storage/')) {
+    fileIssues.push({ level: 'error', type: 'temporary_storage_path', msg: 'Course content must use /api/assets/ instead of a direct /manus-storage/ path' });
+    totalErrors++;
+  }
 
   // ── 2. Duplicate lesson IDs ───────────────────────────────────────────────
   if (Array.isArray(data.lessons)) {

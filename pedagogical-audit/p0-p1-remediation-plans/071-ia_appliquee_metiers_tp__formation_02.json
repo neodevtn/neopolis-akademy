@@ -1,0 +1,68 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_02",
+  "index": 71,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__02"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__02-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire est verrouillant mais son état de complétion est accepté après toute réponse, y compris incorrecte; cette logique ne peut pas être corrigée de manière fiable dans les seuls actifs déclarés. Retirer l’activité et conserver son explication comme contenu non bloquant sur l’écran.",
+      "evidence": "current_open_p0_p1_findings[0] et current_recheck.findings[0]: passThreshold=1, correctAnswer=a, required=true, mais le rapport vérifié indique que toute sélection déclenche la complétion; le JSON de cours ne contient aucun correctif local de cette logique."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__02-checkpoint-preparation",
+      "reason": "Retirer le verrou de progression associé au checkpoint supprimé afin qu’aucune validation d’activité non fiable ne bloque la suite.",
+      "evidence": "Le chapitre déclare requiredBeforeAdvance=true et son unique bloc knowledge_check required=true; la vérification de rendu confirme que l’erreur n’empêche pas la complétion."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__02-mini-project-proof",
+      "reason": "Le mini-projet obligatoire demande quatre éléments mais accepte une preuve non vide et déclenche la complétion sans validation structurée; ses étapes restent génériques et aucun workflow, seuil ou schéma complet n’est déclaré. Retirer l’activité et conserver les consignes utiles comme contenu non bloquant.",
+      "evidence": "current_open_p0_p1_findings[1..2] et current_recheck.findings[1..2]: absence de minimumAnswerLength/rubricCriteria/learnerCriteria/serverGradedAssessment/evaluationPrompt/passingScore/postRevealReflectionOptions; validation par défaut à une réponse non vide; steps limités à relire/réaliser/vérifier, sans séquençage opérationnel démontré."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__02-mini-project-proof",
+      "reason": "Retirer le verrou requiredBeforeAdvance du mini-projet supprimé afin de ne pas exiger une preuve dont la correction fiable n’est pas disponible avec les seuls actifs déclarés.",
+      "evidence": "Le chapitre déclare requiredBeforeAdvance=true; le cloud_exercise appelle onComplete à la soumission et LessonViewer verrouille la suite via completedCloudExercises, sans contrôle fiable des quatre éléments demandés."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Couverture incomplète des compétences métier dans le quiz final",
+      "evidence": "current_recheck.findings[3]: les acquis annoncent critères de qualification, sortie JSON CRM et actions selon score, mais les activités du quiz final ne les vérifient pas directement.",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-final-quiz",
+      "reason_not_rapidly_remediable": "Une correction fiable nécessite d’abord de définir les éléments métier manquants dans le TP; les seuils, champs JSON et règles de routage ne sont pas déclarés et ne peuvent pas être inventés."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback du tri final configuré mais non rendu",
+      "evidence": "current_recheck.findings[4]: feedback est présent dans le JSON du bloc ia_appliquee_metiers_tp__02-quiz-order, mais le chemin bucket_sort ne le transmet pas au composant.",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "chapter_id": "ia_appliquee_metiers_tp__02-final-quiz",
+      "reason_not_rapidly_remediable": "Le défaut relève du composant de rendu et non d’un actif pédagogique local; aucune modification de code n’est autorisée dans ce plan."
+    },
+    {
+      "severity": "P2",
+      "title": "Bilinguisme pédagogique incomplet",
+      "evidence": "current_recheck.findings[5]: au moins 16 chaînes longues fr/en sont identiques dans les titres, consignes, items ou feedbacks.",
+      "course_id": "ia_appliquee_metiers_tp__02",
+      "reason_not_rapidly_remediable": "La traduction nécessite une révision éditoriale de nombreuses chaînes; elle ne peut pas être déduite ou inventée à partir des seuls constats de décision sans modifier le contenu du cours."
+    }
+  ],
+  "summary": "Les trois P1 d’activités obligatoires ne sont pas rapidement corrigeables de façon fiable avec les seuls actifs déclarés : le checkpoint non fiable et le mini-projet non évaluable sont retirés, avec leurs verrous supprimés et leurs explications conservées hors blocage. Aucun P0/P1 ne reste non résolu; trois P2 structurels restent ouverts."
+}

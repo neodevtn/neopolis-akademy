@@ -1,0 +1,44 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_06",
+  "index": 75,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__06"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__06-checkpoint-preparation",
+      "reason": "Activité obligatoire non fiable : une réponse incorrecte est enregistrée comme complétion malgré requiredBeforeAdvance:true et passThreshold:1. Le bloc est retiré plutôt que conservé comme activité contournable ; le cadre de sécurité est déjà expliqué dans les chapitres précédents.",
+      "evidence": "Le constat P1 current_recheck et l’audit initial documentent onComplete pour toute sélection, y compris une réponse erronée ; le bloc réel est lessons[0].chapters[3].blocks[0] avec l’identifiant ia_appliquee_metiers_tp__06-checkpoint-preparation."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__06-checkpoint-preparation",
+      "reason": "Retirer le verrou du checkpoint supprimé afin qu’aucune progression obligatoire ne dépende d’une activité dont la réussite n’est pas contrôlée de manière fiable.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__06-checkpoint-01 déclare requiredBeforeAdvance:true et passThreshold:1 ; le bloc knowledge_check correspondant est identifié par ia_appliquee_metiers_tp__06-checkpoint-preparation."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__06-mini-project-proof",
+      "reason": "Le mini-projet obligatoire n’est pas rapidement corrigeable de façon fiable avec les seuls actifs déclarés : les intrants de brief, d’offre et d’hypothèses ROI manquent, et une preuve d’un seul caractère suffit. Conserver sa consigne et son cadre comme contenu explicatif non bloquant, sans le présenter comme activité validante.",
+      "evidence": "Le constat P1 current_recheck et l’audit initial identifient lessons[0].chapters[4].blocks[0], bloc réel cloud_exercise ia_appliquee_metiers_tp__06-mini-project-proof, sans minimumAnswerLength, rubricCriteria, learnerCriteria ni évaluation suivie ; le support local ne contient pas les intrants nécessaires au livrable et au ROI vérifiables."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__06",
+      "chapter_id": "ia_appliquee_metiers_tp__06-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__06-mini-project-proof",
+      "reason": "Retirer le verrou du mini-projet rendu non bloquant après conversion en contenu, afin qu’une soumission minimale ne puisse plus conditionner la progression.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__06-mini-project déclare requiredBeforeAdvance:true et le bloc cloud_exercise réel est ia_appliquee_metiers_tp__06-mini-project-proof ; l’audit documente qu’un caractère non vide suffit à déclencher la complétion."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les trois constats P1 ouverts sont traités sans modifier le cours : le checkpoint contournable est retiré avec son verrou, et le mini-projet non vérifiable est converti en contenu explicatif non bloquant avec son verrou retiré. Aucun constat P0/P1 ne reste non résolu ; aucun historique stillOpen n’était présent."
+}

@@ -1,0 +1,71 @@
+{
+  "formation_id": "datacamp_gemini_in_google_docs",
+  "index": 36,
+  "course_ids": [
+    "gemini_in_google_docs__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "gemini_in_google_docs__01",
+      "chapter_id": "dc_ch01_act06",
+      "block_id": "dc_1_act_06_resource",
+      "exercise_id": null,
+      "reason": "Retirer l’activité obligatoire resource_review : la seule consigne est une attestation de consultation, le PDF déclaré ne fournit ni étapes, ni production, ni critère de réussite. Le support PDF reste disponible dans le bloc réel dc_ch01_slides du chapitre d’introduction.",
+      "evidence": "p0-p1-decision-inputs/036-datacamp_gemini_in_google_docs.json, current_recheck.findings : dc_ch01_act06/dc_1_act_06_resource ; instructions.fr = \"View the PDF before continuing.\" ; le bouton valide directement reviewId sans contrôle d’ouverture ni production."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "gemini_in_google_docs__01",
+      "chapter_id": "dc_ch01_act06",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Après retrait de l’activité non vérifiable, supprimer le verrou de progression de ce chapitre afin qu’aucune attestation de consultation ne bloque l’apprenant.",
+      "evidence": "Le chapitre dc_ch01_act06 a requiredBeforeAdvance = true et ne contient que le bloc resource_review dc_1_act_06_resource ; le rapport local constate que cette complétion est une fausse soumission non vérifiable."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Localisation française absente des vidéos d’introduction et de démonstration",
+      "evidence": "Les blocs vidéo réels dc_1_act_01_video, dc_1_act_02_video, dc_1_act_03_video, dc_1_act_04_video et dc_1_act_05_video n’ont que subtitleUrlEn/transcription anglaise et leurs titres fr sont identiques à l’anglais.",
+      "course_id": "gemini_in_google_docs__01",
+      "chapter_id": "dc_ch01_act01 à dc_ch01_act05",
+      "reason_not_rapidly_remediable": "Une correction fiable exige une traduction/révision française de cinq vidéos, transcriptions et sous-titres ; aucun actif français déclaré ne permet de la produire sans invention."
+    },
+    {
+      "severity": "P1",
+      "title": "Verrouillage vidéo contournable pour les cinq chapitres d’enseignement",
+      "evidence": "Les ids réels dc_1_act_01_video à dc_1_act_05_video ont 17 caractères, sont exclus par le filtre de longueur de chapterVideoKeys ; aucune banque lessonQuizzes.json n’est configurée et ChapterQuiz auto-valide.",
+      "course_id": "gemini_in_google_docs__01",
+      "chapter_id": "dc_ch01_act01 à dc_ch01_act05",
+      "reason_not_rapidly_remediable": "La correction nécessite une modification et un test du code de verrouillage de LessonViewer/ChapterQuiz, non une suppression ou normalisation de contenu autorisée par ce plan."
+    },
+    {
+      "severity": "P1",
+      "title": "Réponses du QCM 1 partiellement non localisées",
+      "evidence": "Bloc réel dc_1_act_07_qcm : les options a, c et d ont text.fr identique à l’anglais, alors que question, indice et explication sont français.",
+      "course_id": "gemini_in_google_docs__01",
+      "chapter_id": "dc_ch01_act07",
+      "reason_not_rapidly_remediable": "Le bundle ne contient pas de formulations françaises déclarées pour ces trois options ; en inventer les traductions violerait la règle de ne pas inventer de correction."
+    },
+    {
+      "severity": "P1",
+      "title": "QCM 2 majoritairement en anglais dans le parcours français",
+      "evidence": "Bloc réel dc_1_act_08_qcm : question, options, explication et titre de chapitre sont anglais ; seul l’indice est français.",
+      "course_id": "gemini_in_google_docs__01",
+      "chapter_id": "dc_ch01_act08",
+      "reason_not_rapidly_remediable": "Une localisation fiable requiert de nouveaux textes français absents des actifs déclarés ; aucune suppression de référence obsolète ou promesse injustifiée ne corrige ce constat."
+    },
+    {
+      "severity": "P1",
+      "title": "Options et feedback du QCM 3 non localisés",
+      "evidence": "Bloc réel dc_1_act_09_qcm : les quatre options et l’explication fr sont identiques à l’anglais, malgré une question et un indice français.",
+      "course_id": "gemini_in_google_docs__01",
+      "chapter_id": "dc_ch01_act09",
+      "reason_not_rapidly_remediable": "Le bundle ne déclare aucune version française de ces options et du feedback ; produire ces textes serait une invention."
+    }
+  ],
+  "summary": "Revue de l’état courant fondée uniquement sur les JSON locaux : une activité resource_review obligatoire et non vérifiable est retirée avec son verrou ; le PDF déclaré reste accessible via le bloc de téléchargement existant. Les 13 problèmes restants (localisations manquantes et gates vidéo nécessitant du code) sont conservés comme non résolus, sans suppression de vidéos ou de contenus valides."
+}

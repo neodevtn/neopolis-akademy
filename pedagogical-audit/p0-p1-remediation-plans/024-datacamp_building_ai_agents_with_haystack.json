@@ -1,0 +1,93 @@
+{
+  "formation_id": "datacamp_building_ai_agents_with_haystack",
+  "index": 24,
+  "course_ids": [
+    "building_ai_agents_with_haystack__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch01_act03",
+      "block_id": "dc_1_act_03_video",
+      "reason": "Retirer la promesse de démarrage d’une construction pratique absente ; conserver la vidéo et ses explications comme contenu non bloquant, sans inventer l’activité manquante.",
+      "evidence": "Le projectorSlides[14].script du bloc réel dc_1_act_03_video dit « Let’s start creating our agent. », puis le chapitre réel suivant dc_ch02_act01 affirme qu’un agent pleinement fonctionnel existe ; aucun bloc d’activité n’est présent entre les deux."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch02_act01",
+      "block_id": "dc_2_act_01_video",
+      "reason": "Retirer la promesse d’un exercice de tracing non fourni ; conserver l’explication du tracing dans la vidéo sans créer de workflow ou de correction fictifs.",
+      "evidence": "Le projectorSlides[7].script du bloc réel dc_2_act_01_video annonce « In the next exercise… trace tool usage and inspect intermediate steps », mais le chapitre suivant réel dc_ch02_act03 ne contient qu’un bloc vidéo et aucune activité de tracing."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch02_act03",
+      "block_id": "dc_2_act_03_video",
+      "reason": "Retirer la promesse des exercices text-to-SQL/outillage absents ; conserver l’exposé conceptuel et le récapitulatif existants, sans inventer code, dataset ni réponse.",
+      "evidence": "Le projectorSlides[7].script du bloc réel dc_2_act_03_video annonce plusieurs exercices de construction, d’encapsulation et de connexion ; le chapitre réel suivant dc_ch02_act06 est directement une vidéo récapitulative qui présuppose ces étapes."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch01_act01",
+      "block_id": null,
+      "reason": "Supprimer le verrou de validation automatique sans question ; la banque absente ne permet pas une évaluation fiable. Aucun bloc de cours n’est supprimé.",
+      "evidence": "Le contentId généré ChapterQuiz:0_0 est injecté par LessonViewer pour le chapitre teaching, mais aucune clé building_ai_agents_with_haystack__01 n’existe dans lessonQuizzes.json ; ChapterQuiz appelle onPass() lorsque la banque est vide."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Six activités LocalEnvironmentExercise annoncées mais absentes",
+      "evidence": "datacampImport.expected déclare 11 activités, dont 6 LocalEnvironmentExercise, tandis que les cinq chapitres réels ne contiennent que des blocs VideoExercise et aucun bloc pratique.",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "Les actifs déclarés ne contiennent ni énoncés, ni environnement de départ, ni critères, ni corrections permettant de reconstituer fidèlement ces activités ; elles ne doivent pas être inventées. Les promesses textuelles directement repérables sont neutralisées par les actions ci-dessus."
+    },
+    {
+      "severity": "P2",
+      "title": "Transcription et sous-titres non francophones du premier média",
+      "evidence": "dc_1_act_01_video possède une transcription anglaise et subtitleUrlEn, sans subtitleUrlFr ni alternativeTextFr ; le lecteur ne rend pas de piste captions intégrée.",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "Une traduction validée et/ou une évolution du lecteur sont nécessaires ; aucun actif déclaré ne fournit le texte français fiable."
+    },
+    {
+      "severity": "P2",
+      "title": "Marqueurs $$ non rendus dans quatre slides",
+      "evidence": "Les projectorSlides[2..5] de dc_1_act_03_video affichent content/contentLeft=« $$ », tandis que l’explication existe seulement dans script, champ non rendu par ProjectorPlayer.",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch01_act03",
+      "reason_not_rapidly_remediable": "La correction fiable exige une réécriture/validation des supports ou une modification du rendu ; le texte script seul ne constitue pas un contenu affiché."
+    },
+    {
+      "severity": "P2",
+      "title": "Transcription et sous-titres non francophones du média de transparence",
+      "evidence": "dc_2_act_01_video conserve une transcription anglaise et subtitleUrlEn, sans subtitleUrlFr ni alternativeTextFr ; ProjectorPlayer n’intègre pas de captions.",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch02_act01",
+      "reason_not_rapidly_remediable": "Il faut une traduction validée et/ou une évolution du lecteur, non déductible de manière fiable des seuls actifs déclarés."
+    },
+    {
+      "severity": "P2",
+      "title": "Transcription anglaise et captions non intégrées du média pipelines",
+      "evidence": "dc_2_act_03_video a une transcription anglaise ; subtitleUrlFr et subtitleUrlEn sont déclarés mais le lecteur affiche seulement un lien externe et aucune piste intégrée.",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch02_act03",
+      "reason_not_rapidly_remediable": "Une transcription française validée ou une adaptation du lecteur est requise ; aucun remplacement fiable n’est fourni dans les actifs existants."
+    },
+    {
+      "severity": "P2",
+      "title": "Transcription et sous-titres non francophones de la synthèse",
+      "evidence": "dc_2_act_06_video conserve une transcription anglaise et subtitleUrlEn, sans subtitleUrlFr ni alternativeTextFr ; le lecteur n’intègre pas les captions.",
+      "course_id": "building_ai_agents_with_haystack__01",
+      "chapter_id": "dc_ch02_act06",
+      "reason_not_rapidly_remediable": "La traduction validée et/ou la modification du lecteur ne sont pas disponibles dans les actifs déclarés."
+    }
+  ],
+  "summary": "Relecture de l’état courant effectuée sans modifier le cours : 3 promesses de TP absents neutralisées sur des blocs vidéo réels, le verrou de quiz vide retiré, et 6 constats restent ouverts (1 P1 non reconstructible et 5 P2 nécessitant traduction/rendu). Les vidéos et explications valides sont conservées."
+}

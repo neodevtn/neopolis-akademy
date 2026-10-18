@@ -48,7 +48,7 @@ function classifyUrl(key: string, url: string): MediaKind | null {
   const isReferenceKey = /(?:url|uri|path|href|src|download|file|pdf|audio|video|image|slide)/.test(normalizedKey);
   const hasMediaExtension = /\.(mp4|webm|mov|mp3|wav|m4a|ogg|pdf|png|jpe?g|gif|webp|svg|zip|csv|xlsx?|ipynb)(\?|$)/.test(normalizedUrl);
   if (!isReferenceKey && !hasMediaExtension) return null;
-  const hasUsableUrlShape = /^(?:https?:\/\/|\/api\/assets\/|\/manus-storage\/|\/data\/|data:)/.test(url.trim()) || hasMediaExtension;
+  const hasUsableUrlShape = /^(?:https?:\/\/|\/api\/assets\/|\/data\/|data:)/.test(url.trim()) || hasMediaExtension;
   if (!hasUsableUrlShape) return null;
   if (normalizedKey.includes("audio") || /\.(mp3|wav|m4a|ogg)(\?|$)/.test(normalizedUrl)) return "audio";
   if (normalizedKey.includes("pdf") || /\.pdf(\?|$)/.test(normalizedUrl)) return "pdf";
@@ -57,6 +57,21 @@ function classifyUrl(key: string, url: string): MediaKind | null {
   if (normalizedKey.includes("slide")) return "slides";
   if (normalizedKey.includes("video") || normalizedKey.includes("mp4") || /\.(mp4|webm|mov)(\?|$)/.test(normalizedUrl)) return "video";
   return null;
+}
+
+function findTemporaryStoragePaths(value: unknown, currentPath = "course", matches: string[] = []): string[] {
+  if (typeof value === "string") {
+    if (value.includes("/manus-storage/")) matches.push(currentPath);
+    return matches;
+  }
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => findTemporaryStoragePaths(item, `${currentPath}[${index}]`, matches));
+    return matches;
+  }
+  if (value && typeof value === "object") {
+    Object.entries(value as Record<string, unknown>).forEach(([key, item]) => findTemporaryStoragePaths(item, `${currentPath}.${key}`, matches));
+  }
+  return matches;
 }
 
 /** Extracts reusable media references without moving or rewriting existing assets. */
@@ -121,6 +136,10 @@ export function validateStructuredCourse(course: any): ContentValidationResult {
   if (!Array.isArray(course.lessons)) {
     errors.push({ severity: "error", path: "lessons", message: "Le cours doit contenir un tableau de leçons." });
     return { valid: false, errors, warnings };
+  }
+
+  for (const temporaryPath of findTemporaryStoragePaths(course)) {
+    errors.push({ severity: "error", path: temporaryPath, message: "Les ressources de cours doivent utiliser /api/assets/ et non un chemin /manus-storage/ temporaire." });
   }
 
   const ids = new Set<string>();

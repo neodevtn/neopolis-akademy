@@ -1,0 +1,58 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_07",
+  "index": 76,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__07"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__07",
+      "chapter_id": "ia_appliquee_metiers_tp__07-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__07-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Le checkpoint obligatoire repose sur un knowledge_check dont toute sélection est enregistrée comme interaction terminée, tandis que le gate ne compte que les blocs de type checkpoint. Une réponse erronée peut donc déverrouiller la suite. Retirer l’activité interactive tout en conservant la consigne, les options et l’explication comme contenu non bloquant.",
+      "evidence": "Le current_recheck décrit requiredBeforeAdvance=true et passThreshold=1, avec l’unique bloc knowledge_check id=ia_appliquee_metiers_tp__07-checkpoint-preparation; GenericLearningBlocks appelle onComplete dès toute sélection et LessonViewer enregistre l’interaction sans condition sur isCorrect; checkpointGate ne recense pas ce bloc comme checkpoint. Le bloc réel et son correctAnswer/explanation sont présents dans current_courses.lessons[0].chapters[3].blocks[0]."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__07",
+      "chapter_id": "ia_appliquee_metiers_tp__07-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__07-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Après retrait de l’activité non fiable, le chapitre ne doit plus verrouiller la progression.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__07-checkpoint-01 déclare requiredBeforeAdvance=true et passThreshold=1; le finding P1 de verrouillage établit qu’une réponse b/c/d peut satisfaire la progression."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__07",
+      "chapter_id": "ia_appliquee_metiers_tp__07-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__07-mini-project-proof",
+      "exercise_id": "ia_appliquee_metiers_tp__07-mini-project-proof",
+      "reason": "La preuve obligatoire est validée par la présence d’un seul caractère non blanc: aucun minimumAnswerLength, rubricCriteria, learnerCriteria, serverGradedAssessment ou requirePostRevealReflection n’est déclaré. Convertir l’activité en contenu non bloquant conserve l’assignation, les consignes, le guide, les étapes, la correction et l’auto-vérification sans prétendre évaluer la réalisation.",
+      "evidence": "Le current_recheck identifie le bloc réel cloud_exercise ia-appliquee_metiers_tp__07-mini-project-proof et indique que la validation minimale accepte un caractère puis alimente completedCloudExercises et la progression. Dans current_courses.lessons[0].chapters[4].blocks[0], ces critères de validation sont absents alors que assignment, instructions, solution, successMessage et steps sont déclarés."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__07",
+      "chapter_id": "ia_appliquee_metiers_tp__07-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__07-mini-project-proof",
+      "exercise_id": null,
+      "reason": "La preuve ne pouvant pas être corrigée rapidement et fiablement avec les seuls actifs déclarés, le chapitre ne doit plus bloquer l’accès au quiz final.",
+      "evidence": "Le chapitre réel ia-appliquee_metiers_tp__07-mini-project déclare requiredBeforeAdvance=true; le finding P1 établit qu’une saisie d’un caractère suffit à déverrouiller la suite sans vérifier les quatre éléments demandés."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Feedback du tri final non rendu",
+      "evidence": "Le bloc réel ia-appliquee_metiers_tp__07-quiz-order déclare feedback mais pas correction. Le current_recheck indique que LessonViewer transmet seulement correction à MatchingExercise, qui n’affiche une correction textuelle que si correction existe.",
+      "course_id": "ia-appliquee_metiers_tp__07",
+      "chapter_id": "ia-appliquee_metiers_tp__07-final-quiz",
+      "reason_not_rapidly_remediable": "La correction nécessite une modification du mapping ou du rendu du composant, pas une correction fiable réalisable avec les seuls textes et actifs déclarés dans le cours. Le quiz final reste une activité valide et ne doit pas être supprimé pour ce défaut de rendu.",
+      "block_id": "ia-appliquee_metiers_tp__07-quiz-order"
+    }
+  ],
+  "summary": "Les deux activités P1 obligatoires dont la validation est non fiable sont converties en contenu non bloquant, et leurs deux verrouillages de chapitre sont retirés. Le texte pédagogique existant est conservé. Un constat P2 de rendu du feedback du tri reste non résolu car il dépend du composant de rendu, non des seuls actifs du cours."
+}

@@ -1,0 +1,261 @@
+{
+  "formation_id": "datacamp_claude_code_in_action",
+  "index": 29,
+  "course_ids": [
+    "claude_code_in_action__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch01_act02",
+      "block_id": "dc_1_act_02_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[0].chapters[1].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci-dessous.  Pour le reste de c ». `lessons[0].chapters[1].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch01_act03",
+      "block_id": "dc_1_act_03_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[0].chapters[2].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Démarrez Claude Code avec claude.  Enter plan mode with /plan, puis demandez à Claude de planifi » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act02",
+      "block_id": "dc_2_act_02_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[1].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci‑dessous.  Le CLAUDE.md de vo ». `lessons[1].chapters[1].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act03",
+      "block_id": "dc_2_act_03_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[2].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Lancez Claude Code avec `claude`.  Demandez à Claude de réécrire `CLAUDE.md` afin que chaque règ » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act05",
+      "block_id": "dc_2_act_05_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[4].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci‑dessous.  Vous avez empaquet ». `lessons[1].chapters[4].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act06",
+      "block_id": "dc_2_act_06_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[5].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Démarrez Claude Code avec claude.  Demandez à Claude de créer une skill à .claude/skills/verify- » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act09",
+      "block_id": "dc_2_act_09_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[8].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci‑dessous.  Vous avez laissé C ». `lessons[1].chapters[8].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act12",
+      "block_id": "dc_2_act_12_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[11].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci‑dessous.  Vous avez écrit un ». `lessons[1].chapters[11].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act13",
+      "block_id": "dc_2_act_13_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[12].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Démarrez Claude Code avec claude.  Demandez à Claude d'écrire un script de hook PreToolUse dans  » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act14",
+      "block_id": "dc_2_act_14_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[13].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Démarrez Claude Code avec claude.  Demandez à Claude de compléter l'ossature dans hooks/redact-s » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch03_act02",
+      "block_id": "dc_3_act_02_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[2].chapters[1].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci-dessous.  Vous voulez un aud ». `lessons[2].chapters[1].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch03_act05",
+      "block_id": "dc_3_act_05_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[2].chapters[4].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci‑dessous.  Code Review est ac ». `lessons[2].chapters[4].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch03_act06",
+      "block_id": "dc_3_act_06_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[2].chapters[5].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Lancez Claude Code avec `claude`.  Demandez à Claude de créer `.github/workflows/claude.yaml`, q » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch04_act02",
+      "block_id": "dc_4_act_02_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[3].chapters[1].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci‑dessous.  Une exécution de n ». `lessons[3].chapters[1].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch04_act03",
+      "block_id": "dc_4_act_03_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[3].chapters[2].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Start Claude Code with claude.  Demandez à Claude d'ajouter un Stop hook dans .claude/settings.j » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch04_act04",
+      "block_id": "dc_4_act_04_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[3].chapters[3].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Start Claude Code with claude.  Demandez à Claude d'examiner les modifications non validées en l » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch04_act06",
+      "block_id": "dc_4_act_06_qcm_multiple",
+      "reason": "Correction rapide à partir du texte existant : retirer l’amorce « Lisez l’article » qui référence une ressource absente; conserver la question et les choix du QCM, qui restent utilisables avec les contenus déclarés.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[3].chapters[5].blocks[0].question commence toujours par « Lisez l'article, puis répondez à la question ci‑dessous.  Un coéquipier a tr ». `lessons[3].chapters[5].blocks` contient 1 bloc(s) et aucun `resource_review`, `download`, URL ou champ de ressource (0 trouvé). `client/src/pages/training/LessonViewer.tsx:1183-1184` le rend uniquement via `MultiChoiceBlock`; `client/src/components/blocks/MultiChoiceBlock.tsx:62-80` ne rend qu’un scénario de chat ou visuel si leurs données existent, sans résoudre d’article. L’absence constatée dans les données et le rendu prouve la persistance du défaut — elle n’est pas traitée comme une correction."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch04_act07",
+      "block_id": "dc_4_act_07_code",
+      "reason": "Activité obligatoire non réalisable de manière fiable avec les seuls actifs déclarés : le bloc demande une session Claude Code mais rend un champ code_repl Python sans runtime ni test exécutable; retirer le bloc enlève son éventuel verrou, tandis que les explications déjà présentes restent du contenu non bloquant.",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[3].chapters[6].blocks[0] est toujours `type=code_repl`, `language=python`; ses `instructions` contiennent « Démarrez Claude Code avec claude.  Demandez à Claude d'emballer la configuration .claude du proj » et le champ `testCode` est absent. `client/src/pages/training/LessonViewer.tsx:1174-1175` rend ce type avec `CodeReplBlock`. `client/src/components/blocks/CodeReplBlock.tsx:28-43` ne lance aucun runtime : il appelle `matchesCanonicalSolution`; `shared/codeReplValidation.ts:10-13` impose l’égalité normalisée au `solutionCode`. `client/src/pages/training/chapterProgress.ts:130-139` n’inclut pas `code_repl` dans les types bloquants et `LessonViewer.tsx:1561-1609` ne calcule aucune gate `code_repl`. La pratique Claude Code reste donc ni exécutable ni requise."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_1_act_01_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[0].chapters[0].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch01_ex01_video_steering_long_sessions_en_15d00822.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: Steering Long Sessions You can prompt Claude and watch it finish a quick task, but ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-BUCKET-FEEDBACK-MASQUE-dc_1_act_04_bucket_sort",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[0].chapters[3].blocks[0] conserve un champ `feedback` non vide (« Bien joué ! Rewind est la façon d'annuler une fausse route ou de remodeler la conversation autour d'un point d ») et ne contient pas de `correction`. `client/src/pages/training/LessonViewer.tsx:950-966` transmet à `MatchingExercise` seulement `id`, `title`, `instructions`, `buckets`, `cards` et `correction`, jamais `feedback`. `client/src/components/MatchingExercise.tsx:420-465` affiche un score générique et ne montre un retour détaillé que si `exercise.correction` existe. Le retour pédagogique déclaré reste donc masqué; le constat est toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch01_act04",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_2_act_01_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[0].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch02_ex01_video_a_claude_md_that_follows_en_d6387cf6.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: A CLAUDE.md That Follows The CLAUDE.md file is not an enforced configuration, mean ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act01",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_2_act_04_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[3].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch02_ex04_video_verification_skills_en_3cc51de1.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: Verification Skills As your project continues to grow and grow, you want to automa ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act04",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-BUCKET-FEEDBACK-MASQUE-dc_2_act_07_bucket_sort",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[6].blocks[0] conserve un champ `feedback` non vide (« Exactement. Les conventions vont dans CLAUDE.md, les procédures répétées deviennent des skills, et tout ce qui ») et ne contient pas de `correction`. `client/src/pages/training/LessonViewer.tsx:950-966` transmet à `MatchingExercise` seulement `id`, `title`, `instructions`, `buckets`, `cards` et `correction`, jamais `feedback`. `client/src/components/MatchingExercise.tsx:420-465` affiche un score générique et ne montre un retour détaillé que si `exercise.correction` existe. Le retour pédagogique déclaré reste donc masqué; le constat est toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act07",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_2_act_08_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[7].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch02_ex08_video_permission_modes_en_632a192f.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: Permission Modes Permission modes lets you decide once what's safe to run without  ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act08",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-BUCKET-FEEDBACK-MASQUE-dc_2_act_10_bucket_sort",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[9].blocks[0] conserve un champ `feedback` non vide (« Bien assorti. Auto est le mode par défaut sans intervention, avec un classificateur vérifiant l'intention avan ») et ne contient pas de `correction`. `client/src/pages/training/LessonViewer.tsx:950-966` transmet à `MatchingExercise` seulement `id`, `title`, `instructions`, `buckets`, `cards` et `correction`, jamais `feedback`. `client/src/components/MatchingExercise.tsx:420-465` affiche un score générique et ne montre un retour détaillé que si `exercise.correction` existe. Le retour pédagogique déclaré reste donc masqué; le constat est toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act10",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_2_act_11_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[1].chapters[10].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch02_ex11_video_hooks_en_35ffff45.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: Hooks A hook is a deterministic code at a fixed point in the loop, which means it  ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch02_act11",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_3_act_01_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[2].chapters[0].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch03_ex01_video_routines_and_headless_en_8fe057b6.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: Routines and Headless Once you trust Claude to do a task, the next move is to stop ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch03_act01",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-BUCKET-FEEDBACK-MASQUE-dc_3_act_03_bucket_sort",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[2].chapters[2].blocks[0] conserve un champ `feedback` non vide (« Bien organisé. Commencez par l'extrémité gérée et descendez le spectre seulement quand le travail l'exige : un ») et ne contient pas de `correction`. `client/src/pages/training/LessonViewer.tsx:950-966` transmet à `MatchingExercise` seulement `id`, `title`, `instructions`, `buckets`, `cards` et `correction`, jamais `feedback`. `client/src/components/MatchingExercise.tsx:420-465` affiche un score générique et ne montre un retour détaillé que si `exercise.correction` existe. Le retour pédagogique déclaré reste donc masqué; le constat est toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch03_act03",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_3_act_04_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[2].chapters[3].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch03_ex04_video_github_actions_and_code_review_en_74dd9890.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: GitHub Actions and Code Review The best place to hand off repetitive work is the p ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch03_act04",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_4_act_01_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[3].chapters[0].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch04_ex01_video_trust_it_verifying_unsupervised_runs_en_9b366a92.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: Trust It: Verifying Unsupervised Runs You handed Claude a task and let it run with ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch04_act01",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    },
+    {
+      "severity": "P2",
+      "title": "029-VIDEO-FR-ALTERNATIVE-dc_4_act_05_video",
+      "evidence": "client/public/data/courses/claude_code_in_action__01.json → lessons[3].chapters[4].blocks[0] conserve `type=video`, `subtitleUrlEn=/api/assets/ch04_ex05_video_plugins_en_9d93acd8.vtt` et ne contient ni `subtitleUrlFr` ni `alternativeTextFr`; son champ `transcript` commence par « 1. Video: Plugins A setup you trust is worth more when your whole team runs it. Plugins are  ». `client/src/pages/training/LessonViewer.tsx:626-690` ne crée une piste française que si `block.subtitleUrlFr` existe et affiche le transcript brut; aucune traduction ni résumé français n’est injecté. `shared/blockRegistry.ts:75-90` confirme que ces alternatives sont des champs de données, pas une valeur générée par le thème. Le constat est donc vérifiable et toujours ouvert.",
+      "course_id": "claude_code_in_action__01",
+      "chapter_id": "dc_ch04_act05",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le rendu/contrôle applicatif (alternative française de vidéo ou transmission du feedback), pas sur une activité supprimable ni sur une référence textuelle rapidement corrigeable; le bundle ne fournit pas d’actif de remplacement ni de correctif fiable. Une suppression de contenu valide ne résoudrait pas le problème."
+    }
+  ],
+  "summary": "Revue de l’état courant terminée : les 9 activités code_repl obligatoires non exécutables sont retirées, les 9 références obsolètes à un article absent sont supprimées de leurs QCM, et les 13 constats historiques P2 liés aux alternatives vidéo ou au feedback masqué restent ouverts car non corrigeables rapidement avec les seuls actifs déclarés."
+}

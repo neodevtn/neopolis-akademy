@@ -1,0 +1,48 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_09",
+  "index": 78,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__09"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__09-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Le checkpoint obligatoire ne peut pas être fiabilisé rapidement avec les seuls actifs déclarés : l’état de complétion est accordé après toute sélection et la correction fiable nécessiterait une modification du rendu et de la logique de progression. Conserver la question, les options et l’explication comme contenu informatif non bloquant.",
+      "evidence": "current_recheck.findings P1 verrouillage; cours lessons[0].chapters[3] requiredBeforeAdvance=true, passThreshold=1; bloc knowledge_check required=true, correctAnswer=a. Le constat documente que KnowledgeCheckBlock.select() et LessonViewer enregistrent la complétion indépendamment de isCorrect."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-checkpoint-01",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou du chapitre après transformation du checkpoint en contenu non bloquant, afin qu’une activité dont la complétion obligatoire n’est pas fiable ne puisse plus empêcher la progression.",
+      "evidence": "Cours lessons[0].chapters[3] : requiredBeforeAdvance=true et passThreshold=1; current_recheck P1 verrouillage associé au bloc ia_appliquee_metiers_tp__09-checkpoint-preparation."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__09-mini-project-proof",
+      "exercise_id": null,
+      "reason": "Le mini-projet obligatoire n’est pas rapidement corrigeable de manière fiable avec les seuls actifs déclarés : la soumission accepte un caractère non blanc et ne vérifie aucun des quatre éléments demandés; la réalisation dépend en outre d’un environnement personnel et d’outils externes. Conserver l’énoncé, les consignes, la correction et les garde-fous comme contenu non bloquant.",
+      "evidence": "current_recheck.findings P1 évaluation; cours lessons[0].chapters[4] requiredBeforeAdvance=true et bloc cloud_exercise id=ia_appliquee_metiers_tp__09-mini-project-proof. minimumAnswerLength, rubricCriteria, serverGradedAssessment et requirePostRevealReflection sont absents; la validation par défaut accepte toute réponse non blanche."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__09",
+      "chapter_id": "ia_appliquee_metiers_tp__09-mini-project",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou du chapitre après transformation de la preuve du mini-projet en contenu non bloquant, car la validation obligatoire actuelle n’est pas fiable.",
+      "evidence": "Cours lessons[0].chapters[4] : requiredBeforeAdvance=true; bloc réel ia_appliquee_metiers_tp__09-mini-project-proof; current_recheck P1 évaluation décrit la validation locale par défaut à longueur 1."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux constats P1 actuels concernent des activités obligatoires dont la réussite ne peut pas être fiabilisée rapidement avec les seuls actifs déclarés. Le checkpoint de sécurité et la preuve du mini-projet sont donc convertis en contenu informatif conservant leurs explications, et les deux verrous de chapitre sont retirés. Aucun constat P0/P1 ne reste non résolu; aucun historique stillOpen à normaliser n’est présent."
+}

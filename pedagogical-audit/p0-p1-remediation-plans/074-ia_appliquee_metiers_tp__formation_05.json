@@ -1,0 +1,59 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_05",
+  "index": 74,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__05"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__05",
+      "chapter_id": "ia_appliquee_metiers_tp__05-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__05-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire peut être marqué terminé après une réponse erronée ; son verrou ne vérifie que la complétion de l’interaction, pas isCorrect. L’activité obligatoire n’est donc pas rapidement corrigeable de manière fiable avec les actifs déclarés. Retirer le bloc pour supprimer cette évaluation non fiable ; les consignes de sécurité restent déjà exposées dans les chapitres précédents.",
+      "evidence": "current_recheck.findings[P1 verrouillage] ; chapitre ia_appliquee_metiers_tp__05-checkpoint-01 avec requiredBeforeAdvance=true et passThreshold=1 ; bloc réel ia_appliquee_metiers_tp__05-checkpoint-preparation de type knowledge_check, correctAnswer=a et required=true."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__05",
+      "chapter_id": "ia_appliquee_metiers_tp__05-checkpoint-01",
+      "reason": "Retirer le verrou de chapitre associé au checkpoint supprimé afin qu’aucune interaction non fiablement évaluée ne bloque la progression.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__05-checkpoint-01 porte requiredBeforeAdvance=true et passThreshold=1 ; le seul bloc obligatoire identifié est ia_appliquee_metiers_tp__05-checkpoint-preparation."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__05",
+      "chapter_id": "ia_appliquee_metiers_tp__05-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__05-mini-project-proof",
+      "reason": "Le cloud_exercise obligatoire accepte une réponse non vide sans critères, grille, longueur minimale pertinente, évaluation serveur ni réflexion obligatoire ; il ne peut donc pas fournir une preuve fiable avec les actifs déclarés. Convertir le bloc en contenu non bloquant conserve la consigne, les étapes, l’indice, la correction et le message explicatif sans présenter une simple saisie comme validation du mini-projet.",
+      "evidence": "current_recheck.findings[P1 guidage, évaluation, bilinguisme] ; bloc réel ia-appliquee_metiers_tp__05-mini-project-proof de type cloud_exercise dans ia-appliquee_metiers_tp__05-mini-project ; champs d’évaluation absents et validation décrite comme déclenchée par une soumission non blanche."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__05",
+      "chapter_id": "ia_appliquee_metiers_tp__05-mini-project",
+      "reason": "Le mini-projet ne doit plus être un verrou de progression après conversion de son activité en contenu non bloquant ; aucune preuve non fiable ne doit déverrouiller le quiz final.",
+      "evidence": "Le chapitre réel ia-appliquee_metiers_tp__05-mini-project porte requiredBeforeAdvance=true et contient le bloc cloud_exercise ia-appliquee_metiers_tp__05-mini-project-proof ; la progression dépend actuellement de completedCloudExercises."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Nomenclature différente entre la frise et le tri final",
+      "evidence": "La frise du chapitre ia-appliquee_metiers_tp__05-screen-03 emploie Cadrer → Préparer → Tester → Contrôler, tandis que ia-appliquee_metiers_tp__05-quiz-order emploie Cadrer → Construire → Tester → Valider.",
+      "course_id": "ia-appliquee_metiers_tp__05",
+      "chapter_id": "ia-appliquee_metiers_tp__05-final-quiz",
+      "reason_not_rapidly_remediable": "Le défaut est textuel et non bloquant, mais sa correction nécessite de choisir entre uniformiser les libellés et expliciter l’équivalence pédagogique ; aucune décision de contenu supplémentaire n’est déclarée dans le bundle."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback générique du QCM sur le contrôle du workflow",
+      "evidence": "Le bloc réel ia-appliquee_metiers_tp__05-quiz-03 demande de comparer le résultat du test au critère métier et de documenter l’écart, mais réutilise l’explication générique sur données fictives, contrôle humain et vérification.",
+      "course_id": "ia-appliquee_metiers_tp__05",
+      "chapter_id": "ia-appliquee_metiers_tp__05-final-quiz",
+      "reason_not_rapidly_remediable": "Le problème est une amélioration de feedback non bloquante ; le bundle identifie le texte existant mais ne fournit pas de décision éditoriale arrêtée pour remplacer le feedback commun des QCM."
+    }
+  ],
+  "summary": "Les deux activités obligatoires dont la réussite n’est pas fiablement contrôlée sont neutralisées : le checkpoint est supprimé avec son verrou, et la preuve du mini-projet est convertie en contenu non bloquant avec son verrou retiré. Les deux constats P2 de cohérence terminologique et de feedback restent ouverts."
+}

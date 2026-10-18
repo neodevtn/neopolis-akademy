@@ -1,0 +1,83 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_14",
+  "index": 83,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__14"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__14-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire n'est pas un verrou fiable : une réponse incorrecte est néanmoins enregistrée comme complétée par le flux de progression. Le bundle ne permet pas de corriger ce comportement par le seul contenu ; retirer l'activité obligatoire évite une validation trompeuse.",
+      "evidence": "Le bloc réel lessons[0].chapters[3].blocks[0] est de type knowledge_check, required=true, correctAnswer=a et passThreshold=1 ; le constat P1 confirmé indique que LessonViewer ajoute l'identifiant au Set de complétion sans tester isCorrect (input JSON, current_recheck.findings et initial_audit issue incorrect-answer-unlocks)."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-checkpoint-01",
+      "reason": "Retirer le verrou de chapitre associé au checkpoint supprimé afin que l'activité non fiable ne bloque plus la progression.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__14-checkpoint-01 porte requiredBeforeAdvance=true et contient le bloc knowledge_check supprimé."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__14-mini-project-proof",
+      "reason": "La preuve du cloud_exercise obligatoire est validée dès qu'elle est non vide (minimum effectif d'un caractère), révèle la correction et déverrouille le quiz sans vérifier les éléments demandés. Retirer son caractère bloquant tout en conservant la consigne, le guide d'environnement, les ressources, l'indice et l'auto-vérification comme contenu non bloquant.",
+      "evidence": "Le bloc réel lessons[0].chapters[4].blocks[0] est de type cloud_exercise, avec assignment, instructions, environmentGuide, resources, hint et solution ; le constat P1 confirmé établit l'absence de rubric/server grading/minimumAnswerLength significatif et la complétion sur toute réponse non vide."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-mini-project",
+      "reason": "Le mini-projet n'étant plus une activité bloquante fiable, retirer requiredBeforeAdvance du chapitre empêche le verrou de subsister.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__14-mini-project porte requiredBeforeAdvance=true et son unique activité cloud_exercise est convertie en contenu non bloquant."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Localisation anglaise du cadrage initial incomplète",
+      "evidence": "course.title.en, course.description.en et lessons[0].chapters[0].blocks[0] (learning_section) conservent majoritairement les chaînes françaises ; le renderer affiche la valeur de la langue courante telle quelle (current_recheck.findings, localisation écran d'ouverture).",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-screen-01",
+      "reason_not_rapidly_remediable": "Le plan ne dispose d'aucune action de remplacement/localisation de texte et la consigne interdit de modifier le cours ; aucune suppression d'activité ne corrige ce cadrage non activité."
+    },
+    {
+      "severity": "P1",
+      "title": "Champs anglais du mini-projet non localisés",
+      "evidence": "assignment, instructions, hint, solution et successMessage du bloc réel ia_appliquee_metiers_tp__14-mini-project-proof sont des chaînes françaises ; le constat P1 de localisation le confirme.",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-mini-project",
+      "reason_not_rapidly_remediable": "La conversion en contenu retire le verrou non fiable mais ne fournit pas une action de traduction dans le schéma, et le cours ne peut pas être modifié dans cette revue."
+    },
+    {
+      "severity": "P2",
+      "title": "Éléments anglais du panneau de vérification encore en français",
+      "evidence": "Les six items .en du comparison_panel réel lessons[0].chapters[2].blocks[1] sont identiques aux textes français, selon le constat current_recheck.",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-screen-03",
+      "reason_not_rapidly_remediable": "Aucune action de traduction n'est disponible dans le plan et la modification directe du fichier de cours est interdite."
+    },
+    {
+      "severity": "P2",
+      "title": "Options de quiz final partiellement non localisées",
+      "evidence": "Les options .en des blocs réels ia-appliquee_metiers_tp__14-quiz-01, -quiz-02 et -quiz-04 contiennent encore des propositions françaises ; constat current_recheck final-quiz anglais.",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-final-quiz",
+      "reason_not_rapidly_remediable": "Le schéma d'actions ne permet pas de remplacer les textes et le cours ne peut pas être édité dans cette revue ; les QCM valides ne doivent pas être supprimés uniquement pour une localisation."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback du tri non rendu",
+      "evidence": "Le bloc réel ia-appliquee-metiers-tp__14-quiz-order contient feedback.fr/en, mais le constat confirmé indique que LessonViewer ne le transmet pas à MatchingExercise, qui n'affiche que correction.",
+      "course_id": "ia_appliquee_metiers_tp__14",
+      "chapter_id": "ia_appliquee_metiers_tp__14-final-quiz",
+      "reason_not_rapidly_remediable": "Le défaut est dans le rendu/code (transmission du feedback), non dans un contenu manquant ; aucune modification de cours ou correction de code n'est autorisée dans cette revue."
+    }
+  ],
+  "summary": "Revue de l'état courant terminée : les deux activités obligatoires dont la validation n'est pas fiable sont neutralisées sans modifier le cours (checkpoint supprimé ; mini-projet converti en contenu non bloquant), et leurs verrous de chapitre sont retirés. Les problèmes de localisation et de rendu restants sont conservés comme constats non résolus, sans suppression de contenu valide ni invention d'actif."
+}

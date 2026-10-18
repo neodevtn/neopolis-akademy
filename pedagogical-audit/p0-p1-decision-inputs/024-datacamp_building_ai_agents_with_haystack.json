@@ -1,0 +1,1967 @@
+{
+  "formation": {
+    "index": 24,
+    "formation_id": "datacamp_building_ai_agents_with_haystack",
+    "title": {
+      "en": "Building AI Agents with Haystack",
+      "fr": "Créer des agents d’IA avec Haystack"
+    },
+    "course_ids": [
+      "building_ai_agents_with_haystack__01"
+    ]
+  },
+  "current_open_p0_p1_findings": [],
+  "legacy_open_count_requiring_normalization": 10,
+  "current_recheck": {
+    "formationId": "datacamp_building_ai_agents_with_haystack",
+    "initialIssueCount": 10,
+    "resolvedWithEvidence": 0,
+    "documentedRemoval": 0,
+    "stillOpen": 10,
+    "externallyUnverifiable": 0,
+    "currentQualityScore100": 61.0,
+    "keyOpenIssues": [
+      "P1 — client/public/data/courses/building_ai_agents_with_haystack__01.json → datacampImport.expected et lessons[*].chapters : 6 LocalEnvironmentExercise attendus, mais 5 chapitres VideoExercise seulement et aucun bloc pratique.",
+      "P1 — client/public/data/lessonQuizzes.json + client/src/components/ChapterQuiz.tsx:75-79 : aucune banque Haystack ; le quiz injecté valide automatiquement sans question.",
+      "P1 — course JSON → dc_1_act_03_video.projectorSlides[14] puis dc_2_act_01_video.projectorSlides[0] : l’agent est annoncé à construire, puis présupposé construit sans activité intermédiaire.",
+      "P1 — course JSON → dc_2_act_01_video.projectorSlides[7] suivi de lessons[1].chapters[1] : le tracing annoncé n’est pas enseigné ni pratiqué.",
+      "P1 — course JSON → dc_2_act_03_video.projectorSlides[7] puis dc_2_act_06_video.projectorSlides[5] : le pipeline text-to-SQL/outillage est annoncé et récapitulé sans TP intermédiaire.",
+      "P2 — course JSON → dc_1_act_03_video.projectorSlides[2..5] : contenu affichable « $$ » ; ProjectorPlayer.tsx:301-315 ne rend pas script.",
+      "P2 — course JSON → les 5 blocs vidéo : transcription anglaise ; 4/5 sans subtitleUrlFr et ProjectorPlayer.tsx:159-176 ne rend aucune piste de captions intégrée."
+    ],
+    "methodSummary": "Contre-revue qualitative limitée aux 10 constats explicitement consignés dans le rapport initial, sans modification des fichiers de cours ou de code. Le manifeste de formation (entrée 24) désigne un seul JSON courant : client/public/data/courses/building_ai_agents_with_haystack__01.json, courseId building_ai_agents_with_haystack__01. Les données actuelles ont été rapprochées constat par constat du rendu réel de LessonViewer.tsx, de la progression chapterProgress.ts, du registre blockRegistry.ts, du thème learningDesign.ts, ainsi que des composants effectivement impliqués ChapterQuiz.tsx et ProjectorPlayer.tsx. Le manifeste p0-p2-remediation-manifest.json ne contient aucune entrée pour ce courseId : aucun retrait n’est donc documenté. L’index courant a bien été mis à jour pour annoncer 5 écrans, 5 vidéos et 0 activité (trainingIndex.json:6783-6795), mais cette correction de compteur ne constitue ni la restauration des 6 TP attendus par datacampImport.expected, ni une trace de retrait documenté ; les promesses/transitions pratiques persistent. Aucune absence d’écran n’a été assimilée à une correction. Tous les constats sont tranchables par les données et le code de rendu actuels, donc aucun n’est classé externally_unverifiable. Score : les cinq scores de chapitre du rapport initial (64, 56, 61, 64, 60) sont conservés faute de résolution démontrée des constats qui les pénalisent ; moyenne non pondérée = 305 / 5 = 61,0/100. Le score n’infère ni disponibilité réseau/qualité audiovisuelle réelle ni réussite d’une session apprenant authentifiée.",
+    "issueClassifications": [
+      {
+        "issueId": "haystack-001",
+        "severity": "P1",
+        "category": "complétude et progression",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch01_act01",
+        "contentId": "datacampImport.expected.exercise_types",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → datacampImport.expected; lessons[0].chapters[0..1]; lessons[1].chapters[0..2]",
+        "currentState": "L’import actuel déclare toujours 5 VideoExercise et 6 LocalEnvironmentExercise, tandis que le parcours ne contient que 5 chapitres, tous sourceActivityType=VideoExercise. Les blocs actuels sont content/video/download ou video ; aucun exercise, cloud_exercise, code_repl ou ai_evaluation n’est présent.",
+        "evidence": "Le JSON actuel indique expected.activities_expected_from_outline=11 et expected.exercise_types={VideoExercise:5, LocalEnvironmentExercise:6}, mais ses 2+3 chapitres sont tous VideoExercise. trainingIndex.json:6783-6795 annonce désormais explicitement exerciseCount:0 et totalActivities:5. LessonViewer.tsx:402 et 1137-1184 sait rendre/gérer les types pratiques, et blockRegistry.ts:260-352/419-438 les définit, mais ils ne figurent pas dans ce cours. Le manifeste de remédiation ne cite pas ce courseId : le retrait n’est pas documenté."
+      },
+      {
+        "issueId": "haystack-005",
+        "severity": "P1",
+        "category": "évaluation et verrouillage",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch01_act01",
+        "contentId": "ChapterQuiz:0_0",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/lessonQuizzes.json; client/src/components/ChapterQuiz.tsx; client/src/pages/training/LessonViewer.tsx",
+        "currentState": "lessonQuizzes.json ne possède toujours pas la clé building_ai_agents_with_haystack__01. Les cinq chapitres sont de type teaching, donc LessonViewer continue d’injecter ChapterQuiz avant l’avance lorsqu’ils ne sont pas déjà validés.",
+        "evidence": "ChapterQuiz.tsx:48-59 charge une banque par courseId et retourne une liste vide pour une clé absente ; 75-80 appelle alors onPass(), puis 104 ne rend aucune question. LessonViewer.tsx:1601-1607 calcule needsQuiz pour un chapitre teaching et 1624-1626 ouvre ce quiz ; son onPass à 1404-1422 valide le chapitre et avance. Ainsi, après la garde vidéo, l’évaluation reste une validation sans question."
+      },
+      {
+        "issueId": "haystack-006",
+        "severity": "P2",
+        "category": "langue et accessibilité média",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch01_act01",
+        "contentId": "dc_1_act_01_video",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[0].chapters[0].blocks[1]",
+        "currentState": "Le premier Projector conserve une transcription anglaise, subtitleUrlEn renseigné, subtitleUrlFr absent et aucune alternativeTextFr.",
+        "evidence": "Le bloc dc_1_act_01_video commence sa transcription par « Hello and welcome to this course... ». LessonViewer.tsx:571-582 transmet seulement média/slides/timings à ProjectorPlayer, puis 597-601 propose un lien externe vers les sous-titres et 604-620 affiche cette transcription. ProjectorPlayer.tsx:159-176 ne comporte qu’un élément audio : aucune prop ni balise track/captions ne rend une piste dans le lecteur."
+      },
+      {
+        "issueId": "haystack-002",
+        "severity": "P1",
+        "category": "transition théorie-vers-activité",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch01_act03",
+        "contentId": "dc_1_act_03_video",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[0].chapters[1].blocks[0].projectorSlides[14]; lessons[1].chapters[0].blocks[0].projectorSlides[0]",
+        "currentState": "La transition continue d’annoncer la création de l’agent, puis l’écran suivant déclaré dans le JSON affirme qu’un agent pleinement fonctionnel existe ; aucune activité ou aucun chapitre ne sépare ces deux vidéos.",
+        "evidence": "dc_1_act_03_video.projectorSlides[14].script vaut « Let’s start creating our agent. ». Le chapitre suivant dans l’ordre est lessons[1].chapters[0], dc_ch02_act01, dont projectorSlides[0].script vaut « We now have a fully working agent... ». La structure actuelle ne contient que dc_ch01_act01, dc_ch01_act03, dc_ch02_act01, dc_ch02_act03 et dc_ch02_act06, tous VideoExercise."
+      },
+      {
+        "issueId": "haystack-007",
+        "severity": "P2",
+        "category": "média et rendu",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch01_act03",
+        "contentId": "dc_1_act_03_video#projectorSlides[2-5]",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[0].chapters[1].blocks[0].projectorSlides[2..5]",
+        "currentState": "Les quatre slides « Atouts des agents » ont toujours content et contentLeft égaux à « $$ » ; leurs explications ne sont présentes que dans script.",
+        "evidence": "Les slides [2], [3], [4] et [5] de dc_1_act_03_video conservent toutes le marqueur « $$ » dans le champ affichable et du texte anglais dans script. ProjectorPlayer.tsx:275-315 affiche uniquement title, images, contentLeft, contentRight ou content selon le type de slide ; script n’est jamais rendu. Le marqueur reste donc visible plutôt que l’explication synchronisée."
+      },
+      {
+        "issueId": "haystack-003",
+        "severity": "P1",
+        "category": "transition théorie-vers-activité",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch02_act01",
+        "contentId": "dc_2_act_01_video",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[0].blocks[0].projectorSlides[7]; lessons[1].chapters[1]",
+        "currentState": "La vidéo promet toujours un exercice de tracing des appels d’outils et étapes intermédiaires, mais l’entrée suivante est dc_ch02_act03, une vidéo sur les pipelines sans bloc pratique de tracing.",
+        "evidence": "dc_2_act_01_video.projectorSlides[7].script annonce « In the next exercise ... trace tool usage and inspect intermediate steps ... ». lessons[1].chapters[1] est dc_ch02_act03, sourceActivityType=VideoExercise, blocks=[dc_2_act_03_video de type video]. Aucun chapitre intermédiaire ni type pratique n’est présent."
+      },
+      {
+        "issueId": "haystack-008",
+        "severity": "P2",
+        "category": "langue et accessibilité média",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch02_act01",
+        "contentId": "dc_2_act_01_video",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[0].blocks[0]",
+        "currentState": "Le média de transparence conserve une transcription anglaise, subtitleUrlEn renseigné, subtitleUrlFr absent et aucune alternativeTextFr.",
+        "evidence": "dc_2_act_01_video.transcript commence par « We now have a fully working agent... ». LessonViewer.tsx:597-601 offre au mieux un lien de sous-titres, tandis que ProjectorPlayer.tsx:20-33 et 159-176 ne reçoivent ni ne rendent subtitleUrlFr/subtitleUrlEn sous forme de captions intégrées."
+      },
+      {
+        "issueId": "haystack-004",
+        "severity": "P1",
+        "category": "transition théorie-vers-activité",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch02_act03",
+        "contentId": "dc_2_act_03_video",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[1].blocks[0].projectorSlides[7]; lessons[1].chapters[2].blocks[0].projectorSlides[5]",
+        "currentState": "La vidéo pipelines annonce toujours plusieurs exercices pour construire, envelopper et connecter un pipeline text-to-SQL ; le JSON passe directement au récapitulatif, lequel affirme ces étapes faites.",
+        "evidence": "dc_2_act_03_video.projectorSlides[7].script annonce « In the next exercises, we’ll build a pipeline ... wrap that pipeline as a tool and connect it to our agent ». Le chapitre suivant est directement dc_ch02_act06, VideoExercise ; son projectorSlides[5].script dit « Next, we built a text-to-SQL pipeline ... Finally, we wrapped that pipeline as a tool... ». Aucun bloc pratique n’est intercalé."
+      },
+      {
+        "issueId": "haystack-009",
+        "severity": "P2",
+        "category": "langue et accessibilité média",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch02_act03",
+        "contentId": "dc_2_act_03_video",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[1].blocks[0]",
+        "currentState": "Cette vidéo conserve bien subtitleUrlFr et subtitleUrlEn, mais la transcription affichée reste anglaise et le Projector ne rend toujours pas de captions synchronisées dans son lecteur.",
+        "evidence": "dc_2_act_03_video.transcript commence par « Agents are a powerful... » et alternativeTextFr est absent, malgré subtitleUrlFr renseigné. Dans le chemin Projector, LessonViewer.tsx:571-582 n’envoie pas les URLs de sous-titres à ProjectorPlayer ; 597-601 crée seulement un lien externe, et ProjectorPlayer.tsx:159-176 contient un audio sans track."
+      },
+      {
+        "issueId": "haystack-010",
+        "severity": "P2",
+        "category": "langue et accessibilité média",
+        "courseId": "building_ai_agents_with_haystack__01",
+        "chapterId": "dc_ch02_act06",
+        "contentId": "dc_2_act_06_video",
+        "classification": "still_open",
+        "currentDataPath": "client/public/data/courses/building_ai_agents_with_haystack__01.json → lessons[1].chapters[2].blocks[0]",
+        "currentState": "La synthèse finale conserve une transcription anglaise, subtitleUrlEn renseigné, subtitleUrlFr absent et aucune alternativeTextFr.",
+        "evidence": "dc_2_act_06_video.transcript commence par « Congrats on making it to the end of this course! ». Le même chemin Projector de LessonViewer.tsx:571-620 affiche cette transcription et un lien de sous-titres externe seulement ; ProjectorPlayer.tsx:159-176 ne contient aucune piste de captions intégrée."
+      }
+    ],
+    "reportPath": "/home/ubuntu/neopolis-akademy/pedagogical-audit/recheck/024-datacamp_building_ai_agents_with_haystack.json"
+  },
+  "initial_audit": {
+    "formation_id": "datacamp_building_ai_agents_with_haystack",
+    "courses": [
+      {
+        "course_id": "building_ai_agents_with_haystack__01",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch01_act01",
+            "title": "Bienvenue dans le cours !",
+            "score_100": 64,
+            "verified_dimensions": [
+              "Le bloc « Avant de commencer », le titre et la description sont rendus avant la vidéo ; la vidéo Projector fournit 8 slides et une transcription consultable.",
+              "Le bloc d’ouverture indique d’utiliser un chatbot autorisé et de ne pas partager données sensibles, mots de passe ou clés API.",
+              "La vidéo officielle est requise avant le passage ; le lecteur rend une commande « Marquer comme vue » et le motif du verrouillage.",
+              "Le média dispose de références MP4, MP3, PDF de slides, timings et transcription ; ProjectorPlayer rend les slides synchronisées et LessonViewer rend la transcription repliable."
+            ],
+            "unverified_dimensions": [
+              "Aucun objectif spécifique de cet écran n’est distinct de la description globale du cours, répétée au niveau du chapitre.",
+              "Aucune activité de construction n’est rendue dans cet écran : pratique, feedback et critère de réussite d’un agent ne sont pas vérifiables.",
+              "La qualité audiovisuelle, la lisibilité effective des images et la disponibilité de lecture des assets /api/assets n’ont pas été testées dans une session apprenant authentifiée."
+            ],
+            "issues": [
+              {
+                "issue_id": "haystack-001",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "datacampImport.expected.exercise_types",
+                "content_type": "course_import_metadata",
+                "severity": "P1",
+                "category": "complétude et progression",
+                "description": "Le parcours apprenant ne contient que cinq chapitres VideoExercise ; les six LocalEnvironmentExercise annoncés dans les métadonnées d’import ne sont représentés par aucun chapitre ni bloc rendu. Le cours promet pourtant de créer un agent fonctionnel et la suite des vidéos présuppose des réalisations pratiques. L’apprenant ne peut donc ni réaliser ni recevoir de feedback sur les étapes de construction annoncées.",
+                "current_content": "datacampImport.expected indique 11 activités extraites, dont 5 VideoExercise et 6 LocalEnvironmentExercise. Les 2 leçons totalisent en réalité 5 chapitres, tous sourceActivityType=VideoExercise ; aucun bloc exercise, cloud_exercise, code_repl ou ai_evaluation n’est présent.",
+                "proposed_content": "Réintégrer les six activités d’environnement local avec leur énoncé, code/environnement de départ, action attendue, critère de réussite et feedback, ou corriger de façon explicite et cohérente les promesses, compteurs et transitions si ces activités ne font pas partie de l’offre. Les données disponibles ne permettent pas de reconstituer fidèlement leurs énoncés ou solutions.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json: datacampImport.expected (l. 9-20), lessons[*].chapters (5 entrées, toutes VideoExercise) ; server/buildingAiAgentsWithHaystack.test.ts l. 5-12 confirme 5 activités, 5 Projector et l’absence de cloud_exercise/ai_evaluation/code_repl ; client/src/data/trainingIndex.json l. 6783-6795 affiche simultanément exerciseCount:0/totalActivities:5 et « 11 activités · 6 TP guidés ».",
+                "confidence": "high",
+                "verification_status": "verified_json_and_renderer_code",
+                "recommended_action": "Priorité 1 : arbitrer le périmètre source, puis rétablir les TP ou mettre en cohérence toutes les données et la narration avant publication."
+              },
+              {
+                "issue_id": "haystack-005",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "ChapterQuiz:0_0",
+                "content_type": "generated_chapter_quiz",
+                "severity": "P1",
+                "category": "évaluation et verrouillage",
+                "description": "La validation automatique injectée après cet écran n’évalue rien : aucune banque de questions n’existe pour ce cours. Lorsqu’elle est ouverte, ChapterQuiz appelle onPass sans afficher de question ; LessonViewer enregistre alors le chapitre comme validé et avance. Le verrouillage vérifie donc seulement que la vidéo a été regardée ou marquée manuellement comme vue, pas la compréhension.",
+                "current_content": "Aucune entrée « building_ai_agents_with_haystack__01 » dans client/public/data/lessonQuizzes.json. Pour une banque vide, ChapterQuiz exécute onPass() automatiquement.",
+                "proposed_content": "Ajouter une banque de questions sourcées et contextualisées pour chaque écran d’enseignement, avec explication de la bonne réponse et seuil explicite ; à défaut, ne pas présenter ni tracer ce passage comme une validation pédagogique.",
+                "evidence": "client/src/components/ChapterQuiz.tsx l. 48-60 charge une banque par courseId/lesson/chapter et l. 75-79 déclenche onPass quand allQuestions est vide ; client/src/pages/training/LessonViewer.tsx l. 1621-1648 déclenche ce quiz pour tout chapitre teaching puis valide/avance via onPass l. 1411-1429. La lecture complète de lessonQuizzes.json ne contient pas la clé du cours.",
+                "confidence": "high",
+                "verification_status": "verified_json_and_renderer_code",
+                "recommended_action": "Priorité 1 : ne laisser la validation et son indicateur de progression actifs qu’après ajout de questions vérifiées ; couvrir les cinq écrans concernés."
+              },
+              {
+                "issue_id": "haystack-006",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "dc_1_act_01_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "langue et accessibilité média",
+                "description": "Dans une formation importée avec sourceLanguage=fr-FR et des titres/puces en français, la transcription visible de cette vidéo est en anglais et seul un fichier de sous-titres anglais est déclaré. ProjectorPlayer ne rend pas de piste de sous-titres dans le lecteur ; il affiche seulement un lien externe « Sous-titres ». La voie textuelle accessible au sein de l’écran n’est donc pas en français.",
+                "current_content": "transcript : « Hello and welcome to this course on building AI agents using Haystack! » ; subtitleUrlEn renseigné ; subtitleUrlFr absent.",
+                "proposed_content": "Fournir une transcription française relue et des sous-titres français rendus dans le lecteur Projector ; conserver la version anglaise comme alternative. Ne pas déduire ou réécrire la piste audio sans source validée.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json l. 4-8, 71-74 et 239-272 ; client/src/pages/training/LessonViewer.tsx l. 571-620 rend la transcription mais l. 597-601 ne propose que le lien de sous-titres ; client/src/components/ProjectorPlayer.tsx l. 159-176 ne comporte aucun élément track/captions.",
+                "confidence": "high",
+                "verification_status": "verified_rendered_text_and_renderer_code",
+                "recommended_action": "Priorité 2 : rétablir une alternative textuelle française directement utilisable dans le parcours avant de considérer le média accessible en français."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch01_act03",
+            "title": "Que peut faire un agent Haystack ?",
+            "score_100": 56,
+            "verified_dimensions": [
+              "La comparaison LLM/agent et les outils possibles sont explicitées dans les slides, la transcription et les titres visibles.",
+              "Le chapitre prolonge l’introduction par la distinction LLM/agent avant d’aborder la transparence et les pipelines.",
+              "Titre, slides, transcription et commande de lecture sont rendus ; la vidéo est identifiée comme requise par le mécanisme de progression."
+            ],
+            "unverified_dimensions": [
+              "Le chapitre réutilise la description globale plutôt qu’un objectif spécifique mesurable.",
+              "Aucun exercice ou critère de réussite ne permet de vérifier la création du premier agent annoncée par la formation.",
+              "La qualité audiovisuelle et la lisibilité effective des illustrations ne sont pas vérifiables sans lecture apprenant."
+            ],
+            "issues": [
+              {
+                "issue_id": "haystack-002",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "dc_1_act_03_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "transition théorie-vers-activité",
+                "description": "La transition annonce le début de la création de l’agent, mais le chapitre suivant réellement rendu est une vidéo qui affirme déjà qu’un agent pleinement fonctionnel a été construit. Aucune activité de construction, de test ou de correction n’est disponible entre les deux. Cette ellipse transforme un prérequis pratique en connaissance implicite.",
+                "current_content": "Fin de la vidéo : « Let’s start creating our agent. » ; ouverture du chapitre suivant : « We now have a fully working agent, one that can choose tools and pull in real-world data… ».",
+                "proposed_content": "Insérer avant « Ouvrir la boîte noire » les activités de création annoncées, avec une étape observable de mise en route, un résultat attendu et un retour de réussite/erreur ; si elles ne sont pas livrées, remplacer la transition et ne pas présupposer un agent construit.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json: dc_1_act_03_video.projectorSlides[14].script (« Let’s start creating our agent. ») et dc_2_act_01_video.projectorSlides[0].script (« We now have a fully working agent… ») ; aucun chapitre intermédiaire dans lessons[0].chapters puis lessons[1].chapters.",
+                "confidence": "high",
+                "verification_status": "verified_json_and_renderer_code",
+                "recommended_action": "Priorité 1 : restaurer la continuité pratique ou corriger la narration de passage entre les deux écrans."
+              },
+              {
+                "issue_id": "haystack-007",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch01_act03",
+                "content_id": "dc_1_act_03_video#projectorSlides[2-5]",
+                "content_type": "projector_slide",
+                "severity": "P2",
+                "category": "média et rendu",
+                "description": "Quatre slides consécutives « Atouts des agents » ne contiennent que « $$ » dans le champ affiché. Le texte explicatif réside dans script, mais ProjectorPlayer ne rend jamais script sur le canevas. L’apprenant voit donc le titre et le marqueur brut plutôt que la progression visuelle correspondant aux exemples de recherche, calcul et base de données.",
+                "current_content": "projectorSlides[2] à [5] : content/contentLeft = « $$ » ; script contient les explications en anglais.",
+                "proposed_content": "Remplacer les marqueurs rendus par des phrases ou visuels finalisés et contextuels, ou adapter le lecteur pour présenter un sous-titrage/script synchronisé. La formulation exacte doit être validée à partir de la source pédagogique et de la langue cible.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json, dc_1_act_03_video, slides 3-6 (transcription l. 635-650) ; client/src/components/ProjectorPlayer.tsx l. 301-315 affiche seulement slide.title, slide.images et slide.content, jamais slide.script.",
+                "confidence": "high",
+                "verification_status": "verified_json_and_renderer_code",
+                "recommended_action": "Priorité 2 : corriger les quatre slides avant de les utiliser comme support autonome de compréhension."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch02_act01",
+            "title": "Ouvrir la boîte noire : rendre les agents transparents",
+            "score_100": 61,
+            "verified_dimensions": [
+              "Le besoin de traçabilité est introduit par les risques observables : appel d’outil, paramètres, hallucination et débogage.",
+              "La transparence est un prolongement logique de la présentation des agents et outils.",
+              "Le chapitre contient une vidéo Projector, une transcription, un téléchargement de slides et un verrouillage de vidéo explicité."
+            ],
+            "unverified_dimensions": [
+              "Aucun objectif distinct de la description générale de la leçon n’est disponible.",
+              "Aucune activité de tracing, action attendue, correction ou feedback n’est rendue.",
+              "La qualité audiovisuelle et la lisibilité effective des images ne sont pas vérifiables sans lecture apprenant."
+            ],
+            "issues": [
+              {
+                "issue_id": "haystack-003",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch02_act01",
+                "content_id": "dc_2_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "transition théorie-vers-activité",
+                "description": "La vidéo promet que l’exercice suivant configurera le traçage des appels d’outils et l’inspection des étapes intermédiaires. L’écran suivant disponible traite des pipelines ; aucune activité de tracing n’est rendue. Le geste annoncé, ses paramètres et sa vérification ne peuvent donc pas être appris ni validés.",
+                "current_content": "« In the next exercise… we’ll customize our agent to trace tool usage and inspect intermediate steps in real time… » ; le chapitre immédiatement suivant est « Pipelines Haystack : la force secrète de notre agent » et ne contient qu’une vidéo.",
+                "proposed_content": "Réinsérer l’exercice de tracing annoncé avec une consigne, un état de départ, les observations attendues sur les appels d’outils, un moyen de comparer son résultat et un feedback ; ou modifier la promesse de transition si l’exercice n’est pas proposé.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json, dc_2_act_01_video.projectorSlides[7].script ; lessons[1].chapters[1] = dc_ch02_act03, blocks=[video].",
+                "confidence": "high",
+                "verification_status": "verified_json_and_renderer_code",
+                "recommended_action": "Priorité 1 : réparer la transition et la pratique promise avant le chapitre sur les pipelines."
+              },
+              {
+                "issue_id": "haystack-008",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch02_act01",
+                "content_id": "dc_2_act_01_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "langue et accessibilité média",
+                "description": "La transcription visible et les scripts de ce média sont en anglais alors que l’interface et le cours sont en français, et seul un sous-titre anglais est déclaré. Le lecteur Projector ne rend pas les sous-titres dans le lecteur.",
+                "current_content": "transcript : « We now have a fully working agent… » ; subtitleUrlEn renseigné ; subtitleUrlFr absent.",
+                "proposed_content": "Ajouter une transcription et des sous-titres français accessibles dans le lecteur, après validation du contenu source.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json, bloc dc_2_act_01_video (subtitleUrlEn et transcript) ; ProjectorPlayer.tsx l. 159-176 ; LessonViewer.tsx l. 597-620.",
+                "confidence": "high",
+                "verification_status": "verified_rendered_text_and_renderer_code",
+                "recommended_action": "Priorité 2 : traiter ce média avec les quatre autres vidéos de la formation dans un même lot d’accessibilité linguistique."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch02_act03",
+            "title": "Pipelines Haystack : la force secrète de notre agent",
+            "score_100": 64,
+            "verified_dimensions": [
+              "La distinction agent/pipeline, les workflows déterministes et le rôle d’un pipeline text-to-SQL sont explicités dans les slides et la transcription.",
+              "Le chapitre s’appuie de manière cohérente sur agents, outils et traçabilité déjà présentés.",
+              "La vidéo Projector comporte une transcription et des sous-titres français/anglais déclarés."
+            ],
+            "unverified_dimensions": [
+              "Aucun objectif de performance ni activité de mise en œuvre du pipeline n’est rendu.",
+              "Aucun exercice, test, message d’erreur ou solution ne permet de contrôler le feedback et la correction.",
+              "La qualité effective de l’audio, des sous-titres et des illustrations n’a pas été lue en session apprenant."
+            ],
+            "issues": [
+              {
+                "issue_id": "haystack-004",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch02_act03",
+                "content_id": "dc_2_act_03_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "transition théorie-vers-activité",
+                "description": "La vidéo annonce plusieurs exercices pour construire un pipeline text-to-SQL, l’encapsuler comme outil puis le connecter à l’agent. L’écran suivant est le récapitulatif final, qui déclare ces étapes réalisées. Aucun exercice intermédiaire n’est présent pour permettre à l’apprenant d’effectuer ou de vérifier ces actions.",
+                "current_content": "« In the next exercises, we’ll build a pipeline that translates natural language questions into SQL queries… Then, we’ll wrap that pipeline as a tool and connect it to our agent » ; le récapitulatif suivant indique « Next, we built a text-to-SQL pipeline… Finally, we wrapped that pipeline as a tool… ».",
+                "proposed_content": "Restaurer les exercices annoncés dans l’ordre : construire le pipeline, tester une requête, interpréter le résultat, l’encapsuler comme outil et tester l’intégration. Chaque étape doit comporter les conditions nécessaires, une action observable et un retour. Sans les sources des TP, ne pas inventer leur code ni leurs réponses.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json, dc_2_act_03_video.projectorSlides[7].script et dc_2_act_06_video.projectorSlides[5].script ; lessons[1].chapters passe directement de dc_ch02_act03 à dc_ch02_act06.",
+                "confidence": "high",
+                "verification_status": "verified_json_and_renderer_code",
+                "recommended_action": "Priorité 1 : restaurer les TP text-to-SQL/outillage avant le récapitulatif, puis ajouter une validation qui porte sur les actions réellement effectuées."
+              },
+              {
+                "issue_id": "haystack-009",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch02_act03",
+                "content_id": "dc_2_act_03_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "langue et accessibilité média",
+                "description": "Bien que les sous-titres français soient déclarés, la transcription affichée dans l’écran est en anglais et ProjectorPlayer ne rend aucune piste de sous-titres. Un apprenant francophone qui utilise la transcription ne dispose pas de l’alternative française dans l’interface.",
+                "current_content": "transcript anglais ; subtitleUrlFr et subtitleUrlEn déclarés, mais le lecteur affiche un lien « Sous-titres » et non des captions synchronisées.",
+                "proposed_content": "Afficher les captions françaises dans ProjectorPlayer et fournir une transcription française repliable ; conserver les versions anglaises en option.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json, bloc dc_2_act_03_video ; LessonViewer.tsx l. 597-620 ; ProjectorPlayer.tsx l. 159-176.",
+                "confidence": "high",
+                "verification_status": "verified_rendered_text_and_renderer_code",
+                "recommended_action": "Priorité 2 : mutualiser l’évolution du lecteur et la traduction de transcription avec les autres Projector du cours."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch02_act06",
+            "title": "Récapitulatif et prochaines étapes",
+            "score_100": 60,
+            "verified_dimensions": [
+              "La vidéo récapitule explicitement le LLM, la recherche web, le tracing et le pipeline text-to-SQL ; elle fournit des pistes de prolongement.",
+              "Ce chapitre est correctement positionné comme conclusion après les notions de transparence et de pipelines.",
+              "La dernière vidéo demeure une condition explicitement signalée pour terminer la leçon."
+            ],
+            "unverified_dimensions": [
+              "L’atteinte réelle des compétences récapitulées ne peut être confirmée puisque les activités pratiques auxquelles le bilan renvoie ne sont pas dans les données rendues.",
+              "Aucun exercice final ni feedback de réinvestissement ne sont disponibles.",
+              "La qualité effective de l’audio, de l’image et de l’asset média n’a pas été vérifiée en lecture apprenant."
+            ],
+            "issues": [
+              {
+                "issue_id": "haystack-010",
+                "course_id": "building_ai_agents_with_haystack__01",
+                "chapter_id": "dc_ch02_act06",
+                "content_id": "dc_2_act_06_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "langue et accessibilité média",
+                "description": "La synthèse affichable en transcription est en anglais, avec un seul sous-titre anglais déclaré, alors que l’écran s’inscrit dans le parcours français. Le lecteur Projector ne présente pas de sous-titres intégrés.",
+                "current_content": "transcript : « Congrats on making it to the end of this course! » ; subtitleUrlEn renseigné ; subtitleUrlFr absent.",
+                "proposed_content": "Mettre à disposition la transcription française et des sous-titres français intégrés au lecteur ; conserver la variante anglaise en ressource complémentaire.",
+                "evidence": "client/public/data/courses/building_ai_agents_with_haystack__01.json, bloc dc_2_act_06_video (subtitleUrlEn, transcript, transcriptSegments) ; ProjectorPlayer.tsx l. 159-176 ; LessonViewer.tsx l. 597-620.",
+                "confidence": "high",
+                "verification_status": "verified_rendered_text_and_renderer_code",
+                "recommended_action": "Priorité 2 : inclure la conclusion dans le lot de remédiation linguistique des médias."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "formation_summary": {
+      "coverage": {
+        "courses_reviewed": 1,
+        "lessons_reviewed": 2,
+        "chapters_reviewed": 5,
+        "rendered_chapter_activities_reviewed": 5,
+        "blocks_reviewed": 7,
+        "video_blocks_reviewed": 5,
+        "downloads_reviewed": 2,
+        "declared_source_activities": 11,
+        "declared_but_not_represented_local_environment_activities": 6
+      },
+      "assessment_method": "Revue qualitative intégrale du seul JSON de cours, du registre de blocs, du rendu LessonViewer/ProjectorPlayer, des règles de progression et du quiz injecté. Les scores sont renormalisés sur les dimensions vérifiables à partir de ces éléments ; les dimensions non vérifiables sont listées par chapitre et ne reçoivent pas de note implicite.",
+      "confirmed_issue_counts": {
+        "P0": 0,
+        "P1": 5,
+        "P2": 5,
+        "P3": 0,
+        "total": 10
+      },
+      "key_findings": [
+        "Les 6 TP LocalEnvironmentExercise annoncés par l’import ne sont pas présents dans le parcours rendu, alors que les objectifs et les vidéos les présupposent.",
+        "Trois transitions vidéo annoncent une pratique qui n’arrive jamais, puis le chapitre suivant présuppose les résultats de cette pratique.",
+        "La validation automatique des cinq chapitres d’enseignement ne pose aucune question car aucune banque de quiz du cours n’est disponible ; elle ne mesure donc pas la compréhension.",
+        "La voie textuelle de tous les Projector est anglaise dans le parcours français ; quatre vidéos n’ont même pas de sous-titre français déclaré, et le lecteur n’intègre pas les captions.",
+        "La progression par vidéos est techniquement cohérente et son motif de verrouillage est rendu ; elle ne compense toutefois pas l’absence de pratique et d’évaluation effective."
+      ],
+      "priority_order": [
+        "P1 — décider puis corriger la disparition des six TP et les ruptures théorie→activité.",
+        "P1 — supprimer la fausse validation automatique ou alimenter les banques de questions avec feedback.",
+        "P2 — rendre les alternatives françaises (captions et transcription) accessibles dans ProjectorPlayer.",
+        "P2 — réparer les slides Projector affichant des marqueurs « $$ » à la place du contenu pédagogique."
+      ]
+    },
+    "limits": [
+      "Les MP4/MP3/PDF et images référencés par /api/assets ont été vérifiés comme références de données, mais n’ont pas été lus visuellement ou auditivement dans une session apprenant authentifiée ; leur disponibilité réseau, leur qualité sonore, leur rythme et la lisibilité réelle des illustrations restent non vérifiés, sans être considérés absents.",
+      "Les six LocalEnvironmentExercise sont déclarés par les métadonnées mais ne sont pas représentés dans le JSON rendu ni dans des blocs audités ; leurs énoncés, données, solutions, actions et feedback ne peuvent donc pas être évalués individuellement ni réécrits sans invention.",
+      "La conclusion sur l’absence de quiz porte sur la banque locale lessonQuizzes.json et le comportement de ChapterQuiz/LessonViewer ; aucun test de navigateur authentifié ni appel API de production n’a été effectué.",
+      "Les scripts et transcriptions permettent de contrôler le texte rendu, mais ne permettent pas d’affirmer la langue réellement audible de la piste MP3 ; les constats linguistiques portent donc sur la voie textuelle et les sous-titres déclarés."
+    ]
+  },
+  "current_courses": {
+    "building_ai_agents_with_haystack__01": {
+      "courseId": "building_ai_agents_with_haystack__01",
+      "sourceCourseTitle": "Créer des agents d’IA avec Haystack",
+      "datacampImport": {
+        "schemaVersion": "neopolis.datacamp_course.v1",
+        "sourceProvider": "DataCamp",
+        "sourceCourseSlug": "building-ai-agents-with-haystack",
+        "sourceLanguage": "fr-FR",
+        "expected": {
+          "chapters_expected": 2,
+          "chapters_extracted": 2,
+          "activities_expected_from_outline": 11,
+          "activities_extracted": 11,
+          "videos_expected_from_chapter_metadata": 5,
+          "videos_extracted": 5,
+          "exercise_types": {
+            "VideoExercise": 5,
+            "LocalEnvironmentExercise": 6
+          },
+          "failed_pages": []
+        },
+        "competencyTagging": "lesson_content_signals_v1"
+      },
+      "lessons": [
+        {
+          "id": "datacamp_ch01",
+          "title": {
+            "en": "Faites connaissance avec votre agent",
+            "fr": "Faites connaissance avec votre agent"
+          },
+          "description": {
+            "en": "Discover how Haystack components interact with LLMs, understand what sets agents apart from traditional language models, and create your first functional agent. You will then see how to give your agent access to real-world tools, such as web search, to transform it from a simple responder into a true active problem solver!",
+            "fr": "Découvrez comment les composants Haystack interagissent avec les LLM, comprenez ce qui distingue les agents des modèles de langue traditionnels et créez votre premier agent fonctionnel. Vous verrez ensuite comment donner à votre agent l’accès à des outils du monde réel, comme la recherche web, pour le transformer d’un simple répondant en véritable résolveur de problèmes actif !"
+          },
+          "competencyTags": [
+            "rag_knowledge",
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch01_act01",
+              "title": {
+                "en": "Bienvenue dans le cours !",
+                "fr": "Bienvenue dans le cours !"
+              },
+              "description": {
+                "en": "Discover how Haystack components interact with LLMs, understand what sets agents apart from traditional language models, and create your first functional agent. You will then see how to give your agent access to real-world tools, such as web search, to transform it from a simple responder into a true active problem solver!",
+                "fr": "Découvrez comment les composants Haystack interagissent avec les LLM, comprenez ce qui distingue les agents des modèles de langue traditionnels et créez votre premier agent fonctionnel. Vous verrez ensuite comment donner à votre agent l’accès à des outils du monde réel, comme la recherche web, pour le transformer d’un simple répondant en véritable résolveur de problèmes actif !"
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "content",
+                  "id": "neopolis_building_ai_agents_with_haystack__01_environment_preparation",
+                  "body": {
+                    "fr": "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
+                    "en": "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys."
+                  }
+                },
+                {
+                  "type": "video",
+                  "id": "dc_1_act_01_video",
+                  "title": {
+                    "en": "Bienvenue dans le cours !",
+                    "fr": "Bienvenue dans le cours !"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex01_bienvenue_dans_le_cours_9b30d9c8.mp4",
+                  "audioUrl": "/api/assets/ch01_ex01_bienvenue_dans_le_cours_f351635e.mp3",
+                  "subtitleUrlEn": "/api/assets/ch01_ex01_bienvenue_dans_le_cours_en_40518d1f.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_253a7a78.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "Bienvenue dans le cours !",
+                      "type": "TitleSlide",
+                      "script": "Hello and welcome to this course on building AI agents using Haystack!\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "Bilge Yücel",
+                      "instructorTitle": "DevRel Engineer for Haystack at deepset",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "Votre formateur·rice",
+                      "type": "FullSlide",
+                      "script": "I’m Bilge from deepset, and I’ll be your instructor for this course. In this course, you’ll learn how to build smart AI agents using Haystack. Whether you're new to agents or just new to Haystack, you're in the right place.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 3,
+                      "title": "À propos de l’agent : agent de santé",
+                      "type": "TwoColumns",
+                      "script": "You won’t just be learning about agents in theory. You’ll actually build one step by step with real components, tools, and data. And this won’t be a generic agent either. You’ll create a healthcare agent that can respond to user queries by combining up-to-date online information with private, structured patient data.\n\n",
+                      "images": [
+                        {
+                          "alt": "haystack_logo_right_large.png",
+                          "url": "/api/assets/ch01_ex01_bienvenue_dans_le_cours_003_haystack_logo_right_large_cf085044.png"
+                        }
+                      ],
+                      "content": "$$\n\n- Peut combiner des informations en ligne à jour avec des données patient privées et structurées \n\n$$\n\n$$\n\n$$",
+                      "contentLeft": "",
+                      "contentRight": "$$\n\n- Peut combiner des informations en ligne à jour avec des données patient privées et structurées \n\n$$\n\n$$\n\n$$"
+                    },
+                    {
+                      "number": 4,
+                      "title": "À propos de l’agent : agent de santé",
+                      "type": "TwoColumns",
+                      "script": "Your agent will be able to access the web to fetch current medical insights — like treatment guidelines or drug interactions and query an SQL database that holds patient records: things like age, conditions, and prescribed medications.\n\n",
+                      "images": [
+                        {
+                          "alt": "haystack_logo_right_large.png",
+                          "url": "/api/assets/ch01_ex01_bienvenue_dans_le_cours_003_haystack_logo_right_large_cf085044.png"
+                        }
+                      ],
+                      "content": "$$\n\n- Peut combiner des informations en ligne à jour avec des données patient privées et structurées \n\n- Accès à la recherche web et à une base SQL\n\n$$\n\n$$",
+                      "contentLeft": "",
+                      "contentRight": "$$\n\n- Peut combiner des informations en ligne à jour avec des données patient privées et structurées \n\n- Accès à la recherche web et à une base SQL\n\n$$\n\n$$"
+                    },
+                    {
+                      "number": 5,
+                      "title": "Votre framework : Haystack",
+                      "type": "FullSlide",
+                      "script": "We’ll be using Haystack to build our agent. Haystack is an open-source AI orchestration framework — built for AI engineers, data scientists, and Python developers. It gives us the tools to build real-world, compound, agentic systems that can reason, retrieve, act, and respond like autonomous agents, multi-modal apps, or scalable RAG systems. Haystack is designed to be modular and model-agnostic — meaning we can build our system with our choice of LLMs and tools, without being locked into one provider or platform.\n\n",
+                      "images": [],
+                      "content": "- Cadre open source d’orchestration de l’IA \n\n- Fournit aux développeurs Python les outils pour créer des systèmes d’IA agentiques concrets \n\n- Modulaire et indépendant des modèles \n\n$$",
+                      "contentLeft": "- Cadre open source d’orchestration de l’IA \n\n- Fournit aux développeurs Python les outils pour créer des systèmes d’IA agentiques concrets \n\n- Modulaire et indépendant des modèles \n\n$$",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Haystack avec des outils",
+                      "type": "FullSlide",
+                      "script": "Additionally, in this course, we’ll be using OpenAI as our LLM provider and to let the agent search the web, we’ll connect it to the Google Search API through Serper.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Notre démarche de construction",
+                      "type": "FullSlide",
+                      "script": "",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 8,
+                      "title": "Passons à la pratique !",
+                      "type": "FinalSlide",
+                      "script": "Let’s get started. In the next exercise, we’ll start exploring Haystack components by talking to a language model directly. Understanding how to communicate with LLMs is the first step toward building a complete agent.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.01221782660599981,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.03301161539051903,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.12969153168004588,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.22205858081670127,
+                      "slideIndex": 2,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.3528387810858109,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.3737282289277523,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.40619522725224627,
+                      "slideIndex": 4,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.47356955930007666,
+                      "slideIndex": 4,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.5614720081437303,
+                      "slideIndex": 4,
+                      "fragment": 2
+                    },
+                    {
+                      "time": 0.623269513331422,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.694829146358945,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.9176756677092283,
+                      "slideIndex": 7,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. Bienvenue dans le cours !\nHello and welcome to this course on building AI agents using Haystack!\n\n2. Votre formateur·rice\nI’m Bilge from deepset, and I’ll be your instructor for this course. In this course, you’ll learn how to build smart AI agents using Haystack. Whether you're new to agents or just new to Haystack, you're in the right place.\n\n3. À propos de l’agent : agent de santé\nYou won’t just be learning about agents in theory. You’ll actually build one step by step with real components, tools, and data. And this won’t be a generic agent either. You’ll create a healthcare agent that can respond to user queries by combining up-to-date online information with private, structured patient data.\n\n4. À propos de l’agent : agent de santé\nYour agent will be able to access the web to fetch current medical insights — like treatment guidelines or drug interactions and query an SQL database that holds patient records: things like age, conditions, and prescribed medications.\n\n5. Votre framework : Haystack\nWe’ll be using Haystack to build our agent. Haystack is an open-source AI orchestration framework — built for AI engineers, data scientists, and Python developers. It gives us the tools to build real-world, compound, agentic systems that can reason, retrieve, act, and respond like autonomous agents, multi-modal apps, or scalable RAG systems. Haystack is designed to be modular and model-agnostic — meaning we can build our system with our choice of LLMs and tools, without being locked into one provider or platform.\n\n6. Haystack avec des outils\nAdditionally, in this course, we’ll be using OpenAI as our LLM provider and to let the agent search the web, we’ll connect it to the Google Search API through Serper.\n\n7. Notre démarche de construction\nBy the end of this course, you’ll not only understand how agents work, but you’ll also have a working prototype that can interpret natural language queries, make smart decisions, and act on them using the right tools at the right time.\n\n8. Passons à la pratique !\nLet’s get started. In the next exercise, we’ll start exploring Haystack components by talking to a language model directly. Understanding how to communicate with LLMs is the first step toward building a complete agent.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Bienvenue dans le cours !",
+                      "text": "Hello and welcome to this course on building AI agents using Haystack!"
+                    },
+                    {
+                      "heading": "2. Votre formateur·rice",
+                      "text": "I’m Bilge from deepset, and I’ll be your instructor for this course. In this course, you’ll learn how to build smart AI agents using Haystack. Whether you're new to agents or just new to Haystack, you're in the right place."
+                    },
+                    {
+                      "heading": "3. À propos de l’agent : agent de santé",
+                      "text": "You won’t just be learning about agents in theory. You’ll actually build one step by step with real components, tools, and data. And this won’t be a generic agent either. You’ll create a healthcare agent that can respond to user queries by combining up-to-date online information with private, structured patient data."
+                    },
+                    {
+                      "heading": "4. À propos de l’agent : agent de santé",
+                      "text": "Your agent will be able to access the web to fetch current medical insights — like treatment guidelines or drug interactions and query an SQL database that holds patient records: things like age, conditions, and prescribed medications."
+                    },
+                    {
+                      "heading": "5. Votre framework : Haystack",
+                      "text": "We’ll be using Haystack to build our agent. Haystack is an open-source AI orchestration framework — built for AI engineers, data scientists, and Python developers. It gives us the tools to build real-world, compound, agentic systems that can reason, retrieve, act, and respond like autonomous agents, multi-modal apps, or scalable RAG systems. Haystack is designed to be modular and model-agnostic — meaning we can build our system with our choice of LLMs and tools, without being locked into one provider or platform."
+                    },
+                    {
+                      "heading": "6. Haystack avec des outils",
+                      "text": "Additionally, in this course, we’ll be using OpenAI as our LLM provider and to let the agent search the web, we’ll connect it to the Google Search API through Serper."
+                    },
+                    {
+                      "heading": "7. Notre démarche de construction",
+                      "text": ""
+                    },
+                    {
+                      "heading": "8. Passons à la pratique !",
+                      "text": "Let’s get started. In the next exercise, we’ll start exploring Haystack components by talking to a language model directly. Understanding how to communicate with LLMs is the first step toward building a complete agent."
+                    }
+                  ]
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch01_slides",
+                  "title": {
+                    "en": "Chapter 1 slides",
+                    "fr": "Chapter 1 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Official course slides provided for this course."
+                  },
+                  "url": "/api/assets/chapter_01_slides_253a7a78.pdf",
+                  "filename": "chapter_01_slides.pdf"
+                }
+              ]
+            },
+            {
+              "id": "dc_ch01_act03",
+              "title": {
+                "en": "Que peut faire un agent Haystack ?",
+                "fr": "Que peut faire un agent Haystack ?"
+              },
+              "description": {
+                "en": "Discover how Haystack components interact with LLMs, understand what sets agents apart from traditional language models, and create your first functional agent. You will then see how to give your agent access to real-world tools, such as web search, to transform it from a simple responder into a true active problem solver!",
+                "fr": "Découvrez comment les composants Haystack interagissent avec les LLM, comprenez ce qui distingue les agents des modèles de langue traditionnels et créez votre premier agent fonctionnel. Vous verrez ensuite comment donner à votre agent l’accès à des outils du monde réel, comme la recherche web, pour le transformer d’un simple répondant en véritable résolveur de problèmes actif !"
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_1_act_03_video",
+                  "title": {
+                    "en": "Que peut faire un agent Haystack ?",
+                    "fr": "Que peut faire un agent Haystack ?"
+                  },
+                  "mp4Url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_a8255d34.mp4",
+                  "audioUrl": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_acc148ba.mp3",
+                  "subtitleUrlEn": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_en_48ce2c07.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_253a7a78.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "Que peut faire un agent Haystack ?",
+                      "type": "TitleSlide",
+                      "script": "Let’s take a moment to understand what an AI agent actually is and what makes it different from just using a large language model on its own.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "Bilge Yücel",
+                      "instructorTitle": "DevRel Engineer for Haystack at deepset",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "Comparer LLM et agents",
+                      "type": "TwoColumns",
+                      "script": "Large language models, on their own, are powerful, but limited. They can answer questions, summarize text, or write code. But they can’t interact with the outside world. They can’t fetch real-time data, query a private database, trigger a function. Once they generate a response, that’s it, they’re done.\nThat’s where the key difference lies.\nAn AI agent is an autonomous system that can understand a user’s request, figure out what needs to be done, and take real actions using external tools. It still relies on an LLM to reason and interpret language, but it doesn’t stop at generating a response. It goes beyond that.\n\n",
+                      "images": [
+                        {
+                          "alt": "haystack_logo_upper_right_large.png",
+                          "url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_010_haystack_logo_upper_right_large_6762cc7f.png"
+                        }
+                      ],
+                      "content": "- Un modèle de langage puissant \n- Idéal pour le génératif (répondre, écrire du code) \n- Aucune interaction avec l’extérieur \n\n- Un système autonome basé sur un LLM \n- Comprend l’intention, planifie et agit en conséquence \n- Accès à des outils pour interagir avec l’extérieur",
+                      "contentLeft": "- Un modèle de langage puissant \n- Idéal pour le génératif (répondre, écrire du code) \n- Aucune interaction avec l’extérieur",
+                      "contentRight": "- Un système autonome basé sur un LLM \n- Comprend l’intention, planifie et agit en conséquence \n- Accès à des outils pour interagir avec l’extérieur"
+                    },
+                    {
+                      "number": 3,
+                      "title": "Atouts des agents",
+                      "type": "FullSlide",
+                      "script": "Agents don’t just generate text; they make decisions.\n\n",
+                      "images": [],
+                      "content": "$$",
+                      "contentLeft": "$$",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 4,
+                      "title": "Atouts des agents",
+                      "type": "FullSlide",
+                      "script": "When they get a question, they think things through, like: \n“Do I need to search the web for up-to-date information?”\n\n",
+                      "images": [],
+                      "content": "$$",
+                      "contentLeft": "$$",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 5,
+                      "title": "Atouts des agents",
+                      "type": "FullSlide",
+                      "script": "“Should I run a function to calculate something?”\n\n",
+                      "images": [],
+                      "content": "$$",
+                      "contentLeft": "$$",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Atouts des agents",
+                      "type": "FullSlide",
+                      "script": "“Is this a case where I should look in a database?”\n\n",
+                      "images": [],
+                      "content": "$$",
+                      "contentLeft": "$$",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Atouts des agents",
+                      "type": "FullSlide",
+                      "script": "And then, they actually take those actions. This kind of behavior is known as function calling or tool use — and it’s what gives agents their real power.\n\n",
+                      "images": [],
+                      "content": "- Function Calling = la force de l’agent",
+                      "contentLeft": "- Function Calling = la force de l’agent",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 8,
+                      "title": "Agents dans Haystack",
+                      "type": "FullSlide",
+                      "script": "Creating an agent with Haystack is quite straightforward. We give it a language model to power its thinking,\n\n",
+                      "images": [
+                        {
+                          "alt": "33_v2.png",
+                          "url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_015_33_v2_5af92e45.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 9,
+                      "title": "Agents dans Haystack",
+                      "type": "FullSlide",
+                      "script": "a system prompt to steer its behavior,\n\n",
+                      "images": [
+                        {
+                          "alt": "34_v2.png",
+                          "url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_016_34_v2_72d99f35.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 10,
+                      "title": "Agents dans Haystack",
+                      "type": "FullSlide",
+                      "script": "and a list of tools it can call. Those tools could be Python functions,\n\n",
+                      "images": [
+                        {
+                          "alt": "35_v2.png",
+                          "url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_017_35_v2_ace9ee0b.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 11,
+                      "title": "Agents dans Haystack",
+                      "type": "FullSlide",
+                      "script": "external APIs,\n\n",
+                      "images": [
+                        {
+                          "alt": "36_v2.png",
+                          "url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_018_36_v2_294d6f27.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 12,
+                      "title": "Agents dans Haystack",
+                      "type": "FullSlide",
+                      "script": "other Haystack components like retrievers, rankers, or other agents,\n\n",
+                      "images": [
+                        {
+                          "alt": "37_v2.png",
+                          "url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_019_37_v2_8ebd3263.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 13,
+                      "title": "Agents dans Haystack",
+                      "type": "FullSlide",
+                      "script": "and even connections to MCP servers for distributed tasks. We define the tools, and the agent figures out how to use them based on the situation.\n\n",
+                      "images": [
+                        {
+                          "alt": "38_v2.png",
+                          "url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_020_38_v2_0da3f155.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 14,
+                      "title": "Notre agent santé",
+                      "type": "FullSlide",
+                      "script": "In this course, we’ll build a healthcare agent that decides whether to query a patient database, search the web for medical information, or combine both to answer a complex question. The language model handles the reasoning, and Haystack takes care of the orchestration.\n\n",
+                      "images": [
+                        {
+                          "alt": "healthcare_agent_diagram.png",
+                          "url": "/api/assets/ch01_ex03_que_peut_faire_un_agent_haystack_021_healthcare_agent_diagram_7e24bfb6.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 15,
+                      "title": "Passons à la pratique !",
+                      "type": "FinalSlide",
+                      "script": "Let’s start creating our agent.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.01754224638440772,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.06588718930758758,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.09850780483359829,
+                      "slideIndex": 1,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.12207962731244743,
+                      "slideIndex": 1,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.1456396098051,
+                      "slideIndex": 1,
+                      "fragment": 2
+                    },
+                    {
+                      "time": 0.2764951918430234,
+                      "slideIndex": 1,
+                      "fragment": 3
+                    },
+                    {
+                      "time": 0.29282071074679655,
+                      "slideIndex": 1,
+                      "fragment": 4
+                    },
+                    {
+                      "time": 0.36350230285684265,
+                      "slideIndex": 1,
+                      "fragment": 5
+                    },
+                    {
+                      "time": 0.40336312112354333,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.430556348394849,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.4831622805636841,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.4994296572874027,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.5229978902372954,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6064092554489169,
+                      "slideIndex": 7,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6589458605746565,
+                      "slideIndex": 8,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6788835988983094,
+                      "slideIndex": 9,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.716958278475015,
+                      "slideIndex": 10,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.7296551452864234,
+                      "slideIndex": 11,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.7604523551687679,
+                      "slideIndex": 12,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.8293525377590979,
+                      "slideIndex": 13,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.9607425911047529,
+                      "slideIndex": 14,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. Que peut faire un agent Haystack ?\nLet’s take a moment to understand what an AI agent actually is and what makes it different from just using a large language model on its own.\n\n2. Comparer LLM et agents\nLarge language models, on their own, are powerful, but limited. They can answer questions, summarize text, or write code. But they can’t interact with the outside world. They can’t fetch real-time data, query a private database, trigger a function. Once they generate a response, that’s it, they’re done.\nThat’s where the key difference lies.\nAn AI agent is an autonomous system that can understand a user’s request, figure out what needs to be done, and take real actions using external tools. It still relies on an LLM to reason and interpret language, but it doesn’t stop at generating a response. It goes beyond that.\n\n3. Atouts des agents\nAgents don’t just generate text; they make decisions.\n\n4. Atouts des agents\nWhen they get a question, they think things through, like: \n“Do I need to search the web for up-to-date information?”\n\n5. Atouts des agents\n“Should I run a function to calculate something?”\n\n6. Atouts des agents\n“Is this a case where I should look in a database?”\n\n7. Atouts des agents\nAnd then, they actually take those actions. This kind of behavior is known as function calling or tool use — and it’s what gives agents their real power.\n\n8. Agents dans Haystack\nCreating an agent with Haystack is quite straightforward. We give it a language model to power its thinking,\n\n9. Agents dans Haystack\na system prompt to steer its behavior,\n\n10. Agents dans Haystack\nand a list of tools it can call. Those tools could be Python functions,\n\n11. Agents dans Haystack\nexternal APIs,\n\n12. Agents dans Haystack\nother Haystack components like retrievers, rankers, or other agents,\n\n13. Agents dans Haystack\nand even connections to MCP servers for distributed tasks. We define the tools, and the agent figures out how to use them based on the situation.\n\n14. Notre agent santé\nIn this course, we’ll build a healthcare agent that decides whether to query a patient database, search the web for medical information, or combine both to answer a complex question. The language model handles the reasoning, and Haystack takes care of the orchestration.\n\n15. Passons à la pratique !\nLet’s start creating our agent.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Que peut faire un agent Haystack ?",
+                      "text": "Let’s take a moment to understand what an AI agent actually is and what makes it different from just using a large language model on its own."
+                    },
+                    {
+                      "heading": "2. Comparer LLM et agents",
+                      "text": "Large language models, on their own, are powerful, but limited. They can answer questions, summarize text, or write code. But they can’t interact with the outside world. They can’t fetch real-time data, query a private database, trigger a function. Once they generate a response, that’s it, they’re done.\nThat’s where the key difference lies.\nAn AI agent is an autonomous system that can understand a user’s request, figure out what needs to be done, and take real actions using external tools. It still relies on an LLM to reason and interpret language, but it doesn’t stop at generating a response. It goes beyond that."
+                    },
+                    {
+                      "heading": "3. Atouts des agents",
+                      "text": "Agents don’t just generate text; they make decisions."
+                    },
+                    {
+                      "heading": "4. Atouts des agents",
+                      "text": "When they get a question, they think things through, like: \n“Do I need to search the web for up-to-date information?”"
+                    },
+                    {
+                      "heading": "5. Atouts des agents",
+                      "text": "“Should I run a function to calculate something?”"
+                    },
+                    {
+                      "heading": "6. Atouts des agents",
+                      "text": "“Is this a case where I should look in a database?”"
+                    },
+                    {
+                      "heading": "7. Atouts des agents",
+                      "text": "And then, they actually take those actions. This kind of behavior is known as function calling or tool use — and it’s what gives agents their real power."
+                    },
+                    {
+                      "heading": "8. Agents dans Haystack",
+                      "text": "Creating an agent with Haystack is quite straightforward. We give it a language model to power its thinking,"
+                    },
+                    {
+                      "heading": "9. Agents dans Haystack",
+                      "text": "a system prompt to steer its behavior,"
+                    },
+                    {
+                      "heading": "10. Agents dans Haystack",
+                      "text": "and a list of tools it can call. Those tools could be Python functions,"
+                    },
+                    {
+                      "heading": "11. Agents dans Haystack",
+                      "text": "external APIs,"
+                    },
+                    {
+                      "heading": "12. Agents dans Haystack",
+                      "text": "other Haystack components like retrievers, rankers, or other agents,"
+                    },
+                    {
+                      "heading": "13. Agents dans Haystack",
+                      "text": "and even connections to MCP servers for distributed tasks. We define the tools, and the agent figures out how to use them based on the situation."
+                    },
+                    {
+                      "heading": "14. Notre agent santé",
+                      "text": "In this course, we’ll build a healthcare agent that decides whether to query a patient database, search the web for medical information, or combine both to answer a complex question. The language model handles the reasoning, and Haystack takes care of the orchestration."
+                    },
+                    {
+                      "heading": "15. Passons à la pratique !",
+                      "text": "Let’s start creating our agent."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "datacamp_ch02",
+          "title": {
+            "en": "Concevoir des agents robustes",
+            "fr": "Concevoir des agents robustes"
+          },
+          "description": {
+            "en": "In this chapter, equip your agents with tools to make them smarter, more transparent, and easier to debug. From tracing agent decisions with streaming callbacks to creating reusable Haystack pipelines, you will expand your agents into a wide range of capabilities, including executing SQL queries. Get ready to customize, connect, and boost your Haystack pipeline!",
+            "fr": "Dans ce chapitre, dotez vos agents d’outils pour les rendre plus intelligents, plus transparents et plus faciles à déboguer. Du traçage des décisions de l’agent avec des callbacks en streaming à la création de pipelines Haystack réutilisables, vous ferez évoluer vos agents vers un large éventail de capacités, y compris l’exécution de requêtes SQL. Préparez-vous à personnaliser, connecter et booster votre pipeline Haystack !"
+          },
+          "competencyTags": [
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch02_act01",
+              "title": {
+                "en": "Ouvrir la boîte noire : rendre les agents transparents",
+                "fr": "Ouvrir la boîte noire : rendre les agents transparents"
+              },
+              "description": {
+                "en": "In this chapter, equip your agents with tools to make them smarter, more transparent, and easier to debug. From tracing agent decisions with streaming callbacks to creating reusable Haystack pipelines, you will expand your agents into a wide range of capabilities, including executing SQL queries. Get ready to customize, connect, and boost your Haystack pipeline!",
+                "fr": "Dans ce chapitre, dotez vos agents d’outils pour les rendre plus intelligents, plus transparents et plus faciles à déboguer. Du traçage des décisions de l’agent avec des callbacks en streaming à la création de pipelines Haystack réutilisables, vous ferez évoluer vos agents vers un large éventail de capacités, y compris l’exécution de requêtes SQL. Préparez-vous à personnaliser, connecter et booster votre pipeline Haystack !"
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_01_video",
+                  "title": {
+                    "en": "Ouvrir la boîte noire : rendre les agents transparents",
+                    "fr": "Ouvrir la boîte noire : rendre les agents transparents"
+                  },
+                  "mp4Url": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_24e4dee5.mp4",
+                  "audioUrl": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_3caa4d2e.mp3",
+                  "subtitleUrlEn": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_en_f3e708fe.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_84119823.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "Ouvrir la boîte noire : rendre les agents transparents",
+                      "type": "TitleSlide",
+                      "script": "We now have a fully working agent, one that can choose tools and pull in real-world data to answer a user’s question.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "Bilge Yücel",
+                      "instructorTitle": "DevRel Engineer for Haystack at deepset",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "Des LLM aux agents",
+                      "type": "FullSlide",
+                      "script": "But if we take a closer look at the agent we’ve built so far, we’ll notice a big gap: we can’t actually see what’s happening inside the agent when it generates a response.\nThe lack of visibility is a real problem — especially when we're trying to build a reliable system such as our healthcare agent. \n\nLet’s say we asked the agent a question and it gave us a helpful response.\n\n",
+                      "images": [
+                        {
+                          "alt": "user_healthcare_assistant.png",
+                          "url": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_022_user_healthcare_assistant_4977de59.png"
+                        }
+                      ],
+                      "content": "- Peut interagir &#9989; &nbsp; Impossible de voir l’intérieur &#10060;",
+                      "contentLeft": "- Peut interagir &#9989; &nbsp; Impossible de voir l’intérieur &#10060;",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 3,
+                      "title": "Manque de visibilité",
+                      "type": "FullSlide",
+                      "script": "But we have no idea if that answer was based on a tool call or just the model making something up. There’s no way to tell whether it actually used the search tool we gave it or hallucinated an answer instead.\n\n",
+                      "images": [
+                        {
+                          "alt": "user_healthcare_assistant.png",
+                          "url": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_022_user_healthcare_assistant_4977de59.png"
+                        }
+                      ],
+                      "content": "- Aucune trace des appels d’outils",
+                      "contentLeft": "- Aucune trace des appels d’outils",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 4,
+                      "title": "Manque de visibilité",
+                      "type": "FullSlide",
+                      "script": "This makes it really difficult to evaluate the correctness of the response, especially in cases where accuracy and trustworthiness are critical.\n\n",
+                      "images": [
+                        {
+                          "alt": "user_healthcare_assistant.png",
+                          "url": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_023_user_healthcare_assistant_05ac8a5d.png"
+                        }
+                      ],
+                      "content": "- Difficile d’évaluer la justesse",
+                      "contentLeft": "- Difficile d’évaluer la justesse",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 5,
+                      "title": "Débogage",
+                      "type": "FullSlide",
+                      "script": "Another major challenge is debugging. If the agent gives an incorrect answer, what exactly went wrong? Was the wrong tool used? Was the right tool used with the wrong parameters? Or did the tool return something useful but the model just ignored it? Right now, with the default agent behavior, we don’t know. We’re flying blind.\n\n",
+                      "images": [
+                        {
+                          "alt": "Debugging.png",
+                          "url": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_024_Debugging_4c6c668c.png"
+                        }
+                      ],
+                      "content": "- Mauvais usage d’outil, mauvais paramètres, hallucination",
+                      "contentLeft": "- Mauvais usage d’outil, mauvais paramètres, hallucination",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Agents transparents",
+                      "type": "FullSlide",
+                      "script": "To build robust, testable, and trustworthy agents, we need transparency.\n\n",
+                      "images": [
+                        {
+                          "alt": "47.png",
+                          "url": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_025_47_1765e44c.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Agents transparents",
+                      "type": "FullSlide",
+                      "script": "We need to see when the agent decides to use a tool, the input it sends, the output it gets back\n\n",
+                      "images": [
+                        {
+                          "alt": "48.png",
+                          "url": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_026_48_c2884413.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 8,
+                      "title": "Agents transparents",
+                      "type": "FullSlide",
+                      "script": "and how that result influences the final answer. This is what turns agent development from guesswork into an engineering process.\nIn the next exercise, we’ll address this head-on. We’ll customize our agent to trace tool usage and inspect intermediate steps in real time during development. This kind of tracing is essential when we’re building and debugging our agent.\n\n",
+                      "images": [
+                        {
+                          "alt": "49.png",
+                          "url": "/api/assets/ch02_ex01_ouvrir_la_bo_te_noire_rendre_les_agents_transparents_027_49_b1ffe2e3.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 9,
+                      "title": "Passons à la pratique !",
+                      "type": "FinalSlide",
+                      "script": "Let’s take a look.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.01957554873767439,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.07634189638855818,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.14120054492169615,
+                      "slideIndex": 1,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.28310544311139607,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.3923703457446808,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.4660320847452453,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6727889535061209,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.7255234224745857,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.7802261730317185,
+                      "slideIndex": 7,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.9753135207741858,
+                      "slideIndex": 8,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. Ouvrir la boîte noire : rendre les agents transparents\nWe now have a fully working agent, one that can choose tools and pull in real-world data to answer a user’s question.\n\n2. Des LLM aux agents\nBut if we take a closer look at the agent we’ve built so far, we’ll notice a big gap: we can’t actually see what’s happening inside the agent when it generates a response.\nThe lack of visibility is a real problem — especially when we're trying to build a reliable system such as our healthcare agent. \n\nLet’s say we asked the agent a question and it gave us a helpful response.\n\n3. Manque de visibilité\nBut we have no idea if that answer was based on a tool call or just the model making something up. There’s no way to tell whether it actually used the search tool we gave it or hallucinated an answer instead.\n\n4. Manque de visibilité\nThis makes it really difficult to evaluate the correctness of the response, especially in cases where accuracy and trustworthiness are critical.\n\n5. Débogage\nAnother major challenge is debugging. If the agent gives an incorrect answer, what exactly went wrong? Was the wrong tool used? Was the right tool used with the wrong parameters? Or did the tool return something useful but the model just ignored it? Right now, with the default agent behavior, we don’t know. We’re flying blind.\n\n6. Agents transparents\nTo build robust, testable, and trustworthy agents, we need transparency.\n\n7. Agents transparents\nWe need to see when the agent decides to use a tool, the input it sends, the output it gets back\n\n8. Agents transparents\nand how that result influences the final answer. This is what turns agent development from guesswork into an engineering process.\nIn the next exercise, we’ll address this head-on. We’ll customize our agent to trace tool usage and inspect intermediate steps in real time during development. This kind of tracing is essential when we’re building and debugging our agent.\n\n9. Passons à la pratique !\nLet’s take a look.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Ouvrir la boîte noire : rendre les agents transparents",
+                      "text": "We now have a fully working agent, one that can choose tools and pull in real-world data to answer a user’s question."
+                    },
+                    {
+                      "heading": "2. Des LLM aux agents",
+                      "text": "But if we take a closer look at the agent we’ve built so far, we’ll notice a big gap: we can’t actually see what’s happening inside the agent when it generates a response.\nThe lack of visibility is a real problem — especially when we're trying to build a reliable system such as our healthcare agent. \n\nLet’s say we asked the agent a question and it gave us a helpful response."
+                    },
+                    {
+                      "heading": "3. Manque de visibilité",
+                      "text": "But we have no idea if that answer was based on a tool call or just the model making something up. There’s no way to tell whether it actually used the search tool we gave it or hallucinated an answer instead."
+                    },
+                    {
+                      "heading": "4. Manque de visibilité",
+                      "text": "This makes it really difficult to evaluate the correctness of the response, especially in cases where accuracy and trustworthiness are critical."
+                    },
+                    {
+                      "heading": "5. Débogage",
+                      "text": "Another major challenge is debugging. If the agent gives an incorrect answer, what exactly went wrong? Was the wrong tool used? Was the right tool used with the wrong parameters? Or did the tool return something useful but the model just ignored it? Right now, with the default agent behavior, we don’t know. We’re flying blind."
+                    },
+                    {
+                      "heading": "6. Agents transparents",
+                      "text": "To build robust, testable, and trustworthy agents, we need transparency."
+                    },
+                    {
+                      "heading": "7. Agents transparents",
+                      "text": "We need to see when the agent decides to use a tool, the input it sends, the output it gets back"
+                    },
+                    {
+                      "heading": "8. Agents transparents",
+                      "text": "and how that result influences the final answer. This is what turns agent development from guesswork into an engineering process.\nIn the next exercise, we’ll address this head-on. We’ll customize our agent to trace tool usage and inspect intermediate steps in real time during development. This kind of tracing is essential when we’re building and debugging our agent."
+                    },
+                    {
+                      "heading": "9. Passons à la pratique !",
+                      "text": "Let’s take a look."
+                    }
+                  ]
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch02_slides",
+                  "title": {
+                    "en": "Chapter 2 slides",
+                    "fr": "Chapter 2 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Official course slides provided for this course."
+                  },
+                  "url": "/api/assets/chapter_02_slides_84119823.pdf",
+                  "filename": "chapter_02_slides.pdf"
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act03",
+              "title": {
+                "en": "Pipelines Haystack : la force secrète de notre agent",
+                "fr": "Pipelines Haystack : la force secrète de notre agent"
+              },
+              "description": {
+                "en": "In this chapter, equip your agents with tools to make them smarter, more transparent, and easier to debug. From tracing agent decisions with streaming callbacks to creating reusable Haystack pipelines, you will expand your agents into a wide range of capabilities, including executing SQL queries. Get ready to customize, connect, and boost your Haystack pipeline!",
+                "fr": "Dans ce chapitre, dotez vos agents d’outils pour les rendre plus intelligents, plus transparents et plus faciles à déboguer. Du traçage des décisions de l’agent avec des callbacks en streaming à la création de pipelines Haystack réutilisables, vous ferez évoluer vos agents vers un large éventail de capacités, y compris l’exécution de requêtes SQL. Préparez-vous à personnaliser, connecter et booster votre pipeline Haystack !"
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_03_video",
+                  "title": {
+                    "en": "Pipelines Haystack : la force secrète de notre agent",
+                    "fr": "Pipelines Haystack : la force secrète de notre agent"
+                  },
+                  "mp4Url": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_1b13a76b.mp4",
+                  "audioUrl": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_29d550b5.mp3",
+                  "subtitleUrlFr": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_fr_98e3931d.vtt",
+                  "subtitleUrlEn": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_en_7fb8e3c6.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_84119823.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "Pipelines Haystack : le super-pouvoir de notre agent",
+                      "type": "TitleSlide",
+                      "script": "Agents are a powerful architecture —\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "Bilge Yücel",
+                      "instructorTitle": "DevRel Engineer for Haystack at deepset",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "Agents pour le raisonnement",
+                      "type": "FullSlide",
+                      "script": "especially when we need a system that can reason under uncertainty, plan the actions, and choose the right tools for the task.\n\nThis is particularly useful when answering open-ended questions that require depth and context — like research-style queries or tasks that involve multi-step reasoning.\n\n",
+                      "images": [
+                        {
+                          "alt": "agent_de_raisonnement.png",
+                          "url": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_028_reasoning_agent_392b4915.png"
+                        }
+                      ],
+                      "content": "- Quand une planification est requise \n- Pour un usage dynamique des outils \n- Questions ouvertes, raisonnement en plusieurs étapes",
+                      "contentLeft": "- Quand une planification est requise \n- Pour un usage dynamique des outils \n- Questions ouvertes, raisonnement en plusieurs étapes",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 3,
+                      "title": "Pipelines pour flux défini",
+                      "type": "FullSlide",
+                      "script": "But not every task requires that level of flexibility.\nIn fact, when the execution path is clear, when the steps are fixed and the logic is predictable, using an agent might actually add unnecessary complexity. For simple, deterministic workflows like data processing, retrieval or converting queries into SQL, we don’t need an agent. We need a pipeline.\n\n",
+                      "images": [
+                        {
+                          "alt": "pipeline_vers_reponse.png",
+                          "url": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_029_pipeline_to_response_8070bfe1.png"
+                        }
+                      ],
+                      "content": "- Quand les étapes sont fixes \n- Pour des workflows déterministes \n- Traitement des données, recherche, text-to-SQL",
+                      "contentLeft": "- Quand les étapes sont fixes \n- Pour des workflows déterministes \n- Traitement des données, recherche, text-to-SQL",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 4,
+                      "title": "Pipeline et composant",
+                      "type": "FullSlide",
+                      "script": "So what is a pipeline in Haystack?\nA pipeline is a directed graph of components connected together in a specific order to form a repeatable, structured process.\n\n",
+                      "images": [
+                        {
+                          "alt": "64.png",
+                          "url": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_030_64_c6e2cfd5.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 5,
+                      "title": "Pipeline et composant",
+                      "type": "FullSlide",
+                      "script": "We’ve already seen some of these components, like OpenAIChatGenerator, SerperDevWebSearch, and the Agent itself. Each component has a clearly defined responsibility like, creating embeddings, connecting to an API, or generating text.\n\n",
+                      "images": [
+                        {
+                          "alt": "65.png",
+                          "url": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_031_65_e7737718.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Pipeline et composant",
+                      "type": "FullSlide",
+                      "script": "Haystack provides a long list of built-in components, and if we need custom logic or behavior, we can also define our own component.\n\n",
+                      "images": [
+                        {
+                          "alt": "66.png",
+                          "url": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_032_66_2e0a8a10.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Des pipelines comme outils d’agent",
+                      "type": "FullSlide",
+                      "script": "Here’s the powerful part: once we've built a pipeline that solves a specific task, like translating a question into an SQL query, we can wrap that pipeline as a tool and give it to our agent. That means our agent doesn't have to “figure out” how to do SQL translation or data fetching. It can just call the tool, and the tool, so our text-to-sql pipeline under the hood, can handle the task. This approach gives us the structure and efficiency of pipelines, and the flexibility and reasoning of agents.\n\n",
+                      "images": [
+                        {
+                          "alt": "Outil agent : pipeline",
+                          "url": "/api/assets/ch02_ex03_pipelines_haystack_la_force_secr_te_de_notre_agent_033_pipeline_as_agent_tool_0a94e901.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 8,
+                      "title": "À suivre",
+                      "type": "FullSlide",
+                      "script": "In the next exercises, we’ll build a pipeline that translates natural language questions into SQL queries and retrieves answers from a structured database. Then, we’ll wrap that pipeline as a tool and connect it to our agent — getting us closer to a fully functional healthcare agent.\n\n",
+                      "images": [],
+                      "content": "$$\n\n-  Pipeline qui traduit des questions en langage naturel en requêtes SQL et extrait les réponses d’une base de données structurée \n\n$$\n\n-  Encapsuler le pipeline en tant qu’outil \n\n$$\n\n-  Connecter à l’agent",
+                      "contentLeft": "$$\n\n-  Pipeline qui traduit des questions en langage naturel en requêtes SQL et extrait les réponses d’une base de données structurée \n\n$$\n\n-  Encapsuler le pipeline en tant qu’outil \n\n$$\n\n-  Connecter à l’agent",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 9,
+                      "title": "Passons à la pratique !",
+                      "type": "FinalSlide",
+                      "script": "Let’s dive in.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.01107532865872492,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.026553019506139194,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.05750771826657622,
+                      "slideIndex": 1,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.06716620508172498,
+                      "slideIndex": 1,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.10768667141577305,
+                      "slideIndex": 1,
+                      "fragment": 2
+                    },
+                    {
+                      "time": 0.16172418208126477,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.22167417544554002,
+                      "slideIndex": 2,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.2756912344055837,
+                      "slideIndex": 2,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.3365192819148936,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.42220244263400153,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.5386469414893617,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.5967537890671256,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.841072674005562,
+                      "slideIndex": 7,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.8793355045464432,
+                      "slideIndex": 7,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.9295617981264391,
+                      "slideIndex": 7,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.9454499979304907,
+                      "slideIndex": 7,
+                      "fragment": 2
+                    },
+                    {
+                      "time": 0.9832086874916987,
+                      "slideIndex": 8,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. Pipelines Haystack : le super-pouvoir de notre agent\nAgents are a powerful architecture —\n\n2. Agents pour le raisonnement\nespecially when we need a system that can reason under uncertainty, plan the actions, and choose the right tools for the task.\n\nThis is particularly useful when answering open-ended questions that require depth and context — like research-style queries or tasks that involve multi-step reasoning.\n\n3. Pipelines pour flux défini\nBut not every task requires that level of flexibility.\nIn fact, when the execution path is clear, when the steps are fixed and the logic is predictable, using an agent might actually add unnecessary complexity. For simple, deterministic workflows like data processing, retrieval or converting queries into SQL, we don’t need an agent. We need a pipeline.\n\n4. Pipeline et composant\nSo what is a pipeline in Haystack?\nA pipeline is a directed graph of components connected together in a specific order to form a repeatable, structured process.\n\n5. Pipeline et composant\nWe’ve already seen some of these components, like OpenAIChatGenerator, SerperDevWebSearch, and the Agent itself. Each component has a clearly defined responsibility like, creating embeddings, connecting to an API, or generating text.\n\n6. Pipeline et composant\nHaystack provides a long list of built-in components, and if we need custom logic or behavior, we can also define our own component.\n\n7. Des pipelines comme outils d’agent\nHere’s the powerful part: once we've built a pipeline that solves a specific task, like translating a question into an SQL query, we can wrap that pipeline as a tool and give it to our agent. That means our agent doesn't have to “figure out” how to do SQL translation or data fetching. It can just call the tool, and the tool, so our text-to-sql pipeline under the hood, can handle the task. This approach gives us the structure and efficiency of pipelines, and the flexibility and reasoning of agents.\n\n8. À suivre\nIn the next exercises, we’ll build a pipeline that translates natural language questions into SQL queries and retrieves answers from a structured database. Then, we’ll wrap that pipeline as a tool and connect it to our agent — getting us closer to a fully functional healthcare agent.\n\n9. Passons à la pratique !\nLet’s dive in.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Pipelines Haystack : le super-pouvoir de notre agent",
+                      "text": "Agents are a powerful architecture —"
+                    },
+                    {
+                      "heading": "2. Agents pour le raisonnement",
+                      "text": "especially when we need a system that can reason under uncertainty, plan the actions, and choose the right tools for the task.\n\nThis is particularly useful when answering open-ended questions that require depth and context — like research-style queries or tasks that involve multi-step reasoning."
+                    },
+                    {
+                      "heading": "3. Pipelines pour flux défini",
+                      "text": "But not every task requires that level of flexibility.\nIn fact, when the execution path is clear, when the steps are fixed and the logic is predictable, using an agent might actually add unnecessary complexity. For simple, deterministic workflows like data processing, retrieval or converting queries into SQL, we don’t need an agent. We need a pipeline."
+                    },
+                    {
+                      "heading": "4. Pipeline et composant",
+                      "text": "So what is a pipeline in Haystack?\nA pipeline is a directed graph of components connected together in a specific order to form a repeatable, structured process."
+                    },
+                    {
+                      "heading": "5. Pipeline et composant",
+                      "text": "We’ve already seen some of these components, like OpenAIChatGenerator, SerperDevWebSearch, and the Agent itself. Each component has a clearly defined responsibility like, creating embeddings, connecting to an API, or generating text."
+                    },
+                    {
+                      "heading": "6. Pipeline et composant",
+                      "text": "Haystack provides a long list of built-in components, and if we need custom logic or behavior, we can also define our own component."
+                    },
+                    {
+                      "heading": "7. Des pipelines comme outils d’agent",
+                      "text": "Here’s the powerful part: once we've built a pipeline that solves a specific task, like translating a question into an SQL query, we can wrap that pipeline as a tool and give it to our agent. That means our agent doesn't have to “figure out” how to do SQL translation or data fetching. It can just call the tool, and the tool, so our text-to-sql pipeline under the hood, can handle the task. This approach gives us the structure and efficiency of pipelines, and the flexibility and reasoning of agents."
+                    },
+                    {
+                      "heading": "8. À suivre",
+                      "text": "In the next exercises, we’ll build a pipeline that translates natural language questions into SQL queries and retrieves answers from a structured database. Then, we’ll wrap that pipeline as a tool and connect it to our agent — getting us closer to a fully functional healthcare agent."
+                    },
+                    {
+                      "heading": "9. Passons à la pratique !",
+                      "text": "Let’s dive in."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act06",
+              "title": {
+                "en": "Récapitulatif et prochaines étapes",
+                "fr": "Récapitulatif et prochaines étapes"
+              },
+              "description": {
+                "en": "In this chapter, equip your agents with tools to make them smarter, more transparent, and easier to debug. From tracing agent decisions with streaming callbacks to creating reusable Haystack pipelines, you will expand your agents to support a wide range of capabilities, including executing SQL queries. Get ready to customize, connect, and boost your Haystack pipeline!",
+                "fr": "Dans ce chapitre, dotez vos agents d’outils pour les rendre plus intelligents, plus transparents et plus faciles à déboguer. Du traçage des décisions de l’agent avec des callbacks en streaming à la création de pipelines Haystack réutilisables, vous ferez évoluer vos agents vers un large éventail de capacités, y compris l’exécution de requêtes SQL. Préparez-vous à personnaliser, connecter et booster votre pipeline Haystack !"
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_06_video",
+                  "title": {
+                    "en": "Récapitulatif et prochaines étapes",
+                    "fr": "Récapitulatif et prochaines étapes"
+                  },
+                  "mp4Url": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_8d5d067e.mp4",
+                  "audioUrl": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_060778de.mp3",
+                  "subtitleUrlEn": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_en_a5ccb90f.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_84119823.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "Bilan et prochaines étapes",
+                      "type": "TitleSlide",
+                      "script": "Congrats on making it to the end of this course!\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "Bilge Yücel",
+                      "instructorTitle": "DevRel Engineer for Haystack at deepset",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "Vous avez créé un agent réel avec Haystack !",
+                      "type": "FullSlide",
+                      "script": "You’ve just completed a hands-on journey into building AI agents using Haystack. You’ve learned how to create systems that don’t just generate responses but reason, interact with external data sources, and make decisions.\n\n",
+                      "images": [
+                        {
+                          "alt": "félicitations.png",
+                          "url": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_037_congrats_46101067.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 3,
+                      "title": "Agents capables de raisonner et d’agir",
+                      "type": "FullSlide",
+                      "script": "At the beginning, we interacted directly with a language model. It could generate text, but it had no awareness of the world or tools to act with.\n\n",
+                      "images": [
+                        {
+                          "alt": "75.png",
+                          "url": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_038_75_eabd6012.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 4,
+                      "title": "Agents capables de raisonner et d’agir",
+                      "type": "FullSlide",
+                      "script": "Then, we built our first agent by giving it access to tools, starting with real-time web search, and later, structured patient records in an SQL database. \nAlong the way, we learned how to use Haystack to build an AI agent in just couple of steps.\n\n",
+                      "images": [
+                        {
+                          "alt": "76.png",
+                          "url": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_039_76_f0e94aa3.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 5,
+                      "title": "Agents capables de raisonner et d’agir",
+                      "type": "FullSlide",
+                      "script": "First, we integrated the SerperDevWebSearch component as the agent’s first tool, giving it access to real-time web information. We then improved the agent’s transparency and traceability through custom configurations.\n\n",
+                      "images": [
+                        {
+                          "alt": "77.png",
+                          "url": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_040_77_691d937c.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Agents capables de raisonner et d’agir",
+                      "type": "FullSlide",
+                      "script": "Next, we built a text-to-SQL pipeline that converted natural language questions into SQL queries, executed them on a patient database, and returned the results. Finally, we wrapped that pipeline as a tool and connected it back to the agent. That’s how we combined dynamic reasoning with structured workflows, all within a unified system.\n\n",
+                      "images": [
+                        {
+                          "alt": "78.png",
+                          "url": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_041_78_a9806e8c.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Prochaines étapes",
+                      "type": "FullSlide",
+                      "script": "If you want to explore further, you can level up by building multi-agent systems, adding multimodal capabilities like image or PDF support, and deploying your agents in production with Hayhooks.\nAgents are one of the most exciting frontiers in AI, and you now have the skills to help shape what comes next.\n\n",
+                      "images": [
+                        {
+                          "alt": "formation_haystack_logos.png",
+                          "url": "/api/assets/ch02_ex06_r_capitulatif_et_prochaines_tapes_042_datacamp_haystack_logos_2c611f46.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 8,
+                      "title": "Passons à la pratique !",
+                      "type": "FinalSlide",
+                      "script": "Thanks for joining me on this journey, happy building!\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.017985362917214573,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.050788579026466704,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.17379926307892507,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.2607425763150606,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.4207924452668826,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.5521650818398335,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.7584766996880353,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.9533955822655912,
+                      "slideIndex": 7,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. Bilan et prochaines étapes\nCongrats on making it to the end of this course!\n\n2. Vous avez créé un agent réel avec Haystack !\nYou’ve just completed a hands-on journey into building AI agents using Haystack. You’ve learned how to create systems that don’t just generate responses but reason, interact with external data sources, and make decisions.\n\n3. Agents capables de raisonner et d’agir\nAt the beginning, we interacted directly with a language model. It could generate text, but it had no awareness of the world or tools to act with.\n\n4. Agents capables de raisonner et d’agir\nThen, we built our first agent by giving it access to tools, starting with real-time web search, and later, structured patient records in an SQL database. \nAlong the way, we learned how to use Haystack to build an AI agent in just couple of steps.\n\n5. Agents capables de raisonner et d’agir\nFirst, we integrated the SerperDevWebSearch component as the agent’s first tool, giving it access to real-time web information. We then improved the agent’s transparency and traceability through custom configurations.\n\n6. Agents capables de raisonner et d’agir\nNext, we built a text-to-SQL pipeline that converted natural language questions into SQL queries, executed them on a patient database, and returned the results. Finally, we wrapped that pipeline as a tool and connected it back to the agent. That’s how we combined dynamic reasoning with structured workflows, all within a unified system.\n\n7. Prochaines étapes\nIf you want to explore further, you can level up by building multi-agent systems, adding multimodal capabilities like image or PDF support, and deploying your agents in production with Hayhooks.\nAgents are one of the most exciting frontiers in AI, and you now have the skills to help shape what comes next.\n\n8. Passons à la pratique !\nThanks for joining me on this journey, happy building!",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Bilan et prochaines étapes",
+                      "text": "Congrats on making it to the end of this course!"
+                    },
+                    {
+                      "heading": "2. Vous avez créé un agent réel avec Haystack !",
+                      "text": "You’ve just completed a hands-on journey into building AI agents using Haystack. You’ve learned how to create systems that don’t just generate responses but reason, interact with external data sources, and make decisions."
+                    },
+                    {
+                      "heading": "3. Agents capables de raisonner et d’agir",
+                      "text": "At the beginning, we interacted directly with a language model. It could generate text, but it had no awareness of the world or tools to act with."
+                    },
+                    {
+                      "heading": "4. Agents capables de raisonner et d’agir",
+                      "text": "Then, we built our first agent by giving it access to tools, starting with real-time web search, and later, structured patient records in an SQL database. \nAlong the way, we learned how to use Haystack to build an AI agent in just couple of steps."
+                    },
+                    {
+                      "heading": "5. Agents capables de raisonner et d’agir",
+                      "text": "First, we integrated the SerperDevWebSearch component as the agent’s first tool, giving it access to real-time web information. We then improved the agent’s transparency and traceability through custom configurations."
+                    },
+                    {
+                      "heading": "6. Agents capables de raisonner et d’agir",
+                      "text": "Next, we built a text-to-SQL pipeline that converted natural language questions into SQL queries, executed them on a patient database, and returned the results. Finally, we wrapped that pipeline as a tool and connected it back to the agent. That’s how we combined dynamic reasoning with structured workflows, all within a unified system."
+                    },
+                    {
+                      "heading": "7. Prochaines étapes",
+                      "text": "If you want to explore further, you can level up by building multi-agent systems, adding multimodal capabilities like image or PDF support, and deploying your agents in production with Hayhooks.\nAgents are one of the most exciting frontiers in AI, and you now have the skills to help shape what comes next."
+                    },
+                    {
+                      "heading": "8. Passons à la pratique !",
+                      "text": "Thanks for joining me on this journey, happy building!"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exerciseCount": 0
+    }
+  },
+  "policy": {
+    "publication_gate": "No P0; every P1 must be fixed or explicitly verified false positive; every mandatory media/file/exercise must be learner-usable; no required activity may depend on unprovided external access, dataset, workflow or environment; navigation gates must correspond to rendered activities.",
+    "remediation_rule": "If an activity cannot be made reliably correctable quickly using only its current declared assets, preserve any explanatory source text as a content block, remove the activity, remove its completion gate and remove orphan exercise definitions. Never invent a file, dataset, API, workflow, answer key, source or external access.",
+    "review_scope": "Inspect current learner-visible course JSON and current report. Produce exact block-level decisions only; do not modify course files."
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "formation_id": "ia_pour_les_nuls",
+  "index": 110,
+  "course_ids": [
+    "ia_pour_les_nuls__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_pour_les_nuls__01",
+      "chapter_id": "chapter_03",
+      "block_id": null,
+      "exercise_id": "ex_ia_pour_les_nuls__01_001",
+      "reason": "Le checkpoint obligatoire est bloquant mais sa réussite n’est pas vérifiable avec les seuls actifs déclarés : aucune condition de correction n’est configurée. Retirer le bloc checkpoint identifié par son exerciseId et conserver le contenu explicatif du chapitre.",
+      "evidence": "current_recheck.findings[0] : exercice required:true, completionRequiresCorrectAnswer/serverCorrectionRequired/evaluation/passingScore absents; le chapitre chapter_03 a completionRule:'exercise'. Le bloc réel est le bloc type:'checkpoint' dont exerciseId est ex_ia_pour_les_nuls__01_001."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_pour_les_nuls__01",
+      "chapter_id": "chapter_03",
+      "block_id": null,
+      "exercise_id": "ex_ia_pour_les_nuls__01_001",
+      "reason": "Retirer le verrou de chapitre associé au checkpoint supprimé afin que l’activité non vérifiable ne bloque plus la progression.",
+      "evidence": "Le chapitre chapter_03 conserve completionRule:'exercise' alors que le checkpoint ex_ia_pour_les_nuls__01_001 ne déclare aucune règle de réussite vérifiable."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_pour_les_nuls__01",
+      "chapter_id": "chapter_03_lesson_2_2",
+      "block_id": null,
+      "exercise_id": "ex_ia_pour_les_nuls__01_002",
+      "reason": "Le checkpoint multi-choix obligatoire exige l’ensemble des réponses correctes mais ne déclare aucune comparaison fiable de la sélection. Retirer le bloc checkpoint identifié par son exerciseId et conserver l’explication du chapitre.",
+      "evidence": "current_recheck.findings[1] : exercice required:true, trois réponses correctes, mais completionRequiresCorrectAnswer/serverCorrectionRequired/evaluation/passingScore absents; bloc réel type:'checkpoint' avec exerciseId ex_ia_pour_les_nuls__01_002."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_pour_les_nuls__01",
+      "chapter_id": "chapter_03_lesson_2_2",
+      "block_id": null,
+      "exercise_id": "ex_ia_pour_les_nuls__01_002",
+      "reason": "Retirer le verrou de chapitre associé au checkpoint non corrigeable de manière fiable.",
+      "evidence": "Le chapitre chapter_03_lesson_2_2 a completionRule:'exercise' sans règle de comparaison de la sélection aux réponses attendues."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_pour_les_nuls__01",
+      "chapter_id": "chapter_03_lesson_4_2",
+      "block_id": null,
+      "exercise_id": "ex_ia_pour_les_nuls__01_004",
+      "reason": "Le scénario professionnel obligatoire demande trois réponses structurées et des estimations, mais aucun schéma ou évaluateur fiable n’est déclaré. Retirer le bloc checkpoint identifié par son exerciseId et conserver le contenu explicatif du chapitre.",
+      "evidence": "current_recheck.findings[2] : inputSchema/evaluation/passingScore/completionRequiresCorrectAnswer/serverCorrectionRequired absents; bloc réel type:'checkpoint' avec exerciseId ex_ia_pour_les_nuls__01_004."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_pour_les_nuls__01",
+      "chapter_id": "chapter_03_lesson_4_2",
+      "block_id": null,
+      "exercise_id": "ex_ia_pour_les_nuls__01_004",
+      "reason": "Retirer le verrou de chapitre associé au scénario dont les critères annoncés ne peuvent pas être contrôlés avec les actifs présents.",
+      "evidence": "Le chapitre chapter_03_lesson_4_2 conserve completionRule:'exercise' et le scénario requis ne déclare aucune validation."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_pour_les_nuls__01",
+      "chapter_id": "chapter_03_lesson_5_2",
+      "block_id": null,
+      "exercise_id": "ex_ia_pour_les_nuls__01_005",
+      "reason": "La checklist obligatoire contient des indicateurs correct mais aucune logique de comparaison de la sélection. Retirer le bloc checkpoint identifié par son exerciseId et conserver le contenu explicatif du chapitre.",
+      "evidence": "current_recheck.findings[3] : exercice required:true, options correct:true/false, mais aucune condition completionRequiresCorrectAnswer/serverCorrectionRequired/evaluation/passingScore; bloc réel type:'checkpoint' avec exerciseId ex_ia_pour_les_nuls__01_005."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_pour_les_nuls__01",
+      "chapter_id": "chapter_03_lesson_5_2",
+      "block_id": null,
+      "exercise_id": "ex_ia_pour_les_nuls__01_005",
+      "reason": "Retirer le verrou de chapitre associé à la checklist non validable de manière fiable.",
+      "evidence": "Le chapitre chapter_03_lesson_5_2 a completionRule:'exercise' sans règle de validation de la sélection attendue."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Les secondes vidéos restent sans activité de réinvestissement ni alternative textuelle déclarée",
+      "evidence": "current_recheck.findings[4] : les blocs vidéo chapter_01_1_video_2, chapter_01_1_video_2_lesson_2_2, chapter_01_1_video_2_lesson_3_2, chapter_01_1_video_2_lesson_4_2 et chapter_01_1_video_2_lesson_5_2 ont watchUrl et objectiveBefore, mais aucun questionsAfter, alternativeTextFr ou transcript.",
+      "course_id": "ia_pour_les_nuls__01",
+      "reason_not_rapidly_remediable": "Une question ou une alternative fiable et spécifique ne peut pas être inventée sans le contenu/transcript des vidéos; les vidéos sont des contenus valides et ne doivent pas être supprimées pour cette seule lacune."
+    }
+  ],
+  "summary": "Les quatre checkpoints P1 obligatoires non vérifiables sont retirés de leurs chapitres et leurs verrous completionRule:'exercise' sont retirés, tandis que les explications de chapitre sont conservées. Un constat P2 vidéo reste ouvert faute de transcript ou d’alternative déclarée; aucune vidéo valide n’est supprimée."
+}

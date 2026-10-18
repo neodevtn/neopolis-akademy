@@ -1,39 +1,165 @@
-import { describe, expect, it } from "vitest";
 import catalog from "../client/src/data/trainingIndex.json";
 import course from "../client/public/data/courses/building_scalable_agentic_systems__01.json";
+import { describe, expect, it } from "vitest";
 
-describe("cours DataCamp Concevoir des systèmes agentiques évolutifs", () => {
-  const activities = course.lessons.flatMap((lesson: any) => lesson.chapters);
+const courseId = "building_scalable_agentic_systems__01";
+const interactiveBlockTypes = new Set([
+  "exercise",
+  "single_choice_exercise",
+  "multi_choice_exercise",
+  "multi_choice",
+  "matching",
+  "bucket_sort",
+  "fill_blank",
+  "code_repl",
+  "terminal_sim",
+  "ai_evaluation",
+  "ordering",
+  "cloud_exercise",
+  "resource_review",
+]);
+const practicalBlockTypes = new Set([
+  "cloud_exercise",
+  "code_repl",
+  "ai_evaluation",
+  "terminal_sim",
+]);
+const hasText = (value: unknown) =>
+  typeof value === "string" && value.trim().length > 0;
+const isLocalAsset = (value: unknown) =>
+  typeof value === "string" && value.startsWith("/api/assets/");
+
+function derivedMetrics(activities: any[], blocks: any[]) {
+  const downloadableUrls = new Set<string>();
+  let downloadsWithoutUrl = 0;
+
+  for (const block of blocks) {
+    const urls = [
+      block.url,
+      block.downloadUrl,
+      block.fileUrl,
+      block.slidesPdf,
+      ...(Array.isArray(block.resources)
+        ? block.resources.map((resource: any) => resource?.url)
+        : []),
+      ...(Array.isArray(block.downloads)
+        ? block.downloads.map((download: any) => download?.url || download)
+        : []),
+    ].filter(
+      (url): url is string => typeof url === "string" && url.trim().length > 0
+    );
+    urls.forEach(url => downloadableUrls.add(url));
+    if (
+      (block.type === "download" || block.type === "file_download") &&
+      urls.length === 0
+    )
+      downloadsWithoutUrl += 1;
+  }
+
+  return {
+    lessonCount: course.lessons.length,
+    chapterCount: activities.length,
+    totalActivities: activities.length,
+    exerciseCount: blocks.filter((block: any) =>
+      interactiveBlockTypes.has(block.type)
+    ).length,
+    videoCount: blocks.filter((block: any) => block.type === "video").length,
+    downloadCount: downloadableUrls.size + downloadsWithoutUrl,
+  };
+}
+
+describe("Cours : Concevoir des systèmes agentiques évolutifs", () => {
+  const activities = course.lessons.flatMap(
+    (lesson: any) => lesson.chapters || []
+  );
   const blocks = activities.flatMap((activity: any) => activity.blocks || []);
 
-  it("publie les compteurs dérivés après les trois retraits visuels canoniquement justifiés", () => {
-    const certification = catalog.certifications.find((entry: any) => entry.id === "datacamp_building_scalable_agentic_systems");
-    const courseIndex = catalog.courses.find((entry: any) => entry.id === "building_scalable_agentic_systems__01");
-    expect(certification).toMatchObject({ group: "claude_ai_agents", totalLessons: 3, totalActivities: 26, totalVideos: 10, totalExercises: 16, totalDownloads: 3 });
-    expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 26, videoCount: 10, exerciseCount: 16, downloadCount: 3 });
+  it("synchronise le catalogue avec les métriques dérivées du JSON livré", () => {
+    const metrics = derivedMetrics(activities, blocks);
+    const courseIndex = catalog.courses.find(
+      (entry: any) => entry.id === courseId
+    );
+
+    expect(courseIndex).toMatchObject({ id: courseId, ...metrics });
+    const certification = catalog.certifications.find(
+      (entry: any) => entry.id === courseIndex?.certId
+    );
+    expect(certification).toMatchObject({
+      totalLessons: metrics.lessonCount,
+      totalActivities: metrics.totalActivities,
+      totalVideos: metrics.videoCount,
+      totalExercises: metrics.exerciseCount,
+      totalDownloads: metrics.downloadCount,
+    });
   });
 
-  it("préserve les médias Projector locaux, l’interactivité et la progression séquentielle", () => {
-    const projectorVideos = blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length);
-    expect(activities).toHaveLength(26);
-    expect(projectorVideos).toHaveLength(10);
-    expect(projectorVideos.every((block: any) => block.audioUrl && block.slidesPdf && block.subtitleUrlFr && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
-    expect(blocks.filter((block: any) => block.type === "bucket_sort")).toHaveLength(6);
-    expect(blocks.filter((block: any) => block.type === "multi_choice_exercise" || block.type === "single_choice_exercise")).toHaveLength(10);
-    expect(blocks.some((block: any) => block.chatScenario?.messages?.length === 3)).toBe(true);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "PureMultipleChoiceExercise")).toHaveLength(9);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "DragAndDropExercise")).toHaveLength(6);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "VisualExercise")).toHaveLength(0);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "ChatExercise")).toHaveLength(1);
-    expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
-    expect(activities.map((activity: any) => activity.id)).not.toEqual(expect.arrayContaining(["dc_ch02_act06", "dc_ch02_act07", "dc_ch02_act09"]));
+  it("conserve chaque média vidéo importé sous une forme locale exploitable", () => {
+    const videos = blocks.filter((block: any) => block.type === "video");
+    const expectedVideoCount =
+      course.datacampImport?.expected?.videos_extracted;
+
+    expect(expectedVideoCount).toBeGreaterThan(0);
+    expect(videos).toHaveLength(expectedVideoCount);
+    expect(new Set(videos.map((video: any) => video.id)).size).toBe(
+      videos.length
+    );
+    expect(
+      videos.every(
+        (video: any) =>
+          video.projectorSlides?.length > 0 &&
+          (hasText(video.audioUrl) || hasText(video.mp4Url)) &&
+          video.projectorTimings?.length > 0 &&
+          video.transcriptSegments?.length > 0
+      )
+    ).toBe(true);
+    const mediaPaths = videos.flatMap((video: any) =>
+      [
+        video.audioUrl,
+        video.mp4Url,
+        video.slidesPdf,
+        video.subtitleUrlFr,
+        video.subtitleUrlEn,
+      ].filter(Boolean)
+    );
+    expect(mediaPaths).not.toHaveLength(0);
+    expect(mediaPaths.every(isLocalAsset)).toBe(true);
   });
 
-  it("n’expose ni URL de recommandation, ni libellé fournisseur, ni XP dans les blocs publiés", () => {
-    const serialized = JSON.stringify(course);
-    const visibleBlocks = JSON.stringify(blocks);
-    expect(serialized).not.toMatch(/https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com/i);
-    expect(serialized).not.toContain("/manus-storage/");
-    expect(visibleBlocks).not.toMatch(/DataCamp|\bXP\b/i);
+  it("ne rend obligatoire aucune pratique sans correction locale et vérifiable", () => {
+    const requiredPracticalBlocks = activities
+      .filter((activity: any) => activity.requiredBeforeAdvance)
+      .flatMap((activity: any) =>
+        (activity.blocks || []).filter((block: any) =>
+          practicalBlockTypes.has(block.type)
+        )
+      );
+
+    expect(
+      requiredPracticalBlocks.every(
+        (block: any) =>
+          Array.isArray(block.rubricCriteria) &&
+          block.rubricCriteria.length > 0 &&
+          hasText(block.evaluationPrompt) &&
+          !/https?:\/\/|\/manus-storage\//i.test(JSON.stringify(block))
+      )
+    ).toBe(true);
+  });
+
+  it("n’expose ni DataLab ni XP, ni URL fournisseur ou stockage direct aux apprenants", () => {
+    // `xp` est une métadonnée legacy non rendue : on contrôle la charge utile apprenant,
+    // à laquelle le lecteur de leçon accède, plutôt que de confondre stockage et exposition.
+    const learnerFacingActivities = activities.map((activity: any) => ({
+      ...activity,
+      blocks: (activity.blocks || []).map(
+        ({ xp: _xp, ...block }: any) => block
+      ),
+    }));
+    const learnerFacingContent = JSON.stringify(learnerFacingActivities);
+
+    expect(learnerFacingContent).not.toMatch(/datalab|\bXP\b/i);
+    expect(learnerFacingContent).not.toMatch(
+      /https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com/i
+    );
+    expect(learnerFacingContent).not.toContain("/manus-storage/");
   });
 });

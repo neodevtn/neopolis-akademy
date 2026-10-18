@@ -1,0 +1,97 @@
+{
+  "formation_id": "open_source_llms_fine_tuning_engineer",
+  "index": 115,
+  "course_ids": [
+    "open_source_llms_fine_tuning_engineer__01",
+    "open_source_llms_fine_tuning_engineer__02",
+    "open_source_llms_fine_tuning_engineer__03",
+    "open_source_llms_fine_tuning_engineer__04"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "mark_false_positive",
+      "course_id": "open_source_llms_fine_tuning_engineer__02",
+      "chapter_id": null,
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Le constat historique de checkpoint absent/non verrouillant n'est plus observable comme défaut de rendu : chapter_04 et les exercices correspondants sont absents de l'état courant, et aucun verrou ou activité orpheline réelle n'est présent à supprimer.",
+      "evidence": "current_recheck.findings P0; le cours __02 contient chapter_01, chapter_02, chapter_03, chapter_05 et chapter_06 pour ses leçons, course.exercises=[]; aucun chapter_04 ni bloc/exercice checkpoint n'existe dans le bundle courant."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Objectifs du cours 01 masqués par une vidéo dans What You Will Learn",
+      "evidence": "open_source_llms_fine_tuning_engineer__01, lesson_01_chapter_01 : chapter.body contient les objectifs mais blocks[0] est uniquement la vidéo The Major LLM Families Explained: Llama, Mistral, Gemma; le rendu parcourt blocks lorsqu'ils existent.",
+      "course_id": "open_source_llms_fine_tuning_engineer__01",
+      "chapter_id": "lesson_01_chapter_01",
+      "reason_not_rapidly_remediable": "La correction fiable exige une modification de structure/normalisation pour rendre chapter.body avant le média; aucune action autorisée ne permet d'ajouter ou réordonner ce contenu sans retirer à tort une vidéo déclarée valide."
+    },
+    {
+      "severity": "P1",
+      "title": "Théorie Hugging Face Hub masquée par une vidéo",
+      "evidence": "open_source_llms_fine_tuning_engineer__01, lesson_02_chapter_02 : le body documente Hub, model cards, datasets et authentification, tandis que blocks[0] est seulement la vidéo Mistral 7B: The BEST Tiny Model EVER! Beats LLAMA 2.",
+      "course_id": "open_source_llms_fine_tuning_engineer__01",
+      "chapter_id": "lesson_02_chapter_02",
+      "reason_not_rapidly_remediable": "Il faut rendre le body existant avant la vidéo ou modifier le chemin de rendu; supprimer la vidéo serait une suppression non justifiée d'un contenu média valide."
+    },
+    {
+      "severity": "P1",
+      "title": "Objectifs Adapter Saving and Merging masqués par une vidéo",
+      "evidence": "open_source_llms_fine_tuning_engineer__04, lesson_01_chapter_01 : body contient les objectifs et blocks[0] est uniquement qLoRa in Action: A Fine-Tuning Tutorial.",
+      "course_id": "open_source_llms_fine_tuning_engineer__04",
+      "chapter_id": "lesson_01_chapter_01",
+      "reason_not_rapidly_remediable": "La résolution nécessite d'exposer le body existant avant le média; aucune suppression de référence obsolète ou promesse injustifiée n'est démontrée."
+    },
+    {
+      "severity": "P1",
+      "title": "Théorie model cards/dataset cards masquée par une vidéo non spécifique",
+      "evidence": "open_source_llms_fine_tuning_engineer__04, lesson_02_chapter_02 : le body porte sur model cards et dataset cards, mais blocks[0] est The Major LLM Families Explained: Llama, Mistral, Gemma.",
+      "course_id": "open_source_llms_fine_tuning_engineer__04",
+      "chapter_id": "lesson_02_chapter_02",
+      "reason_not_rapidly_remediable": "La correction nécessite une réorganisation du rendu ou une décision éditoriale sur le média; le bundle ne démontre pas que la vidéo est obsolète ni qu'elle doit être supprimée."
+    },
+    {
+      "severity": "P2",
+      "title": "Bilan et transition non rendus dans le cours 01",
+      "evidence": "open_source_llms_fine_tuning_engineer__01, lesson_03_chapter_06 : body contient bilan et annonce de la leçon suivante, blocks[0] est uniquement How to Install LLaMA & Mistral Locally for Free—Easy Setup.",
+      "course_id": "open_source_llms_fine_tuning_engineer__01",
+      "chapter_id": "lesson_03_chapter_06",
+      "reason_not_rapidly_remediable": "Il faut modifier la normalisation ou ajouter/réordonner un bloc content; aucune action autorisée ne réalise cette correction sans supprimer un média potentiellement valide."
+    },
+    {
+      "severity": "P2",
+      "title": "Média LoRA/QLoRA mal contextualisé dans le chapitre des splits",
+      "evidence": "open_source_llms_fine_tuning_engineer__02, chapter_02 : le chapitre traite train/validation/test et blocks[1] est LoRA, QLoRA Indepth Mathematical Intuition, sans consigne de split ou validation spécifique.",
+      "course_id": "open_source_llms_fine_tuning_engineer__02",
+      "chapter_id": "chapter_02",
+      "reason_not_rapidly_remediable": "Le bundle ne permet pas de déterminer de façon fiable si le média doit être déplacé ou si une consigne manque; aucune suppression rapide justifiée n'est disponible."
+    },
+    {
+      "severity": "P2",
+      "title": "Duplication legacy chapter.block/chapter.blocks",
+      "evidence": "open_source_llms_fine_tuning_engineer__03 : plusieurs chapitres possèdent simultanément chapter.block et chapter.blocks, avec du texte content répété dans les deux représentations.",
+      "course_id": "open_source_llms_fine_tuning_engineer__03",
+      "chapter_id": null,
+      "reason_not_rapidly_remediable": "Le constat porte sur une représentation structurelle multi-chapitres; aucune action de suppression autorisée ne peut cibler la copie legacy sans identifiant de bloc réel ni garantie sur le chemin canonique."
+    },
+    {
+      "severity": "P2",
+      "title": "Vidéo placée avant les objectifs dans What You Will Learn",
+      "evidence": "open_source_llms_fine_tuning_engineer__03, lesson_01_chapter_01 : blocks[0] est la vidéo How to Fine Tune your own LLM using LoRA..., blocks[1] est le content d'objectifs.",
+      "course_id": "open_source_llms_fine_tuning_engineer__03",
+      "chapter_id": "lesson_01_chapter_01",
+      "reason_not_rapidly_remediable": "La correction est un réordonnancement ou une requalification du média, non une suppression de référence obsolète; les actions disponibles ne garantissent pas la conservation de l'écran valide."
+    },
+    {
+      "severity": "P2",
+      "title": "Objectifs Adapter Saving and Merging masqués par une vidéo dans le cours 04",
+      "evidence": "open_source_llms_fine_tuning_engineer__04, lesson_03_chapter_06 : body contient le bilan et la transition, blocks[0] est la vidéo How to Fine Tune your own LLM using LoRA.",
+      "course_id": "open_source_llms_fine_tuning_engineer__04",
+      "chapter_id": "lesson_03_chapter_06",
+      "reason_not_rapidly_remediable": "Il faut exposer le body et conserver/recontextualiser le média; supprimer la vidéo ne serait pas justifié par le bundle."
+    }
+  ],
+  "summary": "État courant relu pour les quatre cours. Le P0 historique sur les checkpoints du cours 02 est normalisé en faux positif car l'activité absente n'existe plus dans le bundle. Les quatre P1 et cinq P2 restent non résolus : ils exigent une réorganisation du rendu, une décision éditoriale ou une normalisation structurelle, et aucune suppression fiable d'activité/bloc réel n'est autorisée sans retirer un contenu valide."
+}

@@ -53,4 +53,19 @@ describe("content studio model", () => {
     expect(result.valid).toBe(false);
     expect(result.errors.some((issue) => issue.message.includes("qu’une seule vidéo"))).toBe(true);
   });
+
+  it("rejects direct temporary-storage paths in learner-facing course content", () => {
+    const result = validateStructuredCourse({
+      ...course,
+      lessons: [{
+        chapters: [{
+          id: "chapter_temporary_resource",
+          blocks: [{ type: "content", body: { fr: "[Télécharger](/manus-storage/support.pdf)" } }],
+        }],
+      }],
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors.some((issue) => issue.path.endsWith("body.fr") && issue.message.includes("/api/assets/"))).toBe(true);
+  });
 });

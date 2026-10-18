@@ -1,0 +1,75 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_34",
+  "index": 103,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__34"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "chapter_id": "ia_appliquee_metiers_tp__34-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__34-checkpoint-preparation",
+      "reason": "Activité obligatoire P1 non fiable : le knowledge_check valide toute sélection, y compris une réponse incorrecte, alors que la gate exige un seuil de réussite. La correction fiable nécessiterait une modification du renderer/gate, hors correction rapide à partir des seuls actifs déclarés. Les consignes de sécurité et leur explication existent déjà dans les écrans précédents ; le bloc interactif doit donc être retiré.",
+      "evidence": "current_open_p0_p1_findings[0] et initial_audit issue pedagogical:ia_appliquee_metiers_tp__34:checkpoint-01:knowledge-check-pass-gate ; chapitre ia_appliquee_metiers_tp__34-checkpoint-01 requiredBeforeAdvance=true, bloc réel ia_appliquee_metiers_tp__34-checkpoint-preparation type knowledge_check, correctAnswer=a."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "chapter_id": "ia_appliquee_metiers_tp__34-checkpoint-01",
+      "reason": "Retirer le verrou de progression associé au checkpoint supprimé ; aucune activité obligatoire non fiable ne doit bloquer l’apprenant.",
+      "evidence": "Le chapitre ia-appliquee-metiers-tp__34-checkpoint-01 est requiredBeforeAdvance=true et son unique bloc réel est ia_appliquee_metiers_tp__34-checkpoint-preparation."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "chapter_id": "ia_appliquee_metiers_tp__34-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__34-mini-project-proof",
+      "reason": "Le cloud_exercise obligatoire accepte une soumission triviale d’un caractère et révèle la correction/déverrouille la suite sans vérifier les quatre éléments demandés. Une validation fiable nécessiterait une grille, une validation serveur ou un contrôle de critères absent des actifs déclarés. Convertir le bloc en contenu non bloquant conserve les consignes, le guide, l’indice, la correction et le message explicatif existants sans maintenir une fausse preuve de réalisation.",
+      "evidence": "current_open_p0_p1_findings[1] et initial_audit issue pedagogical:ia_appliquee_metiers_tp__34:mini-project-proof:trivial-submission ; bloc réel ia-appliquee-metiers-tp__34-mini-project-proof type cloud_exercise, sans minimumAnswerLength, rubricCriteria, serverGradedAssessment ni requirePostRevealReflection, avec instructions et solution textuelles existantes."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "chapter_id": "ia_appliquee_metiers_tp__34-mini-project",
+      "reason": "Retirer le verrou de progression du mini-projet devenu contenu non bloquant ; la preuve ne doit plus être une condition obligatoire tant qu’elle ne peut pas être évaluée de manière fiable.",
+      "evidence": "Le chapitre ia-appliquee-metiers-tp__34-mini-project est requiredBeforeAdvance=true et contient le bloc réel ia-appliquee-metiers-tp__34-mini-project-proof dont la complétion déverrouille le quiz final."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Couverture bilingue incomplète des champs visibles",
+      "evidence": "Le cloud_exercise réel ia-appliquee-metiers-tp__34-mini-project-proof contient assignment, instructions, hint, solution et successMessage comme chaînes uniques ; d’autres textes des écrans 2 et 3 sont également non localisés ou recopiés.",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "chapter_id": "ia_appliquee_metiers_tp__34-mini-project",
+      "reason_not_rapidly_remediable": "Ce constat P1 n’est pas lié à une activité bloquante et aucune traduction anglaise fiable n’est déclarée dans le bundle pour ces champs. Inventer des traductions ou modifier le contenu au-delà des textes existants serait contraire à la consigne ; il n’y a donc pas de correction rapide autorisée parmi les actions disponibles."
+    },
+    {
+      "severity": "P2",
+      "title": "Confirmation déclarative de consultation de la ressource",
+      "evidence": "Le resource_review réel ia-appliquee-metiers-tp__34-source-review enregistre une confirmation sans état d’ouverture vérifié selon current_recheck.findings[0].",
+      "course_id": "ia-appliquee_metiers_tp__34",
+      "chapter_id": "ia-appliquee_metiers_tp__34-screen-02",
+      "reason_not_rapidly_remediable": "La ressource YouTube est valide et ne doit pas être retirée pour absence d’activité ; établir une ouverture vérifiable nécessite une modification du comportement du lecteur, non présente dans les actifs déclarés."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback du tri final non rendu",
+      "evidence": "Le bloc réel ia-appliquee-metiers-tp__34-quiz-order contient feedback mais pas correction ; le rapport indique que LessonViewer ne transmet pas feedback au renderer.",
+      "course_id": "ia_appliquee_metiers_tp__34",
+      "chapter_id": "ia-appliquee-metiers-tp__34-final-quiz",
+      "reason_not_rapidly_remediable": "Le texte de feedback existe mais le défaut est dans le câblage du renderer ; aucune action autorisée de contenu ne peut garantir son affichage sans modifier le code."
+    },
+    {
+      "severity": "P2",
+      "title": "Vocabulaire des phases non harmonisé entre théorie et tri",
+      "evidence": "L’écran ia-appliquee-metiers-tp__34-screen-03 enseigne Cadrer, Préparer, Tester, Contrôler, tandis que le bloc réel ia-appliquee-metiers-tp__34-quiz-order évalue Cadrer, Construire, Tester, Valider.",
+      "course_id": "ia-appliquee_metiers_tp__34",
+      "chapter_id": "ia-appliquee_metiers_tp__34-final-quiz",
+      "reason_not_rapidly_remediable": "La correction nécessite de choisir et réécrire une terminologie pédagogique cohérente ; le bundle ne fournit pas de correspondance existante autorisant une modification fiable sans invention."
+    }
+  ],
+  "summary": "Revue lecture seule de la formation 103 : deux activités obligatoires P1 ne sont pas fiablement corrigeables avec les actifs déclarés. Le checkpoint de sécurité est retiré avec son verrou ; le mini-projet est converti en contenu non bloquant avec son verrou retiré, afin de conserver ses explications. Un P1 de bilinguisme et trois P2 restent non résolus faute de correction rapide démontrable dans le bundle."
+}

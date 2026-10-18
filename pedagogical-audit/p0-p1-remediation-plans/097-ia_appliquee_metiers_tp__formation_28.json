@@ -1,0 +1,75 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_28",
+  "index": 97,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__28"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "chapter_id": "ia_appliquee_metiers_tp__28-screen-01",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Le chapitre est obligatoire mais son ChapterQuiz ne dispose d'aucune question déclarée et passe automatiquement ; retirer le verrou plutôt que maintenir une validation vide.",
+      "evidence": "current_recheck.findings[0] ; chapitre lessons[0].chapters[0] requiredBeforeAdvance=true ; absence de clé de cours dans lessonQuizzes.json ; ChapterQuiz appelle onPass lorsque allQuestions est vide."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "chapter_id": "ia_appliquee_metiers_tp__28-screen-02",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Le chapitre est obligatoire mais son ChapterQuiz ne dispose d'aucune question déclarée et passe automatiquement ; retirer le verrou plutôt que maintenir une validation vide.",
+      "evidence": "current_recheck.findings[0] ; chapitre lessons[0].chapters[1] requiredBeforeAdvance=true ; absence de clé de cours dans lessonQuizzes.json ; ChapterQuiz appelle onPass lorsque allQuestions est vide."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "chapter_id": "ia_appliquee_metiers_tp__28-screen-03",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Le chapitre est obligatoire mais son ChapterQuiz ne dispose d'aucune question déclarée et passe automatiquement ; retirer le verrou plutôt que maintenir une validation vide.",
+      "evidence": "current_recheck.findings[0] ; chapitre lessons[0].chapters[2] requiredBeforeAdvance=true ; absence de clé de cours dans lessonQuizzes.json ; ChapterQuiz appelle onPass lorsque allQuestions est vide."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "chapter_id": "ia_appliquee_metiers_tp__28-screen-02",
+      "block_id": "ia_appliquee_metiers_tp__28-source-review",
+      "exercise_id": null,
+      "reason": "La consultation de la ressource ne peut pas être vérifiée de manière fiable par le verrou actuel ; conserver la consigne et le lien comme contenu non bloquant, sans prétendre valider l'ouverture.",
+      "evidence": "current_recheck.findings[1] ; bloc resource_review réel avec resourceUrl présente ; le bouton de confirmation ajoute directement reviewId sans enregistrer l'ouverture de resourceUrl."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "chapter_id": "ia_appliquee_metiers_tp__28-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__28-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Le knowledge_check obligatoire enregistre une sélection incorrecte comme complétion et n'est pas reconnu par le gate checkpoint ; retirer l'activité et son verrou plutôt que laisser un prérequis de sécurité non fiable. Son explication est déjà présente à l'écran.",
+      "evidence": "current_recheck.findings[2] ; bloc réel type knowledge_check required=true correctAnswer=a dans chapitre type checkpoint ; GenericLearningBlocks appelle onComplete à chaque sélection et LessonViewer ajoute systématiquement l'identifiant."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "chapter_id": "ia_appliquee_metiers_tp__28-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__28-mini-project-proof",
+      "exercise_id": "ia_appliquee_metiers_tp__28-mini-project-proof",
+      "reason": "La preuve substantielle du mini-projet n'est pas évaluable de manière fiable avec les seuls actifs déclarés : sans longueur minimale, rubrique ni évaluation serveur, toute réponse non vide valide l'activité. Retirer le bloc obligatoire et son verrou plutôt que certifier une preuve insuffisante ; les instructions et la correction existent déjà dans le chapitre.",
+      "evidence": "current_recheck.findings[3] ; bloc cloud_exercise réel sans minimumAnswerLength, rubricCriteria ni serverGradedAssessment ; CloudExerciseBlock complète directement l'activité avec le minimum par défaut d'un caractère."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Couverture bilingue incomplète dans l'état courant",
+      "evidence": "current_recheck.findings[4] ; plusieurs champs fr/en sont identiques ou restent en français, notamment description, titres de chapitres, libellés et options.",
+      "course_id": "ia_appliquee_metiers_tp__28",
+      "chapter_id": null,
+      "reason_not_rapidly_remediable": "Une traduction cohérente de nombreux champs ne peut pas être déduite de façon fiable comme simple correction rapide à partir des seuls constats ; aucune modification de contenu n'est effectuée dans cette décision."
+    }
+  ],
+  "summary": "Six décisions retirent les validations non fiables : trois verrous de chapitres sans questions, la revue de ressource convertie en contenu non bloquant, le checkpoint de sécurité et la preuve de mini-projet supprimés avec leurs verrous. La ressource valide n'est pas supprimée. Un constat P2 de couverture bilingue reste ouvert ; aucun P0/P1 ne reste non résolu."
+}

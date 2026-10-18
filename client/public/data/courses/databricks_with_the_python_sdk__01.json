@@ -79,7 +79,7 @@
                   "number": 1,
                   "title": "Premiers pas avec le SDK Databricks",
                   "type": "TitleSlide",
-                  "script": "Bonjour, je suis Avi Steinberg.\n\n",
+                  "script": "Bonjour, je suis Avi Steinberg.",
                   "images": [],
                   "content": "",
                   "contentLeft": "",
@@ -92,7 +92,7 @@
                   "number": 2,
                   "title": "Pourquoi apprendre Databricks ?",
                   "type": "FullSlide",
-                  "script": "Je suis ingénieur logiciel, avec de l'expérience dans plusieurs startups technologiques et au sein d'entreprises du Fortune-cinq-cents. J'utilise Databricks dans un cadre professionnel depuis plusieurs années et, dans ce cours, je vais vous apprendre à utiliser le Kit de développement logiciel (SDK) Databricks pour Python. C'est un ensemble de bibliothèques et d'API qui nous permettent d'interagir avec un espace de travail Databricks.\nPourquoi apprendre Databricks ? Parce que c'est l'une des principales plateformes cloud d'apprentissage automatique, d'I-A et d'ingénierie des données sur le marché. Elle est utilisée par plus de soixante pour cent des entreprises du Fortune cinq-cents.\n\n",
+                  "script": "Je suis ingénieur logiciel, avec de l'expérience dans plusieurs startups technologiques et au sein d'entreprises du Fortune-cinq-cents. J'utilise Databricks dans un cadre professionnel depuis plusieurs années et, dans ce cours, je vais vous apprendre à utiliser le Kit de développement logiciel (SDK) Databricks pour Python. C'est un ensemble de bibliothèques et d'API qui nous permettent d'interagir avec un espace de travail Databricks.\nPourquoi apprendre Databricks ? Parce que c'est l'une des principales plateformes cloud d'apprentissage automatique, d'I-A et d'ingénierie des données sur le marché. Elle est utilisée par plus de soixante pour cent des entreprises du Fortune cinq-cents.",
                   "images": [],
                   "content": "- Plateforme cloud leader pour ML, IA et data engineering \n- Utilisée par plus de 60 % des entreprises du Fortune 500",
                   "contentLeft": "- Plateforme cloud leader pour ML, IA et data engineering \n- Utilisée par plus de 60 % des entreprises du Fortune 500",
@@ -102,7 +102,7 @@
                   "number": 3,
                   "title": "Qu'est-ce qu'un workspace Databricks ?",
                   "type": "FullSlide",
-                  "script": "Alors, qu'est-ce qu'un espace de travail Databricks ? C'est un ensemble de ressources cloud Databricks qui sert d'environnement pour accéder aux éléments Databricks. Parmi les éléments que l'on peut avoir dans notre espace de travail, on trouve par exemple des clusters, des notebooks et des jobs.\n\n",
+                  "script": "Alors, qu'est-ce qu'un espace de travail Databricks ? C'est un ensemble de ressources cloud Databricks qui sert d'environnement pour accéder aux éléments Databricks. Parmi les éléments que l'on peut avoir dans notre espace de travail, on trouve par exemple des clusters, des notebooks et des jobs.",
                   "images": [],
                   "content": "- Déploiement Databricks de ressources cloud \n- Environnement d'accès aux ressources Databricks \n- Exemples d'actifs dans le workspace : jobs, clusters, notebooks",
                   "contentLeft": "- Déploiement Databricks de ressources cloud \n- Environnement d'accès aux ressources Databricks \n- Exemples d'actifs dans le workspace : jobs, clusters, notebooks",
@@ -112,17 +112,17 @@
                   "number": 4,
                   "title": "Installer le SDK Databricks",
                   "type": "FullSlide",
-                  "script": "Notre point d'entrée dans l'espace de travail Databricks est le WorkspaceClient, que l'on importe depuis le module databricks.sdk. Nous instancions un objet de la classe WorkspaceClient et nous l'utilisons pour interagir avec notre espace de travail Databricks. Mais comment le client d'espace de travail sait-il avec quel espace de travail Databricks interagir ? La réponse tient à l'authentification.\n\n",
+                  "script": "Notre point d'entrée dans l'espace de travail Databricks est le WorkspaceClient, que l'on importe depuis le module databricks.sdk. Nous instancions un objet de la classe WorkspaceClient et nous l'utilisons pour interagir avec notre espace de travail Databricks. Mais comment le client d'espace de travail sait-il avec quel espace de travail Databricks interagir ? La réponse tient à l'authentification.",
                   "images": [],
-                  "content": "Installer le SDK \n\n```py\npip install databricks-sdk\n```\n\nInstancier `WorkspaceClient`\n\n```py\nfrom databricks.sdk import WorkspaceClient\nw = WorkspaceClient()\n```",
-                  "contentLeft": "Installer le SDK \n\n```py\npip install databricks-sdk\n```\n\nInstancier `WorkspaceClient`\n\n```py\nfrom databricks.sdk import WorkspaceClient\nw = WorkspaceClient()\n```",
+                  "content": "Installer le SDK ```py\npip install databricks-sdk\n```\n\nInstancier `WorkspaceClient`\n\n```py\nfrom databricks.sdk import WorkspaceClient\nw = WorkspaceClient()\n```",
+                  "contentLeft": "Installer le SDK ```py\npip install databricks-sdk\n```\n\nInstancier `WorkspaceClient`\n\n```py\nfrom databricks.sdk import WorkspaceClient\nw = WorkspaceClient()\n```",
                   "contentRight": ""
                 },
                 {
                   "number": 5,
                   "title": "Variables d'environnement d'authentification",
                   "type": "TwoColumns",
-                  "script": "Une variable d'environnement est une variable stockée sur un système informatique, composée d'une paire Clé/Valeur, généralement utilisée pour configurer le comportement d'une application en fonction de paramètres externes. Le WorkspaceClient requiert trois variables d'environnement pour s'authentifier auprès d'un espace de travail Databricks : DATABRICKS_CLIENT_SECRET, DATABRICKS_CLIENT_ID et DATABRICKS_HOST. DATABRICKS_HOST correspond à la même adresse url que celle que nous utilisons dans le navigateur pour accéder à notre espace de travail Databricks. Elle a la forme <workspace_id>.cloud.databricks.com. Pour obtenir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET, nous pouvons nous authentifier à l'aide d'un principal de service.\n\n",
+                  "script": "Une variable d'environnement est une variable stockée sur un système informatique, composée d'une paire Clé/Valeur, généralement utilisée pour configurer le comportement d'une application en fonction de paramètres externes. Le WorkspaceClient requiert trois variables d'environnement pour s'authentifier auprès d'un espace de travail Databricks : DATABRICKS_CLIENT_SECRET, DATABRICKS_CLIENT_ID et DATABRICKS_HOST. DATABRICKS_HOST correspond à la même adresse url que celle que nous utilisons dans le navigateur pour accéder à notre espace de travail Databricks. Elle a la forme <workspace_id>.cloud.databricks.com. Pour obtenir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET, nous pouvons nous authentifier à l'aide d'un principal de service.",
                   "images": [],
                   "content": "* Variable d'environnement = paire clé/valeur pour configurer le comportement d'une application\n\n- ```DATABRICKS_CLIENT_SECRET```\n- ```DATABRICKS_CLIENT_ID```\n- ```DATABRICKS_HOST```=<workspace_id>.cloud.databricks.com",
                   "contentLeft": "* Variable d'environnement = paire clé/valeur pour configurer le comportement d'une application\n\n- ```DATABRICKS_CLIENT_SECRET```\n- ```DATABRICKS_CLIENT_ID```\n- ```DATABRICKS_HOST```=<workspace_id>.cloud.databricks.com",
@@ -132,7 +132,7 @@
                   "number": 6,
                   "title": "S'authentifier avec un Service Principal",
                   "type": "FullSlide",
-                  "script": "Un \"principal de service\" est une identité de sécurité au sein d'une plateforme cloud qui représente une application ou un service, lui permettant de s'authentifier et d'accéder à des ressources sans nécessiter la connexion d'un utilisateur humain. Ils sont utiles lorsque vous souhaitez créer des identités avec différents niveaux d'autorisations pour différentes ressources. \n\nPour authentifier un espace de travail Databricks à l'aide d'un principal de service, nous nous connectons à notre espace, créons un principal de service, lui attribuons des autorisations, puis créons un secret OAuth qui contiendra un ClientId et un ClientSecret. Ces valeurs peuvent servir à définir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET.\n\n",
+                  "script": "Un \"principal de service\" est une identité de sécurité au sein d'une plateforme cloud qui représente une application ou un service, lui permettant de s'authentifier et d'accéder à des ressources sans nécessiter la connexion d'un utilisateur humain. Ils sont utiles lorsque vous souhaitez créer des identités avec différents niveaux d'autorisations pour différentes ressources. Pour authentifier un espace de travail Databricks à l'aide d'un principal de service, nous nous connectons à notre espace, créons un principal de service, lui attribuons des autorisations, puis créons un secret OAuth qui contiendra un ClientId et un ClientSecret. Ces valeurs peuvent servir à définir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET.",
                   "images": [],
                   "content": "* Service Principal = identité de sécurité dans le cloud représentant une application\n\n1. Créer un Service Principal\n2. Attribuer des autorisations au Service Principal\n3. Générer un secret pour le Service Principal",
                   "contentLeft": "* Service Principal = identité de sécurité dans le cloud représentant une application\n\n1. Créer un Service Principal\n2. Attribuer des autorisations au Service Principal\n3. Générer un secret pour le Service Principal",
@@ -142,7 +142,7 @@
                   "number": 7,
                   "title": "Authentification par défaut",
                   "type": "FullSlide",
-                  "script": "Nous pouvons utiliser la fonction .environ() de la bibliothèque os pour exporter les valeurs souhaitées vers ces variables d'environnement.\nAvec l'authentification par défaut, nous instancions le WorkspaceClient sans passer de paramètres. Il lit automatiquement les valeurs des trois variables d'environnement : DATABRICKS_CLIENT_SECRET, DATABRICKS_CLIENT_ID et DATABRICKS_HOST, puis s'authentifie auprès de l'espace de travail Databricks correspondant.\n\n",
+                  "script": "Nous pouvons utiliser la fonction .environ() de la bibliothèque os pour exporter les valeurs souhaitées vers ces variables d'environnement.\nAvec l'authentification par défaut, nous instancions le WorkspaceClient sans passer de paramètres. Il lit automatiquement les valeurs des trois variables d'environnement : DATABRICKS_CLIENT_SECRET, DATABRICKS_CLIENT_ID et DATABRICKS_HOST, puis s'authentifie auprès de l'espace de travail Databricks correspondant.",
                   "images": [],
                   "content": "```py\nfrom databricks.sdk import WorkspaceClient\nimport os\n\nos.environ['DATABRICKS_CLIENT_SECRET'] = \"Your-Client-Secret\"\nos.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\\os.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"\nw = WorkspaceClient()\n```\n* Lit automatiquement les valeurs des trois variables d'environnement",
                   "contentLeft": "```py\nfrom databricks.sdk import WorkspaceClient\nimport os\n\nos.environ['DATABRICKS_CLIENT_SECRET'] = \"Your-Client-Secret\"\nos.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\\os.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"\nw = WorkspaceClient()\n```\n* Lit automatiquement les valeurs des trois variables d'environnement",
@@ -152,17 +152,17 @@
                   "number": 8,
                   "title": "Interagir avec notre workspace Databricks",
                   "type": "FullSlide",
-                  "script": "Maintenant que nous avons vu comment authentifier le WorkspaceClient, nous pouvons interagir avec notre espace de travail Databricks. Les clusters Spark de Databricks permettent d'exécuter des charges de travail intensives en données sur une infrastructure personnalisée. Nous pouvons créer, lister et supprimer des clusters dans notre espace de travail à l'aide du WorkspaceClient. Ce n'est qu'un aperçu des capacités du WorkspaceClient ; il permet d'automatiser tout ce que nous pouvons faire manuellement dans l'application web Databricks, et plus encore.\n\n",
+                  "script": "Maintenant que nous avons vu comment authentifier le WorkspaceClient, nous pouvons interagir avec notre espace de travail Databricks. Les clusters Spark de Databricks permettent d'exécuter des charges de travail intensives en données sur une infrastructure personnalisée. Nous pouvons créer, lister et supprimer des clusters dans notre espace de travail à l'aide du WorkspaceClient. Ce n'est qu'un aperçu des capacités du WorkspaceClient ; il permet d'automatiser tout ce que nous pouvons faire manuellement dans l'application web Databricks, et plus encore.",
                   "images": [],
-                  "content": "```py\n# Authentifier WorkspaceClient\nfrom databricks.sdk import WorkspaceClient\nimport os\nos.environ['DATABRICKS_CLIENT_SECRET'] = \"Your-Client-Secret\"\nos.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\nos.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"\nw = WorkspaceClient()\n```\n```py\n# Créer un cluster :\ncluster = w.clusters.create(cluster_name=\"Test-Cluster\")\n```\n```py\n# Lister les clusters :\nfor cluster in w.clusters.list():\n    print(f\"Nom du cluster : {cluster.cluster_name}\")\n```\n\n```out\nNom du cluster : Test-Cluster\n```",
-                  "contentLeft": "```py\n# Authentifier WorkspaceClient\nfrom databricks.sdk import WorkspaceClient\nimport os\nos.environ['DATABRICKS_CLIENT_SECRET'] = \"Your-Client-Secret\"\nos.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\nos.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"\nw = WorkspaceClient()\n```\n```py\n# Créer un cluster :\ncluster = w.clusters.create(cluster_name=\"Test-Cluster\")\n```\n```py\n# Lister les clusters :\nfor cluster in w.clusters.list():\n    print(f\"Nom du cluster : {cluster.cluster_name}\")\n```\n\n```out\nNom du cluster : Test-Cluster\n```",
+                  "content": "```py\n# Authentifier WorkspaceClient\nfrom databricks.sdk import WorkspaceClient\nimport os\nos.environ['DATABRICKS_CLIENT_SECRET'] = \"Your-Client-Secret\"\nos.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\nos.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"\nw = WorkspaceClient()\n```\n```py\n# Créer un cluster :\ncluster = w.clusters.create(cluster_name=\"Test-Cluster\")\n```\n```py\n# Lister les clusters :\nfor cluster in w.clusters.list(): print(f\"Nom du cluster : {cluster.cluster_name}\")\n```\n\n```out\nNom du cluster : Test-Cluster\n```",
+                  "contentLeft": "```py\n# Authentifier WorkspaceClient\nfrom databricks.sdk import WorkspaceClient\nimport os\nos.environ['DATABRICKS_CLIENT_SECRET'] = \"Your-Client-Secret\"\nos.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\nos.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"\nw = WorkspaceClient()\n```\n```py\n# Créer un cluster :\ncluster = w.clusters.create(cluster_name=\"Test-Cluster\")\n```\n```py\n# Lister les clusters :\nfor cluster in w.clusters.list(): print(f\"Nom du cluster : {cluster.cluster_name}\")\n```\n\n```out\nNom du cluster : Test-Cluster\n```",
                   "contentRight": ""
                 },
                 {
                   "number": 9,
                   "title": "Passons à la pratique !",
                   "type": "FinalSlide",
-                  "script": "Passons à la pratique et authentifions le WorkspaceClient de Databricks !\n\n",
+                  "script": "Passons à la pratique et authentifions le WorkspaceClient de Databricks !",
                   "images": [],
                   "content": "",
                   "contentLeft": "",
@@ -328,7 +328,7 @@
               ],
               "projectorTimingUnit": "fraction",
               "projectorDuration": 300,
-              "transcript": "1. Premiers pas avec le SDK Databricks\nBonjour, je suis Avi Steinberg.\n\n2. Pourquoi apprendre Databricks ?\nJe suis ingénieur logiciel, avec de l'expérience dans plusieurs startups technologiques et au sein d'entreprises du Fortune-cinq-cents. J'utilise Databricks dans un cadre professionnel depuis plusieurs années et, dans ce cours, je vais vous apprendre à utiliser le Kit de développement logiciel (SDK) Databricks pour Python. C'est un ensemble de bibliothèques et d'API qui nous permettent d'interagir avec un espace de travail Databricks.\nPourquoi apprendre Databricks ? Parce que c'est l'une des principales plateformes cloud d'apprentissage automatique, d'I-A et d'ingénierie des données sur le marché. Elle est utilisée par plus de soixante pour cent des entreprises du Fortune cinq-cents.\n\n3. Qu'est-ce qu'un workspace Databricks ?\nAlors, qu'est-ce qu'un espace de travail Databricks ? C'est un ensemble de ressources cloud Databricks qui sert d'environnement pour accéder aux éléments Databricks. Parmi les éléments que l'on peut avoir dans notre espace de travail, on trouve par exemple des clusters, des notebooks et des jobs.\n\n4. Installer le SDK Databricks\nNotre point d'entrée dans l'espace de travail Databricks est le WorkspaceClient, que l'on importe depuis le module databricks.sdk. Nous instancions un objet de la classe WorkspaceClient et nous l'utilisons pour interagir avec notre espace de travail Databricks. Mais comment le client d'espace de travail sait-il avec quel espace de travail Databricks interagir ? La réponse tient à l'authentification.\n\n5. Variables d'environnement d'authentification\nUne variable d'environnement est une variable stockée sur un système informatique, composée d'une paire Clé/Valeur, généralement utilisée pour configurer le comportement d'une application en fonction de paramètres externes. Le WorkspaceClient requiert trois variables d'environnement pour s'authentifier auprès d'un espace de travail Databricks : DATABRICKS_CLIENT_SECRET, DATABRICKS_CLIENT_ID et DATABRICKS_HOST. DATABRICKS_HOST correspond à la même adresse url que celle que nous utilisons dans le navigateur pour accéder à notre espace de travail Databricks. Elle a la forme <workspace_id>.cloud.databricks.com. Pour obtenir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET, nous pouvons nous authentifier à l'aide d'un principal de service.\n\n6. S'authentifier avec un Service Principal\nUn \"principal de service\" est une identité de sécurité au sein d'une plateforme cloud qui représente une application ou un service, lui permettant de s'authentifier et d'accéder à des ressources sans nécessiter la connexion d'un utilisateur humain. Ils sont utiles lorsque vous souhaitez créer des identités avec différents niveaux d'autorisations pour différentes ressources. \n\nPour authentifier un espace de travail Databricks à l'aide d'un principal de service, nous nous connectons à notre espace, créons un principal de service, lui attribuons des autorisations, puis créons un secret OAuth qui contiendra un ClientId et un ClientSecret. Ces valeurs peuvent servir à définir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET.\n\n7. Authentification par défaut\nNous pouvons utiliser la fonction .environ() de la bibliothèque os pour exporter les valeurs souhaitées vers ces variables d'environnement.\nAvec l'authentification par défaut, nous instancions le WorkspaceClient sans passer de paramètres. Il lit automatiquement les valeurs des trois variables d'environnement : DATABRICKS_CLIENT_SECRET, DATABRICKS_CLIENT_ID et DATABRICKS_HOST, puis s'authentifie auprès de l'espace de travail Databricks correspondant.\n\n8. Interagir avec notre workspace Databricks\nMaintenant que nous avons vu comment authentifier le WorkspaceClient, nous pouvons interagir avec notre espace de travail Databricks. Les clusters Spark de Databricks permettent d'exécuter des charges de travail intensives en données sur une infrastructure personnalisée. Nous pouvons créer, lister et supprimer des clusters dans notre espace de travail à l'aide du WorkspaceClient. Ce n'est qu'un aperçu des capacités du WorkspaceClient ; il permet d'automatiser tout ce que nous pouvons faire manuellement dans l'application web Databricks, et plus encore.\n\n9. Passons à la pratique !\nPassons à la pratique et authentifions le WorkspaceClient de Databricks !",
+              "transcript": "1. Premiers pas avec le SDK Databricks\nBonjour, je suis Avi Steinberg.\n\n2. Pourquoi apprendre Databricks ?\nJe suis ingénieur logiciel, avec de l'expérience dans plusieurs startups technologiques et au sein d'entreprises du Fortune-cinq-cents. J'utilise Databricks dans un cadre professionnel depuis plusieurs années et, dans ce cours, je vais vous apprendre à utiliser le Kit de développement logiciel (SDK) Databricks pour Python. C'est un ensemble de bibliothèques et d'API qui nous permettent d'interagir avec un espace de travail Databricks.\nPourquoi apprendre Databricks ? Parce que c'est l'une des principales plateformes cloud d'apprentissage automatique, d'I-A et d'ingénierie des données sur le marché. Elle est utilisée par plus de soixante pour cent des entreprises du Fortune cinq-cents.\n\n3. Qu'est-ce qu'un workspace Databricks ?\nAlors, qu'est-ce qu'un espace de travail Databricks ? C'est un ensemble de ressources cloud Databricks qui sert d'environnement pour accéder aux éléments Databricks. Parmi les éléments que l'on peut avoir dans notre espace de travail, on trouve par exemple des clusters, des notebooks et des jobs.\n\n4. Installer le SDK Databricks\nNotre point d'entrée dans l'espace de travail Databricks est le WorkspaceClient, que l'on importe depuis le module databricks.sdk. Nous instancions un objet de la classe WorkspaceClient et nous l'utilisons pour interagir avec notre espace de travail Databricks. Mais comment le client d'espace de travail sait-il avec quel espace de travail Databricks interagir ? La réponse tient à l'authentification.\n\n5. Variables d'environnement d'authentification\nUne variable d'environnement est une variable stockée sur un système informatique, composée d'une paire Clé/Valeur, généralement utilisée pour configurer le comportement d'une application en fonction de paramètres externes. Le WorkspaceClient requiert trois variables d'environnement pour s'authentifier auprès d'un espace de travail Databricks : DATABRICKS_CLIENT_SECRET, DATABRICKS_CLIENT_ID et DATABRICKS_HOST. DATABRICKS_HOST correspond à la même adresse url que celle que nous utilisons dans le navigateur pour accéder à notre espace de travail Databricks. Elle a la forme <workspace_id>.cloud.databricks.com. Pour obtenir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET, nous pouvons nous authentifier à l'aide d'un principal de service.\n\n6. S'authentifier avec un Service Principal\nUn \"principal de service\" est une identité de sécurité au sein d'une plateforme cloud qui représente une application ou un service, lui permettant de s'authentifier et d'accéder à des ressources sans nécessiter la connexion d'un utilisateur humain. Ils sont utiles lorsque vous souhaitez créer des identités avec différents niveaux d'autorisations pour différentes ressources. Pour authentifier un espace de travail Databricks à l'aide d'un principal de service, nous nous connectons à notre espace, créons un principal de service, lui attribuons des autorisations, puis créons un secret OAuth qui contiendra un ClientId et un ClientSecret. Ces valeurs peuvent servir à définir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET.\n\n7. Authentification par défaut\nNous pouvons utiliser la fonction .environ() de la bibliothèque os pour exporter les valeurs souhaitées vers ces variables d'environnement.\nAvec l'authentification par défaut, nous instancions le WorkspaceClient sans passer de paramètres. Il lit automatiquement les valeurs des trois variables d'environnement : DATABRICKS_CLIENT_SECRET, DATABRICKS_CLIENT_ID et DATABRICKS_HOST, puis s'authentifie auprès de l'espace de travail Databricks correspondant.\n\n8. Interagir avec notre workspace Databricks\nMaintenant que nous avons vu comment authentifier le WorkspaceClient, nous pouvons interagir avec notre espace de travail Databricks. Les clusters Spark de Databricks permettent d'exécuter des charges de travail intensives en données sur une infrastructure personnalisée. Nous pouvons créer, lister et supprimer des clusters dans notre espace de travail à l'aide du WorkspaceClient. Ce n'est qu'un aperçu des capacités du WorkspaceClient ; il permet d'automatiser tout ce que nous pouvons faire manuellement dans l'application web Databricks, et plus encore.\n\n9. Passons à la pratique !\nPassons à la pratique et authentifions le WorkspaceClient de Databricks !",
               "transcriptSegments": [
                 {
                   "heading": "1. Premiers pas avec le SDK Databricks",
@@ -352,7 +352,7 @@
                 },
                 {
                   "heading": "6. S'authentifier avec un Service Principal",
-                  "text": "Un \"principal de service\" est une identité de sécurité au sein d'une plateforme cloud qui représente une application ou un service, lui permettant de s'authentifier et d'accéder à des ressources sans nécessiter la connexion d'un utilisateur humain. Ils sont utiles lorsque vous souhaitez créer des identités avec différents niveaux d'autorisations pour différentes ressources. \n\nPour authentifier un espace de travail Databricks à l'aide d'un principal de service, nous nous connectons à notre espace, créons un principal de service, lui attribuons des autorisations, puis créons un secret OAuth qui contiendra un ClientId et un ClientSecret. Ces valeurs peuvent servir à définir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET."
+                  "text": "Un \"principal de service\" est une identité de sécurité au sein d'une plateforme cloud qui représente une application ou un service, lui permettant de s'authentifier et d'accéder à des ressources sans nécessiter la connexion d'un utilisateur humain. Ils sont utiles lorsque vous souhaitez créer des identités avec différents niveaux d'autorisations pour différentes ressources. Pour authentifier un espace de travail Databricks à l'aide d'un principal de service, nous nous connectons à notre espace, créons un principal de service, lui attribuons des autorisations, puis créons un secret OAuth qui contiendra un ClientId et un ClientSecret. Ces valeurs peuvent servir à définir les variables d'environnement DATABRICKS_CLIENT_ID et DATABRICKS_CLIENT_SECRET."
                 },
                 {
                   "heading": "7. Authentification par défaut",
@@ -381,58 +381,6 @@
               },
               "url": "/api/assets/chapter_01_slides_64f182e1.pdf",
               "filename": "chapter_01_slides.pdf"
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act02",
-          "title": {
-            "en": "Authentification par défaut",
-            "fr": "Authentification par défaut"
-          },
-          "description": {
-            "en": "In this chapter, you will configure the Databricks workspace client in Python, authenticate it with your workspace, and explore the core API operations for interacting with clusters and jobs.",
-            "fr": "Dans ce chapitre, vous allez configurer le client d'espace de travail Databricks en Python, l'authentifier auprès de votre espace de travail, et explorer les opérations d'API fondamentales pour interagir avec les clusters et les jobs."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_02_tp",
-              "title": {
-                "en": "Authentification par défaut",
-                "fr": "Authentification par défaut"
-              },
-              "assignment": "Le SDK Databricks expose une classe Workspace Client que vous utiliserez tout au long de ce cours pour interagir avec un espace de travail Databricks. Par défaut, cette classe est instanciée sans paramètre, car le SDK récupère automatiquement les variables d'environnement nécessaires pour s'authentifier auprès d'un espace de travail Databricks.\n\nLa variable dbrx_host, qui contient l'adresse de l'hôte Databricks, a été préchargée.",
-              "instructions": "Importez la classe du SDK Databricks qui contient le Workspace Client.\n\nUtilisez la bibliothèque os pour définir la variable d'environnement d'authentification sur la valeur prédéfinie dbrx_host.\n\nCréez un objet Workspace Client en utilisant l'authentification par défaut.\n\n### Code de départ\n\n```python\nimport os\n# Import the workspace client\nfrom databricks.sdk import ____\n\n# Set the Databricks authentication environment variables\nos.environ['____'] = dbrx_host\n\n# Instantiate the Workspace Client\nworkspace_client = ____()\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Importez la classe du SDK Databricks qui contient le Workspace Client.",
-                "Utilisez la bibliothèque os pour définir la variable d'environnement d'authentification sur la valeur prédéfinie dbrx_host.",
-                "Créez un objet Workspace Client en utilisant l'authentification par défaut."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_64f182e1.pdf"
-                }
-              ],
-              "hint": "Le nom de la classe qui contient le client d'espace de travail Databricks est WorkspaceClient.\n\nUtilisez os.environ[key] = value pour définir la variable d'environnement key à value. Ici, la key est \"DATABRICKS_HOST\".\n\nPour créer un Workspace Client avec l'authentification par défaut, instanciez la classe WorkspaceClient() sans aucun paramètre.",
-              "solution": "import os\n# Import the workspace client\nfrom databricks.sdk import WorkspaceClient\n\n# Set the Databricks authentication environment variables\nos.environ['DATABRICKS_HOST'] = dbrx_host\n\n# Instantiate the Workspace Client\nworkspace_client = WorkspaceClient()",
-              "successMessage": "",
-              "xp": 100
             }
           ]
         },
@@ -705,108 +653,6 @@
                   "text": "Consultez la documentation Python du SDK Databricks pour explorer les autres fonctionnalités offertes par le SDK."
                 }
               ]
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act04",
-          "title": {
-            "en": "Lister des jobs Databricks",
-            "fr": "Lister des jobs Databricks"
-          },
-          "description": {
-            "en": "In this chapter, you will configure the Databricks workspace client in Python, authenticate it with your workspace, and explore the core API operations for interacting with clusters and jobs.",
-            "fr": "Dans ce chapitre, vous allez configurer le client d'espace de travail Databricks en Python, l'authentifier auprès de votre espace de travail, et explorer les opérations d'API fondamentales pour interagir avec les clusters et les jobs."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_04_tp",
-              "title": {
-                "en": "Lister des jobs Databricks",
-                "fr": "Lister des jobs Databricks"
-              },
-              "assignment": "Nous allons maintenant lister les jobs Databricks qui ont été créés dans notre espace de travail. L'API jobs de WorkspaceClient expose une méthode .list() qui permet de lister tous les jobs de l'espace de travail authentifié.",
-              "instructions": "Récupérez tous les jobs de l'espace de travail à l'aide de WorkspaceClient.\n\nParcourez jusqu'à 10 jobs et affichez l'attribut job_id de chacun.\n\n### Code de départ\n\n```python\nfrom databricks.sdk import WorkspaceClient\nw = WorkspaceClient()\n# List all jobs in the workspace\njobs = w.____.____()\n# Print the first 10 job IDs\nfor job in list(jobs)[:10]:\n    print(f\"JobId={job.____}\")\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Récupérez tous les jobs de l'espace de travail à l'aide de WorkspaceClient.",
-                "Parcourez jusqu'à 10 jobs et affichez l'attribut job_id de chacun."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_64f182e1.pdf"
-                }
-              ],
-              "hint": "Vous pouvez utiliser la méthode .list() de l'API jobs de WorkspaceClient pour lister tous les jobs dans l'espace de travail authentifié.\n\nVous pouvez accéder à l'identifiant d'un job avec your_job.job_id.",
-              "solution": "from databricks.sdk import WorkspaceClient\nw = WorkspaceClient()\n# List all jobs in the workspace\njobs = w.jobs.list()\n# Print the first 10 job IDs\nfor job in list(jobs)[:10]:\n    print(f\"JobId={job.job_id}\")",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act05",
-          "title": {
-            "en": "Lister les clusters Databricks",
-            "fr": "Lister les clusters Databricks"
-          },
-          "description": {
-            "en": "In this chapter, you will configure the Databricks workspace client in Python, authenticate it with your workspace, and explore the core API operations for interacting with clusters and jobs.",
-            "fr": "Dans ce chapitre, vous allez configurer le client d'espace de travail Databricks en Python, l'authentifier auprès de votre espace de travail, et explorer les opérations d'API fondamentales pour interagir avec les clusters et les jobs."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_05_tp",
-              "title": {
-                "en": "Lister les clusters Databricks",
-                "fr": "Lister les clusters Databricks"
-              },
-              "assignment": "Les clusters Databricks sont un ensemble d'ordinateurs virtuels hébergés sur la plateforme Databricks qui vous permettent d'exécuter des jobs et des notebooks Databricks. À l'image de l'API jobs, l'API clusters de WorkspaceClient expose une fonction .list() qui répertorie tous les clusters de l'espace de travail authentifié.",
-              "instructions": "Parcourez tous les clusters.\n\nAffichez l'identifiant du cluster pour chaque cluster.\n\n### Code de départ\n\n```python\nfrom databricks.sdk import WorkspaceClient\n\nw = WorkspaceClient()\n\n# Iterate through all clusters\nfor c in w.____.____():\n  # Print cluster id for each cluster\n  print(c.____)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Parcourez tous les clusters.",
-                "Affichez l'identifiant du cluster pour chaque cluster."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_64f182e1.pdf"
-                }
-              ],
-              "hint": "Utilisez la méthode .list() de la classe clusters du Workspace Client pour lister tous les clusters de l'espace de travail.\n\nUtilisez la propriété cluster_id d'un cluster pour récupérer l'identifiant du cluster.",
-              "solution": "from databricks.sdk import WorkspaceClient\n\nw = WorkspaceClient()\n\n# Iterate through all clusters\nfor c in w.clusters.list():\n  # Print cluster id for each cluster\n  print(c.cluster_id)",
-              "successMessage": "",
-              "xp": 100
             }
           ]
         }
@@ -1186,108 +1032,6 @@
           ]
         },
         {
-          "id": "dc_ch02_act03",
-          "title": {
-            "en": "Interroger un Foundation Model",
-            "fr": "Interroger un Foundation Model"
-          },
-          "description": {
-            "en": "Next, you query foundation AI models with the Databricks SDK, learn how the System and User message roles work in a chat, and use LangChain SQL agents to query data directly from the Databricks catalog.",
-            "fr": "Ensuite, vous interrogez des modèles d'IA fondamentaux avec le SDK Databricks, découvrez le fonctionnement des rôles de messages System et User dans un chat, et utilisez des agents LangChain SQL pour interroger directement les données depuis le catalogue Databricks."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_03_tp",
-              "title": {
-                "en": "Interroger un Foundation Model",
-                "fr": "Interroger un Foundation Model"
-              },
-              "assignment": "Utilisons ce que nous avons appris sur la différence entre les rôles de message de chat « SYSTEM » et « USER » pour envoyer des invites différentes à l'agent IA selon le rôle de message de chat.",
-              "instructions": "Demandez à l'agent IA d'adopter le rôle d'un professeur de sciences informatiques au lycée lorsqu'il répond aux requêtes en utilisant l'invite ai_agent_context.\n\nDemandez à l'agent IA quand utiliser les boucles For en utilisant user_prompt.\n\n### Code de départ\n\n```python\nfrom databricks.sdk import WorkspaceClient\nfrom databricks.sdk.service.serving import ChatMessage, ChatMessageRole\nw = WorkspaceClient()\nuser_prompt = \"What is a For loop and When should I use it?\"\nai_agent_context = \"You are a high school computer science teacher\"\nresponse = w.serving_endpoints.query(\n    name=\"databricks-meta-llama-3-3-70b-instruct\",\n    messages=[\n        ChatMessage( \n          \t# Set system prompt\n            role=ChatMessageRole.SYSTEM, content=____\n        ),\n        ChatMessage( \n          \t# Set user query\n            role=ChatMessageRole.USER, content=____\n        ),\n    ],\n    max_tokens=250)\nprint(f\"RESPONSE:\\n{response.choices[0].message.content}\")\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Demandez à l'agent IA d'adopter le rôle d'un professeur de sciences informatiques au lycée lorsqu'il répond aux requêtes en utilisant l'invite ai_agent_context.",
-                "Demandez à l'agent IA quand utiliser les boucles For en utilisant user_prompt."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_61dccb20.pdf"
-                }
-              ],
-              "hint": "Utilisez le rôle de message de chat SYSTEM lorsque vous envoyez un message décrivant la façon dont l'agent IA doit répondre aux questions.\n\nUtilisez le rôle de message de chat USER lorsque vous envoyez une requête à l'agent IA.",
-              "solution": "from databricks.sdk import WorkspaceClient\nfrom databricks.sdk.service.serving import ChatMessage, ChatMessageRole\nw = WorkspaceClient()\nuser_prompt = \"What is a For loop and When should I use it?\"\nai_agent_context = \"You are a high school computer science teacher\"\nresponse = w.serving_endpoints.query(\n    name=\"databricks-meta-llama-3-3-70b-instruct\",\n    messages=[\n        ChatMessage( \n          \t# Set system prompt\n            role=ChatMessageRole.SYSTEM, content=ai_agent_context\n        ),\n        ChatMessage( \n          \t# Set user query\n            role=ChatMessageRole.USER, content=user_prompt\n        ),\n    ],\n    max_tokens=250)\nprint(f\"RESPONSE:\\n{response.choices[0].message.content}\")",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act04",
-          "title": {
-            "en": "Interroger un chatbot avec l'API Databricks Servings Endpoint",
-            "fr": "Interroger un chatbot avec l'API Databricks Servings Endpoint"
-          },
-          "description": {
-            "en": "Next, you query foundation AI models with the Databricks SDK, learn how the System and User message roles work in a chat, and use LangChain SQL agents to query data directly from the Databricks catalog.",
-            "fr": "Ensuite, vous interrogez des modèles d'IA fondamentaux avec le SDK Databricks, découvrez le fonctionnement des rôles de messages System et User dans un chat, et utilisez des agents LangChain SQL pour interroger directement les données depuis le catalogue Databricks."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_04_tp",
-              "title": {
-                "en": "Interroger un chatbot avec l'API Databricks Servings Endpoint",
-                "fr": "Interroger un chatbot avec l'API Databricks Servings Endpoint"
-              },
-              "assignment": "Dans l'exercice précédent, vous avez appris à utiliser le SDK Databricks pour interroger un modèle d'AI Foundation. L'objectif de cet exercice est d'expérimenter différents prompts de type System et User lors de l'interrogation de modèles d'IA avec le SDK Databricks.",
-              "instructions": "Modifiez le prompt System et observez comment le modèle d'IA répond différemment.\n\nModifiez le prompt User et observez comment le modèle d'IA répond différemment.\n\n### Code de départ\n\n```python\nfrom databricks.sdk import WorkspaceClient\nfrom databricks.sdk.service.serving import ChatMessage, ChatMessageRole\nw = WorkspaceClient()\nresponse = w.serving_endpoints.query(\n    name=\"databricks-meta-llama-3-3-70b-instruct\",\n    messages=[\n        ChatMessage( \n          \t# Edit the System prompt\n            role=ChatMessageRole.SYSTEM, content=\"<Your-Prompt>\"\n        ),\n        ChatMessage( \n          \t# Edit the User prompt\n            role=ChatMessageRole.USER, content=\"<Your-Prompt>\" \n        ),\n    ],\n    max_tokens=128)\nprint(f\"RESPONSE:\\n{response.choices[0].message.content}\")\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Modifiez le prompt System et observez comment le modèle d'IA répond différemment.",
-                "Modifiez le prompt User et observez comment le modèle d'IA répond différemment."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_61dccb20.pdf"
-                }
-              ],
-              "hint": "Remplacez la chaîne \"\" par la requête que vous souhaitez poser au modèle d'IA.",
-              "solution": "from databricks.sdk import WorkspaceClient\nfrom databricks.sdk.service.serving import ChatMessage, ChatMessageRole\nw = WorkspaceClient()\nresponse = w.serving_endpoints.query(\n    name=\"databricks-meta-llama-3-3-70b-instruct\",\n    messages=[\n        ChatMessage( \n          \t# Edit the System prompt\n            role=ChatMessageRole.SYSTEM, content=\"You are a helpful writing assistant.\"\n        ),\n        ChatMessage( \n          \t# Edit the User prompt\n            role=ChatMessageRole.USER, content=\"What is a haiku?\"\n        ),\n    ],\n    max_tokens=128)\nprint(f\"RESPONSE:\\n{response.choices[0].message.content}\")",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
           "id": "dc_ch02_act05",
           "title": {
             "en": "Query a chat completion model",
@@ -1570,112 +1314,6 @@
                   "text": "Entraînons-nous à utiliser le SDK Databricks pour interagir avec des modèles d'I-A et leur demander d'effectuer des tâches utiles pour nous."
                 }
               ]
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act06",
-          "title": {
-            "en": "Résumé de texte",
-            "fr": "Résumé de texte"
-          },
-          "description": {
-            "en": "Next, you query foundational AI models with the Databricks SDK, learn how the System and User message roles work in a chat, and use LangChain SQL agents to query data directly from the Databricks catalog.",
-            "fr": "Ensuite, vous interrogez des modèles d'IA fondamentaux avec le SDK Databricks, découvrez le fonctionnement des rôles de messages System et User dans un chat, et utilisez des agents LangChain SQL pour interroger directement les données depuis le catalogue Databricks."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_06_tp",
-              "title": {
-                "en": "Résumé de texte",
-                "fr": "Résumé de texte"
-              },
-              "assignment": "Vous voulez transformer un poème en un résumé rapide ? Allons-y ! Vous disposez du texte complet d'un poème stocké dans une variable de type chaîne appelée raven_text, que vous allez transmettre à un modèle d'IA conversationnelle afin de lui demander de résumer le poème en un nombre défini de mots.",
-              "instructions": "Demandez à l'agent d'IA de résumer le poème « The Raven » d'Edgar Allan Poe.\n\nDéfinissez le nom du modèle sur Meta Llama 3, déjà enregistré dans ai_model.\n\nCréez le message que vous souhaitez envoyer au modèle d'IA, en incluant la variable raven_text.\n\nUtilisez le rôle de message de chat approprié pour interroger le modèle d'IA.\n\n### Code de départ\n\n```python\nw = WorkspaceClient()\n\nai_model = \"databricks-meta-llama-3-3-70b-instruct\"\n\n# Summarize the poem\nresponse = w.serving_endpoints.query(\n  # Set model name\n  name=____,  \n  messages=[\n    \t# Create a chat message to send to the model\n        ____(\n          \t# Specify the role for sending the query\n            role=ChatMessageRole.____, content=f\"Summarize this poem by Edgar Allan Poe: {____} in 3 bullet points\"\n        ),\n    ],\n  max_tokens=200)\n\nprint(f\"RESPONSE:\\n{response.choices[0].message.content}\")\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Demandez à l'agent d'IA de résumer le poème « The Raven » d'Edgar Allan Poe.",
-                "Définissez le nom du modèle sur Meta Llama 3, déjà enregistré dans ai_model.",
-                "Créez le message que vous souhaitez envoyer au modèle d'IA, en incluant la variable raven_text.",
-                "Utilisez le rôle de message de chat approprié pour interroger le modèle d'IA."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_61dccb20.pdf"
-                }
-              ],
-              "hint": "Passez ai_model à l'argument name pour sélectionner le point de terminaison du modèle.\n\nUtilisez ChatMessage() pour créer un objet message.\n\nUtilisez ChatMessageRole.USER pour le rôle lors de l'interrogation du modèle d'IA.\n\nIncluez {raven_text} dans la f-string pour transmettre le texte du poème.",
-              "solution": "w = WorkspaceClient()\n\nai_model = \"databricks-meta-llama-3-3-70b-instruct\"\n\n# Summarize the poem\nresponse = w.serving_endpoints.query(\n  # Set model name\n  name=ai_model,  \n  messages=[\n    \t# Create a chat message to send to the model\n        ChatMessage(\n          \t# Specify the role for sending the query\n            role=ChatMessageRole.USER, content=f\"Summarize this poem by Edgar Allan Poe: {raven_text} in 3 bullet points\"\n        ),\n    ],\n  max_tokens=200)\n\nprint(f\"RESPONSE:\\n{response.choices[0].message.content}\")",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act07",
-          "title": {
-            "en": "Relire un texte",
-            "fr": "Relire un texte"
-          },
-          "description": {
-            "en": "Next, you query foundational AI models with the Databricks SDK, learn how the System and User message roles work in a chat, and use LangChain SQL agents to query data directly from the Databricks catalog.",
-            "fr": "Ensuite, vous interrogez des modèles d'IA fondamentaux avec le SDK Databricks, découvrez le fonctionnement des rôles de messages System et User dans un chat, et utilisez des agents LangChain SQL pour interroger directement les données depuis le catalogue Databricks."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_07_tp",
-              "title": {
-                "en": "Relire un texte",
-                "fr": "Relire un texte"
-              },
-              "assignment": "Vous avez un texte à faire relire ? Utilisez le SDK Databricks pour demander à un modèle d'IA de le relire pour vous. Il vous renverra une version corrigée de votre texte, ainsi qu'une liste précise des modifications effectuées.",
-              "instructions": "Interrogez la classe du client de l'espace de travail utilisée pour questionner des modèles d'IA.\n\nRenseignez le rôle utilisé pour donner des consignes au modèle d'IA sur la façon de répondre aux prochaines requêtes.\n\nRenseignez le rôle utilisé lorsque vous envoyez une requête au modèle d'IA.\n\nAffichez le détail du message dans la réponse du modèle d'IA.\n\n### Code de départ\n\n```python\nw = WorkspaceClient()\ntext_to_proofread = \"I am gong to the stor to buy some bred. I migt also buy some mlk. Do u want to jon me?\"\n\n# Query the AI model via the workspace client\nresponse = w.____.query(\n  name=\"databricks-meta-llama-3-3-70b-instruct\",\n  messages=[\n        ChatMessage( \n          \t# Specify the role for configuring model behavior\n            role=ChatMessageRole.____, content=f\"You are a helpful writing assistant. \"\n        ),\n        ChatMessage( \n          \t# Specify the role for sending the query\n            role=ChatMessageRole.____, content=f\"Proofread the following text: {text_to_proofread}\"\n        ),\n    ],\n  max_tokens=200)\n\n# Print the content of the model's response\nprint(f\"RESPONSE:\\n{response.choices[0].message.____}\")\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Interrogez la classe du client de l'espace de travail utilisée pour questionner des modèles d'IA.",
-                "Renseignez le rôle utilisé pour donner des consignes au modèle d'IA sur la façon de répondre aux prochaines requêtes.",
-                "Renseignez le rôle utilisé lorsque vous envoyez une requête au modèle d'IA.",
-                "Affichez le détail du message dans la réponse du modèle d'IA."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_61dccb20.pdf"
-                }
-              ],
-              "hint": "Les Serving Endpoints sont des points de terminaison d'API que vous pouvez utiliser pour interroger des modèles d'IA.\n\nLe rôle SYSTEM sert à donner des consignes au modèle d'IA sur la façon de répondre aux prochaines requêtes.\n\nLe rôle USER est utilisé lorsque vous envoyez des requêtes au modèle d'IA.\n\nPour récupérer le détail du message, analysez le champ message.content dans le tableau response.choices.",
-              "solution": "w = WorkspaceClient()\ntext_to_proofread = \"I am gong to the stor to buy some bred. I migt also buy some mlk. Do u want to jon me?\"\n\n# Query the AI model via the workspace client\nresponse = w.serving_endpoints.query(\n  name=\"databricks-meta-llama-3-3-70b-instruct\",\n  messages=[\n        ChatMessage( \n          \t# Specify the role for configuring model behavior\n            role=ChatMessageRole.SYSTEM, content=f\"You are a helpful writing assistant. \"\n        ),\n        ChatMessage( \n          \t# Specify the role for sending the query\n            role=ChatMessageRole.USER, content=f\"Proofread the following text: {text_to_proofread}\"\n        ),\n    ],\n  max_tokens=200)\n\n# Print the content of the model's response\nprint(f\"RESPONSE:\\n{response.choices[0].message.content}\")",
-              "successMessage": "",
-              "xp": 100
             }
           ]
         },
@@ -2040,165 +1678,6 @@
               ]
             }
           ]
-        },
-        {
-          "id": "dc_ch02_act09",
-          "title": {
-            "en": "Créer un agent SQL LangChain connecté à Databricks",
-            "fr": "Créer un agent SQL LangChain connecté à Databricks"
-          },
-          "description": {
-            "en": "Next, you query foundational AI models with the Databricks SDK, learn how the System and User message roles work in a chat, and use LangChain SQL agents to query data directly from the Databricks catalog.",
-            "fr": "Ensuite, vous interrogez des modèles d'IA fondamentaux avec le SDK Databricks, découvrez le fonctionnement des rôles de messages System et User dans un chat, et utilisez des agents LangChain SQL pour interroger directement les données depuis le catalogue Databricks."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_09_tp",
-              "title": {
-                "en": "Créer un agent SQL LangChain connecté à Databricks",
-                "fr": "Créer un agent SQL LangChain connecté à Databricks"
-              },
-              "assignment": "LangChain est une bibliothèque pour créer et déployer des applications LLM. Elle permet également de créer des agents d'IA, de les connecter à des sources de données et d'exécuter des requêtes SQL.\n\nDans les exercices suivants, vous allez interagir avec des schémas du catalogue samples. Dans cet exercice, vous allez créer un agent Databricks SQL, puis dans les exercices suivants vous interrogez aussi les agents que vous créez.\n\nNous importons pour vous les fonctions suivantes dans l'environnement de code :\n\nfrom langchain_community.agent_toolkits import create_sql_agent\nfrom langchain_community.agent_toolkits import SQLDatabaseToolkit\nfrom langchain_community.utilities import SQLDatabase\nfrom databricks_langchain import ChatDatabricks\nfrom databricks.sdk import WorkspaceClient",
-              "instructions": "Créez une SQLDatabase LangChain à partir du schéma nyctaxi dans le catalogue Databricks « samples ».\n\nCréez un LLM LangChain Databricks en utilisant le modèle fondamental Databricks Meta Llama 3.\n\nCréez un toolkit LangChain pour base de données SQL qui utilise la base Databricks SQL db et le llm.\n\nCréez un agent SQL LangChain Databricks en utilisant le toolkit et le llm.\n\n### Code de départ\n\n```python\n# Connect to the nyctaxi schema\ndb = SQLDatabase.____(\n    catalog=\"samples\", \n    schema=\"nyctaxi\",\n    warehouse_id=warehouse_id)\n\n# Create the LangChain LLM\nllm = ____(\n    endpoint=\"databricks-meta-llama-3-3-70b-instruct\",\n    max_tokens=100)\n\n# Build the SQL toolkit\ntoolkit = ____(db=db, llm=llm) \n\n# Create the SQL agent\ndatabricks_sql_agent = ____(llm=llm, toolkit=toolkit, verbose=True, handle_parsing_errors=True)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Créez une SQLDatabase LangChain à partir du schéma nyctaxi dans le catalogue Databricks « samples ».",
-                "Créez un LLM LangChain Databricks en utilisant le modèle fondamental Databricks Meta Llama 3.",
-                "Créez un toolkit LangChain pour base de données SQL qui utilise la base Databricks SQL db et le llm.",
-                "Créez un agent SQL LangChain Databricks en utilisant le toolkit et le llm."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_61dccb20.pdf"
-                }
-              ],
-              "hint": "La classe SQLDatabase possède une fonction from_databricks() qui permet de construire une base de données LangChain à partir d'un catalogue Databricks.\n\nPour créer un LLM Databricks pour LangChain, instanciez la classe ChatDatabricks().\n\nPour créer un toolkit LangChain pour base de données SQL, instanciez la classe SQLDatabaseToolkit().\n\nLa fonction create_sql_agent() crée un agent SQL LangChain.",
-              "solution": "# Connect to the nyctaxi schema\ndb = SQLDatabase.from_databricks(\n    catalog=\"samples\", \n    schema=\"nyctaxi\",\n    warehouse_id=warehouse_id)\n\n# Create the LangChain LLM\nllm = ChatDatabricks(\n    endpoint=\"databricks-meta-llama-3-3-70b-instruct\",\n    max_tokens=100)\n\n# Build the SQL toolkit\ntoolkit = SQLDatabaseToolkit(db=db, llm=llm) \n\n# Create the SQL agent\ndatabricks_sql_agent = create_sql_agent(llm=llm, toolkit=toolkit, verbose=True, handle_parsing_errors=True)",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act10",
-          "title": {
-            "en": "Query the NYC Taxi dataset with an SQL agent",
-            "fr": "Interroger le jeu de données NYC Taxi avec un agent SQL"
-          },
-          "description": {
-            "en": "Next, you query foundational AI models with the Databricks SDK, learn how the System and User message roles work in a chat, and use LangChain SQL agents to query data directly from the Databricks catalog.",
-            "fr": "Ensuite, vous interrogez des modèles d'IA fondamentaux avec le SDK Databricks, découvrez le fonctionnement des rôles de messages System et User dans un chat, et utilisez des agents LangChain SQL pour interroger directement les données depuis le catalogue Databricks."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_10_tp",
-              "title": {
-                "en": "Query the NYC Taxi dataset with an SQL agent",
-                "fr": "Interroger le jeu de données NYC Taxi avec un agent SQL"
-              },
-              "assignment": "Databricks propose un catalogue open source samples qui contient plusieurs schémas. Dans cet exercice, nous allons créer un agent SQL Databricks LangChain pour se connecter au schéma nyctaxi, puis lui poser une question qui nécessite du SQL pour obtenir une réponse. Créer ce type d'agent permet à l'utilisateur de réaliser des analyses de données et de poser des questions sur des données nécessitant du SQL, sans connaissance préalable du SQL.",
-              "instructions": "Créez un objet LangChain SQLDatabase à partir du schéma nyctaxi dans le catalogue samples de Databricks.\n\nCréez un LLM LangChain personnalisé en utilisant le modèle Databricks Meta Llama 3.\n\nCréez un agent SQL Databricks LangChain en utilisant ce LLM personnalisé.\n\nInterrogez l'agent SQL Databricks.\n\n### Code de départ\n\n```python\n# Connect to the nyctaxi schema\ndb = SQLDatabase.from_databricks(\n    ____=\"samples\", \n    ____=\"nyctaxi\",  \n  \twarehouse_id=warehouse_id)\n\n# Create the custom LangChain LLM\nmeta_llm = ChatDatabricks(\n    ____=\"databricks-meta-llama-3-3-70b-instruct\",\n    max_tokens=100)\ntoolkit = SQLDatabaseToolkit(db=db, llm=meta_llm)\n\n# Create the SQL agent\nagent = create_sql_agent(llm=____, toolkit=toolkit, verbose=True, handle_parsing_errors=True)\n\n# Query the Databricks SQL Agent\nresult = agent.____(\"what's the duration and distance of the longest trip?\")\nprint(result)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Créez un objet LangChain SQLDatabase à partir du schéma nyctaxi dans le catalogue samples de Databricks.",
-                "Créez un LLM LangChain personnalisé en utilisant le modèle Databricks Meta Llama 3.",
-                "Créez un agent SQL Databricks LangChain en utilisant ce LLM personnalisé.",
-                "Interrogez l'agent SQL Databricks."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_61dccb20.pdf"
-                }
-              ],
-              "hint": "Les paramètres catalog et schema de SQLDatabase.from_databricks() indiquent à quel jeu de données de Databricks se connecter.\n\nLe paramètre endpoint de ChatDatabricks() sert à spécifier le Databricks Serving Endpoint du modèle que vous souhaitez utiliser.\n\nLe paramètre llm de create_sql_agent() est requis pour créer un agent SQL LangChain.",
-              "solution": "# Connect to the nyctaxi schema\ndb = SQLDatabase.from_databricks(\n    catalog=\"samples\", \n    schema=\"nyctaxi\",  \n  \twarehouse_id=warehouse_id)\n\n# Create the custom LangChain LLM\nmeta_llm = ChatDatabricks(\n    endpoint=\"databricks-meta-llama-3-3-70b-instruct\",\n    max_tokens=100)\ntoolkit = SQLDatabaseToolkit(db=db, llm=meta_llm)\n\n# Create the SQL agent\nagent = create_sql_agent(llm=meta_llm, toolkit=toolkit, verbose=True, handle_parsing_errors=True)\n\n# Query the Databricks SQL Agent\nresult = agent.run(\"what's the duration and distance of the longest trip?\")\nprint(result)",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act11",
-          "title": {
-            "en": "Query bakery sales with an SQL agent",
-            "fr": "Interroger les ventes de la boulangerie avec un agent SQL"
-          },
-          "description": {
-            "en": "Next, you query foundational AI models with the Databricks SDK, learn how the System and User message roles work in a chat, and use LangChain SQL agents to query data directly from the Databricks catalog.",
-            "fr": "Ensuite, vous interrogez des modèles d'IA fondamentaux avec le SDK Databricks, découvrez le fonctionnement des rôles de messages System et User dans un chat, et utilisez des agents LangChain SQL pour interroger directement les données depuis le catalogue Databricks."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_11_tp",
-              "title": {
-                "en": "Query bakery sales with a SQL agent",
-                "fr": "Interroger les ventes de la boulangerie avec un agent SQL"
-              },
-              "assignment": "Le schéma \"bakehouse\" dans le catalogue samples de Databricks contient des données fictives sur les ventes d'une boulangerie. Nous pouvons créer un agent Databricks SQL avec LangChain pour se connecter à cet ensemble de données, puis lui poser des questions. L'agent peut utiliser du SQL pour obtenir les réponses et peut montrer son raisonnement, en décrivant les requêtes SQL et la logique utilisées pour parvenir à la solution.",
-              "instructions": "Créez une base de données SQL LangChain à partir du jeu de données bakehouse dans le catalogue samples.\n\nCréez un objet SQLDatabaseToolkit qui se connecte à la base de données SQL LangChain et à llm.\n\nCréez un agent SQL LangChain qui se connecte à llm et au toolkit.\n\nDemandez à l'agent Databricks SQL quel produit génère le plus de revenu.\n\n### Code de départ\n\n```python\n# Connect to the bakehouse schema\nbakehouse_db = SQLDatabase.from_databricks(\n    ____=\"samples\", \n    schema=\"bakehouse\",  \n  \twarehouse_id=warehouse_id)\n\n# Build the SQL toolkit\ntoolkit = SQLDatabaseToolkit(____=bakehouse_db, llm=llm)\n# Create the SQL agent\nagent = ____(llm=llm, toolkit=toolkit, verbose=True, handle_parsing_errors=True)\n\n# Run the revenue query\nprompt = \"Which product generates the most revenue?\"\nresult = agent.run(____)\nprint(result)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Créez une base de données SQL LangChain à partir du jeu de données bakehouse dans le catalogue samples.",
-                "Créez un objet SQLDatabaseToolkit qui se connecte à la base de données SQL LangChain et à llm.",
-                "Créez un agent SQL LangChain qui se connecte à llm et au toolkit.",
-                "Demandez à l'agent Databricks SQL quel produit génère le plus de revenu."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_61dccb20.pdf"
-                }
-              ],
-              "hint": "Le paramètre catalog de SQLDatabase.from_databricks() indique dans quel catalogue Databricks se trouve le schéma auquel se connecter.\n\nPassez les paramètres db et llm à l'objet SQLDatabaseToolkit pour créer une boîte à outils pour l'agent SQL LangChain.\n\nPassez l'invite (la question) que vous souhaitez poser à l'agent IA dans la fonction agent.run().",
-              "solution": "# Connect to the bakehouse schema\nbakehouse_db = SQLDatabase.from_databricks(\n    catalog=\"samples\", \n    schema=\"bakehouse\",  \n    warehouse_id=warehouse_id)\n\n# Build the SQL toolkit\ntoolkit = SQLDatabaseToolkit(db=bakehouse_db, llm=llm)\n# Create the SQL agent\nagent = create_sql_agent(llm=llm, toolkit=toolkit, verbose=True, handle_parsing_errors=True)\n\n# Run the revenue query\nprompt = \"Which product generates the most revenue?\"\nresult = agent.run(prompt)\nprint(result)",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
         }
       ]
     },
@@ -2520,108 +1999,6 @@
           ]
         },
         {
-          "id": "dc_ch03_act02",
-          "title": {
-            "en": "Démarrer un cluster",
-            "fr": "Démarrer un cluster"
-          },
-          "description": {
-            "en": "In this final chapter, learn how to programmatically start, schedule, and delete Databricks clusters and jobs with the Python SDK.",
-            "fr": "Dans ce dernier chapitre, apprenez à démarrer, planifier et supprimer des clusters et des jobs Databricks de manière programmatique avec le SDK Python."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_02_tp",
-              "title": {
-                "en": "Démarrer un cluster",
-                "fr": "Démarrer un cluster"
-              },
-              "assignment": "Les clusters sont souvent configurés pour s'éteindre et passer en mode IDLE après une période d'inactivité. Nous pouvons utiliser le service clusters du SDK Databricks pour exécuter un cluster existant dans l'espace de travail authentifié.",
-              "instructions": "Stockez la valeur de la variable d'environnement TRAINING_CLUSTER_ID dans une variable appelée cluster_id.\n\nDémarrez le cluster dont l'identifiant est stocké dans la variable d'environnement TRAINING_CLUSTER_ID.\n\n### Code de départ\n\n```python\nw = WorkspaceClient()\n\n# Store value of environment variable as cluster_id\ncluster_id = os.____['TRAINING_CLUSTER_ID']\n\n# Start cluster with id stored in cluster_id variable\ntry:\n  w.clusters.start(____=cluster_id).result()\nexcept:\n  print(f\"Cannot start cluster_id={cluster_id} because it is already running\")\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Stockez la valeur de la variable d'environnement TRAINING_CLUSTER_ID dans une variable appelée cluster_id.",
-                "Démarrez le cluster dont l'identifiant est stocké dans la variable d'environnement TRAINING_CLUSTER_ID."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_79697ed2.pdf"
-                }
-              ],
-              "hint": "L'objet environ de la bibliothèque os est un dictionnaire : les clés sont les noms des variables d'environnement et les valeurs sont leurs contenus.\n\nPassez le paramètre cluster_id à la méthode start() du service clusters de Databricks pour démarrer un cluster spécifique.",
-              "solution": "w = WorkspaceClient()\n\n# Store value of environment variable as cluster_id\ncluster_id = os.environ['TRAINING_CLUSTER_ID']\n\n# Start cluster with id stored in cluster_id variable\ntry:\n  w.clusters.start(cluster_id=cluster_id).result()\nexcept:\n  print(f\"Cannot start cluster_id={cluster_id} because it is already running\")",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch03_act03",
-          "title": {
-            "en": "Vérifier qu'un cluster est en cours d'exécution",
-            "fr": "Vérifier qu'un cluster est en cours d'exécution"
-          },
-          "description": {
-            "en": "In this final chapter, learn how to programmatically start, schedule, and delete Databricks clusters and jobs with the Python SDK.",
-            "fr": "Dans ce dernier chapitre, apprenez à démarrer, planifier et supprimer des clusters et des jobs Databricks de manière programmatique avec le SDK Python."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_03_tp",
-              "title": {
-                "en": "Vérifier qu'un cluster est en cours d'exécution",
-                "fr": "Vérifier qu'un cluster est en cours d'exécution"
-              },
-              "assignment": "Nous pouvons utiliser le service clusters du SDK Databricks pour récupérer les informations d'un cluster donné. Dans cet exercice, nous nous intéressons au state d'un cluster. Cela nous indique si un cluster est Terminated, Idle ou Running.\nSupposez que l'id du cluster qui nous intéresse est stocké dans une variable appelée cluster_id.",
-              "instructions": "Récupérez les informations du cluster dont l'identifiant est stocké dans la variable cluster_id.\n\nAffichez l'état (state) du cluster pour confirmer qu'il est en cours d'exécution.\n\n### Code de départ\n\n```python\nw = WorkspaceClient()\n\n# Retrieve info for the specified cluster\ncluster_info = w.clusters.____(cluster_id)\n\n# Print the state of the cluster\nprint(cluster_info.____)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Récupérez les informations du cluster dont l'identifiant est stocké dans la variable cluster_id.",
-                "Affichez l'état (state) du cluster pour confirmer qu'il est en cours d'exécution."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_79697ed2.pdf"
-                }
-              ],
-              "hint": "Pour récupérer un dictionnaire contenant des informations sur un cluster, utilisez la fonction get() du service clusters.\n\nPour vérifier si un cluster est en cours d'exécution, affichez le champ state dans le dictionnaire d'informations du cluster.",
-              "solution": "w = WorkspaceClient()\n\n# Retrieve info for the specified cluster\ncluster_info = w.clusters.get(cluster_id)\n\n# Print the state of the cluster\nprint(cluster_info.state)",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
           "id": "dc_ch03_act04",
           "title": {
             "en": "Création et gestion des jobs",
@@ -2913,161 +2290,6 @@
                   "text": "Maintenant que nous avons vu comment créer, modifier, afficher, supprimer et planifier des jobs Databricks, passons à la pratique !"
                 }
               ]
-            }
-          ]
-        },
-        {
-          "id": "dc_ch03_act05",
-          "title": {
-            "en": "Créer et exécuter un job Databricks",
-            "fr": "Créer et exécuter un job Databricks"
-          },
-          "description": {
-            "en": "In this final chapter, learn how to programmatically start, schedule, and delete Databricks clusters and jobs with the Python SDK.",
-            "fr": "Dans ce dernier chapitre, apprenez à démarrer, planifier et supprimer des clusters et des jobs Databricks de manière programmatique avec le SDK Python."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_05_tp",
-              "title": {
-                "en": "Créer et exécuter un job Databricks",
-                "fr": "Créer et exécuter un job Databricks"
-              },
-              "assignment": "Dans cet exercice, vous allez créer un job qui exécute un notebook nommé HelloWorld et qui affiche simplement « Hello World ». Vous pouvez exécuter le code de votre choix dans le notebook référencé par le job.\n\nCe job doit être explicitement déclenché pour s'exécuter.\n\nLe chemin du notebook dépend du nom d'utilisateur de la personne authentifiée dans l'espace de travail et suit la structure suivante :\n/Users/${username}/${notebook_name}.\n\nNous avons déjà créé le WorkspaceClient(), stocké dans w.",
-              "instructions": "Récupérez le nom d'utilisateur de l'utilisateur actuel dans l'espace de travail pour générer le chemin du notebook nommé HelloWorld.\n\nCréez un job qui exécute le notebook HelloWorld.\n\nExécutez le job que vous venez de créer.\n\n### Code de départ\n\n```python\n# Build notebook path for HelloWorld\nnotebook_path = f'/Users/{w.____.me().____}/HelloWorld'\n\n# Create a job that runs the HelloWorld Notebook\ncreated_job = w.jobs.____(name='sdk-dc-project-task',\n                          tasks=[\n                              jobs.____(description=\"create_notebook_test\",\n                                        # Set the notebook_path\n                                        notebook_task=jobs.NotebookTask(\n                                            notebook_path=____),\n                                        task_key=\"my-key\")\n                          ])\n\n# Run job\nw.jobs.____(created_job.____)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Récupérez le nom d'utilisateur de l'utilisateur actuel dans l'espace de travail pour générer le chemin du notebook nommé HelloWorld.",
-                "Créez un job qui exécute le notebook HelloWorld.",
-                "Exécutez le job que vous venez de créer."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_79697ed2.pdf"
-                }
-              ],
-              "hint": "Récupérez le user_name de l'utilisateur en exécutant current_user.me().user_name sur le WorkspaceClient.\n\nPour créer un job, utilisez la fonction .create() et passez les paramètres name et tasks.\n\nUtilisez la fonction Task() de l'API Databricks Jobs pour créer une tâche de job (Job Task).\n\nVous pouvez exécuter un job Databricks en passant le job à la fonction WorkspaceClient.jobs.run_now().",
-              "solution": "# Build notebook path for HelloWorld\nnotebook_path = f'/Users/{w.current_user.me().user_name}/HelloWorld'\n\n# Create a job that runs the HelloWorld Notebook\ncreated_job = w.jobs.create(name='sdk-dc-project-task',\n                            tasks=[\n                                jobs.Task(description=\"create_notebook_test\",\n                                          # Set the notebook_path\n                                          notebook_task=jobs.NotebookTask(\n                                              notebook_path=notebook_path),\n                                          task_key=\"my-key\")\n                            ])\n\n# Run job\nw.jobs.run_now(created_job.job_id)",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch03_act06",
-          "title": {
-            "en": "Planifier un job Databricks",
-            "fr": "Planifier un job Databricks"
-          },
-          "description": {
-            "en": "In this final chapter, learn how to programmatically start, schedule, and delete Databricks clusters and jobs with the Python SDK.",
-            "fr": "Dans ce dernier chapitre, apprenez à démarrer, planifier et supprimer des clusters et des jobs Databricks de manière programmatique avec le SDK Python."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_06_tp",
-              "title": {
-                "en": "Planifier un job Databricks",
-                "fr": "Planifier un job Databricks"
-              },
-              "assignment": "Dans cet exercice, vous allez utiliser le client Databricks Workspace pour créer un job qui exécute un notebook nommé HelloWorld à une heure planifiée.\n\nVous avez déjà appris à créer un job déclenché explicitement. En passant le paramètre schedule à cette fonction, vous pouvez programmer l'exécution du job à un moment précis en fournissant une expression cron.\n\nDans cet exercice, vous pouvez supposer qu'il existe une variable prédéfinie appelée cron_expression qui représente l'expression cron pour une exécution une fois par jour à 3 h (heure de la côte Est des États‑Unis).\n\nNous avons déjà créé le WorkspaceClient(), stocké dans w, ainsi qu'une variable notebook_path.",
-              "instructions": "Utilisez la méthode create() de l'API WorkspaceClient.jobs pour créer un job.\n\nProgrammez le job pour qu'il s'exécute chaque jour à 3 h dans le fuseau horaire de la côte Est, en utilisant la variable prédéfinie cron_expression.\n\nConfigurez le job pour qu'il expire après 25 secondes.\n\n### Code de départ\n\n```python\n# Create a job scheduled to run every day at 3 AM\ncreated_job = w.jobs.____(name='sdk-dc-project-task',\n                          tasks=[\n                              jobs.Task(description=\"test\",\n                                        notebook_task=jobs.____(\n                                            ____=notebook_path),\n                                        task_key=\"my-key\")\n                          ],\n                          # Schedule it to run every day at 3 AM\n                          schedule=jobs.____(\n                              quartz_cron_expression=____, ____=\"America/New_York\"),\n\n                          # The job should timeout after 25 seconds\n                          ____=25,\n                          )\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Utilisez la méthode create() de l'API WorkspaceClient.jobs pour créer un job.",
-                "Programmez le job pour qu'il s'exécute chaque jour à 3 h dans le fuseau horaire de la côte Est, en utilisant la variable prédéfinie cron_expression.",
-                "Configurez le job pour qu'il expire après 25 secondes."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_79697ed2.pdf"
-                }
-              ],
-              "hint": "L'argument notebook_path dans la fonction jobs.NotebookTask() indique le chemin du notebook à exécuter dans ce job.\n\nL'argument timezone_id dans la fonction jobs.CronSchedule() précise le fuseau horaire dans lequel l'expression cron doit s'exécuter.\n\nL'argument timeout_seconds passé à jobs.create() indique le nombre de secondes avant l'expiration du job.",
-              "solution": "# Create a job scheduled to run every day at 3 AM\ncreated_job = w.jobs.create(name='sdk-dc-project-task',\n                            tasks=[\n                                jobs.Task(description=\"test\",\n                                          notebook_task=jobs.NotebookTask(\n                                              notebook_path=notebook_path),\n                                          task_key=\"my-key\")\n                            ],\n                            # Schedule it to run every day at 3 AM\n                            schedule=jobs.CronSchedule(\n                                quartz_cron_expression=cron_expression, timezone_id=\"America/New_York\"),\n\n                            # The job should timeout after 25 seconds\n                            timeout_seconds=25,\n                            )",
-              "successMessage": "",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch03_act07",
-          "title": {
-            "en": "Supprimer un job Databricks",
-            "fr": "Supprimer un job Databricks"
-          },
-          "description": {
-            "en": "In this final chapter, learn how to programmatically start, schedule, and delete Databricks clusters and jobs with the Python SDK.",
-            "fr": "Dans ce dernier chapitre, apprenez à démarrer, planifier et supprimer des clusters et des jobs Databricks de manière programmatique avec le SDK Python."
-          },
-          "type": "exercise",
-          "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_07_tp",
-              "title": {
-                "en": "Supprimer un job Databricks",
-                "fr": "Supprimer un job Databricks"
-              },
-              "assignment": "Vous avez appris à créer et exécuter un job Databricks avec le SDK Python. Il arrive que certains jobs que vous avez créés soient désormais obsolètes et que vous souhaitiez les supprimer. Vous pouvez utiliser le SDK pour supprimer ces jobs par programmation au lieu de passer par la console Databricks pour les effacer manuellement. Dans cet exercice, vous allez créer un job puis utiliser le SDK pour le supprimer.\n\nNous avons déjà créé le WorkspaceClient(), stocké dans w, ainsi qu'une variable notebook_path.",
-              "instructions": "Créez un job Databricks à l'aide de WorkspaceClient qui s'exécute sur cluster_id.\n\nSupprimez le job Databricks créé à l'étape 1.\n\n### Code de départ\n\n```python\n# Create a job with the notebook task\ncreated_job = w.jobs.____(name='sdk-dc-project-task',\n                          tasks=[\n                              jobs.Task(description=\"create_notebook_test\",\n                                        ____=cluster_id,                                         \n                                        notebook_task=jobs.____(\n                                            notebook_path=notebook_path),\n                                        task_key=\"my-key\")\n                          ])\n\n# Delete the job that was just created\nw.jobs.____(job_id=created_job.____)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Créez un job Databricks à l'aide de WorkspaceClient qui s'exécute sur cluster_id.",
-                "Supprimez le job Databricks créé à l'étape 1."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_79697ed2.pdf"
-                }
-              ],
-              "hint": "Créez un job à l'aide de la fonction create() dans l'API jobs de WorkspaceClient.\n\nPour créer une tâche de notebook exécutable dans un job Databricks, utilisez la fonction jobs.NotebookTask().\n\nSupprimez un job à l'aide de la fonction delete(job_id=) dans l'API jobs de WorkspaceClient.",
-              "solution": "# Create a job with the notebook task\ncreated_job = w.jobs.create(name='sdk-dc-project-task',\n                            tasks=[\n                                jobs.Task(description=\"create_notebook_test\",\n                                          existing_cluster_id=cluster_id,\n                                          notebook_task=jobs.NotebookTask(\n                                              notebook_path=notebook_path),\n                                          task_key=\"my-key\")\n                            ])\n\n# Delete the job that was just created\nw.jobs.delete(job_id=created_job.job_id)",
-              "successMessage": "",
-              "xp": 100
             }
           ]
         },

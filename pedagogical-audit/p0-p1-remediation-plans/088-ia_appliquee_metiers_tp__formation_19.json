@@ -1,0 +1,48 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_19",
+  "index": 88,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__19"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "chapter_id": "ia_appliquee_metiers_tp__19-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__19-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Le knowledge_check obligatoire est déclaré avec passThreshold 1 mais son implémentation marque toute sélection comme complétée, y compris une réponse erronée. Sans modification de code, il ne peut pas être un verrou fiable ; le bloc est retiré et l’explication de sécurité déjà présente dans les chapitres précédents reste non bloquante.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__19-checkpoint-01 est requiredBeforeAdvance:true et le bloc réel ia_appliquee_metiers_tp__19-checkpoint-preparation est de type knowledge_check, correctAnswer a, required:true. Le dossier de revue confirme GenericLearningBlocks.tsx appelle onComplete dès la sélection et que le gate ne recense pas ce type."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "chapter_id": "ia_appliquee_metiers_tp__19-checkpoint-01",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou du chapitre après suppression du knowledge_check non fiable ; le contenu de préparation et de sécurité demeure consultable sans bloquer la progression.",
+      "evidence": "Le chapitre réel ia-appliquee-metiers-tp__19-checkpoint-01 déclare requiredBeforeAdvance:true et passThreshold:1."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "chapter_id": "ia_appliquee_metiers_tp__19-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__19-mini-project-proof",
+      "exercise_id": null,
+      "reason": "Le mini-projet obligatoire n’est pas rapidement corrigeable avec les seuls actifs déclarés : il promet 10 factures mais le support local déclaré ne fournit ni les 10 entrées ni les données nécessaires pour vérifier extraction, nommage et comptabilisation. La consigne, le cadre de sécurité et la description de la preuve sont utiles et doivent rester comme contenu non bloquant, sans activité soumise.",
+      "evidence": "Le bloc réel ia-appliquee-metiers-tp__19-mini-project-proof est de type cloud_exercise, requiredBeforeAdvance:true au niveau du chapitre, assignment annonce 10 factures et resources ne référence qu’un support fictif. La revue locale confirme que ce support ne contient pas la série de 10 factures ni les champs/règles requis ; CloudExerciseBlock accepte une réponse d’un seul caractère et complète alors l’exercice."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__19",
+      "chapter_id": "ia_appliquee_metiers_tp__19-mini-project",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou du chapitre après conversion du TP irréalisable en contenu explicatif non bloquant ; aucune preuve insuffisante ne doit déverrouiller la suite.",
+      "evidence": "Le chapitre réel ia-appliquee-metiers-tp__19-mini-project déclare requiredBeforeAdvance:true et contient le bloc réel ia-appliquee-metiers-tp__19-mini-project-proof."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les trois constats P1 sont traités sans inventer d’actifs ni modifier le cours : le checkpoint obligatoire non fiable est retiré avec son verrou, et le mini-projet obligatoire non faisable est converti en contenu explicatif puis déverrouillé. Aucun constat historique stillOpen n’existe à normaliser ; les constats P2/P3 ne sont pas des activités obligatoires et restent hors décision."
+}

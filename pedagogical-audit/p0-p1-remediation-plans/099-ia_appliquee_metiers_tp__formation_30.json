@@ -1,0 +1,67 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_30",
+  "index": 99,
+  "course_ids": ["ia_appliquee_metiers_tp__30"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__30-checkpoint-preparation",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : le contrôle de progression est erroné dans le code et une réponse incorrecte est enregistrée comme complétée. Retirer ce bloc retire aussi son verrou défectueux ; l’explication pédagogique reste représentée par les contenus de préparation et les consignes de sécurité du parcours.",
+      "evidence": "099-ia_appliquee_metiers_tp__formation_30.json current_recheck/findings et initial_audit issue incorrect-answer-unlocks : le bloc réel lessons[0].chapters[3].blocks[0] est required=true, correctAnswer='a', mais LessonViewer enregistre l’interaction sans conserver isCorrect ; le code de gate ne collecte pas ce knowledge_check."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__30-mini-project-proof",
+      "reason": "L’activité obligatoire ne fournit pas une validation substantielle fiable : sans critère structuré ni évaluation serveur, une preuve d’un seul caractère déverrouille le quiz. La consigne, les étapes, la correction et le cadre de sécurité sont utiles et doivent être conservés comme contenu non bloquant ; convertir le bloc en contenu retire le verrou sans supprimer ces explications.",
+      "evidence": "Le bloc réel lessons[0].chapters[4].blocks[0] est un cloud_exercise sans minimumAnswerLength, rubricCriteria, learnerCriteria ni serverGradedAssessment ; cloudExerciseValidation applique une longueur minimale par défaut de 1 et CloudExerciseBlock appelle onComplete après soumission non vide. Le même bloc contient assignment, instructions, environmentGuide, resources, hint, solution, successMessage et steps."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-final-quiz",
+      "block_id": "ia_appliquee_metiers_tp__30-quiz-order",
+      "reason": "Activité obligatoire dont le feedback annoncé n’est pas rendu de manière fiable : le bundle contient feedback mais pas correction, tandis que le composant ne rend que correction. Retirer le bloc enlève son verrou ; la démarche et ses explications restent enseignées dans les cartes et les contenus précédents.",
+      "evidence": "Le bloc réel lessons[0].chapters[5].blocks[4] est un bucket_sort avec buckets/cards/feedback mais sans propriété correction ; LessonViewer transmet uniquement block.correction et MatchingExercise n’affiche la correction détaillée que si elle existe."
+    },
+    {
+      "action": "mark_false_positive",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__30-mini-project-proof",
+      "reason": "Le constat historique de guidage n’est plus confirmé par l’état courant : le bloc contient maintenant des étapes structurées bilingues.",
+      "evidence": "Le JSON courant lessons[0].chapters[4].blocks[0].steps contient trois étapes réelles avec fr/en : relire la consigne, réaliser avec les ressources sans donnée confidentielle, puis vérifier selon les critères avant soumission."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Textes du comparison_panel non localisés en anglais",
+      "evidence": "lessons[0].chapters[2].blocks[1].columns[*].items[*].en reprend les chaînes françaises pour les six items.",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-screen-03",
+      "reason_not_rapidly_remediable": "Aucune action d’édition de texte n’est disponible dans le plan décisionnel ; le constat n’est pas un verrou P0/P1 et aucune suppression de contenu valide n’est justifiée."
+    },
+    {
+      "severity": "P2",
+      "title": "Textes du mini-projet non localisés en anglais",
+      "evidence": "Le bloc lessons[0].chapters[4].blocks[0] conserve assignment, instructions, hint, solution et successMessage comme chaînes françaises simples.",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-mini-project",
+      "reason_not_rapidly_remediable": "Le défaut est une édition de localisation hors des actions de décision prévues ; le contenu pédagogique reste valide et ne doit pas être supprimé pour ce seul motif."
+    },
+    {
+      "severity": "P2",
+      "title": "Nomenclature de démarche différente entre enseignement et tri",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__30-screen-03 enseigne Cadrer/Préparer/Tester/Contrôler, tandis que ia_appliquee_metiers_tp__30-quiz-order utilise Cadrer/Construire/Tester/Valider, sans transition explicite dans le JSON.",
+      "course_id": "ia_appliquee_metiers_tp__30",
+      "chapter_id": "ia_appliquee_metiers_tp__30-final-quiz",
+      "reason_not_rapidly_remediable": "Le choix de la nomenclature canonique n’est pas démontré par les actifs déclarés ; aucune suppression supplémentaire n’est justifiée après retrait du tri obligatoire."
+    }
+  ],
+  "summary": "Revue de l’état courant terminée : les trois activités obligatoires dont le verrou, la validation ou le rendu ne sont pas fiables avec les seuls actifs déclarés sont neutralisées (checkpoint et tri retirés, mini-projet converti en contenu non bloquant). Le constat historique d’absence d’étapes du mini-projet est marqué faux positif car trois étapes sont présentes dans le JSON courant. Trois constats P2 de localisation/nomenclature restent ouverts sans suppression de contenu valide."
+}

@@ -1,0 +1,93 @@
+{
+  "formation_id": "datacamp_building_agentic_workflows_with_llamaindex",
+  "index": 22,
+  "course_ids": [
+    "building_agentic_workflows_with_llamaindex__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch02_act08",
+      "block_id": "dc_2_act_08_video",
+      "reason": "Cette activité vidéo obligatoire finale reste contournable par le garde de fin de parcours ; sa correction dépend d’une modification de code non réalisable rapidement avec les seuls actifs déclarés. Retirer le bloc conserve le parcours non bloquant plutôt que de présenter un verrou illusoire.",
+      "evidence": "Le JSON du cours contient le bloc réel dc_2_act_08_video avec requiredBeforeAdvance=true. La contre-revue confirme que LessonViewer.tsx:1476-1485 filtre encore les identifiants Projector de 17 caractères, exclut dc_2_act_08_video, puis déverrouille la fin sur une liste vide (ped-022-011)."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch02_act08",
+      "block_id": "dc_2_act_08_video",
+      "reason": "Retirer le verrou associé au bloc final supprimé afin qu’aucune exigence obligatoire orpheline ne subsiste.",
+      "evidence": "Le chapitre dc_ch02_act08 déclare requiredBeforeAdvance=true et son unique bloc vidéo réel est dc_2_act_08_video ; le garde de fin actuel ne contrôle pas correctement cette clé de 17 caractères."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch01_act03",
+      "block_id": "dc_1_act_03_video",
+      "reason": "Supprimer la formulation qui annonce une mise en pratique immédiate alors que l’écran suivant livré est une vidéo conceptuelle et qu’aucun TP vérifiable n’est inclus.",
+      "evidence": "La slide 7 du bloc réel dc_1_act_03_video contient « Exciting, right? Let’s get into it. » ; le chapitre suivant dc_ch01_act05 contient seulement une vidéo et le bundle déclare interactiveExercises=0 et excludedSourcePracticalActivities=10 (ped-022-005)."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch01_act05",
+      "block_id": "dc_1_act_05_video",
+      "reason": "Supprimer la référence à un agent déjà construit, incohérente avec les écrans antérieurs et le périmètre réellement livré.",
+      "evidence": "La première slide du bloc réel dc_1_act_05_video dit « Now that we have a working agent » ; les chapitres antérieurs ne livrent ni construction, ni code, ni environnement, et le texte d’introduction confirme l’absence de TP exécutable (ped-022-008)."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch02_act08",
+      "block_id": "dc_2_act_08_video",
+      "reason": "Supprimer les promesses de human oversight et de custom workflows non couvertes par les activités conservées ; cette correction textuelle est rapide à partir du contenu existant, même si le bloc vidéo lui-même est retiré comme activité bloquante.",
+      "evidence": "La première slide du bloc réel dc_2_act_08_video revendique « injecting human oversight » et « designing custom workflows outside the defaults », alors que l’inventaire livré est limité à cinq vidéos, deux supports et zéro exercice interactif ; aucun chapitre livré ne traite ces thèmes (ped-022-013)."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Vidéo d’accueil sans alternative française détaillée",
+      "evidence": "Le bloc dc_1_act_01_video contient subtitleUrlEn et un transcript anglais, sans subtitleUrlFr, transcriptFr ni alternativeTextFr ; le lecteur rend les ressources déclarées sans traduction.",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "Une alternative française synchronisée et relue nécessite de nouveaux actifs média/textuels ; elle ne peut pas être produite de manière fiable avec les seuls actifs déclarés."
+    },
+    {
+      "severity": "P2",
+      "title": "Définition d’agent sans alternative française détaillée",
+      "evidence": "Le bloc dc_1_act_03_video ne déclare que subtitleUrlEn ; son transcript et ses scripts sont anglais et aucune propriété subtitleUrlFr, transcriptFr ou alternativeTextFr n’est fournie.",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch01_act03",
+      "reason_not_rapidly_remediable": "La localisation validée du média exige de nouveaux sous-titres/transcription français, absents du bundle actuel."
+    },
+    {
+      "severity": "P2",
+      "title": "Chapitre mémoire/Context sans alternative française détaillée",
+      "evidence": "Le bloc dc_1_act_05_video fournit subtitleUrlEn et un transcript anglais, sans subtitleUrlFr, transcriptFr ni alternativeTextFr.",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch01_act05",
+      "reason_not_rapidly_remediable": "La création d’une transcription et de sous-titres français relus nécessite des actifs nouveaux non déclarés."
+    },
+    {
+      "severity": "P2",
+      "title": "Explication multi-agents sans alternative française détaillée",
+      "evidence": "Le bloc dc_2_act_01_video contient transcript et scripts anglais avec subtitleUrlEn seulement ; aucune alternative française n’est déclarée ou rendue.",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch02_act01",
+      "reason_not_rapidly_remediable": "Une version française synchronisée et vérifiée n’existe pas parmi les actifs déclarés et ne peut pas être inventée."
+    },
+    {
+      "severity": "P2",
+      "title": "Conclusion vidéo sans alternative française détaillée",
+      "evidence": "Le bloc dc_2_act_08_video dispose de subtitleUrlEn et d’un transcript anglais, sans subtitleUrlFr, transcriptFr ni alternativeTextFr.",
+      "course_id": "building_agentic_workflows_with_llamaindex__01",
+      "chapter_id": "dc_ch02_act08",
+      "reason_not_rapidly_remediable": "Les nouveaux sous-titres/transcription français nécessaires ne sont pas des actifs déclarés ; aucune traduction fiable ne peut être inventée."
+    }
+  ],
+  "summary": "Contre-revue terminée : 4 constats P1 historiques sont résolus, le P1 final non corrigeable rapidement est neutralisé par retrait du bloc et de son verrou, et 3 formulations P2 obsolètes sont retirées. Cinq constats P2 de localisation restent ouverts faute d’actifs français déclarés."
+}

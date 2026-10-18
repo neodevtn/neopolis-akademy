@@ -1,0 +1,83 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_29",
+  "index": 98,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__29"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-screen-02",
+      "block_id": "ia_appliquee_metiers_tp__29-source-review",
+      "reason": "Cette activité obligatoire dépend d’un événement d’ouverture de ressource que le contenu déclaré ne peut pas enregistrer de manière fiable; suppression de l’activité et de son verrou, sans retirer le chapitre explicatif de préparation.",
+      "evidence": "current_recheck.findings P2 verrouillage; current_courses...lessons[0].chapters[1].blocks[1] est le resource_review réel; la confirmation seule lève actuellement la complétion selon le constat documenté."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-screen-02",
+      "block_id": "ia_appliquee_metiers_tp__29-source-review",
+      "reason": "Retirer le verrou associé au resource_review supprimé afin que le chapitre ne dépende plus d’une preuve d’ouverture non fiable.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__29-screen-02 est requiredBeforeAdvance=true et le bloc supprimé est l’activité de consultation identifiée dans current_recheck.findings."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__29-checkpoint-preparation",
+      "reason": "Le checkpoint obligatoire n’est pas rapidement corrigeable de façon fiable avec les seuls actifs déclarés: son code de complétion accepte toute sélection, y compris une réponse fausse. L’explication pédagogique du bloc doit rester disponible comme contenu non bloquant.",
+      "evidence": "current_recheck.findings P1 verrouillage; bloc knowledge_check réel avec required=true et correctAnswer=a; le rapport documente GenericLearningBlocks/LessonViewer comme marquant la complétion sans condition de justesse."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__29-checkpoint-preparation",
+      "reason": "Retirer le verrou du checkpoint supprimé pour empêcher qu’une activité dont la condition de réussite est non fiable bloque la progression.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__29-checkpoint-01 a requiredBeforeAdvance=true et le bloc réel est required=true; current_recheck décrit le déverrouillage après réponse incorrecte."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__29-mini-project-proof",
+      "reason": "Le mini-projet obligatoire ne peut pas être évalué de manière fiable avec les seuls actifs déclarés: une preuve d’un caractère suffit actuellement. Conserver sa consigne, son cadre de sécurité et ses éléments de preuve comme contenu non bloquant, sans prétendre valider la réalisation.",
+      "evidence": "current_recheck.findings P1 évaluation; bloc cloud_exercise réel sans minimumAnswerLength, learnerCriteria, rubricCriteria ni serverGradedAssessment; le constat documente l’acceptation d’un seul caractère non blanc."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__29-mini-project-proof",
+      "reason": "Retirer l’exigence de complétion du mini-projet devenu contenu informatif, afin qu’une preuve non vérifiée ne bloque pas le parcours.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__29-mini-project est requiredBeforeAdvance=true et son unique bloc réel est le cloud_exercise sans évaluation proportionnée."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-screen-03",
+      "reason": "Corriger rapidement dans le texte existant l’incohérence des libellés en supprimant la référence obsolète à « Préparer »/« Contrôler » et en reprenant les libellés déjà utilisés par le tri: « Cadrer, Construire, Tester, Valider ».",
+      "evidence": "current_recheck.findings P2 progression; sequence_visual du chapitre enseigne « Cadrer, Préparer, Tester, Contrôler », tandis que ia_appliquee_metiers_tp__29-quiz-order utilise « Cadrer, Construire, Tester, Valider »."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia-appliquee_metiers_tp__29-final-quiz",
+      "block_id": "ia-appliquee_metiers_tp__29-quiz-order",
+      "reason": "Le tri obligatoire n’est pas rapidement corrigeable avec les seuls actifs déclarés car son feedback existant n’est pas transmis par le rendu. Conserver ses instructions, cartes et feedback comme contenu non bloquant plutôt que supprimer une explication utile.",
+      "evidence": "current_recheck.findings P2 feedback; bucket_sort réel ia_appliquee_metiers_tp__29-quiz-order contient le feedback mais LessonViewer ne le transmet pas au composant de rendu."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__29",
+      "chapter_id": "ia_appliquee_metiers_tp__29-final-quiz",
+      "block_id": "ia_appliquee_metiers_tp__29-quiz-order",
+      "reason": "Retirer le verrou du tri converti en contenu afin que le feedback non rendu ne bloque pas la validation des autres activités du quiz.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__29-final-quiz est requiredBeforeAdvance=true; le bucket_sort identifié est l’activité dont le feedback n’est pas rendu."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les quatre activités obligatoires dont le comportement applicatif ou l’évaluation n’est pas rapidement fiabilisé avec les actifs déclarés sont retirées ou converties en contenu, avec leurs exigences de complétion supprimées. L’incohérence de terminologie est corrigée par une référence textuelle existante; aucun constat P0/P1 ne reste non résolu et aucun fichier de cours n’a été modifié."
+}

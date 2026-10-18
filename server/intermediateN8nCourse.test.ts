@@ -48,34 +48,29 @@ describe("Intermediate Workflow Automation with n8n — source-verified opening 
     const learner = JSON.parse(sanitizeCourseDataForLearner(rawCourse));
     const learnerPracticals = learner.lessons.flatMap((lesson: any) => lesson.chapters).flatMap((chapter: any) => chapter.blocks)
       .filter((block: any) => block.practiceStatus === "source_screen_verified");
-    // dc_4_act_04_tp est retiré : il promettait un « pack Neopolis » absent
-    // de la médiathèque et ne doit donc plus verrouiller le parcours.
-    expect(learnerPracticals).toHaveLength(21);
+    expect(learnerPracticals).toHaveLength(12);
     for (const block of learnerPracticals) {
       expect(block).not.toHaveProperty("solution");
       expect(block).not.toHaveProperty("evaluationPrompt");
       expect(block).not.toHaveProperty("rubricCriteria");
+      expect(block.steps.length).toBeGreaterThanOrEqual(3);
+      expect(block.environmentGuide.fr).toContain("n8n");
+      expect(block.source_refs.length).toBeGreaterThan(0);
     }
   });
 
-  it("replaces copied reliability pages with source-verified personal-environment practices", () => {
-    const reliabilityIds = ["dc_4_act_02_tp", "dc_4_act_03_tp", "dc_4_act_06_tp", "dc_4_act_07_tp"];
-    for (const id of reliabilityIds) {
-      const block = practical(id);
-      expect(block).toMatchObject({ type: "cloud_exercise", practiceStatus: "source_screen_verified", serverGradedAssessment: "intermediate_n8n_source_verified" });
-      expect(block.environmentGuide.fr).toContain("instance personnelle n8n");
-      expect(block.steps.length).toBeGreaterThanOrEqual(3);
-      expect(block.source_refs?.[0]?.url).toContain("reliability-and-production-readiness");
-      expect(JSON.stringify(block)).not.toContain("Apprendre\n/\nCours");
-      expect(JSON.stringify(block)).not.toContain("Points de progression Neopolis\n40");
-    }
-    expect(practical("dc_4_act_02_tp").resources).toHaveLength(1);
-    expect(practical("dc_4_act_06_tp").resources).toHaveLength(1);
-    const removedPackPractice = course.lessons.flatMap((lesson: any) => lesson.chapters).find((chapter: any) => chapter.id === "dc_ch04_act04");
-    expect(removedPackPractice).toMatchObject({ type: "content", requiredBeforeAdvance: false });
-    expect(removedPackPractice.blocks).toEqual(expect.arrayContaining([
-      expect.objectContaining({ type: "content", remediation: expect.objectContaining({ sourcePreserved: true }) }),
-    ]));
-    expect(course.lessons.flatMap((lesson: any) => lesson.chapters).flatMap((chapter: any) => chapter.blocks).some((block: any) => block.id === "dc_4_act_09_tp")).toBe(false);
+  it("conserve seulement la pratique de fiabilité dotée des ressources publiées et retire les autres TPs non vérifiables", () => {
+    const retained = practical("dc_4_act_02_tp");
+    const allBlocks = course.lessons.flatMap((lesson: any) => lesson.chapters).flatMap((chapter: any) => chapter.blocks);
+
+    expect(retained).toMatchObject({ type: "cloud_exercise", practiceStatus: "source_screen_verified", serverGradedAssessment: "intermediate_n8n_source_verified" });
+    expect(retained.environmentGuide.fr).toContain("instance personnelle n8n");
+    expect(retained.steps.length).toBeGreaterThanOrEqual(3);
+    expect(retained.source_refs?.[0]?.url).toContain("reliability-and-production-readiness");
+    expect(retained.resources).toHaveLength(1);
+    expect(retained.resources[0].url).toMatch(/^\/api\/assets\//);
+    expect(["dc_4_act_03_tp", "dc_4_act_04_tp", "dc_4_act_06_tp", "dc_4_act_07_tp", "dc_4_act_09_tp"].some((id) =>
+      allBlocks.some((block: any) => block.id === id),
+    )).toBe(false);
   });
 });

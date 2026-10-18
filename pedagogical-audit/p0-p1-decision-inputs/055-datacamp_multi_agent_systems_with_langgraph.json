@@ -1,0 +1,1628 @@
+{
+  "formation": {
+    "index": 55,
+    "formation_id": "datacamp_multi_agent_systems_with_langgraph",
+    "title": {
+      "en": "Multi-Agent Systems with LangGraph",
+      "fr": "Systèmes multi-agents avec LangGraph"
+    },
+    "course_ids": [
+      "multi_agent_systems_with_langgraph__01"
+    ]
+  },
+  "current_open_p0_p1_findings": [
+    {
+      "severity": "P1",
+      "category": "objectifs_et_activites_faisabilite_tp",
+      "course_id": "multi_agent_systems_with_langgraph__01",
+      "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: datacampImport.expected; lessons[0].chapters[0].blocks; lessons[0].chapters[0].blocks[1].projectorSlides[10..11]",
+      "description": "Le cours annonce des exercices de code, un environnement de développement local, une section d'instructions et un notebook, tandis que datacampImport.expected déclare activities_expected_from_outline=13 et exercise_types.LocalEnvironmentExercise=9. L'état courant ne rend que 4 chapitres et 7 blocs au total (video=4, download=2, content=1), sans bloc d'exercice. La première vidéo renvoie aux exercices, mais aucune action de programmation, critère de réussite ou feedback n'est fourni pour construire les agents.",
+      "recommendation": "Restaurer les TP annoncés avec fichiers/environnement, consigne, action attendue, critère de réussite et feedback, ou réaligner explicitement les objectifs et scripts sur un parcours vidéo sans TP.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage_fausse_soumission_gate",
+      "course_id": "multi_agent_systems_with_langgraph__01",
+      "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: lessons[*].chapters[*].requiredBeforeAdvance=true et blocs video dc_1_act_01_video, dc_2_act_01_video, dc_2_act_04_video, dc_2_act_07_video; LessonViewer.tsx lignes 1483-1492, 1557-1568, 1511-1534, 1634-1663",
+      "description": "Les 4 chapitres déclarent requiredBeforeAdvance=true, mais les 4 vidéos ont audioUrl et un id de 17 caractères sans videoId/url. La dérivation de LessonViewer ne retient qu'un id de longueur 8 à 15 pour chapterVideoKeys : la liste de clés est donc vide, le bouton Suivant et la fin de parcours peuvent être validés sans consultation des Projector audio. En l'absence d'activité évaluée livrée, ce gate contournable ne fournit aucune preuve de consultation ou de compréhension.",
+      "recommendation": "Corriger et tester la dérivation de clé pour les Projector audio, puis vérifier le verrouillage de chaque chapitre et de la fin de leçon sur le rendu courant.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "progression_et_prerequis",
+      "course_id": "multi_agent_systems_with_langgraph__01",
+      "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: lessons[1].chapters[0].blocks[0] (dc_2_act_01_video), projectorSlides[0..1,10]; lessons[0].chapters[0].blocks=[content, video, download]",
+      "description": "La première vidéo de la seconde leçon dit que l'apprenant a déjà construit un « very first agent » et repart d'un workflow linéaire opérationnel. La seule leçon antérieure livrée est une introduction vidéo, un bloc content et un téléchargement, sans bloc de code ni exercice ; elle annonce que le code sera écrit dans les exercices. Le prérequis pratique nécessaire pour suivre le diagnostic du workflow linéaire n'a donc pas été réalisé dans l'état courant.",
+      "recommendation": "Réaligner l'accroche sur le prérequis réellement acquis, ou restaurer et faire valider le TP du workflow linéaire avant cette vidéo.",
+      "status": "open"
+    }
+  ],
+  "legacy_open_count_requiring_normalization": 0,
+  "current_recheck": {
+    "formation_id": "datacamp_multi_agent_systems_with_langgraph",
+    "index": 55,
+    "course_ids": [
+      "multi_agent_systems_with_langgraph__01"
+    ],
+    "review_scope": {
+      "manifest": "/home/ubuntu/neopolis-akademy/pedagogical-audit/formation-manifest.json",
+      "course_paths": [
+        "/home/ubuntu/neopolis-akademy/client/public/data/courses/multi_agent_systems_with_langgraph__01.json"
+      ],
+      "initial_report": "/home/ubuntu/neopolis-akademy/pedagogical-audit/raw/055-datacamp_multi_agent_systems_with_langgraph.json",
+      "static_audit": "/home/ubuntu/neopolis-akademy/pedagogical-audit/static-audit-data.json",
+      "criteria": [
+        "objectifs et activités",
+        "faisabilité TP/fichiers/environnement",
+        "fausses soumissions ou gates",
+        "médias/téléchargements",
+        "duplications ou corruption",
+        "rendu/bilinguisme"
+      ],
+      "method": "Contre-revue fondée uniquement sur les JSON locaux et les localisations de code déjà citées par le rapport initial ; aucune modification de cours. Le static-audit-data.json indique issue_count=0 pour ce course_id, mais sa couverture est verified_static_only et ne remplace pas la vérification pédagogique du rapport initial."
+    },
+    "reviewed_current_state": true,
+    "findings": [
+      {
+        "severity": "P1",
+        "category": "objectifs_et_activites_faisabilite_tp",
+        "course_id": "multi_agent_systems_with_langgraph__01",
+        "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: datacampImport.expected; lessons[0].chapters[0].blocks; lessons[0].chapters[0].blocks[1].projectorSlides[10..11]",
+        "description": "Le cours annonce des exercices de code, un environnement de développement local, une section d'instructions et un notebook, tandis que datacampImport.expected déclare activities_expected_from_outline=13 et exercise_types.LocalEnvironmentExercise=9. L'état courant ne rend que 4 chapitres et 7 blocs au total (video=4, download=2, content=1), sans bloc d'exercice. La première vidéo renvoie aux exercices, mais aucune action de programmation, critère de réussite ou feedback n'est fourni pour construire les agents.",
+        "recommendation": "Restaurer les TP annoncés avec fichiers/environnement, consigne, action attendue, critère de réussite et feedback, ou réaligner explicitement les objectifs et scripts sur un parcours vidéo sans TP.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage_fausse_soumission_gate",
+        "course_id": "multi_agent_systems_with_langgraph__01",
+        "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: lessons[*].chapters[*].requiredBeforeAdvance=true et blocs video dc_1_act_01_video, dc_2_act_01_video, dc_2_act_04_video, dc_2_act_07_video; LessonViewer.tsx lignes 1483-1492, 1557-1568, 1511-1534, 1634-1663",
+        "description": "Les 4 chapitres déclarent requiredBeforeAdvance=true, mais les 4 vidéos ont audioUrl et un id de 17 caractères sans videoId/url. La dérivation de LessonViewer ne retient qu'un id de longueur 8 à 15 pour chapterVideoKeys : la liste de clés est donc vide, le bouton Suivant et la fin de parcours peuvent être validés sans consultation des Projector audio. En l'absence d'activité évaluée livrée, ce gate contournable ne fournit aucune preuve de consultation ou de compréhension.",
+        "recommendation": "Corriger et tester la dérivation de clé pour les Projector audio, puis vérifier le verrouillage de chaque chapitre et de la fin de leçon sur le rendu courant.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "rendu_bilinguisme_accessibilite",
+        "course_id": "multi_agent_systems_with_langgraph__01",
+        "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: datacampImport.sourceLanguage=fr-FR; video.transcript et projectorSlides[*].script des 4 vidéos; subtitleUrlFr/subtitleUrlEn; LessonViewer.tsx lignes 735-759; ProjectorPlayer.tsx lignes 159-175",
+        "description": "La formation est déclarée fr-FR et les en-têtes sont français, mais les scripts/transcriptions rendus dans le lecteur sont majoritairement en anglais, avec un mélange ponctuel français/anglais. Les sous-titres français sont présents, mais ProjectorPlayer ne les incorpore pas comme piste et LessonViewer les propose comme lien séparé ; l'alternative textuelle ouverte via Transcription reste donc largement anglaise pour un parcours français.",
+        "recommendation": "Localiser la transcription affichée et vérifier par rendu que la variante française est celle fournie à l'apprenant francophone, sans supprimer les sous-titres déclarés.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "progression_et_prerequis",
+        "course_id": "multi_agent_systems_with_langgraph__01",
+        "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: lessons[1].chapters[0].blocks[0] (dc_2_act_01_video), projectorSlides[0..1,10]; lessons[0].chapters[0].blocks=[content, video, download]",
+        "description": "La première vidéo de la seconde leçon dit que l'apprenant a déjà construit un « very first agent » et repart d'un workflow linéaire opérationnel. La seule leçon antérieure livrée est une introduction vidéo, un bloc content et un téléchargement, sans bloc de code ni exercice ; elle annonce que le code sera écrit dans les exercices. Le prérequis pratique nécessaire pour suivre le diagnostic du workflow linéaire n'a donc pas été réalisé dans l'état courant.",
+        "recommendation": "Réaligner l'accroche sur le prérequis réellement acquis, ou restaurer et faire valider le TP du workflow linéaire avant cette vidéo.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "transition_vers_activite",
+        "course_id": "multi_agent_systems_with_langgraph__01",
+        "location": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json: lessons.length=2; lessons[1].chapters.length=3; lessons[1].chapters[2].blocks[0] (dc_2_act_07_video), projectorSlides[number=7].script",
+        "description": "La conclusion se termine par « Let's practice! », mais dc_ch02_act07 est le dernier chapitre rendu et son bloc unique est une vidéo. Après cette injonction, aucune consigne, action, exercice, indication de fin ou évaluation n'est fournie ; la pratique annoncée ne suit pas la synthèse.",
+        "recommendation": "Remplacer l'appel à une pratique inexistante par une clôture explicite, ou ajouter immédiatement le TP final avec énoncé, action attendue, critère de réussite et feedback.",
+        "status": "open"
+      }
+    ],
+    "summary": {
+      "issue_count": 5,
+      "p0": 0,
+      "p1": 3,
+      "p2": 2
+    }
+  },
+  "initial_audit": {
+    "formation_id": "datacamp_multi_agent_systems_with_langgraph",
+    "courses": [
+      {
+        "course_id": "multi_agent_systems_with_langgraph__01",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch01_act01",
+            "title": "Construire des agents à la manière de LangGraph !",
+            "score_100": 55,
+            "verified_dimensions": [
+              {
+                "dimension": "Explications et contextualisation",
+                "finding": "La vidéo introduit le livrable (assistant de recherche d’entreprises), distingue LLM et agent, explique outils, orchestration, nœuds et arêtes, puis relie le tout au cas fil rouge."
+              },
+              {
+                "dimension": "Média et alternatives déclarées",
+                "finding": "Le bloc vidéo est rendu comme Projector audio avec 13 diapositives, transcription et liens aux sous-titres FR/EN et au PDF ; le lecteur rend aussi les titres et les images déclarées des diapositives."
+              },
+              {
+                "dimension": "Action et progression effectivement offertes",
+                "finding": "Le parcours rendu de ce chapitre contient exactement un contenu de préparation, une vidéo et un téléchargement ; aucun bloc d’exercice, de code, de quiz ou d’activité interactive n’y est rendu."
+              },
+              {
+                "dimension": "Verrouillage",
+                "finding": "Le JSON positionne requiredBeforeAdvance à true, mais la clé de complétion vidéo n’est pas dérivée pour cet identifiant audio Projector ; le verrouillage de passage n’est donc pas appliqué (issue 055-MASLG-003)."
+              }
+            ],
+            "unverified_dimensions": [
+              {
+                "dimension": "Énoncé, action attendue, réussite et feedback des 9 LocalEnvironmentExercise annoncés",
+                "reason": "Le fichier JSON exact ne contient aucun chapitre ni bloc correspondant à ces activités locales, ni énoncé, environnement, données, critères de réussite, correction ou feedback à examiner. Elles ne sont pas assimilées à des ressources inaccessibles."
+              },
+              {
+                "dimension": "Exactitude de l’audio, des images et des PDF",
+                "reason": "Les URLs locales sont déclarées et les scripts/transcriptions/alt text ont été lus, mais les binaires média n’ont pas été lus dans cet audit de données et de rendu."
+              }
+            ],
+            "issues": [
+              {
+                "issue_id": "055-MASLG-001",
+                "course_id": "multi_agent_systems_with_langgraph__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "course_delivery_and_dc_1_act_01_video",
+                "content_type": "course_delivery_video",
+                "severity": "P1",
+                "category": "pratique_et_guidage",
+                "description": "Le parcours livré ne propose que quatre VideoExercise, alors que son introduction et sa première vidéo annoncent une réalisation d’exercices de code, un environnement de développement local, une section d’instructions et un notebook. Les neuf LocalEnvironmentExercise comptabilisés dans les métadonnées ne sont représentés par aucun chapitre ou bloc rendu. Un débutant ne dispose donc ni de l’action de programmation annoncée, ni d’un critère de réussite, ni d’un retour pédagogique pour construire les agents présentés.",
+                "current_content": "datacampImport.expected indique 13 activités extraites, dont 4 VideoExercise et 9 LocalEnvironmentExercise ; pourtant les lessons[*].chapters[*].blocks ne contiennent que 4 video, 2 download et 1 content. Le contenu de préparation dit « Ce cours se réalise directement dans Neopolis avec des activités interactives ». La diapositive « Course format » dit : « Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in votre environnement de développement local ... » puis « You can find detailed information ... in the instructions section, and in the notebook. »",
+                "proposed_content": "Décider explicitement entre deux parcours cohérents : (1) réintroduire les TP un par un uniquement après obtention, pour chacun, de l’énoncé, du code/données de départ, de l’environnement, des critères de réussite, de la correction et du feedback ; ou (2) assumer un parcours vidéo et remplacer dès l’introduction et la diapositive « Course format » les promesses d’exercices/notebook par : « Cette version est un parcours d’introduction vidéo : elle explique les architectures LangGraph mais ne fournit pas de TP de programmation ni de notebook. »",
+                "evidence": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json → datacampImport.expected (activities_expected_from_outline=13, exercise_types.LocalEnvironmentExercise=9), lessons (4 chapitres seulement) et blocs (video=4, download=2, content=1) ; dc_ch01_act01.blocks[id=dc_1_act_01_video].projectorSlides[10..11].script. LessonViewer.tsx lignes 1308-1399 rend uniquement les blocs présents dans le chapitre ; blockRegistry.ts définit les blocs d’exercice possibles mais aucun n’est présent ici.",
+                "confidence": "high",
+                "verification_status": "verified_json_and_render_path",
+                "recommended_action": "Priorité contenu : ne pas rédiger un TP fictif. Obtenir le paquet pédagogique/rubriques des activités locales pour les réintroduire, ou corriger les promesses et le positionnement de cette version vidéo avant diffusion."
+              },
+              {
+                "issue_id": "055-MASLG-003",
+                "course_id": "multi_agent_systems_with_langgraph__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "dc_1_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Les quatre chapitres déclarent requiredBeforeAdvance=true, mais un apprenant peut passer et terminer le cours sans lire les Projector audio. LessonViewer ne reconnaît une vidéo sans videoId/url que si son id a entre 8 et 15 caractères ; les quatre identifiants Projector audio (par exemple dc_1_act_01_video) dépassent cette longueur. La liste chapterVideoKeys est donc vide, le bouton Suivant n’est pas désactivé et le dernier chapitre peut être terminé immédiatement. Comme il n’existe aucune activité évaluée livrée, ce contournement valide un cours de théorie sans preuve de consultation ou de compréhension.",
+                "current_content": "dc_ch01_act01, dc_ch02_act01, dc_ch02_act04 et dc_ch02_act07 ont tous requiredBeforeAdvance=true et un bloc video audioUrl avec les ids dc_1_act_01_video, dc_2_act_01_video, dc_2_act_04_video et dc_2_act_07_video. Aucun de ces blocs ne possède videoId ni url.",
+                "proposed_content": "Dans la construction des clés de progression vidéo, utiliser block.id comme clé de repli pour tout bloc vidéo/audio dépourvu de videoId et d’url, sans condition de longueur liée à YouTube. Appliquer cette même clé aux contrôles clavier, au pied de page et au bouton de fin, puis ajouter un test couvrant les quatre ids Projector de ce cours. Conserver un mécanisme explicite d’accessibilité permettant de déclarer le média consulté, mais ne pas laisser le verrou s’ouvrir parce que la clé est absente.",
+                "evidence": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json → les 4 chapters ont requiredBeforeAdvance=true, chaque bloc video a audioUrl et un id de 17 caractères sans videoId/url. LessonViewer.tsx lignes 1557-1568 et 1483-1492 n’ajoutent block.id qu’à la condition 8 <= id.length <= 15 ; le passage est verrouillé seulement si chapterVideoKeys contient une clé non complétée. LessonViewer.tsx lignes 1634-1663 utilise ce résultat pour activer Suivant ; les lignes 1511-1534 utilisent la même dérivation pour terminer la dernière leçon.",
+                "confidence": "high",
+                "verification_status": "verified_render_logic",
+                "recommended_action": "Priorité développement : corriger et tester la dérivation de clé avant de s’appuyer sur requiredBeforeAdvance pour les Projector audio."
+              },
+              {
+                "issue_id": "055-MASLG-004",
+                "course_id": "multi_agent_systems_with_langgraph__01",
+                "chapter_id": "dc_ch01_act01",
+                "content_id": "video_transcripts_dc_1_act_01_video_dc_2_act_01_video_dc_2_act_04_video_dc_2_act_07_video",
+                "content_type": "video_transcript",
+                "severity": "P2",
+                "category": "langue_et_accessibilite",
+                "description": "La formation est déclarée fr-FR et les en-têtes de l’interface sont français, mais les quatre scripts/transcriptions rendus dans le lecteur Projector sont en anglais (avec un mélange ponctuel français/anglais dans « Course format »). Les sous-titres français sont bien déclarés, donc ils ne sont pas considérés absents ; toutefois ProjectorPlayer ne les incorpore pas dans le lecteur et LessonViewer les propose comme lien séparé. L’alternative textuelle accessible affichée après ouverture de « Transcription » reste donc largement anglaise pour un parcours français.",
+                "current_content": "sourceLanguage=fr-FR ; les titres/description ont une valeur fr. Les champs transcript et projectorSlides[*].script des quatre vidéos sont en anglais, par exemple « Now that you're getting comfortable with LangGraph... » et « Throughout the course, we'll be working side-by-side... ». Chaque vidéo déclare subtitleUrlFr et subtitleUrlEn.",
+                "proposed_content": "Fournir pour chaque vidéo une transcription et des scripts de diapositives localisés en français, sélectionnés selon la langue de la formation ; conserver l’anglais comme variante EN. À défaut de traduction complète, signaler clairement avant la lecture que l’audio/diapositives/transcription restent en anglais et intégrer le sous-titre français dans le lecteur plutôt que de le laisser uniquement en téléchargement séparé.",
+                "evidence": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json → datacampImport.sourceLanguage=fr-FR ; les 4 video.transcript et projectorSlides[*].script ; subtitleUrlFr/subtitleUrlEn présents. LessonViewer.tsx lignes 743-759 affiche transcript/transcriptSegments tels quels ; ProjectorPlayer.tsx lignes 159-175 n’accepte ni piste de sous-titres ni prop subtitleUrl, tandis que LessonViewer.tsx lignes 735-739 fournit seulement un lien « Sous-titres ».",
+                "confidence": "high",
+                "verification_status": "verified_json_and_render_path",
+                "recommended_action": "Priorité accessibilité : localiser la transcription affichée et vérifier par test de rendu que la variante FR est celle ouverte par un apprenant en français."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 0,
+            "chapter_id": "dc_ch02_act01",
+            "title": "Outiller ou ne pas outiller !",
+            "score_100": 60,
+            "verified_dimensions": [
+              {
+                "dimension": "Explications",
+                "finding": "La vidéo explique avec continuité les limites d’un flux linéaire, les arêtes conditionnelles et le cas d’usage de deux appels d’outils successifs."
+              },
+              {
+                "dimension": "Transition conceptuelle",
+                "finding": "La transition depuis les principes agentiques vers les arêtes conditionnelles est intelligible à l’oral, mais elle présuppose une réalisation précédente non présente dans le parcours livré."
+              },
+              {
+                "dimension": "Média et UX",
+                "finding": "Le Projector contient 11 diapositives, transcription, PDF et liens de sous-titres ; l’affichage de la transcription et le verrouillage sont soumis aux constats transversaux 055-MASLG-004 et 055-MASLG-003."
+              }
+            ],
+            "unverified_dimensions": [
+              {
+                "dimension": "Énoncé/action/feedback de la mise en pratique annoncée",
+                "reason": "Le chapitre ne contient qu’un bloc video et un download ; aucun exercice correspondant à « we'll build this conditional edge » n’est livré dans le JSON."
+              },
+              {
+                "dimension": "Évaluation des acquis",
+                "reason": "La banque lessonQuizzes.json ne contient pas la clé multi_agent_systems_with_langgraph__01 ; ChapterQuiz auto-valide lorsqu’aucune question n’est chargée."
+              }
+            ],
+            "issues": [
+              {
+                "issue_id": "055-MASLG-002",
+                "course_id": "multi_agent_systems_with_langgraph__01",
+                "chapter_id": "dc_ch02_act01",
+                "content_id": "dc_2_act_01_video",
+                "content_type": "video",
+                "severity": "P1",
+                "category": "progression_et_prerequis",
+                "description": "La première vidéo de la seconde leçon affirme que l’apprenant a déjà construit un « very first agent » et repart d’un workflow linéaire opérationnel. Or, la seule leçon antérieure livrée est une vidéo d’introduction sans bloc de code ni exercice ; elle annonce justement que le code sera écrit « in the exercises ». Les notions de nœud/outils sont introduites, mais le prérequis pratique nécessaire pour suivre le diagnostic du workflow linéaire n’a pas été réalisé dans cette version.",
+                "current_content": "La vidéo commence par « Let's pick up where we left off in Chapter 1. » puis « We built our very first agent, which was a linear workflow... ». Sa dernière diapositive annonce : « In the exercises, we'll build this conditional edge ... ». Le chapitre précédent dc_ch01_act01 ne rend que content, video et download.",
+                "proposed_content": "Si les TP restent absents, remplacer l’amorce par le texte réutilisable suivant : « Dans la séquence précédente, vous avez découvert les composants d’un agent LangGraph ; aucun agent n’a encore été codé dans cette version. Nous allons maintenant suivre, sur le schéma, comment des arêtes conditionnelles dirigent les appels d’outils. » Si les TP sont réintroduits, placer avant cette vidéo le TP du workflow linéaire et sa validation.",
+                "evidence": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json → dc_ch02_act01.blocks[id=dc_2_act_01_video].projectorSlides[0..1,10].script ; lesson 0 / dc_ch01_act01.blocks=[content, video, download]. LessonViewer.tsx lignes 1308-1399 ne rend aucun contenu pédagogique non présent dans ces blocs.",
+                "confidence": "high",
+                "verification_status": "verified_json_and_render_path",
+                "recommended_action": "Priorité pédagogique : réaligner l’accroche sur le prérequis réellement acquis, ou restaurer et faire valider le TP préalable avant cette séquence."
+              }
+            ]
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 1,
+            "chapter_id": "dc_ch02_act04",
+            "title": "Cadres multi-agents",
+            "score_100": 65,
+            "verified_dimensions": [
+              {
+                "dimension": "Explications et progression",
+                "finding": "La vidéo part d’un cas de création de site, explique le besoin de spécialisation, définit l’essaim et le superviseur, puis présente avantages et limites avant la synthèse."
+              },
+              {
+                "dimension": "Prérequis",
+                "finding": "Les notions de nœud, arête conditionnelle et outil sont rappelées dans le discours ; leur mise en œuvre pratique antérieure reste non démontrée dans le parcours rendu."
+              },
+              {
+                "dimension": "Média contextualisé",
+                "finding": "Le titre de chapitre, la description et le premier segment relient explicitement la séquence au cas mono-agent ; 13 diapositives, transcription, PDF et liens de sous-titres sont déclarés."
+              }
+            ],
+            "unverified_dimensions": [
+              {
+                "dimension": "Objectif d’apprentissage explicite dans l’écran",
+                "reason": "Aucun bloc learning_objectives ni champ objectiveBefore n’est fourni. La description de chapitre donne une intention globale, mais pas un objectif learner-facing distinct dont l’affichage pourrait être vérifié."
+              },
+              {
+                "dimension": "Action attendue, feedback et correction",
+                "reason": "Aucun bloc interactif/évaluatif n’est livré dans ce chapitre ; le dernier script renvoie vers des exercices non présents dans le JSON."
+              },
+              {
+                "dimension": "Exactitude des schémas affichés",
+                "reason": "Les scripts et alt text sont disponibles, mais les fichiers image binaires n’ont pas été inspectés."
+              }
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 1,
+            "chapter_index": 2,
+            "chapter_id": "dc_ch02_act07",
+            "title": "Récapitulatif",
+            "score_100": 52,
+            "verified_dimensions": [
+              {
+                "dimension": "Synthèse",
+                "finding": "La vidéo récapitule dans un ordre logique le graphe LLM seul, l’agent linéaire, les arêtes conditionnelles, l’essaim puis le superviseur, avec trois schémas déclarés et 7 segments de transcription."
+              },
+              {
+                "dimension": "Fin de parcours et transition",
+                "finding": "Le bloc est le dernier chapitre réellement livré de la dernière leçon ; il n’y a aucun écran d’exercice, de quiz ou de projet après sa diapositive finale."
+              },
+              {
+                "dimension": "Progression",
+                "finding": "La dernière vidéo reste affectée par le verrouillage défaillant commun aux Projector audio (issue 055-MASLG-003), donc la synthèse peut être contournée sans consultation."
+              }
+            ],
+            "unverified_dimensions": [
+              {
+                "dimension": "Vérification finale des acquis et feedback",
+                "reason": "Aucun bloc d’évaluation n’est présent ; aucune banque de ChapterQuiz pour ce course_id n’est disponible dans lessonQuizzes.json."
+              },
+              {
+                "dimension": "Action de pratique annoncée",
+                "reason": "Le dernier script dit « Let's practice! » mais aucun contenu suit dans les 2 leçons / 4 chapitres fournis."
+              }
+            ],
+            "issues": [
+              {
+                "issue_id": "055-MASLG-005",
+                "course_id": "multi_agent_systems_with_langgraph__01",
+                "chapter_id": "dc_ch02_act07",
+                "content_id": "dc_2_act_07_video",
+                "content_type": "video",
+                "severity": "P2",
+                "category": "transition_vers_activite",
+                "description": "La conclusion est présentée comme une transition vers la pratique, alors que ce bloc est la fin effective du cours rendu. Après « Let's practice! », l’apprenant ne reçoit ni consigne, ni action, ni exercice, ni indication que le parcours se termine. Cette injonction non suivie rend la clôture contradictoire et ne permet pas de mobiliser les notions récapitulées.",
+                "current_content": "La diapositive finale de dc_2_act_07_video a pour titre « Let's practice! » et son script se termine par « ... the insights from this course will serve you well! ». Le JSON du cours contient seulement 2 leçons et 4 chapitres ; dc_ch02_act07 est le dernier. Ses blocs=[video].",
+                "proposed_content": "Sans TP final disponible, remplacer la diapositive par : « Vous avez terminé ce parcours vidéo. Retenez qu’un essaim répartit le travail entre agents spécialisés, tandis qu’un superviseur organise la délégation et la synthèse. Pour aller plus loin, choisissez l’architecture adaptée à un cas d’usage concret. » Si un TP est ajouté, conserver « Passons à la pratique » et ajouter immédiatement l’énoncé, l’action attendue, le critère de réussite et le feedback.",
+                "evidence": "client/public/data/courses/multi_agent_systems_with_langgraph__01.json → lessons.length=2 ; lessons[1].chapters.length=3 ; dc_ch02_act07 est le dernier chapitre et dc_2_act_07_video.projectorSlides[number=7].script contient l’injonction. LessonViewer.tsx lignes 1435-1534 affichent la fin de leçon sur le dernier chapitre et aucun chapitre suivant n’est rendu.",
+                "confidence": "high",
+                "verification_status": "verified_json_and_render_path",
+                "recommended_action": "Priorité contenu : remplacer l’appel à une pratique inexistante par une clôture explicite, ou livrer le TP final et son évaluation immédiatement après la synthèse."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "formation_summary": {
+      "scope": "1 formation, 1 cours, 2 leçons, 4 chapitres et les 4 VideoExercise effectivement représentés dans le JSON ont été examinés. Les blocs rendus sont 4 vidéos Projector audio, 2 téléchargements et 1 contenu de préparation.",
+      "overall_score_100": 58,
+      "scoring_method": "Scores par chapitre renormalisés de manière qualitative sur les dimensions effectivement vérifiables ; les dimensions sans payload d’activité ou sans accès au binaire média sont listées comme non vérifiables, non notées artificiellement.",
+      "confirmed_issues": {
+        "total": 5,
+        "P0": 0,
+        "P1": 3,
+        "P2": 2,
+        "P3": 0
+      },
+      "key_findings": [
+        "Les explications vidéo sont structurées et le fil conceptuel LLM seul → outils → arêtes conditionnelles → essaim → superviseur est intelligible.",
+        "La version livrée promet et présuppose des exercices de programmation alors qu’elle ne rend aucune activité de pratique/évaluation ; les neuf LocalEnvironmentExercise sont seulement comptés dans les métadonnées, sans données permettant de les auditer ou de les réécrire.",
+        "Le requiredBeforeAdvance de chaque vidéo Projector ne produit pas de verrouillage effectif pour les quatre ids audio concernés.",
+        "Le parcours français expose une transcription et des scripts principalement anglais ; les sous-titres FR sont déclarés, mais seulement comme lien hors du lecteur Projector.",
+        "Aucune question de ChapterQuiz n’est déclarée pour ce course_id ; ChapterQuiz auto-valide une banque vide."
+      ],
+      "priority_actions": [
+        "P1 : corriger la clé de progression des blocs vidéo/audio Projector et couvrir les quatre ids par test.",
+        "P1 : décider puis expliciter la nature du parcours : restaurer des TP rubricés ou retirer les promesses et prérequis d’exercices/notebook.",
+        "P1 : réaligner l’ouverture de la leçon 2 sur ce qui a été effectivement pratiqué, ou insérer le TP de workflow linéaire avant elle.",
+        "P2 : localiser la transcription visible et intégrer réellement la piste de sous-titres FR dans le lecteur.",
+        "P2 : remplacer l’appel final à la pratique par une clôture, sauf ajout immédiat d’un TP final évalué."
+      ]
+    },
+    "limits": [
+      "Le périmètre a été limité au seul fichier indiqué par le manifest : client/public/data/courses/multi_agent_systems_with_langgraph__01.json, et aux composants de rendu/progression nécessaires pour vérifier l’affichage et le verrouillage ; aucune donnée de contenu, code ou base existante n’a été modifiée.",
+      "Les métadonnées déclarent 9 LocalEnvironmentExercise, mais le JSON exact ne fournit pour eux ni chapitre, ni bloc, ni énoncé, ni environnement, ni données, ni solution, ni critère/feedback. Ils sont donc non vérifiables individuellement ; ce rapport ne les qualifie pas de ressources inaccessibles et n’invente aucune activité ou réponse attendue.",
+      "Les URLs d’audio, sous-titres, PDF et images sont déclarées localement ; leurs scripts, transcriptions et alt text ont été inspectés, mais les binaires n’ont pas été écoutés/visionnés ou téléchargés. Leur exactitude technique et factuelle reste non vérifiée.",
+      "Le pré-audit statique ne signalait aucune anomalie pour ce cours ; il a été traité comme un signal non concluant. Les constats rapportés ici sont fondés sur le JSON du cours et sur le comportement de rendu/progression lu dans LessonViewer, ProjectorPlayer et ChapterQuiz.",
+      "La commande d’exécution Vitest ciblée n’a pas pu être lancée dans cet environnement car le terminal a rejeté le répertoire comme hors projet WebDev ; les constats de rendu/progression restent une inspection de code, pas une session navigateur instrumentée."
+    ]
+  },
+  "current_courses": {
+    "multi_agent_systems_with_langgraph__01": {
+      "courseId": "multi_agent_systems_with_langgraph__01",
+      "sourceCourseTitle": "Systèmes multi‑agents avec LangGraph",
+      "datacampImport": {
+        "schemaVersion": "neopolis.datacamp_course.v1",
+        "sourceProvider": "DataCamp",
+        "sourceCourseSlug": "multi-agent-systems-with-langgraph",
+        "sourceLanguage": "fr-FR",
+        "expected": {
+          "chapters_expected": 2,
+          "chapters_extracted": 2,
+          "activities_expected_from_outline": 13,
+          "activities_extracted": 13,
+          "videos_expected_from_chapter_metadata": 4,
+          "videos_extracted": 4,
+          "exercise_types": {
+            "VideoExercise": 4,
+            "LocalEnvironmentExercise": 9
+          },
+          "failed_pages": []
+        },
+        "competencyTagging": "lesson_content_signals_v1"
+      },
+      "lessons": [
+        {
+          "id": "datacamp_ch01",
+          "title": {
+            "en": "Des agents sous forme de graphes",
+            "fr": "Des agents sous forme de graphes"
+          },
+          "description": {
+            "en": "Learn to build AI agents the LangGraph way! Build a toolkit that enables your agent to interact with APIs, retrieve data from CSV files, and execute Python code! Start building a single-agent system using nodes and edges to connect the LLM and tools in a controlled and methodical way.",
+            "fr": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique."
+          },
+          "competencyTags": [
+            "ai_development",
+            "rag_knowledge",
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch01_act01",
+              "title": {
+                "en": "Building Agents the LangGraph Way!",
+                "fr": "Construire des agents à la manière de LangGraph !"
+              },
+              "description": {
+                "en": "Learn to build AI agents the LangGraph way! Build a toolkit that enables your agent to interact with APIs, retrieve data from CSV files, and execute Python code! Start building a single-agent system using nodes and edges to connect the LLM and tools in a controlled and methodical way.",
+                "fr": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique."
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "content",
+                  "id": "neopolis_multi_agent_systems_with_langgraph__01_environment_preparation",
+                  "body": {
+                    "fr": "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
+                    "en": "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys."
+                  }
+                },
+                {
+                  "type": "video",
+                  "id": "dc_1_act_01_video",
+                  "title": {
+                    "en": "Building Agents the LangGraph Way!",
+                    "fr": "Construire des agents à la manière de LangGraph !"
+                  },
+                  "audioUrl": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_d80c7946.mp3",
+                  "subtitleUrlFr": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_fr_ad9a8e9c.vtt",
+                  "subtitleUrlEn": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_en_307639ed.vtt",
+                  "slidesPdf": "/api/assets/chapter_01_slides_a0d02fdf.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "Building agents the LangGraph way!",
+                      "type": "TitleSlide",
+                      "script": "Hi, and welcome to this course on building multi-agent systems with LangGraph. I'm James, and I'll be your instructor for this course.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "James Chapman",
+                      "instructorTitle": "Curriculum Manager, plateforme source",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "What you'll build...",
+                      "type": "FullSlide",
+                      "script": "In this course, you'll create an agentic assistant to help retrieve and summarize information on Fortune 500 companies. This assistant will be able to retrieve summary information about the company from the internet, stock performance data from CSV files, and run Python code to generate stock performance visualizations.\n\n",
+                      "images": [
+                        {
+                          "alt": "A company assistant able to call tools to retrieve stock performance data, company summary information, and plot stock performance data.",
+                          "url": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_001_finance_assistant_5faacd4a.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 3,
+                      "title": "Agents: the LangGraph way!",
+                      "type": "TwoColumns",
+                      "script": "We'll be using the LangGraph framework to build these agents. LangGraph is part of the LangChain ecosystem, specifically designed for building and orchestrating production-ready agents.\n\nThese agents are constructed as nodes and edges, which we'll see in a few moments, and this approach provides a high-degree of control and customizability over the workflow.\n\nLet's briefly zoom out and discuss the need for AI agents.\n\n",
+                      "images": [
+                        {
+                          "alt": "The LangGraph logo.",
+                          "url": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_002_langgraph_logo_df19e82f.png"
+                        }
+                      ],
+                      "content": "&nbsp;\n\n&nbsp;\n\n- ### **LangChain** &#129309; **LangGraph**\n\n&nbsp;\n\n- ### _Build_ and _orchestrate_ production-ready agentic workflows",
+                      "contentLeft": "&nbsp;",
+                      "contentRight": "&nbsp;\n\n- ### **LangChain** &#129309; **LangGraph**\n\n&nbsp;\n\n- ### _Build_ and _orchestrate_ production-ready agentic workflows"
+                    },
+                    {
+                      "number": 4,
+                      "title": "Limitations of LLMs",
+                      "type": "TwoColumns",
+                      "script": "Recall that LLMs have a knowledge cut-off: they only know about information or events included in their training data, and they can only typically generate text, or sometimes images if they have multi-modal capabilities.\n\nBecause it cannot interact with the outside world, an LLM on its own is not an agent.\n\nTo perform actions in the real-world, and hence gain agency and become \"agentic\", LLMs require a means to trigger actions, which they can do by calling tools.\n\n",
+                      "images": [
+                        {
+                          "alt": "An LLM struggling with tasks that involve up-to-date information or the usage of external tools.",
+                          "url": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_004_llm_limitations_541c25cb.png"
+                        }
+                      ],
+                      "content": "&nbsp;\n\n1. ### Knowledge cutoff based on training data\n2. ### Trained to generate specific modalities (text, images, etc.)\n\n&nbsp;\n\n- ### LLM $\\neq$ Agent\n- ### **Agents** &rarr; LLM + _Tools_",
+                      "contentLeft": "",
+                      "contentRight": "&nbsp;\n\n1. ### Knowledge cutoff based on training data\n2. ### Trained to generate specific modalities (text, images, etc.)\n\n&nbsp;\n\n- ### LLM $\\neq$ Agent\n- ### **Agents** &rarr; LLM + _Tools_"
+                    },
+                    {
+                      "number": 5,
+                      "title": "Agents: the story from the inside",
+                      "type": "FullSlide",
+                      "script": "This is the essence of an agent.\n\nA prompt comes in from a user to complete a task,\n\n",
+                      "images": [
+                        {
+                          "alt": "components",
+                          "url": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_005_ai_agent_components_f5a1c594.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Agents: the story from the inside",
+                      "type": "FullSlide",
+                      "script": "it goes to the LLM, which can choose to select an appropriate tool to complete the task.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Agents: the story from the inside",
+                      "type": "FullSlide",
+                      "script": "These tools can interact with the real-world, such as pulling real-time data from databases, APIs, documents, or search engines, triggering events in third-party applications like Google Calendar, or running code to perform calculations or analyze data.\n\nThe capabilities of tools are really only bounded by what can be programmed into a function.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 8,
+                      "title": "Agents: the story from the inside",
+                      "type": "FullSlide",
+                      "script": "The orchestration layer maps out how these interactions take place, and handles things like memory. We'll be using LangGraph for the orchestration.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 9,
+                      "title": "What you'll build...",
+                      "type": "FullSlide",
+                      "script": "Returning to our company research assistant, we can express this in terms of nodes and edges, which we'll replicate in the LangGraph code we'll write in the exercises.\n\n",
+                      "images": [
+                        {
+                          "alt": "A company assistant able to call tools to retrieve stock performance data, company summary information, and plot stock performance data.",
+                          "url": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_001_finance_assistant_5faacd4a.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 10,
+                      "title": "Nodes and edges",
+                      "type": "FullSlide",
+                      "script": "Nodes indicate a component in the workflow, and edges represent paths in which messages can be exchanged. A node is built for the LLM, and another for the tools it has access to. Edges are added to define where information should travel and depending on what conditions!\n\n",
+                      "images": [],
+                      "content": "&nbsp;",
+                      "contentLeft": "&nbsp;",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 11,
+                      "title": "Course format",
+                      "type": "FullSlide",
+                      "script": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in votre environnement de développement local with accompanying videos. Utilisez un environnement de développement local pour suivre les exemples. If you've used other notebook IDEs, you should find votre environnement de développement local pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!\n\n",
+                      "images": [
+                        {
+                          "alt": "Illustration de slide",
+                          "url": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_010_1_1_demo_33288d21.gif"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 12,
+                      "title": "Course format",
+                      "type": "FullSlide",
+                      "script": "You can find detailed information to help you complete the tasks in the instructions section, and in the notebook.\n\n",
+                      "images": [
+                        {
+                          "alt": "info_locations.png",
+                          "url": "/api/assets/ch01_ex01_construire_des_agents_la_mani_re_de_langgraph_011_info_locations_6b34356b.png"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 13,
+                      "title": "Let's practice!",
+                      "type": "FinalSlide",
+                      "script": "Time to get familiar coding agents with LangGraph!\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.0013927986112817912,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.0425858088622154,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.1424908472502265,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.16634613096713097,
+                      "slideIndex": 2,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.18369872835578846,
+                      "slideIndex": 2,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.21079828311064464,
+                      "slideIndex": 2,
+                      "fragment": 2
+                    },
+                    {
+                      "time": 0.27584935286249235,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.2856129730968197,
+                      "slideIndex": 3,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.32480358917317026,
+                      "slideIndex": 3,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.35825636318991516,
+                      "slideIndex": 3,
+                      "fragment": 2
+                    },
+                    {
+                      "time": 0.3994724410223763,
+                      "slideIndex": 3,
+                      "fragment": 3
+                    },
+                    {
+                      "time": 0.42873793595795223,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.4569252714817792,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.48294484623713885,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.5840086479060977,
+                      "slideIndex": 7,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6291316335681162,
+                      "slideIndex": 8,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6779868281945999,
+                      "slideIndex": 9,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.7604055539633576,
+                      "slideIndex": 10,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.9513554261493214,
+                      "slideIndex": 11,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. Building agents the LangGraph way!\nHi, and welcome to this course on building multi-agent systems with LangGraph. I'm James, and I'll be your instructor for this course.\n\n2. What you'll build...\nIn this course, you'll create an agentic assistant to help retrieve and summarize information on Fortune 500 companies. This assistant will be able to retrieve summary information about the company from the internet, stock performance data from CSV files, and run Python code to generate stock performance visualizations.\n\n3. Agents: the LangGraph way!\nWe'll be using the LangGraph framework to build these agents. LangGraph is part of the LangChain ecosystem, specifically designed for building and orchestrating production-ready agents.\n\nThese agents are constructed as nodes and edges, which we'll see in a few moments, and this approach provides a high-degree of control and customizability over the workflow.\n\nLet's briefly zoom out and discuss the need for AI agents.\n\n4. Limitations of LLMs\nRecall that LLMs have a knowledge cut-off: they only know about information or events included in their training data, and they can only typically generate text, or sometimes images if they have multi-modal capabilities.\n\nBecause it cannot interact with the outside world, an LLM on its own is not an agent.\n\nTo perform actions in the real-world, and hence gain agency and become \"agentic\", LLMs require a means to trigger actions, which they can do by calling tools.\n\n5. Agents: the story from the inside\nThis is the essence of an agent.\n\nA prompt comes in from a user to complete a task,\n\n6. Agents: the story from the inside\nit goes to the LLM, which can choose to select an appropriate tool to complete the task.\n\n7. Agents: the story from the inside\nThese tools can interact with the real-world, such as pulling real-time data from databases, APIs, documents, or search engines, triggering events in third-party applications like Google Calendar, or running code to perform calculations or analyze data.\n\nThe capabilities of tools are really only bounded by what can be programmed into a function.\n\n8. Agents: the story from the inside\nThe orchestration layer maps out how these interactions take place, and handles things like memory. We'll be using LangGraph for the orchestration.\n\n9. What you'll build...\nReturning to our company research assistant, we can express this in terms of nodes and edges, which we'll replicate in the LangGraph code we'll write in the exercises.\n\n10. Nodes and edges\nNodes indicate a component in the workflow, and edges represent paths in which messages can be exchanged. A node is built for the LLM, and another for the tools it has access to. Edges are added to define where information should travel and depending on what conditions!\n\n11. Course format\nThroughout the course, we'll be working side-by-side to tackle exercises, which will be completed in votre environnement de développement local with accompanying videos. Utilisez un environnement de développement local pour suivre les exemples. If you've used other notebook IDEs, you should find votre environnement de développement local pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!\n\n12. Course format\nYou can find detailed information to help you complete the tasks in the instructions section, and in the notebook.\n\n13. Let's practice!\nTime to get familiar coding agents with LangGraph!",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Building agents the LangGraph way!",
+                      "text": "Hi, and welcome to this course on building multi-agent systems with LangGraph. I'm James, and I'll be your instructor for this course."
+                    },
+                    {
+                      "heading": "2. What you'll build...",
+                      "text": "In this course, you'll create an agentic assistant to help retrieve and summarize information on Fortune 500 companies. This assistant will be able to retrieve summary information about the company from the internet, stock performance data from CSV files, and run Python code to generate stock performance visualizations."
+                    },
+                    {
+                      "heading": "3. Agents: the LangGraph way!",
+                      "text": "We'll be using the LangGraph framework to build these agents. LangGraph is part of the LangChain ecosystem, specifically designed for building and orchestrating production-ready agents.\n\nThese agents are constructed as nodes and edges, which we'll see in a few moments, and this approach provides a high-degree of control and customizability over the workflow.\n\nLet's briefly zoom out and discuss the need for AI agents."
+                    },
+                    {
+                      "heading": "4. Limitations of LLMs",
+                      "text": "Recall that LLMs have a knowledge cut-off: they only know about information or events included in their training data, and they can only typically generate text, or sometimes images if they have multi-modal capabilities.\n\nBecause it cannot interact with the outside world, an LLM on its own is not an agent.\n\nTo perform actions in the real-world, and hence gain agency and become \"agentic\", LLMs require a means to trigger actions, which they can do by calling tools."
+                    },
+                    {
+                      "heading": "5. Agents: the story from the inside",
+                      "text": "This is the essence of an agent.\n\nA prompt comes in from a user to complete a task,"
+                    },
+                    {
+                      "heading": "6. Agents: the story from the inside",
+                      "text": "it goes to the LLM, which can choose to select an appropriate tool to complete the task."
+                    },
+                    {
+                      "heading": "7. Agents: the story from the inside",
+                      "text": "These tools can interact with the real-world, such as pulling real-time data from databases, APIs, documents, or search engines, triggering events in third-party applications like Google Calendar, or running code to perform calculations or analyze data.\n\nThe capabilities of tools are really only bounded by what can be programmed into a function."
+                    },
+                    {
+                      "heading": "8. Agents: the story from the inside",
+                      "text": "The orchestration layer maps out how these interactions take place, and handles things like memory. We'll be using LangGraph for the orchestration."
+                    },
+                    {
+                      "heading": "9. What you'll build...",
+                      "text": "Returning to our company research assistant, we can express this in terms of nodes and edges, which we'll replicate in the LangGraph code we'll write in the exercises."
+                    },
+                    {
+                      "heading": "10. Nodes and edges",
+                      "text": "Nodes indicate a component in the workflow, and edges represent paths in which messages can be exchanged. A node is built for the LLM, and another for the tools it has access to. Edges are added to define where information should travel and depending on what conditions!"
+                    },
+                    {
+                      "heading": "11. Course format",
+                      "text": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in environnement de pratique Notebooks with accompanying videos. Utilisez un environnement de développement local pour suivre les exemples. If you've used other notebook IDEs, you should find environnement de pratique pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!"
+                    },
+                    {
+                      "heading": "12. Course format",
+                      "text": "You can find detailed information to help you complete the tasks in the instructions section, and in the notebook."
+                    },
+                    {
+                      "heading": "13. Let's practice!",
+                      "text": "Time to get familiar coding agents with LangGraph!"
+                    }
+                  ]
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch01_slides",
+                  "title": {
+                    "en": "Chapter 1 slides",
+                    "fr": "Chapter 1 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Official course slides provided for this course."
+                  },
+                  "url": "/api/assets/chapter_01_slides_a0d02fdf.pdf",
+                  "filename": "chapter_01_slides.pdf"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "datacamp_ch02",
+          "title": {
+            "en": "Multi‑agents avec LangGraph",
+            "fr": "Multi‑agents avec LangGraph"
+          },
+          "description": {
+            "en": "Since the rise of AI agents, several agentic design patterns have emerged, and you will explore two of the most common: swarm (or decentralized) multi-agent systems and supervisor-based multi-agent systems. You will see that LangGraph offers a wide range of features for designing multi-agent systems tailored to your use case.",
+            "fr": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage."
+          },
+          "competencyTags": [
+            "ai_solution_design",
+            "ai_orchestration"
+          ],
+          "recommendedVideos": [],
+          "recommendedVideosManaged": false,
+          "chapters": [
+            {
+              "id": "dc_ch02_act01",
+              "title": {
+                "en": "Outiller ou ne pas outiller !",
+                "fr": "Outiller ou ne pas outiller !"
+              },
+              "description": {
+                "en": "Since the rise of AI agents, several agentic design patterns have emerged, and you will explore two of the most common: swarm (or decentralized) multi-agent systems and supervisor-based multi-agent systems. You will see that LangGraph offers a wide range of features for designing multi-agent systems tailored to your use case.",
+                "fr": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage."
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_01_video",
+                  "title": {
+                    "en": "Outiller ou ne pas outiller !",
+                    "fr": "Outiller ou ne pas outiller !"
+                  },
+                  "audioUrl": "/api/assets/ch02_ex01_outiller_ou_ne_pas_outiller_af31dd9a.mp3",
+                  "subtitleUrlFr": "/api/assets/ch02_ex01_outiller_ou_ne_pas_outiller_fr_c4c27a73.vtt",
+                  "subtitleUrlEn": "/api/assets/ch02_ex01_outiller_ou_ne_pas_outiller_en_4af758e0.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_3d7075e6.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "To tool or not to tool!",
+                      "type": "TitleSlide",
+                      "script": "Let's pick up where we left off in Chapter 1.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "James Chapman",
+                      "instructorTitle": "Curriculum Manager, plateforme source",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "The linear agent",
+                      "type": "FullSlide",
+                      "script": "We built our very first agent, which was a linear workflow that took a user input and passed it to a tool-aware LLM node. This LLM then either requested a tool call or responded as normal.\n\nThe output of the LLM was then fed into the tool node, which triggered a tool if the LLM decided that one was needed to complete the task.\n\nThis agent was able to respond to some inputs, such as requesting stock data or company summaries, but it wasn't able to respond to queries that don't require tool calls. This is because the LLM output would have been a response to the user, and when this reaches the tool node, it doesn't know what to do with it.\n\nAdditionally, the Python tool wasn't able to create plots, as this tool requires the data loaded by the stock performance data tool. Our linear workflow simply isn't able to accommodate this iterative and collaborative way of working.\n\nLet's adjust this single-agent architecture.\n\n",
+                      "images": [
+                        {
+                          "alt": "A tool-aware LLM in a linear workflow.",
+                          "url": "/api/assets/ch02_ex01_outiller_ou_ne_pas_outiller_012_linear_agent_v2_e4013957.png"
+                        }
+                      ],
+                      "content": "&nbsp;\n\n&#x2705; Could respond to some queries\n\n&#10060; Couldn't handle queries that don't require tools\n\n&#10060; Couldn't generate plots (requires _recursion_)",
+                      "contentLeft": "&nbsp;\n\n&#x2705; Could respond to some queries\n\n&#10060; Couldn't handle queries that don't require tools\n\n&#10060; Couldn't generate plots (requires _recursion_)",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 3,
+                      "title": "Conditional edges",
+                      "type": "FullSlide",
+                      "script": "We'll introduce conditional edges, which like normal edges allow the passage of information in a particular direction.\n\nHowever, conditional edges can route information to different nodes depending on the result of a condition.\n\nLet's see how this would work in our agent.\n\n",
+                      "images": [],
+                      "content": "&nbsp;",
+                      "contentLeft": "&nbsp;",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 4,
+                      "title": "Conditional edges",
+                      "type": "FullSlide",
+                      "script": "The LLM receives a prompt, and it will make a tool call if it determines a tool call is required to complete the task.\n\n",
+                      "images": [],
+                      "content": "&nbsp;",
+                      "contentLeft": "&nbsp;",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 5,
+                      "title": "Conditional edges",
+                      "type": "FullSlide",
+                      "script": "The conditional edge checks to see if a tool call is requested by the LLM, and if it is, the graph routes to the tool node.\n\n",
+                      "images": [],
+                      "content": "&nbsp;",
+                      "contentLeft": "&nbsp;",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Conditional edges",
+                      "type": "FullSlide",
+                      "script": "The tool response is then returned to the LLM, which can then determine if the task has been completed and route to the end, or request another tool call to start the cycle again.\n\n",
+                      "images": [],
+                      "content": "&nbsp;",
+                      "contentLeft": "&nbsp;",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Conditional edges",
+                      "type": "FullSlide",
+                      "script": "If, instead, the LLM determines that a tool isn't required to respond to the prompt, a tool call isn't made, and thus the tool condition fails. The conditional edge then routes to the end node with a standard LLM response.\n\n",
+                      "images": [],
+                      "content": "&nbsp;",
+                      "contentLeft": "&nbsp;",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 8,
+                      "title": "Conditional edges in practice",
+                      "type": "FullSlide",
+                      "script": "If we ask for a plot of the closing price of a particular company,\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 9,
+                      "title": "Conditional edges in practice",
+                      "type": "FullSlide",
+                      "script": "the LLM may choose to call the stock data tool, this data will be fed back to the LLM and stored in the graph state. The LLM should realize that the task hasn't been completed. It'll make another tool call,\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 10,
+                      "title": "Conditional edges in practice",
+                      "type": "FullSlide",
+                      "script": "triggering the Python tool to generate a plot using the data stored in the graph state messages.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 11,
+                      "title": "Let's practice!",
+                      "type": "FinalSlide",
+                      "script": "In the exercises, we'll build this conditional edge using very similar syntax to what we've seen previously, defining each node and edge in turn. We'll also show you a quick LangGraph shortcut for defining single-agents with fewer lines of code. These shortcuts will become more useful as we make the step up to multi-agents later in the chapter.\n\nSee you in a moment!\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.0036753727532679737,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.0226625510620915,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.16245198120915033,
+                      "slideIndex": 1,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.1977155330882353,
+                      "slideIndex": 1,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.2695958282271242,
+                      "slideIndex": 1,
+                      "fragment": 2
+                    },
+                    {
+                      "time": 0.36610608149509805,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.4718946895424837,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.5196163296568628,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.5670834048202614,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6335461907679738,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.7176338592728758,
+                      "slideIndex": 7,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.7420491574754902,
+                      "slideIndex": 8,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.8254657373366013,
+                      "slideIndex": 9,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.8620898845996732,
+                      "slideIndex": 10,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. To tool or not to tool!\nLet's pick up where we left off in Chapter 1.\n\n2. The linear agent\nWe built our very first agent, which was a linear workflow that took a user input and passed it to a tool-aware LLM node. This LLM then either requested a tool call or responded as normal.\n\nThe output of the LLM was then fed into the tool node, which triggered a tool if the LLM decided that one was needed to complete the task.\n\nThis agent was able to respond to some inputs, such as requesting stock data or company summaries, but it wasn't able to respond to queries that don't require tool calls. This is because the LLM output would have been a response to the user, and when this reaches the tool node, it doesn't know what to do with it.\n\nAdditionally, the Python tool wasn't able to create plots, as this tool requires the data loaded by the stock performance data tool. Our linear workflow simply isn't able to accommodate this iterative and collaborative way of working.\n\nLet's adjust this single-agent architecture.\n\n3. Conditional edges\nWe'll introduce conditional edges, which like normal edges allow the passage of information in a particular direction.\n\nHowever, conditional edges can route information to different nodes depending on the result of a condition.\n\nLet's see how this would work in our agent.\n\n4. Conditional edges\nThe LLM receives a prompt, and it will make a tool call if it determines a tool call is required to complete the task.\n\n5. Conditional edges\nThe conditional edge checks to see if a tool call is requested by the LLM, and if it is, the graph routes to the tool node.\n\n6. Conditional edges\nThe tool response is then returned to the LLM, which can then determine if the task has been completed and route to the end, or request another tool call to start the cycle again.\n\n7. Conditional edges\nIf, instead, the LLM determines that a tool isn't required to respond to the prompt, a tool call isn't made, and thus the tool condition fails. The conditional edge then routes to the end node with a standard LLM response.\n\n8. Conditional edges in practice\nIf we ask for a plot of the closing price of a particular company,\n\n9. Conditional edges in practice\nthe LLM may choose to call the stock data tool, this data will be fed back to the LLM and stored in the graph state. The LLM should realize that the task hasn't been completed. It'll make another tool call,\n\n10. Conditional edges in practice\ntriggering the Python tool to generate a plot using the data stored in the graph state messages.\n\n11. Let's practice!\nIn the exercises, we'll build this conditional edge using very similar syntax to what we've seen previously, defining each node and edge in turn. We'll also show you a quick LangGraph shortcut for defining single-agents with fewer lines of code. These shortcuts will become more useful as we make the step up to multi-agents later in the chapter.\n\nSee you in a moment!",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. To tool or not to tool!",
+                      "text": "Let's pick up where we left off in Chapter 1."
+                    },
+                    {
+                      "heading": "2. The linear agent",
+                      "text": "We built our very first agent, which was a linear workflow that took a user input and passed it to a tool-aware LLM node. This LLM then either requested a tool call or responded as normal.\n\nThe output of the LLM was then fed into the tool node, which triggered a tool if the LLM decided that one was needed to complete the task.\n\nThis agent was able to respond to some inputs, such as requesting stock data or company summaries, but it wasn't able to respond to queries that don't require tool calls. This is because the LLM output would have been a response to the user, and when this reaches the tool node, it doesn't know what to do with it.\n\nAdditionally, the Python tool wasn't able to create plots, as this tool requires the data loaded by the stock performance data tool. Our linear workflow simply isn't able to accommodate this iterative and collaborative way of working.\n\nLet's adjust this single-agent architecture."
+                    },
+                    {
+                      "heading": "3. Conditional edges",
+                      "text": "We'll introduce conditional edges, which like normal edges allow the passage of information in a particular direction.\n\nHowever, conditional edges can route information to different nodes depending on the result of a condition.\n\nLet's see how this would work in our agent."
+                    },
+                    {
+                      "heading": "4. Conditional edges",
+                      "text": "The LLM receives a prompt, and it will make a tool call if it determines a tool call is required to complete the task."
+                    },
+                    {
+                      "heading": "5. Conditional edges",
+                      "text": "The conditional edge checks to see if a tool call is requested by the LLM, and if it is, the graph routes to the tool node."
+                    },
+                    {
+                      "heading": "6. Conditional edges",
+                      "text": "The tool response is then returned to the LLM, which can then determine if the task has been completed and route to the end, or request another tool call to start the cycle again."
+                    },
+                    {
+                      "heading": "7. Conditional edges",
+                      "text": "If, instead, the LLM determines that a tool isn't required to respond to the prompt, a tool call isn't made, and thus the tool condition fails. The conditional edge then routes to the end node with a standard LLM response."
+                    },
+                    {
+                      "heading": "8. Conditional edges in practice",
+                      "text": "If we ask for a plot of the closing price of a particular company,"
+                    },
+                    {
+                      "heading": "9. Conditional edges in practice",
+                      "text": "the LLM may choose to call the stock data tool, this data will be fed back to the LLM and stored in the graph state. The LLM should realize that the task hasn't been completed. It'll make another tool call,"
+                    },
+                    {
+                      "heading": "10. Conditional edges in practice",
+                      "text": "triggering the Python tool to generate a plot using the data stored in the graph state messages."
+                    },
+                    {
+                      "heading": "11. Let's practice!",
+                      "text": "In the exercises, we'll build this conditional edge using very similar syntax to what we've seen previously, defining each node and edge in turn. We'll also show you a quick LangGraph shortcut for defining single-agents with fewer lines of code. These shortcuts will become more useful as we make the step up to multi-agents later in the chapter.\n\nSee you in a moment!"
+                    }
+                  ]
+                },
+                {
+                  "type": "download",
+                  "id": "dc_ch02_slides",
+                  "title": {
+                    "en": "Chapter 2 slides",
+                    "fr": "Chapter 2 slides"
+                  },
+                  "description": {
+                    "en": "Official course slides provided for this course.",
+                    "fr": "Official course slides provided for this course."
+                  },
+                  "url": "/api/assets/chapter_02_slides_3d7075e6.pdf",
+                  "filename": "chapter_02_slides.pdf"
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act04",
+              "title": {
+                "en": "Cadres multi-agents",
+                "fr": "Cadres multi-agents"
+              },
+              "description": {
+                "en": "Since the rise of AI agents, several agentic design patterns have emerged, and you will explore two of the most common: swarm (or decentralized) multi-agent systems and supervisor-based multi-agent systems. You will see that LangGraph offers a wide range of features for designing multi-agent systems tailored to your use case.",
+                "fr": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage."
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_04_video",
+                  "title": {
+                    "en": "Cadres multi-agents",
+                    "fr": "Cadres multi-agents"
+                  },
+                  "audioUrl": "/api/assets/ch02_ex04_cadres_multi_agents_f2baa8ec.mp3",
+                  "subtitleUrlFr": "/api/assets/ch02_ex04_cadres_multi_agents_fr_9c12e3c4.vtt",
+                  "subtitleUrlEn": "/api/assets/ch02_ex04_cadres_multi_agents_en_3bd17e1e.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_3d7075e6.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "Multi-agent frameworks",
+                      "type": "TitleSlide",
+                      "script": "Now that you're getting comfortable with LangGraph and have mastered the single-agent case, let's talk about multiple agents.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "James Chapman",
+                      "instructorTitle": "Curriculum Manager, plateforme source",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "Example: website creator system",
+                      "type": "TwoColumns",
+                      "script": "Imagine you want to create an agentic system to design a website. There's a number of tasks that might be performed here: creating a design specification, writing the codebase for the website backend, aligning on branding, and so on.\n\nThere are some dependencies between these tasks, for example, the specifications will likely precede every other task, but some tasks could, in theory, be performed in parallel, such as branding and writing the codebase for the backend.\n\nIf we continue to give a single agent more tools and a broader scope, we will likely see it struggle to choose which tools to use and when, and it won't be able to handle concurrent tasks.\n\nInstead, we could build multiple agents specialized to specific tasks, like a coding agent and design agent, that can collaborate to complete the task.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 3,
+                      "title": "Multi-agent design patterns",
+                      "type": "FullSlide",
+                      "script": "There are many emerging design patterns for multi-agent system. In this course we'll focus on two of the most popular: swarm, or network multi-agents, and supervisor multi-agents.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 4,
+                      "title": "Swarm multi-agents",
+                      "type": "FullSlide",
+                      "script": "The swarm multi-agent architecture gives multiple agents their own sets of tools and prompts to define their scope of operation.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 5,
+                      "title": "Swarm multi-agents",
+                      "type": "FullSlide",
+                      "script": "Each agent can either progress the task through using its functional tools,\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Swarm multi-agents",
+                      "type": "FullSlide",
+                      "script": "or choose to handoff to the other agent if it believes that it is better-suited for the task.\n\nFor our example,\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Swarm multi-agents",
+                      "type": "FullSlide",
+                      "script": "we create a research agent responsible for retrieving summaries and stock performance data, and an analyst agent responsible for generating plots.\n\nThe two agents are essentially looping, calling tools and collecting their results until the task is completed.\n\nTo start this workflow,\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 8,
+                      "title": "Swarm multi-agents",
+                      "type": "FullSlide",
+                      "script": "an initial agent must be chosen. Here, it makes sense to start with the research agent, as the analyst agent actually can't complete anything without the stock performance data.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 9,
+                      "title": "Swarm multi-agents",
+                      "type": "FullSlide",
+                      "script": "Under-the-hood, each of these agent nodes is an LLM node and a tool node, connected with conditional edges that either route to the end node if the task has been completed, or route to the other agent if not.\n\nThis architecture is fairly simplistic in structure, and extends naturally from the single-agent case; however, there are some drawbacks.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 10,
+                      "title": "Swarm multi-agents",
+                      "type": "TwoColumns",
+                      "script": "First, these agents can get stuck in infinite loops, as it might turn out that neither agent can complete the task, but they still continue to handoff in the hope that the other agent can complete the task.\n\nSecond, the architecture requires choosing an agent to start the workflow with. For some cases, choosing this initial agent may be obvious, but for other cases, it could introduce challenges and redundancy.\n\nAn alternative to this is to introduce a third agent: a supervisor!\n\n",
+                      "images": [],
+                      "content": "&nbsp;\n\n&nbsp;\n\n### Challenges\n\n&nbsp;\n\n1. ### Agent collaboration\n2. ### Choosing a starter agent\n\n&nbsp;\n\n- ### Solution &rarr; a supervisor!",
+                      "contentLeft": "&nbsp;",
+                      "contentRight": "&nbsp;\n\n### Challenges\n\n&nbsp;\n\n1. ### Agent collaboration\n2. ### Choosing a starter agent\n\n&nbsp;\n\n- ### Solution &rarr; a supervisor!"
+                    },
+                    {
+                      "number": 11,
+                      "title": "Supervisor multi-agents",
+                      "type": "FullSlide",
+                      "script": "In this case, the user input first reaches the supervisor, which is responsible for enabling meaningful collaboration between the agents, and bringing together their respective outputs. The supervisor decides how the tasks should be delegated, and the agents hand off back to the supervisor, which can then determine if the task has been completed or if the worker agents need to continue their work.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 12,
+                      "title": "Example: website creator system",
+                      "type": "FullSlide",
+                      "script": "In our website agent, this supervisor agent would act like a product manager, who acts as the go-between for the coding, design, and other agents in use.\n\nThis supervisor may also decide that a task doesn't require a tool call and delegation to the worker agents below it. In this case, the supervisor will provide a standard LLM response back to the user.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 13,
+                      "title": "Let's practice!",
+                      "type": "FinalSlide",
+                      "script": "We've looked at two approaches to multi-agent collaboration: swarms and supervisors. Time to have a go at coding these in the exercises.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.003762556276279525,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.03387229076703545,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.10455856297906115,
+                      "slideIndex": 1,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.2634240947039127,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.32001845071007123,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.3552992989063094,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.3760489351606246,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.4051201861445102,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.4843447570960643,
+                      "slideIndex": 7,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.5303858089803516,
+                      "slideIndex": 8,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6236900773056242,
+                      "slideIndex": 9,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.633027754160911,
+                      "slideIndex": 9,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.6807707834695637,
+                      "slideIndex": 9,
+                      "fragment": 1
+                    },
+                    {
+                      "time": 0.7301190007966585,
+                      "slideIndex": 9,
+                      "fragment": 2
+                    },
+                    {
+                      "time": 0.756139896726759,
+                      "slideIndex": 10,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.8564437584114858,
+                      "slideIndex": 11,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.9571354888895414,
+                      "slideIndex": 12,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. Multi-agent frameworks\nNow that you're getting comfortable with LangGraph and have mastered the single-agent case, let's talk about multiple agents.\n\n2. Example: website creator system\nImagine you want to create an agentic system to design a website. There's a number of tasks that might be performed here: creating a design specification, writing the codebase for the website backend, aligning on branding, and so on.\n\nThere are some dependencies between these tasks, for example, the specifications will likely precede every other task, but some tasks could, in theory, be performed in parallel, such as branding and writing the codebase for the backend.\n\nIf we continue to give a single agent more tools and a broader scope, we will likely see it struggle to choose which tools to use and when, and it won't be able to handle concurrent tasks.\n\nInstead, we could build multiple agents specialized to specific tasks, like a coding agent and design agent, that can collaborate to complete the task.\n\n3. Multi-agent design patterns\nThere are many emerging design patterns for multi-agent system. In this course we'll focus on two of the most popular: swarm, or network multi-agents, and supervisor multi-agents.\n\n4. Swarm multi-agents\nThe swarm multi-agent architecture gives multiple agents their own sets of tools and prompts to define their scope of operation.\n\n5. Swarm multi-agents\nEach agent can either progress the task through using its functional tools,\n\n6. Swarm multi-agents\nor choose to handoff to the other agent if it believes that it is better-suited for the task.\n\nFor our example,\n\n7. Swarm multi-agents\nwe create a research agent responsible for retrieving summaries and stock performance data, and an analyst agent responsible for generating plots.\n\nThe two agents are essentially looping, calling tools and collecting their results until the task is completed.\n\nTo start this workflow,\n\n8. Swarm multi-agents\nan initial agent must be chosen. Here, it makes sense to start with the research agent, as the analyst agent actually can't complete anything without the stock performance data.\n\n9. Swarm multi-agents\nUnder-the-hood, each of these agent nodes is an LLM node and a tool node, connected with conditional edges that either route to the end node if the task has been completed, or route to the other agent if not.\n\nThis architecture is fairly simplistic in structure, and extends naturally from the single-agent case; however, there are some drawbacks.\n\n10. Swarm multi-agents\nFirst, these agents can get stuck in infinite loops, as it might turn out that neither agent can complete the task, but they still continue to handoff in the hope that the other agent can complete the task.\n\nSecond, the architecture requires choosing an agent to start the workflow with. For some cases, choosing this initial agent may be obvious, but for other cases, it could introduce challenges and redundancy.\n\nAn alternative to this is to introduce a third agent: a supervisor!\n\n11. Supervisor multi-agents\nIn this case, the user input first reaches the supervisor, which is responsible for enabling meaningful collaboration between the agents, and bringing together their respective outputs. The supervisor decides how the tasks should be delegated, and the agents hand off back to the supervisor, which can then determine if the task has been completed or if the worker agents need to continue their work.\n\n12. Example: website creator system\nIn our website agent, this supervisor agent would act like a product manager, who acts as the go-between for the coding, design, and other agents in use.\n\nThis supervisor may also decide that a task doesn't require a tool call and delegation to the worker agents below it. In this case, the supervisor will provide a standard LLM response back to the user.\n\n13. Let's practice!\nWe've looked at two approaches to multi-agent collaboration: swarms and supervisors. Time to have a go at coding these in the exercises.",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Multi-agent frameworks",
+                      "text": "Now that you're getting comfortable with LangGraph and have mastered the single-agent case, let's talk about multiple agents."
+                    },
+                    {
+                      "heading": "2. Example: website creator system",
+                      "text": "Imagine you want to create an agentic system to design a website. There's a number of tasks that might be performed here: creating a design specification, writing the codebase for the website backend, aligning on branding, and so on.\n\nThere are some dependencies between these tasks, for example, the specifications will likely precede every other task, but some tasks could, in theory, be performed in parallel, such as branding and writing the codebase for the backend.\n\nIf we continue to give a single agent more tools and a broader scope, we will likely see it struggle to choose which tools to use and when, and it won't be able to handle concurrent tasks.\n\nInstead, we could build multiple agents specialized to specific tasks, like a coding agent and design agent, that can collaborate to complete the task."
+                    },
+                    {
+                      "heading": "3. Multi-agent design patterns",
+                      "text": "There are many emerging design patterns for multi-agent system. In this course we'll focus on two of the most popular: swarm, or network multi-agents, and supervisor multi-agents."
+                    },
+                    {
+                      "heading": "4. Swarm multi-agents",
+                      "text": "The swarm multi-agent architecture gives multiple agents their own sets of tools and prompts to define their scope of operation."
+                    },
+                    {
+                      "heading": "5. Swarm multi-agents",
+                      "text": "Each agent can either progress the task through using its functional tools,"
+                    },
+                    {
+                      "heading": "6. Swarm multi-agents",
+                      "text": "or choose to handoff to the other agent if it believes that it is better-suited for the task.\n\nFor our example,"
+                    },
+                    {
+                      "heading": "7. Swarm multi-agents",
+                      "text": "we create a research agent responsible for retrieving summaries and stock performance data, and an analyst agent responsible for generating plots.\n\nThe two agents are essentially looping, calling tools and collecting their results until the task is completed.\n\nTo start this workflow,"
+                    },
+                    {
+                      "heading": "8. Swarm multi-agents",
+                      "text": "an initial agent must be chosen. Here, it makes sense to start with the research agent, as the analyst agent actually can't complete anything without the stock performance data."
+                    },
+                    {
+                      "heading": "9. Swarm multi-agents",
+                      "text": "Under-the-hood, each of these agent nodes is an LLM node and a tool node, connected with conditional edges that either route to the end node if the task has been completed, or route to the other agent if not.\n\nThis architecture is fairly simplistic in structure, and extends naturally from the single-agent case; however, there are some drawbacks."
+                    },
+                    {
+                      "heading": "10. Swarm multi-agents",
+                      "text": "First, these agents can get stuck in infinite loops, as it might turn out that neither agent can complete the task, but they still continue to handoff in the hope that the other agent can complete the task.\n\nSecond, the architecture requires choosing an agent to start the workflow with. For some cases, choosing this initial agent may be obvious, but for other cases, it could introduce challenges and redundancy.\n\nAn alternative to this is to introduce a third agent: a supervisor!"
+                    },
+                    {
+                      "heading": "11. Supervisor multi-agents",
+                      "text": "In this case, the user input first reaches the supervisor, which is responsible for enabling meaningful collaboration between the agents, and bringing together their respective outputs. The supervisor decides how the tasks should be delegated, and the agents hand off back to the supervisor, which can then determine if the task has been completed or if the worker agents need to continue their work."
+                    },
+                    {
+                      "heading": "12. Example: website creator system",
+                      "text": "In our website agent, this supervisor agent would act like a product manager, who acts as the go-between for the coding, design, and other agents in use.\n\nThis supervisor may also decide that a task doesn't require a tool call and delegation to the worker agents below it. In this case, the supervisor will provide a standard LLM response back to the user."
+                    },
+                    {
+                      "heading": "13. Let's practice!",
+                      "text": "We've looked at two approaches to multi-agent collaboration: swarms and supervisors. Time to have a go at coding these in the exercises."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "dc_ch02_act07",
+              "title": {
+                "en": "Récapitulatif",
+                "fr": "Récapitulatif"
+              },
+              "description": {
+                "en": "Since the rise of AI agents, several agentic design patterns have emerged, and you will explore two of the most common: swarm (or decentralized) multi-agent systems and supervisor-based multi-agent systems. You will see that LangGraph offers a wide range of features for designing multi-agent systems tailored to your use case.",
+                "fr": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage."
+              },
+              "type": "teaching",
+              "sourceActivityType": "VideoExercise",
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "video",
+                  "id": "dc_2_act_07_video",
+                  "title": {
+                    "en": "Récapitulatif",
+                    "fr": "Récapitulatif"
+                  },
+                  "audioUrl": "/api/assets/ch02_ex07_r_capitulatif_7ca97348.mp3",
+                  "subtitleUrlFr": "/api/assets/ch02_ex07_r_capitulatif_fr_3b1bf5f8.vtt",
+                  "subtitleUrlEn": "/api/assets/ch02_ex07_r_capitulatif_en_22726b8f.vtt",
+                  "slidesPdf": "/api/assets/chapter_02_slides_3d7075e6.pdf",
+                  "projectorSlides": [
+                    {
+                      "number": 1,
+                      "title": "Wrap-up",
+                      "type": "TitleSlide",
+                      "script": "Congratulations on making it to the end of the course! You've gone on quite the journey!\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": "",
+                      "instructorName": "James Chapman",
+                      "instructorTitle": "Curriculum Manager, plateforme source",
+                      "technology": "python"
+                    },
+                    {
+                      "number": 2,
+                      "title": "LLM-only graph",
+                      "type": "FullSlide",
+                      "script": "Remember that we started with a graph consisting of a single LLM that could respond to user inputs, but was bounded by the limitations of not having access to external tools.\n\n",
+                      "images": [
+                        {
+                          "alt": "A graph consisting of a single LLM.",
+                          "url": "/api/assets/ch02_ex07_r_capitulatif_033_wrapup1_f7704d4d.jpg"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 3,
+                      "title": "Linear agent",
+                      "type": "FullSlide",
+                      "script": "We gave this LLM access to tools in a linear workflow, which expanded its capabilities, but given that the tool node was non-negotiable in this workflow, meant that inputs that didn't require a tool call often got stuck in the workflow.\n\nTo mitigate this,\n\n",
+                      "images": [
+                        {
+                          "alt": "A graph consisting of an LLM and a set of tools in a linear workflow.",
+                          "url": "/api/assets/ch02_ex07_r_capitulatif_034_wrapup2_63fcc61e.jpg"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 4,
+                      "title": "Conditional edges",
+                      "type": "FullSlide",
+                      "script": "we introduce conditional edges, so tools were only called if a condition was met. This condition checked if a tool call was required, called the tool node if it returned True, and ended the workflow if not.\n\nWe saw that this approach was much more flexible, but a single agent system can struggle using tools where one tool output is dependent on another, and cannot support concurrent tasks.\n\n",
+                      "images": [
+                        {
+                          "alt": "A graph consisting of a conditional workflow where the LLM can \"choose\" to call tools.",
+                          "url": "/api/assets/ch02_ex07_r_capitulatif_035_wrapup3_80fa9a73.jpg"
+                        }
+                      ],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 5,
+                      "title": "Swarm multi-agent",
+                      "type": "FullSlide",
+                      "script": "We explored a swarm multi-agent framework, splitting tools across multiple agents with clear functions of operation.\n\nWe saw that this workflow enabled better exchange of information from different tools, but that the agents could get stuck in a loop where neither one could solve the problem. Additionally, the swarm required a starting point, which isn't always flexible to the range of tasks that the agent might encounter.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 6,
+                      "title": "Supervisor multi-agent",
+                      "type": "FullSlide",
+                      "script": "We finished with the supervisor framework, adding a third agent to supervise the other two. This agent handled the delegation of tasks, the exchange of information between the two worker agents, and the response back to the user. This modularity of distinct tasks gave us much better performance, and the supervisor approach could continue to scale for more agents.\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    },
+                    {
+                      "number": 7,
+                      "title": "Let's practice!",
+                      "type": "FinalSlide",
+                      "script": "Congratulations again! Agents are an extremely exciting and valuable domain of AI, and there are lots of tools out there. Regardless of which you decide to use, the insights from this course will serve you well!\n\n",
+                      "images": [],
+                      "content": "",
+                      "contentLeft": "",
+                      "contentRight": ""
+                    }
+                  ],
+                  "projectorTimings": [
+                    {
+                      "time": 0,
+                      "slideIndex": 0,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.005270626199197627,
+                      "slideIndex": 0,
+                      "fragment": 0
+                    },
+                    {
+                      "time": 0.04387826327112041,
+                      "slideIndex": 1,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.13078300337228907,
+                      "slideIndex": 2,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.2600911898947613,
+                      "slideIndex": 3,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.47440351183208324,
+                      "slideIndex": 4,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.6856765436944008,
+                      "slideIndex": 5,
+                      "fragment": -1
+                    },
+                    {
+                      "time": 0.8787203325774754,
+                      "slideIndex": 6,
+                      "fragment": -1
+                    }
+                  ],
+                  "projectorTimingUnit": "fraction",
+                  "projectorDuration": 300,
+                  "transcript": "1. Wrap-up\nCongratulations on making it to the end of the course! You've gone on quite the journey!\n\n2. LLM-only graph\nRemember that we started with a graph consisting of a single LLM that could respond to user inputs, but was bounded by the limitations of not having access to external tools.\n\n3. Linear agent\nWe gave this LLM access to tools in a linear workflow, which expanded its capabilities, but given that the tool node was non-negotiable in this workflow, meant that inputs that didn't require a tool call often got stuck in the workflow.\n\nTo mitigate this,\n\n4. Conditional edges\nwe introduce conditional edges, so tools were only called if a condition was met. This condition checked if a tool call was required, called the tool node if it returned True, and ended the workflow if not.\n\nWe saw that this approach was much more flexible, but a single agent system can struggle using tools where one tool output is dependent on another, and cannot support concurrent tasks.\n\n5. Swarm multi-agent\nWe explored a swarm multi-agent framework, splitting tools across multiple agents with clear functions of operation.\n\nWe saw that this workflow enabled better exchange of information from different tools, but that the agents could get stuck in a loop where neither one could solve the problem. Additionally, the swarm required a starting point, which isn't always flexible to the range of tasks that the agent might encounter.\n\n6. Supervisor multi-agent\nWe finished with the supervisor framework, adding a third agent to supervise the other two. This agent handled the delegation of tasks, the exchange of information between the two worker agents, and the response back to the user. This modularity of distinct tasks gave us much better performance, and the supervisor approach could continue to scale for more agents.\n\n7. Let's practice!\nCongratulations again! Agents are an extremely exciting and valuable domain of AI, and there are lots of tools out there. Regardless of which you decide to use, the insights from this course will serve you well!",
+                  "transcriptSegments": [
+                    {
+                      "heading": "1. Wrap-up",
+                      "text": "Congratulations on making it to the end of the course! You've gone on quite the journey!"
+                    },
+                    {
+                      "heading": "2. LLM-only graph",
+                      "text": "Remember that we started with a graph consisting of a single LLM that could respond to user inputs, but was bounded by the limitations of not having access to external tools."
+                    },
+                    {
+                      "heading": "3. Linear agent",
+                      "text": "We gave this LLM access to tools in a linear workflow, which expanded its capabilities, but given that the tool node was non-negotiable in this workflow, meant that inputs that didn't require a tool call often got stuck in the workflow.\n\nTo mitigate this,"
+                    },
+                    {
+                      "heading": "4. Conditional edges",
+                      "text": "we introduce conditional edges, so tools were only called if a condition was met. This condition checked if a tool call was required, called the tool node if it returned True, and ended the workflow if not.\n\nWe saw that this approach was much more flexible, but a single agent system can struggle using tools where one tool output is dependent on another, and cannot support concurrent tasks."
+                    },
+                    {
+                      "heading": "5. Swarm multi-agent",
+                      "text": "We explored a swarm multi-agent framework, splitting tools across multiple agents with clear functions of operation.\n\nWe saw that this workflow enabled better exchange of information from different tools, but that the agents could get stuck in a loop where neither one could solve the problem. Additionally, the swarm required a starting point, which isn't always flexible to the range of tasks that the agent might encounter."
+                    },
+                    {
+                      "heading": "6. Supervisor multi-agent",
+                      "text": "We finished with the supervisor framework, adding a third agent to supervise the other two. This agent handled the delegation of tasks, the exchange of information between the two worker agents, and the response back to the user. This modularity of distinct tasks gave us much better performance, and the supervisor approach could continue to scale for more agents."
+                    },
+                    {
+                      "heading": "7. Let's practice!",
+                      "text": "Congratulations again! Agents are an extremely exciting and valuable domain of AI, and there are lots of tools out there. Regardless of which you decide to use, the insights from this course will serve you well!"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exerciseCount": 0
+    }
+  },
+  "policy": {
+    "publication_gate": "No P0; every P1 must be fixed or explicitly verified false positive; every mandatory media/file/exercise must be learner-usable; no required activity may depend on unprovided external access, dataset, workflow or environment; navigation gates must correspond to rendered activities.",
+    "remediation_rule": "If an activity cannot be made reliably correctable quickly using only its current declared assets, preserve any explanatory source text as a content block, remove the activity, remove its completion gate and remove orphan exercise definitions. Never invent a file, dataset, API, workflow, answer key, source or external access.",
+    "review_scope": "Inspect current learner-visible course JSON and current report. Produce exact block-level decisions only; do not modify course files."
+  }
+}

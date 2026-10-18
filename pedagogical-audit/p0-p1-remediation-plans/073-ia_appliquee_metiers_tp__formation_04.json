@@ -1,0 +1,36 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_04",
+  "index": 73,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__04"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__04",
+      "chapter_id": "ia_appliquee_metiers_tp__04-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__04-checkpoint-preparation",
+      "reason": "Activité obligatoire P1 non fiable : le checkpoint est présenté comme bloquant avec passThreshold: 1, mais une réponse erronée est enregistrée comme interaction terminée et déverrouille la suite. Les seuls actifs déclarés ne permettent pas de corriger rapidement et fiablement le comportement de progression ; retirer l’activité bloquante tout en conservant l’énoncé, les choix et l’explication comme contenu non bloquant.",
+      "evidence": "Le dossier courant vérifie requiredBeforeAdvance: true, passThreshold: 1, correctAnswer: a et required: true dans le bloc réel ia_appliquee_metiers_tp__04-checkpoint-preparation, mais le flux de progression ajoute l’interaction dès qu’une réponse est sélectionnée sans exiger isCorrect. La réponse erronée peut donc franchir le checkpoint."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__04",
+      "chapter_id": "ia_appliquee_metiers_tp__04-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__04-mini-project-proof",
+      "reason": "Activité obligatoire P1 non fiable : le mini-projet demande cinq questions et une preuve structurée, mais aucune validation fiable n’est déclarée ; le validateur retombe sur une longueur minimale d’un caractère et toute saisie non vide peut déverrouiller la suite. Une correction rapide exigerait des critères d’évaluation ou une évaluation serveur non présents. Retirer l’activité bloquante et conserver l’affectation, les consignes, les précautions et la correction comme contenu non bloquant.",
+      "evidence": "Le bloc réel ia_appliquee_metiers_tp__04-mini-project-proof est un cloud_exercise avec assignment, instructions, environmentGuide, resources, hint, solution et successMessage, mais le dossier courant constate l’absence de minimumAnswerLength, rubricCriteria et serverGradedAssessment effectifs ; cloudExerciseValidation fixe alors le minimum à 1 et CloudExerciseBlock appelle onComplete dès une saisie non vide."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__04",
+      "chapter_id": "ia_appliquee_metiers_tp__04-final-quiz",
+      "block_id": "ia_appliquee_metiers_tp__04-quiz-order",
+      "reason": "Correction rapide d’une promesse non tenue à partir du texte existant : retirer la phrase annonçant une correction après tentative complète, puisque le rendu actuel n’utilise pas le champ feedback comme correction. Conserver le reste de la consigne et le feedback existant plutôt que modifier le fonctionnement ou inventer une correction.",
+      "evidence": "Le bloc réel ia-appliquee-metiers_tp__04-quiz-order contient instructions indiquant « La correction est disponible après une tentative complète » et un champ feedback, mais le dossier courant constate que LessonViewer transmet seulement block.correction au composant MatchingExercise ; aucun champ correction n’est présent, donc la correction annoncée n’est pas rendue."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux constats P1 concernent des activités obligatoires dont la validation n’est pas fiablement corrigeable avec les seuls actifs déclarés : les blocs checkpoint et mini-projet sont convertis en contenu non bloquant, en conservant leurs explications et consignes. Le constat P2 du tri est traité par suppression de sa référence textuelle obsolète. Aucun P0/P1 ne reste non résolu ; aucun constat historique stillOpen supplémentaire n’est présent (legacy_open_count_requiring_normalization: 0)."
+}

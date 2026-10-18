@@ -1,0 +1,36 @@
+{
+  "formation_id": "datacamp_ai_for_sales",
+  "index": 21,
+  "course_ids": [
+    "ai_for_sales__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ai_for_sales__01",
+      "chapter_id": "dc_ch02_act02",
+      "block_id": "dc_2_act_02_tp",
+      "reason": "L’activité obligatoire exige le Researcher Agent de Microsoft Copilot, mais l’environnement déclaré ne garantit qu’un assistant IA auquel l’apprenant a accès personnellement ; aucune ressource ni alternative équivalente n’est fournie. Convertir le bloc en contenu non bloquant conserve la consigne et le texte explicatif sans imposer une capacité externe non garantie.",
+      "evidence": "current_courses.ai_for_sales__01.lessons[1].chapters[1].blocks[id=dc_2_act_02_tp] : assignment demande Microsoft Copilot ; learnerCriteria exige l’agent de recherche Copilot ; rubricCriteria[1] précise que l’invite doit être dirigée vers le Researcher Agent et non le chat standard ; environmentGuide reste générique et resources vaut []."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ai_for_sales__01",
+      "chapter_id": "dc_ch02_act02",
+      "reason": "Retirer le verrou de progression afin que le chapitre ne reste pas conditionné à l’accès non garanti au Researcher Agent Copilot après conversion de l’activité en contenu.",
+      "evidence": "current_courses.ai_for_sales__01.lessons[1].chapters[1] a requiredBeforeAdvance:true alors que son unique activité cloud_exercise dc_2_act_02_tp dépend d’un agent externe non déclaré comme disponible."
+    },
+    {
+      "action": "remove_orphan_exercise",
+      "course_id": "ai_for_sales__01",
+      "chapter_id": "dc_ch02_act02",
+      "block_id": "dc_2_act_02_tp",
+      "exercise_id": "dc_2_act_02_tp",
+      "reason": "Supprimer la définition d’exercice devenue orpheline après retrait de l’activité obligatoire ; ne conserver que le texte explicatif sous forme de contenu non bloquant.",
+      "evidence": "Le bloc réel dc_2_act_02_tp est de type cloud_exercise, porte resources:[], solution vide et successMessage vide, et impose le Researcher Agent Copilot dans ses critères sans accès ni alternative déclarés."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Le seul P1 actuel est traité : l’activité Copilot non garantie est convertie en contenu non bloquant, son verrou de chapitre est retiré et sa définition d’exercice est supprimée ; aucun constat historique stillOpen ne subsiste."
+}

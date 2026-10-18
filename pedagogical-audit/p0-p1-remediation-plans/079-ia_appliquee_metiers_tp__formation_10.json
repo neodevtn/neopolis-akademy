@@ -1,0 +1,82 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_10",
+  "index": 79,
+  "course_ids": ["ia_appliquee_metiers_tp__10"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapter_id": "ia_appliquee_metiers_tp__10-screen-01",
+      "block_id": "learning_section[0]",
+      "exercise_id": null,
+      "reason": "Correction rapide à partir du texte déjà présent : remplacer les valeurs françaises recopiées dans les champs en par les traductions anglaises déjà explicitées dans le constat (métier, niveau, durée et quatre objectifs).",
+      "evidence": "current_recheck.findings P1 localisation; lessons[0].chapters[0].blocks[0].body.en et items[0..3].en contiennent actuellement le français."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapter_id": "ia_appliquee_metiers_tp__10-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__10-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Le knowledge_check obligatoire est contournable après une réponse erronée : retirer son verrouillage et conserver l’énoncé, la réponse attendue et l’explication comme contenu non bloquant.",
+      "evidence": "P1 verrouillage; chapitre requiredBeforeAdvance=true/passThreshold=1, bloc knowledge_check correctAnswer=a, mais la complétion de progression est enregistrée après toute sélection."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapter_id": "ia_appliquee_metiers_tp__10-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__10-mini-project-proof",
+      "exercise_id": "ia_appliquee_metiers_tp__10-mini-project-proof",
+      "reason": "La preuve du cloud_exercise n’est pas évaluable de manière fiable avec les seuls actifs déclarés : toute saisie non vide valide et débloque la suite sans vérifier les quatre éléments demandés. Retirer le verrou et conserver assignment, instructions, hint et solution comme consigne non bloquante.",
+      "evidence": "P1 évaluation; absence de minimumAnswerLength supérieur à 1, learnerCriteria/rubricCriteria, passingScore et serverGradedAssessment; validation locale d’une chaîne non vide."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapter_id": "ia_appliquee_metiers_tp__10-final-quiz",
+      "block_id": "ia_appliquee_metiers_tp__10-quiz-order",
+      "exercise_id": "ia_appliquee_metiers_tp__10-quiz-order",
+      "reason": "Le bucket_sort reste bloquant mais n’affiche pas sa correction détaillée : le seul feedback général n’est pas rendu comme correction. Retirer le verrou et conserver la consigne, les étapes et le feedback existant comme contenu non bloquant.",
+      "evidence": "P1 feedback; le bloc possède feedback/instructions mais pas correction, et le rendu ne transmet que correction tandis que la suite exige une réussite complète."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapter_id": "ia_appliquee_metiers_tp__10-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__10-mini-project-proof",
+      "exercise_id": "ia_appliquee_metiers_tp__10-mini-project-proof",
+      "reason": "Correction rapide à partir du texte existant : fournir assignment, instructions, hint et solution sous forme fr/en en réutilisant le contenu français déjà déclaré et sa traduction anglaise proposée dans le constat.",
+      "evidence": "P1 localisation; ces quatre champs sont des chaînes françaises alors que environmentGuide et resources ont déjà des variantes bilingues."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapter_id": "ia_appliquee_metiers_tp__10-final-quiz",
+      "block_id": "ia-appliquee_metiers_tp__10-quiz-02",
+      "exercise_id": "ia-appliquee_metiers_tp__10-quiz-02",
+      "reason": "Remplacer l’option anglaise restée en français par la traduction déjà déterminée dans le constat, sans inventer de contenu.",
+      "evidence": "P3 localisation; blocks[1].options[1].text.en est encore « Faux : l’automatisation dispense toujours de tout contrôle. »."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapter_id": "ia_appliquee_metiers_tp__10-final-quiz",
+      "block_id": "ia_appliquee_metiers_tp__10-quiz-04",
+      "exercise_id": "ia_appliquee_metiers_tp__10-quiz-04",
+      "reason": "Remplacer l’option anglaise restée en français par la traduction déjà déterminée dans le constat, sans inventer de contenu.",
+      "evidence": "P3 localisation; blocks[3].options[2].text.en est encore « Le statut de test « à vérifier ». »."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Couverture insuffisante des compétences SEO centrales",
+      "evidence": "Le quiz final vérifie surtout données fictives, secrets et validation humaine; il ne démontre pas explicitement l’exploitation de résultats SERP, l’assemblage audit technique/mots-clés/local/contenu ni la production d’un rapport client.",
+      "course_id": "ia_appliquee_metiers_tp__10",
+      "chapter_id": "ia_appliquee_metiers_tp__10-final-quiz",
+      "reason_not_rapidly_remediable": "Les données accessibles ne fournissent pas assez de résultats SERP, de support fictif détaillé ni de livrable type pour rédiger sans invention des items et corrections fiables couvrant ces compétences."
+    }
+  ],
+  "summary": "Revue de l’état courant terminée. Les trois activités obligatoires dont le verrou ou l’évaluation n’est pas fiable sont converties en contenu non bloquant; les références françaises résiduelles dans les variantes anglaises sont signalées pour correction rapide à partir du texte existant. Le manque de couverture explicite des trois compétences SEO centrales reste non résolu faute d’actifs suffisants sans invention."
+}

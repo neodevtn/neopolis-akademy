@@ -1,0 +1,42 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_21",
+  "index": 90,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__21"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "chapter_id": "ia_appliquee_metiers_tp__21-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__21-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire est une activité bloquante dont l'état de complétion est enregistré après toute sélection, y compris une réponse fausse ; il ne fournit donc pas un verrou de réussite fiable dans l'état actuel.",
+      "evidence": "Le bloc réel de type knowledge_check porte required:true et correctAnswer:a ; le constat P1 vérifié indique que KnowledgeCheckBlock.select appelle onComplete pour toute sélection et que le gate ne compte que les blocs de type checkpoint."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "chapter_id": "ia_appliquee_metiers_tp__21-checkpoint-01",
+      "reason": "Après retrait de l'activité non fiable, le chapitre ne doit plus bloquer la progression sur une exigence de complétion qui ne peut plus être satisfaite.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__21-checkpoint-01 porte requiredBeforeAdvance:true et passThreshold:1, tandis que son unique bloc d'activité est retiré."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "chapter_id": "ia_appliquee_metiers_tp__21-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__21-mini-project-proof",
+      "reason": "Le cloud_exercise obligatoire ne peut pas être corrigé rapidement et fiablement avec les seuls actifs déclarés : sa preuve est validée par un simple texte non vide et ses étapes restent génériques. Conserver sa consigne, ses garde-fous, ses ressources déclarées et son explication comme contenu non bloquant, sans soumission ni déverrouillage.",
+      "evidence": "Le bloc réel cloud_exercise contient assignment, instructions, environmentGuide, resources, hint, solution et successMessage, mais aucune validation de couverture fiable ; CloudExerciseBlock retombe à un seuil d'un caractère et onComplete déverrouille la suite. Les étapes actuelles sont seulement « Relisez la consigne », « Réalisez la tâche » et « Vérifiez votre production »."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__21",
+      "chapter_id": "ia_appliquee_metiers_tp__21-mini-project",
+      "reason": "Le mini-projet devient du contenu explicatif non bloquant ; son verrou de chapitre doit donc être retiré avec l'activité obligatoire non fiable.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__21-mini-project porte requiredBeforeAdvance:true et dépend du bloc cloud_exercise retiré de la progression bloquante."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux activités P1 obligatoires non fiables sont retirées de la progression : le knowledge check fautivement franchissable est supprimé, et le mini-projet cloud est converti en contenu non bloquant en conservant ses consignes et actifs déclarés. Les verrous de leurs chapitres sont retirés ; aucun constat historique stillOpen n'existe et aucun P0/P1 ne reste non résolu dans le périmètre de décision."
+}

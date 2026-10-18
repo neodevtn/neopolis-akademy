@@ -1,0 +1,42 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_39",
+  "index": 108,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__39"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "chapter_id": "ia_appliquee_metiers_tp__39-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__39-checkpoint-preparation",
+      "reason": "Activité obligatoire P1 non fiablement corrigeable avec les seuls actifs déclarés : le knowledge_check est enregistré comme terminé même après une réponse fausse et le gate ne compte pas ce type de bloc. Retirer l’activité plutôt que laisser un verrou trompeur ; le chapitre sera rendu non bloquant.",
+      "evidence": "Bundle courant, current_recheck/findings et initial_audit PED-39-CH04-001 : chapitre requiredBeforeAdvance=true, passThreshold=1 ; knowledge_check requis ; la preuve de code indique que toute réponse ajoute l’identifiant aux interactions terminées et que checkpointGate filtre uniquement les blocs type checkpoint. Bloc réel : lessons[0].chapters[3].blocks[0], id ia_appliquee_metiers_tp__39-checkpoint-preparation."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "chapter_id": "ia_appliquee_metiers_tp__39-checkpoint-01",
+      "reason": "Retirer le verrou du chapitre après suppression de l’activité obligatoire non fiable ; ne pas bloquer la progression sur une évaluation dont le seuil n’est pas appliqué.",
+      "evidence": "Bundle courant, current_recheck/findings et initial_audit PED-39-CH04-001 : chapter_id ia_appliquee_metiers_tp__39-checkpoint-01, requiredBeforeAdvance=true et passThreshold=1, avec défaut démontré de progression."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "chapter_id": "ia_appliquee_metiers_tp__39-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__39-mini-project-proof",
+      "reason": "Le mini-projet obligatoire n’est pas fiablement corrigeable avec les seuls actifs déclarés : une saisie d’un caractère suffit à terminer l’activité et à déverrouiller le quiz. Conserver ses consignes, garde-fous et gabarit comme contenu informatif non bloquant, sans le présenter comme remise validée.",
+      "evidence": "Bundle courant, current_recheck/findings et initial_audit PED-39-CH05-001 : cloud_exercise requis sans minimumAnswerLength, rubricCriteria, serverGradedAssessment ni requirePostRevealReflection ; la validation par défaut accepte une réponse non vide d’un caractère. Bloc réel : lessons[0].chapters[4].blocks[0], id ia_appliquee_metiers_tp__39-mini-project-proof."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__39",
+      "chapter_id": "ia_appliquee_metiers_tp__39-mini-project",
+      "reason": "Retirer le verrou du chapitre après conversion de l’activité non fiablement validable en contenu non bloquant.",
+      "evidence": "Bundle courant, current_recheck/findings et initial_audit PED-39-CH05-001 : chapter_id ia_appliquee_metiers_tp__39-mini-project, requiredBeforeAdvance=true ; la remise est acceptée dès un caractère non vide et déverrouille le quiz final."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux P1 d’activités obligatoires sont traités sans inventer d’actifs : le knowledge check défaillant est retiré avec son verrou, et le mini-projet non vérifiable est converti en contenu non bloquant avec son verrou retiré. Aucun P0/P1 ne reste non résolu ; les P2 sont conservés hors actions car ils ne justifient pas une suppression selon la règle demandée."
+}

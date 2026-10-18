@@ -1,0 +1,53 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_16",
+  "index": 85,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__16"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "chapter_id": "ia_appliquee_metiers_tp__16-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__16-checkpoint-preparation",
+      "reason": "Retirer l’activité obligatoire dont une réponse incorrecte peut néanmoins être enregistrée comme terminée et déverrouiller la suite. Les règles de sandbox, données fictives et validation humaine sont déjà expliquées dans les écrans précédents, donc le bloc peut être supprimé sans perte de contenu nécessaire.",
+      "evidence": "current_open_p0_p1_findings[0] et current_recheck.findings[0] : knowledge_check required=true, correctAnswer=\"a\", chapitre requiredBeforeAdvance=true/passThreshold=1 ; le constat vérifié indique qu’une sélection incorrecte peut déverrouiller le chapitre."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "chapter_id": "ia_appliquee_metiers_tp__16-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__16-checkpoint-preparation",
+      "reason": "Retirer le verrou de progression associé au checkpoint supprimé afin qu’aucune réussite non fiable ne soit exigée pour accéder à la suite.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__16-checkpoint-01 est configuré requiredBeforeAdvance=true avec passThreshold=1 et le bloc ciblé required=true ; le rapport courant documente que ce seuil ne sécurise pas ce knowledge_check."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "chapter_id": "ia_appliquee_metiers_tp__16-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__16-mini-project-proof",
+      "reason": "Le mini-projet est une activité obligatoire dont une saisie symbolique peut être acceptée, car aucune contrainte de preuve, grille ou évaluation serveur n’est déclarée. Conserver sa consigne et ses aides comme contenu non bloquant, sans présenter une soumission non vérifiable comme validation.",
+      "evidence": "current_open_p0_p1_findings[1] et current_recheck.findings[1] : cloud_exercise sans minimumAnswerLength, learnerCriteria/rubricCriteria ni serverGradedAssessment ; le constat indique qu’une saisie d’un caractère peut valider le TP et déverrouiller le quiz final."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "chapter_id": "ia_appliquee_metiers_tp__16-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__16-mini-project-proof",
+      "reason": "Retirer le verrou de complétion du mini-projet, puisque les actifs déclarés ne permettent pas d’en vérifier rapidement et fiablement la preuve. La consigne, l’indice et la correction restent consultables comme contenu d’apprentissage.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__16-mini-project est requiredBeforeAdvance=true et son unique bloc est le cloud_exercise ciblé ; le constat courant établit que la soumission non évaluée peut valider l’activité sans démontrer les quatre éléments demandés."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Feedback du tri final non rendu",
+      "evidence": "current_recheck.findings[2] : le bloc ia-appliquee-metiers_tp__16-quiz-order contient le feedback « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. », mais le constat indique que ce texte n’est pas transmis au renderer et qu’aucun champ correction n’est configuré.",
+      "course_id": "ia_appliquee_metiers_tp__16",
+      "chapter_id": "ia_appliquee_metiers_tp__16-final-quiz",
+      "reason_not_rapidly_remediable": "La correction nécessite une modification du passage de données ou du renderer, pas une suppression ou une conversion fiable avec les seuls actifs déclarés ; aucune action de contenu autorisée ne peut garantir l’affichage du feedback existant."
+    }
+  ],
+  "summary": "Les deux constats P1 sont des activités obligatoires dont la réussite n’est pas fiablement vérifiable avec les actifs déclarés : le checkpoint est retiré avec son verrou, et le mini-projet est converti en contenu non bloquant avec son verrou retiré. Le texte explicatif, les aides et la correction sont conservés comme contenu. Le constat historique P2 sur le feedback du tri final reste ouvert car il requiert une correction de rendu/code."
+}

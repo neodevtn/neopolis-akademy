@@ -243,52 +243,23 @@
             "fr": "Découvrez les fonctionnalités avancées qui distinguent un serveur MCP de démonstration d’un serveur prêt pour la production. Vous utiliserez le sampling pour exploiter le modèle de langage du client, diffuserez des notifications de journal et de progression depuis un outil lent afin que les utilisateurs le voient fonctionner, et appliquerez les roots pour qu’un serveur n’accède qu’aux fichiers qui lui ont été accordés.\n"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_05_tp",
+              "type": "content",
+              "id": "dc_1_act_05_tp_learning_note",
               "title": {
-                "en": "Delegate the summary with sampling",
-                "fr": "Delegate the summary with sampling"
+                "fr": "Delegate the summary with sampling",
+                "en": "Delegate the summary with sampling"
               },
-              "assignment": "Your server's summarize tool needs a language model to condense some text — but you don't want the server holding an API key. With sampling, the server asks the connected client to run the prompt instead, and the client returns the generated text. You also want the summary kept to a single sentence, so you'll steer the model with a system prompt.\n\nFastMCP, Context, SamplingMessage, and TextContent are imported and the server mcp is created. run_tool(text_to_summarize) runs your tool through a real MCP client–server session; the connected client fulfills each sampling request by calling a real language model and returning its reply.",
-              "instructions": "Call ctx.session.create_message() to ask the client to run the prompt.\n\nSteer the model by passing a system_prompt that tells it to reply with a single-sentence summary.\n\nReturn the generated text from the result with result.content.text.\n\n### Code de départ\n\n```python\n@mcp.tool()\nasync def summarize(text_to_summarize: str, ctx: Context):\n    prompt = f\"Please summarize the following text:\\n{text_to_summarize}\"\n\n    # Ask the client's model to summarize, steered by a system prompt\n    result = await ctx.session.____(\n        messages=[\n            SamplingMessage(role=\"user\", content=TextContent(type=\"text\", text=prompt))\n        ],\n        system_prompt=____,\n        max_tokens=1000,\n    )\n\n    # Return the generated text\n    return result.____.text\n\n\n# Run the tool through a real MCP client-server session\nsummary = run_tool(\"lots of text\")\nprint(summary)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "L'outil summarize de votre serveur a besoin d'un modèle de langage pour condenser du texte — mais vous ne voulez pas que le serveur détienne une clé API. Avec sampling, le serveur demande au client connecté d'exécuter le prompt à la place, et le client renvoie le texte généré. Vous voulez aussi que le résumé tienne en une seule phrase, donc vous guiderez le modèle avec un prompt système.\n\nFastMCP, Context, SamplingMessage et TextContent sont importés et le serveur mcp est créé. run_tool(text_to_summarize) exécute votre outil via une véritable session client–serveur MCP ; le client connecté satisfait chaque requête de sampling en appelant un véritable modèle de langage et en renvoyant sa réponse.",
+                "en": "Your server's summarize tool needs a language model to condense some text — but you don't want the server holding an API key. With sampling, the server asks the connected client to run the prompt instead, and the client returns the generated text. You also want the summary kept to a single sentence, so you'll steer the model with a system prompt.\n\nFastMCP, Context, SamplingMessage, and TextContent are imported and the server mcp is created. run_tool(text_to_summarize) runs your tool through a real MCP client–server session; the connected client fulfills each sampling request by calling a real language model and returning its reply."
               },
-              "steps": [
-                {
-                  "fr": "Relisez la consigne et identifiez le résultat attendu pour « Delegate the summary with sampling ».",
-                  "en": "Review the instructions and identify the expected outcome for “Delegate the summary with sampling”."
-                },
-                {
-                  "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
-                  "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
-                },
-                {
-                  "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
-                  "en": "Check your work against the stated criteria before submitting it."
-                }
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_fe17924b.pdf"
-                }
-              ],
-              "hint": "create_message() is an async method, so await its result (already set up for you).\n\nsystem_prompt takes a plain string instruction — describe the kind of summary you want back.\n\nThe result has a content attribute, and the generated text is on content.text.",
-              "solution": "@mcp.tool()\nasync def summarize(text_to_summarize: str, ctx: Context):\n    prompt = f\"Please summarize the following text:\\n{text_to_summarize}\"\n\n    # Ask the client's model to summarize, steered by a system prompt\n    result = await ctx.session.create_message(\n        messages=[\n            SamplingMessage(role=\"user\", content=TextContent(type=\"text\", text=prompt))\n        ],\n        system_prompt=\"Summarize the text in a single sentence.\",\n        max_tokens=1000,\n    )\n\n    # Return the generated text\n    return result.content.text\n\n\n# Run the tool through a real MCP client-server session\nsummary = run_tool(\"lots of text\")\nprint(summary)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -424,52 +395,23 @@
             "fr": "Découvrez les fonctionnalités avancées qui distinguent un serveur MCP de démonstration d’un serveur de production. Vous utiliserez l’échantillonnage pour emprunter le modèle de langage du client, diffuserez des notifications de journalisation et de progression depuis un outil lent afin que les utilisateurs puissent voir qu’il fonctionne, et appliquerez des racines afin qu’un serveur ne touche que les fichiers qui lui ont été accordés.\n"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_09_tp",
+              "type": "content",
+              "id": "dc_1_act_09_tp_learning_note",
               "title": {
-                "en": "Add progress and logs to a slow tool",
-                "fr": "Add progress and logs to a slow tool"
+                "fr": "Add progress and logs to a slow tool",
+                "en": "Add progress and logs to a slow tool"
               },
-              "assignment": "Your research server has an add_all tool that sums a list of numbers, working through them one at a time. Right now it stays silent, so the client can't tell how far along it is. You'll log a message when it starts, then report progress after each number so the client can render a smooth, advancing progress bar.\n\nFastMCP and Context are imported and the server mcp is created. run_tool(numbers) runs your tool through a real MCP client–server session and collects what the connected client receives into the lists LOGS and PROGRESS.",
-              "instructions": "Use ctx.info() to log the message \"Adding the numbers...\" when the tool starts.\n\nAfter adding each number, call ctx.report_progress() inside the loop.\n\nReport the count done so far (i + 1) out of the total (len(numbers)).\n\n### Code de départ\n\n```python\n@mcp.tool()\nasync def add_all(numbers: list[int], ctx: Context) -> int:\n    # Log that the tool started\n    await ctx.____(\"Adding the numbers...\")\n\n    total = 0\n    for i, number in enumerate(numbers):\n        total += number\n        # Report progress after each number\n        await ctx.____(____, ____)\n\n    return total\n\n\n# Run the tool through a real MCP client-server session\nresult = run_tool([5, 3, 2])\nprint(result, LOGS, PROGRESS)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Votre serveur de recherche dispose d'un outil add_all qui somme une liste de nombres, en les traitant un par un. Actuellement, il reste silencieux, de sorte que le client ne peut pas savoir où il en est. Vous consignerez un message au démarrage, puis signalerez la progression après chaque nombre afin que le client puisse afficher une barre de progression fluide et continue.\n\nFastMCP et Context sont importés et le serveur mcp est créé. run_tool(numbers) exécute votre outil à travers une véritable session client–serveur MCP et collecte ce que le client connecté reçoit dans les listes LOGS et PROGRESS.",
+                "en": "Your research server has an add_all tool that sums a list of numbers, working through them one at a time. Right now it stays silent, so the client can't tell how far along it is. You'll log a message when it starts, then report progress after each number so the client can render a smooth, advancing progress bar.\n\nFastMCP and Context are imported and the server mcp is created. run_tool(numbers) runs your tool through a real MCP client–server session and collects what the connected client receives into the lists LOGS and PROGRESS."
               },
-              "steps": [
-                {
-                  "fr": "Relisez la consigne et identifiez le résultat attendu pour « Add progress and logs to a slow tool ».",
-                  "en": "Review the instructions and identify the expected outcome for “Add progress and logs to a slow tool”."
-                },
-                {
-                  "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
-                  "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
-                },
-                {
-                  "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
-                  "en": "Check your work against the stated criteria before submitting it."
-                }
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_fe17924b.pdf"
-                }
-              ],
-              "hint": "ctx.info() takes a single string — the message to send to the client.\n\nenumerate() gives you the index i for each number; the running count of finished items is i + 1.\n\nreport_progress() takes the current count first, then the total — here, len(numbers).",
-              "solution": "@mcp.tool()\nasync def add_all(numbers: list[int], ctx: Context) -> int:\n    # Log that the tool started\n    await ctx.info(\"Adding the numbers...\")\n\n    total = 0\n    for i, number in enumerate(numbers):\n        total += number\n        # Report progress after each number\n        await ctx.report_progress(i + 1, len(numbers))\n\n    return total\n\n\n# Run the tool through a real MCP client-server session\nresult = run_tool([5, 3, 2])\nprint(result, LOGS, PROGRESS)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -613,52 +555,23 @@
             "fr": "Découvrez les fonctionnalités avancées qui distinguent un serveur MCP de démonstration d’un serveur de production. Vous utiliserez l’échantillonnage pour emprunter le modèle de langage du client, diffuserez des notifications de journalisation et de progression depuis un outil lent afin que les utilisateurs puissent voir qu’il fonctionne, et appliquerez des racines afin qu’un serveur ne touche que les fichiers qui lui ont été accordés.\n"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_13_tp",
+              "type": "content",
+              "id": "dc_1_act_13_tp_learning_note",
               "title": {
-                "en": "Stop your tool from escaping its roots",
-                "fr": "Stop your tool from escaping its roots"
+                "fr": "Stop your tool from escaping its roots",
+                "en": "Stop your tool from escaping its roots"
               },
-              "assignment": "The MCP SDK does not stop a tool from touching files outside the directories a user granted — that's on you. You'll write is_path_allowed(), which checks a requested path against the client's roots before any file is accessed.\n\nFastMCP and Context are imported and the server mcp is created. check_access(path) runs your function through a real MCP client–server session: the connected client grants one directory (/tmp/mcp_allowed_root, holding video.mp4), and mcp_outside.mp4 sits outside it. root_to_path() converts a root to a Path.",
-              "instructions": "Call ctx.session.list_roots() to get the directories the server may access.\n\nReturn True when the requested path is inside one of the roots.\n\n### Code de départ\n\n```python\nasync def is_path_allowed(requested_path, ctx):\n    # Get the client's allowed roots\n    roots_result = await ctx.session.____()\n\n    for root in roots_result.roots:\n        root_path = root_to_path(root)\n        try:\n            requested_path.relative_to(root_path)\n            # Allow paths inside a root\n            return ____\n        except ValueError:\n            continue\n\n    return False\n\n\n# Check a file inside the allowed root, and one outside it\nallowed = check_access(\"/tmp/mcp_allowed_root/video.mp4\")\ndenied = check_access(\"/tmp/mcp_outside.mp4\")\nprint(allowed, denied)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Le MCP SDK n'empêche pas un outil d'accéder à des fichiers en dehors des répertoires qu'un utilisateur a accordés — c'est à vous. Vous allez écrire is_path_allowed(), qui vérifie un chemin demandé par rapport aux racines du client avant tout accès à un fichier.\n\nFastMCP et Context sont importés et le serveur mcp est créé. check_access(path) exécute votre fonction dans une véritable session client–serveur MCP: le client connecté accorde un répertoire (/tmp/mcp_allowed_root, contenant video.mp4), et mcp_outside.mp4 se trouve en dehors. root_to_path() convertit une racine en Path.",
+                "en": "The MCP SDK does not stop a tool from touching files outside the directories a user granted — that's on you. You'll write is_path_allowed(), which checks a requested path against the client's roots before any file is accessed.\n\nFastMCP and Context are imported and the server mcp is created. check_access(path) runs your function through a real MCP client–server session: the connected client grants one directory (/tmp/mcp_allowed_root, holding video.mp4), and mcp_outside.mp4 sits outside it. root_to_path() converts a root to a Path."
               },
-              "steps": [
-                {
-                  "fr": "Relisez la consigne et identifiez le résultat attendu pour « Stop your tool from escaping its roots ».",
-                  "en": "Review the instructions and identify the expected outcome for “Stop your tool from escaping its roots”."
-                },
-                {
-                  "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
-                  "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
-                },
-                {
-                  "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
-                  "en": "Check your work against the stated criteria before submitting it."
-                }
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_fe17924b.pdf"
-                }
-              ],
-              "hint": "list_roots() is async — await it, then read .roots from the result.\n\nPath.relative_to() raises ValueError when the path is not inside the given directory; that's already handled in the except branch.",
-              "solution": "async def is_path_allowed(requested_path, ctx):\n    # Get the client's allowed roots\n    roots_result = await ctx.session.list_roots()\n\n    for root in roots_result.roots:\n        root_path = root_to_path(root)\n        try:\n            requested_path.relative_to(root_path)\n            # Allow paths inside a root\n            return True\n        except ValueError:\n            continue\n\n    return False\n\n\n# Check a file inside the allowed root, and one outside it\nallowed = check_access(\"/tmp/mcp_allowed_root/video.mp4\")\ndenied = check_access(\"/tmp/mcp_outside.mp4\")\nprint(allowed, denied)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -673,52 +586,23 @@
             "fr": "Découvrez les fonctionnalités avancées qui distinguent un serveur MCP de démonstration d’un serveur prêt pour la production. Vous utiliserez l’échantillonnage pour emprunter le modèle de langage du client, diffuserez en continu des notifications de journalisation et de progression depuis un outil lent afin que les utilisateurs le voient fonctionner, et imposerez des racines afin qu’un serveur ne touche jamais qu’aux fichiers qui lui ont été accordés.\n"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_14_tp",
+              "type": "content",
+              "id": "dc_1_act_14_tp_learning_note",
               "title": {
-                "en": "Read a file only if it's inside the roots",
-                "fr": "Read a file only if it's inside the roots"
+                "fr": "Read a file only if it's inside the roots",
+                "en": "Read a file only if it's inside the roots"
               },
-              "assignment": "You built is_path_allowed() in the last exercise — now put it to work. A read_file tool should never hand back a file the user didn't grant access to, so it has to check the path against the client's roots before reading anything.\n\nFastMCP, Context, and Path are imported and the server mcp is created. Your is_path_allowed() is provided. run_tool(path) calls your tool through a real MCP client–server session: the connected client grants /tmp/mcp_allowed_root (holding notes.txt), and mcp_secret.txt sits outside it.",
-              "instructions": "Guard the read: call is_path_allowed() with the requested Path and ctx, so the tool refuses when it returns False.\n\nWhen the path is allowed, read the file with Path.read_text() and return its contents.\n\n### Code de départ\n\n```python\n@mcp.tool()\nasync def read_file(path: str, ctx: Context) -> str:\n    requested = Path(path)\n\n    # Refuse paths outside the roots\n    if not await is_path_allowed(____, ctx):\n        return \"Access denied: that path is outside the allowed roots.\"\n\n    # Read and return the file\n    return requested.____()\n\n\n# Try a file inside the allowed root, and one outside it\ninside = run_tool(\"/tmp/mcp_allowed_root/notes.txt\")\noutside = run_tool(\"/tmp/mcp_secret.txt\")\nprint(inside)\nprint(outside)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Vous avez construit la fonction is_path_allowed() dans l'exercice précédent — mettez-la maintenant en pratique. Un outil read_file ne devrait jamais renvoyer un fichier auquel l'utilisateur n'a pas accordé l'accès. Il doit donc vérifier le chemin par rapport aux racines du client avant de lire quoi que ce soit.\n\nFastMCP, Context et Path sont importés et le serveur mcp est créé. Votre is_path_allowed() est fournie. run_tool(path) appelle votre outil via une vraie session client–serveur MCP : le client connecté accorde l'accès à /tmp/mcp_allowed_root (contenant notes.txt), et mcp_secret.txt se trouve en dehors de celle-ci.",
+                "en": "You built is_path_allowed() in the last exercise — now put it to work. A read_file tool should never hand back a file the user didn't grant access to, so it has to check the path against the client's roots before reading anything.\n\nFastMCP, Context, and Path are imported and the server mcp is created. Your is_path_allowed() is provided. run_tool(path) calls your tool through a real MCP client–server session: the connected client grants /tmp/mcp_allowed_root (holding notes.txt), and mcp_secret.txt sits outside it."
               },
-              "steps": [
-                {
-                  "fr": "Relisez la consigne et identifiez le résultat attendu pour « Read a file only if it's inside the roots ».",
-                  "en": "Review the instructions and identify the expected outcome for “Read a file only if it's inside the roots”."
-                },
-                {
-                  "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
-                  "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
-                },
-                {
-                  "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
-                  "en": "Check your work against the stated criteria before submitting it."
-                }
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_fe17924b.pdf"
-                }
-              ],
-              "hint": "is_path_allowed() is async, so await it; the if not ... refusal branch is already written for you.\n\nrequested is already a Path, so you can call .read_text() on it directly.",
-              "solution": "@mcp.tool()\nasync def read_file(path: str, ctx: Context) -> str:\n    requested = Path(path)\n\n    # Refuse paths outside the roots\n    if not await is_path_allowed(requested, ctx):\n        return \"Access denied: that path is outside the allowed roots.\"\n\n    # Read and return the file\n    return requested.read_text()\n\n\n# Try a file inside the allowed root, and one outside it\ninside = run_tool(\"/tmp/mcp_allowed_root/notes.txt\")\noutside = run_tool(\"/tmp/mcp_secret.txt\")\nprint(inside)\nprint(outside)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         }
@@ -963,52 +847,23 @@
             "fr": "Passez au niveau du protocole et découvrez comment les clients et serveurs MCP communiquent réellement. Vous écrirez à la main des requêtes et des notifications JSON-RPC, suivrez la négociation d’initialisation et comparerez le transport STDIO pour les serveurs locaux au transport StreamableHTTP pour les serveurs distants, y compris la manière dont les Server-Sent Events et l’absence d’état déterminent ce que chacun peut faire.\n"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_04_tp",
+              "type": "content",
+              "id": "dc_2_act_04_tp_learning_note",
               "title": {
-                "en": "Build a request and a notification",
-                "fr": "Build a request and a notification"
+                "fr": "Build a request and a notification",
+                "en": "Build a request and a notification"
               },
-              "assignment": "Time to hand-write two MCP messages. One asks the server to run the add tool and expects a result back; the other is a one-way notification telling the server the client is ready. On the wire, the difference is a single field: a request carries an id so its reply can be matched to it, while a notification has no id at all.\n\nNo imports or setup are needed — you'll work with plain Python dictionaries.",
-              "instructions": "Give call_request an id of 1, so the server's reply can be matched back to it.\n\nSet the initialized notification's method to \"notifications/initialized\" (notice it has no id).\n\nComplete expects_reply() so it returns True only when a message carries an \"id\" key.\n\n### Code de départ\n\n```python\n# Build the request with an id\ncall_request = {\n    \"jsonrpc\": \"2.0\",\n    \"id\": ____,\n    \"method\": \"tools/call\",\n    \"params\": {\"name\": \"add\", \"arguments\": {\"a\": 5, \"b\": 3}},\n}\n\n# Build the one-way notification\ninitialized = {\n    \"jsonrpc\": \"2.0\",\n    \"method\": ____,\n}\n\n\n# Return True only if an id is present\ndef expects_reply(message):\n    return ____ in message\n\n\nrequest_expects_reply = expects_reply(call_request)\nnotification_expects_reply = expects_reply(initialized)\nprint(request_expects_reply, notification_expects_reply)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Il est temps d'écrire à la main deux messages MCP. L'un demande au serveur d'exécuter l'outil add et attend un résultat en retour ; l'autre est une notification unidirectionnelle indiquant au serveur que le client est prêt. Sur le réseau, la différence tient à un seul champ : une requête contient un id afin que sa réponse puisse y être associée, tandis qu'une notification n'a aucun id.\n\nAucun import ni configuration n'est nécessaire — vous travaillerez avec de simples dictionnaires Python.",
+                "en": "Time to hand-write two MCP messages. One asks the server to run the add tool and expects a result back; the other is a one-way notification telling the server the client is ready. On the wire, the difference is a single field: a request carries an id so its reply can be matched to it, while a notification has no id at all.\n\nNo imports or setup are needed — you'll work with plain Python dictionaries."
               },
-              "steps": [
-                {
-                  "fr": "Relisez la consigne et identifiez le résultat attendu pour « Build a request and a notification ».",
-                  "en": "Review the instructions and identify the expected outcome for “Build a request and a notification”."
-                },
-                {
-                  "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
-                  "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
-                },
-                {
-                  "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
-                  "en": "Check your work against the stated criteria before submitting it."
-                }
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_bc089529.pdf"
-                }
-              ],
-              "hint": "A request needs an id; the value just has to be unique for the connection — 1 is fine here.\n\nThe in operator checks for a key: \"id\" in message is True when the dict has an \"id\" key.\n\nA notification deliberately omits id, so expects_reply() should return False for it.",
-              "solution": "# Build the request with an id\ncall_request = {\n    \"jsonrpc\": \"2.0\",\n    \"id\": 1,\n    \"method\": \"tools/call\",\n    \"params\": {\"name\": \"add\", \"arguments\": {\"a\": 5, \"b\": 3}},\n}\n\n# Build the one-way notification\ninitialized = {\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"notifications/initialized\",\n}\n\n\n# Return True only if an id is present\ndef expects_reply(message):\n    return \"id\" in message\n\n\nrequest_expects_reply = expects_reply(call_request)\nnotification_expects_reply = expects_reply(initialized)\nprint(request_expects_reply, notification_expects_reply)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },

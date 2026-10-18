@@ -1,0 +1,51 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_35",
+  "index": 104,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__35"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__35-checkpoint-preparation",
+      "reason": "Le knowledge_check est une activité obligatoire dont la complétion est enregistrée après toute sélection, y compris une réponse incorrecte ; il ne peut pas être corrigé rapidement de manière fiable avec les seuls actifs déclarés. Retirer l’activité bloqueuse et conserver le cadrage explicatif déjà présent à l’écran comme contenu non bloquant.",
+      "evidence": "current_recheck.findings P1 ; initial_audit issue pedagogical:ia_appliquee_metiers_tp__35:lesson_01:checkpoint_01:incorrect-answer-unlocks ; bloc réel ia_appliquee_metiers_tp__35-checkpoint-preparation de type knowledge_check dans lessons[0].chapters[3].blocks[0]."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-checkpoint-01",
+      "reason": "Retirer le verrou de progression associé au checkpoint supprimé afin qu’une activité non fiable ne conditionne plus la suite.",
+      "evidence": "Chapitre réel ia_appliquee_metiers_tp__35-checkpoint-01 avec passThreshold=1 ; le rapport constate que la complétion du knowledge_check est enregistrée indépendamment de la justesse."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__35-mini-project-proof",
+      "reason": "La preuve du mini-projet est obligatoire mais toute remise non vide peut être acceptée sans critères déclarés ni évaluation fiable ; cette activité ne peut pas être rendue fiable rapidement à partir des seuls actifs déclarés. Retirer l’activité bloqueuse et conserver l’objectif, les consignes et l’explication déjà affichés comme contenu non bloquant.",
+      "evidence": "current_recheck.findings P1 ; initial_audit issue pedagogical:ia_appliquee_metiers_tp__35:lesson_01:mini_project:unassessed-evidence ; bloc réel ia_appliquee_metiers_tp__35-mini-project-proof de type cloud_exercise dans lessons[0].chapters[4].blocks[0]."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-mini-project",
+      "reason": "Retirer le verrou de progression associé au mini-projet supprimé afin que la remise non évaluée ne conditionne plus la suite.",
+      "evidence": "Chapitre réel ia_appliquee_metiers_tp__35-mini-project ; l’audit établit que CloudExerciseBlock marque le TP terminé avec une remise non vide en l’absence de rubricCriteria, learnerCriteria, serverGradedAssessment ou minimumAnswerLength."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Le quiz final ne démontre pas les quatre acquis techniques RAG",
+      "evidence": "current_recheck.findings P1 ; chapitre réel ia_appliquee_metiers_tp__35-final-quiz et blocs ia_appliquee_metiers_tp__35-quiz-01 à -04 plus ia_appliquee_metiers_tp__35-quiz-order : les QCM évaluent surtout sécurité/données fictives/validation humaine et le tri une démarche générale, alors que metadata.acquiredSkills annonce ingestion/chunking, embeddings/recherche vectorielle, réponse documentée et rapport Google Docs.",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-final-quiz",
+      "reason_not_rapidly_remediable": "L’alignement exige de définir ou vérifier des critères, questions et réponses attendues à partir du support fictif et du workflow de référence ; ces réponses et seuils ne sont pas présents dans les actifs déclarés. Les inventer violerait la règle de non-invention, et aucun simple retrait de texte obsolète ne corrige le défaut d’évaluation."
+    }
+  ],
+  "summary": "Deux activités obligatoires non fiabilisables avec les seuls actifs déclarés (checkpoint et preuve du mini-projet) sont retirées avec leurs verrous ; leurs explications restent non bloquantes. Le défaut P1 d’alignement du quiz final reste ouvert car sa correction nécessite des critères et réponses absents du bundle. Aucun constat historique stillOpen n’était à normaliser."
+}

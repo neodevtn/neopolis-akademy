@@ -1,0 +1,59 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_23",
+  "index": 92,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__23"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__23-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire ne peut pas être corrigé rapidement de manière fiable avec les seuls actifs déclarés : toute option déclenche onComplete et le verrou ne vérifie pas isCorrect. Retirer l’activité bloquante ; conserver son énoncé, ses garde-fous et son explication comme contenu non bloquant sur l’écran.",
+      "evidence": "Le bloc knowledge_check a correctAnswer=a et required=true. KnowledgeCheckBlock appelle onComplete pour toute option ; LessonViewer enregistre systématiquement l’id et le verrouillage ne contrôle que sa présence."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-checkpoint-01",
+      "reason": "Retirer le verrou de progression associé au checkpoint supprimé afin que le chapitre ne reste pas bloqué par une activité dont la réussite n’est pas fiable.",
+      "evidence": "Le chapitre est type=checkpoint, requiredBeforeAdvance=true, passThreshold=1, mais checkpointGate ne sélectionne pas ce knowledge_check ; la complétion erronée suffit néanmoins à ouvrir la suite."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__23-mini-project-proof",
+      "reason": "La preuve obligatoire n’est pas évaluée de façon fiable : un caractère non vide suffit à déclencher submitted, solutionRevealed et onComplete. Retirer l’activité bloquante ; conserver l’objectif, les instructions, les critères demandés et la correction comme contenu non bloquant sur l’écran.",
+      "evidence": "Le cloud_exercise ne déclare ni minimumAnswerLength, rubricCriteria, serverGradedAssessment ni requirePostRevealReflection. CloudExerciseBlock utilise une longueur minimale de 1 et LessonViewer fonde le verrouillage sur completedCloudExercises."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-mini-project",
+      "reason": "Retirer le verrou d’accès au quiz final associé à l’activité supprimée ; aucune soumission non évaluée ne doit conditionner la progression.",
+      "evidence": "Le chapitre mini-project précède le quiz final et son accès dépend de completedCloudExercises, alors que la soumission n’établit pas la preuve du routeur RH ni des contrôles attendus."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "La correction textuelle du tri final n’est pas rendue",
+      "evidence": "Le bloc ia_appliquee_metiers_tp__23-quiz-order contient feedback mais pas correction ; LessonViewer transmet seulement block.correction à MatchingExercise, qui n’affiche le texte correctif que si correction est présent.",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-final-quiz",
+      "reason_not_rapidly_remediable": "La correction nécessite une modification du câblage de rendu applicatif ou du contrat de données, pas une correction fiable limitée aux actifs déclarés du cours."
+    },
+    {
+      "severity": "P2",
+      "title": "Les libellés des phases divergent entre la timeline et le tri final",
+      "evidence": "La timeline du chapitre ia-appliquee-metiers-tp__23-screen-03 enseigne « Cadrer, Préparer, Tester, Contrôler », tandis que ia-appliquee-metiers-tp__23-quiz-order demande « Cadrer, Construire, Tester, Valider » sans correspondance explicite.",
+      "course_id": "ia_appliquee_metiers_tp__23",
+      "chapter_id": "ia_appliquee_metiers_tp__23-final-quiz",
+      "reason_not_rapidly_remediable": "La correction requiert une harmonisation éditoriale cohérente entre plusieurs blocs et chapitres ; aucun remplacement unique ou actif déclaré ne permet de la garantir sans modifier le cours."
+    }
+  ],
+  "summary": "Les deux activités P1 obligatoires (checkpoint sécurité et preuve du mini-projet) sont retirées de la progression avec leurs verrous, car leur validation actuelle est contournable avec une réponse incorrecte ou un caractère unique. Leurs explications et critères restent non bloquants. Deux constats P2 nécessitant une modification de rendu ou une harmonisation multi-blocs restent ouverts."
+}

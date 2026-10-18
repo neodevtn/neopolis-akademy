@@ -52,7 +52,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "content",
@@ -500,42 +500,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_02_tp",
+              "type": "content",
+              "id": "dc_1_act_02_tp_learning_note",
               "title": {
-                "en": "Présentation du LightningModule",
-                "fr": "Présentation du LightningModule"
+                "fr": "Présentation du LightningModule",
+                "en": "Présentation du LightningModule"
               },
-              "assignment": "Préparez-vous à créer votre premier LightningModule! Dans cet exercice pratique, vous allez configurer la structure principale d'un workflow de classification. Vous allez définir une couche linéaire, y faire passer les données selon la méthode directe, puis calculer la perte lors de l'étape d'apprentissage. Cette structure claire vous offre une base solide pour commencer à expérimenter avec vos modèles.\n\nLes fichiers torch et lightning.pytorch, importés sous le nom pl, ont été préchargés pour vous.",
-              "instructions": "Définissez une classe LightModel qui hérite de pl.LightningModule.\n\nDéfinissez une couche linéaire pour transformer votre entrée, en supposant que les caractéristiques d'entrée sont au nombre de 16 et qu'il existe 10 classes de sortie.\n\n### Code de départ\n\n```python\n# Define the model class\nclass LightModel(____):\n  \t# Define a linear layer to transform your input\n    def __init__(self):\n        super().__init__()\n        self.layer = ____\n    def forward(self, x):\n        return self.layer(x)\n    def training_step(self, batch, batch_idx):\n        x, y = batch\n        logits = self(x)\n        loss = torch.nn.functional.cross_entropy(logits, y)\n        return loss\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Préparez-vous à créer votre premier LightningModule! Dans cet exercice pratique, vous allez configurer la structure principale d'un workflow de classification. Vous allez définir une couche linéaire, y faire passer les données selon la méthode directe, puis calculer la perte lors de l'étape d'apprentissage. Cette structure claire vous offre une base solide pour commencer à expérimenter avec vos modèles.\n\nLes fichiers torch et lightning.pytorch, importés sous le nom pl, ont été préchargés pour vous.",
+                "en": "Get ready to create your first LightningModule! In this hands-on exercise, you will set up the main structure of a classification workflow. You will define a linear layer, pass data through it using the forward method, then compute the loss during the training step. This clear structure gives you a solid foundation to start experimenting with your models.\n\nThe torch and lightning.pytorch files, imported as pl, have been preloaded for you."
               },
-              "steps": [
-                "Définissez une classe LightModel qui hérite de pl.LightningModule.",
-                "Définissez une couche linéaire pour transformer votre entrée, en supposant que les caractéristiques d'entrée sont au nombre de 16 et qu'il existe 10 classes de sortie."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_ea600529.pdf"
-                }
-              ],
-              "hint": "Transmettez pl.LightningModule à LightModel().\n\nDéfinissez le calque avec torch.nn.Linear().",
-              "solution": "# Define the model class\nclass LightModel(pl.LightningModule):\n    # Define a linear layer to transform your input\n    def __init__(self):\n        super().__init__()\n        self.layer = torch.nn.Linear(16, 10)\n    def forward(self, x):\n        return self.layer(x)\n    def training_step(self, batch, batch_idx):\n        x, y = batch\n        logits = self(x)\n        loss = torch.nn.functional.cross_entropy(logits, y)\n        return loss",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -551,42 +532,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_03_tp",
+              "type": "content",
+              "id": "dc_1_act_03_tp_learning_note",
               "title": {
-                "en": "Utilisation du Lightning Trainer",
-                "fr": "Utilisation du Lightning Trainer"
+                "fr": "Utilisation du Lightning Trainer",
+                "en": "Utilisation du Lightning Trainer"
               },
-              "assignment": "Maintenant que votre modèle est défini, vous êtes prêt à configurer l'Trainer Lightning pour exécuter une boucle d'entraînement. Cet exercice vous aide à comprendre comment intégrer votre modèle, vos chargeurs de données et vos configurations d'entraînement. Il est essentiel de maîtriser cette configuration avant de passer à un entraînement plus avancé.\n\nLes fichiers torch et lightning.pytorch, importés sous le nom pl, ont été préchargés pour vous. Une instance de classe « model » a déjà été initialisée, en utilisant la classe que vous avez définie dans l'exercice précédent.",
-              "instructions": "Configurez l'Trainer avec 3 époques.\n\nCommencez une séance d'entraînement avec le programme prédéfini « model ».\n\n### Code de départ\n\n```python\nfrom lightning.pytorch import Trainer\n# Configure the Trainer with max epochs\ntrainer = ____(max_epochs=____, devices=1)\n# Start training with the predefined model\ntrainer.____(____, train_dataloader, val_dataloader)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Maintenant que votre modèle est défini, vous êtes prêt à configurer l'Trainer Lightning pour exécuter une boucle d'entraînement. Cet exercice vous aide à comprendre comment intégrer votre modèle, vos chargeurs de données et vos configurations d'entraînement. Il est essentiel de maîtriser cette configuration avant de passer à un entraînement plus avancé.\n\nLes fichiers torch et lightning.pytorch, importés sous le nom pl, ont été préchargés pour vous. Une instance de classe `model` a déjà été initialisée, en utilisant la classe que vous avez définie dans l'exercice précédent.",
+                "en": "Now that your model is defined, you are ready to set up the Lightning Trainer to run a training loop. This exercise helps you understand how to integrate your model, your data loaders, and your training configurations. It is essential to master this setup before moving on to more advanced training.\n\nThe files torch and lightning.pytorch, imported under the name pl, have been preloaded for you. An instance of the class `model` has already been initialized, using the class you defined in the previous exercise."
               },
-              "steps": [
-                "Configurez l'Trainer avec 3 époques.",
-                "Commencez une séance d'entraînement avec le programme prédéfini « model »."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_ea600529.pdf"
-                }
-              ],
-              "hint": "Veuillez définir l'max_epochs sur 3.\n\nVeuillez vous assurer que le modèle est bien transmis à l'trainer.fit e avant de l'appeler.",
-              "solution": "from lightning.pytorch import Trainer\n# Configure the Trainer with max epochs\ntrainer = Trainer(max_epochs=3, devices=1)\n# Start training with the predefined model\ntrainer.fit(model, train_dataloader, val_dataloader)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -602,7 +564,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",
@@ -936,42 +898,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_06_tp",
+              "type": "content",
+              "id": "dc_1_act_06_tp_learning_note",
               "title": {
-                "en": "Maîtriser la méthode init",
-                "fr": "Maîtriser la méthode init"
+                "fr": "Maîtriser la méthode init",
+                "en": "Maîtriser la méthode init"
               },
-              "assignment": "Dans PyTorch Lightning, la méthode ` __init__ est au cœur de votre configuration d'LightningModule`. C'est ici que vous définissez les couches du modèle, les paramètres et toute configuration initiale avant l'entraînement. En séparant clairement cette étape de configuration, PyTorch Lightning facilite la maintenance et la mise à l'échelle de vos projets. Dans cet exercice, vous allez vous concentrer sur l'initialisation de la classe pour votre modèle de classification.",
-              "instructions": "Créez une classe nommée « ClassifierModel » qui hérite de « pl.LightningModule ».\n\nInitialisez la classe parente afin de tirer parti des fonctionnalités de LightningModule.\n\n### Code de départ\n\n```python\nimport lightning.pytorch as pl\nimport torch.nn as nn\n\n# Create the class\nclass ClassifierModel(____):\n    # Create init method\n    def __init__(self, input_dim, output_dim):\n        ____\n        self.classifier = nn.Linear(input_dim, output_dim)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Dans PyTorch Lightning, la méthode `__init__` est au cœur de votre configuration de `LightningModule`. C'est ici que vous définissez les couches du modèle, les paramètres et toute configuration initiale avant l'entraînement. En séparant clairement cette étape de configuration, PyTorch Lightning facilite la maintenance et la mise à l'échelle de vos projets. Dans cet exercice, vous allez vous concentrer sur l'initialisation de la classe pour votre modèle de classification.",
+                "en": "In PyTorch Lightning, the `__init__` method is at the heart of your `LightningModule` configuration. This is where you define the model's layers, parameters, and any initial configuration before training. By clearly separating this configuration step, PyTorch Lightning makes it easier to maintain and scale your projects. In this exercise, you will focus on the class initialization for your classification model."
               },
-              "steps": [
-                "Créez une classe nommée « ClassifierModel » qui hérite de « pl.LightningModule ».",
-                "Initialisez la classe parente afin de tirer parti des fonctionnalités de LightningModule."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_ea600529.pdf"
-                }
-              ],
-              "hint": "Veuillez toujours hériter de pl.LightningModule pour que la magie de Lightning fonctionne.\n\nVeuillez appeler l'super().__init__() dans votre constructeur.",
-              "solution": "import lightning.pytorch as pl\nimport torch.nn as nn\n\n# Create the class\nclass ClassifierModel(pl.LightningModule):\n    # Create init method\n    def __init__(self, input_dim, output_dim):\n        super().__init__()\n        self.classifier = nn.Linear(input_dim, output_dim)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -987,42 +930,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_07_tp",
+              "type": "content",
+              "id": "dc_1_act_07_tp_learning_note",
               "title": {
-                "en": "Perfectionnement de la méthode avant",
-                "fr": "Perfectionnement de la méthode avant"
+                "fr": "Perfectionnement de la méthode avant",
+                "en": "Perfectionnement de la méthode avant"
               },
-              "assignment": "Après avoir configuré les couches dans la méthode d'__init__, la méthode de transfert définit la manière dont les données circulent entre elles. Dans PyTorch Lightning, cette séparation permet de garder votre code propre et facile à maintenir. Vous avez déjà vu comment structurer le constructeur. Il est maintenant temps de vous concentrer sur le passage direct, en vous assurant que votre logique de classification est claire et optimisée pour l'entraînement. Ici, les couches dans __init__ sont déjà définies pour vous, vous pouvez donc vous concentrer uniquement sur le flux avant.\n\nLes sites lightning.pytorch et torch.nn ont déjà été importés sous les noms pl et nn.",
-              "instructions": "Veuillez implémenter la méthode « forward » à l'intérieur de « ClassifierModel ».\n\nAppliquez une activation ReLU après la couche cachée.\n\n### Code de départ\n\n```python\nclass ClassifierModel(pl.LightningModule):\n  \n    def __init__(self, input_dim, hidden_dim, output_dim):\n        super().__init__()\n        self.hidden = nn.Linear(input_dim, hidden_dim)\n        self.output = nn.Linear(hidden_dim, output_dim)\n        \n    # Define forward method\n    def ____(self, ____):\n        # Complete the forward pass\n        x = self.hidden(x)\n        x = ____(x)\n        x = self.output(x)\n        return x\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Après avoir configuré les couches dans la méthode d'__init__, la méthode de transfert définit la manière dont les données circulent entre elles. Dans PyTorch Lightning, cette séparation permet de garder votre code propre et facile à maintenir. Vous avez déjà vu comment structurer le constructeur. Il est maintenant temps de vous concentrer sur le passage direct, en vous assurant que votre logique de classification est claire et optimisée pour l'entraînement. Ici, les couches dans __init__ sont déjà définies pour vous, vous pouvez donc vous concentrer uniquement sur le flux avant.\n\nLes sites lightning.pytorch et torch.nn ont déjà été importés sous les noms pl et nn.",
+                "en": "After configuring the layers in the __init__ method, the forward method defines how data flows between them. In PyTorch Lightning, this separation helps keep your code clean and easy to maintain. You have already seen how to structure the constructor. It is now time to focus on the forward pass, ensuring that your classification logic is clear and optimized for training. Here, the layers in __init__ are already defined for you, so you can focus solely on the forward flow.\n\nThe modules lightning.pytorch and torch.nn have already been imported under the names pl and nn."
               },
-              "steps": [
-                "Veuillez implémenter la méthode « forward » à l'intérieur de « ClassifierModel ».",
-                "Appliquez une activation ReLU après la couche cachée."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_ea600529.pdf"
-                }
-              ],
-              "hint": "Veuillez vous assurer que l'entrée passe par chaque couche définie dans l'ordre.\n\nVeuillez inclure l'activation ReLU (nn.ReLU()) dans le passage avant.",
-              "solution": "class ClassifierModel(pl.LightningModule):\n  \n    def __init__(self, input_dim, hidden_dim, output_dim):\n        super().__init__()\n        self.hidden = nn.Linear(input_dim, hidden_dim)\n        self.output = nn.Linear(hidden_dim, output_dim)\n        \n    # Define forward method\n    def forward(self, x):\n        # Complete the forward pass\n        x = self.hidden(x)\n        x = nn.ReLU(x)\n        x = self.output(x)\n        return x",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -1038,7 +962,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",
@@ -1372,43 +1296,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_09_tp",
+              "type": "content",
+              "id": "dc_1_act_09_tp_learning_note",
               "title": {
-                "en": "Implementing the Training Phase",
-                "fr": "Mise en œuvre de la phase de formation"
+                "fr": "Mise en œuvre de la phase de formation",
+                "en": "Implementing the Training Phase"
               },
-              "assignment": "Dans cet exercice, vous allez implémenter la méthode training_step() dans un module PyTorch Lightning conçu pour une tâche de classification d'images.\nVotre implémentation doit décompresser un lot d'images et d'étiquettes, calculer les prédictions du modèle via le passage direct, calculer la perte d'entropie croisée et enregistrer la perte d'entraînement.",
-              "instructions": "Veuillez vous assurer que vous calculez les prédictions à l'aide du passage direct.\n\nCalculez la perte d'entropie croisée.\n\nEnregistrez la perte d'entraînement.\n\n### Code de départ\n\n```python\nfrom torch.nn.functional import cross_entropy\n\ndef training_step(self, batch, batch_idx):\n    x, y = batch\n    # Ensure that you compute predictions using the forward pass\n    y_hat = ____\n    # Calculate the cross entropy loss\n    loss = ____\n    # Log the loss\n    self.____(\"train_loss\", loss)\n    return loss\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Dans cet exercice, vous allez implémenter la méthode training_step() dans un module PyTorch Lightning conçu pour une tâche de classification d'images.\nVotre implémentation doit décompresser un lot d'images et d'étiquettes, calculer les prédictions du modèle via le passage direct, calculer la perte d'entropie croisée et enregistrer la perte d'entraînement.",
+                "en": "In this exercise, you will implement the training_step() method in a PyTorch Lightning module designed for an image classification task.\nYour implementation should unpack a batch of images and labels, compute the model's predictions via the forward pass, compute the cross-entropy loss, and log the training loss."
               },
-              "steps": [
-                "Veuillez vous assurer que vous calculez les prédictions à l'aide du passage direct.",
-                "Calculez la perte d'entropie croisée.",
-                "Enregistrez la perte d'entraînement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_ea600529.pdf"
-                }
-              ],
-              "hint": "Calculez les prédictions en appelant la méthode forward du modèle avec l'entrée (self(x)).\n\nVeuillez utiliser nn.functional.cross_entropy() pour calculer la perte.",
-              "solution": "from torch.nn.functional import cross_entropy\n\ndef training_step(self, batch, batch_idx):\n    x, y = batch\n    # Ensure that you compute predictions using the forward pass\n    y_hat = self(x)\n    # Calculate the cross entropy loss\n    loss = cross_entropy(y_hat, y)\n    # Log the loss\n    self.log(\"train_loss\", loss)\n    return loss",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -1424,41 +1328,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_10_tp",
+              "type": "content",
+              "id": "dc_1_act_10_tp_learning_note",
               "title": {
-                "en": "Configuration de l'optimiseur",
-                "fr": "Configuration de l'optimiseur"
+                "fr": "Configuration de l'optimiseur",
+                "en": "Configuration de l'optimiseur"
               },
-              "assignment": "Maintenant que nous disposons d'une logique d'entraînement, nous devons préciser comment optimiser les paramètres du modèle.\n\nDans cet exercice, vous allez compléter la méthode d'configure_optimizers dans un module PyTorch Lightning utilisé pour les tâches de classification d'images. Votre objectif est de configurer un optimiseur qui mettra à jour les paramètres du modèle pendant l'entraînement. Pour ce faire, vous utiliserez l'optimiseur Adam avec un taux d'apprentissage de 1e-3.",
-              "instructions": "Veuillez créer un optimiseur Adam en utilisant les paramètres du modèle, en définissant le taux d'apprentissage sur 1e-3.\n\n### Code de départ\n\n```python\nimport torch\n\ndef configure_optimizers(self):\n  \t# Create an Adam optimizer for model parameters\n    optimizer = ____ \n    return optimizer\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Maintenant que nous disposons d'une logique d'entraînement, nous devons préciser comment optimiser les paramètres du modèle.\n\nDans cet exercice, vous allez compléter la méthode d'configure_optimizers dans un module PyTorch Lightning utilisé pour les tâches de classification d'images. Votre objectif est de configurer un optimiseur qui mettra à jour les paramètres du modèle pendant l'entraînement. Pour ce faire, vous utiliserez l'optimiseur Adam avec un taux d'apprentissage de 1e-3.",
+                "en": "Now that we have training logic, we need to specify how to optimize the model parameters.\n\nIn this exercise, you will complete the configure_optimizers method in a PyTorch Lightning module used for image classification tasks. Your goal is to configure an optimizer that will update the model's parameters during training. To do this, you will use the Adam optimizer with a learning rate of 1e-3."
               },
-              "steps": [
-                "Veuillez créer un optimiseur Adam en utilisant les paramètres du modèle, en définissant le taux d'apprentissage sur 1e-3."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_ea600529.pdf"
-                }
-              ],
-              "hint": "Veuillez utiliser torch.optim.Adam pour créer l'optimiseur.\n\nTransmettez l'self.parameters() à l'optimiseur afin qu'il puisse mettre à jour tous les paramètres du modèle.",
-              "solution": "import torch\n\ndef configure_optimizers(self):\n  \t# Create an Adam optimizer for model parameters\n    optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)\n    return optimizer",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -1474,44 +1360,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_11_tp",
+              "type": "content",
+              "id": "dc_1_act_11_tp_learning_note",
               "title": {
-                "en": "Formation et évaluation",
-                "fr": "Formation et évaluation"
+                "fr": "Formation et évaluation",
+                "en": "Formation et évaluation"
               },
-              "assignment": "Dans cet exercice, nous allons rassembler tout ce que nous avons appris jusqu'à présent en entraînant et en évaluant un réseau neuronal sur un ensemble de données réelles de caractères MNIST éthiopiens manuscrits.\n\nImageClassifier est un modèle de réseau neuronal prédéfini implémenté à l'aide de PyTorch Lightning. Il se compose de couches convolutives pour l'extraction des caractéristiques, de fonctions d'activation pour introduire la non-linéarité et de couches entièrement connectées pour la classification.\n\nL'ensemble de données MNIST en éthiopien a été pré-importé pour vous.",
-              "instructions": "Veuillez importer l'Trainer.\n\nDéfinissez le modèle d'ImageClassifier et le formateur.\n\nEntraînez le modèle.\n\nÉvaluez le modèle sur l'ensemble de validation.\n\n### Code de départ\n\n```python\n# Import the Trainer\nfrom lightning.pytorch import ____\n\n# Define ImageClassifier model & trainer and set epoch parameter\nmodel = ____()\ntrainer = ____(max_epochs=5)\n\n# Train the model\ntrainer.fit(____, train_loader, val_loader)\n\n# Evaluate the model\nval_results = trainer.____(____, val_loader)\nprint(\"Validation Accuracy:\", val_results[0][\"val_acc\"])\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Dans cet exercice, nous allons rassembler tout ce que nous avons appris jusqu'à présent en entraînant et en évaluant un réseau neuronal sur un ensemble de données réelles de caractères MNIST éthiopiens manuscrits.\n\nImageClassifier est un modèle de réseau neuronal prédéfini implémenté à l'aide de PyTorch Lightning. Il se compose de couches convolutives pour l'extraction des caractéristiques, de fonctions d'activation pour introduire la non-linéarité et de couches entièrement connectées pour la classification.\n\nL'ensemble de données MNIST en éthiopien a été pré-importé pour vous.",
+                "en": "In this exercise, we will bring together everything we've learned so far by training and evaluating a neural network on a real dataset of handwritten Ethiopian MNIST characters.\n\nImageClassifier is a predefined neural network model implemented using PyTorch Lightning. It consists of convolutional layers for feature extraction, activation functions to introduce nonlinearity, and fully connected layers for classification.\n\nThe Ethiopian MNIST dataset has been pre-imported for you."
               },
-              "steps": [
-                "Veuillez importer l'Trainer.",
-                "Définissez le modèle d'ImageClassifier et le formateur.",
-                "Entraînez le modèle.",
-                "Évaluez le modèle sur l'ensemble de validation."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_ea600529.pdf"
-                }
-              ],
-              "hint": "Veuillez utiliser ImageClassifier pour définir les modèles et Trainer pour gérer le processus de formation.\n\nN'oubliez pas d'utiliser la méthode « .validate() » pour évaluer les performances de votre modèle après l'entraînement.",
-              "solution": "# Import the Trainer\nfrom lightning.pytorch import Trainer\n\n# Define ImageClassifier model & trainer and set epoch parameter\nmodel = ImageClassifier()\ntrainer = Trainer(max_epochs=5)\n\n# Train the model\ntrainer.fit(model, train_loader, val_loader)\n\n# Evaluate the model\nval_results = trainer.validate(model, val_loader)\nprint(\"Validation Accuracy:\", val_results[0][\"val_acc\"])",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         }
@@ -1545,7 +1410,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",
@@ -1907,42 +1772,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_02_tp",
+              "type": "content",
+              "id": "dc_2_act_02_tp_learning_note",
               "title": {
-                "en": "Splitting data with LightningDataModule",
-                "fr": "Diviser les données avec LightningDataModule"
+                "fr": "Diviser les données avec LightningDataModule",
+                "en": "Splitting data with LightningDataModule"
               },
-              "assignment": "Vous devrez suivre la méthode de l'setup dans un LightningDataModule. Un partitionnement adéquat des ensembles de données garantit que le modèle est entraîné sur un sous-ensemble et validé sur un autre, ce qui évite le surapprentissage.\n\nLe module d'extension « dataset » a déjà été pré-importé.",
-              "instructions": "Importez l'random_split pour diviser l'ensemble de données en deux parties : formation et validation.\n\nDivisez l'ensemble de données en deux parties : formation (80 %) et validation (20 %) à l'aide de l'random_split.\n\n### Code de départ\n\n```python\n# Import libraries \nimport lightning.pytorch as pl\nfrom torch.utils.data import ____\n\nclass SplitDataModule(pl.LightningDataModule):\n    def __init__(self):\n        super().__init__()\n        self.train_data = None\n        self.val_data = None\n    def setup(self, stage=None):\n        # Split the dataset into training (80%) and validation (20%)\n        self.____, self.____ = random_split(dataset, [____, ____])\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Vous devrez suivre la méthode `setup` d’un LightningDataModule. Un partitionnement adéquat des ensembles de données garantit que le modèle est entraîné sur un sous-ensemble et validé sur un autre, ce qui évite le surapprentissage.\n\nLe module d'extension `dataset` a déjà été pré-importé.",
+                "en": "You will need to follow the `setup` method in a LightningDataModule. Proper partitioning of datasets ensures that the model is trained on one subset and validated on another, which prevents overfitting. The `dataset` extension module has already been pre-imported."
               },
-              "steps": [
-                "Importez l'random_split pour diviser l'ensemble de données en deux parties : formation et validation.",
-                "Divisez l'ensemble de données en deux parties : formation (80 %) et validation (20 %) à l'aide de l'random_split."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_2c0dfa07.pdf"
-                }
-              ],
-              "hint": "Veuillez utiliser l'random_split(dataset, [size1, size2]) pour diviser l'ensemble de données en ensembles d'entraînement et de validation.\n\nLa somme des tailles des divisions doit correspondre à la longueur de l'ensemble de données.\n\nVeuillez enregistrer les ensembles de données obtenus sous les noms self.train_data et self.val_data.",
-              "solution": "# Import libraries\nimport lightning.pytorch as pl\nfrom torch.utils.data import random_split\n\nclass SplitDataModule(pl.LightningDataModule):\n    def __init__(self):\n        super().__init__()\n        self.train_data = None\n        self.val_data = None\n    def setup(self, stage=None):\n        # Split the dataset into training (80%) and validation (20%)\n        self.train_data, self.val_data = random_split(dataset, [80, 20])",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -1958,42 +1804,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_03_tp",
+              "type": "content",
+              "id": "dc_2_act_03_tp_learning_note",
               "title": {
-                "en": "Creating a DataLoader for training",
-                "fr": "Création d'un DataLoader pour un train"
+                "fr": "Création d'un DataLoader pour un train",
+                "en": "Creating a DataLoader for training"
               },
-              "assignment": "Maintenant que nous avons divisé notre ensemble de données, nous devons définir un chargeur de données afin de fournir des lots de données pendant l'entraînement. DataLoader charge efficacement les données en mémoire et permet de les mélanger pour une meilleure généralisation. Dans cet exercice, vous allez compléter la méthode d'appel de la fonction « train_dataloader ».",
-              "instructions": "Veuillez importer l'DataLoader.\n\nRenvoie une instance d'DataLoader qui charge self.train_data, activant le brassage pour une meilleure généralisation.\n\n### Code de départ\n\n```python\n# Import libraries\nfrom torch.utils.data import ____\nimport lightning.pytorch as pl\n\nclass LoaderDataModule(pl.LightningDataModule):\n    def __init__(self):\n        super().__init__()\n        self.train_data = None\n        self.val_data = None\n    def setup(self, stage=None):\n        self.train_data, self.val_data = random_split(dataset, [80, 20])\n    def train_dataloader(self):\n      \t# Complete DataLoader\n        return ____(____, batch_size=16, shuffle=____)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Maintenant que nous avons divisé notre ensemble de données, nous devons définir un chargeur de données afin de fournir des lots de données pendant l'entraînement. DataLoader charge efficacement les données en mémoire et permet de les mélanger pour une meilleure généralisation. Dans cet exercice, vous allez compléter la méthode d’appel de la fonction `train_dataloader`.",
+                "en": "Now that we have split our dataset, we need to define a data loader to provide data batches during training. DataLoader efficiently loads data into memory and allows shuffling for better generalization. In this exercise, you will complete the call method of the `train_dataloader` function."
               },
-              "steps": [
-                "Veuillez importer l'DataLoader.",
-                "Renvoie une instance d'DataLoader qui charge self.train_data, activant le brassage pour une meilleure généralisation."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_2c0dfa07.pdf"
-                }
-              ],
-              "hint": "Veuillez utiliser DataLoader(dataset, batch_size=batch_size, shuffle=True) pour charger le jeu de données par lots.\n\nVeuillez vous assurer d'utiliser self.train_data comme ensemble de données.\n\nDéfinissez l'shuffle=True pour randomiser l'ordre des données.",
-              "solution": "# Import libraries\nfrom torch.utils.data import DataLoader\nimport lightning.pytorch as pl\n\nclass LoaderDataModule(pl.LightningDataModule):\n    def __init__(self):\n        super().__init__()\n        self.train_data = None\n        self.val_data = None\n    def setup(self, stage=None):\n        self.train_data, self.val_data = random_split(dataset, [80, 20])\n    def train_dataloader(self):\n      \t# Complete DataLoader\n        return DataLoader(self.train_data, batch_size=16, shuffle=True)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -2009,7 +1836,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",
@@ -2275,43 +2102,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_05_tp",
+              "type": "content",
+              "id": "dc_2_act_05_tp_learning_note",
               "title": {
-                "en": "Mise en œuvre de l'étape de validation",
-                "fr": "Mise en œuvre de l'étape de validation"
+                "fr": "Mise en œuvre de l'étape de validation",
+                "en": "Mise en œuvre de l'étape de validation"
               },
-              "assignment": "Une fois que nous avons formé un modèle de réseau neuronal, nous devons surveiller ses performances pendant l'entraînement. À l'aide de PyTorch Lightning, implémentez la méthode validation_step() pour calculer et enregistrer la perte de validation à chaque époque.",
-              "instructions": "Calculez les prédictions à l'aide du modèle sur le lot d'entrée.\n\nVeuillez calculer la perte de validation à l'aide de l'F.cross_entropy().\n\nEnregistrez la perte de validation avec l'self.log() comme val_loss.\n\n### Code de départ\n\n```python\nimport torch.nn.functional as F\n\ndef validation_step(self, batch, batch_idx):\n    x, y = batch\n    # Compute predictions using the model\n    preds = ____(x)\n    # Calculate validation loss\n    loss = F.____(preds, y)\n    # Log the validation loss\n    self.____('val_loss', loss)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Une fois que nous avons formé un modèle de réseau neuronal, nous devons surveiller ses performances pendant l'entraînement. À l'aide de PyTorch Lightning, implémentez la méthode validation_step() pour calculer et enregistrer la perte de validation à chaque époque.",
+                "en": "Once we have trained a neural network model, we must monitor its performance during training. Using PyTorch Lightning, implement the validation_step() method to compute and record the validation loss at each epoch."
               },
-              "steps": [
-                "Calculez les prédictions à l'aide du modèle sur le lot d'entrée.",
-                "Veuillez calculer la perte de validation à l'aide de l'F.cross_entropy().",
-                "Enregistrez la perte de validation avec l'self.log() comme val_loss."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_2c0dfa07.pdf"
-                }
-              ],
-              "hint": "Veuillez utiliser l'instance de modèle (self) pour générer des prédictions.\n\nVeuillez utiliser la fonction « F.cross_entropy() » de PyTorch pour calculer la perte.\n\nN'oubliez pas d'utiliser self.log() pour suivre les statistiques.",
-              "solution": "import torch.nn.functional as F\n\ndef validation_step(self, batch, batch_idx):\n    x, y = batch\n    # Compute predictions using the model\n    preds = self(x)\n    # Calculate validation loss\n    loss = F.cross_entropy(preds, y)\n    # Log the validation loss\n    self.log('val_loss', loss)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -2327,43 +2134,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_06_tp",
+              "type": "content",
+              "id": "dc_2_act_06_tp_learning_note",
               "title": {
-                "en": "Evaluate model accuracy using Torchmetrics",
-                "fr": "Évaluer la précision du modèle à l'aide de Torchmetrics"
+                "fr": "Évaluer la précision du modèle à l'aide de Torchmetrics",
+                "en": "Evaluate model accuracy using Torchmetrics"
               },
-              "assignment": "Il est essentiel d'évaluer les performances de votre modèle, en particulier lorsque vous le préparez pour son déploiement. Intégrons en toute simplicité le calcul de précision à l'aide de Torchmetrics directement dans validation_step(). N'oubliez pas d'enregistrer les résultats afin de pouvoir suivre facilement les progrès de votre modèle.",
-              "instructions": "Importez Accuracy à partir de torchmetrics.\n\nVeuillez instancier la métrique de précision à l'intérieur de l'__init__().\n\nVeuillez calculer la précision dans l'validation_step() et l'enregistrer en tant qu''val_acc'.\n\n### Code de départ\n\n```python\n# Import relevant metric\nfrom torchmetrics import ____\nimport lightning.pytorch as pl\n\nclass ClassifierModel(pl.LightningModule):\n    def __init__(self):\n        super().__init__()\n        # Instantiate accuracy metric\n        self.accuracy = ____()\n    def validation_step(self, batch, batch_idx):\n        x, y = batch\n        preds = self(x)\n        # Calculate accuracy and log it as val_acc\n        acc = self.____(preds, y)\n        self.log(____, acc)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Il est essentiel d'évaluer les performances de votre modèle, en particulier lorsque vous le préparez pour son déploiement. Intégrons en toute simplicité le calcul de précision à l'aide de Torchmetrics directement dans validation_step(). N'oubliez pas d'enregistrer les résultats afin de pouvoir suivre facilement les progrès de votre modèle.",
+                "en": "It is essential to evaluate the performance of your model, especially when you are preparing it for deployment. Let's simply integrate the accuracy calculation using Torchmetrics directly into validation_step(). Don't forget to log the results so you can easily track your model's progress."
               },
-              "steps": [
-                "Importez Accuracy à partir de torchmetrics.",
-                "Veuillez instancier la métrique de précision à l'intérieur de l'__init__().",
-                "Veuillez calculer la précision dans l'validation_step() et l'enregistrer en tant qu''val_acc'."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_2c0dfa07.pdf"
-                }
-              ],
-              "hint": "L'objet self.accuracy instancié peut être utilisé pour calculer la précision.",
-              "solution": "# Import relevant metric\nfrom torchmetrics import Accuracy\nimport lightning.pytorch as pl\n\nclass ClassifierModel(pl.LightningModule):\n    def __init__(self):\n        super().__init__()\n        # Instantiate accuracy metric\n        self.accuracy = Accuracy()\n    def validation_step(self, batch, batch_idx):\n        x, y = batch\n        preds = self(x)\n        # Calculate accuracy and log it as val_acc\n        acc = self.accuracy(preds, y)\n        self.log('val_acc', acc)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -2379,7 +2166,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",
@@ -2756,42 +2543,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_09_tp",
+              "type": "content",
+              "id": "dc_2_act_09_tp_learning_note",
               "title": {
-                "en": "Optimizing Model Training with Lightning",
-                "fr": "Optimisation de l'entraînement des modèles avec Lightning"
+                "fr": "Optimisation de l'entraînement des modèles avec Lightning",
+                "en": "Optimizing Model Training with Lightning"
               },
-              "assignment": "En mettant en œuvre des techniques automatisées telles que ModelCheckpoint et EarlyStopping, vous vous assurerez que votre modèle sélectionne les paramètres les plus performants tout en évitant les calculs inutiles.\n\nCet ensemble de données, qui est un sous-ensemble de l'ensemble de données Osmanya MNIST, fournit un cas d'utilisation concret où les techniques d'entraînement de l'IA évolutives peuvent améliorer considérablement l'efficacité et la précision.\n\nOsmanyaDataModule ImageClassifier ont été prédéfinis pour vous.",
-              "instructions": "Importez les rappels que vous utiliserez pour le pointage du modèle et l'arrêt anticipé.\n\nEntraînez le modèle à l'aide des rappels « ModelCheckpoint » et « EarlyStopping ».\n\n### Code de départ\n\n```python\n# Import relevant checkpoints\nfrom lightning.pytorch.callbacks import ____, ____\n\nclass EvaluatedImageClassifier(ImageClassifier):\n    def validation_step(self, batch, batch_idx):\n        x, y = batch\n        y_hat = self(x)\n        acc = (y_hat.argmax(dim=1) == y).float().mean()\n        self.log(\"val_acc\", acc)\n\nmodel = EvaluatedImageClassifier()\ndata_module = OsmanyaDataModule()\n# Train the model with ModelCheckpoint and EarlyStopping checkpoints\ntrainer = Trainer(____=[____(monitor=\"val_acc\", save_top_k=1), ____(monitor=\"val_acc\", patience=3)])\ntrainer.fit(model, datamodule=data_module)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "En mettant en œuvre des techniques automatisées telles que ModelCheckpoint et EarlyStopping, vous vous assurerez que votre modèle sélectionne les paramètres les plus performants tout en évitant les calculs inutiles.\n\nCet ensemble de données, qui est un sous-ensemble de l'ensemble de données Osmanya MNIST, fournit un cas d'utilisation concret où les techniques d'entraînement de l'IA évolutives peuvent améliorer considérablement l'efficacité et la précision.\n\nOsmanyaDataModule ImageClassifier ont été prédéfinis pour vous.",
+                "en": "By implementing automated techniques such as ModelCheckpoint and EarlyStopping, you will ensure that your model selects the best-performing parameters while avoiding unnecessary computations.\n\nThis dataset, which is a subset of the Osmanya MNIST dataset, provides a concrete use case where scalable AI training techniques can significantly improve efficiency and accuracy.\n\nOsmanyaDataModule and ImageClassifier have been predefined for you."
               },
-              "steps": [
-                "Importez les rappels que vous utiliserez pour le pointage du modèle et l'arrêt anticipé.",
-                "Entraînez le modèle à l'aide des rappels « ModelCheckpoint » et « EarlyStopping »."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_2c0dfa07.pdf"
-                }
-              ],
-              "hint": "Définissez la classe parente ImageClassifier pour EvaluatedImageClassifier.\n\nVeuillez créer une instance de EvaluatedImageClassifier.\n\nConfigurez la classe d'Trainer avec ModelCheckpoint pour enregistrer le meilleur modèle en fonction de val_acc et EarlyStopping pour arrêter l'entraînement lorsqu'aucune amélioration n'est détectée.\n\nN'oubliez pas de remplir le paramètre essentiel « callbacks » dans « Trainer ».",
-              "solution": "# Import relevant checkpoints\nfrom lightning.pytorch.callbacks import ModelCheckpoint, EarlyStopping\n\nclass EvaluatedImageClassifier(ImageClassifier):\n    def validation_step(self, batch, batch_idx):\n        x, y = batch\n        y_hat = self(x)\n        acc = (y_hat.argmax(dim=1) == y).float().mean()\n        self.log(\"val_acc\", acc)\n\nmodel = EvaluatedImageClassifier()\ndata_module = OsmanyaDataModule()\n# Train the model with ModelCheckpoint and EarlyStopping checkpoints\ntrainer = Trainer(callbacks=[ModelCheckpoint(monitor=\"val_acc\", save_top_k=1), EarlyStopping(monitor=\"val_acc\", patience=3)])\ntrainer.fit(model, datamodule=data_module)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         }
@@ -2825,7 +2593,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",
@@ -3128,42 +2896,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_02_tp",
+              "type": "content",
+              "id": "dc_3_act_02_tp_learning_note",
               "title": {
-                "en": "Appliquer la quantification dynamique",
-                "fr": "Appliquer la quantification dynamique"
+                "fr": "Appliquer la quantification dynamique",
+                "en": "Appliquer la quantification dynamique"
               },
-              "assignment": "Vous avez formé avec succès un modèle de réseau neuronal en vue de son déploiement et vous souhaitez maintenant l'optimiser à l'aide de la quantification dynamique. Cette étape est cruciale pour déployer efficacement votre modèle dans des environnements aux ressources limitées.\n\nLe logiciel de gestion de la santé et de la sécurité au travail « model » a été préinstallé.",
-              "instructions": "Importez le module de quantification nécessaire depuis PyTorch.\n\nAppliquez une quantification dynamique ciblant les couches linéaires, en utilisant une précision entière de 8 bits.\n\n### Code de départ\n\n```python\nimport torch\n# Import the necessary quantization module\nfrom torch.quantization import ____\n\n# Apply dynamic quantization targeting linear layers\nmodel_quantized = torch.quantization.____(\n    ____, {torch.nn.____}, dtype=torch.____\n)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Vous avez formé avec succès un modèle de réseau neuronal en vue de son déploiement et vous souhaitez maintenant l'optimiser à l'aide de la quantification dynamique. Cette étape est cruciale pour déployer efficacement votre modèle dans des environnements aux ressources limitées.\n\nLe logiciel de gestion de la santé et de la sécurité au travail « model » a été préinstallé.",
+                "en": "You have successfully trained a neural network model for deployment and now want to optimize it using dynamic quantization. This step is crucial for efficiently deploying your model in resource-constrained environments.\n\nThe occupational health and safety management software « model » has been preinstalled."
               },
-              "steps": [
-                "Importez le module de quantification nécessaire depuis PyTorch.",
-                "Appliquez une quantification dynamique ciblant les couches linéaires, en utilisant une précision entière de 8 bits."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_7c4bce6f.pdf"
-                }
-              ],
-              "hint": "Veuillez vous rappeler la fonction d'quantize_dynamic() ion de PyTorch pour quantifier de manière dynamique.\n\nIdentifiez la couche PyTorch que vous ciblez généralement pour la quantification.\n\nVeuillez utiliser le type de données « torch.qint8 » pour une quantification efficace.",
-              "solution": "import torch\n# Import the necessary quantization module\nfrom torch.quantization import quantize_dynamic\n\n# Apply dynamic quantization targeting linear layers\nmodel_quantized = torch.quantization.quantize_dynamic(\n    model, {torch.nn.Linear}, dtype=torch.qint8\n)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -3179,42 +2928,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_03_tp",
+              "type": "content",
+              "id": "dc_3_act_03_tp_learning_note",
               "title": {
-                "en": "Comparing the Performance of Quantized Models",
-                "fr": "Comparaison des performances des modèles quantifiés"
+                "fr": "Comparaison des performances des modèles quantifiés",
+                "en": "Comparing the Performance of Quantized Models"
               },
-              "assignment": "Comprendre les améliorations en matière de performances ne se limite pas à la précision. Les modèles quantifiés offrent souvent des temps d'inférence plus rapides, ce qui constitue un avantage clé dans les scénarios de déploiement. Vous mesurerez le temps nécessaire aux modèles original et quantifié pour traiter l'ensemble de test.\n\nLa fonction d'measure_time() a été prédéfinie. Il met le modèle en mode évaluation, exécute une passe avant sur tous les lots du chargeur de données et renvoie le temps écoulé.\n\nmodel (le modèle original) et model_quantized (la version quantifiée) sont préchargés avec test_loader.",
-              "instructions": "Calculez le temps d'inférence pour les modèles originaux et quantifiés.\n\nVeuillez imprimer les deux valeurs arrondies à deux décimales.\n\n### Code de départ\n\n```python\n# Measure inference time of the original model\noriginal_time = measure_time(____)\n\n# Measure inference time of the quantized model\nquant_time = measure_time(____)\n\n# Print results\nprint(f\"Original Model Time: {____}s\")\nprint(f\"Quantized Model Time: {____}s\")\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Comprendre les améliorations en matière de performances ne se limite pas à la précision. Les modèles quantifiés offrent souvent des temps d'inférence plus rapides, ce qui constitue un avantage clé dans les scénarios de déploiement. Vous mesurerez le temps nécessaire aux modèles original et quantifié pour traiter l'ensemble de test.\n\nLa fonction d'measure_time() a été prédéfinie. Il met le modèle en mode évaluation, exécute une passe avant sur tous les lots du chargeur de données et renvoie le temps écoulé.\n\nmodel (le modèle original) et model_quantized (la version quantifiée) sont préchargés avec test_loader.",
+                "en": "Understanding performance improvements is not limited to accuracy. Quantized models often offer faster inference times, which is a key advantage in deployment scenarios. You will measure the time required for the original and quantized models to process the test set.\n\nThe function measure_time() has been predefined. It sets the model to evaluation mode, runs a forward pass on all batches from the data loader, and returns the elapsed time.\n\nmodel (the original model) and model_quantized (the quantized version) are preloaded with test_loader."
               },
-              "steps": [
-                "Calculez le temps d'inférence pour les modèles originaux et quantifiés.",
-                "Veuillez imprimer les deux valeurs arrondies à deux décimales."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_7c4bce6f.pdf"
-                }
-              ],
-              "hint": "Veuillez utiliser measure_time(model, test_loader) et attribuer le résultat à original_time.\n\nVeuillez procéder de la même manière pour model_quantized.\n\nFormatez les deux sorties à l'aide d'une chaîne f avec l':.2f.",
-              "solution": "# Measure inference time of the original model\noriginal_time = measure_time(model, test_loader)\n\n# Measure inference time of the quantized model\nquant_time = measure_time(model_quantized, test_loader)\n\n# Print results\nprint(f\"Original Model Time: {original_time:.2f}s\")\nprint(f\"Quantized Model Time: {quant_time:.2f}s\")",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -3230,7 +2960,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",
@@ -3525,42 +3255,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_05_tp",
+              "type": "content",
+              "id": "dc_3_act_05_tp_learning_note",
               "title": {
-                "en": "Appliquer la taille à une couche linéaire",
-                "fr": "Appliquer la taille à une couche linéaire"
+                "fr": "Appliquer la taille à une couche linéaire",
+                "en": "Appliquer la taille à une couche linéaire"
               },
-              "assignment": "Nous avons formé un modèle de classification d'images à l'aide d'une couche entièrement connectée (linéaire). À présent, nous devons appliquer un élagage non structuré à cette couche afin de réduire la taille du modèle sans affecter de manière significative les performances. Nous utiliserons la méthode d'l1_unstructured de PyTorch pour cette tâche.\n\nLe modèle est préchargé dans la variable model.",
-              "instructions": "Veuillez importer le module de taille à partir de l'adresse suivante : torch.nn.utils.\n\nAppliquez la taille « l1_unstructured » à « model[3] », la dernière couche, et réduisez les poids de 30 %.\n\n### Code de départ\n\n```python\n# Import pruning module\nimport torch.nn.utils.prune as ____\n# Before pruning\nprint(model)\n# Apply L1 unstructured pruning to model[3]\nprune.____(model[3], name=\"____\", amount=____)\n# After pruning\nprint(model)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Nous avons formé un modèle de classification d'images à l'aide d'une couche entièrement connectée (linéaire). À présent, nous devons appliquer un élagage non structuré à cette couche afin de réduire la taille du modèle sans affecter de manière significative les performances. Nous utiliserons la méthode d'l1_unstructured de PyTorch pour cette tâche.\n\nLe modèle est préchargé dans la variable model.",
+                "en": "We trained an image classification model using a fully connected (linear) layer. Now we need to apply unstructured pruning to this layer to reduce the model size without significantly affecting performance. We will use PyTorch's l1_unstructured method for this task.\n\nThe model is preloaded in the variable model."
               },
-              "steps": [
-                "Veuillez importer le module de taille à partir de l'adresse suivante : torch.nn.utils.",
-                "Appliquez la taille « l1_unstructured » à « model[3] », la dernière couche, et réduisez les poids de 30 %."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_7c4bce6f.pdf"
-                }
-              ],
-              "hint": "Veuillez utiliser import torch.nn.utils.prune en tant que prune pour accéder aux utilitaires de suppression.\n\nLe paramètre amount définit le pourcentage de poids à mettre à zéro.\n\nNous devons définir l'argument name sur weight pour notre tâche d'élagage.",
-              "solution": "# Import pruning module\nimport torch.nn.utils.prune as prune\n# Before pruning\nprint(model)\n# Apply L1 unstructured pruning to model[3]\nprune.l1_unstructured(model[3], name=\"weight\", amount=0.3)\n# After pruning\nprint(model)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -3576,43 +3287,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_06_tp",
+              "type": "content",
+              "id": "dc_3_act_06_tp_learning_note",
               "title": {
-                "en": "Terminez la taille en retirant le masque.",
-                "fr": "Terminez la taille en retirant le masque."
+                "fr": "Terminez la taille en retirant le masque.",
+                "en": "Terminez la taille en retirant le masque."
               },
-              "assignment": "Après avoir élagué un modèle, vous devez le finaliser avant de l'enregistrer ou de le déployer. Cela implique de supprimer le masque de taille afin que le modèle ne suive plus les poids qui ont été mis à zéro. Vous utiliserez prune.remove() pour terminer cette étape.",
-              "instructions": "Veuillez finaliser la réduction du paramètre de pondération.\n\nVeuillez utiliser l'prune.remove() e pour supprimer le masque et enregistrer les poids finaux.\n\nImprimez le modèle pour confirmer que l'élagage a bien été supprimé.\n\n### Code de départ\n\n```python\nimport torch.nn.utils.prune as prune\n# Before pruning\nprint(model)\n# Finalize pruning by removing the pruning mask\nprune.____(model[3], \"____\")\n# Print model structure after pruning\nprint(____)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Après avoir élagué un modèle, vous devez le finaliser avant de l'enregistrer ou de le déployer. Cela implique de supprimer le masque de taille afin que le modèle ne suive plus les poids qui ont été mis à zéro. Vous utiliserez prune.remove() pour terminer cette étape.",
+                "en": "After pruning a model, you must finalize it before saving or deploying it. This involves removing the pruning mask so that the model no longer tracks weights that have been set to zero. You will use prune.remove() to complete this step."
               },
-              "steps": [
-                "Veuillez finaliser la réduction du paramètre de pondération.",
-                "Veuillez utiliser l'prune.remove() e pour supprimer le masque et enregistrer les poids finaux.",
-                "Imprimez le modèle pour confirmer que l'élagage a bien été supprimé."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_7c4bce6f.pdf"
-                }
-              ],
-              "hint": "prune.remove() prend deux arguments : le module et le nom du paramètre.\n\nUne fois supprimée, la couche se comporte comme une couche linéaire standard.",
-              "solution": "import torch.nn.utils.prune as prune\n# Before pruning\nprint(model)\n# Finalize pruning by removing the pruning mask\nprune.remove(model[3], \"weight\")\n# Print model structure after pruning\nprint(model)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -3628,7 +3319,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",
@@ -3994,43 +3685,23 @@
           },
           "type": "exercise",
           "sourceActivityType": "NormalExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_09_tp",
+              "type": "content",
+              "id": "dc_3_act_09_tp_learning_note",
               "title": {
-                "en": "Optimizing Models for Scalability",
-                "fr": "Optimisation des modèles pour l'évolutivité"
+                "fr": "Optimisation des modèles pour l'évolutivité",
+                "en": "Optimizing Models for Scalability"
               },
-              "assignment": "Le déploiement efficace des modèles d'IA est essentiel pour les applications concrètes où la vitesse d'inférence, la taille des modèles et l'efficacité computationnelle sont importantes. Nous allons maintenant tester votre capacité à enregistrer et charger des modèles en vue de leur déploiement. Vous utiliserez des techniques telles que l'exportation TorchScript pour terminer le flux de travail. L'ensemble de données utilisé est une variante de l'ensemble MNIST.\n\nEn complétant cet exercice, vous aurez préparé un modèle optimisé pour le déploiement tout en appliquant les techniques avancées apprises dans cette leçon.\n\nX_testLes ensembles de données y_test et torch.jit ont été préchargés pour vous.",
-              "instructions": "Exportez le modèle vers TorchScript à l'aide de la fonction « trace ».\n\nEnregistrez le modèle dans TorchScript.\n\nChargez le modèle enregistré.\n\n### Code de départ\n\n```python\n# Export model to TorchScript\nscripted_model = torch.jit.____(model, torch.tensor(X_test[:1], dtype=torch.float32).unsqueeze(1))\n# Save model to TorchScript\ntorch.jit.____(scripted_model, 'model.pt')\n\n# Loaded saved model\nloaded_model = torch.jit.____('____.pt')\n# Validate inference on test dataset\ntest_loader = DataLoader(TensorDataset(torch.tensor(X_test, dtype=torch.float32).unsqueeze(1), ____), batch_size=64)\n\naccuracy = evaluate_model(loaded_model, test_loader)\n\nprint(f\"Optimized model accuracy: {accuracy:.2%}\")\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Le déploiement efficace des modèles d'IA est essentiel pour les applications concrètes où la vitesse d'inférence, la taille des modèles et l'efficacité computationnelle sont importantes. Nous allons maintenant tester votre capacité à enregistrer et charger des modèles en vue de leur déploiement. Vous utiliserez des techniques telles que l'exportation TorchScript pour terminer le flux de travail. L'ensemble de données utilisé est une variante de l'ensemble MNIST.\n\nEn complétant cet exercice, vous aurez préparé un modèle optimisé pour le déploiement tout en appliquant les techniques avancées apprises dans cette leçon.\n\nX_testLes ensembles de données y_test et torch.jit ont été préchargés pour vous.",
+                "en": "Efficient deployment of AI models is essential for real-world applications where inference speed, model size, and computational efficiency are important. We will now test your ability to save and load models for deployment. You will use techniques such as TorchScript export to complete the workflow. The dataset used is a variant of the MNIST dataset.\n\nBy completing this exercise, you will have prepared a model optimized for deployment while applying the advanced techniques learned in this lesson.\n\nThe datasets X_test, y_test, and torch.jit have been preloaded for you."
               },
-              "steps": [
-                "Exportez le modèle vers TorchScript à l'aide de la fonction « trace ».",
-                "Enregistrez le modèle dans TorchScript.",
-                "Chargez le modèle enregistré."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_7c4bce6f.pdf"
-                }
-              ],
-              "hint": "Veuillez utiliser torch.jit.save et torch.jit.load pour l'exportation et l'importation de TorchScript.\n\nVeuillez utiliser X_test et y_test pour évaluer le modèle.",
-              "solution": "# Export model to TorchScript\nscripted_model = torch.jit.trace(model, torch.tensor(X_test[:1], dtype=torch.float32).unsqueeze(1))\n# Save model to TorchScript\ntorch.jit.save(scripted_model, 'model.pt')\n\n# Loaded saved model\nloaded_model = torch.jit.load('model.pt')\n# Validate inference on test dataset\ntest_loader = DataLoader(TensorDataset(torch.tensor(X_test, dtype=torch.float32).unsqueeze(1), y_test), batch_size=64)\n\naccuracy = evaluate_model(loaded_model, test_loader)\n\nprint(f\"Optimized model accuracy: {accuracy:.2%}\")",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -4046,7 +3717,7 @@
           },
           "type": "teaching",
           "sourceActivityType": "VideoExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "video",

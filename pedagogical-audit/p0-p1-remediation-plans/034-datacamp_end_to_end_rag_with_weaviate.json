@@ -1,0 +1,52 @@
+{
+  "formation_id": "datacamp_end_to_end_rag_with_weaviate",
+  "index": 34,
+  "course_ids": [
+    "end_to_end_rag_with_weaviate__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "chapter_id": "dc_ch01_act01",
+      "block_id": "neopolis_end_to_end_rag_with_weaviate__01_environment_preparation",
+      "reason": "Ce bloc affirme que le cours se réalise avec des activités interactives et demande de préparer un chatbot externe, alors que le parcours rendu ne contient aucune activité interactive et ne déclare ni workflow ni environnement externe. Sa suppression retire une promesse et une dépendance non étayées sans supprimer la vidéo ni les explications valides.",
+      "evidence": "Le bloc réel est présent dans client/public/data/courses/end_to_end_rag_with_weaviate__01.json, lessons[0].chapters[0].blocks[0]. Les quatre chapitres rendus ne contiennent que content/video/download; exerciseCount=0. Le bundle signale l’absence des activités pratiques et interdit d’inventer un chatbot, un workflow ou un environnement externe."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Verrouillage vidéo incohérent avec les clés de progression",
+      "evidence": "Les chapitres dc_ch01_act01, dc_ch02_act01, dc_ch03_act01 et dc_ch03_act04 ont requiredBeforeAdvance=true; les blocs vidéo réels dc_1_act_01_video, dc_2_act_01_video, dc_3_act_01_video et dc_3_act_04_video ont des ids de 17 caractères. Le rapport vérifie que LessonViewer filtre les ids à 8–15 caractères et peut donc autoriser la navigation avec une liste de vidéos vide.",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "reason_not_rapidly_remediable": "Il s’agit d’un défaut de code de navigation, pas d’une activité ou d’un texte corrigeable avec les seuls actifs déclarés; aucun changement fiable ne peut être proposé ici sans modifier et tester l’application."
+    },
+    {
+      "severity": "P1",
+      "title": "Promesse de construction manuelle sans activité rendue au chapitre 1",
+      "evidence": "La description de dc_ch01_act01 promet de construire manuellement un workflow RAG de bout en bout, tandis que ses blocs réels sont content, video et download. Le bundle indique que les quatre activités attendues dc_ch01_act02 à dc_ch01_act05 sont absentes et qu’aucune action, production, validation ou feedback n’est rendu.",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "Les consignes, données/code de départ, critères, réponses et feedback des activités manquantes ne sont pas déclarés; les inventer violerait la règle. La promesse devrait être réécrite en présentation guidée, mais aucune action de modification de champ de description n’est autorisée par ce plan sans contenu source supplémentaire."
+    },
+    {
+      "severity": "P1",
+      "title": "Objectifs opérationnels sans activités rendues au chapitre 2",
+      "evidence": "La description de dc_ch02_act01 annonce génération d’embeddings, stockage, retrieval et génération avec Weaviate. Le chapitre réel contient seulement dc_2_act_01_video et dc_ch02_slides; les quatre pratiques attendues dc_ch02_act02 à dc_ch02_act05 sont absentes, sans résultat ni feedback.",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "chapter_id": "dc_ch02_act01",
+      "reason_not_rapidly_remediable": "Aucun fichier, environnement, énoncé, critère ou correction des quatre activités n’est déclaré. Les restaurer serait une invention; la promesse doit être réduite à une démonstration, mais ne peut pas être corrigée de façon fiable par les actifs actuels seuls."
+    },
+    {
+      "severity": "P1",
+      "title": "Promesse de RAG multimodal sans activités rendues au chapitre 3",
+      "evidence": "La description de dc_ch03_act01 annonce ColPali et des réponses multimodales. Le chapitre réel ne rend que dc_3_act_01_video et dc_ch03_slides; les activités dc_ch03_act02 et dc_ch03_act03 sont absentes, sans action, résultat attendu ni feedback.",
+      "course_id": "end_to_end_rag_with_weaviate__01",
+      "chapter_id": "dc_ch03_act01",
+      "reason_not_rapidly_remediable": "Les données, prérequis, environnement, critères et corrections des pratiques multimodales ne sont pas déclarés. Il faut soit des sources autorisées supplémentaires, soit une réécriture de l’objectif en présentation; aucune activité ne peut être inventée ni restaurée fiablement ici."
+    }
+  ],
+  "summary": "État courant vérifié pour le seul cours de la formation. Une dépendance externe et une promesse d’activités interactives ont été retirées via le bloc réel de préparation. Les quatre P1 restants sont conservés comme non résolus: le verrouillage exige une correction de code, et les trois objectifs pratiques ne peuvent pas être rendus évaluables sans actifs déclarés; aucune vidéo valide ni téléchargement n’a été supprimé. Aucun constat historique stillOpen n’est présent (legacy_open_count=0)."
+}

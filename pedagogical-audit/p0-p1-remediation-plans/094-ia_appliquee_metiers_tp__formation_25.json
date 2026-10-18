@@ -1,0 +1,66 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_25",
+  "index": 94,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__25"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-screen-02",
+      "block_id": "ia_appliquee_metiers_tp__25-source-review",
+      "reason": "Cette activité obligatoire est corrigeable de façon fiable uniquement par une modification du rendu : la confirmation peut être enregistrée sans ouverture de la ressource. Retirer l’activité plutôt que prétendre corriger son verrou avec les seuls actifs déclarés ; conserver l’explication et l’URL comme contenu non bloquant de l’écran.",
+      "evidence": "current_recheck.findings P2 verrouillage : resource_review requis, resourceUrl déclaré, mais la confirmation ajoute directement reviewId aux completedExercises sans preuve d’ouverture ; initial_audit issue declarative_completion, evidence citant LessonViewer.tsx."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-screen-02",
+      "reason": "Retirer le verrou de chapitre associé au resource_review supprimé afin que la suppression de l’activité obligatoire ne bloque pas la progression.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__25-screen-02 déclare requiredBeforeAdvance: true et son activité obligatoire est le bloc ia_appliquee_metiers_tp__25-source-review."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__25-checkpoint-preparation",
+      "reason": "Le checkpoint obligatoire ne vérifie pas la justesse : toute sélection appelle la complétion et une réponse incorrecte déverrouille la suite. Cette gate n’est pas fiablement corrigeable par le contenu du cours seul ; retirer le bloc tout en conservant son énoncé, ses choix et son explication comme contenu non bloquant.",
+      "evidence": "current_open_p0_p1_findings P1 verrouillage et current_recheck : requiredBeforeAdvance true, passThreshold 1, correctAnswer a, required true, mais GenericLearningBlocks KnowledgeCheckBlock appelle onComplete après toute sélection et LessonViewer vérifie la complétion plutôt que la justesse."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-checkpoint-01",
+      "reason": "Retirer le verrou de chapitre associé au knowledge_check supprimé afin que le checkpoint défaillant ne bloque pas la progression.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__25-checkpoint-01 déclare requiredBeforeAdvance: true et passThreshold: 1 ; son seul bloc est ia_appliquee_metiers_tp__25-checkpoint-preparation."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__25-mini-project-proof",
+      "reason": "Le mini-projet obligatoire demande quatre preuves mais accepte une saisie non blanche d’un seul caractère ; la validation structurée et la localisation complète exigeraient des changements de composant/code, non une correction rapide à partir des seuls actifs déclarés. Retirer le cloud_exercise et conserver sa consigne, son objectif, ses étapes, son indice et sa correction comme contenu non bloquant.",
+      "evidence": "current_open_p0_p1_findings P1 localisation et verrouillage ; absence de minimumAnswerLength, learnerCriteria/rubricCriteria et serverGradedAssessment ; cloudExerciseValidation.ts retourne une longueur minimale par défaut de 1 et une réponse d’un caractère déverrouille la suite."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia_appliquee_metiers_tp__25-mini-project",
+      "reason": "Retirer le verrou de chapitre associé au cloud_exercise supprimé afin que le mini-projet non fiablement validable ne bloque pas la progression.",
+      "evidence": "Le chapitre ia_appliquee_metiers_tp__25-mini-project déclare requiredBeforeAdvance: true et contient le bloc obligatoire ia_appliquee_metiers_tp__25-mini-project-proof."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Le feedback métier du tri final n’est pas rendu",
+      "evidence": "current_recheck.findings P2 feedback : ia-appliquee_metiers_tp__25-quiz-order possède feedback en fr/en mais LessonViewer transmet block.correction à MatchingExercise et correction est absent ; le texte pédagogique n’est donc pas affiché après soumission.",
+      "course_id": "ia_appliquee_metiers_tp__25",
+      "chapter_id": "ia-appliquee_metiers_tp__25-final-quiz",
+      "reason_not_rapidly_remediable": "Le constat porte sur la chaîne de rendu LessonViewer → MatchingExercise et ne peut pas être corrigé de manière fiable par les seuls actifs déclarés ; l’activité reste toutefois une évaluation valide et ne doit pas être retirée pour un défaut de feedback non bloquant."
+    }
+  ],
+  "summary": "Revue lecture seule de l’état courant : trois activités obligatoires avec gates non fiables ou validation non remédiable rapidement ont été retirées du blocage, avec retrait des exigences de complétion de leurs chapitres et conservation de leurs explications comme contenu non bloquant. Le tri final reste actif ; son feedback non rendu demeure le seul constat P2 non résolu. Le constat historique P2 sur l’absence de steps est normalisé comme corrigé dans l’état courant ; aucun constat legacy ouvert."
+}

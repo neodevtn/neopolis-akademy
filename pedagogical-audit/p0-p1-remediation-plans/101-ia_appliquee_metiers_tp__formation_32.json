@@ -1,0 +1,55 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_32",
+  "index": 101,
+  "course_ids": ["ia_appliquee_metiers_tp__32"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "chapter_id": "ia_appliquee_metiers_tp__32-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__32-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire peut être complété par une réponse fausse ; sa réussite n’est pas fiable avec les seuls actifs déclarés. Retirer l’activité défectueuse et conserver l’explication de sécurité dans les écrans d’enseignement existants.",
+      "evidence": "Le bloc réel est lessons[0].chapters[3].blocks[0] dans client/public/data/courses/ia_appliquee_metiers_tp__32.json ; le constat P1 de verrouillage indique que toute sélection appelle la complétion sans exiger isCorrect=true."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "chapter_id": "ia_appliquee_metiers_tp__32-checkpoint-01",
+      "reason": "Retirer explicitement le verrou du chapitre après retrait du checkpoint non fiable.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__32-checkpoint-01 porte requiredBeforeAdvance=true et passThreshold=1, tandis que son unique bloc knowledge_check est soumis à la complétion sur sélection."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "chapter_id": "ia_appliquee_metiers_tp__32-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__32-mini-project-proof",
+      "reason": "Le support déclaré est absent du sandbox ; retirer cette référence obsolète plutôt que d’inventer ou de remplacer un fichier.",
+      "evidence": "Le bloc réel lessons[0].chapters[4].blocks[0].resources[0] référence /manus-storage/32-32-construire-un-data-analyst-ia-conversationnel-support-fictif_6e351af8.md, et ce chemin n’existe pas localement."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "chapter_id": "ia_appliquee_metiers_tp__32-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__32-mini-project-proof",
+      "reason": "Le mini-projet obligatoire accepte une preuve d’un seul caractère et dépend en plus d’un support déclaré indisponible ; il ne peut pas être corrigé rapidement et fiablement avec les actifs présents. Conserver assignment, consignes, sécurité et auto-vérification comme contenu non bloquant.",
+      "evidence": "Le bloc cloud_exercise réel ia_appliquee_metiers_tp__32-mini-project-proof ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment ; la validation générique accepte une saisie non blanche."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "chapter_id": "ia_appliquee_metiers_tp__32-mini-project",
+      "reason": "Retirer le verrou du chapitre après conversion de la remise non fiable en contenu informatif.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__32-mini-project porte requiredBeforeAdvance=true et dépend du bloc cloud_exercise-proof supprimé de la progression."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__32",
+      "chapter_id": "ia_appliquee_metiers_tp__32-final-quiz",
+      "reason": "Le quiz obligatoire ne vérifie pas explicitement trois compétences annoncées (séparation récupération/calculs, Calculator, langage métier) ; retirer uniquement son caractère bloquant conserve les questions et explications valides comme contenu non bloquant.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__32-final-quiz porte requiredBeforeAdvance=true et passThreshold=4, mais ses quatre QCM et son tri ne demandent pas explicitement les trois compétences signalées dans le constat P1 d’alignement."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les quatre constats P1 sont traités sans inventer d’actif : checkpoint non fiable retiré et déverrouillé ; mini-projet non vérifiable converti en contenu, verrou retiré et référence de support absent supprimée ; quiz final conservé mais rendu non bloquant car son évaluation ne couvre pas trois objectifs annoncés."
+}

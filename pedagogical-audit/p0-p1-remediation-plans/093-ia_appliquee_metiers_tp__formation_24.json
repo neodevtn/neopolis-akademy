@@ -1,0 +1,83 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_24",
+  "index": 93,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__24"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__24-checkpoint-preparation",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : une réponse erronée déclenche quand même la complétion et le déverrouillage. Retirer le knowledge check ; conserver son énoncé, ses règles de sécurité et son explication déjà présentes dans les écrans de préparation comme contenu non bloquant.",
+      "evidence": "Le bloc knowledge_check est required=true avec correctAnswer=\"a\" ; GenericLearningBlocks.tsx appelle onComplete pour toute sélection et LessonViewer.tsx enregistre systématiquement l’interaction, tandis que chapterProgress.ts déverrouille dès la complétion déclarée. Preuve localisée dans le bundle et le code cités par le constat P1 PED-093-003."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-checkpoint-01",
+      "reason": "Après retrait du knowledge check non fiable, ce chapitre ne doit plus bloquer la progression.",
+      "evidence": "Le chapitre checkpoint-01 porte requiredBeforeAdvance=true et passThreshold=1 ; la seule activité obligatoire est le bloc knowledge_check retiré ci-dessus."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__24-mini-project-proof",
+      "reason": "La preuve obligatoire n’est pas corrigeable de manière fiable avec les seuls actifs déclarés : une saisie minimale d’une lettre révèle la correction et déverrouille la suite sans critères ni évaluation. Convertir en contenu non bloquant en conservant la consigne utile, les quatre éléments attendus, les garde-fous, l’indice et la correction comme guidance.",
+      "evidence": "Le cloud_exercise n’a ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment ; resolveAssessmentMinimumLength retourne 1 hors évaluation tracée et CloudExerciseBlock appelle onComplete dès cette longueur. Le bloc réel est lessons[0].chapters[4].blocks[id=ia_appliquee_metiers_tp__24-mini-project-proof]."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-mini-project",
+      "reason": "Après conversion de la preuve non fiable en contenu, ce chapitre ne doit plus bloquer la progression.",
+      "evidence": "Le chapitre mini-project porte requiredBeforeAdvance=true et dépend de la complétion du cloud_exercise sans évaluation probante."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Confirmation de ressource indépendante de l’ouverture du lien",
+      "evidence": "Le bloc resource_review ia_appliquee_metiers_tp__24-source-review permet de confirmer sans enregistrer l’ouverture ; la branche resource_review de LessonViewer ajoute directement l’identifiant complété.",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-screen-02",
+      "reason_not_rapidly_remediable": "Le défaut dépend du mécanisme d’interface et de suivi d’ouverture, absent des actifs pédagogiques déclarés ; aucune modification de code n’est autorisée dans cette revue."
+    },
+    {
+      "severity": "P2",
+      "title": "Libellés divergents de la démarche",
+      "evidence": "La sequence_visual emploie Cadrer, Préparer, Tester, Contrôler, tandis que le bucket_sort final emploie Cadrer, Construire, Tester, Valider.",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-screen-03",
+      "reason_not_rapidly_remediable": "Le constat porte sur une harmonisation éditoriale non urgente et aucun texte de remplacement autorisé n’est fourni au-delà des variantes existantes."
+    },
+    {
+      "severity": "P2",
+      "title": "Étapes structurées insuffisantes dans le mini-projet",
+      "evidence": "Le bloc mini-project-proof contient désormais trois étapes génériques (relire, réaliser, vérifier), mais pas de séquence métier détaillée pour les quatre compétences annoncées.",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-mini-project",
+      "reason_not_rapidly_remediable": "Après conversion en contenu non bloquant, l’amélioration détaillée nécessiterait une réécriture pédagogique ; elle n’est pas nécessaire pour lever le verrou P1."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback du tri non transmis au rendu",
+      "evidence": "Le bucket_sort ia-appliquee-metiers-tp__24-quiz-order déclare feedback, mais LessonViewer transmet seulement block.correction à MatchingExercise et correction est absent.",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-final-quiz",
+      "reason_not_rapidly_remediable": "Le correctif concerne le mapping du composant de rendu ou la structure de données ; il ne peut pas être garanti par les seuls actifs pédagogiques déclarés."
+    },
+    {
+      "severity": "P2",
+      "title": "Deux compétences annoncées non observées dans le quiz final",
+      "evidence": "Les objectifs incluent les relances selon les réponses et la grille comportementale, mais les quatre QCM et le tri final portent surtout sur sécurité, contrôle, vérification et séquence.",
+      "course_id": "ia_appliquee_metiers_tp__24",
+      "chapter_id": "ia_appliquee_metiers_tp__24-final-quiz",
+      "reason_not_rapidly_remediable": "Une couverture fiable exigerait de nouvelles activités corrigées ou une évaluation de preuve ; aucun actif déclaré ne fournit ces critères de correction."
+    }
+  ],
+  "summary": "Deux activités P1 obligatoires sont retirées de la progression fiable : le knowledge check est supprimé et la preuve cloud est convertie en contenu non bloquant ; les exigences de complétion de leurs chapitres sont retirées. Cinq constats P2 restent ouverts. Aucun constat historique stillOpen n’était à normaliser."
+}

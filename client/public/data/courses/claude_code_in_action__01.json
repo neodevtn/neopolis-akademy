@@ -148,41 +148,6 @@
           ]
         },
         {
-          "id": "dc_ch01_act03",
-          "title": {
-            "en": "Scope it before you run it",
-            "fr": "Définissez le périmètre avant de l'exécuter"
-          },
-          "description": {
-            "en": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees.",
-            "fr": "Une longue session dérive à moins que vous ne la structuriez. Définissez le périmètre du travail avec plan mode, orientez la compaction pour que le résumé conserve l'essentiel, utilisez le menu Rewind pour corriger la trajectoire, fixez un objectif quand vous pouvez décrire l'état « terminé » mieux que les étapes, et lancez des travaux parallèles dans des worktrees."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_1_act_03_code",
-              "title": {
-                "en": "Scope it before you run it",
-                "fr": "Définissez le périmètre avant de l'exécuter"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with claude.\n\nEnter plan mode with /plan, then ask Claude to plan the work described in task.md. If there are initial follow-up questions from Claude, answer them any way you wish.\n\nRead the plan, then ask Claude to revise it so it reuses the existing getPendingOrders() query instead of writing a new one.\n\nType /exit to exit Claude Code.",
-                "fr": "Démarrez Claude Code avec claude.\n\nEnter plan mode with /plan, puis demandez à Claude de planifier le travail décrit dans task.md. S'il y a des questions de suivi initiales de la part de Claude, répondez-y comme vous le souhaitez.\n\nLisez le plan, puis demandez à Claude de le réviser pour qu'il réutilise la requête getPendingOrders() existante au lieu d'en écrire une nouvelle.\n\nTapez /exit pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\n# The shipped hooks launch a nested Claude session on every edit, which would\n# slow this exercise down. Chapter 2 wires hooks up deliberately instead.\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Type `/plan` to enter plan mode.\n# 3. Ask Claude: \"Plan the work in @task.md. Don't write any code yet.\"\n# 4. Ask Claude: \"Reuse the existing getPendingOrders query in src/queries/order_queries.ts instead of adding a new one.\"\n# 5. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/1_1/history.jsonl ~/.claude/.",
-              "expectedOutput": "",
-              "hint": {
-                "en": "Run claude, then type /plan. You can also cycle to plan mode with Shift+Tab, and the status bar shows the mode you are in.\n\nA prompt like Plan the work in @task.md. Don't write any code yet. keeps Claude researching instead of editing.\n\nRevising is just another message, for example Reuse the existing getPendingOrders query in src/queries/order_queries.ts instead of adding a new one.",
-                "fr": "Exécutez claude, puis tapez /plan. Vous pouvez aussi basculer en plan mode avec Shift+Tab, et la barre d'état affiche le mode dans lequel vous vous trouvez.\n\nUn prompt like Plan the work in @task.md. Don't write any code yet. maintient Claude en phase de recherche plutôt qu'en édition.\n\nRéviser n'est qu'un autre message, par exemple Reuse the existing getPendingOrders query in src/queries/order_queries.ts instead of adding a new one."
-              }
-            }
-          ]
-        },
-        {
           "id": "dc_ch01_act04",
           "title": {
             "en": "Rewind, goal, or worktree?",
@@ -404,41 +369,6 @@
           ]
         },
         {
-          "id": "dc_ch02_act03",
-          "title": {
-            "en": "Put the file on a diet",
-            "fr": "Put the file on a diet"
-          },
-          "description": {
-            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
-            "fr": "Claude suit un ensemble d'instructions concis bien plus fiablement qu'un ensemble long. Rédigez un CLAUDE.md qui survive au contact d'un vrai projet, regroupez les procédures récurrentes en Skills, adaptez le mode d'autorisation à la tâche, et déplacez les règles que Claude ne doit jamais ignorer dans des hooks."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_2_act_03_code",
-              "title": {
-                "en": "Put the file on a diet",
-                "fr": "Put the file on a diet"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Launch Claude Code with `claude`.\n\nAsk Claude to rewrite `CLAUDE.md` so that every rule is precise and verifiable, and every prohibition states its replacement.\n\nIn the same request, ask Claude to emphasize no more than two rules and to remove the “never push to main” rule, which a hook will enforce in a later lesson.\n\nEnter `/exit` to leave Claude Code.",
-                "fr": "Lancez Claude Code avec `claude`.\n\nDemandez à Claude de réécrire `CLAUDE.md` afin que chaque règle soit précise et vérifiable, et que chaque interdiction indique son remplacement.\n\nDans la même demande, demandez à Claude de mettre l’accent sur deux règles au maximum et de supprimer la règle « never push to main », qu’un hook appliquera dans une leçon ultérieure.\n\nSaisissez `/exit` pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json')\nrepl.run_command(r'''cat > /home/repl/queries/CLAUDE.md <<'EOF'\n# CLAUDE.md\n\n# Overview\n\nThis is an e-commerce data utilities project that provides query functions for\na SQLite database. The project uses TypeScript.\n\n# Rules\n\n- IMPORTANT: Follow best practices at all times.\n- IMPORTANT: Write clean, readable, maintainable code.\n- YOU MUST never push to main.\n- IMPORTANT: Don't use default exports.\n- IMPORTANT: Don't write bad SQL.\n- YOU MUST handle errors properly.\n- IMPORTANT: All database queries must be written in the ./src/queries dir.\n- YOU MUST use good variable names.\n- IMPORTANT: Be careful when editing the schema.\n- Tests are important.\nEOF''')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Rewrite CLAUDE.md so every rule is specific and checkable, name\n#    the replacement for every ban, keep emphasis on at most two rules, and delete\n#    the never push to main rule.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_1/history.jsonl ~/.claude/.\n\n# Seeds the rewritten CLAUDE.md that Claude produces.\ncp ~/solutions/2_1/CLAUDE.md /home/repl/queries/CLAUDE.md",
-              "expectedOutput": "",
-              "hint": {
-                "en": "One prompt can carry the whole rewrite, for example: Rewrite CLAUDE.md so every rule is specific and checkable, name the replacement for every ban, keep emphasis on at most two rules, and delete the never push to main rule.\n\n\"Follow best practices\" is the clearest example of a rule nobody can check. A specific replacement names a path or a concrete convention.\n\nThe push rule is not being thrown away, it is moving somewhere it can actually be enforced.",
-                "fr": "Une seule invite peut porter toute la réécriture, par exemple : Rewrite CLAUDE.md so every rule is specific and checkable, name the replacement for every ban, keep emphasis on at most two rules, and delete the never push to main rule.\n\n\"Follow best practices\" est l'exemple le plus clair d'une règle que personne ne peut vérifier. Un remplaçant spécifique précise un chemin ou une convention concrète.\n\nLa règle de push n'est pas abandonnée, elle est déplacée là où elle peut réellement être appliquée."
-              }
-            }
-          ]
-        },
-        {
           "id": "dc_ch02_act04",
           "title": {
             "en": "Video: Verification Skills",
@@ -529,41 +459,6 @@
               "hint": {
                 "en": "Only skill descriptions load into context until a skill is actually needed, so the description is what has to carry the trigger.\n\nA skill folder can also hold reference files and scripts, which Claude reaches for only once the skill is running.",
                 "fr": "Seules les descriptions des skills sont chargées dans le contexte tant qu'une skill n'est pas réellement nécessaire, donc c'est la description qui doit porter le déclencheur.\n\nUn dossier de skill peut aussi contenir des fichiers de référence et des scripts, auxquels Claude ne fait appel qu'une fois la skill en cours d'exécution."
-              }
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act06",
-          "title": {
-            "en": "The skill worth building first",
-            "fr": "La skill qu'il faut construire en premier"
-          },
-          "description": {
-            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
-            "fr": "Claude suit un ensemble concis d'instructions bien plus fidèlement qu'un ensemble long. Écrivez un CLAUDE.md qui résiste au contact d'un vrai projet, regroupez les procédures répétées en skills, adaptez le mode d'autorisation à la tâche, et déplacez les règles que Claude ne doit jamais ignorer dans des hooks."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_2_act_06_code",
-              "title": {
-                "en": "The skill worth building first",
-                "fr": "La skill à construire en priorité"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with claude.\n\nAsk Claude to create a skill at .claude/skills/verify-changes/SKILL.md, with a description saying it runs after edits to source files.\n\nHave the procedure run npx tsc --noEmit, read the diff, confirm no check was weakened just to pass, and report pass or fail with the evidence.\n\nType /exit to exit Claude Code.",
-                "fr": "Démarrez Claude Code avec claude.\n\nDemandez à Claude de créer une skill à .claude/skills/verify-changes/SKILL.md, avec une description indiquant qu'elle s'exécute après des modifications des fichiers source.\n\nFaites en sorte que la procédure exécute npx tsc --noEmit, lise le diff, confirme qu'aucune vérification n'a été affaiblie juste pour faire passer les tests, et signale réussite ou échec avec les preuves.\n\nTapez /exit pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json')\nrepl.run_command('rm -rf /home/repl/queries/.claude/skills')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Create a skill at .claude/skills/verify-changes/SKILL.md that runs\n#    after source edits: run npx tsc --noEmit, read git diff, confirm no check was\n#    weakened, and report pass or fail with evidence.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_2/history.jsonl ~/.claude/.\n\n# Seeds the skill file that Claude writes.\nmkdir -p /home/repl/queries/.claude/skills/verify-changes\ncp ~/solutions/2_2/SKILL.md /home/repl/queries/.claude/skills/verify-changes/SKILL.md",
-              "expectedOutput": "",
-              "hint": {
-                "en": "One prompt can carry it, for example: Create a skill at .claude/skills/verify-changes/SKILL.md that runs after source edits: run npx tsc --noEmit, read git diff, confirm no check was weakened, and report pass or fail with evidence.\n\nThe frontmatter holds name and description, and the description is what makes the skill fire without being asked.\n\nKeep SKILL.md lean. Long explanations belong in a reference.md beside it, which Claude reads only when it needs the depth.",
-                "fr": "Un seul prompt peut suffire, par exemple : Créez une skill à .claude/skills/verify-changes/SKILL.md qui s'exécute après des modifications de source : exécutez npx tsc --noEmit, lisez le git diff, confirmez qu'aucune vérification n'a été affaiblie, et signalez réussite ou échec avec les preuves.\n\nLe frontmatter contient le nom et la description, et c'est la description qui fait déclencher la skill sans qu'elle soit sollicitée.\n\nGardez SKILL.md concis. Les longues explications appartiennent dans un reference.md à côté, que Claude ne lira que lorsqu'il aura besoin d'approfondir."
               }
             }
           ]
@@ -973,76 +868,6 @@
               }
             }
           ]
-        },
-        {
-          "id": "dc_ch02_act13",
-          "title": {
-            "en": "Make the rule unskippable",
-            "fr": "Rendre la règle non contournable"
-          },
-          "description": {
-            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
-            "fr": "Claude suit un ensemble concis d'instructions beaucoup plus fidèlement qu'un long. Rédigez un CLAUDE.md qui résiste au contact d'un vrai projet, regroupez les procédures répétées sous forme de Skills, adaptez le permission mode au travail, et déplacez les règles que Claude ne doit jamais ignorer dans des hooks."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_2_act_13_code",
-              "title": {
-                "en": "Make the rule unskippable",
-                "fr": "Rendre la règle non contournable"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with claude.\n\nAsk Claude to write a PreToolUse hook script at hooks/block-main-push.js that refuses any Bash command pushing to main, and explains why.\n\nAsk Claude to wire that script into .claude/settings.json as a PreToolUse hook with the matcher set to Bash.\n\nType /exit to exit Claude Code.",
-                "fr": "Démarrez Claude Code avec claude.\n\nDemandez à Claude d'écrire un script de hook PreToolUse dans hooks/block-main-push.js qui refuse toute commande Bash effectuant un push vers main, et qui explique pourquoi.\n\nDemandez à Claude d'intégrer ce script dans .claude/settings.json en tant que hook PreToolUse avec matcher réglé sur Bash.\n\nTapez /exit pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json /home/repl/queries/.claude/settings.json')\nrepl.run_command('rm -f /home/repl/queries/hooks/block-main-push.js')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Write a PreToolUse hook at hooks/block-main-push.js that denies any\n#    Bash command pushing to main, with a reason, and wire it into .claude/settings.json\n#    with the matcher set to Bash.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_3/history.jsonl ~/.claude/.\n\n# Seeds the hook script and the settings wiring that Claude writes.\nmkdir -p /home/repl/queries/hooks /home/repl/queries/.claude\ncp ~/solutions/2_3/block-main-push.js /home/repl/queries/hooks/block-main-push.js\ncp ~/solutions/2_3/settings.json /home/repl/queries/.claude/settings.json",
-              "expectedOutput": "",
-              "hint": {
-                "en": "The hook reads the tool call from standard in, so it needs to spot a git push aimed at main.\n\nPrinting JSON with permissionDecision set to deny, plus a permissionDecisionReason, stops the call. Exiting 2 with the reason on standard error does the same job.\n\nThe wiring goes under hooks.PreToolUse in .claude/settings.json, where matcher names the tool to watch.",
-                "fr": "Le hook lit l'appel d'outil depuis l'entrée standard, il doit donc détecter un git push visant main.\n\nL'impression de JSON avec permissionDecision défini sur deny, plus une permissionDecisionReason, arrête l'appel. Sortir avec le code 2 en affichant la raison sur la sortie d'erreur standard a le même effet.\n\nLe branchement se fait sous hooks.PreToolUse dans .claude/settings.json, où matcher nomme l'outil à surveiller."
-              }
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act14",
-          "title": {
-            "en": "Redact instead of block",
-            "fr": "Masquer plutôt que bloquer"
-          },
-          "description": {
-            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
-            "fr": "Claude suit un ensemble d'instructions concis bien plus fidèlement qu'un long texte. Rédigez un CLAUDE.md qui résiste au contact d'un vrai projet, regroupez les procédures répétées en 'skills', adaptez le mode d'autorisation à la tâche, et déplacez les règles que Claude ne doit jamais ignorer dans les hooks."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_2_act_14_code",
-              "title": {
-                "en": "Redact instead of block",
-                "fr": "Masquer plutôt que bloquer"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with claude.\n\nAsk Claude to finish the skeleton at hooks/redact-secrets.js so it masks the key with updatedInput and lets the command run, echoing back the fields it isn't changing.\n\nAsk Claude to wire that script into .claude/settings.json as a PreToolUse hook matching Bash.\n\nType /exit to exit Claude Code.",
-                "fr": "Démarrez Claude Code avec claude.\n\nDemandez à Claude de compléter l'ossature dans hooks/redact-secrets.js afin qu'il masque la clé avec updatedInput et laisse la commande s'exécuter, en renvoyant les champs qu'il ne modifie pas.\n\nDemandez à Claude d'intégrer ce script dans .claude/settings.json en tant que hook PreToolUse correspondant à Bash.\n\nTapez /exit pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json /home/repl/queries/.claude/settings.json')\nrepl.run_command('mkdir -p /home/repl/queries/hooks')\nrepl.run_command(r'''cat > /home/repl/queries/hooks/redact-secrets.js <<'EOF'\n// PreToolUse hook: keep live API keys out of Bash commands.\n// Claude Code sends the tool call to this script as JSON on standard in.\nlet raw = \"\";\nprocess.stdin.on(\"data\", (chunk) => (raw += chunk));\nprocess.stdin.on(\"end\", () => {\n  const payload = JSON.parse(raw || \"{}\");\n  const input = payload.tool_input || {};\n  const command = input.command || \"\";\n\n  const SECRET = /sk_live_[A-Za-z0-9]+/g;\n  if (!command.match(SECRET)) {\n    process.exit(0);\n  }\n\n  // TODO: rewrite the call so the key is masked and the command still runs.\n  process.exit(0);\n});\nEOF''')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Finish hooks/redact-secrets.js so it returns updatedInput with the\n#    sk_live key masked and the other input fields echoed back, then wire it into\n#    .claude/settings.json as a PreToolUse hook matching Bash.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_4/history.jsonl ~/.claude/.\n\n# Seeds the finished hook and the settings wiring that Claude writes.\nmkdir -p /home/repl/queries/hooks /home/repl/queries/.claude\ncp ~/solutions/2_4/redact-secrets.js /home/repl/queries/hooks/redact-secrets.js\ncp ~/solutions/2_4/settings.json /home/repl/queries/.claude/settings.json",
-              "expectedOutput": "",
-              "hint": {
-                "en": "The response goes to standard out as JSON under hookSpecificOutput, with hookEventName set to PreToolUse.\n\nupdatedInput replaces the whole input object, so any field you don't copy through is lost. Pass description along with the rewritten command.\n\nBlocking isn't the goal. The command should still run, just without the live key in it.",
-                "fr": "La réponse est envoyée vers la sortie standard sous forme de JSON sous hookSpecificOutput, avec hookEventName défini sur PreToolUse.\n\nupdatedInput remplace l'objet input entier, donc tout champ que vous ne recopiez pas est perdu. Transmettez description en même temps que la commande réécrite.\n\nLe but n'est pas de bloquer. La commande doit toujours s'exécuter, simplement sans la clé en clair."
-              }
-            }
-          ]
         }
       ]
     },
@@ -1360,41 +1185,6 @@
               }
             }
           ]
-        },
-        {
-          "id": "dc_ch03_act06",
-          "title": {
-            "en": "Wire up the action",
-            "fr": "Wire up the action"
-          },
-          "description": {
-            "en": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action.",
-            "fr": "Une fois que vous faites confiance à Claude pour une tâche, cessez de la faire manuellement. Planifiez les prompts comme des routines sur l'infrastructure d'Anthropic, passez en mode headless lorsque le travail nécessite votre propre pipeline, et mettez Claude au travail sur les pull requests avec le code review géré et l'action GitHub."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_3_act_06_code",
-              "title": {
-                "en": "Wire up the action",
-                "fr": "Wire up the action"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Launch Claude Code with `claude`.\n\nAsk Claude to create `.github/workflows/claude.yaml`, which runs `anthropics/claude-code-action@v1` when someone comments on a pull request.\n\nAsk it to pass the API key from the repository secrets, listen for the trigger phrase `@claude`, and set `claude_args` with a five-turn limit and a permission mode that never interrupts to ask.\n\nEnter `/exit` to exit Claude Code.",
-                "fr": "Lancez Claude Code avec `claude`.\n\nDemandez à Claude de créer `.github/workflows/claude.yaml`, qui exécute `anthropics/claude-code-action@v1` lorsqu’une personne commente une pull request.\n\nDemandez-lui de transmettre la clé API depuis les secrets du dépôt, d’écouter la phrase de déclenchement `@claude` et de régler `claude_args` avec une limite de cinq tours et un mode d’autorisation qui ne s’interrompt jamais pour demander.\n\nSaisissez `/exit` pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json')\nrepl.run_command('rm -rf /home/repl/queries/.github')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Create .github/workflows/claude.yaml that runs\n#    anthropics/claude-code-action@v1 on pull request comments, passes the API key\n#    from secrets, listens for @claude, and sets claude_args to\n#    --max-turns 5 --permission-mode dontAsk.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/3_1/history.jsonl ~/.claude/.\n\n# Seeds the workflow file that Claude writes.\nmkdir -p /home/repl/queries/.github/workflows\ncp ~/solutions/3_1/claude.yaml /home/repl/queries/.github/workflows/claude.yaml",
-              "expectedOutput": "",
-              "hint": {
-                "en": "The `trigger_phrase` input corresponds to what the action listens for in comments; its default value is `@claude`.\n\n`claude_args` is a simple string of CLI arguments passed directly to Claude Code: `--max-turns 5` and the permission mode are therefore both included there.\n\nAn unattended run has no one available to respond to a prompt; the desired mode therefore authorizes only pre-approved tools and denies the others.",
-                "fr": "L’entrée `trigger_phrase` correspond à ce que l’action écoute dans les commentaires ; sa valeur par défaut est `@claude`.\n\n`claude_args` est une simple chaîne d’arguments CLI transmise directement à Claude Code : `--max-turns 5` et le mode d’autorisation y figurent donc tous deux.\n\nUne exécution sans supervision ne dispose de personne pour répondre à un prompt ; le mode recherché n’autorise donc que les outils préapprouvés et refuse les autres."
-              }
-            }
-          ]
         }
       ]
     },
@@ -1510,76 +1300,6 @@
           ]
         },
         {
-          "id": "dc_ch04_act03",
-          "title": {
-            "en": "Gate the turn, don't take its word",
-            "fr": "Gate the turn, don't take its word"
-          },
-          "description": {
-            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
-            "fr": "Une exécution que personne n'a regardée nécessite une vérification réelle, pas un résumé soigné. Lisez le diff vous-même, conditionnez le tour aux tests avec un hook, obtenez un second avis à froid sur tout ce qui compte, puis empaquetez la configuration de confiance comme un plugin que toute votre équipe peut installer."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_4_act_03_code",
-              "title": {
-                "en": "Gate the turn, don't take its word",
-                "fr": "Gate the turn, don't take its word"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with claude.\n\nAsk Claude to add a Stop hook to .claude/settings.json that runs npx tsc --noEmit.\n\nHave the hook refuse to end the turn when the check fails, so the failure is fed back to Claude rather than to you.\n\nType /exit to exit Claude Code.",
-                "fr": "Start Claude Code with claude.\n\nDemandez à Claude d'ajouter un Stop hook dans .claude/settings.json qui exécute npx tsc --noEmit.\n\nFaites en sorte que le hook refuse de terminer le tour lorsque la vérification échoue, afin que l'échec soit renvoyé à Claude plutôt qu'à vous.\n\nTapez /exit pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json /home/repl/queries/.claude/settings.json')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Add a Stop hook to .claude/settings.json that runs npx tsc --noEmit\n#    and exits 2 when the type check fails, so the turn cannot end on a broken build.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/4_1/history.jsonl ~/.claude/.\n\n# Seeds the settings wiring that Claude writes.\nmkdir -p /home/repl/queries/.claude\ncp ~/solutions/4_1/settings.json /home/repl/queries/.claude/settings.json",
-              "expectedOutput": "",
-              "hint": {
-                "en": "The blocking exit code is 2, and it hands standard error back to Claude as context to act on.\n\ntsc exits 1 when it finds type errors, and exit 1 does not block, so the hook has to translate the failure. Something like npx tsc --noEmit || exit 2 covers it.\n\nThe wiring goes under hooks.Stop in .claude/settings.json, which needs no matcher because it is not watching a tool.",
-                "fr": "Le code de sortie bloquant est 2, et il renvoie la sortie d'erreur standard à Claude comme contexte d'action.\n\ntsc se termine avec 1 lorsqu'il trouve des erreurs de typage, et exit 1 ne bloque pas, donc le hook doit traduire l'échec. Quelque chose comme npx tsc --noEmit || exit 2 couvre cela.\n\nLe câblage se place sous hooks.Stop dans .claude/settings.json, qui n'a pas besoin de matcher car il n'observe aucun outil."
-              }
-            }
-          ]
-        },
-        {
-          "id": "dc_ch04_act04",
-          "title": {
-            "en": "A cold second opinion",
-            "fr": "Un second avis à froid"
-          },
-          "description": {
-            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
-            "fr": "Une exécution que personne n'a regardée nécessite une vérification réelle, pas un résumé soigné. Lisez le diff vous-même, conditionnez le tour aux tests avec un hook, obtenez un second avis à froid sur tout ce qui compte, puis empaquetez la configuration de confiance comme un plugin que toute votre équipe peut installer."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_4_act_04_code",
-              "title": {
-                "en": "A cold second opinion",
-                "fr": "Un second avis à froid"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with claude.\n\nAsk Claude to review the uncommitted changes by reading git diff, rather than any description of them.\n\nTell it the run was only meant to add a stale pending-orders query, and have it write its findings to review.md, calling out anything that falls outside that.\n\nType /exit to exit Claude Code.",
-                "fr": "Start Claude Code with claude.\n\nDemandez à Claude d'examiner les modifications non validées en lisant git diff, plutôt que toute description de celles-ci.\n\nDites-lui que l'exécution visait uniquement à ajouter une requête pending-orders obsolète, et faites-lui écrire ses conclusions dans review.md, en signalant tout ce qui en sort.\n\nTapez /exit pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json /home/repl/queries/.claude/settings.json')\nrepl.run_command('cd /home/repl/queries && git checkout -- . 2>/dev/null; rm -f review.md')\n# The change the run was asked to make.\nrepl.run_command(r'''cat >> /home/repl/queries/src/queries/order_queries.ts <<'EOF'\n\nexport async function getStalePendingOrders(\n  db: Database,\n  days: number\n): Promise<any[]> {\n  const query = `\n    SELECT o.order_id, c.first_name, c.last_name, c.phone\n    FROM orders o\n    JOIN customers c ON c.id = o.customer_id\n    WHERE o.status = 'pending'\n      AND o.order_date < datetime('now', '-' || ? || ' days')\n  `;\n  return new Promise((resolve, reject) => {\n    db.all(query, [days], (err, rows) => {\n      if (err) reject(err);\n      else resolve(rows);\n    });\n  });\n}\nEOF''')\n# The change nobody asked for.\nrepl.run_command('cd /home/repl/queries && sed -i \"s/email TEXT UNIQUE NOT NULL/email TEXT NOT NULL/\" src/schema.ts')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Review the output of git diff. The run was only meant to add a stale\n#    pending-orders query. Write your findings to review.md and call out anything\n#    outside that scope.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/4_2/history.jsonl ~/.claude/.\n\n# Seeds the review Claude writes.\ncp ~/solutions/4_2/review.md /home/repl/queries/review.md",
-              "expectedOutput": "",
-              "hint": {
-                "en": "Point Claude at the evidence, for example: Review the output of git diff.\n\nNaming the intended scope is what lets a reviewer recognize the change that falls outside it.\n\nRead review.md yourself afterwards. A file the brief never mentioned is exactly the kind of thing a tidy summary leaves out.",
-                "fr": "Dirigez Claude vers les éléments de preuve, par exemple : examinez la sortie de git diff.\n\nNommer la portée prévue permet au réviseur de reconnaître le changement qui en sort.\n\nLisez review.md vous-même ensuite. Un fichier que le brief n'a jamais mentionné est précisément le type de chose qu'un résumé soigné omet."
-              }
-            }
-          ]
-        },
-        {
           "id": "dc_ch04_act05",
           "title": {
             "en": "Video: Plugins",
@@ -1670,41 +1390,6 @@
               "hint": {
                 "en": "A plugin's components run alongside your own configuration rather than replacing any of it.\n\nReviewed is not the same as trusted, and automated review catches some things rather than everything.",
                 "fr": "Les composants d'un plugin s'exécutent aux côtés de votre propre configuration plutôt que de la remplacer.\n\n'Reviewed' n'est pas la même chose que 'trusted', et la revue automatisée détecte certaines choses mais pas tout."
-              }
-            }
-          ]
-        },
-        {
-          "id": "dc_ch04_act07",
-          "title": {
-            "en": "Package what you built",
-            "fr": "Packagez ce que vous avez construit"
-          },
-          "description": {
-            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
-            "fr": "Une exécution que personne n'a surveillée nécessite une vraie vérification, pas un résumé propre. Lisez le diff vous‑même, conditionnez l'activation des tests à un hook, obtenez un second avis impartial sur tout ce qui compte, puis packagez la configuration en laquelle vous avez confiance comme un plugin que toute votre équipe pourra installer."
-          },
-          "type": "exercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "code_repl",
-              "id": "dc_4_act_07_code",
-              "title": {
-                "en": "Package what you built",
-                "fr": "Emballez ce que vous avez construit"
-              },
-              "language": "python",
-              "instructions": {
-                "en": "Start Claude Code with claude.\n\nAsk Claude to package the project's .claude setup as a plugin in a new queries-verify/ directory, putting the skill under skills/ and the hook wiring in hooks/hooks.json.\n\nHave it write the manifest to queries-verify/.claude-plugin/plugin.json with a hyphenated name, a version, a description, and an author.\n\nType /exit to exit Claude Code.",
-                "fr": "Démarrez Claude Code avec claude.\n\nDemandez à Claude d'emballer la configuration .claude du projet en tant que plugin dans un nouveau répertoire queries-verify/, en plaçant la skill sous skills/ et le câblage des hooks dans hooks/hooks.json.\n\nDemandez-lui d'écrire le manifeste dans queries-verify/.claude-plugin/plugin.json avec un nom en trait d'union, une version, une description et un auteur.\n\nTapez /exit pour quitter Claude Code."
-              },
-              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -rf /home/repl/queries/queries-verify')\nrepl.run_command('mkdir -p /home/repl/queries/.claude/skills/verify-changes')\n# Written with printf rather than a heredoc: the skill's YAML frontmatter\n# delimiters would otherwise sit at the start of a line and split this exercise.\nrepl.run_command(\n    \"printf '%s\\\\n' '---' 'name: verify-changes'\"\n    \" 'description: Run after edits to source files. Runs the type check, reads the diff, confirms no check was weakened, and reports pass or fail with evidence.'\"\n    \" '---' '' '# Verify changes' ''\"\n    \" '1. Run `npx tsc --noEmit` and capture the output.'\"\n    \" '2. Read `git diff` for the changes made in this turn.'\"\n    \" '3. Confirm no check was loosened or skipped to make the run pass.'\"\n    \" '4. Report pass or fail, quoting the output you relied on.'\"\n    \" > /home/repl/queries/.claude/skills/verify-changes/SKILL.md\"\n)\nrepl.run_command(r'''cat > /home/repl/queries/.claude/settings.json <<'EOF'\n{\n  \"hooks\": {\n    \"Stop\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"npx tsc --noEmit || exit 2\"\n          }\n        ]\n      }\n    ]\n  }\n}\nEOF''')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
-              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Package the .claude setup as a plugin in queries-verify/: move the\n#    skill under skills/, put the hook wiring in hooks/hooks.json, and write a manifest\n#    at queries-verify/.claude-plugin/plugin.json with a name, version, description\n#    and author.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/4_3/history.jsonl ~/.claude/.\n\n# Seeds the packaged plugin that Claude produces.\ncp -r ~/solutions/4_3/queries-verify /home/repl/queries/queries-verify",
-              "expectedOutput": "",
-              "hint": {
-                "en": "The plugin uses the same layout as your .claude directory, one folder per skill, so most of this is moving files rather than rewriting them.\n\nname is the only required field, and it namespaces the skills as name:skill-name, so it needs to be a slug rather than a sentence.\n\nVersion it like any other dependency. That is what makes updates and version tracking work for everyone who installs it.",
-                "fr": "Le plugin utilise la même structure que votre répertoire .claude, un dossier par skill, donc la plupart de ceci consiste à déplacer des fichiers plutôt qu'à les réécrire.\n\nname est le seul champ requis, et il namespace les skills en tant que name:skill-name, donc il doit être un slug plutôt qu'une phrase.\n\nVersionnez-le comme toute autre dépendance. C'est ce qui permet aux mises à jour et au suivi des versions de fonctionner pour tous ceux qui l'installent."
               }
             }
           ]

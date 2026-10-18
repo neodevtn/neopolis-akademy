@@ -152,11 +152,18 @@ describe("short blocking course remediation", () => {
     expect(practicals.every((block: any) => Array.isArray(block.learnerCriteria) && block.learnerCriteria.length > 0)).toBe(true);
   });
 
-  it("makes the published source objective visible as criteria for Responses API practicals", () => {
+  it("removes Responses API practicals that lack supplied assets while preserving the published renderable activities", () => {
     const course = loadCourse("working_with_the_openai_responses_api__01");
-    const practicals = course.lessons.flatMap((lesson: any) => lesson.chapters || []).flatMap((chapter: any) => chapter.blocks || []).filter((block: any) => block.type === "cloud_exercise");
-    expect(practicals.length).toBeGreaterThan(0);
-    expect(practicals.every((block: any) => Array.isArray(block.learnerCriteria) && block.learnerCriteria.length > 0)).toBe(true);
+    const chapters = course.lessons.flatMap((lesson: any) => lesson.chapters || []);
+    const publishedBlocks = blocks(course);
+    const practicalTypes = new Set(["cloud_exercise", "code_repl", "ai_evaluation", "free_text_exercise", "terminal_sim"]);
+    const ordering = publishedBlocks.filter((block: any) => block.type === "ordering");
+
+    expect(publishedBlocks.some((block: any) => practicalTypes.has(block.type))).toBe(false);
+    expect(ordering).toHaveLength(2);
+    expect(ordering.every((block: any) => block.items?.length > 0 && block.feedback && block.hint)).toBe(true);
+    expect(chapters.every((chapter: any) => chapter.requiredBeforeAdvance === true && chapter.blocks?.length > 0)).toBe(true);
+    expect(JSON.stringify(course)).not.toMatch(/DataLab|cloud\s+lab|\/manus-storage\//i);
     assertCatalogCounts("working_with_the_openai_responses_api__01", "datacamp_working_with_the_openai_responses_api");
   });
 });

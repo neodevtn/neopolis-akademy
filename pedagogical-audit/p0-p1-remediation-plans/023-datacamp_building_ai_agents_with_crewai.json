@@ -1,0 +1,45 @@
+{
+  "formation_id": "datacamp_building_ai_agents_with_crewai",
+  "index": 23,
+  "course_ids": [
+    "building_ai_agents_with_crewai__01"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch01_act01",
+      "block_id": "neopolis_building_ai_agents_with_crewai__01_environment_preparation",
+      "reason": "Le texte de préparation affirme que le cours se réalise avec des activités interactives, alors que le bundle courant contient exerciseCount:0 et aucun bloc d’activité. Cette promesse n’est pas tenue dans l’état publié; retirer cette référence obsolète est la correction rapide possible sans inventer d’activité, de dataset ou d’environnement.",
+      "evidence": "current_courses.building_ai_agents_with_crewai__01.lessons[0].chapters[0].blocks contient réellement le bloc neopolis_building_ai_agents_with_crewai__01_environment_preparation, dont le body.fr indique « Ce cours se réalise directement dans Neopolis avec des activités interactives ». Le même bundle indique exerciseCount:0, seulement deux chapitres et aucun bloc interactif/évalué; current_recheck.keyOpenIssues et P023-CURRICULUM-01 confirment l’absence des activités annoncées."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Parcours pratique promis mais non présent",
+      "evidence": "P023-CURRICULUM-01: le cours publié ne contient que dc_ch01_act01 et dc_ch02_act04, avec exerciseCount:0 et aucun bloc interactif; les descriptions et compteurs annoncent pourtant agent, tâches, outils, équipes, mémoire, routage, flux et 7 activités dont 5 TP guidés.",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "Les énoncés, ressources, réponses attendues et rubriques des cinq TP manquants ne sont pas déclarés dans le bundle. Les inventer ou réimporter une séquence complète dépasserait une correction rapide fondée uniquement sur le texte existant; seule la promesse textuelle obsolète peut être retirée."
+    },
+    {
+      "severity": "P1",
+      "title": "Verrou terminal de la vidéo obligatoire de la première leçon contournable",
+      "evidence": "P023-LOCK-01: dc_ch01_act01.requiredBeforeAdvance vaut true et le média réel dc_1_act_01_video possède un identifiant de 17 caractères, mais le gate terminal de LessonViewer.tsx filtre les identifiants à 8–15 caractères; la liste des médias requis devient vide et la leçon peut être finalisée sans complétion explicite.",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch01_act01",
+      "reason_not_rapidly_remediable": "Le défaut est dans la logique applicative du gate terminal, pas dans un texte ou un actif de cours. Le bundle ne permet pas de corriger ce code via une action de contenu sans inventer un mécanisme de verrouillage."
+    },
+    {
+      "severity": "P1",
+      "title": "Verrou terminal de la vidéo obligatoire de la seconde leçon contournable",
+      "evidence": "P023-LOCK-02: dc_ch02_act04.requiredBeforeAdvance vaut true et le média réel dc_2_act_04_video possède un identifiant de 17 caractères; le même filtre 8–15 de LessonViewer.tsx l’exclut du calcul final, permettant de terminer la leçon sans regarder ou marquer le média.",
+      "course_id": "building_ai_agents_with_crewai__01",
+      "chapter_id": "dc_ch02_act04",
+      "reason_not_rapidly_remediable": "Le problème provient du code de navigation/progression et non d’une activité ou d’un texte du cours. Aucun actif déclaré ne fournit une correction de code fiable; supprimer la vidéo valide serait contraire à la règle."
+    }
+  ],
+  "summary": "Revue actuelle effectuée sans modifier le cours. Une référence textuelle non tenue aux activités interactives est retirée du bloc réel de préparation. Le manque structurel de séquences/TP et les deux défauts de gate terminal restent ouverts, car ils exigent des contenus source ou une correction applicative absents du bundle."
+}

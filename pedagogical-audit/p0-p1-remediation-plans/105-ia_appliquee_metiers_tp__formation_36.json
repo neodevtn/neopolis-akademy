@@ -1,0 +1,63 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_36",
+  "index": 105,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__36"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "chapter_id": "ia_appliquee_metiers_tp__36-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__36-checkpoint-preparation",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : le checkpoint est présenté comme acquis après toute sélection alors que le seuil annoncé exige une réponse correcte. Retirer le bloc retire le verrou défectueux ; le cadrage et les explications de sécurité restent déjà présents dans les chapitres précédents comme contenu non bloquant.",
+      "evidence": "Le bloc réel lessons[0].chapters[3].blocks[0] (knowledge_check, id ia_appliquee_metiers_tp__36-checkpoint-preparation) est required:true ; le chapitre ia_appliquee_metiers_tp__36-checkpoint-01 porte requiredBeforeAdvance:true et passThreshold:1. Le constat P1 confirmé indique que KnowledgeCheckBlock appelle onComplete pour toute option et que LessonViewer enregistre la complétion sans tester isCorrect, malgré correctAnswer:a. Aucun actif déclaré ne fournit un correctif fiable du comportement de verrouillage.",
+      "exercise_id": "ia_appliquee_metiers_tp__36-checkpoint-preparation"
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "chapter_id": "ia_appliquee_metiers_tp__36-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__36-mini-project-proof",
+      "reason": "Activité obligatoire non corrigeable de manière fiable avec les seuls actifs déclarés : le cloud_exercise accepte toute saisie non vide et peut déverrouiller la suite sans démontrer les quatre éléments exigés. La consigne, le guide d’environnement, les ressources déclarées, l’indice et la correction sont pédagogiquement utiles ; convertir le bloc en contenu non bloquant les conserve sans laisser le verrou défectueux.",
+      "evidence": "Le bloc réel lessons[0].chapters[4].blocks[0] (cloud_exercise, id ia_appliquee_metiers_tp__36-mini-project-proof) demande scénario, résultat, contrôle et validation humaine, mais n’a ni minimumAnswerLength, rubricCriteria ni serverGradedAssessment ; le rapport confirme le seuil par défaut d’un caractère et la complétion sur toute saisie non vide. Les champs assignment, instructions, environmentGuide, resources, hint, solution, successMessage et steps existent et doivent rester lisibles comme contenu.",
+      "exercise_id": "ia_appliquee_metiers_tp__36-mini-project-proof"
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P3",
+      "title": "Libellés français persistants dans le comparison_panel anglais",
+      "evidence": "Le constat historique stillOpen localise lessons[0].chapters[2].blocks[1] (comparison_panel) : les valeurs anglaises de colonnes et plusieurs items restent françaises, notamment « À faire », « À éviter » et « Utiliser des données fictives. ».",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "chapter_id": "ia_appliquee_metiers_tp__36-screen-03",
+      "reason_not_rapidly_remediable": "Il s’agit d’un défaut de contenu/localisation à corriger dans les champs du cours, sans correction anglaise déjà déclarée comme actif distinct ; aucune suppression d’un contenu valide n’est justifiée."
+    },
+    {
+      "severity": "P2",
+      "title": "Étapes structurées absentes du mini-projet",
+      "evidence": "Le constat historique stillOpen localise le cloud_exercise ia_appliquee_metiers_tp__36-mini-project-proof et affirme que steps est absent dans l’état audité, alors que le TP est annoncé comme guidé.",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "chapter_id": "ia_appliquee_metiers_tp__36-mini-project",
+      "reason_not_rapidly_remediable": "Le bloc est converti en contenu non bloquant pour supprimer le gate non fiable, mais l’ajout et la vérification d’une séquence guidée cohérente nécessitent une édition pédagogique ; aucun actif séparé ne permet de garantir cette correction rapidement."
+    },
+    {
+      "severity": "P2",
+      "title": "Champs du cloud_exercise non bilingues",
+      "evidence": "Le constat historique stillOpen localise assignment, instructions, hint, solution et successMessage du cloud_exercise : ces champs sont des chaînes françaises et l’écran anglais les affiche donc en français.",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "chapter_id": "ia_appliquee_metiers_tp__36-mini-project",
+      "reason_not_rapidly_remediable": "La conversion retire le bloc d’évaluation mais ne fournit pas de traductions anglaises déclarées dans le bundle ; il faut produire et valider les textes bilingues sans inventer de contenu externe."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback du tri final non rendu",
+      "evidence": "Le bloc réel ia_appliquee_metiers_tp__36-quiz-order conserve feedback, mais le constat stillOpen indique que LessonViewer ne transmet que correction et que MatchingExercise n’affiche une explication que depuis correction.",
+      "course_id": "ia_appliquee_metiers_tp__36",
+      "chapter_id": "ia_appliquee_metiers_tp__36-final-quiz",
+      "reason_not_rapidly_remediable": "Le défaut porte sur le mapping/rendu dans le code, pas sur une activité obligatoire réalisable avec un actif déclaré ; supprimer le quiz ou son contenu valide ne corrigerait pas fiablement l’affichage."
+    }
+  ],
+  "summary": "Revue de l’état courant terminée : les deux activités P1 obligatoires ne sont pas fiablement validables avec les seuls actifs et sont respectivement retirée (checkpoint) et convertie en contenu non bloquant (mini-projet), sans modifier le cours. Quatre constats historiques P2/P3 restent ouverts : localisation anglaise, guidage et traduction du mini-projet, et feedback du tri final non rendu. Aucun constat historique legacy n’est à normaliser (legacy_open_count=0)."
+}

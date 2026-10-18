@@ -13,14 +13,14 @@ describe("cours DataCamp Systèmes multi-agents avec LangGraph", () => {
     expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 4, videoCount: 4, exerciseCount: 0 });
   });
 
-  it("retire les DataLab non rubricés et conserve les leçons Projector", () => {
+  it("retire les DataLab non rubricés et conserve les leçons Projector non bloquantes", () => {
     const projectors = blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length);
     const practicals = blocks.filter((block: any) => ["cloud_exercise", "ai_evaluation", "code_repl"].includes(block.type));
     expect(activities).toHaveLength(4);
     expect(projectors).toHaveLength(4);
     expect(practicals).toHaveLength(0);
-    expect(projectors.every((block: any) => block.audioUrl && block.slidesPdf && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
-    expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
+    expect(projectors.every((block: any) => block.audioUrl?.startsWith("/api/assets/") && block.slidesPdf?.startsWith("/api/assets/") && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
+    expect(activities.every((activity: any) => activity.requiredBeforeAdvance === false)).toBe(true);
   });
 
   it("reste entièrement local côté médias et conserve les tags d’orchestration", () => {

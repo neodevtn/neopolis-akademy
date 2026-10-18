@@ -1,0 +1,42 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_31",
+  "index": 100,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__31"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__31",
+      "chapter_id": "ia_appliquee_metiers_tp__31-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__31-checkpoint-preparation",
+      "reason": "Le knowledge_check obligatoire ne peut pas être rendu fiable avec les seuls actifs déclarés : le code de progression comptabilise une réponse incorrecte comme interaction complétée. Retirer l’activité plutôt que laisser un verrou de checkpoint faux ; les explications de sécurité déjà présentes dans les chapitres précédents sont conservées comme contenu non bloquant.",
+      "evidence": "current_open_p0_p1_findings[0] et current_recheck.findings[0] ; current_courses.ia_appliquee_metiers_tp__31.lessons[0].chapters[3] contient le bloc réel ia_appliquee_metiers_tp__31-checkpoint-preparation, requiredBeforeAdvance=true et passThreshold=1 ; la correction fiable nécessiterait une modification de GenericLearningBlocks.tsx/LessonViewer.tsx/checkpointGate.ts, qui ne fait pas partie des actifs déclarés."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__31",
+      "chapter_id": "ia_appliquee_metiers_tp__31-checkpoint-01",
+      "reason": "Retirer le verrou de progression associé au checkpoint supprimé afin qu’aucune complétion obligatoire ne dépende de cette évaluation non fiable.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__31-checkpoint-01 est requiredBeforeAdvance=true et son passThreshold=1 est exposé dans current_recheck.findings[0]."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__31",
+      "chapter_id": "ia_appliquee_metiers_tp__31-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__31-mini-project-proof",
+      "reason": "Le mini-projet obligatoire accepte une réponse d’un seul caractère et ne dispose d’aucun rubricCriteria, minimumAnswerLength ou serverGradedAssessment. Il n’est donc pas rapidement corrigeable de manière fiable avec les seuls actifs déclarés ; retirer l’activité évite une fausse preuve et conserve les consignes déjà présentes dans le chapitre comme contenu non bloquant.",
+      "evidence": "current_open_p0_p1_findings[1] et current_recheck.findings[1] ; current_courses.ia_appliquee_metiers_tp__31.lessons[0].chapters[4].blocks[0] est le cloud_exercise réel ia_appliquee_metiers_tp__31-mini-project-proof ; CloudExerciseBlock/cloudExerciseValidation.ts valident par défaut la longueur minimale 1, et une correction fiable nécessiterait une configuration ou logique d’évaluation absente des actifs déclarés."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__31",
+      "chapter_id": "ia_appliquee_metiers_tp__31-mini-project",
+      "reason": "Retirer le verrou de progression du mini-projet supprimé afin que la suite ne dépende pas d’une preuve non vérifiée.",
+      "evidence": "Le chapitre réel ia_appliquee_metiers_tp__31-mini-project est requiredBeforeAdvance=true dans current_courses ; le bloc obligatoire supprimé est ia_appliquee_metiers_tp__31-mini-project-proof."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux constats P1 concernent des activités obligatoires dont la validation n’est pas fiable avec les seuls actifs déclarés et nécessiterait des changements de code ou d’évaluation absents du bundle. Les deux blocs réels sont donc retirés et leurs exigences de complétion supprimées ; les explications de sécurité et les consignes existantes restent du contenu non bloquant. Aucun constat historique stillOpen à normaliser et aucun P0/P1 ne reste ouvert."
+}

@@ -1,0 +1,53 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_33",
+  "index": 102,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__33"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__33-checkpoint-preparation",
+      "reason": "Le checkpoint obligatoire ne peut pas être corrigé de manière fiable avec les seuls actifs déclarés : le code enregistre la complétion dès toute sélection, y compris une réponse incorrecte. Retirer l’activité et son verrou, en conservant l’énoncé, les options et l’explication comme contenu non bloquant.",
+      "evidence": "current_recheck.findings P2 verrouillage; initial_audit issue ped:ia_appliquee_metiers_tp__33:0:3:knowledge-check-gate-on-wrong-answer; le bloc knowledge_check est required=true et le chapitre requiredBeforeAdvance=true, tandis que GenericLearningBlocks.tsx et LessonViewer.tsx enregistrent la complétion sans tester isCorrect."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__33-mini-project-proof",
+      "reason": "La preuve du mini-projet est une activité obligatoire dont une réponse minimale non vide déclenche la réussite et le déverrouillage, sans contrôle de fond ni actif déclaré permettant une correction fiable. Retirer l’activité et son verrou, en conservant assignment, instructions, guide, ressources, étapes, indice et correction comme contenu non bloquant.",
+      "evidence": "current_open_p0_p1_findings P1 évaluation; initial_audit issue ped:ia_appliquee_metiers_tp__33:0:4:cloud-exercise-unvalidated-proof; le bloc cloud_exercise ne contient ni rubricCriteria, learnerCriteria, serverGradedAssessment ni minimumAnswerLength, et CloudExerciseBlock.tsx appelle onComplete dès la longueur minimale par défaut."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia-appliquee_metiers_tp__33-final-quiz",
+      "block_id": "ia_appliquee_metiers_tp__33-quiz-03",
+      "reason": "Correction rapide à partir du texte existant : reformuler l’énoncé pour qu’il corresponde à la réponse correcte déjà déclarée, sans changer l’activité ni sa correction.",
+      "evidence": "current_recheck.findings P2 énoncé; l’énoncé demande le contrôle de lecture du schéma, alors que correctAnswer=a décrit la comparaison du résultat au critère métier et la documentation d’un écart."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Le feedback du tri final n’est pas rendu",
+      "evidence": "current_recheck.findings P2 feedback; le bloc ia_appliquee_metiers_tp__33-quiz-order contient feedback mais LessonViewer.tsx transmet seulement block.correction à MatchingExercise.tsx, qui n’affiche que exercise.correction.",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-final-quiz",
+      "reason_not_rapidly_remediable": "Le texte feedback existe déjà, mais son affichage dépend d’une modification du composant de rendu et non d’un changement rapide limité aux actifs déclarés du cours."
+    },
+    {
+      "severity": "P2",
+      "title": "Le mini-projet ne fournit pas de séquence d’étapes rendue",
+      "evidence": "initial_audit issue ped:ia_appliquee_metiers_tp__33:0:4:cloud-exercise-no-sequenced-steps; le champ steps est absent du bloc courant alors que le composant ne rend la section Étapes que si elle est renseignée.",
+      "course_id": "ia_appliquee_metiers_tp__33",
+      "chapter_id": "ia_appliquee_metiers_tp__33-mini-project",
+      "reason_not_rapidly_remediable": "Après retrait de l’activité obligatoire, ajouter une séquence dédiée nécessiterait de reconstruire le bloc de cours ; le contenu explicatif existant est conservé non bloquant plutôt que d’inventer des détails dépendant du support fictif non disponible localement."
+    }
+  ],
+  "summary": "La formation comporte un checkpoint et un mini-projet obligatoires dont le verrouillage ou la réussite ne sont pas fiables avec les actifs actuels : les deux activités sont converties en contenu non bloquant, avec conservation de leurs explications. L’énoncé du quiz-03 est réaligné sur sa réponse existante. Le défaut de rendu du feedback du tri final reste ouvert car il dépend du code de rendu ; l’absence d’étapes structurées du mini-projet reste ouverte après conversion. Aucun constat historique stillOpen supplémentaire n’existe (legacy_open_count=0)."
+}

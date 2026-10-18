@@ -1,0 +1,28 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_22",
+  "index": 91,
+  "course_ids": [
+    "ia_appliquee_metiers_tp__22"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "chapter_id": "ia_appliquee_metiers_tp__22-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__22-checkpoint-preparation",
+      "reason": "Activité obligatoire non fiable : une réponse incorrecte est enregistrée comme complétée et déverrouille la suite malgré required=true. Le garde-fou de sécurité doit donc être retiré du parcours bloquant ; les explications et règles de sécurité sont déjà conservées dans les chapitres d’enseignement précédents.",
+      "evidence": "Le bloc knowledge_check réel est lessons[0].chapters[3].blocks[0], avec id ia_appliquee_metiers_tp__22-checkpoint-preparation, required=true et correctAnswer=\"a\". Le constat P1 documente l’enregistrement de toute interaction et le déverrouillage malgré une réponse incorrecte (GenericLearningBlocks.tsx:57-64 ; LessonViewer.tsx:359-362,484-489)."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__22",
+      "chapter_id": "ia_appliquee_metiers_tp__22-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__22-mini-project-proof",
+      "reason": "Le mini-projet obligatoire accepte toute valeur non vide, y compris un caractère, sans critère fiable pour les quatre éléments exigés ; il ne peut pas être rendu validant rapidement avec les seuls actifs déclarés. Conserver la consigne, les garde-fous, l’indice et la correction comme contenu non bloquant, sans soumission obligatoire ni déverrouillage fondé sur cette preuve.",
+      "evidence": "Le bloc cloud_exercise réel est lessons[0].chapters[4].blocks[0], avec id ia_appliquee_metiers_tp__22-mini-project-proof. Les instructions exigent scénario, résultat, contrôle et validation humaine, mais aucun minimumAnswerLength, rubricCriteria, learnerCriteria ou serverGradedAssessment n’est configuré ; cloudExerciseValidation.ts:1-8 accepte une valeur non vide et CloudExerciseBlock.ts:117-125,153-161 complète immédiatement."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Deux activités P1 obligatoires ne fournissent pas un verrouillage ou une validation fiable avec les seuls actifs déclarés : le checkpoint est retiré et le mini-projet est converti en contenu non bloquant, en conservant ses consignes et explications. Aucun constat historique stillOpen ni P0/P1 non résolu."
+}

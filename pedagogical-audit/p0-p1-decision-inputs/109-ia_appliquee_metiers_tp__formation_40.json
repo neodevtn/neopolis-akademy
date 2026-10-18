@@ -1,0 +1,929 @@
+{
+  "formation": {
+    "index": 109,
+    "formation_id": "ia_appliquee_metiers_tp__formation_40",
+    "title": {
+      "fr": "Agent de classification et routage de documents juridiques",
+      "en": "Agent de classification et routage de documents juridiques"
+    },
+    "course_ids": [
+      "ia_appliquee_metiers_tp__40"
+    ]
+  },
+  "current_open_p0_p1_findings": [
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[3] (ia_appliquee_metiers_tp__40-checkpoint-01), blocks[0] (ia_appliquee_metiers_tp__40-checkpoint-preparation)",
+      "description": "Le gate conserve requiredBeforeAdvance=true et passThreshold=1, avec correctAnswer=a. Le rapport initial documente que le renderer marque l'interaction terminée dès la sélection, y compris lorsque la réponse est incorrecte, et que le calcul dédié du seuil ne recense pas ce bloc knowledge_check. La configuration actuelle du cours n'apporte aucune preuve de correction de ce comportement.",
+      "recommendation": "Faire dépendre le déverrouillage d'une réponse correcte, ou intégrer explicitement ce knowledge_check au calcul du seuil, puis tester une réponse incorrecte suivie d'une navigation.",
+      "status": "open"
+    },
+    {
+      "severity": "P1",
+      "category": "verrouillage",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[4] (ia_appliquee_metiers_tp__40-mini-project), blocks[0] (ia_appliquee_metiers_tp__40-mini-project-proof)",
+      "description": "Le mini-projet demande bien une preuve couvrant scénario, résultat, contrôle et validation humaine (lignes 337-338), mais le bloc ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment, ni workflowUploadRequired (lignes 331-358). Selon le rapport initial, le renderer accepte alors toute réponse non vide et le gate requiredBeforeAdvance peut être levé par une saisie triviale.",
+      "recommendation": "Mettre en place une validation significative couvrant les éléments demandés, sans considérer une simple réponse non vide comme preuve suffisante.",
+      "status": "open"
+    }
+  ],
+  "legacy_open_count_requiring_normalization": 0,
+  "current_recheck": {
+    "formation_id": "ia_appliquee_metiers_tp__formation_40",
+    "index": 109,
+    "course_ids": [
+      "ia_appliquee_metiers_tp__40"
+    ],
+    "review_scope": "Contre-revue du cours référencé par formation-manifest.json (course_paths), comparaison avec le rapport initial raw/109-ia_appliquee_metiers_tp__formation_40.json et static-audit-data.json. Contrôles : objectifs et activités, faisabilité TP/fichiers/environnement, soumissions et gates, médias/téléchargements, duplications/corruption, rendu et bilinguisme. Revue documentaire statique ; aucune exécution navigateur, workflow ou ressource externe.",
+    "reviewed_current_state": true,
+    "findings": [
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "ia_appliquee_metiers_tp__40",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[3] (ia_appliquee_metiers_tp__40-checkpoint-01), blocks[0] (ia_appliquee_metiers_tp__40-checkpoint-preparation)",
+        "description": "Le gate conserve requiredBeforeAdvance=true et passThreshold=1, avec correctAnswer=a. Le rapport initial documente que le renderer marque l'interaction terminée dès la sélection, y compris lorsque la réponse est incorrecte, et que le calcul dédié du seuil ne recense pas ce bloc knowledge_check. La configuration actuelle du cours n'apporte aucune preuve de correction de ce comportement.",
+        "recommendation": "Faire dépendre le déverrouillage d'une réponse correcte, ou intégrer explicitement ce knowledge_check au calcul du seuil, puis tester une réponse incorrecte suivie d'une navigation.",
+        "status": "open"
+      },
+      {
+        "severity": "P1",
+        "category": "verrouillage",
+        "course_id": "ia_appliquee_metiers_tp__40",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[4] (ia_appliquee_metiers_tp__40-mini-project), blocks[0] (ia_appliquee_metiers_tp__40-mini-project-proof)",
+        "description": "Le mini-projet demande bien une preuve couvrant scénario, résultat, contrôle et validation humaine (lignes 337-338), mais le bloc ne déclare ni minimumAnswerLength, ni rubricCriteria, ni serverGradedAssessment, ni workflowUploadRequired (lignes 331-358). Selon le rapport initial, le renderer accepte alors toute réponse non vide et le gate requiredBeforeAdvance peut être levé par une saisie triviale.",
+        "recommendation": "Mettre en place une validation significative couvrant les éléments demandés, sans considérer une simple réponse non vide comme preuve suffisante.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "feedback",
+        "course_id": "ia_appliquee_metiers_tp__40",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[5].blocks[4] (ia_appliquee_metiers_tp__40-quiz-order), feedback aux lignes 619-622",
+        "description": "Le bloc bucket_sort contient un feedback pédagogique bilingue, mais le rapport initial localise que LessonViewer transmet correction à MatchingExercise et non feedback, tandis que correction est absent du bloc. Le contenu actuel ne montre pas de champ correction ajouté ; le feedback reste donc susceptible de ne pas être visible après une tentative incorrecte.",
+        "recommendation": "Corriger le mapping de rendu ou fournir le champ attendu par le composant, puis vérifier visiblement le débrief après une tentative erronée.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "bilinguisme",
+        "course_id": "ia_appliquee_metiers_tp__40",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[2].blocks[0].items[3].description.en (lignes 201-208); chapters[5].blocks[2].question.en (lignes 459-463); chapters[5].blocks[4].cards[3].text.en (lignes 611-614)",
+        "description": "Plusieurs valeurs déclarées en anglais sont identiques au français au lieu d'être traduites : la description de l'étape Contrôler, la question du quiz 03 et le texte de la carte Valider. Le cours est donc partiellement bilingue dans ses données actuelles.",
+        "recommendation": "Fournir une traduction anglaise distincte pour ces champs, ou documenter explicitement un choix monolingue cohérent pour l'ensemble du cours.",
+        "status": "open"
+      },
+      {
+        "severity": "P2",
+        "category": "guidage",
+        "course_id": "ia_appliquee_metiers_tp__40",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: lessons[0].chapters[4].blocks[0].steps (lignes 359-372)",
+        "description": "Le rapport initial signalait l'absence d'étapes structurées dans le mini-projet. L'état actuel contient désormais trois étapes bilingues explicites : relire la consigne, réaliser la tâche sans donnée confidentielle, puis vérifier la production avant soumission.",
+        "recommendation": "Aucune correction supplémentaire sur ce point ; conserver ces étapes et vérifier leur rendu si une validation navigateur est ultérieurement disponible.",
+        "status": "fixed"
+      },
+      {
+        "severity": "P2",
+        "category": "médias_téléchargements",
+        "course_id": "ia_appliquee_metiers_tp__40",
+        "location": "client/public/data/courses/ia_appliquee_metiers_tp__40.json: sourceReference (lignes 12-15), resource_review (lignes 135-149), cloud_exercise.resources[0] (lignes 343-354)",
+        "description": "Les médias audiovisuels sont explicitement absents (recommendedVideosManaged=false, recommendedVideos=[] aux lignes 58-59), mais une ressource n8n externe et un support fictif /manus-storage sont bien déclarés. Le rapport initial indique que leur contenu et leur disponibilité réelle n'ont pas été vérifiés ; aucune absence ou corruption ne peut donc être affirmée à partir des JSON locaux.",
+        "recommendation": "Aucune correction déduite des seules preuves locales ; vérifier séparément l'accessibilité et le contenu de ces URLs dans une session apprenant.",
+        "status": "false_positive"
+      }
+    ],
+    "summary": {
+      "issue_count": 5,
+      "p0": 0,
+      "p1": 2,
+      "p2": 3
+    }
+  },
+  "initial_audit": {
+    "formation_id": "ia_appliquee_metiers_tp__formation_40",
+    "courses": [
+      {
+        "course_id": "ia_appliquee_metiers_tp__40",
+        "chapters": [
+          {
+            "lesson_index": 0,
+            "chapter_index": 0,
+            "chapter_id": "ia_appliquee_metiers_tp__40-screen-01",
+            "title": "Objectif du TP",
+            "score_100": 94,
+            "verified_dimensions": [
+              "Objectifs: le bloc learning_section affiche quatre compétences opérationnelles (classer, extraire, détecter, router), le métier cible, le niveau et la durée.",
+              "Cadrage: le callout précise que le cas est à reproduire dans un environnement de démonstration et que les contrôles métier et sécurité restent nécessaires.",
+              "Rendu: LearningSectionBlock et CalloutBlock affichent les champs renseignés; aucun champ pédagogique pertinent n'est masqué pour ce chapitre.",
+              "Médias: aucun média audiovisuel ou illustration n'est déclaré; cette dimension ne nécessite pas de contrôle de contextualisation ici."
+            ],
+            "unverified_dimensions": [
+              "Atteinte effective des compétences: elle dépend de la réalisation ultérieure du TP et ne peut pas être observée dans ce seul chapitre."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 1,
+            "chapter_id": "ia_appliquee_metiers_tp__40-screen-02",
+            "title": "Préparer l’environnement",
+            "score_100": 86,
+            "verified_dimensions": [
+              "Prérequis et sécurité: le texte impose sandbox ou comptes de démonstration, données fictives, absence de secrets et validation humaine des actions à impact.",
+              "Action attendue: resource_review demande explicitement d'ouvrir la ressource, d'identifier résultat métier, entrées, sorties et contrôles, puis de confirmer la consultation.",
+              "Rendu et verrouillage: LessonViewer affiche le titre, la consigne, le lien et le bouton de confirmation; la progression est bloquée jusqu'à cette confirmation.",
+              "Transition: le chapitre prépare explicitement l'environnement avant la démarche de construction et le mini-projet."
+            ],
+            "unverified_dimensions": [
+              "Contenu et qualité pédagogique de la ressource n8n externe: son URL est référencée et rendue, mais elle n'a pas été consultée; elle n'est donc pas considérée comme absente.",
+              "Accessibilité et disponibilité réelle de l'URL de ressource dans une session apprenant."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 2,
+            "chapter_id": "ia_appliquee_metiers_tp__40-screen-03",
+            "title": "Construire progressivement",
+            "score_100": 88,
+            "verified_dimensions": [
+              "Progression: sequence_visual présente une démarche ordonnée Cadrer, Préparer, Tester, Contrôler avant le checkpoint puis le mini-projet.",
+              "Prérequis opérationnels: les limites d'automatisation, données fictives, tests, journalisation des écarts et revue humaine sont formulés avant l'activité pratique.",
+              "Clarté et rendu: SequenceVisualBlock et ComparisonPanelBlock rendent les étapes, les descriptions et les listes À faire/À éviter renseignées.",
+              "Cohérence: le contenu est aligné avec l'objectif de classification et routage de documents juridiques, et avec les règles de sécurité énoncées au chapitre précédent."
+            ],
+            "unverified_dimensions": [
+              "Maîtrise technique détaillée de n8n, Claude Sonnet et Google Sheets: elle dépend de la ressource référencée et de la pratique dans l'environnement personnel."
+            ],
+            "issues": []
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 3,
+            "chapter_id": "ia_appliquee_metiers_tp__40-checkpoint-01",
+            "title": "Checkpoint : environnement et sécurité",
+            "score_100": 76,
+            "verified_dimensions": [
+              "Énoncé et action: la question précise le moment, le workflow concerné et la pratique attendue; les quatre choix sont cohérents avec les règles déjà enseignées.",
+              "Feedback: KnowledgeCheckBlock affiche la bonne ou mauvaise réponse, l'explication et une possibilité de réessayer.",
+              "Rendu: le prompt, les options, le compteur d'une réponse attendue et l'explication sont effectivement rendus par KnowledgeCheckBlock."
+            ],
+            "unverified_dimensions": [],
+            "issues": [
+              {
+                "issue_id": "ped:ia_appliquee_metiers_tp__40:ia_appliquee_metiers_tp__40-checkpoint-01:knowledge-check-can-unlock-on-error",
+                "course_id": "ia_appliquee_metiers_tp__40",
+                "chapter_id": "ia_appliquee_metiers_tp__40-checkpoint-01",
+                "content_id": "ia_appliquee_metiers_tp__40-checkpoint-preparation",
+                "content_type": "knowledge_check",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Le checkpoint obligatoire peut être quitté après une réponse incorrecte. Le composant appelle onComplete dès la sélection, quelle que soit la correction; LessonViewer marque alors l'interaction comme terminée. Le passThreshold: 1 du chapitre ne s'applique pas à ce bloc knowledge_check, car le calcul dédié ne compte que les blocs de type checkpoint. L'apprenant peut donc progresser sans avoir validé la règle de sécurité évaluée.",
+                "current_content": "Chapitre requiredBeforeAdvance: true, passThreshold: 1; bloc knowledge_check avec correctAnswer: a et required: true.",
+                "proposed_content": "Faire dépendre la complétion qui déverrouille le chapitre de isCorrect pour ce knowledge_check, ou traiter explicitement knowledge_check comme une question de checkpoint dans le calcul du seuil. Conserver le réessai et ne permettre le passage qu'après la réponse a.",
+                "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__40.json → lessons[0].chapters[3] (passThreshold: 1 et correctAnswer: a); client/src/components/blocks/GenericLearningBlocks.tsx:57 appelle onComplete(block.id, id === block.correctAnswer); client/src/pages/training/LessonViewer.tsx:484-489 ajoute l'identifiant aux interactions terminées sans condition sur isCorrect; client/src/pages/training/checkpointGate.ts:12-14 ne recense que les blocs type checkpoint.",
+                "confidence": "high",
+                "verification_status": "confirmed_content_and_renderer",
+                "recommended_action": "Corriger la règle de complétion et ajouter un test couvrant une réponse incorrecte suivie d'une tentative de navigation."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 4,
+            "chapter_id": "ia_appliquee_metiers_tp__40-mini-project",
+            "title": "Mini-projet et preuve de réalisation",
+            "score_100": 54,
+            "verified_dimensions": [
+              "Objectif et livrable: le TP demande de classer 20 documents fictifs et de créer une piste d'audit exportable; la preuve doit décrire le scénario, le résultat, un contrôle et l'étape soumise à validation humaine.",
+              "Préparation et ressources: l'environnement de démonstration, les données fictives, les précautions de sécurité, le support fictif et un indice sont fournis dans le rendu CloudExerciseBlock.",
+              "Feedback post-soumission: la correction, les erreurs fréquentes, l'auto-vérification et le message de succès sont visibles après soumission."
+            ],
+            "unverified_dimensions": [
+              "Contenu du support fictif servi par l'URL gérée /manus-storage: l'URL est déclarée et rendue comme ressource; le fichier n'était pas présent dans le workspace d'audit et n'est pas considéré comme absent.",
+              "Exécution réelle dans les environnements personnels n8n, Claude Sonnet et Google Sheets."
+            ],
+            "issues": [
+              {
+                "issue_id": "ped:ia_appliquee_metiers_tp__40:ia_appliquee_metiers_tp__40-mini-project:proof-gate-accepts-trivial-answer",
+                "course_id": "ia_appliquee_metiers_tp__40",
+                "chapter_id": "ia_appliquee_metiers_tp__40-mini-project",
+                "content_id": "ia_appliquee_metiers_tp__40-mini-project-proof",
+                "content_type": "cloud_exercise",
+                "severity": "P1",
+                "category": "verrouillage",
+                "description": "Le verrou du mini-projet ne vérifie pas la preuve demandée. Le bloc ne définit ni minimumAnswerLength, ni critères de grille, ni évaluation serveur, ni dépôt de workflow requis. Le renderer applique donc le minimum par défaut d'un caractère et appelle onComplete après toute réponse non vide: une saisie d'un seul caractère suffit à révéler la correction et à déverrouiller le quiz final, sans preuve du scénario, du résultat, du contrôle ou de la validation humaine.",
+                "current_content": "Le bloc demande une preuve décrivant « le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine », mais aucun mécanisme de validation de ces éléments n'est configuré.",
+                "proposed_content": "Configurer une validation de preuve avant déverrouillage: critères explicites couvrant (1) le classement de 20 documents fictifs, (2) les métadonnées/routage et la piste d'audit, (3) un résultat de test ou un écart, et (4) le contrôle humain d'une action sensible. Préférer une évaluation à critères ou un dépôt de workflow exporté; un minimum de longueur seul ne suffit pas.",
+                "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__40.json → lessons[0].chapters[4].blocks[0] ne contient pas minimumAnswerLength, rubricCriteria, serverGradedAssessment ni workflowUploadRequired; client/src/components/blocks/cloudExerciseValidation.ts:1-4 fixe le minimum implicite à 1; client/src/components/CloudExerciseBlock.tsx:153-161 marque le TP soumis et appelle onComplete sans évaluation configurée; client/src/pages/training/LessonViewer.tsx:1587-1592 utilise cette complétion pour lever le verrou.",
+                "confidence": "high",
+                "verification_status": "confirmed_content_and_renderer",
+                "recommended_action": "Rendre la validation de la preuve significative avant de conserver requiredBeforeAdvance: true sur ce mini-projet."
+              },
+              {
+                "issue_id": "ped:ia_appliquee_metiers_tp__40:ia_appliquee_metiers_tp__40-mini-project:missing-structured-steps",
+                "course_id": "ia_appliquee_metiers_tp__40",
+                "chapter_id": "ia_appliquee_metiers_tp__40-mini-project",
+                "content_id": "ia_appliquee_metiers_tp__40-mini-project-proof",
+                "content_type": "cloud_exercise",
+                "severity": "P2",
+                "category": "guidage",
+                "description": "La consigne donne le livrable et quatre capacités à couvrir, mais le tableau steps est absent. Pour un TP qui implique trois outils et un jeu de documents, l'apprenant n'a pas de séquence de réalisation vérifiable dans l'activité elle-même; la démarche générale du chapitre précédent ne précise pas l'enchaînement du mini-projet.",
+                "current_content": "Instructions: « Réalisez le mini-projet... puis décrivez dans la zone de preuve... » suivies des quatre capacités; steps est absent.",
+                "proposed_content": "Ajouter des étapes réutilisables, fondées uniquement sur les données déjà fournies: 1. Ouvrir le support fictif et définir les catégories contrats, NDA, factures et pièces diverses. 2. Configurer dans l'environnement de démonstration l'extraction de métadonnées, le routage et une piste d'audit. 3. Tester 20 documents fictifs, y compris un doublon ou document à risque, puis consigner résultat et écarts. 4. Vérifier qu'aucune action sensible n'est finale sans validation humaine et rédiger la preuve demandée.",
+                "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__40.json → lessons[0].chapters[4].blocks[0]: le champ steps est absent alors que assignment, instructions, environmentGuide, ressources, hint et solution sont présents; client/src/components/CloudExerciseBlock.tsx:278-297 ne rend des étapes numérotées que lorsque tpSteps.length > 0.",
+                "confidence": "high",
+                "verification_status": "confirmed_content_and_renderer",
+                "recommended_action": "Ajouter les étapes au champ steps du cloud_exercise et conserver l'indice comme aide facultative."
+              }
+            ]
+          },
+          {
+            "lesson_index": 0,
+            "chapter_index": 5,
+            "chapter_id": "ia_appliquee_metiers_tp__40-final-quiz",
+            "title": "Quiz final : valider la démarche",
+            "score_100": 84,
+            "verified_dimensions": [
+              "Énoncés: les quatre QCM sont explicites, leurs réponses attendues existent parmi les options et ils sont alignés sur la sécurité, la preuve et le contrôle du TP.",
+              "Feedback QCM: SingleChoiceExercise montre le bon choix, l'explication et un bouton Réessayer; les quatre QCM disposent d'une explication renseignée.",
+              "Action et progression: le tri indique de placer chaque action dans son étape, explique l'interface de sélection/dépôt et exige les quatre QCM corrects (passThreshold: 4) ainsi qu'un tri correct avant la fin de leçon.",
+              "Cohérence: les catégories Cadrer, Construire, Tester, Valider réinvestissent la démarche explicitée avant le mini-projet."
+            ],
+            "unverified_dimensions": [],
+            "issues": [
+              {
+                "issue_id": "ped:ia_appliquee_metiers_tp__40:ia_appliquee_metiers_tp__40-final-quiz:bucket-feedback-not-rendered",
+                "course_id": "ia_appliquee_metiers_tp__40",
+                "chapter_id": "ia_appliquee_metiers_tp__40-final-quiz",
+                "content_id": "ia_appliquee_metiers_tp__40-quiz-order",
+                "content_type": "bucket_sort",
+                "severity": "P2",
+                "category": "feedback",
+                "description": "Le bloc de tri possède un feedback pédagogique renseigné, mais le lecteur ne le transmet pas au composant de tri. Après une tentative incorrecte, l'apprenant voit le score et « Réessayez »; les catégories attendues ne sont exposées qu'en texte lecteur d'écran sur les cartes erronées. Le rappel pédagogique fourni dans les données n'est donc pas visible à l'ensemble des apprenants.",
+                "current_content": "feedback: « La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés. »; correction est absent.",
+                "proposed_content": "Transmettre et afficher le champ feedback après toute tentative complète, ou renseigner ce même texte dans correction si le contrat du composant est maintenu. Après une erreur, afficher aussi visiblement la catégorie attendue pour chaque carte avant le réessai.",
+                "evidence": "client/public/data/courses/ia_appliquee_metiers_tp__40.json → lessons[0].chapters[5].blocks[4] contient feedback mais pas correction; client/src/pages/training/LessonViewer.tsx:957-973 transmet correction à MatchingExercise, jamais feedback; client/src/components/MatchingExercise.tsx:40-42 et 444-450 n'affiche un débrief détaillé que si correction est renseigné.",
+                "confidence": "high",
+                "verification_status": "confirmed_content_and_renderer",
+                "recommended_action": "Corriger le mapping de rendu ou compléter la donnée correction, puis tester une tentative erronée au tri."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "formation_summary": {
+      "scope": "Audit qualitatif complet de la seule formation ia_appliquee_metiers_tp__formation_40: 1 cours, 1 leçon, 6 chapitres et 8 interactions contrôlées individuellement (1 consultation de ressource, 1 knowledge check, 1 TP cloud, 4 QCM et 1 tri).",
+      "confirmed_issues": 4,
+      "priority_summary": "2 problèmes P1 portent sur la cohérence des verrous: le checkpoint est validable après une mauvaise réponse et le mini-projet est déverrouillable avec une preuve d'un caractère. Deux P2 concernent le guidage structuré du TP et le feedback non rendu du tri final. Les quatre signaux du pré-audit ont été revus: le signal de guidage du TP est confirmé mais reclassé P2; les signaux de progression des checkpoint, TP et quiz ne sont pas retenus tels quels lorsque les contenus et le rendu montrent un énoncé, des prérequis ou une transition suffisants.",
+      "score_global_indicatif_100": 80,
+      "coverage": "Tous les chapitres, tous les blocs et toutes les activités déclarés dans le JSON du cours ont été examinés; LessonViewer, les renderers d'activité et les règles de progression associées ont été vérifiés."
+    },
+    "limits": [
+      "Audit documentaire et de code de rendu uniquement: aucune session navigateur authentifiée, exécution réelle de workflow ni test d'accessibilité assistive n'a été réalisé.",
+      "La ressource n8n externe est référencée et rendue comme lien, mais son contenu n'a pas été consulté; elle n'est pas traitée comme absente.",
+      "Le support fictif du TP est référencé par une URL gérée /manus-storage mais son fichier n'était pas disponible dans le workspace d'audit; il n'est pas traité comme absent.",
+      "La qualité factuelle des sorties produites dans n8n, Claude Sonnet et Google Sheets reste non vérifiable sans réaliser le TP dans un environnement de démonstration."
+    ]
+  },
+  "current_courses": {
+    "ia_appliquee_metiers_tp__40": {
+      "courseId": "ia_appliquee_metiers_tp__40",
+      "id": "ia_appliquee_metiers_tp__40",
+      "title": {
+        "fr": "Agent de classification et routage de documents juridiques",
+        "en": "Agent de classification et routage de documents juridiques"
+      },
+      "description": {
+        "fr": "TP guidé pour Records manager, legal operations, compliance analyst. Outils : n8n, Claude Sonnet, Google Sheets.",
+        "en": "TP guidé pour Records manager, legal operations, compliance analyst. Outils : n8n, Claude Sonnet, Google Sheets."
+      },
+      "sourceReference": {
+        "sourceType": "n8n workflow",
+        "sourceUrl": "https://n8n.io/workflows/15790-extract-and-classify-legal-documents-with-claude-sonnet-and-google-sheets/",
+        "language": "EN"
+      },
+      "metadata": {
+        "canonicalTutorialId": "40-agent-de-classification-et-routage-de-documents-juridiques",
+        "canonicalOrder": 40,
+        "targetJob": "Records manager, legal operations, compliance analyst",
+        "level": "Intermédiaire",
+        "duration": "2 h 30",
+        "tools": [
+          "n8n",
+          "Claude Sonnet",
+          "Google Sheets",
+          "dossier de dépôt",
+          "lot de documents juridiques fictifs"
+        ],
+        "acquiredSkills": [
+          "Classer automatiquement contrats, NDA, factures et pièces diverses",
+          "Extraire des métadonnées structurées",
+          "Détecter doublons et documents à risque",
+          "Router les documents vers le bon processus"
+        ],
+        "skillTags": [
+          "ia-appliquee-metiers",
+          "juridique-contrats-conformite",
+          "n8n",
+          "claude-sonnet",
+          "google-sheets",
+          "intermédiaire"
+        ]
+      },
+      "lessons": [
+        {
+          "id": "ia_appliquee_metiers_tp__40-lesson-01",
+          "title": {
+            "fr": "Agent de classification et routage de documents juridiques",
+            "en": "Agent de classification et routage de documents juridiques"
+          },
+          "competencyTags": [
+            "ai_governance",
+            "ai_orchestration",
+            "prompt_engineering",
+            "ai_business"
+          ],
+          "recommendedVideosManaged": false,
+          "recommendedVideos": [],
+          "chapters": [
+            {
+              "id": "ia_appliquee_metiers_tp__40-screen-01",
+              "type": "teaching",
+              "title": {
+                "fr": "Objectif du TP",
+                "en": "Objectif du TP"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "learning_section",
+                  "sectionKind": "hero",
+                  "eyebrow": {
+                    "fr": "Juridique, contrats & conformité · TP 40/40",
+                    "en": "Juridique, contrats & conformité · TP 40/40"
+                  },
+                  "title": {
+                    "fr": "Agent de classification et routage de documents juridiques",
+                    "en": "Agent de classification et routage de documents juridiques"
+                  },
+                  "body": {
+                    "fr": "Métier cible : Records manager, legal operations, compliance analyst. Niveau : Intermédiaire. Durée indicative : 2 h 30.",
+                    "en": "Métier cible : Records manager, legal operations, compliance analyst. Niveau : Intermédiaire. Durée indicative : 2 h 30."
+                  },
+                  "items": [
+                    {
+                      "fr": "Classer automatiquement contrats, NDA, factures et pièces diverses",
+                      "en": "Classer automatiquement contrats, NDA, factures et pièces diverses"
+                    },
+                    {
+                      "fr": "Extraire des métadonnées structurées",
+                      "en": "Extraire des métadonnées structurées"
+                    },
+                    {
+                      "fr": "Détecter doublons et documents à risque",
+                      "en": "Détecter doublons et documents à risque"
+                    },
+                    {
+                      "fr": "Router les documents vers le bon processus",
+                      "en": "Router les documents vers le bon processus"
+                    }
+                  ]
+                },
+                {
+                  "type": "callout",
+                  "variant": "info",
+                  "title": {
+                    "fr": "Cadre pratique",
+                    "en": "Cadre pratique"
+                  },
+                  "body": {
+                    "fr": "Vous reproduisez un cas d’usage dans votre propre environnement de démonstration. La ressource source reste consultable ; elle ne remplace pas les contrôles métier et de sécurité.",
+                    "en": "You reproduce a use case in your own demonstration environment. The source resource remains available for consultation; it does not replace business and security checks."
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__40-screen-02",
+              "type": "teaching",
+              "title": {
+                "fr": "Préparer l’environnement",
+                "en": "Préparer l’environnement"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "content",
+                  "body": {
+                    "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Claude Sonnet, Google Sheets, dossier de dépôt, lot de documents juridiques fictifs.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
+                    "en": "## Environment preparation\n\nWork in a **personal sandbox**, a local draft, or demo accounts. Prepare only fictional data and test access.\n\n- Planned tools: n8n, Claude Sonnet, Google Sheets, submission folder, batch of fictional legal documents.\n- Do not enter any key, password, or real personal data in the practical exercise or its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with human impact, retain an **explicit human validation** before the final action.\n\nThis pathway does not require any provider-hosted lab: adapt the steps to your local or demo environment."
+                  }
+                },
+                {
+                  "type": "resource_review",
+                  "id": "ia_appliquee_metiers_tp__40-source-review",
+                  "title": {
+                    "fr": "Ressource source",
+                    "en": "Ressource source"
+                  },
+                  "instructions": {
+                    "fr": "Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation.\n\n[Ouvrir la ressource source](https://n8n.io/workflows/15790-extract-and-classify-legal-documents-with-claude-sonnet-and-google-sheets/)",
+                    "en": "Open the source resource in a new tab. Identify the business outcome, inputs, outputs, and control steps. Then return here to confirm that you reviewed it.\n\n[Open the source resource](https://n8n.io/workflows/15790-extract-and-classify-legal-documents-with-claude-sonnet-and-google-sheets/)"
+                  },
+                  "resourceUrl": "https://n8n.io/workflows/15790-extract-and-classify-legal-documents-with-claude-sonnet-and-google-sheets/",
+                  "resourceLabel": {
+                    "fr": "Ouvrir la ressource source",
+                    "en": "Ouvrir la ressource source"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__40-screen-03",
+              "type": "teaching",
+              "title": {
+                "fr": "Construire progressivement",
+                "en": "Construire progressivement"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "type": "sequence_visual",
+                  "title": {
+                    "fr": "Démarche de réalisation",
+                    "en": "Démarche de réalisation"
+                  },
+                  "layout": "timeline",
+                  "items": [
+                    {
+                      "title": {
+                        "fr": "Cadrer",
+                        "en": "Cadrer"
+                      },
+                      "description": {
+                        "fr": "Définissez le cas d’usage pour Records manager, legal operations, compliance analyst et les limites d’automatisation.",
+                        "en": "Define the use case for Records manager, legal operations, compliance analyst, and the automation limits."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Préparer",
+                        "en": "Préparer"
+                      },
+                      "description": {
+                        "fr": "Créez des données fictives adaptées aux outils : n8n, Claude Sonnet, Google Sheets.",
+                        "en": "Create fictional data suited to the tools: n8n, Claude Sonnet, Google Sheets."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Tester",
+                        "en": "Tester"
+                      },
+                      "description": {
+                        "fr": "Exécutez des scénarios de test, relisez les sorties et consignez les écarts.",
+                        "en": "Run test scenarios, review the outputs, and document any discrepancies."
+                      }
+                    },
+                    {
+                      "title": {
+                        "fr": "Contrôler",
+                        "en": "Contrôler"
+                      },
+                      "description": {
+                        "fr": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne.",
+                        "en": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "comparison_panel",
+                  "title": {
+                    "fr": "Vérifications avant utilisation",
+                    "en": "Vérifications avant utilisation"
+                  },
+                  "columns": [
+                    {
+                      "title": {
+                        "fr": "À faire",
+                        "en": "À faire"
+                      },
+                      "items": [
+                        {
+                          "fr": "Utiliser des données fictives.",
+                          "en": "Utiliser des données fictives."
+                        },
+                        {
+                          "fr": "Définir un contrôle humain.",
+                          "en": "Définir un contrôle humain."
+                        },
+                        {
+                          "fr": "Tester les cas limites.",
+                          "en": "Tester les cas limites."
+                        }
+                      ]
+                    },
+                    {
+                      "title": {
+                        "fr": "À éviter",
+                        "en": "À éviter"
+                      },
+                      "items": [
+                        {
+                          "fr": "Exposer un secret ou une donnée personnelle.",
+                          "en": "Exposer un secret ou une donnée personnelle."
+                        },
+                        {
+                          "fr": "Déclencher une action finale sans validation.",
+                          "en": "Déclencher une action finale sans validation."
+                        },
+                        {
+                          "fr": "Déduire une décision sans vérification métier.",
+                          "en": "Déduire une décision sans vérification métier."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__40-checkpoint-01",
+              "type": "checkpoint",
+              "title": {
+                "fr": "Checkpoint : environnement et sécurité",
+                "en": "Checkpoint : environnement et sécurité"
+              },
+              "requiredBeforeAdvance": true,
+              "passThreshold": 1,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__40-checkpoint-preparation",
+                  "type": "knowledge_check",
+                  "mode": "multiple_choice",
+                  "prompt": {
+                    "fr": "Avant de relier n8n au workflow de « Agent de classification et routage de documents juridiques », quelle pratique est attendue ?",
+                    "en": "Before connecting n8n to the “Legal Document Classification and Routing Agent” workflow, what practice is expected?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Utiliser une sandbox, des données fictives et prévoir une validation humaine pour toute action sensible.",
+                        "en": "Use a sandbox, fictional data, and provide for human validation for any sensitive action."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Copier les données réelles de production pour obtenir un résultat plus représentatif.",
+                        "en": "Copy real production data to obtain a more representative result."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Mettre une clé API dans le workflow partagé pour que les autres puissent la réutiliser.",
+                        "en": "Put an API key in the shared workflow so that others can reuse it."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Activer directement les envois et modifications définitives avant les essais.",
+                        "en": "Activer directement les envois et modifications définitives avant les essais."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "Le TP doit être testé dans un environnement maîtrisé, avec données fictives et contrôle humain des actions à impact.",
+                    "en": "The practical exercise must be tested in a controlled environment, with fictional data and human oversight of actions with impact."
+                  },
+                  "competencyPoints": 1.5,
+                  "required": true
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__40-mini-project",
+              "type": "exercise",
+              "title": {
+                "fr": "Mini-projet et preuve de réalisation",
+                "en": "Mini-projet et preuve de réalisation"
+              },
+              "requiredBeforeAdvance": true,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__40-mini-project-proof",
+                  "type": "cloud_exercise",
+                  "title": {
+                    "fr": "Mini-projet pratique",
+                    "en": "Mini-projet pratique"
+                  },
+                  "assignment": "Mettre en place un tri documentaire qui classe 20 documents fictifs et crée une piste d'audit exportable.",
+                  "instructions": "Réalisez le mini-projet dans un environnement personnel de démonstration. Utilisez le support fictif fourni, puis décrivez dans la zone de preuve : le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine.\n\n- Classer automatiquement contrats, NDA, factures et pièces diverses\n- Extraire des métadonnées structurées\n- Détecter doublons et documents à risque\n- Router les documents vers le bon processus",
+                  "environmentGuide": {
+                    "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Claude Sonnet, Google Sheets, dossier de dépôt, lot de documents juridiques fictifs.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
+                    "en": "## Environment preparation\n\nWork in a **personal sandbox**, a local draft, or demo accounts. Prepare only fictional data and test access.\n\n- Planned tools: n8n, Claude Sonnet, Google Sheets, submission folder, batch of fictional legal documents.\n- Do not enter any key, password, or real personal data in the practical exercise or its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with human impact, retain an **explicit human validation** before the final action.\n\nThis pathway does not require any provider-hosted lab: adapt the steps to your local or demo environment."
+                  },
+                  "resources": [
+                    {
+                      "title": {
+                        "fr": "Support fictif de TP 40",
+                        "en": "Support fictif de TP 40"
+                      },
+                      "description": {
+                        "fr": "Données de démonstration sans secret ni information réelle.",
+                        "en": "Données de démonstration sans secret ni information réelle."
+                      },
+                      "url": "/manus-storage/40-40-agent-de-classification-et-routage-de-documents-juridiques-support-fictif_8bb22bee.md"
+                    }
+                  ],
+                  "hint": "Commencez par un seul cas fictif et conservez l’action finale en brouillon ou derrière une validation humaine.",
+                  "solution": "## Correction et auto-vérification\n\nUne preuve complète décrit le scénario fictif, le workflow ou la procédure réalisée, le résultat observé et le contrôle humain prévu.\n\n### Erreurs fréquentes\n\n- Introduire des données réelles, identifiants ou clés dans l’exercice.\n- Déclencher un envoi, une publication ou une décision sans étape de validation.\n- Confondre une sortie IA avec une validation métier.\n\n### Vérification\n\nRelisez votre preuve : elle doit être cohérente avec l’objectif « Mettre en place un tri documentaire qui classe 20 documents fictifs et crée une piste d'audit exportable. » et montrer au moins un test avec données fictives.\n\n### Extension\n\nAjoutez un journal d’exécution, un cas limite supplémentaire et une règle d’escalade humaine.",
+                  "successMessage": "Preuve enregistrée. Vous pouvez maintenant consulter la correction et terminer le quiz final.",
+                  "steps": [
+                    {
+                      "fr": "Relisez la consigne et identifiez le résultat attendu pour « Mini-projet et preuve de réalisation ».",
+                      "en": "Review the instructions and identify the expected outcome for “Mini-projet et preuve de réalisation”."
+                    },
+                    {
+                      "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
+                      "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
+                    },
+                    {
+                      "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
+                      "en": "Check your work against the stated criteria before submitting it."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__40-final-quiz",
+              "type": "quiz",
+              "title": {
+                "fr": "Quiz final : valider la démarche",
+                "en": "Quiz final : valider la démarche"
+              },
+              "requiredBeforeAdvance": true,
+              "passThreshold": 4,
+              "blocks": [
+                {
+                  "id": "ia_appliquee_metiers_tp__40-quiz-01",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Quel élément doit être conservé dans le mini-projet « Mettre en place un tri documentaire qui classe 20 documents fictifs et crée une piste d'audit exportable. » ?",
+                    "en": "What element must be retained in the mini-project “Set up a document sorting system that classifies 20 fictional documents and creates an exportable audit trail.”?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Une preuve de test avec des données fictives et un résultat vérifiable.",
+                        "en": "Test evidence using fictional data and a verifiable result."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Un mot de passe de production directement dans le workflow.",
+                        "en": "A production password directly in the workflow."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Une action finale déclenchée sans relecture.",
+                        "en": "Une action finale déclenchée sans relecture."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Un export de données personnelles non anonymisées.",
+                        "en": "An export of non-anonymized personal data."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical assignment: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__40-quiz-02",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Vrai ou faux : un brouillon ou une validation humaine doit précéder toute action sensible générée par le workflow.",
+                    "en": "True or false: a draft or human approval must precede any sensitive action generated by the workflow."
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Vrai : les actions sensibles exigent un contrôle humain explicite.",
+                        "en": "True: sensitive actions require explicit human oversight."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Faux : l’automatisation dispense toujours de tout contrôle.",
+                        "en": "Faux : l’automatisation dispense toujours de tout contrôle."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical assignment: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__40-quiz-03",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Quel contrôle aide à vérifier l’objectif « Classer automatiquement contrats, NDA, factures et pièces diverses » ?",
+                    "en": "Quel contrôle aide à vérifier l’objectif « Classer automatiquement contrats, NDA, factures et pièces diverses » ?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Comparer le résultat du test au critère métier défini puis documenter l’écart.",
+                        "en": "Compare the test result with the defined business criterion, then document the discrepancy."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Considérer toute sortie du modèle comme correcte sans la relire.",
+                        "en": "Consider every model output correct without reviewing it."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Supprimer les journaux et les traces de test avant la vérification.",
+                        "en": "Delete logs and test traces before verification."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Remplacer le jeu de données fictif par une exportation client.",
+                        "en": "Replace the fictional dataset with a customer data export."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the framework for the practical assignment: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__40-quiz-04",
+                  "type": "single_choice_exercise",
+                  "question": {
+                    "fr": "Question de vigilance : parmi ces outils prévus — n8n, Claude Sonnet, Google Sheets, dossier de dépôt, lot de documents juridiques fictifs — quelle donnée ne doit jamais être saisie dans le support ou le commentaire de preuve ?",
+                    "en": "Vigilance question: among these planned tools—n8n, Claude Sonnet, Google Sheets, a submission folder, and a set of fictional legal documents—which piece of data must never be entered in the evidence submission or comment?"
+                  },
+                  "options": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "fr": "Une clé API, un mot de passe ou un identifiant réel.",
+                        "en": "An API key, a password, or a real credential."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "fr": "Le nom fictif du dossier de démonstration.",
+                        "en": "The fictional name of the demonstration folder."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "fr": "Le statut de test « à vérifier ».",
+                        "en": "Le statut de test « à vérifier »."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "fr": "Une note indiquant qu’une validation humaine est requise.",
+                        "en": "Une note indiquant qu’une validation humaine est requise."
+                      }
+                    }
+                  ],
+                  "correctAnswer": "a",
+                  "explanation": {
+                    "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                    "en": "The correction reiterates the practical assignment framework: fictional data, human oversight, and verification before any real action."
+                  }
+                },
+                {
+                  "id": "ia_appliquee_metiers_tp__40-quiz-order",
+                  "type": "bucket_sort",
+                  "title": {
+                    "fr": "Ordonnez la démarche de réalisation",
+                    "en": "Put the implementation process in order"
+                  },
+                  "instructions": {
+                    "fr": "Placez chaque action dans son étape. La correction est disponible après une tentative complète.",
+                    "en": "Place each action in its step. The correction is available after a complete attempt."
+                  },
+                  "buckets": [
+                    {
+                      "id": "1",
+                      "label": {
+                        "fr": "1. Cadrer",
+                        "en": "1. Cadrer"
+                      }
+                    },
+                    {
+                      "id": "2",
+                      "label": {
+                        "fr": "2. Construire",
+                        "en": "2. Construire"
+                      }
+                    },
+                    {
+                      "id": "3",
+                      "label": {
+                        "fr": "3. Tester",
+                        "en": "3. Tester"
+                      }
+                    },
+                    {
+                      "id": "4",
+                      "label": {
+                        "fr": "4. Valider",
+                        "en": "4. Valider"
+                      }
+                    }
+                  ],
+                  "cards": [
+                    {
+                      "id": "cadrer",
+                      "text": {
+                        "fr": "Définir le résultat métier, les données fictives et les limites d’action.",
+                        "en": "Define the business outcome, the fictional data, and the action limits."
+                      },
+                      "correctBucket": "1"
+                    },
+                    {
+                      "id": "construire",
+                      "text": {
+                        "fr": "Configurer le workflow dans un environnement de démonstration.",
+                        "en": "Configure the workflow in a demonstration environment."
+                      },
+                      "correctBucket": "2"
+                    },
+                    {
+                      "id": "tester",
+                      "text": {
+                        "fr": "Exécuter des cas fictifs, journaliser les sorties et relever les écarts.",
+                        "en": "Run fictional cases, log the outputs, and identify discrepancies."
+                      },
+                      "correctBucket": "3"
+                    },
+                    {
+                      "id": "valider",
+                      "text": {
+                        "fr": "Faire relire les actions sensibles avant toute utilisation réelle.",
+                        "en": "Faire relire les actions sensibles avant toute utilisation réelle."
+                      },
+                      "correctBucket": "4"
+                    }
+                  ],
+                  "feedback": {
+                    "fr": "La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés.",
+                    "en": "The correct process moves from safe scoping to human validation, following documented tests."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "policy": {
+    "publication_gate": "No P0; every P1 must be fixed or explicitly verified false positive; every mandatory media/file/exercise must be learner-usable; no required activity may depend on unprovided external access, dataset, workflow or environment; navigation gates must correspond to rendered activities.",
+    "remediation_rule": "If an activity cannot be made reliably correctable quickly using only its current declared assets, preserve any explanatory source text as a content block, remove the activity, remove its completion gate and remove orphan exercise definitions. Never invent a file, dataset, API, workflow, answer key, source or external access.",
+    "review_scope": "Inspect current learner-visible course JSON and current report. Produce exact block-level decisions only; do not modify course files."
+  }
+}

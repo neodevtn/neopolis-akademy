@@ -989,29 +989,22 @@
           },
           "type": "exercise",
           "sourceActivityType": "PromptingExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "ai_evaluation",
-              "id": "dc_1_act_05_prompting",
+              "type": "content",
+              "id": "dc_1_act_05_prompting_learning_note",
               "title": {
-                "en": "Decoding functions with the right prompts",
-                "fr": "Décoder des fonctions avec les bons prompts"
+                "fr": "Décoder des fonctions avec les bons prompts",
+                "en": "Decoding functions with the right prompts"
               },
-              "prompt": {
-                "en": "You are part of the Sales Data Analytics team at an urban mobility rental company that offers short-term bike and motorcycle rentals. Pricing is dynamic: during peak hours (7–10 AM, 5–8 PM), no discount applies; during off-peak hours, prices can be reduced by up to 40% based on demand and usage.\n\nThe function below calculates prices and is saved in pricing.py, a file that the LLM can read and use:\n\ndef calc_price(base_price, is_peak, discount_ratio):\n  if is_peak:\n    return base_price\n  return base_price * (1 - 0.4 * discount_ratio)\n\n- Ask the model to improve the function for better **readability and correctness**, including the context of peak-hour and off-peak pricing and the **dynamic pricing use case**, and asking it to return the response as **PEP 8-formatted Python code**.",
-                "fr": "Vous faites partie de l’équipe Sales Data Analytics d’une société de location de mobilité urbaine qui propose des vélos et des motos en courte durée. La tarification est dynamique : aux heures de pointe (7–10 h, 17–20 h) aucune réduction ne s’applique ; en heures creuses, les prix peuvent baisser jusqu’à 40 % selon la demande et l’usage.\n\nLa fonction ci-dessous calcule les prix et est enregistrée dans pricing.py, un fichier que le LLM peut lire et utiliser :\n\ndef calc_price(base_price, is_peak, discount_ratio):\n  if is_peak:\n    return base_price\n  return base_price * (1 - 0.4 * discount_ratio)\n\n- Demandez au modèle d’améliorer la fonction pour une meilleure **lisibilité et justesse**, en incluant le contexte des tarifs en heures de pointe et en heures creuses et le **cas d’usage de tarification dynamique**, et en demandant de retourner la réponse sous forme de **code Python formaté selon PEP 8**."
+              "body": {
+                "fr": "Vous faites partie de l’équipe Sales Data Analytics d’une société de location de mobilité urbaine qui propose des vélos et des motos en courte durée. La tarification est dynamique : aux heures de pointe (7–10 h, 17–20 h) aucune réduction ne s’applique ; en heures creuses, les prix peuvent baisser jusqu’à 40 % selon la demande et l’usage.\n\nLa fonction ci-dessous calcule les prix et est enregistrée dans pricing.py, un fichier que le LLM peut lire et utiliser :\n\ndef calc_price(base_price, is_peak, discount_ratio):\n  if is_peak:\n    return base_price\n  return base_price * (1 - 0.4 * discount_ratio)\n\n- Demandez au modèle d’améliorer la fonction pour une meilleure **lisibilité et justesse**, en incluant le contexte des tarifs en heures de pointe et en heures creuses et le **cas d’usage de tarification dynamique**, et en demandant de retourner la réponse sous forme de **code Python formaté selon PEP 8**.",
+                "en": "You are part of the Sales Data Analytics team at an urban mobility rental company that offers short-term bike and motorcycle rentals. Pricing is dynamic: during peak hours (7–10 AM, 5–8 PM), no discount applies; during off-peak hours, prices can be reduced by up to 40% based on demand and usage.\n\nThe function below calculates prices and is saved in pricing.py, a file that the LLM can read and use:\n\ndef calc_price(base_price, is_peak, discount_ratio):\n  if is_peak:\n    return base_price\n  return base_price * (1 - 0.4 * discount_ratio)\n\n- Ask the model to improve the function for better **readability and correctness**, including the context of peak-hour and off-peak pricing and the **dynamic pricing use case**, and asking it to return the response as **PEP 8-formatted Python code**."
               },
-              "rubric": "task: Mention that the function needs to be improved, refactored, or similar.\ncontext: Provide background information on the use case or on how price changes.\nresponse_format",
-              "maxScore": 10,
-              "sampleAnswer": {
-                "en": "You are improving a Python function called calc_price in the pricing.py file. This function calculates price variations based on the time of day. During peak hours (from 7 AM to 10 AM in the morning and from 5 PM to 8 PM in the evening), prices remain the same. During off-peak hours, prices are reduced by up to 40% based on usage. Make the function easier to read and correct any errors. Write your response as Python code that follows the PEP 8 style.",
-                "fr": "Vous améliorez une fonction Python appelée calc_price dans le fichier pricing.py. Cette fonction calcule les variations de prix selon l’heure de la journée. Aux heures de pointe (de 7 h à 10 h le matin et de 17 h à 20 h le soir), les prix restent identiques. En heures creuses, les prix sont réduits jusqu’à 40 % selon l’usage. Rendez la fonction plus facile à lire et corrigez toute erreur. Rédigez votre réponse sous forme de code Python respectant le style PEP 8."
-              },
-              "minWords": 5,
-              "hint": {
-                "en": "",
-                "fr": ""
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1390,29 +1383,22 @@
           },
           "type": "exercise",
           "sourceActivityType": "PromptingExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "ai_evaluation",
-              "id": "dc_1_act_08_prompting",
+              "type": "content",
+              "id": "dc_1_act_08_prompting_learning_note",
               "title": {
-                "en": "Choosing the right context for coding tasks",
-                "fr": "Choisir le bon contexte pour les tâches de code"
+                "fr": "Choisir le bon contexte pour les tâches de code",
+                "en": "Choosing the right context for coding tasks"
               },
-              "prompt": {
-                "en": "You are a teacher maintaining a Python project for managing student records. Grades are stored in a dictionary, with utility functions for retrieving a student and calculating their average. The existing functions are saved in students.py, a file the LLM can access and use:\n\ndef get_student(student_id):\n  return {\"name\": \"Alice\", \"grades\": [88, 92, 95]}\n\ndef calculate_average(grades):\n  return round(sum(grades) / len(grades), 2)\n\nYou want to use these utilities to implement an add_grade() function that adds a grade to a student's record and returns the updated average.\n\n- Ask the model to **implement the `add_grade()` function** using the **context** of `get_student()` and `calculate_average()`, and require a response in **PEP 8**-compliant Python code.",
-                "fr": "Vous êtes professeur et vous maintenez un projet Python pour la gestion des dossiers étudiants. Les notes sont stockées dans un dictionnaire, avec des fonctions utilitaires pour récupérer un étudiant et calculer sa moyenne. Les fonctions existantes sont enregistrées dans students.py, un fichier auquel le LLM peut accéder et qu’il peut utiliser :\n\ndef get_student(student_id):\n  return {\"name\": \"Alice\", \"grades\": [88, 92, 95]}\n\ndef calculate_average(grades):\n  return round(sum(grades) / len(grades), 2)\n\nVous souhaitez utiliser ces utilitaires pour implémenter une fonction add_grade() qui ajoute une note au dossier d’un étudiant et renvoie la moyenne mise à jour.\n\n- Demandez au modèle d’**implémenter la fonction `add_grade()`** en utilisant le **contexte** de `get_student()` et `calculate_average()`, et exigez une réponse sous forme de code Python conforme à **PEP 8**."
+              "body": {
+                "fr": "Vous êtes professeur et vous maintenez un projet Python pour la gestion des dossiers étudiants. Les notes sont stockées dans un dictionnaire, avec des fonctions utilitaires pour récupérer un étudiant et calculer sa moyenne. Les fonctions existantes sont enregistrées dans students.py, un fichier auquel le LLM peut accéder et qu’il peut utiliser :\n\ndef get_student(student_id):\n  return {\"name\": \"Alice\", \"grades\": [88, 92, 95]}\n\ndef calculate_average(grades):\n  return round(sum(grades) / len(grades), 2)\n\nVous souhaitez utiliser ces utilitaires pour implémenter une fonction add_grade() qui ajoute une note au dossier d’un étudiant et renvoie la moyenne mise à jour.\n\n- Demandez au modèle d’**implémenter la fonction `add_grade()`** en utilisant le **contexte** de `get_student()` et `calculate_average()`, et exigez une réponse sous forme de code Python conforme à **PEP 8**.",
+                "en": "You are a teacher maintaining a Python project for managing student records. Grades are stored in a dictionary, with utility functions for retrieving a student and calculating their average. The existing functions are saved in students.py, a file the LLM can access and use:\n\ndef get_student(student_id):\n  return {\"name\": \"Alice\", \"grades\": [88, 92, 95]}\n\ndef calculate_average(grades):\n  return round(sum(grades) / len(grades), 2)\n\nYou want to use these utilities to implement an add_grade() function that adds a grade to a student's record and returns the updated average.\n\n- Ask the model to **implement the `add_grade()` function** using the **context** of `get_student()` and `calculate_average()`, and require a response in **PEP 8**-compliant Python code."
               },
-              "rubric": "task: Asks to implement the `add_grade()` function.\ncontext: Mentions the helper functions used in the project.\nresponse_format",
-              "maxScore": 10,
-              "sampleAnswer": {
-                "en": "You are working on a Python function to update student records. The goal is to add a new grade to a student's record and return the updated average. Implement the function, named `add_grade()`, using the existing `get_student()` and `calculate_average()` utilities, and return your response as PEP 8-compliant Python code. Be sure to use the functions in the students.py file.",
-                "fr": "Vous travaillez sur une fonction Python pour mettre à jour les dossiers étudiants. L’objectif est d’ajouter une nouvelle note au dossier d’un étudiant et de renvoyer la moyenne mise à jour. Implémentez la fonction, nommée `add_grade()`, en utilisant les utilitaires existants `get_student()` et `calculate_average()`, et retournez votre réponse sous forme de code Python conforme à PEP 8. Veillez à utiliser les fonctions présentes dans le fichier students.py."
-              },
-              "minWords": 5,
-              "hint": {
-                "en": "",
-                "fr": ""
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1824,29 +1810,22 @@
           },
           "type": "exercise",
           "sourceActivityType": "PromptingExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "ai_evaluation",
-              "id": "dc_2_act_02_prompting",
+              "type": "content",
+              "id": "dc_2_act_02_prompting_learning_note",
               "title": {
-                "en": "Prompts pour un débogage efficace",
-                "fr": "Prompts pour un débogage efficace"
+                "fr": "Prompts pour un débogage efficace",
+                "en": "Prompts pour un débogage efficace"
               },
-              "prompt": {
-                "en": "You work at a bank where you are building a pipeline that processes and stores user-provided data. A preprocessing step converts strings to uppercase before saving them to a central database, but you have identified a bug.\n\nAt this step, an input of ['a', 'b', 'c'] should produce ['A', 'B', 'C'], but the current script returns ['C', 'C', 'C'] instead.\n\nThe process_data.py file, which the LLM can read and use, contains the faulty function:\n\ndef to_uppercase(strings):\n  uppercased = [s.upper() for s in strings]\n  return [uppercased[-1]] * len(strings)\n\n- Ask the model to debug the function by including the **faulty code**, the **expected behavior**, and requesting clear **reasoning steps**.",
-                "fr": "Vous travaillez dans une banque où vous construisez un pipeline qui traite et stocke des données fournies par les utilisateurs. Une étape de prétraitement convertit les chaînes en majuscules avant de les enregistrer dans une base de données centrale, mais vous avez repéré un bug.\n\nÀ cette étape, une entrée ['a', 'b', 'c'] devrait produire ['A', 'B', 'C'], mais le script actuel renvoie ['C', 'C', 'C'] à la place.\n\nLe fichier process_data.py, que le LLM peut lire et utiliser, contient la fonction défectueuse :\n\ndef to_uppercase(strings):\n  uppercased = [s.upper() for s in strings]\n  return [uppercased[-1]] * len(strings)\n\n- Demandez au modèle de déboguer la fonction en incluant le **code défectueux**, le **comportement attendu**, et en sollicitant des **étapes de raisonnement** claires."
+              "body": {
+                "fr": "Vous travaillez dans une banque où vous construisez un pipeline qui traite et stocke des données fournies par les utilisateurs. Une étape de prétraitement convertit les chaînes en majuscules avant de les enregistrer dans une base de données centrale, mais vous avez repéré un bug.\n\nÀ cette étape, une entrée ['a', 'b', 'c'] devrait produire ['A', 'B', 'C'], mais le script actuel renvoie ['C', 'C', 'C'] à la place.\n\nLe fichier process_data.py, que le LLM peut lire et utiliser, contient la fonction défectueuse :\n\ndef to_uppercase(strings):\n  uppercased = [s.upper() for s in strings]\n  return [uppercased[-1]] * len(strings)\n\n- Demandez au modèle de déboguer la fonction en incluant le **code défectueux**, le **comportement attendu**, et en sollicitant des **étapes de raisonnement** claires.",
+                "en": "You work at a bank where you are building a pipeline that processes and stores user-provided data. A preprocessing step converts strings to uppercase before saving them to a central database, but you have identified a bug.\n\nAt this step, an input of ['a', 'b', 'c'] should produce ['A', 'B', 'C'], but the current script returns ['C', 'C', 'C'] instead.\n\nThe process_data.py file, which the LLM can read and use, contains the faulty function:\n\ndef to_uppercase(strings):\n  uppercased = [s.upper() for s in strings]\n  return [uppercased[-1]] * len(strings)\n\n- Ask the model to debug the function by including the **faulty code**, the **expected behavior**, and requesting clear **reasoning steps**."
               },
-              "rubric": "task: Asks the model to debug and propose a fix for the uppercase bug.\ncontext: Includes the buggy code and expected behavior.\nresponse_format",
-              "maxScore": 10,
-              "sampleAnswer": {
-                "en": "You need to debug a function so that it converts each input string to uppercase and returns them. For the example input ['a', 'b', 'c'], the expected output is ['A', 'B', 'C']. The exact code to analyze and fix is in the to_uppercase function in the process_data.py file.  Reason step by step.",
-                "fr": "Vous devez déboguer une fonction afin qu’elle convertisse chaque chaîne d’entrée en majuscules et les renvoie. Pour l’exemple d’entrée ['a', 'b', 'c'], la sortie attendue est ['A', 'B', 'C']. Le code exact à analyser et à corriger se trouve dans la fonction to_uppercase du fichier process_data.py. Raisonnez étape par étape."
-              },
-              "minWords": 5,
-              "hint": {
-                "en": "",
-                "fr": ""
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -2300,29 +2279,22 @@
           },
           "type": "exercise",
           "sourceActivityType": "PromptingExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "ai_evaluation",
-              "id": "dc_2_act_05_prompting",
+              "type": "content",
+              "id": "dc_2_act_05_prompting_learning_note",
               "title": {
-                "en": "Optimizing prompts for code documentation",
-                "fr": "Optimiser les prompts pour la documentation du code"
+                "fr": "Optimiser les prompts pour la documentation du code",
+                "en": "Optimizing prompts for code documentation"
               },
-              "prompt": {
-                "en": "You have worked at a bank for a long time and have maintained a large Python codebase for years. A new intern joins, and you realize that all this knowledge is in your head. You decide to use an AI assistant to start documenting the codebase.\n\nTo test the feasibility of this approach, you start with a single function, saved in interest.py, a file that the LLM can read and use:\n\ndef calculate_interest(balance, rate, years):\n  return balance * (1 + rate) ** years\n\n- Ask the model to **add docstrings** to the function, **specify a standard** (for example, Google-style docstrings), and **require sections** for: the function's purpose, arguments (names/types), return type, and, optionally, examples.",
-                "fr": "Vous travaillez dans une banque depuis longtemps et maintenez une large base de code Python depuis des années. Un nouvel·le stagiaire arrive, et vous réalisez que toutes ces connaissances sont dans votre tête. Vous décidez d’utiliser un assistant IA pour commencer à documenter la base de code.\n\nPour tester la faisabilité de cette approche, vous commencez par une seule fonction, enregistrée dans interest.py, un fichier que le LLM peut lire et utiliser :\n\ndef calculate_interest(balance, rate, years):\n  return balance * (1 + rate) ** years\n\n- Demandez au modèle d’**ajouter des docstrings** à la fonction, **spécifiez un standard** (par exemple, docstrings au format Google) et **exigez des sections** pour : objectif de la fonction, arguments (noms/types), type de retour et, éventuellement, des exemples."
+              "body": {
+                "fr": "Vous travaillez dans une banque depuis longtemps et maintenez une large base de code Python depuis des années. Un nouvel·le stagiaire arrive, et vous réalisez que toutes ces connaissances sont dans votre tête. Vous décidez d’utiliser un assistant IA pour commencer à documenter la base de code.\n\nPour tester la faisabilité de cette approche, vous commencez par une seule fonction, enregistrée dans interest.py, un fichier que le LLM peut lire et utiliser :\n\ndef calculate_interest(balance, rate, years):\n  return balance * (1 + rate) ** years\n\n- Demandez au modèle d’**ajouter des docstrings** à la fonction, **spécifiez un standard** (par exemple, docstrings au format Google) et **exigez des sections** pour : objectif de la fonction, arguments (noms/types), type de retour et, éventuellement, des exemples.",
+                "en": "You have worked at a bank for a long time and have maintained a large Python codebase for years. A new intern joins, and you realize that all this knowledge is in your head. You decide to use an AI assistant to start documenting the codebase.\n\nTo test the feasibility of this approach, you start with a single function, saved in interest.py, a file that the LLM can read and use:\n\ndef calculate_interest(balance, rate, years):\n  return balance * (1 + rate) ** years\n\n- Ask the model to **add docstrings** to the function, **specify a standard** (for example, Google-style docstrings), and **require sections** for: the function's purpose, arguments (names/types), return type, and, optionally, examples."
               },
-              "rubric": "task: Requests docstrings.\ncontext: Ask for sections in the docstring.\nresponse_format",
-              "maxScore": 10,
-              "sampleAnswer": {
-                "en": "Add a Google-style docstring for the calculate_interest function, saved in the interest.py file. Include: purpose, parameters with types, return type, and a short example if helpful. Keep the tone consistent and avoid restating code.",
-                "fr": "Ajoutez une docstring au format Google à la fonction calculate_interest, enregistrée dans le fichier interest.py. Incluez : l’objectif, les paramètres avec leurs types, le type de retour et un court exemple si cela est utile. Gardez un ton cohérent et évitez de reformuler le code."
-              },
-              "minWords": 5,
-              "hint": {
-                "en": "",
-                "fr": ""
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -2632,29 +2604,22 @@
           },
           "type": "exercise",
           "sourceActivityType": "PromptingExercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "ai_evaluation",
-              "id": "dc_2_act_08_prompting",
+              "type": "content",
+              "id": "dc_2_act_08_prompting_learning_note",
               "title": {
-                "en": "Prompts pour un codage assisté par l’IA sécurisé",
-                "fr": "Prompts pour un codage assisté par l’IA sécurisé"
+                "fr": "Prompts pour un codage assisté par l’IA sécurisé",
+                "en": "Prompts pour un codage assisté par l’IA sécurisé"
               },
-              "prompt": {
-                "en": "You are now building web applications that handle sensitive financial data and using test-driven guidance to ensure the robustness of your client email validation code. Instead of asking the model to write the code directly, you will first define explicit tests and edge cases so that the model generates code that satisfies them.\n\n- Write a prompt asking the model to implement a Python function that validates email addresses in the format \"user@example.com\", rejects formats that do not contain \"@\", and raises a ValueError if the input is empty.",
-                "fr": "Vous construisez désormais des applications web manipulant des données financières sensibles et utilisez un guidage par les tests pour garantir la robustesse de votre code de validation des e-mails clients. Au lieu de demander au modèle d’écrire le code directement, vous allez d’abord définir des tests explicites et des cas limites, afin que le modèle génère un code qui les satisfait.\n\n- Rédigez un prompt demandant au modèle d’implémenter une fonction Python qui valide les adresses e-mail au format « user@example.com », rejette les formats qui ne contiennent pas « @ » et lève une ValueError si l’entrée est vide."
+              "body": {
+                "fr": "Vous construisez désormais des applications web manipulant des données financières sensibles et utilisez un guidage par les tests pour garantir la robustesse de votre code de validation des e-mails clients. Au lieu de demander au modèle d’écrire le code directement, vous allez d’abord définir des tests explicites et des cas limites, afin que le modèle génère un code qui les satisfait.\n\n- Rédigez un prompt demandant au modèle d’implémenter une fonction Python qui valide les adresses e-mail au format « user@example.com », rejette les formats qui ne contiennent pas « @ » et lève une ValueError si l’entrée est vide.",
+                "en": "You are now building web applications that handle sensitive financial data and using test-driven guidance to ensure the robustness of your client email validation code. Instead of asking the model to write the code directly, you will first define explicit tests and edge cases so that the model generates code that satisfies them.\n\n- Write a prompt asking the model to implement a Python function that validates email addresses in the format \"user@example.com\", rejects formats that do not contain \"@\", and raises a ValueError if the input is empty."
               },
-              "rubric": "task: Asks for email validation.\ncontext: Mentions valid email formats.\nresponse_format",
-              "maxScore": 10,
-              "sampleAnswer": {
-                "en": "Write a Python function named validate_email that takes a string argument called address and returns a string. The function must accept only addresses in the format \"user@example.com\". If the input does not contain the \"@\" character, it must be rejected. If the input is an empty string, the function must raise a ValueError.",
-                "fr": "Écrivez une fonction Python nommée validate_email qui prend un argument chaîne appelé address et renvoie une chaîne. La fonction doit accepter uniquement les adresses au format \"user@example.com\". Si l’entrée ne contient pas le caractère \"@\", elle doit être rejetée. Si l’entrée est une chaîne vide, la fonction doit lever une ValueError."
-              },
-              "minWords": 5,
-              "hint": {
-                "en": "",
-                "fr": ""
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]

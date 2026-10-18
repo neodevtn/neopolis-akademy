@@ -15,10 +15,18 @@ describe("Hugging Face Learn · LLM Course", () => {
     expect(activities[0].title.en).toBe("Introduction");
   });
 
-  it("convertit les checkpoints en TP standards répondables", () => {
-    const practices = blocks.filter((block: any) => block.type === "cloud_exercise");
-    expect(practices).toHaveLength(82);
-    expect(practices.every((block: any) => block.requiredBeforeAdvance)).toBe(true);
+  it("conserve le contenu publié sans réintroduire les checkpoints ou laboratoires non vérifiables", () => {
+    const optionalSourcePages = activities.filter((activity: any) =>
+      ["checkpoint_or_quiz", "exercise_or_lab"].includes(activity.sourceActivityType),
+    );
+    const practicalTypes = new Set(["cloud_exercise", "code_repl", "ai_evaluation", "free_text_exercise", "terminal_sim"]);
+
+    expect(optionalSourcePages).toHaveLength(82);
+    expect(optionalSourcePages.every((activity: any) => activity.requiredBeforeAdvance === false)).toBe(true);
+    expect(activities.every((activity: any) => activity.blocks?.length > 0)).toBe(true);
+    expect(blocks.every((block: any) => ["content", "download"].includes(block.type))).toBe(true);
+    expect(blocks.filter((block: any) => practicalTypes.has(block.type))).toHaveLength(0);
+    expect(activities.filter((activity: any) => activity.requiredBeforeAdvance).every((activity: any) => activity.type === "teaching")).toBe(true);
   });
 
   it("publie seulement les téléchargements locaux via le proxy média", () => {

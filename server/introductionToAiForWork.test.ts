@@ -23,7 +23,7 @@ describe("Introduction à l’IA pour le travail — import DataCamp", () => {
 
     expect(certification).toMatchObject({
       totalLessons: 4,
-      totalActivities: 33,
+      totalActivities: 30,
       totalVideos: 11,
       totalDownloads: 4,
       group: "workplace_ai_productivity",
@@ -32,7 +32,9 @@ describe("Introduction à l’IA pour le travail — import DataCamp", () => {
     expect(catalogCourse).toMatchObject({
       certId: "datacamp_introduction_to_ai_for_work",
       lessonCount: 4,
-      totalActivities: 33,
+      chapterCount: 30,
+      totalActivities: 30,
+      exerciseCount: 19,
       videoCount: 11,
       downloadCount: 4,
     });
@@ -42,7 +44,7 @@ describe("Introduction à l’IA pour le travail — import DataCamp", () => {
     const projectorVideos = blocks.filter((block) => block.type === "video" && block.audioUrl);
 
     expect(course.lessons).toHaveLength(4);
-    expect(chapters).toHaveLength(33);
+    expect(chapters).toHaveLength(30);
     expect(projectorVideos).toHaveLength(11);
     for (const block of projectorVideos) {
       expect(block.audioUrl).toMatch(/^\/api\/assets\//);
@@ -57,11 +59,17 @@ describe("Introduction à l’IA pour le travail — import DataCamp", () => {
     }
   });
 
-  it("restitue des activités interactives et garde le verrouillage séquentiel", () => {
-    expect(chapters.every((chapter: { requiredBeforeAdvance?: boolean }) => chapter.requiredBeforeAdvance)).toBe(true);
+  it("conserve les interactions rendables comme seules activités obligatoires après le retrait des TP non vérifiables", () => {
+    const interactiveTypes = new Set(["bucket_sort", "single_choice_exercise", "multi_choice_exercise", "resource_review"]);
+    const practicalTypes = new Set(["cloud_exercise", "code_repl", "ai_evaluation", "free_text_exercise", "terminal_sim"]);
+    const interactiveChapters = chapters.filter((chapter: any) => chapter.blocks.some((block: any) => interactiveTypes.has(block.type)));
+
     expect(blocks.filter((block) => block.type === "bucket_sort")).toHaveLength(9);
-    expect(blocks.filter((block) => block.type === "single_choice_exercise" || block.type === "multi_choice_exercise")).toHaveLength(12);
-    expect(blocks.some((block) => block.type === "resource_review")).toBe(true);
+    expect(blocks.filter((block) => block.type === "single_choice_exercise" || block.type === "multi_choice_exercise")).toHaveLength(9);
+    expect(interactiveChapters).toHaveLength(19);
+    expect(interactiveChapters.every((chapter: any) => chapter.requiredBeforeAdvance === true)).toBe(true);
+    expect(blocks.filter((block) => practicalTypes.has(block.type))).toHaveLength(0);
+    expect(blocks.filter((block) => block.type === "resource_review").every((block: any) => String(block.resourceUrl).startsWith("/api/assets/"))).toBe(true);
   });
 
   it("ne conserve aucune URL média DataCamp externe dans le cours publié", () => {

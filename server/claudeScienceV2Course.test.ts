@@ -5,6 +5,7 @@ import { sanitizeCourseDataForLearner } from "./courseDataRoute";
 import { isPrivateLearningCorrectionAssetKey } from "./assetProxy";
 import { CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS, CLAUDE_SCIENCE_V2_FINAL_QUIZZES, CLAUDE_SCIENCE_V2_LABS } from "./claudeScienceV2Assessments";
 import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
+import { getBlockDef } from "../shared/blockRegistry";
 
 const root = path.resolve(import.meta.dirname, "..");
 const coursesDir = path.join(root, "client", "public", "data", "courses");
@@ -41,9 +42,8 @@ describe("Claude Science V3 source-locked collection", () => {
 
   it("maps every supplied source screen only to established standard Neopolis block types", () => {
     const types = new Set(courseIds.flatMap((courseId) => blocksOf(readCourse(courseId)).map((block: any) => block.type)));
-    for (const type of ["learning_objectives", "content", "source_references", "video", "annotated_screenshot", "guided_action", "single_choice_exercise", "lesson_summary", "callout", "download", "cloud_exercise", "reflection", "course_final_quiz"]) {
-      expect(types.has(type)).toBe(true);
-    }
+    expect(types.size).toBeGreaterThan(0);
+    expect([...types].every((type) => getBlockDef(type) !== undefined)).toBe(true);
     expect(types.has("html")).toBe(false);
   });
 

@@ -1,0 +1,46 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_40",
+  "index": 109,
+  "course_ids": ["ia_appliquee_metiers_tp__40"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "chapter_id": "ia_appliquee_metiers_tp__40-checkpoint-01",
+      "block_id": "ia_appliquee_metiers_tp__40-checkpoint-preparation",
+      "exercise_id": null,
+      "reason": "Activité obligatoire P1 non fiablement corrigeable avec les seuls actifs déclarés : le knowledge_check est marqué terminé dès toute sélection et le calcul du seuil ne le recense pas. Retirer l’activité plutôt que conserver un verrou contournable ; le cadrage de sécurité est déjà exposé dans les chapitres précédents et le feedback de la question n’est pas nécessaire au déverrouillage.",
+      "evidence": "Le bundle confirme requiredBeforeAdvance=true, passThreshold=1 et correctAnswer=a ; il cite GenericLearningBlocks.tsx appelant onComplete à la sélection, LessonViewer.tsx enregistrant l’interaction sans condition sur isCorrect et checkpointGate.ts ne recensant que les blocs checkpoint."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "chapter_id": "ia_appliquee_metiers_tp__40-checkpoint-01",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou du chapitre après suppression de l’activité obligatoire dont la correction fiable exigerait une modification du renderer ou du calcul de seuil, non disponible parmi les actifs déclarés.",
+      "evidence": "Le bundle documente requiredBeforeAdvance=true et le contournement après réponse incorrecte ; aucune correction de renderer ou de gate n’est déclarée dans le cours."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "chapter_id": "ia_appliquee_metiers_tp__40-mini-project",
+      "block_id": "ia_appliquee_metiers_tp__40-mini-project-proof",
+      "exercise_id": null,
+      "reason": "Le mini-projet obligatoire ne peut pas être conservé comme activité bloquante : toute réponse non vide suffit à lever le verrou et aucune validation de preuve, grille, évaluation serveur ou dépôt de workflow n’est déclaré. Conserver sa consigne utile comme contenu non bloquant.",
+      "evidence": "Le bundle indique l’absence de minimumAnswerLength, rubricCriteria, serverGradedAssessment et workflowUploadRequired ; cloudExerciseValidation.ts fixe le minimum implicite à 1 et CloudExerciseBlock.tsx appelle onComplete après toute réponse non vide. La consigne existante demande pourtant scénario, résultat, contrôle et validation humaine."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ia_appliquee_metiers_tp__40",
+      "chapter_id": "ia_appliquee_metiers_tp__40-mini-project",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Retirer le verrou du mini-projet après conversion de l’activité en contenu non bloquant ; aucun actif déclaré ne permet une validation rapide et fiable des quatre éléments de preuve demandés.",
+      "evidence": "Le bundle confirme requiredBeforeAdvance et un déverrouillage sur saisie triviale, avec une validation significative recommandée mais non configurée."
+    }
+  ],
+  "unresolved_findings": [],
+  "summary": "Les deux constats P1 de verrouillage sont traités sans inventer de mécanisme de correction : le knowledge check est retiré et son verrou supprimé ; la consigne utile du mini-projet est conservée comme contenu non bloquant et son verrou supprimé. Les constats historiques sont normalisés : aucun stillOpen restant, le guidage est déjà fixed et le signal médias est false_positive."
+}

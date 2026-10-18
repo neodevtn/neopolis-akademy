@@ -1,27 +1,84 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import course from "../client/public/data/courses/software_development_with_windsurf__01.json";
 import catalog from "../client/src/data/trainingIndex.json";
 
+const courseId = "software_development_with_windsurf__01";
+const interactiveTypes = new Set(["single_choice_exercise", "multi_choice_exercise", "bucket_sort", "matching", "ordering"]);
+const isLocalAsset = (value: unknown) => typeof value === "string" && value.startsWith("/api/assets/");
+
+function metrics(payload: any) {
+  const chapters = payload.lessons.flatMap((lesson: any) => lesson.chapters || []);
+  const blocks = chapters.flatMap((chapter: any) => chapter.blocks || []);
+  const downloadUrls = new Set(blocks.flatMap((block: any) => [block.url, block.downloadUrl, block.fileUrl, block.slidesPdf]
+    .filter((url): url is string => typeof url === "string" && url.trim().length > 0)));
+  return {
+    lessonCount: payload.lessons.length,
+    totalActivities: chapters.length,
+    videoCount: blocks.filter((block: any) => block.type === "video").length,
+    exerciseCount: blocks.filter((block: any) => interactiveTypes.has(block.type)).length,
+    downloadCount: downloadUrls.size,
+  };
+}
+
+function hasVerifier(block: any) {
+  if (block.type === "single_choice_exercise") return Array.isArray(block.options) && block.options.some((option: any) => option.id === block.correctAnswer);
+  if (block.type === "multi_choice_exercise") {
+    const expected = String(block.correctAnswers || "").split(",").filter(Boolean);
+    return expected.length > 0 && Array.isArray(block.options) && expected.every((id) => block.options.some((option: any) => option.id === id));
+  }
+  if (block.type === "bucket_sort") return Array.isArray(block.buckets) && block.buckets.length > 0 && Array.isArray(block.cards) && block.cards.every((card: any) => block.buckets.some((bucket: any) => bucket.id === card.correctBucket));
+  if (block.type === "matching") return Array.isArray(block.pairs) && block.pairs.length > 0;
+  if (block.type === "ordering") return Array.isArray(block.items) && block.items.length > 0;
+  return false;
+}
+
 describe("cours DataCamp Développement logiciel avec Windsurf", () => {
-  const activities = course.lessons.flatMap((lesson: any) => lesson.chapters);
+  const activities = course.lessons.flatMap((lesson: any) => lesson.chapters || []);
   const blocks = activities.flatMap((activity: any) => activity.blocks || []);
 
-  it("respecte les compteurs canoniques et le rattachement catalogue", () => {
+  it("synchronise catalogue et rattachement avec les métriques dérivées du JSON publié", () => {
     const certification = catalog.certifications.find((entry: any) => entry.id === "datacamp_software_development_with_windsurf");
-    const courseIndex = catalog.courses.find((entry: any) => entry.id === "software_development_with_windsurf__01");
-    expect(certification).toMatchObject({ totalLessons: 3, totalActivities: 30, totalVideos: 11, totalExercises: 19, totalDownloads: 3 });
-    expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 30, videoCount: 11, exerciseCount: 19 });
-    expect(activities).toHaveLength(30);
+    const courseIndex = catalog.courses.find((entry: any) => entry.id === courseId);
+    expect(courseIndex).toMatchObject({ id: courseId, certId: certification?.id, ...metrics(course) });
+    expect(certification).toBeTruthy();
+    const certificationMetrics = certification!.courses.map((id: string) => metrics(JSON.parse(readFileSync(
+      new URL(`../client/public/data/courses/${id}.json`, import.meta.url), "utf8",
+    )))).reduce((total: any, current: any) => ({
+      lessonCount: total.lessonCount + current.lessonCount,
+      totalActivities: total.totalActivities + current.totalActivities,
+      videoCount: total.videoCount + current.videoCount,
+      exerciseCount: total.exerciseCount + current.exerciseCount,
+      downloadCount: total.downloadCount + current.downloadCount,
+    }), { lessonCount: 0, totalActivities: 0, videoCount: 0, exerciseCount: 0, downloadCount: 0 });
+    expect(certification).toMatchObject({
+      courseCount: certification!.courses.length,
+      totalLessons: certificationMetrics.lessonCount,
+      totalActivities: certificationMetrics.totalActivities,
+      totalVideos: certificationMetrics.videoCount,
+      totalExercises: certificationMetrics.exerciseCount,
+      totalDownloads: certificationMetrics.downloadCount,
+    });
   });
 
-  it("préserve les Projector et les formats interactifs source", () => {
+  it("conserve les médias Projector locaux et les formats interactifs source encore publiés", () => {
     const projector = blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length);
-    expect(projector).toHaveLength(11);
-    expect(projector.every((block: any) => (block.mp4Url || block.audioUrl) && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "VisualExercise")).toHaveLength(9);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "PureMultipleChoiceExercise")).toHaveLength(6);
-    expect(activities.filter((activity: any) => activity.sourceActivityType === "DragAndDropExercise")).toHaveLength(4);
-    expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
+    const expectedVideos = course.datacampImport?.expected?.videos_extracted;
+    expect(expectedVideos).toBeGreaterThan(0);
+    expect(projector).toHaveLength(expectedVideos);
+    expect(projector.every((block: any) => (isLocalAsset(block.mp4Url) || isLocalAsset(block.audioUrl)) && isLocalAsset(block.slidesPdf) && block.projectorTimings?.length && block.transcriptSegments?.length)).toBe(true);
+    const interactiveActivities = activities.filter((activity: any) => activity.sourceActivityType && activity.sourceActivityType !== "VideoExercise");
+    expect(interactiveActivities.length).toBeGreaterThan(0);
+    expect(interactiveActivities.every((activity: any) => activity.blocks.some(hasVerifier))).toBe(true);
+  });
+
+  it("ne laisse aucun chapitre vide ou verrou obligatoire sans contenu complétable", () => {
+    expect(activities.every((activity: any) => Array.isArray(activity.blocks) && activity.blocks.length > 0)).toBe(true);
+    const required = activities.filter((activity: any) => activity.requiredBeforeAdvance);
+    expect(required.length).toBeGreaterThan(0);
+    expect(required.every((activity: any) => activity.blocks.some((block: any) =>
+      hasVerifier(block) || (block.type === "video" && (isLocalAsset(block.mp4Url) || isLocalAsset(block.audioUrl))) || (block.type === "content" && Boolean(block.body)),
+    ))).toBe(true);
   });
 
   it("fournit une préparation Windsurf et ne publie aucune URL DataCamp", () => {

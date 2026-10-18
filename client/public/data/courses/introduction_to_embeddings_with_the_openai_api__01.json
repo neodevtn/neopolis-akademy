@@ -314,26 +314,22 @@
             "fr": "Découvrez comment les modèles d’embeddings alimentent nombre des applications d’IA les plus enthousiasmantes. Apprenez à utiliser l’API OpenAI pour créer des embeddings et calculer la similarité sémantique entre des textes."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_1_act_04_code",
+              "type": "content",
+              "id": "dc_1_act_04_code_learning_note",
               "title": {
-                "en": "Créer des embeddings",
-                "fr": "Créer des embeddings"
+                "fr": "Créer des embeddings",
+                "en": "Créer des embeddings"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Create an OpenAI client (you can leave api_key set to the provided placeholder).\n\nCreate a request to the Embeddings endpoint, passing text of your choice to the text-embedding-3-small model.\n\nConvert the model response to a dictionary.",
-                "fr": "Créez un client OpenAI (vous pouvez laisser api_key sur l’espace réservé fourni).\n\nCréez une requête vers l’endpoint Embeddings en passant au modèle text-embedding-3-small le texte de votre choix.\n\nConvertissez la response du modèle en dictionnaire."
+              "body": {
+                "fr": "Créez un client OpenAI (vous pouvez laisser api_key sur l’espace réservé fourni).\n\nCréez une requête vers l’endpoint Embeddings en passant au modèle text-embedding-3-small le texte de votre choix.\n\nConvertissez la response du modèle en dictionnaire.",
+                "en": "Create an OpenAI client (you can leave api_key set to the provided placeholder).\n\nCreate a request to the Embeddings endpoint, passing text of your choice to the text-embedding-3-small model.\n\nConvert the model response to a dictionary."
               },
-              "starterCode": "# Create an OpenAI client\nclient = ____(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create a request to obtain embeddings\nresponse = ____\n\n# Convert the response into a dictionary\nresponse_dict = ____\nprint(response_dict)",
-              "solutionCode": "# Create an OpenAI client\nclient = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create a request to obtain embeddings\nresponse = client.embeddings.create(\n  model=\"text-embedding-3-small\",\n  input=\"This can contain any text.\"\n)\n\n# Convert the response into a dictionary\nresponse_dict = response.model_dump()\nprint(response_dict)",
-              "expectedOutput": "",
-              "hint": {
-                "en": "To create a client, instantiate the OpenAI class.\n\nTo create a request to the Embeddings endpoint, call the .create() method on client.embeddings.\n\nThe text to encode must be provided as a string to the input argument.\n\nThe response object has a .model_dump() method to convert it to a dictionary.",
-                "fr": "Pour créer un client, instanciez la classe OpenAI.\n\nPour créer une requête vers l’endpoint Embeddings, appelez la méthode .create() sur client.embeddings.\n\nLe texte à encoder doit être fourni sous forme de chaîne de caractères à l’argument input.\n\nL’objet de réponse possède une méthode .model_dump() pour le convertir en dictionnaire."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -450,26 +446,22 @@
             "fr": "Découvrez comment les modèles d’embeddings alimentent nombre des applications d’IA les plus enthousiasmantes. Apprenez à utiliser l’API OpenAI pour créer des embeddings et calculer la similarité sémantique entre des textes."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_1_act_07_code",
+              "type": "content",
+              "id": "dc_1_act_07_code_learning_note",
               "title": {
-                "en": "Creating embeddings for product descriptions",
-                "fr": "Créer des embeddings pour des descriptions de produits"
+                "fr": "Créer des embeddings pour des descriptions de produits",
+                "en": "Creating embeddings for product descriptions"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Create a list called product_descriptions containing the 'short_description' of each product in products using a list comprehension.\n\nCreate embeddings for each product's 'short_description' using batching, passing the input to the text-embedding-3-small model.\n\nExtract each product's embeddings from response_dict and store them in products under a new key called 'embedding'.",
-                "fr": "Créez une liste appelée product_descriptions contenant la 'short_description' de chaque produit dans products à l’aide d’une compréhension de liste.\n\nCréez les embeddings de chaque 'short_description' de produit en utilisant le batching, en passant l’entrée au modèle text-embedding-3-small.\n\nExtrayez les embeddings de chaque produit depuis response_dict et stockez-les dans products sous une nouvelle clé appelée 'embedding'."
+              "body": {
+                "fr": "Créez une liste appelée product_descriptions contenant la 'short_description' de chaque produit dans products à l’aide d’une compréhension de liste.\n\nCréez les embeddings de chaque 'short_description' de produit en utilisant le batching, en passant l’entrée au modèle text-embedding-3-small.\n\nExtrayez les embeddings de chaque produit depuis response_dict et stockez-les dans products sous une nouvelle clé appelée 'embedding'.",
+                "en": "Create a list called product_descriptions containing the 'short_description' of each product in products using a list comprehension.\n\nCreate embeddings for each product's 'short_description' using batching, passing the input to the text-embedding-3-small model.\n\nExtract each product's embeddings from response_dict and store them in products under a new key called 'embedding'."
               },
-              "starterCode": "# Extract a list of product short descriptions from products\nproduct_descriptions = [____ for product in ____]\n\n# Create embeddings for each product description\nresponse = ____\nresponse_dict = response.model_dump()\n\n# Extract the embeddings from response_dict and store in products\nfor i, product in ____:\n    product['embedding'] = response_dict[____][____][____]\n    \nprint(products[0].items())",
-              "solutionCode": "# Extract a list of product short descriptions from products\nproduct_descriptions = [product['short_description'] for product in products]\n\n# Create embeddings for each product description\nresponse = client.embeddings.create(\n  model=\"text-embedding-3-small\",\n  input=product_descriptions\n)\nresponse_dict = response.model_dump()\n\n# Extract the embeddings from response_dict and store in products\nfor i, product in enumerate(products):\n    product['embedding'] = response_dict['data'][i]['embedding']\n    \nprint(products[0].items())",
-              "expectedOutput": "",
-              "hint": {
-                "en": "The input argument of client.embeddings.create() can accept a list of strings to embed multiple texts at once.\n\nTo access the embeddings from response_dict, index the list under the 'data' key with i and extract the 'embedding' value from the resulting dictionary.",
-                "fr": "L’argument input de client.embeddings.create() peut accepter une liste de chaînes pour intégrer plusieurs textes en une seule fois.\n\nPour accéder aux embeddings depuis response_dict, indexez la liste sous la clé 'data' avec i et extrayez la valeur 'embedding' du dictionnaire obtenu."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -556,61 +548,6 @@
           ]
         },
         {
-          "id": "dc_ch01_act10",
-          "title": {
-            "en": "Calculer des distances cosinus",
-            "fr": "Calculer des distances cosinus"
-          },
-          "description": {
-            "en": "Discover how embedding models power many of the most exciting AI applications. Learn to use the OpenAI API to create embeddings and calculate semantic similarity between texts.",
-            "fr": "Découvrez comment les modèles d’embeddings alimentent nombre des applications d’IA les plus enthousiasmantes. Apprenez à utiliser l’API OpenAI pour créer des embeddings et calculer la similarité sémantique entre des textes."
-          },
-          "type": "quiz",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "single_choice_exercise",
-              "id": "dc_1_act_10_qcm",
-              "question": {
-                "en": "To identify the most semantically similar texts, you need to apply a distance metric. A common choice is cosine distance.\n\nIn this exercise, you are provided with four vectors: A, B, C, and D. Your task is to determine which one is most similar to A using cosine distance.\n\nWhich vector is most similar to A?\n\ndistance has already been imported from scipy.spatial.",
-                "fr": "Pour identifier les textes les plus proches sémantiquement, vous devez appliquer une métrique de distance. Un choix courant est la distance cosinus.\n\nDans cet exercice, quatre vecteurs vous sont fournis : A, B, C et D. Votre tâche consiste à déterminer lequel est le plus similaire à A à l’aide de la distance cosinus.\n\nQuel vecteur est le plus similaire à A ?\n\ndistance a déjà été importé depuis scipy.spatial."
-              },
-              "options": [
-                {
-                  "id": "a",
-                  "text": {
-                    "en": "<code>B</code>",
-                    "fr": "<code>B</code>"
-                  }
-                },
-                {
-                  "id": "b",
-                  "text": {
-                    "en": "<code>C</code>",
-                    "fr": "<code>C</code>"
-                  }
-                },
-                {
-                  "id": "c",
-                  "text": {
-                    "en": "<code>D</code>",
-                    "fr": "<code>D</code>"
-                  }
-                }
-              ],
-              "correctAnswer": "c",
-              "explanation": {
-                "en": "To calculate the cosine distance between two points, use distance.cosine(), passing it the coordinates of the two points to compare.",
-                "fr": "Pour calculer la distance cosinus entre deux points, utilisez distance.cosine() en lui passant les coordonnées des deux points à comparer."
-              },
-              "hint": {
-                "en": "To calculate the cosine distance between two points, use distance.cosine(), passing it the coordinates of the two points to compare.",
-                "fr": "Pour calculer la distance cosinus entre deux points, utilisez distance.cosine() en lui passant les coordonnées des deux points à comparer."
-              }
-            }
-          ]
-        },
-        {
           "id": "dc_ch01_act11",
           "title": {
             "en": "Des embeddings plus réutilisables",
@@ -621,26 +558,22 @@
             "fr": "Découvrez comment les modèles d’embeddings alimentent nombre des applications d’IA les plus enthousiasmantes. Apprenez à utiliser l’API OpenAI pour créer des embeddings et calculer la similarité sémantique entre des textes."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_1_act_11_code",
+              "type": "content",
+              "id": "dc_1_act_11_code_learning_note",
               "title": {
-                "en": "Des embeddings plus réutilisables",
-                "fr": "Des embeddings plus réutilisables"
+                "fr": "Des embeddings plus réutilisables",
+                "en": "Des embeddings plus réutilisables"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Define a function create_embeddings() that sends an input parameter, texts, to the embedding model and returns a list containing the embeddings for each text.\n\nGenerate the embedding for short_description with create_embeddings(), then extract and display the embedding as a single list.\n\nGenerate the embeddings for list_of_descriptions with create_embeddings() and display the result.",
-                "fr": "Définissez une fonction create_embeddings() qui envoie un paramètre d’entrée, texts, au modèle d’embedding et renvoie une liste contenant les embeddings pour chaque texte.\n\nGénérez l’embedding de short_description avec create_embeddings(), puis extrayez et affichez les embeddings dans une liste unique.\n\nGénérez les embeddings de list_of_descriptions avec create_embeddings() et affichez le résultat."
+              "body": {
+                "fr": "Définissez une fonction create_embeddings() qui envoie un paramètre d’entrée, texts, au modèle d’embedding et renvoie une liste contenant les embeddings pour chaque texte.\n\nGénérez l’embedding de short_description avec create_embeddings(), puis extrayez et affichez les embeddings dans une liste unique.\n\nGénérez les embeddings de list_of_descriptions avec create_embeddings() et affichez le résultat.",
+                "en": "Define a function create_embeddings() that sends an input parameter, texts, to the embedding model and returns a list containing the embeddings for each text.\n\nGenerate the embedding for short_description with create_embeddings(), then extract and display the embedding as a single list.\n\nGenerate the embeddings for list_of_descriptions with create_embeddings() and display the result."
               },
-              "starterCode": "# Define a create_embeddings function\ndef create_embeddings(texts):\n  response = client.____(\n    model=\"text-embedding-3-small\",\n    input=____\n  )\n  response_dict = response.model_dump()\n  \n  return [data['____'] for data in ____['data']]\n\n# Embed short_description and print\nprint(____)\n\n# Embed list_of_descriptions and print\nprint(____)",
-              "solutionCode": "# Define a create_embeddings function\ndef create_embeddings(texts):\n  response = client.embeddings.create(\n    model=\"text-embedding-3-small\",\n    input=texts\n  )\n  response_dict = response.model_dump()\n\n  return [data['embedding'] for data in response_dict['data']]\n\n# Embed short_description and print\nprint(create_embeddings(short_description)[0])\n\n# Embed list_of_descriptions and print\nprint(create_embeddings(list_of_descriptions))",
-              "expectedOutput": "",
-              "hint": {
-                "en": "Remember that the list of embeddings for each input is stored under the 'data' key in response_dict.\n\nTo extract the embedding for short_description as a single list, remember to use zero-based indexing before displaying it.",
-                "fr": "Rappelez-vous que la liste des embeddings pour chaque entrée est stockée sous la clé 'data' de response_dict.\n\nPour extraire short_description embarqué sous forme d’une liste unique, pensez à utiliser l’indexation à partir de zéro avant l’affichage."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -656,26 +589,22 @@
             "fr": "Découvrez comment les modèles d’embeddings alimentent nombre des applications d’IA les plus enthousiasmantes. Apprenez à utiliser l’API OpenAI pour créer des embeddings et calculer la similarité sémantique entre des textes."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_1_act_12_code",
+              "type": "content",
+              "id": "dc_1_act_12_code_learning_note",
               "title": {
-                "en": "Trouver le produit le plus similaire",
-                "fr": "Trouver le produit le plus similaire"
+                "fr": "Trouver le produit le plus similaire",
+                "en": "Trouver le produit le plus similaire"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Vectorize the text \"soap\" using your custom `create_embeddings()` function and extract a single list of embeddings.\n\nCalculate the cosine distance between `query_embedding` and the embeddings in `product`.\n\nFind and display the `short_description` of the product most similar to the search text using the distances in `distances`.",
-                "fr": "Vectorisez le texte « soap » à l’aide de votre fonction personnalisée `create_embeddings()` et extrayez une seule liste d’embeddings.\n\nCalculez la distance cosinus entre `query_embedding` et les embeddings dans `product`.\n\nTrouvez et affichez la `short_description` du produit le plus similaire au texte de recherche en utilisant les distances dans `distances`."
+              "body": {
+                "fr": "Vectorisez le texte « soap » à l’aide de votre fonction personnalisée `create_embeddings()` et extrayez une seule liste d’embeddings.\n\nCalculez la distance cosinus entre `query_embedding` et les embeddings dans `product`.\n\nTrouvez et affichez la `short_description` du produit le plus similaire au texte de recherche en utilisant les distances dans `distances`.",
+                "en": "Vectorize the text \"soap\" using your custom `create_embeddings()` function and extract a single list of embeddings.\n\nCalculate the cosine distance between `query_embedding` and the embeddings in `product`.\n\nFind and display the `short_description` of the product most similar to the search text using the distances in `distances`."
               },
-              "starterCode": "# Embed the search text\nsearch_text = \"soap\"\nsearch_embedding = ____\n\ndistances = []\nfor product in products:\n  # Compute the cosine distance for each product description\n  dist = ____(search_embedding, ____)\n  distances.append(dist)\n\n# Find and print the most similar product short_description    \nmin_dist_ind = ____\nprint(____)",
-              "solutionCode": "# Embed the search text\nsearch_text = \"soap\"\nsearch_embedding = create_embeddings(search_text)[0]\n\ndistances = []\nfor product in products:\n  # Compute the cosine distance for each product description\n  dist = distance.cosine(search_embedding, product[\"embedding\"])\n  distances.append(dist)\n\n# Find and print the most similar product short_description    \nmin_dist_ind = np.argmin(distances)\nprint(products[min_dist_ind]['short_description'])",
-              "expectedOutput": "",
-              "hint": {
-                "en": "To calculate the cosine distance, call `distance.cosine()` on the query embedding and the already vectorized product description.\n\nIf you do not remember the structure of the `products` list of dictionaries, run `products[0].keys()` to display the keys of the first product dictionary.\n\nThe `np.argmin()` function returns the index of the smallest value in a list.",
-                "fr": "Pour calculer la distance cosinus, appelez `distance.cosine()` sur l’embedding de la requête et la description de produit déjà vectorisée.\n\nSi vous ne vous souvenez plus de la structure de la liste de dictionnaires `products`, exécutez `products[0].keys()` pour afficher les clés du premier dictionnaire de produit.\n\nLa fonction `np.argmin()` renvoie l’index de la plus petite valeur dans une liste."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -789,26 +718,22 @@
             "fr": "Les embeddings rendent possibles de puissantes applications d’IA, notamment les moteurs de recherche sémantique, les systèmes de recommandation et des tâches de classification comme l’analyse de sentiments. Apprenez à utiliser le modèle d’embeddings d’OpenAI pour activer ces applications passionnantes !"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_2_act_02_code",
+              "type": "content",
+              "id": "dc_2_act_02_code_learning_note",
               "title": {
-                "en": "Enrichir les embeddings",
-                "fr": "Enrichir les embeddings"
+                "fr": "Enrichir les embeddings",
+                "en": "Enrichir les embeddings"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Define a function called `create_product_text()` to combine the `title`, `short_description`, `category`, and `features` data into a single string with the desired structure.\n\nUse `create_product_text()` to combine the information for each product in `products`, storing the results in a list.\n\nEmbed the text in `product_texts`.",
-                "fr": "Définissez une fonction appelée `create_product_text()` pour combiner les données `title`, `short_description`, `category` et `features` en une seule chaîne de caractères avec la structure souhaitée.\n\nUtilisez `create_product_text()` pour combiner les informations de chaque produit dans `products`, en stockant les résultats dans une liste.\n\nIntégrez le texte dans `product_texts`."
+              "body": {
+                "fr": "Définissez une fonction appelée `create_product_text()` pour combiner les données `title`, `short_description`, `category` et `features` en une seule chaîne de caractères avec la structure souhaitée.\n\nUtilisez `create_product_text()` pour combiner les informations de chaque produit dans `products`, en stockant les résultats dans une liste.\n\nIntégrez le texte dans `product_texts`.",
+                "en": "Define a function called `create_product_text()` to combine the `title`, `short_description`, `category`, and `features` data into a single string with the desired structure.\n\nUse `create_product_text()` to combine the information for each product in `products`, storing the results in a list.\n\nEmbed the text in `product_texts`."
               },
-              "starterCode": "# Define a function to combine the relevant features into a single string\ndef create_product_text(product):\n  return f\"\"\"Title: {____}\nDescription: {____}\nCategory: {____}\nFeatures: {____}\"\"\"\n\n# Combine the features for each product\nproduct_texts = [____ for product in ____]\n\n# Create the embeddings from product_texts\nproduct_embeddings = ____",
-              "solutionCode": "# Define a function to combine the relevant features into a single string\ndef create_product_text(product):\n  return f\"\"\"Title: {product['title']}\nDescription: {product['short_description']}\nCategory: {product['category']}\nFeatures: {'; '.join(product['features'])}\"\"\"\n\n# Combine the features for each product\nproduct_texts = [create_product_text(product) for product in products]\n\n# Create the embeddings from product_texts\nproduct_embeddings = create_embeddings(product_texts)",
-              "expectedOutput": "",
-              "hint": {
-                "en": "To concatenate all the data in `features` with `;` as a separator, you can use `';'.join(product['features'])`.\n\nTo create `product_texts`, call `create_product_text()` on each `product` in `products`.\n\nThe custom `create_embeddings()` function returns embeddings for any string or list of strings provided as input.",
-                "fr": "Pour concaténer toutes les données de `features` avec `;` comme séparateur, vous pouvez utiliser `';'.join(product['features'])`.\n\nPour créer `product_texts`, appelez `create_product_text()` sur chaque `product` dans `products`.\n\nLa fonction personnalisée `create_embeddings()` renvoie des embeddings pour toute chaîne ou liste de chaînes fournie en entrée."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -824,26 +749,22 @@
             "fr": "Les embeddings rendent possibles de puissantes applications d’IA, notamment les moteurs de recherche sémantique, les systèmes de recommandation et des tâches de classification comme l’analyse de sentiments. Apprenez à utiliser le modèle d’embeddings d’OpenAI pour activer ces applications passionnantes !"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_2_act_03_code",
+              "type": "content",
+              "id": "dc_2_act_03_code_learning_note",
               "title": {
-                "en": "Trier par similarité",
-                "fr": "Trier par similarité"
+                "fr": "Trier par similarité",
+                "en": "Trier par similarité"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Calculate the cosine distance between `query_vector` and `embedding`.\n\nAdd a dictionary containing `dist` and its index to the `distances` list.\n\nSort the `distances` list by the `distance` key of each dictionary.\n\nReturn the first n elements of `distances_sorted`.",
-                "fr": "Calculez la distance cosinus entre `query_vector` et `embedding`.\n\nAjoutez un dictionnaire contenant `dist` et son index à la liste `distances`.\n\nTriez la liste `distances` selon la clé `distance` de chaque dictionnaire.\n\nRenvoyez les n premiers éléments de `distances_sorted`."
+              "body": {
+                "fr": "Calculez la distance cosinus entre `query_vector` et `embedding`.\n\nAjoutez un dictionnaire contenant `dist` et son index à la liste `distances`.\n\nTriez la liste `distances` selon la clé `distance` de chaque dictionnaire.\n\nRenvoyez les n premiers éléments de `distances_sorted`.",
+                "en": "Calculate the cosine distance between `query_vector` and `embedding`.\n\nAdd a dictionary containing `dist` and its index to the `distances` list.\n\nSort the `distances` list by the `distance` key of each dictionary.\n\nReturn the first n elements of `distances_sorted`."
               },
-              "starterCode": "def find_n_closest(query_vector, embeddings, n=3):\n  distances = []\n  for index, embedding in enumerate(embeddings):\n    # Calculate the cosine distance between the query vector and embedding\n    dist = ____\n    # Append the distance and index to distances\n    distances.append({\"distance\": ____, \"index\": ____})\n  # Sort distances by the distance key\n  distances_sorted = ____\n  # Return the first n elements in distances_sorted\n  return ____",
-              "solutionCode": "def find_n_closest(query_vector, embeddings, n=3):\n  distances = []\n  for index, embedding in enumerate(embeddings):\n    # Calculate the cosine distance between the query vector and embedding\n    dist = distance.cosine(query_vector, embedding)\n    # Append the distance and index to distances\n    distances.append({\"distance\": dist, \"index\": index})\n  # Sort distances by the distance key\n  distances_sorted = sorted(distances, key=lambda x: x[\"distance\"])\n  # Return the first n elements in distances_sorted\n  return distances_sorted[0:n]",
-              "expectedOutput": "",
-              "hint": {
-                "en": "To calculate the cosine distance between two vectors, call `distance.cosine()` on the two vectors to compare.\n\nTo sort a list using a key found in its dictionaries, use the `key` argument of `sorted()` to specify a lambda function that returns a dictionary's `distance` value.",
-                "fr": "Pour calculer la distance cosinus entre deux vecteurs, appelez `distance.cosine()` sur les deux vecteurs à comparer.\n\nPour trier une liste à l’aide d’une clé présente dans ses dictionnaires, utilisez l’argument `key` de `sorted()` pour spécifier une fonction lambda qui renvoie la valeur `distance` d’un dictionnaire."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -859,26 +780,22 @@
             "fr": "Les embeddings rendent possibles de puissantes applications d’IA, notamment les moteurs de recherche sémantique, les systèmes de recommandation et des tâches de classification comme l’analyse de sentiments. Apprenez à utiliser le modèle d’embeddings d’OpenAI pour activer ces applications passionnantes !"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_2_act_04_code",
+              "type": "content",
+              "id": "dc_2_act_04_code_learning_note",
               "title": {
-                "en": "Recherche sémantique de produits",
-                "fr": "Recherche sémantique de produits"
+                "fr": "Recherche sémantique de produits",
+                "en": "Recherche sémantique de produits"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Create the query vector from query_text.\n\nFind the five closest distances and their corresponding indices using the find_n_closest() function.\n\nLoop through hits and extract the product at each 'index' in the hits list.",
-                "fr": "Créez le vecteur de requête à partir de query_text.\n\nTrouvez les cinq distances les plus proches et leurs index correspondants à l’aide de la fonction find_n_closest().\n\nParcourez hits et extrayez le produit à chaque 'index' dans la liste hits."
+              "body": {
+                "fr": "Créez le vecteur de requête à partir de query_text.\n\nTrouvez les cinq distances les plus proches et leurs index correspondants à l’aide de la fonction find_n_closest().\n\nParcourez hits et extrayez le produit à chaque 'index' dans la liste hits.",
+                "en": "Create the query vector from query_text.\n\nFind the five closest distances and their corresponding indices using the find_n_closest() function.\n\nLoop through hits and extract the product at each 'index' in the hits list."
               },
-              "starterCode": "# Create the query vector from query_text\nquery_text = \"computer\"\nquery_vector = ____[0]\n\n# Find the five closest distances\nhits = ____\n\nprint(f'Search results for \"{query_text}\"')\nfor hit in hits:\n  # Extract the product at each index in hits\n  product = products[____]\n  print(product[\"title\"])",
-              "solutionCode": "# Create the query vector from query_text\nquery_text = \"computer\"\nquery_vector = create_embeddings(query_text)[0]\n\n# Find the five closest distances\nhits = find_n_closest(query_vector, product_embeddings, n=5)\n\nprint(f'Search results for \"{query_text}\"')\nfor hit in hits:\n  # Extract the product at each index in hits\n  product = products[hit['index']]\n  print(product[\"title\"])",
-              "expectedOutput": "",
-              "hint": {
-                "en": "When calling find_n_closest(), set the n argument to find the five closest distances.\n\nEach hit in hits contains an 'index' key, which you can use to select the corresponding item in the products list of dictionaries.",
-                "fr": "Lors de l’appel à find_n_closest(), définissez l’argument n pour trouver les cinq distances les plus proches.\n\nChaque hit dans hits contient une clé 'index', que vous pouvez utiliser pour sélectionner l’élément correspondant dans la liste de dictionnaires products."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -996,26 +913,22 @@
             "fr": "Les embeddings rendent possibles de puissantes applications d’IA, notamment les moteurs de recherche sémantique, les systèmes de recommandation et des tâches de classification comme l’analyse de sentiments. Apprenez à utiliser le modèle d’embeddings d’OpenAI pour activer ces applications passionnantes !"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_2_act_06_code",
+              "type": "content",
+              "id": "dc_2_act_06_code_learning_note",
               "title": {
-                "en": "Système de recommandation de produits",
-                "fr": "Système de recommandation de produits"
+                "fr": "Système de recommandation de produits",
+                "en": "Système de recommandation de produits"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Combine the text features of last_product, and of each product in products, using create_product_text().\n\nEmbed last_product_text and product_texts with create_embeddings(), ensuring that last_product_embeddings is a single list.\n\nFind the three smallest cosine distances and their indices with find_n_closest().",
-                "fr": "Combinez les caractéristiques textuelles de last_product, et pour chaque produit dans products, en utilisant create_product_text().\n\nIntégrez (embed) last_product_text et product_texts avec create_embeddings(), en veillant à ce que last_product_embeddings soit une liste unique.\n\nTrouvez les trois plus petites distances cosines et leurs index avec find_n_closest()."
+              "body": {
+                "fr": "Combinez les caractéristiques textuelles de last_product, et pour chaque produit dans products, en utilisant create_product_text().\n\nIntégrez (embed) last_product_text et product_texts avec create_embeddings(), en veillant à ce que last_product_embeddings soit une liste unique.\n\nTrouvez les trois plus petites distances cosines et leurs index avec find_n_closest().",
+                "en": "Combine the text features of last_product, and of each product in products, using create_product_text().\n\nEmbed last_product_text and product_texts with create_embeddings(), ensuring that last_product_embeddings is a single list.\n\nFind the three smallest cosine distances and their indices with find_n_closest()."
               },
-              "starterCode": "# Combine the features for last_product and each product in products\nlast_product_text = ____\nproduct_texts = ____\n\n# Embed last_product_text and product_texts\nlast_product_embeddings = ____\nproduct_embeddings = ____\n\n# Find the three smallest cosine distances and their indexes\nhits = ____(____, product_embeddings)\n\nfor hit in hits:\n  product = products[hit['index']]\n  print(product['title'])",
-              "solutionCode": "# Combine the features for last_product and each product in products\nlast_product_text = create_product_text(last_product)\nproduct_texts = [create_product_text(product) for product in products]\n\n# Embed last_product_text and product_texts\nlast_product_embeddings = create_embeddings(last_product_text)[0]\nproduct_embeddings = create_embeddings(product_texts)\n\n# Find the three smallest cosine distances and their indexes\nhits = find_n_closest(last_product_embeddings, product_embeddings)\n\nfor hit in hits:\n  product = products[hit['index']]\n  print(product['title'])",
-              "expectedOutput": "",
-              "hint": {
-                "en": "To create product_texts, use a list comprehension to call create_product_text() on each product in products.\n\nRemember to zero-index the result of create_embeddings() when creating last_product_embeddings, so that a single list of numbers is returned.",
-                "fr": "Pour créer product_texts, utilisez une compréhension de liste pour appeler create_product_text() sur chaque produit de products.\n\nN’oubliez pas d’indexer à partir de zéro le résultat de create_embeddings() lors de la création de last_product_embeddings, afin qu’une seule liste de nombres soit renvoyée."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1031,26 +944,22 @@
             "fr": "Les embeddings rendent possibles de puissantes applications d’IA, notamment les moteurs de recherche sémantique, les systèmes de recommandation et des tâches de classification comme l’analyse de sentiments. Apprenez à utiliser le modèle d’embeddings d’OpenAI pour activer ces applications passionnantes !"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_2_act_07_code",
+              "type": "content",
+              "id": "dc_2_act_07_code_learning_note",
               "title": {
-                "en": "Ajouter l’historique utilisateur au moteur de recommandation",
-                "fr": "Ajouter l’historique utilisateur au moteur de recommandation"
+                "fr": "Ajouter l’historique utilisateur au moteur de recommandation",
+                "en": "Ajouter l’historique utilisateur au moteur de recommandation"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Combine the text features of each product in user_history, generate embeddings for the resulting strings, then calculate the average of the embeddings with numpy.\n\nFilter products to remove products present in user_history.\n\nCombine the features of each product in products_filtered and generate embeddings for the resulting strings.",
-                "fr": "Combinez les caractéristiques textuelles de chaque produit dans user_history, générez les embeddings des chaînes obtenues, puis calculez la moyenne des embeddings avec numpy.\n\nFiltrez products pour retirer les produits présents dans user_history.\n\nCombinez les caractéristiques de chaque produit dans products_filtered et générez les embeddings des chaînes obtenues."
+              "body": {
+                "fr": "Combinez les caractéristiques textuelles de chaque produit dans user_history, générez les embeddings des chaînes obtenues, puis calculez la moyenne des embeddings avec numpy.\n\nFiltrez products pour retirer les produits présents dans user_history.\n\nCombinez les caractéristiques de chaque produit dans products_filtered et générez les embeddings des chaînes obtenues.",
+                "en": "Combine the text features of each product in user_history, generate embeddings for the resulting strings, then calculate the average of the embeddings with numpy.\n\nFilter products to remove products present in user_history.\n\nCombine the features of each product in products_filtered and generate embeddings for the resulting strings."
               },
-              "starterCode": "# Prepare and embed the user_history, and calculate the mean embeddings\nhistory_texts = [____ for article in user_history]\nhistory_embeddings = ____\nmean_history_embeddings = ____\n\n# Filter products to remove any in user_history\nproducts_filtered = ____\n\n# Combine product features and embed the resulting texts\nproduct_texts = ____\nproduct_embeddings = ____\n\nhits = find_n_closest(mean_history_embeddings, product_embeddings)\n\nfor hit in hits:\n  product = products_filtered[hit['index']]\n  print(product['title'])",
-              "solutionCode": "# Prepare and embed the user_history, and calculate the mean embeddings\nhistory_texts = [create_product_text(product) for product in user_history]\nhistory_embeddings = create_embeddings(history_texts)\nmean_history_embeddings = np.mean(history_embeddings, axis=0)\n\n# Filter products to remove any in user_history\nproducts_filtered = [product for product in products if product not in user_history]\n\n# Combine product features and embed the resulting texts\nproduct_texts = [create_product_text(product) for product in products_filtered]\nproduct_embeddings = create_embeddings(product_texts)\n\nhits = find_n_closest(mean_history_embeddings, product_embeddings)\n\nfor hit in hits:\n  product = products_filtered[hit['index']]\n  print(product['title'])",
-              "expectedOutput": "",
-              "hint": {
-                "en": "To calculate the average embeddings for the user's history, use np.mean() with axis=0, which calculates an average for each column of history_embeddings.\n\nTo filter products and remove items present in user_history, you can use a list comprehension that returns each product in products if the product is not in user_history.",
-                "fr": "Pour calculer la moyenne des embeddings pour l’historique de l’utilisateur, utilisez np.mean() avec axis=0, ce qui calcule une moyenne pour chaque colonne de history_embeddings.\n\nPour filtrer products et retirer les articles présents dans user_history, vous pouvez utiliser une compréhension de liste qui retourne chaque produit de products, if le produit not in user_history."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1144,26 +1053,22 @@
             "fr": "Les embeddings rendent possibles de puissantes applications d’IA, notamment les moteurs de recherche sémantique, les systèmes de recommandation et des tâches de classification comme l’analyse de sentiments. Apprenez à utiliser le modèle d’embeddings d’OpenAI pour activer ces applications passionnantes !"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_2_act_09_code",
+              "type": "content",
+              "id": "dc_2_act_09_code_learning_note",
               "title": {
-                "en": "Creating embeddings for restaurant reviews",
-                "fr": "Créer des embeddings pour des avis de restaurants"
+                "fr": "Créer des embeddings pour des avis de restaurants",
+                "en": "Creating embeddings for restaurant reviews"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Create a list of class descriptions from the labels in the `sentiments` dictionary using a list comprehension.\n\nCreate embeddings for `class_descriptions` and `reviews` using the `create_embeddings()` function.",
-                "fr": "Créez une liste de descriptions de classes à partir des étiquettes du dictionnaire `sentiments` à l’aide d’une compréhension de liste.\n\nCréez des embeddings pour `class_descriptions` et `reviews` à l’aide de la fonction `create_embeddings()`."
+              "body": {
+                "fr": "Créez une liste de descriptions de classes à partir des étiquettes du dictionnaire `sentiments` à l’aide d’une compréhension de liste.\n\nCréez des embeddings pour `class_descriptions` et `reviews` à l’aide de la fonction `create_embeddings()`.",
+                "en": "Create a list of class descriptions from the labels in the `sentiments` dictionary using a list comprehension.\n\nCreate embeddings for `class_descriptions` and `reviews` using the `create_embeddings()` function."
               },
-              "starterCode": "# Create a list of class descriptions from the sentiment labels\nclass_descriptions = ____\n\n# Embed the class_descriptions and reviews\nclass_embeddings = ____\nreview_embeddings = ____",
-              "solutionCode": "# Create a list of class descriptions from the sentiment labels\nclass_descriptions = [sentiment['label'] for sentiment in sentiments]\n\n# Embed the class_descriptions and reviews\nclass_embeddings = create_embeddings(class_descriptions)\nreview_embeddings = create_embeddings(reviews)",
-              "expectedOutput": "",
-              "hint": {
-                "en": "When creating `class_descriptions`, extract the `'label'` key from each dictionary in `sentiments`.\n\nThe `create_embeddings()` function can accept a list of strings as input and returns a list of embeddings for each input.",
-                "fr": "Lors de la création de `class_descriptions`, extrayez la clé `'label'` de chaque dictionnaire dans `sentiments`.\n\nLa fonction `create_embeddings()` peut accepter une liste de chaînes de caractères en entrée et renvoie une liste d’embeddings pour chaque entrée."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1179,52 +1084,23 @@
             "fr": "Les embeddings rendent possibles de puissantes applications d’IA, notamment les moteurs de recherche sémantique, les systèmes de recommandation et des tâches de classification comme l’analyse de sentiments. Apprenez à utiliser le modèle d’embeddings d’OpenAI pour activer ces applications passionnantes !"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_10_tp",
+              "type": "content",
+              "id": "dc_2_act_10_tp_learning_note",
               "title": {
-                "en": "Classifier le sentiment d’un avis",
-                "fr": "Classifier le sentiment d’un avis"
+                "fr": "Classifier le sentiment d’un avis",
+                "en": "Classifier le sentiment d’un avis"
               },
-              "assignment": "Maintenant que vous avez calculé les embeddings, il est temps de calculer les distances cosinus et d’extraire le label le plus similaire.\n\nVous allez définir une fonction appelée find_closest() qui permet de comparer les embeddings entre un vecteur et plusieurs autres, puis de renvoyer la distance la plus proche et son index. Vous parcourrez ensuite les avis et utiliserez find_closest() pour trouver la distance la plus proche pour chaque avis, en extrayant le label classé à l’aide de l’index.\n\nLes objets class_embeddings et review_embeddings que vous avez créés dans l’exercice précédent sont à votre disposition, ainsi que reviews et sentiments.",
-              "instructions": "Définissez une fonction appelée find_closest() qui renvoie la distance et l’index de l’embedding le plus similaire au query_vector.\n\nUtilisez find_closest() pour trouver la distance la plus proche entre les embeddings de chaque avis et les class_embeddings.\n\nUtilisez le 'index' de closest pour sous‑sélectionner sentiments et extraire le 'label'.\n\n### Code de départ\n\n```python\n# Define a function to return the minimum distance and its index\ndef find_closest(query_vector, embeddings):\n  distances = []\n  for index, embedding in enumerate(embeddings):\n    dist = distance.cosine(____, ____)\n    distances.append({\"distance\": dist, \"index\": index})\n  return ____(distances, key=lambda x: x[\"distance\"])\n\nfor index, review in enumerate(reviews):\n  # Find the closest distance and its index using find_closest()\n  closest = ____(review_embeddings[____], ____)\n  # Subset sentiments using the index from closest\n  label = ____\n  print(f'\"{review}\" was classified as {label}')\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Maintenant que vous avez calculé les embeddings, il est temps de calculer les distances cosinus et d’extraire le label le plus similaire.\n\nVous allez définir une fonction appelée find_closest() qui permet de comparer les embeddings entre un vecteur et plusieurs autres, puis de renvoyer la distance la plus proche et son index. Vous parcourrez ensuite les avis et utiliserez find_closest() pour trouver la distance la plus proche pour chaque avis, en extrayant le label classé à l’aide de l’index.\n\nLes objets class_embeddings et review_embeddings que vous avez créés dans l’exercice précédent sont à votre disposition, ainsi que reviews et sentiments.",
+                "en": "Now that you have computed the embeddings, it’s time to compute the cosine distances and extract the most similar label.\n\nYou will define a function called find_closest() that compares embeddings between one vector and several others, then returns the nearest distance and its index. You will then iterate through the reviews and use find_closest() to find the nearest distance for each review, extracting the ranked label using the index.\n\nThe class_embeddings and review_embeddings objects you created in the previous exercise are available to you, as well as reviews and sentiments."
               },
-              "steps": [
-                {
-                  "fr": "Relisez la consigne et identifiez le résultat attendu pour « Classifier le sentiment d’un avis ».",
-                  "en": "Review the instructions and identify the expected outcome for “Classifier le sentiment d’un avis”."
-                },
-                {
-                  "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
-                  "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
-                },
-                {
-                  "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
-                  "en": "Check your work against the stated criteria before submitting it."
-                }
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_bffd13c7.pdf"
-                }
-              ],
-              "hint": "La distance la plus similaire aura la distance cosinus la plus petite.\n\nLes embeddings pour chaque review se trouvent en sous‑sélectionnant review_embeddings avec la variable de boucle index.\n\nVous pouvez trouver le label en sous‑sélectionnant d’abord sentiments avec le 'index' de closest, puis en sous‑sélectionnant à nouveau pour extraire le 'label' du dictionnaire obtenu.",
-              "solution": "# Define a function to return the minimum distance and its index\ndef find_closest(query_vector, embeddings):\n  distances = []\n  for index, embedding in enumerate(embeddings):\n    dist = distance.cosine(query_vector, embedding)\n    distances.append({\"distance\": dist, \"index\": index})\n  return min(distances, key=lambda x: x[\"distance\"])\n\nfor index, review in enumerate(reviews):\n  # Find the closest distance and its index using find_closest()\n  closest = find_closest(review_embeddings[index], class_embeddings)\n  # Subset sentiments using the index from closest\n  label = sentiments[closest['index']]['label']\n  print(f'\"{review}\" was classified as {label}')",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -1239,26 +1115,22 @@
             "fr": "Les embeddings rendent possibles de puissantes applications d’IA, notamment les moteurs de recherche sémantique, les systèmes de recommandation et des tâches de classification comme l’analyse de sentiments. Apprenez à utiliser le modèle d’embeddings d’OpenAI pour activer ces applications passionnantes !"
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_2_act_11_code",
+              "type": "content",
+              "id": "dc_2_act_11_code_learning_note",
               "title": {
-                "en": "Agréger des descriptions plus détaillées",
-                "fr": "Agréger des descriptions plus détaillées"
+                "fr": "Agréger des descriptions plus détaillées",
+                "en": "Agréger des descriptions plus détaillées"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Extract a list containing the sentiment descriptions and create embeddings for them.",
-                "fr": "Extrayez une liste contenant les descriptions des sentiments et intégrez-les."
+              "body": {
+                "fr": "Extrayez une liste contenant les descriptions des sentiments et intégrez-les.",
+                "en": "Extract a list containing the sentiment descriptions and create embeddings for them."
               },
-              "starterCode": "# Extract and embed the descriptions from sentiments\nclass_descriptions = ____\nclass_embeddings = ____\nreview_embeddings = create_embeddings(reviews)\n\ndef find_closest(query_vector, embeddings):\n  distances = []\n  for index, embedding in enumerate(embeddings):\n    dist = distance.cosine(query_vector, embedding)\n    distances.append({\"distance\": dist, \"index\": index})\n  return min(distances, key=lambda x: x[\"distance\"])\n\nfor index, review in enumerate(reviews):\n  closest = find_closest(review_embeddings[index], class_embeddings)\n  label = sentiments[closest['index']]['label']\n  print(f'\"{review}\" was classified as {label}')",
-              "solutionCode": "# Extract and embed the descriptions from sentiments\nclass_descriptions = [sentiment['description'] for sentiment in sentiments]\nclass_embeddings = create_embeddings(class_descriptions)\nreview_embeddings = create_embeddings(reviews)\n\ndef find_closest(query_vector, embeddings):\n  distances = []\n  for index, embedding in enumerate(embeddings):\n    dist = distance.cosine(query_vector, embedding)\n    distances.append({\"distance\": dist, \"index\": index})\n  return min(distances, key=lambda x: x[\"distance\"])\n\nfor index, review in enumerate(reviews):\n  closest = find_closest(review_embeddings[index], class_embeddings)\n  label = sentiments[closest['index']]['label']\n  print(f'\"{review}\" was classified as {label}')",
-              "expectedOutput": "",
-              "hint": {
-                "en": "Use a list comprehension to extract the `'description'` key from each dictionary in `sentiments`.",
-                "fr": "Utilisez une compréhension de liste pour extraire la clé 'description' de chaque dictionnaire dans sentiments."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1621,26 +1493,22 @@
             "fr": "Pour déployer des applications à base d’embeddings en production, vous aurez besoin d’une solution efficace de stockage et d’interrogation de vecteurs : place aux bases de données vectorielles ! Vous apprendrez comment ces bases permettent de faire passer à l’échelle vos applications et vous commencerez à créer et enrichir vos propres bases vectorielles avec Chroma."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_3_act_05_code",
+              "type": "content",
+              "id": "dc_3_act_05_code_learning_note",
               "title": {
-                "en": "Premiers pas avec ChromaDB",
-                "fr": "Premiers pas avec ChromaDB"
+                "fr": "Premiers pas avec ChromaDB",
+                "en": "Premiers pas avec ChromaDB"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Create a persistent client to save the database files to disk; you can omit the file path for these exercises.\n\nCreate a database collection called netflix_titles that uses the OpenAI embedding function.\n\nList all collections present in the database.",
-                "fr": "Créez un client persistant pour enregistrer les fichiers de base de données sur le disque ; vous pouvez omettre le chemin de fichier pour ces exercices.\n\nCréez une collection de base de données appelée netflix_titles qui utilise la fonction d’embedding OpenAI.\n\nListez toutes les collections présentes dans la base de données."
+              "body": {
+                "fr": "Créez un client persistant pour enregistrer les fichiers de base de données sur le disque ; vous pouvez omettre le chemin de fichier pour ces exercices.\n\nCréez une collection de base de données appelée netflix_titles qui utilise la fonction d’embedding OpenAI.\n\nListez toutes les collections présentes dans la base de données.",
+                "en": "Create a persistent client to save the database files to disk; you can omit the file path for these exercises.\n\nCreate a database collection called netflix_titles that uses the OpenAI embedding function.\n\nList all collections present in the database."
               },
-              "starterCode": "# Create a persistant client\nclient = chromadb.____()\n\n# Create a netflix_title collection using the OpenAI Embedding function\ncollection = client.create_collection(\n    name=\"____\",\n    ____=____(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\n# List the collections\nprint(client.____())",
-              "solutionCode": "# Create a persistant client\nclient = chromadb.PersistentClient()\n\n# Create a netflix_title collection using the OpenAI Embedding function\ncollection = client.create_collection(\n    name=\"netflix_titles\",\n    embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\n# List the collections\nprint(client.list_collections())",
-              "expectedOutput": "",
-              "hint": {
-                "en": "Create a persistent client with the PersistentClient() function.\n\nPass the OpenAIEmbeddingFunction() function to the embedding_function parameter when creating the collection.",
-                "fr": "Créez un client persistant avec la fonction PersistentClient().\n\nPassez la fonction OpenAIEmbeddingFunction() au paramètre embedding_function lors de la création de la collection."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1656,52 +1524,23 @@
             "fr": "Pour déployer des applications à base d’embeddings en production, vous aurez besoin d’une solution efficace de stockage et d’interrogation de vecteurs : place aux bases de données vectorielles ! Vous apprendrez comment ces bases permettent de faire passer à l’échelle vos applications et vous commencerez à créer et enrichir vos propres bases vectorielles avec Chroma."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_06_tp",
+              "type": "content",
+              "id": "dc_3_act_06_tp_learning_note",
               "title": {
-                "en": "Estimer les coûts d’embedding avec tiktoken",
-                "fr": "Estimer les coûts d’embedding avec tiktoken"
+                "fr": "Estimer les coûts d’embedding avec tiktoken",
+                "en": "Estimer les coûts d’embedding avec tiktoken"
               },
-              "assignment": "Maintenant que nous avons créé une base de données et une collection pour stocker les films et séries Netflix, nous pouvons commencer à générer des embeddings.\n\nAvant de traiter un jeu de données volumineux, il est important d’estimer le coût pour ne pas dépasser votre budget. Comme les modèles OpenAI sont facturés au nombre de tokens en entrée, nous allons utiliser la bibliothèque tiktoken d’OpenAI pour compter les tokens et les convertir en un coût en dollars.\n\nVous disposez de documents, une liste contenant toutes les données à convertir en embeddings. Vous allez parcourir la liste, encoder chaque document et compter le nombre total de tokens. Enfin, vous utiliserez la tarification du modèle pour convertir ce total en un coût.",
-              "instructions": "Chargez l’encodeur pour le modèle text-embedding-3-small.\n\nEncodez chaque texte dans documents, puis faites la somme pour obtenir le nombre total de tokens du jeu de données, total_tokens.\n\nAffichez le nombre total de tokens et le coût correspondant à l’aide de cost_per_1k_tokens défini pour vous.\n\n### Code de départ\n\n```python\n# Load the encoder for the OpenAI text-embedding-3-small model\nenc = tiktoken.encoding_for_model(\"____\")\n\n# Encode each text in documents and calculate the total tokens\ntotal_tokens = ____(____(____) for ____ in documents)\n\ncost_per_1k_tokens = 0.00002\n\n# Display number of tokens and cost\nprint('Total tokens:', ____)\nprint('Cost:', ____)\n```",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
+              "body": {
+                "fr": "Maintenant que nous avons créé une base de données et une collection pour stocker les films et séries Netflix, nous pouvons commencer à générer des embeddings.\n\nAvant de traiter un jeu de données volumineux, il est important d’estimer le coût pour ne pas dépasser votre budget. Comme les modèles OpenAI sont facturés au nombre de tokens en entrée, nous allons utiliser la bibliothèque tiktoken d’OpenAI pour compter les tokens et les convertir en un coût en dollars.\n\nVous disposez de documents, une liste contenant toutes les données à convertir en embeddings. Vous allez parcourir la liste, encoder chaque document et compter le nombre total de tokens. Enfin, vous utiliserez la tarification du modèle pour convertir ce total en un coût.",
+                "en": "Now that we have created a database and a collection to store Netflix movies and series, we can begin generating embeddings.\n\nBefore processing a large dataset, it is important to estimate the cost so you don't exceed your budget. Since OpenAI models are billed by the number of input tokens, we will use OpenAI's tiktoken library to count the tokens and convert them into a dollar cost.\n\nYou have documents, a list containing all the data to be converted into embeddings. You will iterate over the list, encode each document, and count the total number of tokens. Finally, you will use the model's pricing to convert this total into a cost."
               },
-              "steps": [
-                {
-                  "fr": "Relisez la consigne et identifiez le résultat attendu pour « Estimer les coûts d’embedding avec tiktoken ».",
-                  "en": "Review the instructions and identify the expected outcome for “Estimer les coûts d’embedding avec tiktoken”."
-                },
-                {
-                  "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
-                  "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
-                },
-                {
-                  "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
-                  "en": "Check your work against the stated criteria before submitting it."
-                }
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_6b3c7bda.pdf"
-                }
-              ],
-              "hint": "Pour encoder un texte, appelez la méthode .encode() sur l’encodeur en lui passant le texte à encoder.\n\nPour calculer total_tokens de manière « pythonique », encodez chaque texte dans documents, utilisez len() pour obtenir le nombre de tokens du texte, puis faites la somme du résultat.\n\nPour calculer le coût total, divisez le nombre de tokens par 1000, puis multipliez par cost_per_1k_tokens ; le résultat sera en dollars.",
-              "solution": "# Load the encoder for the OpenAI text-embedding-3-small model\nenc = tiktoken.encoding_for_model(\"text-embedding-3-small\")\n\n# Encode each text in documents and calculate the total tokens\ntotal_tokens = sum(len(enc.encode(text)) for text in documents)\n\ncost_per_1k_tokens = 0.00002\n\n# Display number of tokens and cost\nprint('Total tokens:', total_tokens)\nprint('Cost:', cost_per_1k_tokens * total_tokens/1000)",
-              "successMessage": "",
-              "xp": 100
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
+              }
             }
           ]
         },
@@ -1716,26 +1555,22 @@
             "fr": "Pour déployer des applications à base d’embeddings en production, vous aurez besoin d’une solution efficace de stockage et d’interrogation de vecteurs : place aux bases de données vectorielles ! Vous apprendrez comment ces bases permettent de faire passer à l’échelle vos applications et vous commencerez à créer et enrichir vos propres bases vectorielles avec Chroma."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_3_act_07_code",
+              "type": "content",
+              "id": "dc_3_act_07_code_learning_note",
               "title": {
-                "en": "Add data to the collection",
-                "fr": "Ajouter des données à la collection"
+                "fr": "Ajouter des données à la collection",
+                "en": "Add data to the collection"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Re-create your netflix_titles collection.\n\nAdd the documents and their IDs to the collection.\n\nDisplay the number of documents in the collection and the first ten items.",
-                "fr": "Recréez votre collection netflix_titles.\n\nAjoutez les documents et leurs identifiants à la collection.\n\nAffichez le nombre de documents dans collection et les dix premiers éléments."
+              "body": {
+                "fr": "Recréez votre collection netflix_titles.\n\nAjoutez les documents et leurs identifiants à la collection.\n\nAffichez le nombre de documents dans collection et les dix premiers éléments.",
+                "en": "Re-create your netflix_titles collection.\n\nAdd the documents and their IDs to the collection.\n\nDisplay the number of documents in the collection and the first ten items."
               },
-              "starterCode": "# Recreate the netflix_titles collection\ncollection = client.____(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\n# Add the documents and IDs to the collection\n____\n\n# Print the collection size and first ten items\nprint(f\"No. of documents: {____}\")\nprint(f\"First ten documents: {____}\")",
-              "solutionCode": "# Recreate the netflix_titles collection\ncollection = client.create_collection(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\n# Add the documents and IDs to the collection\ncollection.add(ids=ids, documents=documents)\n\n# Print the collection size and first ten items\nprint(f\"No. of documents: {collection.count()}\")\nprint(f\"First ten documents: {collection.peek()}\")",
-              "expectedOutput": "",
-              "hint": {
-                "en": "Calling the .add() method on the collection lets you specify the documents and IDs to add to the collection.\n\nThe .peek() method lets you display the first ten items in the collection.",
-                "fr": "L’appel de la méthode .add() sur la collection permet d’indiquer les documents et les identifiants à ajouter à la collection.\n\nLa méthode .peek() permet d’afficher les dix premiers éléments de la collection."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1829,26 +1664,22 @@
             "fr": "Pour déployer des applications à base d’embeddings en production, vous aurez besoin d’une solution efficace de stockage et d’interrogation de vecteurs : place aux bases de données vectorielles ! Vous apprendrez comment ces bases permettent de faire passer à l’échelle vos applications et vous commencerez à créer et enrichir vos propres bases vectorielles avec Chroma."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_3_act_09_code",
+              "type": "content",
+              "id": "dc_3_act_09_code_learning_note",
               "title": {
-                "en": "Interroger la collection Netflix",
-                "fr": "Interroger la collection Netflix"
+                "fr": "Interroger la collection Netflix",
+                "en": "Interroger la collection Netflix"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Retrieve the netflix_titles collection, specifying the OpenAI embedding function so that the query is encoded with the same function as the documents.\n\nQuery the collection with \"films about dogs\" and return three results.",
-                "fr": "Récupérez la collection netflix_titles en spécifiant la fonction d’embedding OpenAI afin que la requête soit encodée avec la même fonction que les documents.\n\nInterrogez la collection avec \"films about dogs\" et retournez trois résultats."
+              "body": {
+                "fr": "Récupérez la collection netflix_titles en spécifiant la fonction d’embedding OpenAI afin que la requête soit encodée avec la même fonction que les documents.\n\nInterrogez la collection avec \"films about dogs\" et retournez trois résultats.",
+                "en": "Retrieve the netflix_titles collection, specifying the OpenAI embedding function so that the query is encoded with the same function as the documents.\n\nQuery the collection with \"films about dogs\" and return three results."
               },
-              "starterCode": "# Retrieve the netflix_titles collection\ncollection = ____(\n  name=\"____\",\n  embedding_function=____(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\n# Query the collection for \"films about dogs\"\nresult = ____\n\nprint(result)",
-              "solutionCode": "# Retrieve the netflix_titles collection\ncollection = client.get_collection(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\n# Query the collection for \"films about dogs\"\nresult = collection.query(\n  query_texts=[\"films about dogs\"],\n  n_results=3\n)\n\nprint(result)",
-              "expectedOutput": "",
-              "hint": {
-                "en": "To query the collection, call the .query() method, specifying the query_texts and n_results arguments.",
-                "fr": "Pour interroger la collection, appelez la méthode .query() en précisant les arguments query_texts et n_results."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1864,26 +1695,22 @@
             "fr": "Pour déployer des applications à base d’embeddings en production, vous aurez besoin d’une solution efficace de stockage et d’interrogation de vecteurs : place aux bases de données vectorielles ! Vous apprendrez comment ces bases permettent de faire passer à l’échelle vos applications et vous commencerez à créer et enrichir vos propres bases vectorielles avec Chroma."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_3_act_10_code",
+              "type": "content",
+              "id": "dc_3_act_10_code_learning_note",
               "title": {
-                "en": "Mettre à jour et supprimer des éléments d’une collection",
-                "fr": "Mettre à jour et supprimer des éléments d’une collection"
+                "fr": "Mettre à jour et supprimer des éléments d’une collection",
+                "en": "Mettre à jour et supprimer des éléments d’une collection"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Extract the IDs and documents from new_data, then use a single method to update them in the netflix_titles collection if they already exist, and add them if they do not.\n\nAfter adding/updating the items, delete the item whose ID is 's95'.",
-                "fr": "Extrayez les IDs et les documents depuis new_data, puis utilisez une seule méthode pour les mettre à jour dans la collection netflix_titles s’ils existent déjà, et les ajouter s’ils n’existent pas.\n\nAprès avoir ajouté/mis à jour les éléments, supprimez l’élément dont l’ID est 's95'."
+              "body": {
+                "fr": "Extrayez les IDs et les documents depuis new_data, puis utilisez une seule méthode pour les mettre à jour dans la collection netflix_titles s’ils existent déjà, et les ajouter s’ils n’existent pas.\n\nAprès avoir ajouté/mis à jour les éléments, supprimez l’élément dont l’ID est 's95'.",
+                "en": "Extract the IDs and documents from new_data, then use a single method to update them in the netflix_titles collection if they already exist, and add them if they do not.\n\nAfter adding/updating the items, delete the item whose ID is 's95'."
               },
-              "starterCode": "collection = client.get_collection(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\n# Update or add the new documents\n____(\n    ids=____,\n    documents=____\n)\n\n# Delete the item with ID \"s95\"\n____\n\nresult = collection.query(\n    query_texts=[\"films about dogs\"],\n    n_results=3\n)\nprint(result)",
-              "solutionCode": "collection = client.get_collection(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\n# Update or add the new documents\ncollection.upsert(\n    ids=[doc['id'] for doc in new_data],\n    documents=[doc['document'] for doc in new_data]\n)\n\n# Delete the item with ID \"s95\" and re-run the query\ncollection.delete(ids=[\"s95\"])\n\nresult = collection.query(\n    query_texts=[\"films about dogs\"],\n    n_results=3\n)\nprint(result)",
-              "expectedOutput": "",
-              "hint": {
-                "en": "The .upsert() method updates items if the ID is already present in the collection, or adds a new item if it is not.\n\nThe .delete() method is used to delete items from a collection.",
-                "fr": "La méthode .upsert() permet de mettre à jour des éléments si l’ID est déjà présent dans la collection, ou d’ajouter un nouvel élément s’il ne l’est pas.\n\nLa méthode .delete() sert à supprimer des éléments d’une collection."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -1969,26 +1796,22 @@
             "fr": "Pour déployer des applications à base d’embeddings en production, vous aurez besoin d’une solution efficace de stockage et d’interrogation de vecteurs : place aux bases de données vectorielles ! Vous apprendrez comment ces bases permettent de faire passer à l’échelle vos applications et vous commencerez à créer et enrichir vos propres bases vectorielles avec Chroma."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_3_act_12_code",
+              "type": "content",
+              "id": "dc_3_act_12_code_learning_note",
               "title": {
-                "en": "Interroger avec plusieurs textes",
-                "fr": "Interroger avec plusieurs textes"
+                "fr": "Interroger avec plusieurs textes",
+                "en": "Interroger avec plusieurs textes"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Retrieve the documents from the collection for the IDs in reference_ids.\n\nQuery the collection using reference_texts to return three results for each query.",
-                "fr": "Récupérez les documents de la collection pour les IDs dans reference_ids.\n\nInterrogez la collection en utilisant reference_texts pour retourner trois résultats pour chaque requête."
+              "body": {
+                "fr": "Récupérez les documents de la collection pour les IDs dans reference_ids.\n\nInterrogez la collection en utilisant reference_texts pour retourner trois résultats pour chaque requête.",
+                "en": "Retrieve the documents from the collection for the IDs in reference_ids.\n\nQuery the collection using reference_texts to return three results for each query."
               },
-              "starterCode": "collection = client.get_collection(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\nreference_ids = ['s999', 's1000']\n\n# Retrieve the documents for the reference_ids\nreference_texts = ____\n\n# Query using reference_texts\nresult = ____\n\nprint(result['documents'])",
-              "solutionCode": "collection = client.get_collection(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\nreference_ids = ['s999', 's1000']\n\n# Retrieve the documents for the reference_ids\nreference_texts = collection.get(ids=reference_ids)['documents']\n\n# Query using reference_texts\nresult = collection.query(\n  query_texts=reference_texts,\n  n_results=3\n)\n\nprint(result['documents'])",
-              "expectedOutput": "",
-              "hint": {
-                "en": "To retrieve items with specific IDs from the collection, use the .get() method and select the documents from the result.\n\nThe query_texts argument of the .query() method expects a list of texts.",
-                "fr": "Pour récupérer des éléments avec des IDs particuliers depuis la collection, utilisez la méthode .get() et sélectionnez les documents dans le résultat.\n\nL’argument query_texts de la méthode .query() attend une liste de textes."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]
@@ -2004,26 +1827,22 @@
             "fr": "Pour déployer des applications à base d’embeddings en production, vous aurez besoin d’une solution efficace de stockage et d’interrogation de vecteurs : place aux bases de données vectorielles ! Vous apprendrez comment ces bases permettent de faire passer à l’échelle vos applications et vous commencerez à créer et enrichir vos propres bases vectorielles avec Chroma."
           },
           "type": "exercise",
-          "requiredBeforeAdvance": true,
+          "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "type": "code_repl",
-              "id": "dc_3_act_13_code",
+              "type": "content",
+              "id": "dc_3_act_13_code_learning_note",
               "title": {
-                "en": "Filtrer à l’aide des métadonnées",
-                "fr": "Filtrer à l’aide des métadonnées"
+                "fr": "Filtrer à l’aide des métadonnées",
+                "en": "Filtrer à l’aide des métadonnées"
               },
-              "language": "python",
-              "instructions": {
-                "en": "Query two results from the collection using reference_texts.\n\nFilter the results for titles with a 'G' classification and released before 2019.",
-                "fr": "Interrogez deux résultats depuis la collection en utilisant reference_texts.\n\nFiltrez les résultats pour des titres avec une classification 'G' et sortis avant 2019."
+              "body": {
+                "fr": "Interrogez deux résultats depuis la collection en utilisant reference_texts.\n\nFiltrez les résultats pour des titres avec une classification 'G' et sortis avant 2019.",
+                "en": "Query two results from the collection using reference_texts.\n\nFilter the results for titles with a 'G' classification and released before 2019."
               },
-              "starterCode": "collection = client.get_collection(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\nreference_texts = [\"children's story about a car\", \"lions\"]\n\n# Query two results using reference_texts\nresult = collection.query(\n  ____,\n  ____,\n  # Filter for titles with a G rating released before 2019\n  ____={\n    ____: [\n        {\"____\": \n        \t{____}\n        },\n        {\"____\": \n         \t{____}\n        }\n    ]\n  }\n)\n\nprint(result['documents'])",
-              "solutionCode": "collection = client.get_collection(\n  name=\"netflix_titles\",\n  embedding_function=OpenAIEmbeddingFunction(model_name=\"text-embedding-3-small\", api_key=\"<OPENAI_API_TOKEN>\")\n)\n\nreference_texts = [\"children's story about a car\", \"lions\"]\n\n# Query two results using reference_texts\nresult = collection.query(\n  query_texts=reference_texts,\n  n_results=2,\n  # Filter for titles with a G rating released before 2019\n  where={\n    \"$and\": [\n        {\"rating\": \n        \t{\"$eq\": \"G\"}\n        },\n        {\"release_year\": \n         \t{\"$lt\": 2019}\n        }\n    ]\n  }\n)\n\nprint(result['documents'])",
-              "expectedOutput": "",
-              "hint": {
-                "en": "The where argument of .query() lets you filter query results according to one or more conditions.\n\nEach condition must be a dictionary with the following structure: {'metadata_field': {'': }}.\n\nTo filter results that meet multiple conditions, use the $and operator and place the different conditions in a list.",
-                "fr": "L’argument where de .query() permet de filtrer les résultats de requête selon une ou plusieurs conditions.\n\nChaque condition doit être un dictionnaire avec la structure suivante : {'metadata_field': {'': }}.\n\nPour filtrer des résultats qui satisfont plusieurs conditions, utilisez l’opérateur $and et placez les différentes conditions dans une liste."
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "activity_removed_unverifiable_or_unprovided"
               }
             }
           ]

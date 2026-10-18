@@ -1,0 +1,908 @@
+[
+  {
+    "severity": "P1",
+    "title": "PAF-018-LOCK-03-10",
+    "evidence": "Le bloc lessons[2].chapters[9] / dc_3_act_10_video est terminal, audio et son id compte 17 caractères. Le contrôle de fin de leçon contourne encore le helper: LessonViewer.tsx:1476-1485 ne garde block.id que si sa longueur est comprise entre 8 et 15, donc produit une liste vide et lastAllVideosWatched=true. Il n’emploie pas getChapterMediaCompletionKeys contrairement au contrôle Suivant.",
+    "course_id": "ai_for_finance__01",
+    "chapter_id": "dc_ch03_act10",
+    "reason_not_rapidly_remediable": "Le constat porte sur le rendu ou le contrôle de progression dans le code (transmission/affichage du feedback ou gate audio), pas sur un actif pédagogique manquant ; le bundle ne fournit aucun correctif exécutable ni actif de remplacement. Une suppression de contenu/activité ne corrigerait pas fiablement le comportement.",
+    "formation_id": "datacamp_ai_for_finance",
+    "plan": "018-datacamp_ai_for_finance.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Six activités LocalEnvironmentExercise annoncées mais absentes",
+    "evidence": "datacampImport.expected déclare 11 activités, dont 6 LocalEnvironmentExercise, tandis que les cinq chapitres réels ne contiennent que des blocs VideoExercise et aucun bloc pratique.",
+    "course_id": "building_ai_agents_with_haystack__01",
+    "chapter_id": "dc_ch01_act01",
+    "reason_not_rapidly_remediable": "Les actifs déclarés ne contiennent ni énoncés, ni environnement de départ, ni critères, ni corrections permettant de reconstituer fidèlement ces activités ; elles ne doivent pas être inventées. Les promesses textuelles directement repérables sont neutralisées par les actions ci-dessus.",
+    "formation_id": "datacamp_building_ai_agents_with_haystack",
+    "plan": "024-datacamp_building_ai_agents_with_haystack.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Parcours pratique promis mais non présent",
+    "evidence": "P023-CURRICULUM-01: le cours publié ne contient que dc_ch01_act01 et dc_ch02_act04, avec exerciseCount:0 et aucun bloc interactif; les descriptions et compteurs annoncent pourtant agent, tâches, outils, équipes, mémoire, routage, flux et 7 activités dont 5 TP guidés.",
+    "course_id": "building_ai_agents_with_crewai__01",
+    "chapter_id": "dc_ch01_act01",
+    "reason_not_rapidly_remediable": "Les énoncés, ressources, réponses attendues et rubriques des cinq TP manquants ne sont pas déclarés dans le bundle. Les inventer ou réimporter une séquence complète dépasserait une correction rapide fondée uniquement sur le texte existant; seule la promesse textuelle obsolète peut être retirée.",
+    "formation_id": "datacamp_building_ai_agents_with_crewai",
+    "plan": "023-datacamp_building_ai_agents_with_crewai.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Verrou terminal de la vidéo obligatoire de la première leçon contournable",
+    "evidence": "P023-LOCK-01: dc_ch01_act01.requiredBeforeAdvance vaut true et le média réel dc_1_act_01_video possède un identifiant de 17 caractères, mais le gate terminal de LessonViewer.tsx filtre les identifiants à 8–15 caractères; la liste des médias requis devient vide et la leçon peut être finalisée sans complétion explicite.",
+    "course_id": "building_ai_agents_with_crewai__01",
+    "chapter_id": "dc_ch01_act01",
+    "reason_not_rapidly_remediable": "Le défaut est dans la logique applicative du gate terminal, pas dans un texte ou un actif de cours. Le bundle ne permet pas de corriger ce code via une action de contenu sans inventer un mécanisme de verrouillage.",
+    "formation_id": "datacamp_building_ai_agents_with_crewai",
+    "plan": "023-datacamp_building_ai_agents_with_crewai.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Verrou terminal de la vidéo obligatoire de la seconde leçon contournable",
+    "evidence": "P023-LOCK-02: dc_ch02_act04.requiredBeforeAdvance vaut true et le média réel dc_2_act_04_video possède un identifiant de 17 caractères; le même filtre 8–15 de LessonViewer.tsx l’exclut du calcul final, permettant de terminer la leçon sans regarder ou marquer le média.",
+    "course_id": "building_ai_agents_with_crewai__01",
+    "chapter_id": "dc_ch02_act04",
+    "reason_not_rapidly_remediable": "Le problème provient du code de navigation/progression et non d’une activité ou d’un texte du cours. Aucun actif déclaré ne fournit une correction de code fiable; supprimer la vidéo valide serait contraire à la règle.",
+    "formation_id": "datacamp_building_ai_agents_with_crewai",
+    "plan": "023-datacamp_building_ai_agents_with_crewai.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__02 → lessons[0] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__02",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__02 → lessons[1] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__02",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__02 → lessons[2] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__02",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__02 → lessons[3] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__02",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__03 → lessons[0] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__03",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__03 → lessons[1] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__03",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__03 → lessons[2] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__03",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__03 → lessons[3] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__03",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__04 → lessons[0] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__04",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__04 → lessons[1] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__04",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__04 → lessons[2] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__04",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique absent sans retrait documenté ni équivalence",
+    "evidence": "ai_governance_compliance_responsible_ai_leader__04 → lessons[3] : chapter_04 initial absent; la leçon courante contient chapter_01, chapter_02, chapter_03, chapter_05, chapter_06, avec checkpoint_count=0 et exercises=[]. Le manifeste p0-p2-remediation ne référence pas ce course_id.",
+    "course_id": "ai_governance_compliance_responsible_ai_leader__04",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Le bloc réel a disparu du bundle courant : il est impossible de le supprimer ou de corriger son verrou sans inventer un identifiant, une activité équivalente ou un contenu de remplacement. Une décision fiable exige une source de cours ou un retrait documenté absent du bundle.",
+    "formation_id": "ai_governance_compliance_responsible_ai_leader",
+    "plan": "004-ai_governance_compliance_responsible_ai_leader.json"
+  },
+  {
+    "severity": "P1",
+    "title": "P1-ai_data_engineering_rag_practitioner__02-l1-c4-checkpoint-dupliqué",
+    "evidence": "client/public/data/courses/ai_data_engineering_rag_practitioner__02.json → lessons[0].chapters[3] conserve `block.type=\"checkpoint\"` avec 3 questions ET trois `blocks` `single_choice_exercise` IDs ['checkpoint_q0', 'checkpoint_q1', 'checkpoint_q2']. shared/courseBlockNormalization.ts:13-21 régénère les mêmes IDs depuis le bloc historique et :36 les concatène aux blocs existants; le rendu `single_choice_exercise` de LessonViewer.tsx:970-998 parcourt tous les blocs. Le chapitre normalisé contient donc 6 QCM (3 IDs répétés), et non 3.",
+    "course_id": "ai_data_engineering_rag_practitioner__02",
+    "chapter_id": "lesson_01_chapter_04",
+    "reason_not_rapidly_remediable": "Le doublon d’activité est traité par suppression des trois blocs single_choice_exercise réels; le checkpoint historique reste conservé.",
+    "formation_id": "ai_data_engineering_rag_practitioner",
+    "plan": "002-ai_data_engineering_rag_practitioner.json"
+  },
+  {
+    "severity": "P1",
+    "title": "P1-ai_data_engineering_rag_practitioner__02-l2-c4-checkpoint-dupliqué",
+    "evidence": "client/public/data/courses/ai_data_engineering_rag_practitioner__02.json → lessons[1].chapters[3] conserve `block.type=\"checkpoint\"` avec 3 questions ET trois `blocks` `single_choice_exercise` IDs ['checkpoint_q0', 'checkpoint_q1', 'checkpoint_q2']. shared/courseBlockNormalization.ts:13-21 régénère les mêmes IDs depuis le bloc historique et :36 les concatène aux blocs existants; le rendu `single_choice_exercise` de LessonViewer.tsx:970-998 parcourt tous les blocs. Le chapitre normalisé contient donc 6 QCM (3 IDs répétés), et non 3.",
+    "course_id": "ai_data_engineering_rag_practitioner__02",
+    "chapter_id": "lesson_02_chapter_04",
+    "reason_not_rapidly_remediable": "Le doublon d’activité est traité par suppression des trois blocs single_choice_exercise réels; le checkpoint historique reste conservé.",
+    "formation_id": "ai_data_engineering_rag_practitioner",
+    "plan": "002-ai_data_engineering_rag_practitioner.json"
+  },
+  {
+    "severity": "P1",
+    "title": "P1-ai_data_engineering_rag_practitioner__02-l3-c4-checkpoint-dupliqué",
+    "evidence": "client/public/data/courses/ai_data_engineering_rag_practitioner__02.json → lessons[2].chapters[3] conserve `block.type=\"checkpoint\"` avec 3 questions ET trois `blocks` `single_choice_exercise` IDs ['checkpoint_q0', 'checkpoint_q1', 'checkpoint_q2']. shared/courseBlockNormalization.ts:13-21 régénère les mêmes IDs depuis le bloc historique et :36 les concatène aux blocs existants; le rendu `single_choice_exercise` de LessonViewer.tsx:970-998 parcourt tous les blocs. Le chapitre normalisé contient donc 6 QCM (3 IDs répétés), et non 3.",
+    "course_id": "ai_data_engineering_rag_practitioner__02",
+    "chapter_id": "lesson_03_chapter_04",
+    "reason_not_rapidly_remediable": "Le doublon d’activité est traité par suppression des trois blocs single_choice_exercise réels; le checkpoint historique reste conservé.",
+    "formation_id": "ai_data_engineering_rag_practitioner",
+    "plan": "002-ai_data_engineering_rag_practitioner.json"
+  },
+  {
+    "severity": "P1",
+    "title": "P1-ai_data_engineering_rag_practitioner__02-l4-c4-checkpoint-dupliqué",
+    "evidence": "client/public/data/courses/ai_data_engineering_rag_practitioner__02.json → lessons[3].chapters[3] conserve `block.type=\"checkpoint\"` avec 3 questions ET trois `blocks` `single_choice_exercise` IDs ['checkpoint_q0', 'checkpoint_q1', 'checkpoint_q2']. shared/courseBlockNormalization.ts:13-21 régénère les mêmes IDs depuis le bloc historique et :36 les concatène aux blocs existants; le rendu `single_choice_exercise` de LessonViewer.tsx:970-998 parcourt tous les blocs. Le chapitre normalisé contient donc 6 QCM (3 IDs répétés), et non 3.",
+    "course_id": "ai_data_engineering_rag_practitioner__02",
+    "chapter_id": "lesson_04_chapter_04",
+    "reason_not_rapidly_remediable": "Le doublon d’activité est traité par suppression des trois blocs single_choice_exercise réels; le checkpoint historique reste conservé.",
+    "formation_id": "ai_data_engineering_rag_practitioner",
+    "plan": "002-ai_data_engineering_rag_practitioner.json"
+  },
+  {
+    "severity": "P1",
+    "title": "P1-ai_data_engineering_rag_practitioner__04-l1-c4-checkpoint-dupliqué",
+    "evidence": "client/public/data/courses/ai_data_engineering_rag_practitioner__04.json → lessons[0].chapters[3] conserve `block.type=\"checkpoint\"` avec 3 questions ET trois `blocks` `single_choice_exercise` IDs ['checkpoint_q0', 'checkpoint_q1', 'checkpoint_q2']. shared/courseBlockNormalization.ts:13-21 régénère les mêmes IDs depuis le bloc historique et :36 les concatène aux blocs existants; le rendu `single_choice_exercise` de LessonViewer.tsx:970-998 parcourt tous les blocs. Le chapitre normalisé contient donc 6 QCM (3 IDs répétés), et non 3.",
+    "course_id": "ai_data_engineering_rag_practitioner__04",
+    "chapter_id": "lesson_01_chapter_04",
+    "reason_not_rapidly_remediable": "Le doublon d’activité est traité par suppression des trois blocs single_choice_exercise réels; le checkpoint historique reste conservé.",
+    "formation_id": "ai_data_engineering_rag_practitioner",
+    "plan": "002-ai_data_engineering_rag_practitioner.json"
+  },
+  {
+    "severity": "P1",
+    "title": "P1-ai_data_engineering_rag_practitioner__04-l2-c4-checkpoint-dupliqué",
+    "evidence": "client/public/data/courses/ai_data_engineering_rag_practitioner__04.json → lessons[1].chapters[3] conserve `block.type=\"checkpoint\"` avec 3 questions ET trois `blocks` `single_choice_exercise` IDs ['checkpoint_q0', 'checkpoint_q1', 'checkpoint_q2']. shared/courseBlockNormalization.ts:13-21 régénère les mêmes IDs depuis le bloc historique et :36 les concatène aux blocs existants; le rendu `single_choice_exercise` de LessonViewer.tsx:970-998 parcourt tous les blocs. Le chapitre normalisé contient donc 6 QCM (3 IDs répétés), et non 3.",
+    "course_id": "ai_data_engineering_rag_practitioner__04",
+    "chapter_id": "lesson_02_chapter_04",
+    "reason_not_rapidly_remediable": "Le doublon d’activité est traité par suppression des trois blocs single_choice_exercise réels; le checkpoint historique reste conservé.",
+    "formation_id": "ai_data_engineering_rag_practitioner",
+    "plan": "002-ai_data_engineering_rag_practitioner.json"
+  },
+  {
+    "severity": "P1",
+    "title": "P1-ai_data_engineering_rag_practitioner__04-l3-c4-checkpoint-dupliqué",
+    "evidence": "client/public/data/courses/ai_data_engineering_rag_practitioner__04.json → lessons[2].chapters[3] conserve `block.type=\"checkpoint\"` avec 3 questions ET trois `blocks` `single_choice_exercise` IDs ['checkpoint_q0', 'checkpoint_q1', 'checkpoint_q2']. shared/courseBlockNormalization.ts:13-21 régénère les mêmes IDs depuis le bloc historique et :36 les concatène aux blocs existants; le rendu `single_choice_exercise` de LessonViewer.tsx:970-998 parcourt tous les blocs. Le chapitre normalisé contient donc 6 QCM (3 IDs répétés), et non 3.",
+    "course_id": "ai_data_engineering_rag_practitioner__04",
+    "chapter_id": "lesson_03_chapter_04",
+    "reason_not_rapidly_remediable": "Le doublon d’activité est traité par suppression des trois blocs single_choice_exercise réels; le checkpoint historique reste conservé.",
+    "formation_id": "ai_data_engineering_rag_practitioner",
+    "plan": "002-ai_data_engineering_rag_practitioner.json"
+  },
+  {
+    "severity": "P1",
+    "title": "P1-ai_data_engineering_rag_practitioner__04-l4-c4-checkpoint-dupliqué",
+    "evidence": "client/public/data/courses/ai_data_engineering_rag_practitioner__04.json → lessons[3].chapters[3] conserve `block.type=\"checkpoint\"` avec 3 questions ET trois `blocks` `single_choice_exercise` IDs ['checkpoint_q0', 'checkpoint_q1', 'checkpoint_q2']. shared/courseBlockNormalization.ts:13-21 régénère les mêmes IDs depuis le bloc historique et :36 les concatène aux blocs existants; le rendu `single_choice_exercise` de LessonViewer.tsx:970-998 parcourt tous les blocs. Le chapitre normalisé contient donc 6 QCM (3 IDs répétés), et non 3.",
+    "course_id": "ai_data_engineering_rag_practitioner__04",
+    "chapter_id": "lesson_04_chapter_04",
+    "reason_not_rapidly_remediable": "Le doublon d’activité est traité par suppression des trois blocs single_choice_exercise réels; le checkpoint historique reste conservé.",
+    "formation_id": "ai_data_engineering_rag_practitioner",
+    "plan": "002-ai_data_engineering_rag_practitioner.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Le média audio terminal dc_3_act_10_video reste non verrouillé",
+    "evidence": "Le recheck courant PAAC-015-LOCK-L3-C9 est still_open : le bloc réel dc_3_act_10_video conserve audioUrl, requiredBeforeAdvance=true et un id de 17 caractères ; dans le chemin terminal de LessonViewer.tsx:1476-1485, la clé inline n’accepte que les identifiants de 8 à 15 caractères, donc lastChapterVideoKeys peut rester vide et lastIsGated faux.",
+    "course_id": "ai_assisted_coding_for_developers__01",
+    "chapter_id": "dc_ch03_act10",
+    "reason_not_rapidly_remediable": "Ce constat concerne le code de gate du chemin terminal, pas une activité dont le contenu peut être retiré ou converti avec les seuls actifs déclarés. Le bundle ne fournit aucune correction de code autorisée dans ce plan et le média audio valide ne doit pas être supprimé.",
+    "formation_id": "datacamp_ai_assisted_coding_for_developers",
+    "plan": "015-datacamp_ai_assisted_coding_for_developers.json"
+  },
+  {
+    "severity": "P1",
+    "title": "La vidéo terminale ne verrouille pas la complétion de la leçon",
+    "evidence": "client/public/data/courses/ai_agents_with_hugging_face_smolagents__01.json /lessons/2/chapters/9/blocks/0 : id=dc_3_act_10_video, type video, requiredBeforeAdvance=true ; LessonViewer.tsx:1476-1485 filtre encore les identifiants de longueur 8..15 et construit une liste vide pour cet identifiant de 17 caractères.",
+    "course_id": "ai_agents_with_hugging_face_smolagents__01",
+    "chapter_id": "dc_ch03_act10",
+    "reason_not_rapidly_remediable": "Le défaut porte sur la logique de rendu/progression, pas sur un texte ou une activité supprimable ; aucune action de correction de code n’est autorisée par ce plan et la vidéo est un contenu valide à conserver.",
+    "formation_id": "datacamp_ai_agents_with_hugging_face_smolagents",
+    "plan": "014-datacamp_ai_agents_with_hugging_face_smolagents.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique supprimé sans retrait documenté ni activité équivalente",
+    "evidence": "ai_product_management_human_centered_ux_specialist__01.lessons[0] ne contient plus chapter_04 ni bloc checkpoint dans l’état courant; current_recheck indique néanmoins aucune trace de retrait/équivalence dans le manifeste p0-p2.",
+    "course_id": "ai_product_management_human_centered_ux_specialist__01",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Il n’existe aucun bloc réel actuel à supprimer ou à convertir, et le bundle ne fournit ni activité équivalente ni trace de retrait permettant de clore fiablement le constat sans inventer un contenu.",
+    "formation_id": "ai_product_management_human_centered_ux_specialist",
+    "plan": "005-ai_product_management_human_centered_ux_specialist.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique supprimé sans retrait documenté ni activité équivalente",
+    "evidence": "ai_product_management_human_centered_ux_specialist__01.lessons[1] ne contient plus chapter_04 ni bloc checkpoint dans l’état courant; current_recheck indique néanmoins aucune trace de retrait/équivalence dans le manifeste p0-p2.",
+    "course_id": "ai_product_management_human_centered_ux_specialist__01",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Il n’existe aucun bloc réel actuel à supprimer ou à convertir, et le bundle ne fournit ni activité équivalente ni trace de retrait permettant de clore fiablement le constat sans inventer un contenu.",
+    "formation_id": "ai_product_management_human_centered_ux_specialist",
+    "plan": "005-ai_product_management_human_centered_ux_specialist.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique supprimé sans retrait documenté ni activité équivalente",
+    "evidence": "ai_product_management_human_centered_ux_specialist__01.lessons[2] ne contient plus chapter_04 ni bloc checkpoint dans l’état courant; current_recheck indique néanmoins aucune trace de retrait/équivalence dans le manifeste p0-p2.",
+    "course_id": "ai_product_management_human_centered_ux_specialist__01",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Il n’existe aucun bloc réel actuel à supprimer ou à convertir, et le bundle ne fournit ni activité équivalente ni trace de retrait permettant de clore fiablement le constat sans inventer un contenu.",
+    "formation_id": "ai_product_management_human_centered_ux_specialist",
+    "plan": "005-ai_product_management_human_centered_ux_specialist.json"
+  },
+  {
+    "severity": "P0",
+    "title": "Checkpoint historique supprimé sans retrait documenté ni activité équivalente",
+    "evidence": "ai_product_management_human_centered_ux_specialist__01.lessons[3] ne contient plus chapter_04 ni bloc checkpoint dans l’état courant; current_recheck indique néanmoins aucune trace de retrait/équivalence dans le manifeste p0-p2.",
+    "course_id": "ai_product_management_human_centered_ux_specialist__01",
+    "chapter_id": "chapter_04",
+    "reason_not_rapidly_remediable": "Il n’existe aucun bloc réel actuel à supprimer ou à convertir, et le bundle ne fournit ni activité équivalente ni trace de retrait permettant de clore fiablement le constat sans inventer un contenu.",
+    "formation_id": "ai_product_management_human_centered_ux_specialist",
+    "plan": "005-ai_product_management_human_centered_ux_specialist.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Verrouillage vidéo incohérent avec les clés de progression",
+    "evidence": "Les chapitres dc_ch01_act01, dc_ch02_act01, dc_ch03_act01 et dc_ch03_act04 ont requiredBeforeAdvance=true; les blocs vidéo réels dc_1_act_01_video, dc_2_act_01_video, dc_3_act_01_video et dc_3_act_04_video ont des ids de 17 caractères. Le rapport vérifie que LessonViewer filtre les ids à 8–15 caractères et peut donc autoriser la navigation avec une liste de vidéos vide.",
+    "course_id": "end_to_end_rag_with_weaviate__01",
+    "reason_not_rapidly_remediable": "Il s’agit d’un défaut de code de navigation, pas d’une activité ou d’un texte corrigeable avec les seuls actifs déclarés; aucun changement fiable ne peut être proposé ici sans modifier et tester l’application.",
+    "formation_id": "datacamp_end_to_end_rag_with_weaviate",
+    "plan": "034-datacamp_end_to_end_rag_with_weaviate.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Promesse de construction manuelle sans activité rendue au chapitre 1",
+    "evidence": "La description de dc_ch01_act01 promet de construire manuellement un workflow RAG de bout en bout, tandis que ses blocs réels sont content, video et download. Le bundle indique que les quatre activités attendues dc_ch01_act02 à dc_ch01_act05 sont absentes et qu’aucune action, production, validation ou feedback n’est rendu.",
+    "course_id": "end_to_end_rag_with_weaviate__01",
+    "chapter_id": "dc_ch01_act01",
+    "reason_not_rapidly_remediable": "Les consignes, données/code de départ, critères, réponses et feedback des activités manquantes ne sont pas déclarés; les inventer violerait la règle. La promesse devrait être réécrite en présentation guidée, mais aucune action de modification de champ de description n’est autorisée par ce plan sans contenu source supplémentaire.",
+    "formation_id": "datacamp_end_to_end_rag_with_weaviate",
+    "plan": "034-datacamp_end_to_end_rag_with_weaviate.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Objectifs opérationnels sans activités rendues au chapitre 2",
+    "evidence": "La description de dc_ch02_act01 annonce génération d’embeddings, stockage, retrieval et génération avec Weaviate. Le chapitre réel contient seulement dc_2_act_01_video et dc_ch02_slides; les quatre pratiques attendues dc_ch02_act02 à dc_ch02_act05 sont absentes, sans résultat ni feedback.",
+    "course_id": "end_to_end_rag_with_weaviate__01",
+    "chapter_id": "dc_ch02_act01",
+    "reason_not_rapidly_remediable": "Aucun fichier, environnement, énoncé, critère ou correction des quatre activités n’est déclaré. Les restaurer serait une invention; la promesse doit être réduite à une démonstration, mais ne peut pas être corrigée de façon fiable par les actifs actuels seuls.",
+    "formation_id": "datacamp_end_to_end_rag_with_weaviate",
+    "plan": "034-datacamp_end_to_end_rag_with_weaviate.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Promesse de RAG multimodal sans activités rendues au chapitre 3",
+    "evidence": "La description de dc_ch03_act01 annonce ColPali et des réponses multimodales. Le chapitre réel ne rend que dc_3_act_01_video et dc_ch03_slides; les activités dc_ch03_act02 et dc_ch03_act03 sont absentes, sans action, résultat attendu ni feedback.",
+    "course_id": "end_to_end_rag_with_weaviate__01",
+    "chapter_id": "dc_ch03_act01",
+    "reason_not_rapidly_remediable": "Les données, prérequis, environnement, critères et corrections des pratiques multimodales ne sont pas déclarés. Il faut soit des sources autorisées supplémentaires, soit une réécriture de l’objectif en présentation; aucune activité ne peut être inventée ni restaurée fiablement ici.",
+    "formation_id": "datacamp_end_to_end_rag_with_weaviate",
+    "plan": "034-datacamp_end_to_end_rag_with_weaviate.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Localisation française absente des vidéos d’introduction et de démonstration",
+    "evidence": "Les blocs vidéo réels dc_1_act_01_video, dc_1_act_02_video, dc_1_act_03_video, dc_1_act_04_video et dc_1_act_05_video n’ont que subtitleUrlEn/transcription anglaise et leurs titres fr sont identiques à l’anglais.",
+    "course_id": "gemini_in_google_docs__01",
+    "chapter_id": "dc_ch01_act01 à dc_ch01_act05",
+    "reason_not_rapidly_remediable": "Une correction fiable exige une traduction/révision française de cinq vidéos, transcriptions et sous-titres ; aucun actif français déclaré ne permet de la produire sans invention.",
+    "formation_id": "datacamp_gemini_in_google_docs",
+    "plan": "036-datacamp_gemini_in_google_docs.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Verrouillage vidéo contournable pour les cinq chapitres d’enseignement",
+    "evidence": "Les ids réels dc_1_act_01_video à dc_1_act_05_video ont 17 caractères, sont exclus par le filtre de longueur de chapterVideoKeys ; aucune banque lessonQuizzes.json n’est configurée et ChapterQuiz auto-valide.",
+    "course_id": "gemini_in_google_docs__01",
+    "chapter_id": "dc_ch01_act01 à dc_ch01_act05",
+    "reason_not_rapidly_remediable": "La correction nécessite une modification et un test du code de verrouillage de LessonViewer/ChapterQuiz, non une suppression ou normalisation de contenu autorisée par ce plan.",
+    "formation_id": "datacamp_gemini_in_google_docs",
+    "plan": "036-datacamp_gemini_in_google_docs.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Réponses du QCM 1 partiellement non localisées",
+    "evidence": "Bloc réel dc_1_act_07_qcm : les options a, c et d ont text.fr identique à l’anglais, alors que question, indice et explication sont français.",
+    "course_id": "gemini_in_google_docs__01",
+    "chapter_id": "dc_ch01_act07",
+    "reason_not_rapidly_remediable": "Le bundle ne contient pas de formulations françaises déclarées pour ces trois options ; en inventer les traductions violerait la règle de ne pas inventer de correction.",
+    "formation_id": "datacamp_gemini_in_google_docs",
+    "plan": "036-datacamp_gemini_in_google_docs.json"
+  },
+  {
+    "severity": "P1",
+    "title": "QCM 2 majoritairement en anglais dans le parcours français",
+    "evidence": "Bloc réel dc_1_act_08_qcm : question, options, explication et titre de chapitre sont anglais ; seul l’indice est français.",
+    "course_id": "gemini_in_google_docs__01",
+    "chapter_id": "dc_ch01_act08",
+    "reason_not_rapidly_remediable": "Une localisation fiable requiert de nouveaux textes français absents des actifs déclarés ; aucune suppression de référence obsolète ou promesse injustifiée ne corrige ce constat.",
+    "formation_id": "datacamp_gemini_in_google_docs",
+    "plan": "036-datacamp_gemini_in_google_docs.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Options et feedback du QCM 3 non localisés",
+    "evidence": "Bloc réel dc_1_act_09_qcm : les quatre options et l’explication fr sont identiques à l’anglais, malgré une question et un indice français.",
+    "course_id": "gemini_in_google_docs__01",
+    "chapter_id": "dc_ch01_act09",
+    "reason_not_rapidly_remediable": "Le bundle ne déclare aucune version française de ces options et du feedback ; produire ces textes serait une invention.",
+    "formation_id": "datacamp_gemini_in_google_docs",
+    "plan": "036-datacamp_gemini_in_google_docs.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Les 23 activités attendues ne sont pas livrées dans le cours courant",
+    "evidence": "datacampImport.expected.activities_expected_from_outline=23, mais exerciseCount=0 et totalActivities=8; les 11 blocs réels sont uniquement 8 vidéos et 3 téléchargements. Aucun bloc exercise, cloud_exercise, QCM, activité interactive, consigne, ressource d’exercice, solution, critère ou feedback n’est présent. La progression valide le visionnage, pas la pratique annoncée.",
+    "course_id": "building_marketing_workflows_with_n8n__01",
+    "chapter_id": "dc_ch01_act02",
+    "reason_not_rapidly_remediable": "Les seuls actifs déclarés ne contiennent ni les 23 énoncés, ni environnement de départ, ni datasets/configurations, ni réponses, critères ou corrections permettant de reconstituer fidèlement ces activités. Les vidéos et téléchargements valides sont conservés; la référence textuelle identifiable est neutralisée, mais l’écart structurel et le champ d’attendu restent non corrigeables sans source d’activité supplémentaire.",
+    "formation_id": "datacamp_building_marketing_workflows_with_n8n",
+    "plan": "025-datacamp_building_marketing_workflows_with_n8n.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Vidéo de première conversation sans alternative française",
+    "evidence": "dc_ch01_act03 / dc_1_act_03_video déclare subtitleUrlEn et une transcription anglaise, sans subtitleUrlFr ni alternative textuelle française.",
+    "course_id": "claude_101__01",
+    "chapter_id": "dc_ch01_act03",
+    "reason_not_rapidly_remediable": "Aucun sous-titre, transcription ou résumé français n’est déclaré dans le bundle ; inventer ou traduire un asset dépasserait les seuls actifs existants.",
+    "formation_id": "datacamp_claude_101",
+    "plan": "027-datacamp_claude_101.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Vidéo Projects sans alternative française",
+    "evidence": "dc_ch02_act01 / dc_2_act_01_video déclare subtitleUrlEn et une transcription anglaise, sans subtitleUrlFr, transcription française ni alternativeTextFr.",
+    "course_id": "claude_101__01",
+    "chapter_id": "dc_ch02_act01",
+    "reason_not_rapidly_remediable": "Aucun asset français correspondant n’est déclaré dans le bundle ; aucune localisation fiable ne peut être ajoutée sans inventer du contenu.",
+    "formation_id": "datacamp_claude_101",
+    "plan": "027-datacamp_claude_101.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Écart d’extraction : activité VisualExercise annoncée mais absente",
+    "evidence": "datacampImport.expected annonce 37 activités et un VisualExercise, tandis que l’inventaire rendu compte 36 chapitres/types et aucun VisualExercise ; passage dc_ch02_act01 à dc_ch02_act03.",
+    "course_id": "graph_rag_with_langchain_and_neo4j__01",
+    "chapter_id": "dc_ch02_act01",
+    "reason_not_rapidly_remediable": "Aucun bloc ou contenu manquant identifiable n’est déclaré ; inventer l’activité, sa correction ou son environnement violerait les actifs disponibles.",
+    "formation_id": "datacamp_graph_rag_with_langchain_and_neo4j",
+    "plan": "041-datacamp_graph_rag_with_langchain_and_neo4j.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Deux retraits d’activités ne sont pas documentés et rendent les métadonnées incohérentes",
+    "evidence": "Le cours courant contient 16 chapitres/activités (chapterCount:16, totalActivities:16), tandis que datacampImport.expected déclare activities_expected_from_outline:18 et activities_extracted:18; dc_ch01_act06 et dc_ch03_act06 sont absents et aucun objet de retrait/explication n’est déclaré.",
+    "course_id": "introduction_to_agent_skills__01",
+    "reason_not_rapidly_remediable": "Aucun bloc réel correspondant n’existe à retirer ou convertir et le bundle ne fournit pas de texte de remplacement ni de métadonnée corrective autorisée; inventer une activité, une explication ou une valeur d’import violerait la règle des seuls actifs déclarés.",
+    "formation_id": "datacamp_introduction_to_agent_skills",
+    "plan": "044-datacamp_introduction_to_agent_skills.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Activités attendues absentes sans explication conservée",
+    "evidence": "Les identifiants dc_ch01_act06, dc_ch01_act07, dc_ch01_act09, dc_ch01_act10 et dc_ch04_act09 sont absents de lessons[].chapters; aucun bloc réel n’existe donc à cibler.",
+    "course_id": "intermediate_workflow_automation_with_n8n__01",
+    "reason_not_rapidly_remediable": "Le bundle ne contient aucun bloc réel ni texte source conservé pour ces cinq activités; une suppression ou conversion conforme ne peut pas identifier un bloc existant sans inventer de contenu.",
+    "formation_id": "datacamp_intermediate_workflow_automation_with_n8n",
+    "plan": "043-datacamp_intermediate_workflow_automation_with_n8n.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Les quatre leçons ne déclarent aucun objectif pédagogique",
+    "evidence": "lessons[0..3].description vaut exactement {\"en\":\"\",\"fr\":\"\"}; titres et consignes ne sont pas des objectifs déclarés.",
+    "course_id": "intermediate_workflow_automation_with_n8n__01",
+    "reason_not_rapidly_remediable": "La correction nécessiterait d’ajouter des objectifs non présents dans le texte existant; aucune action de suppression autorisée ne permet de corriger ce défaut sans inventer de formulation.",
+    "formation_id": "datacamp_intermediate_workflow_automation_with_n8n",
+    "plan": "043-datacamp_intermediate_workflow_automation_with_n8n.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Activité manquante dans l’export DataCamp",
+    "evidence": "Les métadonnées annoncent 31 activités, tandis que les leçons rendent 30 blocs ; la séquence de la leçon 3 saute de dc_ch03_act05 à dc_ch03_act07. Aucun identifiant ni contenu de l’activité manquante n’est présent dans le bundle.",
+    "course_id": "software_development_with_windsurf__01",
+    "chapter_id": "dc_ch03_act06",
+    "reason_not_rapidly_remediable": "La correction exige une réconciliation de l’export source et la récupération d’un contenu absent ; aucun fichier, texte ou actif déclaré ne permet de restaurer ou d’identifier fiablement cette activité sans invention.",
+    "formation_id": "datacamp_software_development_with_windsurf",
+    "plan": "063-datacamp_software_development_with_windsurf.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_1_act_01_video dans dc_ch01_act01: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch01_act01",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_1_act_03_video dans dc_ch01_act03: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch01_act03",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_1_act_07_video dans dc_ch01_act07: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch01_act07",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_2_act_01_video dans dc_ch02_act01: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch02_act01",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_2_act_04_video dans dc_ch02_act04: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch02_act04",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_2_act_07_video dans dc_ch02_act07: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch02_act07",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_3_act_04_video dans dc_ch03_act04: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch03_act04",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_3_act_08_video dans dc_ch03_act08: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch03_act08",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_4_act_01_video dans dc_ch04_act01: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch04_act01",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_4_act_05_video dans dc_ch04_act05: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch04_act05",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / langue et accessibilité",
+    "evidence": "Bloc vidéo réel dc_4_act_09_video dans dc_ch04_act09: La théorie principale est délivrée en anglais dans un cours dont le parcours, les titres et les activités sont en français. Sans sous-titre français ni alternative française, un apprenant francophone ne dispose pas d’un accès linguistique cohérent au contenu requis.",
+    "course_id": "software_development_with_github_copilot__01",
+    "chapter_id": "dc_ch04_act09",
+    "reason_not_rapidly_remediable": "La correction exige une localisation/sous-titrage ou une intégration lecteur non présente dans les actifs déclarés; aucune ressource française ou modification de composant ne peut être inventée.",
+    "formation_id": "datacamp_software_development_with_github_copilot",
+    "plan": "062-datacamp_software_development_with_github_copilot.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Activité de préparation absente et pratique locale promise",
+    "evidence": "PA-064-001: dc_ch01_act02 absent; la vidéo dc_1_act_01_video annonce cluster, environnement local et exercices. Aucun actif déclaré ne fournit environnement, identifiants et validation.",
+    "course_id": "text_to_query_agents_with_mongodb_and_langgraph__01",
+    "chapter_id": "dc_ch01_act01",
+    "reason_not_rapidly_remediable": "La correction exigerait un environnement, des accès et un critère de validation non déclarés; aucun bloc réel d’activité à retirer n’existe.",
+    "formation_id": "datacamp_text_to_query_agents_with_mongodb_and_langgraph",
+    "plan": "064-datacamp_text_to_query_agents_with_mongodb_and_langgraph.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Livraison française incohérente",
+    "evidence": "PA-064-003: sourceLanguage=fr-FR, cinq narrations/transcriptions en anglais; subtitleUrlFr absent pour dc_1_act_01_video et dc_2_act_01_video, et les autres VTT ne sont pas intégrés au lecteur selon le bundle.",
+    "course_id": "text_to_query_agents_with_mongodb_and_langgraph__01",
+    "chapter_id": "course_language_delivery",
+    "reason_not_rapidly_remediable": "Une correction fiable requiert une narration ou des sous-titres français intégrés et des transcriptions françaises; le texte existant ne peut pas produire ces actifs.",
+    "formation_id": "datacamp_text_to_query_agents_with_mongodb_and_langgraph",
+    "plan": "064-datacamp_text_to_query_agents_with_mongodb_and_langgraph.json"
+  },
+  {
+    "severity": "P1",
+    "title": "TP de requêtes, agrégations et workflow absents",
+    "evidence": "PA-064-004: dc_ch01_act04, dc_ch01_act05 et dc_ch01_act06 absents; dc_ch01_act03 ne contient que dc_1_act_03_video, qui conclut par une invitation à pratiquer.",
+    "course_id": "text_to_query_agents_with_mongodb_and_langgraph__01",
+    "chapter_id": "dc_ch01_act03",
+    "reason_not_rapidly_remediable": "Les données, actions, sorties vérifiables, corrections et feedback des TP ne sont pas déclarés; il n’existe aucun bloc d’activité réel à retirer.",
+    "formation_id": "datacamp_text_to_query_agents_with_mongodb_and_langgraph",
+    "plan": "064-datacamp_text_to_query_agents_with_mongodb_and_langgraph.json"
+  },
+  {
+    "severity": "P1",
+    "title": "TP d’architecture LangGraph absents",
+    "evidence": "PA-064-005: dc_ch02_act02, dc_ch02_act03 et dc_ch02_act04 absents; le chapitre publié ne contient que vidéo et téléchargement.",
+    "course_id": "text_to_query_agents_with_mongodb_and_langgraph__01",
+    "chapter_id": "dc_ch02_act01",
+    "reason_not_rapidly_remediable": "Créer une pratique fiable nécessiterait des consignes, un environnement, des livrables et un feedback non présents dans les actifs déclarés.",
+    "formation_id": "datacamp_text_to_query_agents_with_mongodb_and_langgraph",
+    "plan": "064-datacamp_text_to_query_agents_with_mongodb_and_langgraph.json"
+  },
+  {
+    "severity": "P1",
+    "title": "TP de mémoire/checkpointing absent",
+    "evidence": "PA-064-006: dc_ch03_act02 « Ajouter de la mémoire à l’agent » absent; la vidéo dc_3_act_01_video invite à pratiquer sans activité publiée.",
+    "course_id": "text_to_query_agents_with_mongodb_and_langgraph__01",
+    "chapter_id": "dc_ch03_act01",
+    "reason_not_rapidly_remediable": "Le jeu de données, la preuve attendue, les erreurs et la correction ne sont pas déclarés; aucune correction rapide fiable n’est possible.",
+    "formation_id": "datacamp_text_to_query_agents_with_mongodb_and_langgraph",
+    "plan": "064-datacamp_text_to_query_agents_with_mongodb_and_langgraph.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Chapitre « Imbriquer des classes Pydantic » incomplet",
+    "evidence": "/home/ubuntu/neopolis-akademy/client/public/data/courses/working_with_the_openai_responses_api__01.json → lessons[2].chapters[2].blocks=[{id:dc_3_act_03_content,type:content}]; lessons[2].chapters[3] ouvre ensuite « Diffusion avec des événements sémantiques ». LessonViewer rend ce seul paragraphe (client/src/pages/training/LessonViewer.tsx:498-550).",
+    "course_id": "working_with_the_openai_responses_api__01",
+    "chapter_id": "dc_ch03_act03",
+    "reason_not_rapidly_remediable": "Le bloc existant introduit seulement SimilarMovie et DetailedMovieRecommendation ; l’explication progressive, le lien entre classes et la pratique annoncés ne sont pas présents dans le texte actuel. Les détails nécessaires à une correction fiable ne sont pas fournis dans le bundle.",
+    "formation_id": "datacamp_working_with_the_openai_responses_api",
+    "plan": "067-datacamp_working_with_the_openai_responses_api.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / données de rendu: Les illustrations importées ont, dans une partie substantielle du cours, une balise `<img>` dont l’attribut `src` ne con",
+    "evidence": "client/public/data/courses/huggingface_llm_course__01.json → hf_llm-course_page_001 (2), hf_llm-course_page_002 (5), hf_llm-course_page_004 (1), hf_llm-course_page_005 (17), hf_llm-course_page_009 (1), hf_llm-course_page_014 (4), hf_llm-course_page_016 (6), hf_llm-course_page_020 (1), hf_llm-course_page_030 (2), hf_llm-course_page_031 (11), hf_llm-course_page_039 (5), hf_llm-course_page_040 (2), hf_llm-course_page_045 (2), hf_llm-course_page_046 (2), hf_llm-course_page_047 (2), hf_llm-course_page_051 (2), hf_llm-course_page_055 (2), hf_llm-course_page_056 (3), hf_llm-course_page_057 (3), hf_llm-course_page_058 (4), hf_llm-course_page_059 (2), hf_llm-course_page_060 (2), hf_llm-course_page_064 (4), hf_llm-course_page_065 (7), hf_llm-course_page_073 (3), hf_llm-course_page_079 (1), hf_llm-course_page_080 (1), hf_llm-course_page_081 (2), hf_llm-course_page_082 (3), hf_llm-course_page_088 (4), hf_llm-course_page_102 (9). PageContent.tsx:82-776 normalise et affiche des lignes textuelles sans gestion de <img>; les blocs téléchargements observés ont leurs propres download_url. — Les illustrations importées ont, dans une partie substantielle du cours, une balise `<img>` dont l’attribut `src` ne contient pas d’URL exploitable. Ce défaut de données est distinct de l’accessibilité d’une ressource : ici, aucune cible d’image n’est fournie au rendu. De plus, PageContent ne convertit pas ces balises HTML en image.",
+    "course_id": "huggingface_llm_course__01",
+    "chapter_id": null,
+    "reason_not_rapidly_remediable": "Le constat porte sur le rendu/média ou le mécanisme de quiz global, pas sur une activité obligatoire supprimable; le corriger exige une modification du code/import ou des données absentes du bundle, interdite dans cette revue.",
+    "formation_id": "huggingface_llm_course",
+    "plan": "069-huggingface_llm_course.json"
+  },
+  {
+    "severity": "P1",
+    "title": "média / rendu: Des références vidéo sont bien présentes dans le contenu importé, mais elles ne sont pas converties en blocs `video` ni ",
+    "evidence": "client/public/data/courses/huggingface_llm_course__01.json → hf_llm-course_page_002 (1), hf_llm-course_page_003 (1), hf_llm-course_page_004 (1), hf_llm-course_page_005 (3), hf_llm-course_page_006 (1), hf_llm-course_page_007 (3), hf_llm-course_page_009 (1), hf_llm-course_page_014 (1), hf_llm-course_page_015 (1), hf_llm-course_page_016 (5), hf_llm-course_page_017 (1), hf_llm-course_page_023 (3), hf_llm-course_page_024 (1), hf_llm-course_page_025 (2), hf_llm-course_page_029 (1), hf_llm-course_page_031 (3), hf_llm-course_page_036 (1), hf_llm-course_page_037 (3), hf_llm-course_page_038 (1), hf_llm-course_page_039 (1), hf_llm-course_page_040 (1), hf_llm-course_page_044 (1), hf_llm-course_page_045 (4), hf_llm-course_page_046 (2), hf_llm-course_page_047 (2), hf_llm-course_page_048 (1), hf_llm-course_page_049 (1), hf_llm-course_page_050 (1), hf_llm-course_page_051 (1), hf_llm-course_page_055 (2), hf_llm-course_page_056 (4), hf_llm-course_page_057 (4), hf_llm-course_page_058 (3), hf_llm-course_page_059 (3), hf_llm-course_page_060 (4), hf_llm-course_page_061 (1), hf_llm-course_page_064 (3), hf_llm-course_page_065 (1), hf_llm-course_page_066 (1), hf_llm-course_page_067 (1), hf_llm-course_page_073 (1), hf_llm-course_page_101 (7), hf_llm-course_page_102 (15). LessonViewer.tsx:552-627 ne rend un lecteur que pour block.type='video'; PageContent.tsx:82-776 ne comporte aucun parseur de balise Youtube; blockRegistry.ts:66-93 définit pourtant le type video. — Des références vidéo sont bien présentes dans le contenu importé, mais elles ne sont pas converties en blocs `video` ni interprétées par PageContent. Elles ne peuvent donc pas devenir des lecteurs visibles dans LessonViewer; les chapitres concernés perdent le média annoncé et sa contextualisation visuelle effective.",
+    "course_id": "huggingface_llm_course__01",
+    "chapter_id": null,
+    "reason_not_rapidly_remediable": "Le constat porte sur le rendu/média ou le mécanisme de quiz global, pas sur une activité obligatoire supprimable; le corriger exige une modification du code/import ou des données absentes du bundle, interdite dans cette revue.",
+    "formation_id": "huggingface_llm_course",
+    "plan": "069-huggingface_llm_course.json"
+  },
+  {
+    "severity": "P1",
+    "title": "évaluation / verrouillage: LessonViewer injecte un ChapterQuiz après chaque écran d’enseignement. Pour ce course_id, aucune banque de questions n’e",
+    "evidence": "LessonViewer.tsx:1615-1648 déclenche ChapterQuiz pour tout teaching chapter; ChapterQuiz.tsx:48-64 charge /data/lessonQuizzes.json et 75-80 appelle onPass() lorsque la banque est vide. — LessonViewer injecte un ChapterQuiz après chaque écran d’enseignement. Pour ce course_id, aucune banque de questions n’existe dans lessonQuizzes.json; ChapterQuiz exécute alors onPass() automatiquement. Les 21 écrans d’enseignement concernés affichent ainsi un contrôle de compréhension sans question et valident le passage sans preuve d’acquisition.",
+    "course_id": "huggingface_llm_course__01",
+    "chapter_id": null,
+    "reason_not_rapidly_remediable": "Le constat porte sur le rendu/média ou le mécanisme de quiz global, pas sur une activité obligatoire supprimable; le corriger exige une modification du code/import ou des données absentes du bundle, interdite dans cette revue.",
+    "formation_id": "huggingface_llm_course",
+    "plan": "069-huggingface_llm_course.json"
+  },
+  {
+    "severity": "P1",
+    "title": "activité / rendu: Les questions importées sous forme de composants `<Question>` ne deviennent pas des activités apprenantes. Elles restent",
+    "evidence": "client/public/data/courses/huggingface_llm_course__01.json → hf_llm-course_page_008 (11), hf_llm-course_page_021 (10), hf_llm-course_page_023 (5), hf_llm-course_page_024 (6), hf_llm-course_page_025 (7), hf_llm-course_page_026 (5), hf_llm-course_page_034 (9), hf_llm-course_page_042 (10), hf_llm-course_page_053 (10), hf_llm-course_page_062 (13), hf_llm-course_page_069 (8), hf_llm-course_page_078 (10), hf_llm-course_page_085 (8), hf_llm-course_page_088 (5), hf_llm-course_page_090 (6), hf_llm-course_page_094 (5), hf_llm-course_page_095 (5). LessonViewer.tsx:977-1005 et 1190-1192 ne rendent que les blocs structurés; PageContent.tsx:82-776 n’interprète pas <Question>. — Les questions importées sous forme de composants `<Question>` ne deviennent pas des activités apprenantes. Elles restent dans le texte brut, alors que des écrans intitulés « End-of-chapter quiz » reposent sur elles; les choix, la sélection, la correction et le feedback détaillé inclus dans le balisage ne sont donc pas accessibles comme interaction.",
+    "course_id": "huggingface_llm_course__01",
+    "chapter_id": null,
+    "reason_not_rapidly_remediable": "Le constat porte sur le rendu/média ou le mécanisme de quiz global, pas sur une activité obligatoire supprimable; le corriger exige une modification du code/import ou des données absentes du bundle, interdite dans cette revue.",
+    "formation_id": "huggingface_llm_course",
+    "plan": "069-huggingface_llm_course.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Localisation anglaise absente du mini-projet conservé comme contenu",
+    "evidence": "Dans le bloc réel ia-appliquee_metiers_tp__12-mini-project-proof, assignment, instructions, hint, solution et successMessage sont des chaînes françaises ; le résolveur affiche une chaîne telle quelle en locale EN.",
+    "course_id": "ia_appliquee_metiers_tp__12",
+    "chapter_id": "ia-appliquee_metiers_tp__12-mini-project",
+    "reason_not_rapidly_remediable": "Après conversion, le texte doit rester fidèle au contenu déclaré ; aucune version anglaise déclarée de ces champs n’existe dans les actifs et une traduction ne doit pas être inventée dans ce plan.",
+    "formation_id": "ia_appliquee_metiers_tp__formation_12",
+    "plan": "081-ia_appliquee_metiers_tp__formation_12.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Localisation anglaise du cadrage initial incomplète",
+    "evidence": "course.title.en, course.description.en et lessons[0].chapters[0].blocks[0] (learning_section) conservent majoritairement les chaînes françaises ; le renderer affiche la valeur de la langue courante telle quelle (current_recheck.findings, localisation écran d'ouverture).",
+    "course_id": "ia_appliquee_metiers_tp__14",
+    "chapter_id": "ia_appliquee_metiers_tp__14-screen-01",
+    "reason_not_rapidly_remediable": "Le plan ne dispose d'aucune action de remplacement/localisation de texte et la consigne interdit de modifier le cours ; aucune suppression d'activité ne corrige ce cadrage non activité.",
+    "formation_id": "ia_appliquee_metiers_tp__formation_14",
+    "plan": "083-ia_appliquee_metiers_tp__formation_14.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Champs anglais du mini-projet non localisés",
+    "evidence": "assignment, instructions, hint, solution et successMessage du bloc réel ia_appliquee_metiers_tp__14-mini-project-proof sont des chaînes françaises ; le constat P1 de localisation le confirme.",
+    "course_id": "ia_appliquee_metiers_tp__14",
+    "chapter_id": "ia_appliquee_metiers_tp__14-mini-project",
+    "reason_not_rapidly_remediable": "La conversion en contenu retire le verrou non fiable mais ne fournit pas une action de traduction dans le schéma, et le cours ne peut pas être modifié dans cette revue.",
+    "formation_id": "ia_appliquee_metiers_tp__formation_14",
+    "plan": "083-ia_appliquee_metiers_tp__formation_14.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Le quiz final ne démontre pas les quatre acquis techniques RAG",
+    "evidence": "current_recheck.findings P1 ; chapitre réel ia_appliquee_metiers_tp__35-final-quiz et blocs ia_appliquee_metiers_tp__35-quiz-01 à -04 plus ia_appliquee_metiers_tp__35-quiz-order : les QCM évaluent surtout sécurité/données fictives/validation humaine et le tri une démarche générale, alors que metadata.acquiredSkills annonce ingestion/chunking, embeddings/recherche vectorielle, réponse documentée et rapport Google Docs.",
+    "course_id": "ia_appliquee_metiers_tp__35",
+    "chapter_id": "ia_appliquee_metiers_tp__35-final-quiz",
+    "reason_not_rapidly_remediable": "L’alignement exige de définir ou vérifier des critères, questions et réponses attendues à partir du support fictif et du workflow de référence ; ces réponses et seuils ne sont pas présents dans les actifs déclarés. Les inventer violerait la règle de non-invention, et aucun simple retrait de texte obsolète ne corrige le défaut d’évaluation.",
+    "formation_id": "ia_appliquee_metiers_tp__formation_35",
+    "plan": "104-ia_appliquee_metiers_tp__formation_35.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Couverture bilingue incomplète des champs visibles",
+    "evidence": "Le cloud_exercise réel ia-appliquee-metiers-tp__34-mini-project-proof contient assignment, instructions, hint, solution et successMessage comme chaînes uniques ; d’autres textes des écrans 2 et 3 sont également non localisés ou recopiés.",
+    "course_id": "ia_appliquee_metiers_tp__34",
+    "chapter_id": "ia_appliquee_metiers_tp__34-mini-project",
+    "reason_not_rapidly_remediable": "Ce constat P1 n’est pas lié à une activité bloquante et aucune traduction anglaise fiable n’est déclarée dans le bundle pour ces champs. Inventer des traductions ou modifier le contenu au-delà des textes existants serait contraire à la consigne ; il n’y a donc pas de correction rapide autorisée parmi les actions disponibles.",
+    "formation_id": "ia_appliquee_metiers_tp__formation_34",
+    "plan": "103-ia_appliquee_metiers_tp__formation_34.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Objectifs du cours 01 masqués par une vidéo dans What You Will Learn",
+    "evidence": "open_source_llms_fine_tuning_engineer__01, lesson_01_chapter_01 : chapter.body contient les objectifs mais blocks[0] est uniquement la vidéo The Major LLM Families Explained: Llama, Mistral, Gemma; le rendu parcourt blocks lorsqu'ils existent.",
+    "course_id": "open_source_llms_fine_tuning_engineer__01",
+    "chapter_id": "lesson_01_chapter_01",
+    "reason_not_rapidly_remediable": "La correction fiable exige une modification de structure/normalisation pour rendre chapter.body avant le média; aucune action autorisée ne permet d'ajouter ou réordonner ce contenu sans retirer à tort une vidéo déclarée valide.",
+    "formation_id": "open_source_llms_fine_tuning_engineer",
+    "plan": "115-open_source_llms_fine_tuning_engineer.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Théorie Hugging Face Hub masquée par une vidéo",
+    "evidence": "open_source_llms_fine_tuning_engineer__01, lesson_02_chapter_02 : le body documente Hub, model cards, datasets et authentification, tandis que blocks[0] est seulement la vidéo Mistral 7B: The BEST Tiny Model EVER! Beats LLAMA 2.",
+    "course_id": "open_source_llms_fine_tuning_engineer__01",
+    "chapter_id": "lesson_02_chapter_02",
+    "reason_not_rapidly_remediable": "Il faut rendre le body existant avant la vidéo ou modifier le chemin de rendu; supprimer la vidéo serait une suppression non justifiée d'un contenu média valide.",
+    "formation_id": "open_source_llms_fine_tuning_engineer",
+    "plan": "115-open_source_llms_fine_tuning_engineer.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Objectifs Adapter Saving and Merging masqués par une vidéo",
+    "evidence": "open_source_llms_fine_tuning_engineer__04, lesson_01_chapter_01 : body contient les objectifs et blocks[0] est uniquement qLoRa in Action: A Fine-Tuning Tutorial.",
+    "course_id": "open_source_llms_fine_tuning_engineer__04",
+    "chapter_id": "lesson_01_chapter_01",
+    "reason_not_rapidly_remediable": "La résolution nécessite d'exposer le body existant avant le média; aucune suppression de référence obsolète ou promesse injustifiée n'est démontrée.",
+    "formation_id": "open_source_llms_fine_tuning_engineer",
+    "plan": "115-open_source_llms_fine_tuning_engineer.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Théorie model cards/dataset cards masquée par une vidéo non spécifique",
+    "evidence": "open_source_llms_fine_tuning_engineer__04, lesson_02_chapter_02 : le body porte sur model cards et dataset cards, mais blocks[0] est The Major LLM Families Explained: Llama, Mistral, Gemma.",
+    "course_id": "open_source_llms_fine_tuning_engineer__04",
+    "chapter_id": "lesson_02_chapter_02",
+    "reason_not_rapidly_remediable": "La correction nécessite une réorganisation du rendu ou une décision éditoriale sur le média; le bundle ne démontre pas que la vidéo est obsolète ni qu'elle doit être supprimée.",
+    "formation_id": "open_source_llms_fine_tuning_engineer",
+    "plan": "115-open_source_llms_fine_tuning_engineer.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Le texte du body n’est pas rendu dans trois chapitres vidéo du cours 02",
+    "evidence": "Dans client/public/data/courses/llmops_ai_observability_engineer__02.json, lesson_01_chapter_01, lesson_02_chapter_02 et lesson_03_chapter_06 ont un body renseigné et un unique bloc video, sans bloc content. Le texte utile existe mais son exposition nécessite une correction de rendu/structure; la vidéo déclarée reste valide et ne doit pas être retirée.",
+    "course_id": "llmops_ai_observability_engineer__02",
+    "chapter_id": "lesson_01_chapter_01",
+    "reason_not_rapidly_remediable": "Aucune action autorisée de ce plan ne permet d’ajouter ou de remapper le body existant dans un bloc content sans modifier la structure du cours; supprimer la vidéo ou le texte ne serait pas une correction fiable. Les deux autres chapitres concernés sont lesson_02_chapter_02 et lesson_03_chapter_06.",
+    "formation_id": "llmops_ai_observability_engineer",
+    "plan": "113-llmops_ai_observability_engineer.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Le texte du body n’est pas rendu dans le chapitre de traçage RAG",
+    "evidence": "client/public/data/courses/llmops_ai_observability_engineer__02.json → lesson_02_chapter_02: body renseigné, blocks composé d’un unique bloc video; aucune activité ni bloc obsolète identifiable à retirer.",
+    "course_id": "llmops_ai_observability_engineer__02",
+    "chapter_id": "lesson_02_chapter_02",
+    "reason_not_rapidly_remediable": "La correction exige de rendre le body existant comme contenu; aucune suppression rapide fiable ne préserve l’explication et la vidéo valide.",
+    "formation_id": "llmops_ai_observability_engineer",
+    "plan": "113-llmops_ai_observability_engineer.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Le message de fin et la transition ne sont pas rendus dans le chapitre vidéo",
+    "evidence": "client/public/data/courses/llmops_ai_observability_engineer__02.json → lesson_03_chapter_06: body renseigné, blocks composé d’un unique bloc video; le texte de bilan existe mais n’est pas exposé par la structure courante.",
+    "course_id": "llmops_ai_observability_engineer__02",
+    "chapter_id": "lesson_03_chapter_06",
+    "reason_not_rapidly_remediable": "La correction exige de rendre le body existant comme contenu; aucune suppression rapide fiable ne préserve le bilan, la transition et la vidéo valide.",
+    "formation_id": "llmops_ai_observability_engineer",
+    "plan": "113-llmops_ai_observability_engineer.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Saisie automatisée des données comptables",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u03 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Saisie automatisée des données comptables ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u03_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Catégorisation automatique des transactions",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u04 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Catégorisation automatique des transactions ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u04_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Rapprochement bancaire intelligent",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u05 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Rapprochement bancaire intelligent ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u05_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Gestion automatisée des factures et des dépenses",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u06 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Gestion automatisée des factures et des dépenses ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u06_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Prévisions financières et analyses prédictives",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u07 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Prévisions financières et analyses prédictives ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u07_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Détection des anomalies et prévention de la fraude",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u08 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Détection des anomalies et prévention de la fraude ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u08_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Automatisation de la paie et des déclarations fiscales",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u09 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Automatisation de la paie et des déclarations fiscales ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u09_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Intégration des outils d’IA dans les systèmes comptables",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u10 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Intégration des outils d’IA dans les systèmes comptables ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u10_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Gouvernance, conformité et éthique de l’IA en comptabilité",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u11 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Gouvernance, conformité et éthique de l’IA en comptabilité ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u11_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  },
+  {
+    "severity": "P1",
+    "title": "Contenu spécifique absent : Avenir de la profession comptable à l’ère de l’IA",
+    "evidence": "Le bundle current_recheck décrit les chapitres 2 et 3 de l’unité u12 comme reprenant le même canevas générique et les mêmes erreurs/corrections que les autres unités, malgré l’objectif « Avenir de la profession comptable à l’ère de l’IA ». Aucun cas métier détaillé ni règle validée n’est déclaré.",
+    "course_id": "automatisation_comptable_ia__01",
+    "chapter_id": "novasavo_u12_screen_03",
+    "reason_not_rapidly_remediable": "La correction exige un cas, des données et des règles métier propres à ce thème ; ils ne sont pas fournis dans les actifs déclarés. Rédiger un exemple ou des règles serait une invention, donc aucune correction rapide fiable n’est proposée.",
+    "formation_id": "novasavo_automatisation_comptable_ia",
+    "plan": "114-novasavo_automatisation_comptable_ia.json"
+  }
+]

@@ -1,0 +1,75 @@
+{
+  "formation_id": "datacamp_claude_101",
+  "index": 27,
+  "course_ids": ["claude_101__01"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_101__01",
+      "chapter_id": "dc_ch01_act01",
+      "block_id": "dc_1_act_01_prompting",
+      "reason": "L’évaluation IA obligatoire n’est pas prise en compte par la navigation et ne peut pas être rendue fiable par les seuls actifs déclarés ; conserver la consigne, le rubric et l’exemple comme contenu non bloquant.",
+      "evidence": "current_recheck.findings P1 : chapter dc_ch01_act01 requiredBeforeAdvance=true, bloc ai_evaluation dc_1_act_01_prompting ; LessonViewer exclut ai_evaluation des conditions de passage."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_101__01",
+      "chapter_id": "dc_ch01_act05",
+      "block_id": "dc_1_act_05_prompting",
+      "reason": "Cette pratique de rédaction obligatoire est contournable ; conserver le prompt structuré, les critères et l’exemple comme contenu non bloquant plutôt que laisser un verrou non fiable.",
+      "evidence": "current_recheck.findings P1 : chapter dc_ch01_act05 requiredBeforeAdvance=true, bloc ai_evaluation dc_1_act_05_prompting ; sa complétion n’est pas utilisée par les règles de navigation."
+    },
+    {
+      "action": "convert_block_to_content",
+      "course_id": "claude_101__01",
+      "chapter_id": "dc_ch01_act07",
+      "block_id": "dc_1_act_07_prompting",
+      "reason": "L’exercice d’itération obligatoire peut être quitté sans soumission ni réussite et le verrouillage ne peut pas être fiabilisé avec les seuls actifs déclarés ; conserver la consigne, les défauts à corriger et l’exemple comme contenu non bloquant.",
+      "evidence": "current_recheck.findings P1 : chapter dc_ch01_act07 requiredBeforeAdvance=true, bloc ai_evaluation dc_1_act_07_prompting ; ai_evaluation est omis des conditions de passage."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_101__01",
+      "chapter_id": "dc_ch01_act03",
+      "block_id": "dc_1_act_03_video",
+      "reason": "La vidéo MP4 obligatoire est franchissable sans action à cause de la résolution de clé ; retirer l’exigence de complétion et conserver la vidéo, sa transcription et ses diapositives comme contenu non bloquant valide.",
+      "evidence": "current_recheck.findings P1 : dc_1_act_03_video est un bloc video MP4 dans un chapitre requiredBeforeAdvance=true, mais son id est exclu du calcul de navigation ; le bloc déclare transcript, transcriptSegments et slidesPdf."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "claude_101__01",
+      "chapter_id": "dc_ch02_act01",
+      "block_id": "dc_2_act_01_video",
+      "reason": "La vidéo MP4 obligatoire de Projects peut être passée sans action à cause de la résolution de clé ; retirer l’exigence de complétion et conserver la vidéo, sa transcription et ses diapositives comme contenu non bloquant valide.",
+      "evidence": "current_recheck.findings P1 : dc_2_act_01_video est un bloc video MP4 dans un chapitre requiredBeforeAdvance=true, mais son id est exclu du calcul de navigation ; le bloc déclare transcript, transcriptSegments et slidesPdf."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P1",
+      "title": "Vidéo de première conversation sans alternative française",
+      "evidence": "dc_ch01_act03 / dc_1_act_03_video déclare subtitleUrlEn et une transcription anglaise, sans subtitleUrlFr ni alternative textuelle française.",
+      "course_id": "claude_101__01",
+      "chapter_id": "dc_ch01_act03",
+      "reason_not_rapidly_remediable": "Aucun sous-titre, transcription ou résumé français n’est déclaré dans le bundle ; inventer ou traduire un asset dépasserait les seuls actifs existants."
+    },
+    {
+      "severity": "P1",
+      "title": "Vidéo Projects sans alternative française",
+      "evidence": "dc_ch02_act01 / dc_2_act_01_video déclare subtitleUrlEn et une transcription anglaise, sans subtitleUrlFr, transcription française ni alternativeTextFr.",
+      "course_id": "claude_101__01",
+      "chapter_id": "dc_ch02_act01",
+      "reason_not_rapidly_remediable": "Aucun asset français correspondant n’est déclaré dans le bundle ; aucune localisation fiable ne peut être ajoutée sans inventer du contenu."
+    },
+    {
+      "severity": "P2",
+      "title": "Feedback Projects/Skills non rendu après réussite",
+      "evidence": "dc_ch02_act06 / dc_2_act_06_bucket_sort contient un feedback JSON, mais le rendu transmet block.correction et n’affiche donc pas le texte feedback.",
+      "course_id": "claude_101__01",
+      "chapter_id": "dc_ch02_act06",
+      "reason_not_rapidly_remediable": "Le texte existe, mais sa transmission nécessite une correction du composant LessonViewer/MatchingExercise hors des actifs de cours ; aucune action de contenu fiable ne résout le rendu."
+    }
+  ],
+  "summary": "Cinq exigences de complétion non fiables ont été neutralisées : trois évaluations IA converties en contenu non bloquant et deux vidéos conservées sans verrou. Les deux déficits d’accessibilité française des vidéos et le feedback P2 non transmis restent ouverts faute de correction possible avec les seuls actifs déclarés."
+}

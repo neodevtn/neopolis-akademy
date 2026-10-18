@@ -96,24 +96,19 @@ describe('Developer Foundations course 5 checkpoint integrity', () => {
     expect(exercise('ex_claude_certified_developer_foundations__05_012')).toBeUndefined();
   });
 
-  it('restores the two Skilljar cumulative deployment tasks before the recap', () => {
+  it('removes the two unverifiable Skilljar cumulative deployment tasks without leaving a phantom gate', () => {
     const ids = ['chapter_skilljar_05_s17', 'chapter_skilljar_05_s18'];
-    const chapters = ids.map(chapter);
     const recapIndex = lesson.chapters.findIndex((item: any) => item.id === 'chapter_10_1');
-    expect(chapters.every(Boolean)).toBe(true);
-    expect(lesson.chapters.findIndex((item: any) => item.id === ids[0])).toBeLessThan(recapIndex);
-
-    for (const cumulative of chapters) {
-      const exerciseBlock = cumulative.blocks.find((block: any) => block.type === 'cloud_exercise');
-      expect(cumulative.completionRule).toEqual({ requires: ['cloudExerciseCompleted'] });
-      expect(exerciseBlock.minimumAnswerLength).toBe(10);
-      expect(exerciseBlock.solution.en).not.toHaveLength(0);
-      expect(exerciseBlock.solution.fr).not.toHaveLength(0);
-      expect(exerciseBlock.instructions.fr).toContain('soumettez');
-      expect(exerciseBlock.instructions.fr).toContain('réponse du modèle');
-    }
-
-    expect(chapter('chapter_skilljar_05_s17').blocks[1].solution.fr).toContain('repo_path est codé en dur');
-    expect(chapter('chapter_skilljar_05_s18').blocks[1].solution.en).toContain('treat_as_data');
+    const retiredScreens = ids.map(chapter).filter(Boolean);
+    expect(recapIndex).toBeGreaterThan(-1);
+    expect(retiredScreens.every((screen: any) =>
+      screen.requiredBeforeAdvance !== true &&
+      !screen.completionRule?.requires?.includes('cloudExerciseCompleted') &&
+      screen.blocks.every((block: any) => block.type !== 'cloud_exercise'),
+    )).toBe(true);
+    expect(retiredScreens.every((screen: any) => screen.blocks.length > 0 && screen.blocks.some((block: any) => block.type === 'content'))).toBe(true);
+    expect(lesson.chapters.filter((item: any) => item.completionRule?.requires?.includes('cloudExerciseCompleted')).every((item: any) =>
+      item.blocks.some((block: any) => block.type === 'cloud_exercise'),
+    )).toBe(true);
   });
 });

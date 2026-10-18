@@ -1,0 +1,81 @@
+{
+  "formation_id": "datacamp_introduction_to_subagents",
+  "index": 51,
+  "course_ids": ["introduction_to_subagents__01"],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_block",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch01_act02",
+      "block_id": "dc_1_act_02_qcm_multiple",
+      "exercise_id": null,
+      "reason": "Activité obligatoire non autonome en français : question, options, explication et indice fr sont identiques à l’anglais. Une traduction fiable ne peut pas être inventée à partir des seuls actifs déclarés ; retirer l’activité supprime aussi son verrou, tandis que son feedback/explication est déjà présent à l’écran.",
+      "evidence": "current_recheck.findings P1 ; current_courses.introduction_to_subagents__01.datacampImport.sourceLanguage=fr-FR ; bloc réel dc_1_act_02_qcm_multiple dans dc_ch01_act02."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch01_act05",
+      "block_id": "dc_1_act_05_qcm_multiple",
+      "exercise_id": null,
+      "reason": "Activité obligatoire non autonome en français : question, options, explication et indice fr sont identiques à l’anglais. La correction rapide exigerait d’inventer une traduction ; retirer le bloc retire son verrou et conserve le contenu explicatif déjà disponible.",
+      "evidence": "current_recheck.findings P1 ; sourceLanguage fr-FR ; bloc réel dc_1_act_05_qcm_multiple dans dc_ch01_act05."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act02",
+      "block_id": "dc_2_act_02_qcm_multiple",
+      "exercise_id": null,
+      "reason": "Activité obligatoire partiellement non localisée : question, quatre options et indice fr identiques à l’anglais. Sans texte français fiable déclaré, ne pas inventer de correction ; retirer l’activité et son verrou, l’explication traduite restant déjà dans le bloc retiré non exploitable comme activité.",
+      "evidence": "current_recheck.findings P1 ; sourceLanguage fr-FR ; bloc réel dc_2_act_02_qcm_multiple dans dc_ch02_act02."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act05",
+      "block_id": "dc_2_act_05_qcm_multiple",
+      "exercise_id": null,
+      "reason": "Activité obligatoire majoritairement non localisée : question, trois options, explication et indice fr restent en anglais. Une traduction fiable n’est pas déclarée ; retirer le bloc enlève l’activité bloquante sans supprimer les vidéos valides.",
+      "evidence": "current_recheck.findings P1 ; sourceLanguage fr-FR ; bloc réel dc_2_act_05_qcm_multiple dans dc_ch02_act05."
+    },
+    {
+      "action": "remove_block",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch02_act06",
+      "block_id": "dc_2_act_06_bucket_sort",
+      "exercise_id": null,
+      "reason": "Activité obligatoire non autonome en français : consigne centrale, catégories et six scénarios fr reprennent l’anglais. Ne pas inventer les traductions ; retirer l’interaction et son verrou, sans retirer les vidéos ou contenus valides.",
+      "evidence": "current_recheck.findings P1 ; sourceLanguage fr-FR ; bloc réel dc_2_act_06_bucket_sort dans dc_ch02_act06."
+    },
+    {
+      "action": "remove_stale_text_reference",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": "dc_ch01_act01",
+      "block_id": "neopolis_subagents_environment_preparation",
+      "exercise_id": null,
+      "reason": "Le contenu non bloquant demande de terminer chaque écran pratique et sa validation Neopolis alors que les trois pratiques ont été retirées et qu’aucun code_repl ne subsiste. Supprimer uniquement cette référence obsolète est une correction rapide fondée sur le texte existant.",
+      "evidence": "current_recheck.findings P2 ; bloc content réel neopolis_subagents_environment_preparation dans dc_ch01_act01 ; totalActivities actuel 9 contre 12 activités source et aucun bloc code_repl."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Les verrous des quatre vidéos restent contournables",
+      "evidence": "Les chapitres dc_ch01_act01, dc_ch01_act04, dc_ch02_act01 et dc_ch02_act04 restent requiredBeforeAdvance:true ; leurs blocs vidéo réels dc_1_act_01_video, dc_1_act_04_video, dc_2_act_01_video et dc_2_act_04_video ont des identifiants de 17 caractères ignorés par la dérivation de clé limitée à 8–15.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": null,
+      "reason_not_rapidly_remediable": "Le correctif porte sur la logique applicative de verrouillage, absente des actifs de cours autorisés ; les vidéos sont valides et ne doivent pas être supprimées."
+    },
+    {
+      "severity": "P2",
+      "title": "Les QCM à réponse unique affichent une consigne de choix multiple",
+      "evidence": "Les blocs QCM réels dc_1_act_02_qcm_multiple, dc_1_act_05_qcm_multiple, dc_2_act_02_qcm_multiple et dc_2_act_05_qcm_multiple conservent chacun une seule réponse correcte, tandis que le composant affiche les libellés pluriels.",
+      "course_id": "introduction_to_subagents__01",
+      "chapter_id": null,
+      "reason_not_rapidly_remediable": "Le défaut est dans le composant d’interface partagé et non dans un texte de cours ; aucune correction de code n’est autorisée dans ce plan."
+    }
+  ],
+  "summary": "Relecture actuelle effectuée : 5 activités obligatoires P1 non autonomes en français sont retirées avec leurs verrous, les vidéos valides sont conservées, une référence textuelle obsolète est supprimée. Les deux défauts P2 de logique d’interface/verrouillage restent non résolus car ils nécessitent du code applicatif absent des actifs déclarés."
+}

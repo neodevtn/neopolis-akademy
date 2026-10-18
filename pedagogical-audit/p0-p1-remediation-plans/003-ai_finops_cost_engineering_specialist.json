@@ -1,0 +1,67 @@
+{
+  "formation_id": "ai_finops_cost_engineering_specialist",
+  "index": 3,
+  "course_ids": [
+    "ai_finops_cost_engineering_specialist__01",
+    "ai_finops_cost_engineering_specialist__02",
+    "ai_finops_cost_engineering_specialist__03",
+    "ai_finops_cost_engineering_specialist__04"
+  ],
+  "reviewed_current_state": true,
+  "actions": [
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ai_finops_cost_engineering_specialist__02",
+      "chapter_id": "lesson_01_chapter_01",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Le chapitre est actuellement complété uniquement par une vidéo sans transcription ni alternative textuelle déclarée; retirer son caractère bloquant conserve la vidéo valide sans imposer un actif absent.",
+      "evidence": "003-ai_finops_cost_engineering_specialist.json current_recheck issue FINOPS-02-L01-C01-MEDIA-OBJECTIVE; course __02 lesson_01 chapter_01 blocks[0] est un bloc vidéo réel avec objectiveBefore, sans questionsAfter, transcript ni alternativeTextFr; completionRule=all_chapters."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ai_finops_cost_engineering_specialist__02",
+      "chapter_id": "lesson_02_chapter_02",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "Le chapitre est actuellement complété uniquement par une vidéo sans transcription ni alternative textuelle déclarée; retirer son caractère bloquant conserve la vidéo valide sans inventer de ressource.",
+      "evidence": "003-ai_finops_cost_engineering_specialist.json current_recheck issue FINOPS-02-L02-C02-MEDIA-OBJECTIVE; course __02 lesson_02 chapter_02 blocks[0] est un bloc vidéo réel avec objectiveBefore, sans questionsAfter, transcript ni alternativeTextFr; completionRule=all_chapters."
+    },
+    {
+      "action": "remove_completion_requirement",
+      "course_id": "ai_finops_cost_engineering_specialist__02",
+      "chapter_id": "lesson_03_chapter_06",
+      "block_id": null,
+      "exercise_id": null,
+      "reason": "L’écran final contient une vidéo non facultative et sa synthèse/transition détaillée n’est pas rendue comme bloc; retirer le verrou conserve la vidéo et évite qu’un média sans alternative déclarée bloque la formation.",
+      "evidence": "003-ai_finops_cost_engineering_specialist.json current_recheck issue FINOPS-02-L03-C06-CLOSURE-MEDIA; le bloc réel est la vidéo finale de course __02 lesson_03 chapter_06, sans optional=true, transcript, alternativeTextFr ou questionsAfter; chapterProgress exige sa vue pour la complétion."
+    }
+  ],
+  "unresolved_findings": [
+    {
+      "severity": "P2",
+      "title": "Objectif détaillé de la vidéo d’ouverture non rendu",
+      "evidence": "Le body détaillé est présent dans chapter.body mais le rendu courant parcourt seulement chapter.blocks; le bloc vidéo de course __02 lesson_01 chapter_01 ne déclare ni transcript, ni alternativeTextFr, ni questionsAfter.",
+      "course_id": "ai_finops_cost_engineering_specialist__02",
+      "chapter_id": "lesson_01_chapter_01",
+      "reason_not_rapidly_remediable": "Une correction fiable nécessiterait un actif textuel/transcript ou une modification du renderer; aucun de ces actifs n’est déclaré et il est interdit d’en inventer un."
+    },
+    {
+      "severity": "P2",
+      "title": "Objectif détaillé caching/batching/summarization non rendu",
+      "evidence": "Le contenu explicatif de course __02 lesson_02 chapter_02 est dans chapter.body, tandis que blocks[0] est seulement la vidéo; objectiveBefore est générique et transcript/alternativeTextFr/questionsAfter sont absents.",
+      "course_id": "ai_finops_cost_engineering_specialist__02",
+      "chapter_id": "lesson_02_chapter_02",
+      "reason_not_rapidly_remediable": "Il faudrait un transcript/alternative déclaré ou un changement de rendu pour exposer de façon fiable le contenu existant; aucune source ou réponse supplémentaire n’est disponible dans le bundle."
+    },
+    {
+      "severity": "P2",
+      "title": "Synthèse et transition de clôture non rendues",
+      "evidence": "La relecture historique constate que le chapitre final de course __02 ne rend qu’une vidéo; la synthèse/transition détaillée est dans chapter.body non consommé par LessonViewer et le bloc ne fournit ni transcript ni alternativeTextFr.",
+      "course_id": "ai_finops_cost_engineering_specialist__02",
+      "chapter_id": "lesson_03_chapter_06",
+      "reason_not_rapidly_remediable": "Le verrou a été retiré, mais rendre la synthèse accessible exigerait un bloc textuel déclaré ou une modification du renderer; aucun nouvel actif ne peut être inventé et la vidéo valide ne doit pas être supprimée."
+    }
+  ],
+  "summary": "État courant revu. Les huit checkpoints P0 historiques sont déjà retirés et tracés; aucune action supplémentaire fiable ne peut les restaurer sans inventer un écran de correction. Les trois médias P2 historiques stillOpen sont normalisés: leur verrou de complétion doit être retiré, sans supprimer les vidéos valides. Les déficits d’objectif, de transcription/alternative et de rendu du texte restent non résolus faute d’actifs déclarés ou de correction rapide autorisée."
+}
