@@ -91,7 +91,7 @@ export const goldenJobs: GoldenJob[] = [
     scope: text("Travaille au plus près des métiers ou des clients pour cadrer, prototyper, intégrer, déployer et mesurer l’adoption de solutions IA.", "Works closely with business teams or clients to frame, prototype, integrate, deploy and measure adoption of AI solutions.", "يعمل عن قرب مع فرق الأعمال أو العملاء لتأطير حلول الذكاء الاصطناعي ونمذجتها الأولية ودمجها ونشرها وقياس اعتمادها."),
     skills: [text("Cadrage métier", "Business framing", "تأطير احتياجات الأعمال"), text("Prototypage & intégration", "Prototyping & integration", "النمذجة الأولية والتكامل"), text("Déploiement & adoption", "Deployment & adoption", "النشر والاعتماد")],
     salary: "55–90 k€ · 90–120 k€ · 110–150 k€",
-    recommendedCertificationIds: ["datacamp_ai_for_consulting", "claude_certified_architect_foundations", "datacamp_building_scalable_agentic_systems"],
+    recommendedCertificationIds: ["claude_forward_deployed_engineer", "datacamp_ai_for_consulting", "claude_certified_architect_foundations", "datacamp_building_scalable_agentic_systems"],
     videoGroup: "engineering",
   },
   {

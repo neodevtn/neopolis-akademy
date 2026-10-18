@@ -109,6 +109,13 @@ describe("pages publiques de formations IA", () => {
     expect(detailHtml).not.toContain('href="/training/');
   });
 
+  it("place le parcours FDE dans les recommandations de son Golden Job dédié", () => {
+    const html = renderPublicGoldenJob("forward-deployed-engineer", "fr");
+
+    expect(html).toContain('href="/formations-ia/catalogue/claude-forward-deployed-engineer"');
+    expect(html).toContain("Claude Forward Deployed Engineer");
+  });
+
   it("rend une page de grand domaine avec cas d’usage, formations, indicateurs et métadonnées propres", () => {
     const theme = getPublicTrainingTheme("comptabilite-finance");
     expect(theme).not.toBeNull();

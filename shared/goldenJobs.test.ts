@@ -28,6 +28,12 @@ describe("Golden Jobs pathways", () => {
     expect(jobsWithAnthropicPathway.map((job) => job.slug)).toContain("chief-ai-officer");
   });
 
+  it("recommande le parcours FDE dédié pour le métier Forward Deployed Engineer", () => {
+    const forwardDeployedEngineer = goldenJobs.find((job) => job.slug === "forward-deployed-engineer");
+
+    expect(forwardDeployedEngineer?.recommendedCertificationIds[0]).toBe("claude_forward_deployed_engineer");
+  });
+
   it("declares exactly one verified video per public language", () => {
     expect(goldenJobsPromotionalVideos.map((video) => video.id).sort()).toEqual(["ar", "en", "fr"]);
     expect(goldenJobsPromotionalVideos.every((video) => /^https:\/\/www\.youtube\.com\/embed\/[A-Za-z0-9_-]{6,}$/.test(video.embedUrl))).toBe(true);
