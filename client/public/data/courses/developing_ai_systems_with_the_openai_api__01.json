@@ -1210,9 +1210,61 @@
               "type": "content",
               "id": "dc_2_act_15_content",
               "body": {
-                "en": "To better connect your currency conversion application to other systems, you want to add a few checks to ensure that the model found an appropriate response. First, you check that the response was produced through tool_calls. If so, you check that the function used to produce the result was get_exchange_rate. If so, you load the currency code extracted from the user's prompt and call the get_exchange_rate() function with the code as an argument. Finally, if this produces a response, you return the response.\n\nIn this exercise, response, the json library, and the get_exchange_rate() function have been preloaded.",
-                "fr": "Pour mieux connecter votre application de conversion de devises à d'autres systèmes, vous souhaitez ajouter quelques vérifications pour vous assurer que le modèle a trouvé une réponse appropriée. D'abord, vous vérifiez que la réponse a été produite via tool_calls. Si c’est le cas, vous vérifiez que la fonction utilisée pour produire le résultat était get_exchange_rate. Si c'est le cas, vous chargez le code de devise extrait du prompt de l'utilisateur, et appelez la fonction get_exchange_rate() avec le code comme argument. Enfin, si cela produit une réponse, vous renvoyez la réponse.\n\nDans cet exercice, le response, la bibliothèque json et la fonction get_exchange_rate() ont été préchargés."
+                "fr": "## Objectif\n\nDans une application de conversion de devises, un appel d’outil produit par le modèle **ne lance pas** l’API de change. Il indique seulement l’action que le modèle propose. L’application conserve donc la responsabilité de choisir les outils autorisés, de vérifier leurs arguments et d’exécuter elle-même la fonction.\n\n## Lire et filtrer les appels demandés\n\nAvec l’endpoint Chat Completions, les appels demandés se trouvent dans `response.choices[0].message.tool_calls`. Cette liste peut être vide ou contenir plusieurs appels : ne supposez ni qu’un appel existe, ni que le premier est le seul à traiter. Pour chaque appel, examinez le nom de fonction. Dans ce cas, le routeur n’accepte que `get_exchange_rate`; un nom inattendu ne doit pas être exécuté.\n\nLes arguments de fonction sont encodés en JSON. Décodez-les, puis validez leur structure avant tout appel réseau : par exemple, vérifiez qu’un code de devise est présent, qu’il est une chaîne et qu’il appartient aux codes pris en charge par votre application. Un JSON invalide, un argument manquant ou une devise non prise en charge doit arrêter **cet appel** de façon contrôlée; il ne faut pas deviner une valeur par défaut ni transmettre la chaîne brute à l’API externe.\n\n## Exécuter puis relier le résultat\n\nAprès ces contrôles, l’application peut appeler sa propre fonction `get_exchange_rate()` avec les arguments validés. Elle traite séparément chaque appel valide et conserve l’identifiant de l’appel qui a produit le résultat. Si elle demande ensuite au modèle de formuler une réponse utilisateur, elle ajoute un message `tool` associé à cet identifiant, puis envoie à nouveau la conversation au modèle. Cette association évite de rattacher le résultat d’une devise à un autre appel lorsque plusieurs appels sont présents.\n\n> **Étude de cas.** Le modèle peut demander un taux sans que ce taux soit contenu dans sa réponse. Le résultat vient uniquement de la fonction contrôlée par votre application. La leçon ne fournit ni service de change ni donnée de taux : elle porte sur le contrôle du flux entre la demande d’outil, sa validation et le résultat associé.",
+                "en": "## Objective\n\nIn a currency-conversion application, a tool call produced by the model **does not execute** the exchange-rate API. It only signals an action the model proposes. The application remains responsible for choosing allowed tools, checking their arguments, and running the function itself.\n\n## Read and filter requested calls\n\nWith the Chat Completions endpoint, requested calls are in `response.choices[0].message.tool_calls`. This list may be empty or may contain multiple calls: do not assume that a call exists or that the first call is the only one to handle. For each call, inspect the function name. In this case, the router accepts only `get_exchange_rate`; an unexpected name must not be executed.\n\nFunction arguments are JSON-encoded. Decode them, then validate their structure before any network call: for example, check that a currency code is present, is a string, and belongs to the codes supported by your application. Invalid JSON, a missing argument, or an unsupported currency should stop **that call** in a controlled way; do not guess a default value or pass the raw string to the external API.\n\n## Execute and link the result\n\nAfter these checks, the application can call its own `get_exchange_rate()` function with the validated arguments. It handles each valid call separately and keeps the identifier of the call that produced the result. If it then asks the model to compose a user-facing response, it appends a `tool` message associated with that identifier and sends the conversation to the model again. This association prevents a result for one currency from being attached to another call when several calls are present.\n\n> **Case study.** The model can request a rate without containing that rate in its response. The result comes only from the function controlled by your application. This lesson provides neither an exchange-rate service nor rate data: it explains the controlled flow from a tool request through validation to the associated result."
+              },
+              "title": {
+                "en": "Validating a tool call before execution",
+                "fr": "Valider un appel d’outil avant son exécution"
+              },
+              "remediation": {
+                "sourcePreserved": true,
+                "reason": "unprovided_coding_harness_replaced_with_self_contained_explanation"
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_2_act_15_tool_call_linkage_qcm",
+              "question": {
+                "fr": "Une application a reçu deux appels d’outil valides, `call_eur` et `call_jpy`. Elle vient d’exécuter le second et veut ajouter son résultat à la conversation Chat Completions. Quel champ doit relier ce résultat au second appel ?",
+                "en": "An application has received two valid tool calls, `call_eur` and `call_jpy`. It has just executed the second one and wants to add its result to the Chat Completions conversation. Which field must link that result to the second call?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "`tool_call_id` avec la valeur `call_jpy`",
+                    "en": "`tool_call_id` with the value `call_jpy`"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Le message système initial, sans identifiant d’appel",
+                    "en": "The initial system message, with no call identifier"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Le schéma de la fonction `get_exchange_rate`, sans résultat",
+                    "en": "The `get_exchange_rate` function schema, with no result"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Le texte intégral du prompt utilisateur, sans message `tool`",
+                    "en": "The full user prompt text, with no `tool` message"
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "fr": "Chaque résultat d’outil doit être associé à l’identifiant de l’appel qui l’a déclenché. Ici, `call_jpy` est l’identifiant du second appel : le message `tool` doit donc porter `tool_call_id: \"call_jpy\"`. Le message système, le schéma et le prompt décrivent le contexte, mais ne relient pas un résultat à un appel précis.",
+                "en": "Each tool result must be associated with the identifier of the call that triggered it. Here, `call_jpy` identifies the second call, so the `tool` message must carry `tool_call_id: \"call_jpy\"`. The system message, schema, and prompt provide context, but none links a result to one specific call."
+              },
+              "serverValidated": true
             }
           ]
         }

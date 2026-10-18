@@ -15,7 +15,7 @@
       "videos_extracted": 2,
       "exercise_types": {
         "VideoExercise": 2,
-        "LocalEnvironmentExercise": 5
+        "DatalabExercise": 5
       },
       "failed_pages": []
     },
@@ -56,8 +56,8 @@
               "type": "content",
               "id": "neopolis_building_ai_agents_with_crewai__01_environment_preparation",
               "body": {
-                "fr": "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
-                "en": "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys."
+                "fr": "## Objectif de ce parcours\n\nVous allez suivre, sans installer de logiciel ni appeler de service externe, la conception d’un pipeline de contenu hypothétique dans CrewAI : **agent → tâche → équipe → flux**. Chaque étape est expliquée à partir d’un cas, puis vérifiée par une question. Les extraits décrivent des choix de conception ; ils ne vous demandent ni clé API, ni données réelles, ni exécution locale.\n\n## Repères pour la vidéo d’accueil\n\nLa narration de la vidéo est en anglais. Elle présente un objectif précis : faire collaborer des agents qui recherchent, analysent puis préparent un contenu, à la manière d’un studio composé de spécialistes et d’un orchestrateur. La progression annoncée part d’un seul agent, lui associe des tâches, rassemble ces éléments dans une équipe, puis coordonne le tout dans un flux qui conserve un état et peut prendre des décisions.\n\nLe formateur indique que des bases de Python — fonctions, dictionnaires et boucles — ainsi qu’une familiarité avec les API facilitent la lecture d’un projet CrewAI. Dans ce parcours Neopolis, la pratique d’origine est remplacée par des études de cas et des validations intégrées : la compréhension ne dépend donc pas d’un environnement de développement.\n\n> **À retenir avant la suite :** un agent n’est pas encore un workflow. Il faut définir le travail attendu, organiser les responsabilités et décider comment les étapes se transmettent leurs informations.",
+                "en": "## Course objective\n\nYou will follow—without installing software or calling an external service—the design of a hypothetical content pipeline in CrewAI: **agent → task → crew → flow**. Each step is explained through a case and then checked with a question. The examples describe design choices; they do not require an API key, real data, or a local run.\n\n## Guide to the welcome video\n\nThe video narration is in English. It introduces a clear goal: have agents research, analyze, and prepare content together, like a studio of specialists coordinated by an orchestrator. The announced progression starts with one agent, assigns tasks to it, groups those elements in a crew, and then coordinates the whole system in a flow that keeps state and can make decisions.\n\nThe instructor notes that Python fundamentals—functions, dictionaries, and loops—and familiarity with APIs make a CrewAI project easier to read. In this Neopolis course, the original hands-on work is replaced by embedded case studies and checks, so understanding does not depend on a development environment.\n\n> **Keep this in mind before continuing:** an agent is not yet a workflow. You must define the work to be done, organize responsibilities, and decide how steps pass information to one another."
               }
             },
             {
@@ -436,7 +436,8 @@
                   "heading": "15. Passons à la pratique !",
                   "text": "Ready to go from a chatbot to a crew? Let’s get started!"
                 }
-              ]
+              ],
+              "alternativeTextFr": "Bienvenue dans « Building Multi-AI Agent Systems with CrewAI », où une IA passe d’un chatbot unique à une équipe qui réalise un vrai travail. À la fin du parcours, le pipeline doit permettre à des agents IA de rechercher, analyser et générer du contenu avec peu d’intervention humaine, comme un studio numérique de spécialistes — chercheurs, rédacteurs et orchestrateur. Tony Kipkemboi, Senior Developer Relations Engineer chez CrewAI, présente le parcours. Il commence par un agent, ajoute des tâches, assemble des équipes, puis orchestre des flows avec état, décisions et mémoire afin que le système choisisse le bon chemin, se souvienne de ce qui s’est passé et puisse reprendre après un échec. La vidéo indique que l’apprenant tirera le meilleur parti des exemples s’il maîtrise les fonctions, dictionnaires et boucles Python ainsi que l’usage d’API. L’objectif final annoncé est de concevoir et déployer des pipelines multi-agents flexibles, par exemple un workflow chercheur-rédacteur pour produire des blogs, des posts LinkedIn et des newsletters."
             },
             {
               "type": "download",
@@ -451,8 +452,198 @@
               },
               "url": "/api/assets/chapter_01_slides_9a417cd7.pdf",
               "filename": "chapter_01_slides.pdf"
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_1_act_01_qcm",
+              "question": {
+                "fr": "Dans la progression étudiée ici, quel enchaînement transforme une capacité isolée en workflow coordonné ?",
+                "en": "In the progression studied here, which sequence turns an isolated capability into a coordinated workflow?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Prompt → mot de passe → API → rapport",
+                    "en": "Prompt → password → API → report"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Agent → tâche → équipe → flux",
+                    "en": "Agent → task → crew → flow"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Données → entraînement → déploiement → facturation",
+                    "en": "Data → training → deployment → billing"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Équipe → agent → flux → tâche",
+                    "en": "Crew → agent → flow → task"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "fr": "Le bon enchaînement est **agent → tâche → équipe → flux**. L’agent porte une capacité et une responsabilité ; une tâche précise le travail ; une équipe coordonne agents et tâches ; un flux organise les étapes, leur état et leurs embranchements.",
+                "en": "The correct sequence is **agent → task → crew → flow**. An agent carries a capability and responsibility; a task specifies work; a crew coordinates agents and tasks; a flow organizes steps, their state, and their branches."
+              },
+              "serverValidated": true
             }
           ]
+        },
+        {
+          "id": "dc_ch01_act02",
+          "title": {
+            "fr": "Découvrez votre premier agent CrewAI",
+            "en": "Discover your first CrewAI agent"
+          },
+          "description": {
+            "fr": "Définissez les responsabilités, le résultat visé et les capacités d’un agent avant de lui confier une mission.",
+            "en": "Define an agent’s responsibility, intended result, and capabilities before assigning it a mission."
+          },
+          "type": "teaching",
+          "sourceActivityType": "ConceptualCase",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "content",
+              "id": "dc_1_act_02_content",
+              "body": {
+                "fr": "## Objectif : définir ce qu’un agent est censé faire\n\nDans CrewAI, un **agent** est une unité autonome configurée pour remplir une responsabilité. Sa configuration doit éviter les formules vagues : le **rôle** situe sa responsabilité, le **but** définit le résultat recherché, le **contexte professionnel** (*backstory*) donne des repères de comportement et les **outils** limitent les capacités auxquelles il peut recourir.\n\n## Étude de cas : le chercheur du studio de contenu\n\nImaginez un studio qui doit transformer une note interne approuvée en contenu éditorial. Le chercheur n’a pas pour mission de « tout écrire ». Son rôle est de repérer les éléments utiles ; son but est de fournir un brief vérifiable ; son contexte lui impose de signaler les incertitudes ; ses outils, s’il y en a, sont ceux autorisés par l’organisation. Cette séparation rend la responsabilité lisible et facilite la revue humaine.\n\nUn outil ne rend pas une information vraie par lui-même. Si un agent peut consulter une source, la tâche suivante doit encore préciser ce qui doit être vérifié, conservé ou signalé. À l’inverse, une **tâche** n’est pas la fiche d’identité de l’agent : c’est une mission ponctuelle attribuée à cet agent.\n\n> Cette étude de cas porte sur le modèle de conception : aucun accès au Web ni résultat de recherche externe n’est nécessaire pour la comprendre.",
+                "en": "## Objective: define what an agent is meant to do\n\nIn CrewAI, an **agent** is an autonomous unit configured to fulfil a responsibility. Its configuration should avoid vague wording: a **role** locates the responsibility, a **goal** defines the intended result, a professional **backstory** provides behavioral guidance, and **tools** bound the capabilities it may use.\n\n## Case study: the content-studio researcher\n\nImagine a studio that must turn an approved internal note into editorial content. The researcher is not tasked with “writing everything.” Its role is to identify useful elements; its goal is to provide a checkable brief; its backstory requires it to flag uncertainty; and its tools, if any, are those approved by the organization. This separation makes accountability clear and supports human review.\n\nA tool does not make information true on its own. If an agent can consult a source, the next task must still say what needs to be checked, retained, or flagged. Conversely, a **task** is not an agent’s identity card: it is a specific assignment given to that agent.\n\n> This case study focuses on the design model: no Web access or external search result is needed to understand it."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_1_act_02_qcm",
+              "question": {
+                "fr": "Pour un agent chargé de préparer un brief de recherche, quelle configuration rend le plus clairement sa responsabilité vérifiable ?",
+                "en": "For an agent responsible for preparing a research brief, which configuration makes its responsibility most clearly checkable?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Un unique texte : « Sois utile et écris quelque chose de bon »",
+                    "en": "One sentence: “Be helpful and write something good”"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Une liste de modèles de langage sans responsabilité ni résultat visé",
+                    "en": "A list of language models without a responsibility or intended result"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Un rôle de chercheur, un but de brief vérifiable, un contexte qui demande de signaler l’incertitude et des outils autorisés",
+                    "en": "A researcher role, a goal of a checkable brief, a backstory requiring uncertainty to be flagged, and authorized tools"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Le contenu final déjà rédigé, sans agent ni consigne",
+                    "en": "The final content already written, with no agent or instruction"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "fr": "Cette configuration sépare la responsabilité, le résultat visé, les règles de comportement et les capacités permises. Elle aide à évaluer le travail de l’agent sans confondre son identité avec une tâche ou avec un résultat déjà produit.",
+                "en": "This configuration separates responsibility, intended result, behavioral rules, and permitted capabilities. It makes the agent’s work assessable without confusing its identity with a task or with an already-produced result."
+              },
+              "serverValidated": true
+            }
+          ],
+          "remediation": {
+            "action": "conceptual_case_replaces_unavailable_lab",
+            "source_activity_preserved": "dc_ch01_act02",
+            "requires_external_environment": false
+          }
+        },
+        {
+          "id": "dc_ch01_act03",
+          "title": {
+            "fr": "Lancer une équipe",
+            "en": "Launch a crew"
+          },
+          "description": {
+            "fr": "Distinguez l’agent, la tâche et l’équipe pour organiser un travail coordonné et contrôlable.",
+            "en": "Distinguish agent, task, and crew to organize coordinated, reviewable work."
+          },
+          "type": "teaching",
+          "sourceActivityType": "ConceptualCase",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "content",
+              "id": "dc_1_act_03_content",
+              "body": {
+                "fr": "## Objectif : passer d’une responsabilité à un travail coordonné\n\nUne **Task** (tâche) est une affectation concrète réalisée par un agent. Pour être exploitable, elle indique au moins ce qu’il faut faire, l’agent responsable et la forme attendue du livrable. La forme attendue ne garantit pas la qualité du contenu ; elle permet toutefois de rendre le résultat contrôlable.\n\nUne **Crew** (équipe) rassemble les agents et les tâches qui doivent coopérer. Elle définit leur exécution, par exemple dans l’ordre déclaré ou selon une coordination hiérarchique. Dans le cas du studio, l’équipe peut réunir un seul chercheur et sa tâche de brief : l’équipe devient utile dès qu’elle porte une organisation explicite, même avant l’ajout d’un rédacteur.\n\n### Contraste utile\n\n- **Agent** : qui possède une responsabilité et des capacités.\n- **Tâche** : quel travail limité cet agent doit accomplir et sous quelle forme.\n- **Équipe** : quel ensemble d’agents et de tâches est orchestré.\n\nNe déduisez pas un résultat d’exécution de cette conception. Le cas décrit un contrat de travail ; il ne prétend pas avoir recherché ni rédigé un contenu réel.",
+                "en": "## Objective: move from a responsibility to coordinated work\n\nA **Task** is a concrete assignment completed by an agent. To be usable, it states at least what must be done, the responsible agent, and the expected form of the deliverable. That expected form does not guarantee content quality; it does make the result reviewable.\n\nA **Crew** groups the agents and tasks that must collaborate. It defines their execution, for example in the declared order or through hierarchical coordination. In the studio case, the crew may group one researcher and its briefing task: the crew becomes useful as soon as it carries explicit organization, even before a writer is added.\n\n### Useful contrast\n\n- **Agent**: who has a responsibility and capabilities.\n- **Task**: what bounded work that agent must perform and in what form.\n- **Crew**: which set of agents and tasks is orchestrated.\n\nDo not infer an execution result from this design. The case describes a work contract; it does not claim to have researched or written real content."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_1_act_03_qcm",
+              "question": {
+                "fr": "Dans une tâche destinée à un agent chercheur, quel élément rend le livrable le plus contrôlable sans prétendre que la recherche a déjà été effectuée ?",
+                "en": "In a task intended for a research agent, which element makes the deliverable most reviewable without claiming that research has already happened?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Décrire la forme attendue du brief et attribuer la tâche au chercheur",
+                    "en": "Describe the expected form of the brief and assign the task to the researcher"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Remplacer la tâche par le profil personnel du rédacteur",
+                    "en": "Replace the task with the writer’s personal profile"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Supprimer l’agent et ne garder qu’un nom d’équipe",
+                    "en": "Remove the agent and keep only a crew name"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Déclarer que le rapport a été produit, sans lancer d’exécution",
+                    "en": "Declare that the report was produced without running anything"
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "fr": "Une tâche claire associe un agent à un travail et à une forme de résultat attendue. Elle fournit un critère de revue, sans inventer un rapport ni confondre la tâche avec la configuration de l’agent.",
+                "en": "A clear task associates an agent with work and an expected result format. It provides a review criterion without inventing a report or confusing the task with the agent configuration."
+              },
+              "serverValidated": true
+            }
+          ],
+          "remediation": {
+            "action": "conceptual_case_replaces_unavailable_lab",
+            "source_activity_preserved": "dc_ch01_act03",
+            "requires_external_environment": false
+          }
         }
       ]
     },
@@ -474,6 +665,225 @@
       "recommendedVideosManaged": false,
       "chapters": [
         {
+          "id": "dc_ch02_act01",
+          "title": {
+            "fr": "Une mémoire au service des flux",
+            "en": "State for reliable flows"
+          },
+          "description": {
+            "fr": "Comprenez comment un état explicite conserve les informations utiles entre les étapes d’un Flow.",
+            "en": "Understand how explicit state keeps useful information between Flow steps."
+          },
+          "type": "teaching",
+          "sourceActivityType": "ConceptualCase",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "content",
+              "id": "dc_2_act_01_content",
+              "body": {
+                "fr": "## Objectif : conserver le bon contexte entre les étapes\n\nUn **Flow** de CrewAI coordonne des étapes événementielles et gère un **état** partagé pendant une exécution. Cet état sert à conserver des informations explicites dont les étapes suivantes ont besoin. Pour un workflow de contenu, on peut modéliser une référence de source, le type de contenu demandé et des métadonnées de suivi ; on ne place pas ces informations seulement dans un prompt éphémère.\n\nUn état structuré, par exemple fondé sur un modèle Pydantic, rend les champs attendus visibles et vérifiables. Il vaut mieux distinguer les données par exécution d’un dictionnaire global réutilisé : deux demandes distinctes ne doivent pas mélanger leur contexte.\n\n### État, mémoire et contexte : ne pas les confondre\n\nL’état d’un Flow est le contrat de données explicite du workflow. La mémoire d’un agent peut conserver des interactions selon sa configuration. Le contexte d’une tâche est, lui, un moyen de donner à une tâche les sorties de tâches antérieures. Ces mécanismes peuvent coopérer, mais ils ne répondent pas au même besoin.\n\nLe TP source demandait de compléter `url` et `metadata` dans un modèle d’état. Ici, le cas explique pourquoi ces champs existent, sans demander de créer un fichier ni de l’exécuter.",
+                "en": "## Objective: keep the right context between steps\n\nA CrewAI **Flow** coordinates event-driven steps and manages shared **state** during an execution. That state keeps explicit information needed by later steps. For a content workflow, it can model a source reference, the requested content type, and tracking metadata; this information should not exist only in an ephemeral prompt.\n\nA structured state, for example one based on a Pydantic model, makes expected fields visible and checkable. It is better to keep data per execution than to reuse a global dictionary: two distinct requests must not mix their context.\n\n### State, memory, and context: do not conflate them\n\nFlow state is the workflow’s explicit data contract. Agent memory may retain interactions according to its configuration. Task context, in turn, is a way to give a task outputs from earlier tasks. These mechanisms can cooperate, but they do not solve the same problem.\n\nThe source lab asked learners to complete `url` and `metadata` in a state model. Here, the case explains why those fields exist without asking you to create or run a file."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_2_act_01_qcm",
+              "question": {
+                "fr": "Un workflow doit traiter deux demandes de contenu indépendantes. Quelle conception évite le mieux de mélanger leurs informations de suivi ?",
+                "en": "A workflow must process two independent content requests. Which design best avoids mixing their tracking information?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Mettre toutes les informations dans une seule variable globale partagée",
+                    "en": "Put all information in one shared global variable"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Définir un état structuré propre à chaque exécution du Flow",
+                    "en": "Define structured state that belongs to each Flow execution"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Ne conserver aucune donnée entre les étapes",
+                    "en": "Keep no data between steps"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Mettre le résultat supposé dans le rôle de chaque agent",
+                    "en": "Put the assumed result in every agent’s role"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "fr": "Un état structuré par exécution rend les champs de suivi explicites tout en séparant les demandes. Une variable globale pourrait mélanger le contexte de deux exécutions et compromettre le routage ou la revue.",
+                "en": "Structured state per execution makes tracking fields explicit while separating requests. A global variable could mix the context of two executions and compromise routing or review."
+              },
+              "serverValidated": true
+            }
+          ],
+          "remediation": {
+            "action": "conceptual_case_replaces_unavailable_lab",
+            "source_activity_preserved": "dc_ch02_act01",
+            "requires_external_environment": false
+          }
+        },
+        {
+          "id": "dc_ch02_act02",
+          "title": {
+            "fr": "Constituer des équipes de spécialistes",
+            "en": "Build specialist crews"
+          },
+          "description": {
+            "fr": "Organisez le passage d’information entre un chercheur et un rédacteur sans confondre contexte et validation.",
+            "en": "Organize information handoff between a researcher and a writer without confusing context with validation."
+          },
+          "type": "teaching",
+          "sourceActivityType": "ConceptualCase",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "content",
+              "id": "dc_2_act_02_content",
+              "body": {
+                "fr": "## Objectif : relier le travail de spécialistes\n\nUne équipe gagne en lisibilité lorsque chaque agent a une responsabilité limitée. Dans le cas du studio, un chercheur prépare des éléments sourcés et un rédacteur les transforme en brouillon. La spécialisation ne dispense pas de contrôle : le rédacteur doit connaître la provenance et les limites du brief, et une personne doit valider le résultat avant diffusion.\n\nLa tâche du rédacteur peut recevoir la tâche de recherche comme **contexte**. Dans CrewAI, le contexte rend explicite quelles sorties antérieures sont utiles à une tâche ; il évite de demander au rédacteur de deviner ou de recréer le travail du chercheur. Le contexte doit rester orienté vers les données réellement nécessaires : le transmettre sans discernement augmente le bruit et les risques de confusion.\n\n### Exemple de décision de conception\n\nSi le brief mentionne une affirmation non vérifiée, le rédacteur ne doit pas la présenter comme un fait établi. Le workflow peut conserver le signalement dans son état et demander une validation humaine. Ainsi, relier deux tâches organise le passage d’information ; cela ne remplace ni une source fiable ni une revue.\n\nAucun outil de recherche, aucune URL ni aucun brouillon externe ne sont requis pour cette étude de cas.",
+                "en": "## Objective: connect specialists’ work\n\nA crew becomes easier to reason about when each agent has a bounded responsibility. In the studio case, a researcher prepares sourced elements and a writer turns them into a draft. Specialization does not remove the need for control: the writer must know the brief’s provenance and limits, and a person must validate the result before publication.\n\nThe writer’s task can receive the research task as **context**. In CrewAI, context makes explicit which earlier outputs are useful to a task; it prevents the writer from having to guess or recreate the researcher’s work. Context should remain focused on data that is truly needed: passing it indiscriminately increases noise and confusion risk.\n\n### Design decision example\n\nIf the brief flags an unverified claim, the writer must not present it as an established fact. The workflow can retain that flag in its state and request human validation. Connecting two tasks therefore organizes information handoff; it does not replace a reliable source or review.\n\nNo research tool, URL, or external draft is required for this case study."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_2_act_02_qcm",
+              "question": {
+                "fr": "Dans l’étude de cas, comment le rédacteur reçoit-il de manière explicite les éléments préparés par le chercheur ?",
+                "en": "In the case study, how does the writer explicitly receive elements prepared by the researcher?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "En copiant le rôle du chercheur dans le titre du rédacteur",
+                    "en": "By copying the researcher’s role into the writer’s title"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "En déclarant la tâche de recherche comme contexte de la tâche d’écriture",
+                    "en": "By declaring the research task as context for the writing task"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "En supprimant la tâche de recherche une fois l’équipe créée",
+                    "en": "By deleting the research task once the crew is created"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "En supposant que tous les agents partagent automatiquement les mêmes conclusions",
+                    "en": "By assuming all agents automatically share the same conclusions"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "fr": "Le contexte relie explicitement une tâche aux sorties pertinentes de tâches précédentes. Cette transmission aide le rédacteur à travailler à partir du brief, sans transformer une information non vérifiée en fait ni supprimer la nécessité d’une revue.",
+                "en": "Context explicitly connects a task to relevant outputs from earlier tasks. That handoff helps the writer work from the brief without turning unverified information into fact or removing the need for review."
+              },
+              "serverValidated": true
+            }
+          ],
+          "remediation": {
+            "action": "conceptual_case_replaces_unavailable_lab",
+            "source_activity_preserved": "dc_ch02_act02",
+            "requires_external_environment": false
+          }
+        },
+        {
+          "id": "dc_ch02_act03",
+          "title": {
+            "fr": "Orchestration de flux multi-équipages",
+            "en": "Orchestrate multi-crew flows"
+          },
+          "description": {
+            "fr": "Utilisez les points de départ, écouteurs et routeurs d’un Flow pour diriger une demande vers la bonne équipe.",
+            "en": "Use a Flow’s start points, listeners, and routers to direct a request to the right crew."
+          },
+          "type": "teaching",
+          "sourceActivityType": "ConceptualCase",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "content",
+              "id": "dc_2_act_03_content",
+              "body": {
+                "fr": "## Objectif : décider quelle équipe intervient, puis suivre l’exécution\n\nUn Flow organise un processus en plusieurs étapes. Dans CrewAI, `@start()` marque un point d’entrée, `@listen()` réagit à la sortie d’une étape, et `@router()` choisit une branche à partir d’une décision. Ces décorateurs décrivent le passage du contrôle ; l’état du Flow porte les informations qui doivent survivre d’une étape à la suivante.\n\n## Étude de cas : router une demande de contenu\n\nSupposons qu’une demande contient une référence de source et un type de contenu, par exemple « newsletter ». L’étape de départ enregistre ces valeurs dans l’état. Une étape de routage choisit l’étiquette correspondant au type demandé. Seul l’écouteur associé à cette étiquette doit lancer l’équipe concernée. Une même structure peut ainsi distinguer un traitement de blog, de newsletter ou de post LinkedIn sans faire exécuter toutes les équipes.\n\n`flow.kickoff()` est l’opération qui démarre l’exécution d’un Flow. L’appeler ne prouve pas que le contenu est correct : la conception doit prévoir des conditions de routage claires, des sorties attendues et les validations nécessaires. Le cas n’exécute aucun Flow et ne fournit aucun contenu généré.",
+                "en": "## Objective: decide which crew acts, then track the execution\n\nA Flow organizes a multi-step process. In CrewAI, `@start()` marks an entry point, `@listen()` reacts to a step’s output, and `@router()` chooses a branch from a decision. These decorators describe the handoff of control; Flow state carries information that must survive from one step to the next.\n\n## Case study: route a content request\n\nSuppose a request contains a source reference and a content type, such as “newsletter.” The starting step records these values in state. A routing step chooses the label that corresponds to the requested type. Only the listener associated with that label should launch the relevant crew. The same structure can distinguish blog, newsletter, or LinkedIn-post processing without running every crew.\n\n`flow.kickoff()` is the operation that starts a Flow execution. Calling it does not prove the content is correct: the design still needs clear routing conditions, expected outputs, and necessary checks. This case runs no Flow and provides no generated content."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_2_act_03_qcm",
+              "question": {
+                "fr": "Une demande est étiquetée « newsletter ». Quel élément du Flow doit choisir la branche vers l’équipe newsletter plutôt que déclencher toutes les équipes ?",
+                "en": "A request is labelled “newsletter.” Which Flow element should choose the branch to the newsletter crew rather than trigger every crew?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "`@start()`, car il définit à lui seul toutes les branches",
+                    "en": "`@start()`, because it defines every branch by itself"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "`@listen()`, car tout écouteur doit toujours s’exécuter",
+                    "en": "`@listen()`, because every listener must always run"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "`@router()`, car il retourne l’étiquette qui détermine la branche",
+                    "en": "`@router()`, because it returns the label that determines the branch"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Le texte du contexte de la tâche, sans logique de routage",
+                    "en": "The task-context text, with no routing logic"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "fr": "Un routeur applique une décision et renvoie l’étiquette de branche appropriée. Les écouteurs associés peuvent ensuite réagir à cette branche ; le point de départ collecte ou initialise les informations, mais ne remplace pas la décision de routage.",
+                "en": "A router applies a decision and returns the appropriate branch label. Associated listeners can then react to that branch; the start point collects or initializes information, but it does not replace the routing decision."
+              },
+              "serverValidated": true
+            }
+          ],
+          "remediation": {
+            "action": "conceptual_case_replaces_unavailable_lab",
+            "source_activity_preserved": "dc_ch02_act03",
+            "requires_external_environment": false
+          }
+        },
+        {
           "id": "dc_ch02_act04",
           "title": {
             "en": "Félicitations !",
@@ -487,6 +897,14 @@
           "sourceActivityType": "VideoExercise",
           "requiredBeforeAdvance": true,
           "blocks": [
+            {
+              "type": "content",
+              "id": "dc_2_act_04_content",
+              "body": {
+                "fr": "## Consolider le parcours\n\nLa vidéo de conclusion est narrée en anglais. Elle récapitule le chemin maintenant présent dans ce parcours : définir un agent avec un rôle, un but, un contexte et des outils ; lui attribuer des tâches ; organiser les tâches dans des équipes ; puis utiliser un Flow pour articuler décisions et état.\n\nLe studio de contenu reste un **cas de conception**, pas la preuve qu’un blog, une newsletter ou un post LinkedIn a été créé. La valeur de l’architecture vient de la séparation des responsabilités, de la transmission explicite du contexte et des contrôles ajoutés avant diffusion. Ces mêmes principes se transposent à un assistant de recherche, une chaîne d’analyse ou tout autre workflow qui exige coordination et traçabilité.\n\nAvant de transposer ce modèle à un projet réel, définissez quelles informations peuvent être traitées, qui valide les sorties et où les incertitudes doivent être signalées. La vidéo invite aussi à poursuivre l’exploration de CrewAI ; cette invitation est facultative et aucune consultation externe n’est requise pour terminer le parcours.",
+                "en": "## Consolidate the course\n\nThe conclusion video is narrated in English. It summarizes the path now present in this course: define an agent with a role, goal, backstory, and tools; assign tasks to it; organize tasks into crews; then use a Flow to connect decisions and state.\n\nThe content studio remains a **design case**, not evidence that a blog, newsletter, or LinkedIn post was created. The architecture’s value comes from separating responsibilities, passing context explicitly, and adding checks before publication. The same principles transfer to a research assistant, an analysis pipeline, or any workflow that requires coordination and traceability.\n\nBefore adapting this model to a real project, define which information may be processed, who validates outputs, and where uncertainty must be flagged. The video also encourages further exploration of CrewAI; that invitation is optional, and no external consultation is required to finish this course."
+              }
+            },
             {
               "type": "video",
               "id": "dc_2_act_04_video",
@@ -837,12 +1255,57 @@
                   "heading": "16. Merci !",
                   "text": "Congratulations again, and happy building!"
                 }
-              ]
+              ],
+              "alternativeTextFr": "Félicitations pour avoir terminé ce parcours sur les systèmes multi-agents avec CrewAI. La vidéo récapitule la progression : définition d’un agent unique avec un rôle, un objectif, un contexte et des outils ; attribution de tâches ; assemblage et exécution d’équipes pour produire des sorties utiles ; puis exploration des flows, avec décision et mémoire. Elle indique ensuite que plusieurs équipes peuvent être orchestrées sous un même flow afin de construire un pipeline de contenu flexible et automatisé, pour la recherche, la création de contenu et la prise de décision avec peu d’intervention humaine. Enfin, elle cite comme pistes d’adaptation les assistants de recherche, les studios de contenu automatisés et les pipelines d’analyse de données, et encourage à poursuivre l’exploration des fonctionnalités de CrewAI dans un environnement de développement local."
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_2_act_04_qcm",
+              "question": {
+                "fr": "Quel contrôle reste nécessaire même si un Flow a correctement routé une demande vers une équipe spécialisée ?",
+                "en": "Which control remains necessary even if a Flow has correctly routed a request to a specialized crew?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Valider les sorties et signaler les incertitudes avant diffusion",
+                    "en": "Validate outputs and flag uncertainty before publication"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Supposer que le routage rend toute information factuelle",
+                    "en": "Assume routing makes every piece of information factual"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Supprimer l’état dès qu’une équipe a été choisie",
+                    "en": "Delete state as soon as a crew has been selected"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Faire exécuter toutes les équipes pour être sûr",
+                    "en": "Run every crew just to be safe"
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "fr": "Le routage organise l’exécution ; il ne vérifie ni l’exactitude, ni l’autorisation de diffuser une sortie. Une validation humaine ou un contrôle adapté reste nécessaire, et les incertitudes doivent demeurer visibles.",
+                "en": "Routing organizes execution; it does not verify accuracy or authorize publication of an output. Human validation or an appropriate control remains necessary, and uncertainty must remain visible."
+              },
+              "serverValidated": true
             }
           ]
         }
       ]
     }
   ],
-  "exerciseCount": 0
+  "exerciseCount": 7
 }

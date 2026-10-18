@@ -129,25 +129,21 @@
             {
               "type": "content",
               "body": {
-                "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Pinecone, Gemini ou GPT, Google Docs, rapports trimestriels publics ou fictifs.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
-                "en": "## Environment preparation\n\nWork in a **personal sandbox**, a local draft, or demonstration accounts. Prepare only fictitious data and test access.\n\n- Planned tools: n8n, Pinecone, Gemini or GPT, Google Docs, public or fictitious quarterly reports.\n- Do not enter any key, password, or real personal data in the practical exercise or its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with a human impact, retain **explicit human validation** before the final action.\n\nThis pathway does not require a provider-hosted lab: adapt the steps to your local or demonstration environment."
+                "fr": "## Préparer l’étude de cas sans laboratoire\n\nCette formation n’héberge ni PDF financier, ni identifiants, ni workflow n8n importable. Elle explique la chaîne RAG à partir du **fonctionnement documenté** du workflow de référence. Vous pouvez donc progresser sans compte n8n, Pinecone, Gemini, GPT ou Google Docs, et sans exécuter d’action externe.\n\nLe cas de référence traite des rapports trimestriels : une liste de liens vers des PDF est lue, les PDF sont récupérés et leur texte est découpé. Chaque partie est vectorisée puis stockée dans Pinecone pour être retrouvée lors d’une question. Un agent utilise les passages retrouvés pour préparer une analyse, qui peut ensuite être structurée dans Google Docs.\n\nPour une utilisation réelle, le corpus doit être autorisé et son périmètre explicite : entreprise, période couverte et version du rapport. Une réponse générée n’est pas une recommandation d’investissement ; elle reste à relire par un analyste et à confronter aux documents sources.",
+                "en": "## Prepare the case study without a lab\n\nThis training hosts no financial PDF, credentials, or importable n8n workflow. It explains the RAG chain from the **documented behavior** of the reference workflow. You can therefore progress without an n8n, Pinecone, Gemini, GPT, or Google Docs account, and without performing an external action.\n\nThe reference case handles quarterly reports: it reads a list of PDF links, retrieves the PDFs, and splits their text. Each part is embedded and stored in Pinecone so it can be retrieved when a question is asked. An agent uses the retrieved passages to prepare an analysis, which can then be structured in Google Docs.\n\nFor real use, the corpus must be authorized and its scope explicit: company, covered period, and report version. A generated response is not investment advice; an analyst must still review it and compare it with the source documents."
               }
             },
             {
-              "type": "resource_review",
               "id": "ia_appliquee_metiers_tp__35-source-review",
+              "type": "callout",
+              "variant": "info",
               "title": {
-                "fr": "Ressource source",
-                "en": "Ressource source"
+                "fr": "Ressource source facultative",
+                "en": "Optional source resource"
               },
-              "instructions": {
-                "fr": "Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation.\n\n[Ouvrir la ressource source](https://n8n.io/workflows/2741-ai-powered-rag-workflow-for-stock-earnings-report-analysis/)",
-                "en": "Open the source resource in a new tab. Identify the business outcome, inputs, outputs, and control steps. Then return here to confirm that you consulted it.\n\n[Open the source resource](https://n8n.io/workflows/2741-ai-powered-rag-workflow-for-stock-earnings-report-analysis/)"
-              },
-              "resourceUrl": "https://n8n.io/workflows/2741-ai-powered-rag-workflow-for-stock-earnings-report-analysis/",
-              "resourceLabel": {
-                "fr": "Ouvrir la ressource source",
-                "en": "Ouvrir la ressource source"
+              "body": {
+                "fr": "Le modèle de workflow n8n est proposé uniquement comme contexte complémentaire. Sa consultation, la création de comptes et l’importation du workflow ne sont pas nécessaires pour terminer cette formation. [Consulter le modèle n8n (facultatif)](https://n8n.io/workflows/2741-ai-powered-rag-workflow-for-stock-earnings-report-analysis/).",
+                "en": "The n8n workflow template is offered only as supplementary context. Consulting it, creating accounts, and importing the workflow are not required to complete this training. [View the n8n template (optional)](https://n8n.io/workflows/2741-ai-powered-rag-workflow-for-stock-earnings-report-analysis/)."
               }
             }
           ]
@@ -162,51 +158,59 @@
           "requiredBeforeAdvance": true,
           "blocks": [
             {
+              "id": "ia_appliquee_metiers_tp__35-rag-explanation",
+              "type": "content",
+              "body": {
+                "fr": "## De la source financière à une réponse vérifiable\n\n**Objectif :** comprendre ce qu’une chaîne RAG doit conserver et contrôler pour répondre à une question sur des résultats trimestriels, sans confondre un passage retrouvé avec une conclusion d’investissement.\n\n### 1. Préparer des unités de recherche\n\nUn PDF entier est trop large pour être une unité de recherche utile. Son texte est d’abord extrait, puis découpé en **chunks** cohérents. Chaque chunk garde une provenance exploitable : le rapport auquel il appartient, la période couverte et son emplacement dans la source. Cette provenance permet à l’analyste de relier une affirmation au bon document plutôt que de traiter le résultat du modèle comme une source.\n\n### 2. Retrouver le contexte pertinent\n\nUn modèle d’**embeddings** représente le sens d’un chunk sous forme de vecteur. La question est représentée dans le même espace, puis une recherche vectorielle dans Pinecone sélectionne les passages les plus proches. Des métadonnées telles que l’entreprise et le trimestre servent à limiter le corpus avant la recherche. Un bon score de similarité indique une piste à examiner ; il ne prouve pas à lui seul une affirmation financière.\n\n### 3. Rédiger une réponse documentée\n\nLe modèle reçoit la question et les passages récupérés. La réponse doit rester dans ce périmètre : elle attribue les constats aux documents retrouvés, distingue les éléments établis des interprétations et signale ce que le corpus ne permet pas d’établir. À l’inverse, répondre uniquement depuis la connaissance générale du modèle ou compléter un chiffre absent détruit la traçabilité.\n\n### 4. Préparer un rapport relisible\n\nDans Google Docs, une restitution utile sépare la question et son périmètre, les constats, les références aux sources, les limites et le statut de revue. Le document facilite la relecture humaine ; il ne la remplace pas. Aucun chiffre de résultat n’est supposé dans cette étude de cas.",
+                "en": "## From a financial source to a verifiable answer\n\n**Goal:** understand what a RAG chain must retain and control to answer a question about quarterly results, without confusing a retrieved passage with an investment conclusion.\n\n### 1. Prepare search units\n\nAn entire PDF is too broad to be a useful search unit. Its text is first extracted, then split into coherent **chunks**. Each chunk retains usable provenance: the report it belongs to, the period it covers, and its location in the source. That provenance lets an analyst connect a claim to the right document rather than treating the model output as a source.\n\n### 2. Retrieve relevant context\n\nAn **embedding** model represents the meaning of a chunk as a vector. The question is represented in the same space, then a vector search in Pinecone selects the closest passages. Metadata such as the company and quarter can limit the corpus before the search. A high similarity score is a lead to examine; it does not by itself prove a financial claim.\n\n### 3. Write a documented answer\n\nThe model receives the question and the retrieved passages. The response must stay within that scope: it attributes findings to retrieved documents, separates established facts from interpretations, and states what the corpus cannot establish. In contrast, answering only from the model’s general knowledge or filling in a missing figure destroys traceability.\n\n### 4. Prepare a reviewable report\n\nIn Google Docs, a useful deliverable separates the question and its scope, the findings, source references, limitations, and review status. The document supports human review; it does not replace it. No financial result is assumed in this case study."
+              }
+            },
+            {
               "type": "sequence_visual",
               "title": {
-                "fr": "Démarche de réalisation",
-                "en": "Démarche de réalisation"
+                "fr": "Chaîne RAG de référence",
+                "en": "Reference RAG chain"
               },
               "layout": "timeline",
               "items": [
                 {
                   "title": {
-                    "fr": "Cadrer",
-                    "en": "Cadrer"
+                    "fr": "Délimiter le corpus",
+                    "en": "Scope the corpus"
                   },
                   "description": {
-                    "fr": "Définissez le cas d’usage pour Analyste financier, analyste investissement, BI finance et les limites d’automatisation.",
-                    "en": "Define the use case for a financial analyst, investment analyst, and finance BI, along with the automation limits."
+                    "fr": "Identifier les rapports, les périodes et l’entreprise qui sont autorisés pour la question.",
+                    "en": "Identify the reports, periods, and company that are authorized for the question."
                   }
                 },
                 {
                   "title": {
-                    "fr": "Préparer",
-                    "en": "Préparer"
+                    "fr": "Indexer les passages",
+                    "en": "Index the passages"
                   },
                   "description": {
-                    "fr": "Créez des données fictives adaptées aux outils : n8n, Pinecone, Gemini ou GPT.",
-                    "en": "Create fictitious data suited to the tools: n8n, Pinecone, Gemini, or GPT."
+                    "fr": "Extraire le texte, le découper, créer les embeddings et conserver la provenance avec chaque chunk.",
+                    "en": "Extract text, split it, create embeddings, and retain provenance with each chunk."
                   }
                 },
                 {
                   "title": {
-                    "fr": "Tester",
-                    "en": "Tester"
+                    "fr": "Récupérer le contexte",
+                    "en": "Retrieve context"
                   },
                   "description": {
-                    "fr": "Exécutez des scénarios de test, relisez les sorties et consignez les écarts.",
-                    "en": "Run test scenarios, review the outputs, and document any discrepancies."
+                    "fr": "Représenter la question, rechercher les chunks pertinents et appliquer le périmètre de métadonnées.",
+                    "en": "Represent the question, retrieve relevant chunks, and apply the metadata scope."
                   }
                 },
                 {
                   "title": {
-                    "fr": "Contrôler",
-                    "en": "Contrôler"
+                    "fr": "Restituer et revoir",
+                    "en": "Report and review"
                   },
                   "description": {
-                    "fr": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne.",
-                    "en": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne."
+                    "fr": "Produire une réponse attribuée aux sources, la structurer dans Google Docs et soumettre les conclusions à une revue humaine.",
+                    "en": "Produce a response attributed to sources, structure it in Google Docs, and submit conclusions for human review."
                   }
                 }
               ]
@@ -214,47 +218,47 @@
             {
               "type": "comparison_panel",
               "title": {
-                "fr": "Vérifications avant utilisation",
-                "en": "Vérifications avant utilisation"
+                "fr": "Passage retrouvé ou conclusion fiable ?",
+                "en": "Retrieved passage or reliable conclusion?"
               },
               "columns": [
                 {
                   "title": {
-                    "fr": "À faire",
-                    "en": "À faire"
+                    "fr": "Réponse traçable",
+                    "en": "Traceable response"
                   },
                   "items": [
                     {
-                      "fr": "Utiliser des données fictives.",
-                      "en": "Utiliser des données fictives."
+                      "fr": "Relie chaque constat au rapport et à la période concernés.",
+                      "en": "Links each finding to the relevant report and period."
                     },
                     {
-                      "fr": "Définir un contrôle humain.",
-                      "en": "Définir un contrôle humain."
+                      "fr": "Distingue un extrait source d’une interprétation analytique.",
+                      "en": "Distinguishes a source excerpt from an analytical interpretation."
                     },
                     {
-                      "fr": "Tester les cas limites.",
-                      "en": "Tester les cas limites."
+                      "fr": "Signale une information absente ou insuffisante dans les passages récupérés.",
+                      "en": "Flags information that is absent or insufficient in the retrieved passages."
                     }
                   ]
                 },
                 {
                   "title": {
-                    "fr": "À éviter",
-                    "en": "À éviter"
+                    "fr": "Raccourci à éviter",
+                    "en": "Shortcut to avoid"
                   },
                   "items": [
                     {
-                      "fr": "Exposer un secret ou une donnée personnelle.",
-                      "en": "Exposer un secret ou une donnée personnelle."
+                      "fr": "Prendre le meilleur score vectoriel pour une preuve définitive.",
+                      "en": "Treating the highest vector score as conclusive proof."
                     },
                     {
-                      "fr": "Déclencher une action finale sans validation.",
-                      "en": "Déclencher une action finale sans validation."
+                      "fr": "Mélanger des périodes ou des entreprises hors du périmètre de la question.",
+                      "en": "Mixing periods or companies outside the question’s scope."
                     },
                     {
-                      "fr": "Déduire une décision sans vérification métier.",
-                      "en": "Déduire une décision sans vérification métier."
+                      "fr": "Compléter une donnée absente avec une supposition du modèle.",
+                      "en": "Filling in missing data with a model assumption."
                     }
                   ]
                 }
@@ -266,8 +270,8 @@
           "id": "ia_appliquee_metiers_tp__35-final-quiz",
           "type": "quiz",
           "title": {
-            "fr": "Quiz final : valider la démarche",
-            "en": "Quiz final : valider la démarche"
+            "fr": "Quiz final : valider les compétences RAG",
+            "en": "Final quiz: validate RAG skills"
           },
           "requiredBeforeAdvance": true,
           "passThreshold": 4,
@@ -275,239 +279,177 @@
             {
               "id": "ia_appliquee_metiers_tp__35-quiz-01",
               "type": "single_choice_exercise",
+              "serverValidated": true,
               "question": {
-                "fr": "Quel élément doit être conservé dans le mini-projet « Construire un assistant RAG qui compare deux rapports trimestriels et produit une note d'analyse structurée. » ?",
-                "en": "What element must be retained in the mini-project “Build a RAG assistant that compares two quarterly reports and produces a structured analysis note.”?"
+                "fr": "Avant d’indexer les passages d’un rapport trimestriel, quelle préparation permet de retrouver l’origine d’un passage utilisé dans une réponse ?",
+                "en": "Before indexing passages from a quarterly report, which preparation makes it possible to trace the origin of a passage used in an answer?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Une preuve de test avec des données fictives et un résultat vérifiable.",
-                    "en": "Test evidence using fictional data and a verifiable result."
+                    "fr": "Conserver uniquement le nom de l’entreprise pour tous les passages.",
+                    "en": "Keep only the company name for every passage."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Un mot de passe de production directement dans le workflow.",
-                    "en": "A production password directly in the workflow."
+                    "fr": "Associer au passage sa provenance, notamment le rapport, la période et son emplacement dans la source.",
+                    "en": "Associate the passage with its provenance, including the report, period, and its location in the source."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Une action finale déclenchée sans relecture.",
-                    "en": "Une action finale déclenchée sans relecture."
+                    "fr": "Remplacer les passages par le texte final du rapport Google Docs.",
+                    "en": "Replace the passages with the final Google Docs report text."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Un export de données personnelles non anonymisées.",
-                    "en": "An export of non-anonymized personal data."
+                    "fr": "Conserver seulement la question posée par l’utilisateur.",
+                    "en": "Keep only the user’s question."
                   }
                 }
               ],
-              "correctAnswer": "a",
+              "correctAnswer": "b",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
+                "fr": "Le chunk est l’unité retrouvée par la recherche. Sa provenance relie le constat au bon rapport, à la bonne période et à un emplacement vérifiable. Le seul nom de l’entreprise ne permet pas de distinguer deux trimestres ou de retrouver l’extrait.",
+                "en": "A chunk is the unit returned by retrieval. Its provenance connects a finding to the correct report, period, and a verifiable location. A company name alone cannot distinguish two quarters or recover the excerpt."
               }
             },
             {
               "id": "ia_appliquee_metiers_tp__35-quiz-02",
               "type": "single_choice_exercise",
+              "serverValidated": true,
               "question": {
-                "fr": "Vrai ou faux : un brouillon ou une validation humaine doit précéder toute action sensible générée par le workflow.",
-                "en": "True or false: a draft or human validation must precede any sensitive action generated by the workflow."
+                "fr": "Pour répondre à une question sur l’évolution entre deux trimestres, quelle étape utilise correctement les embeddings et la recherche vectorielle ?",
+                "en": "To answer a question about change between two quarters, which step uses embeddings and vector search correctly?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Vrai : les actions sensibles exigent un contrôle humain explicite.",
-                    "en": "True: sensitive actions require explicit human oversight."
+                    "fr": "Demander directement une conclusion au modèle sans récupérer de passages.",
+                    "en": "Ask the model for a conclusion directly without retrieving passages."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Faux : l’automatisation dispense toujours de tout contrôle.",
-                    "en": "Faux : l’automatisation dispense toujours de tout contrôle."
+                    "fr": "Trier les PDF par ordre alphabétique et utiliser le premier.",
+                    "en": "Sort PDFs alphabetically and use the first one."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Représenter la question dans un espace compatible, récupérer les chunks proches et restreindre la recherche aux rapports pertinents.",
+                    "en": "Represent the question in a compatible space, retrieve nearby chunks, and restrict the search to relevant reports."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Copier les identifiants Pinecone dans Google Docs pour qu’ils deviennent des preuves.",
+                    "en": "Copy Pinecone identifiers into Google Docs so they become evidence."
                   }
                 }
               ],
-              "correctAnswer": "a",
+              "correctAnswer": "c",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the practical assignment framework: fictional data, human oversight, and verification before any real action."
+                "fr": "La recherche vectorielle compare la représentation de la question à celles des chunks indexés. Les contraintes de périmètre, telles que l’entreprise ou le trimestre, évitent de récupérer un passage sémantiquement proche mais hors sujet. Le modèle intervient ensuite pour exploiter ce contexte.",
+                "en": "Vector search compares the question representation with those of indexed chunks. Scope constraints such as company or quarter prevent retrieval of a semantically close but irrelevant passage. The model then uses that context."
               }
             },
             {
               "id": "ia_appliquee_metiers_tp__35-quiz-03",
               "type": "single_choice_exercise",
+              "serverValidated": true,
               "question": {
-                "fr": "Quel contrôle aide à vérifier l’objectif « Ingestion et chunking de rapports PDF financiers » ?",
-                "en": "What check helps verify the objective “Ingestion and chunking of financial PDF reports”?"
+                "fr": "Les passages récupérés étayent un constat sur le chiffre d’affaires, mais aucun ne traite de la marge. Quelle réponse respecte le principe d’une réponse financière documentée ?",
+                "en": "The retrieved passages support a finding about revenue, but none addresses margin. Which response follows the principle of a documented financial answer?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Comparer le résultat du test au critère métier défini puis documenter l’écart.",
-                    "en": "Compare the test result with the defined business criterion, then document the discrepancy."
+                    "fr": "Présenter le constat étayé avec sa source et indiquer que le corpus récupéré ne permet pas d’établir la marge.",
+                    "en": "Present the supported finding with its source and state that the retrieved corpus does not establish the margin."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Considérer toute sortie du modèle comme correcte sans la relire.",
-                    "en": "Consider every model output correct without reviewing it."
+                    "fr": "Déduire la marge à partir de connaissances générales du modèle.",
+                    "en": "Infer the margin from the model’s general knowledge."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Supprimer les journaux et les traces de test avant la vérification.",
-                    "en": "Delete logs and test traces before verification."
+                    "fr": "Utiliser un extrait concernant une autre entreprise parce qu’il mentionne une marge.",
+                    "en": "Use an excerpt about another company because it mentions a margin."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Remplacer le jeu de données fictif par une exportation client.",
-                    "en": "Replace the fictional dataset with a client export."
+                    "fr": "Supprimer la référence au rapport pour rendre la réponse plus concise.",
+                    "en": "Remove the report reference to make the answer more concise."
                   }
                 }
               ],
               "correctAnswer": "a",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the practical assignment framework: fictional data, human oversight, and verification before any real action."
+                "fr": "Une réponse RAG est bornée par les éléments récupérés. Elle peut formuler le constat réellement étayé et rendre explicite une lacune du corpus, mais elle ne doit ni inventer une marge ni emprunter une source hors périmètre. La référence permet la vérification par l’analyste.",
+                "en": "A RAG answer is bounded by retrieved evidence. It may state the finding that is actually supported and explicitly note a corpus gap, but it must not invent a margin or borrow an out-of-scope source. The reference enables analyst verification."
               }
             },
             {
               "id": "ia_appliquee_metiers_tp__35-quiz-04",
               "type": "single_choice_exercise",
+              "serverValidated": true,
               "question": {
-                "fr": "Question de vigilance : parmi ces outils prévus — n8n, Pinecone, Gemini ou GPT, Google Docs, rapports trimestriels publics ou fictifs — quelle donnée ne doit jamais être saisie dans le support ou le commentaire de preuve ?",
-                "en": "Vigilance question: among these planned tools — n8n, Pinecone, Gemini or GPT, Google Docs, public or fictional quarterly reports — what data must never be entered in the evidence support or comment?"
+                "fr": "Quelle organisation d’un rapport dans Google Docs rend le résultat de l’agent le plus relisible et vérifiable ?",
+                "en": "Which organization of a Google Docs report makes the agent’s result most reviewable and verifiable?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Une clé API, un mot de passe ou un identifiant réel.",
-                    "en": "An API key, a password, or a real identifier."
+                    "fr": "Une conclusion seule, sans périmètre ni références, pour accélérer la lecture.",
+                    "en": "A conclusion alone, without scope or references, to make reading faster."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Le nom fictif du dossier de démonstration.",
-                    "en": "The fictional name of the demonstration folder."
+                    "fr": "Les identifiants d’accès aux outils afin que le lecteur puisse relancer le workflow.",
+                    "en": "Tool access credentials so the reader can rerun the workflow."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Le statut de test « à vérifier ».",
-                    "en": "Le statut de test « à vérifier »."
+                    "fr": "Un texte qui mélange constats, hypothèses et périodes sans les distinguer.",
+                    "en": "Text that mixes findings, assumptions, and periods without distinguishing them."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Une note indiquant qu’une validation humaine est requise.",
-                    "en": "Une note indiquant qu’une validation humaine est requise."
+                    "fr": "La question et le périmètre, les constats, les références, les limites et le statut de revue.",
+                    "en": "The question and scope, findings, references, limitations, and review status."
                   }
                 }
               ],
-              "correctAnswer": "a",
+              "correctAnswer": "d",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the practical assignment framework: fictional data, human oversight, and verification before any real action."
-              }
-            },
-            {
-              "id": "ia_appliquee_metiers_tp__35-quiz-order",
-              "type": "bucket_sort",
-              "title": {
-                "fr": "Ordonnez la démarche de réalisation",
-                "en": "Put the implementation approach in order"
-              },
-              "instructions": {
-                "fr": "Placez chaque action dans son étape. La correction est disponible après une tentative complète.",
-                "en": "Place each action in its stage. Feedback is available after a complete attempt."
-              },
-              "buckets": [
-                {
-                  "id": "1",
-                  "label": {
-                    "fr": "1. Cadrer",
-                    "en": "1. Cadrer"
-                  }
-                },
-                {
-                  "id": "2",
-                  "label": {
-                    "fr": "2. Construire",
-                    "en": "2. Construire"
-                  }
-                },
-                {
-                  "id": "3",
-                  "label": {
-                    "fr": "3. Tester",
-                    "en": "3. Tester"
-                  }
-                },
-                {
-                  "id": "4",
-                  "label": {
-                    "fr": "4. Valider",
-                    "en": "4. Valider"
-                  }
-                }
-              ],
-              "cards": [
-                {
-                  "id": "cadrer",
-                  "text": {
-                    "fr": "Définir le résultat métier, les données fictives et les limites d’action.",
-                    "en": "Define the business outcome, the fictitious data, and the limits of action."
-                  },
-                  "correctBucket": "1"
-                },
-                {
-                  "id": "construire",
-                  "text": {
-                    "fr": "Configurer le workflow dans un environnement de démonstration.",
-                    "en": "Configure the workflow in a demonstration environment."
-                  },
-                  "correctBucket": "2"
-                },
-                {
-                  "id": "tester",
-                  "text": {
-                    "fr": "Exécuter des cas fictifs, journaliser les sorties et relever les écarts.",
-                    "en": "Run fictitious cases, log the outputs, and identify discrepancies."
-                  },
-                  "correctBucket": "3"
-                },
-                {
-                  "id": "valider",
-                  "text": {
-                    "fr": "Faire relire les actions sensibles avant toute utilisation réelle.",
-                    "en": "Faire relire les actions sensibles avant toute utilisation réelle."
-                  },
-                  "correctBucket": "4"
-                }
-              ],
-              "feedback": {
-                "fr": "La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés.",
-                "en": "The correct approach goes from safe scoping to human validation, after documented testing."
+                "fr": "Cette structure permet de voir ce qui a été demandé, sur quelles sources repose chaque constat et ce qui exige encore une revue. Elle sépare aussi les limites du corpus des conclusions, ce qui rend le document utile à un analyste plutôt qu’à une simple lecture automatique.",
+                "en": "This structure shows what was asked, which sources support each finding, and what still requires review. It also separates corpus limitations from conclusions, making the document useful to an analyst rather than merely suitable for automated reading."
               }
             }
           ]

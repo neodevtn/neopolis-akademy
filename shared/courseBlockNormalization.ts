@@ -8,6 +8,21 @@ export function normalizeChapterBlocks(chapter: any) {
   const generated: any[] = [];
   const legacyBlock = chapter?.block;
 
+  // A video does not replace the lesson objectives or explanation stored in
+  // legacy chapter.body. Promote that text before playback, but never duplicate
+  // a body already explicitly represented in an existing standard content block.
+  const normalizedText = (value: any): string => typeof value === "string"
+    ? value.replace(/\s+/g, " ").trim()
+    : value && typeof value === "object" ? Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, content]) => `${key}:${normalizedText(content)}`).join("|") : "";
+  const legacyBody = normalizedText(chapter?.body);
+  const hasRenderedExplanation = existingBlocks.some((block: any) => {
+    if (!["content", "text", "callout"].includes(block?.type)) return false;
+    return normalizedText(block?.body || block?.content).length > 0;
+  });
+  if (legacyBody && existingBlocks.some((block: any) => block?.type === "video") && !hasRenderedExplanation) {
+    existingBlocks.unshift({ type: "content", id: `${chapter?.id || "chapter"}__legacy_body`, body: chapter.body });
+  }
+
   if (legacyBlock) {
     if (legacyBlock.type === "content" && legacyBlock.body) generated.push({ type: "content", body: legacyBlock.body });
     else if (legacyBlock.type === "checkpoint" && Array.isArray(legacyBlock.questions)) {

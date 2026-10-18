@@ -669,59 +669,60 @@
             {
               "type": "content",
               "body": {
-                "en": "## Cumulative production-hardening task: find the three defects and explain each\n\nEverything so far has hardened one layer at a time. Real production failures rarely arrive one layer at a time.\n\n### Source application\n\n```python\ndef answer(question, page_url):\n  page = fetch(page_url)                       # untrusted content\n\n  notes = read_file(\"/workspace/input/notes\")\n  write_file(page.suggested_path, summarize(page))\n\n  resp = None\n  for i in range(5):\n      try:\n          resp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\n          break\n      except Exception:\n          time.sleep(0)\n\n  return resp.content[0].text\n```",
-                "fr": "## Tâche cumulative de renforcement pour la production : trouvez les trois défauts et expliquez chacun\n\nJusqu’ici, chaque étape a renforcé une couche à la fois. Les défaillances réelles en production surviennent rarement une couche à la fois.\n\n### Application source\n\n```python\ndef answer(question, page_url):\n  page = fetch(page_url)                       # untrusted content\n\n  notes = read_file(\"/workspace/input/notes\")\n  write_file(page.suggested_path, summarize(page))\n\n  resp = None\n  for i in range(5):\n      try:\n          resp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\n          break\n      except Exception:\n          time.sleep(0)\n\n  return resp.content[0].text\n```"
+                "en": "## Review a production failure across layers\n\n**Objective.** Diagnose a production risk from code without relying on a live environment or a model answer.\n\nThe source application above deliberately combines several responsibilities. Review it in three passes rather than looking only for syntax errors:\n\n1. **Boundary pass.** Trace a value that comes from outside the application to every action it can influence. Ask which component, if any, enforces the allowed destination or scope.\n2. **Failure pass.** Separate temporary failures from terminal failures. A retry policy needs a decision about which failures may be retried, a bounded wait, and a defined outcome when the attempt limit is reached; a broad `except` clause alone does not provide those decisions.\n3. **Regression pass.** Look for fixed cases and a rule that can distinguish acceptable from unacceptable behavior after a prompt, model, or tool changes. Repeating a few demonstrations is useful observation, but it is not a repeatable regression signal.\n\n**Contrast.** A code review may show that a program runs while still missing an enforceable boundary, a usable failure policy, or a regression check. For each suspected defect, identify both its layer and the runtime consequence before proposing a fix.\n\nUse the source application to choose the diagnosis that accounts for all three production concerns.",
+                "fr": "## Examiner une défaillance de production par couches\n\n**Objectif.** Diagnostiquer un risque de production à partir du code, sans dépendre d’un environnement d’exécution ni d’une réponse modèle.\n\nL’application source ci-dessus rassemble volontairement plusieurs responsabilités. Examinez-la en trois passes plutôt qu’en cherchant uniquement des erreurs de syntaxe :\n\n1. **Passe de frontière.** Suivez une valeur provenant de l’extérieur de l’application jusqu’à chaque action qu’elle peut influencer. Demandez-vous quel composant, le cas échéant, impose la destination ou le périmètre autorisé.\n2. **Passe de défaillance.** Distinguez les défaillances temporaires des défaillances terminales. Une politique de nouvelle tentative doit décider quelles défaillances peuvent être réessayées, prévoir une attente bornée et définir l’issue lorsque la limite d’essais est atteinte ; un `except` large ne fournit pas à lui seul ces décisions.\n3. **Passe de régression.** Cherchez des cas fixes et une règle capable de distinguer un comportement acceptable d’un comportement inacceptable après une modification de prompt, de modèle ou d’outil. Répéter quelques démonstrations est une observation utile, mais ce n’est pas un signal de régression reproductible.\n\n**Contraste.** Une revue de code peut montrer qu’un programme s’exécute tout en laissant absents une frontière imposée, une politique de défaillance exploitable ou un contrôle de régression. Pour chaque défaut présumé, identifiez sa couche et sa conséquence à l’exécution avant de proposer une correction.\n\nUtilisez l’application source pour choisir le diagnostic qui rend compte des trois préoccupations de production."
               }
             },
             {
-              "type": "cloud_exercise",
+              "type": "single_choice_exercise",
               "id": "chapter_cumulative_s17",
-              "title": {
-                "en": "Cumulative production-hardening task: find the three defects and explain each",
-                "fr": "Tâche cumulative de renforcement pour la production : trouvez les trois défauts et expliquez chacun"
+              "question": {
+                "en": "In the source application above, which review correctly identifies the three production defects?",
+                "fr": "Dans l’application source ci-dessus, quelle revue identifie correctement les trois défauts de production ?"
               },
-              "assignment": {
-                "en": "Identify the three defects. For each, name its layer and describe in one sentence what it causes at runtime.",
-                "fr": "Identifiez les trois défauts. Pour chacun, nommez sa couche et décrivez en une phrase ce qu’il provoque à l’exécution."
-              },
-              "instructions": {
-                "en": "The application runs, but it contains three planted defects, one per layer. Write your answer first, then submit to compare with the model answer.",
-                "fr": "L’application s’exécute, mais elle contient trois défauts intentionnels, un par couche. Rédigez d’abord votre réponse, puis soumettez-la pour la comparer à la réponse du modèle."
-              },
-              "steps": [
+              "options": [
                 {
-                  "instruction_text": {
-                    "en": "Name the layer for each defect.",
-                    "fr": "Nommez la couche de chaque défaut."
+                  "id": "a",
+                  "text": {
+                    "en": "The only defect is an unused `notes` variable; the destination is safe because it is supplied by `fetch`, and retrying every exception improves reliability.",
+                    "fr": "Le seul défaut est une variable `notes` inutilisée ; la destination est sûre car elle est fournie par `fetch`, et réessayer chaque exception améliore la fiabilité."
                   }
                 },
                 {
-                  "instruction_text": {
-                    "en": "Describe what each defect causes at runtime.",
-                    "fr": "Décrivez ce que chaque défaut provoque à l’exécution."
+                  "id": "b",
+                  "text": {
+                    "en": "Untrusted fetched content can choose a write destination; every exception is retried immediately without classifying it or waiting; and no fixed, graded cases are present to reveal a future regression.",
+                    "fr": "Du contenu récupéré non fiable peut choisir une destination d’écriture ; chaque exception est réessayée immédiatement sans classification ni attente ; et aucun cas fixe noté ne permet de révéler une régression future."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The model name and token limit should be removed, `fetch` should be called only after the model response, and a longer manual demo would create an eval.",
+                    "fr": "Le nom du modèle et la limite de jetons doivent être supprimés, `fetch` doit être appelé seulement après la réponse du modèle, et une démonstration manuelle plus longue créerait une eval."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "The loop should always make five calls, any output path is acceptable once a summary is generated, and evaluation is unnecessary if the API request succeeds.",
+                    "fr": "La boucle doit toujours effectuer cinq appels, tout chemin de sortie est acceptable dès qu’un résumé est généré, et une évaluation est inutile si la requête API réussit."
                   }
                 }
               ],
-              "hint": {
-                "en": "First localize each defect to its layer, then describe its runtime effect.",
-                "fr": "Commencez par situer chaque défaut dans sa couche, puis décrivez son effet à l’exécution."
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "The diagnosis must cover all three layers. `page.suggested_path` originates in fetched, untrusted content and is passed to a write action without an enforcing boundary. The broad exception handler retries immediately, so it neither distinguishes terminal failures from transient ones nor backs off under conditions such as rate limiting. Finally, the function contains no fixed holdout cases or grading rule, so a change can regress without a repeatable signal. An unused variable is not the cumulative production-hardening issue being assessed.",
+                "fr": "Le diagnostic doit couvrir les trois couches. `page.suggested_path` provient de contenu récupéré non fiable et est transmis à une action d’écriture sans frontière imposée. Le gestionnaire d’exception large réessaie immédiatement : il ne distingue donc pas les défaillances terminales des défaillances transitoires et n’applique aucun backoff, par exemple face à une limitation de débit. Enfin, la fonction ne contient ni cas de réserve fixes ni règle de notation : une modification peut donc provoquer une régression sans signal reproductible. Une variable inutilisée n’est pas le problème cumulatif de renforcement pour la production évalué ici."
               },
-              "solution": {
-                "en": "Eval/test layer: No eval exists. Success was judged by three manual demo runs with no holdout set and no graded cases, there is nothing to fail a regression against when the prompt or model changes.\n\nError-handling/cost layer: The retry loop retries every status immediately with time.sleep(0) and does not distinguish terminal errors (400s) from retriable ones. Against a rate limit, each instant retry deepens the limit rather than waiting for it to clear.\n\nSecurity/guardrail layer: write_file uses page.suggested_path as the destination, a path taken from untrusted fetched content, with no PreToolUse hook enforcing a write boundary and no scope limiting what the agent can write.",
-                "fr": "Couche d’évaluation/test : aucune évaluation n’existe. La réussite a été jugée à partir de trois exécutions de démonstration manuelles, sans jeu de réserve ni cas notés ; rien ne permet de détecter une régression lorsque le prompt ou le modèle change.\n\nCouche de gestion des erreurs/coût : la boucle de nouvelle tentative réessaie immédiatement chaque statut avec time.sleep(0) et ne distingue pas les erreurs terminales (400s) de celles pouvant faire l’objet d’une nouvelle tentative. Face à une limite de débit, chaque nouvelle tentative instantanée aggrave la limite au lieu d’attendre qu’elle se lève.\n\nCouche de sécurité/garde-fou : write_file utilise page.suggested_path comme destination, un chemin issu de contenu récupéré non fiable, sans hook PreToolUse appliquant une limite d’écriture et sans périmètre limitant ce que l’agent peut écrire."
-              },
-              "successMessage": {
-                "en": "Your response has been submitted. Review the model answer.",
-                "fr": "Votre réponse a été soumise. Consultez la réponse du modèle."
-              },
-              "minimumAnswerLength": 40,
+              "serverValidated": true,
               "sourceScreenId": "S17",
-              "sourceEvidence": "CumulativeModule-Wide · 7 min"
+              "sourceEvidence": "Skilljar authenticated Developer Foundations, cumulative production-hardening task · 7 min"
             }
           ],
           "completionRule": {
             "requires": [
-              "cloudExerciseCompleted"
+              "requiredExercisesPassed"
             ]
           }
         },
@@ -739,59 +740,60 @@
             {
               "type": "content",
               "body": {
-                "en": "## Cumulative production-hardening task: write the corrected version\n\nFor each defect you identified, show the fixed code and name what it changes.\n\n### Source application\n\n```python\ndef answer(question, page_url):\n  page = fetch(page_url)                       # untrusted content\n\n  notes = read_file(\"/workspace/input/notes\")\n  write_file(page.suggested_path, summarize(page))\n\n  resp = None\n  for i in range(5):\n      try:\n          resp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\n          break\n      except Exception:\n          time.sleep(0)\n\n  return resp.content[0].text\n```",
-                "fr": "## Tâche cumulative de renforcement pour la production : écrivez la version corrigée\n\nPour chaque défaut identifié, montrez le code corrigé et nommez ce qu’il modifie.\n\n### Application source\n\n```python\ndef answer(question, page_url):\n  page = fetch(page_url)                       # untrusted content\n\n  notes = read_file(\"/workspace/input/notes\")\n  write_file(page.suggested_path, summarize(page))\n\n  resp = None\n  for i in range(5):\n      try:\n          resp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\n          break\n      except Exception:\n          time.sleep(0)\n\n  return resp.content[0].text\n```"
+                "en": "## Choose an enforceable correction\n\n**Objective.** Distinguish a patch that merely changes this snippet from a correction that remains effective when the application changes.\n\nA production correction should state the control at each layer:\n\n1. **Boundary control.** Define the permitted scope and identify the mechanism that checks it before the action occurs.\n2. **Failure control.** Define which failures are retryable, how the delay is scheduled, and what happens for a terminal failure or after the retry budget is exhausted.\n3. **Regression control.** Define the fixed cases and the grading rule that are rerun after a change.\n\n**Contrast.** Replacing one string can reduce exposure in a single code path, but it does not by itself establish a policy for every write. Likewise, adding a fixed sleep is not a complete retry policy if it cannot distinguish an error that should stop from one that may recover. A non-empty test is not an eval unless it has expected behavior and a repeatable decision rule.\n\nEvaluate the proposed change packages against those three controls. Select the package that makes each control explicit and verifiable.",
+                "fr": "## Choisir une correction imposable\n\n**Objectif.** Distinguer un correctif qui modifie seulement cet extrait d’une correction qui reste efficace lorsque l’application évolue.\n\nUne correction de production doit énoncer le contrôle de chaque couche :\n\n1. **Contrôle de frontière.** Définissez le périmètre autorisé et identifiez le mécanisme qui le vérifie avant l’action.\n2. **Contrôle de défaillance.** Définissez quelles défaillances sont réessayables, comment le délai est planifié et ce qui se produit pour une défaillance terminale ou après épuisement du budget de tentatives.\n3. **Contrôle de régression.** Définissez les cas fixes et la règle de notation qui sont réexécutés après une modification.\n\n**Contraste.** Remplacer une chaîne peut réduire l’exposition dans un chemin de code, mais cela n’établit pas à lui seul une politique pour toutes les écritures. De même, ajouter une attente fixe n’est pas une politique complète de nouvelle tentative si elle ne distingue pas une erreur qui doit s’arrêter d’une erreur qui peut se rétablir. Un test non vide n’est pas une eval sans comportement attendu ni règle de décision reproductible.\n\nÉvaluez les ensembles de modifications proposés selon ces trois contrôles. Sélectionnez celui qui rend chaque contrôle explicite et vérifiable."
               }
             },
             {
-              "type": "cloud_exercise",
+              "type": "single_choice_exercise",
               "id": "chapter_cumulative_s18",
-              "title": {
-                "en": "Cumulative production-hardening task: write the corrected version",
-                "fr": "Tâche cumulative de renforcement pour la production : écrivez la version corrigée"
+              "question": {
+                "en": "A review finds an untrusted write destination, immediate retries for every exception, and no regression signal. Which change package is the production-ready correction?",
+                "fr": "Une revue constate une destination d’écriture non fiable, des nouvelles tentatives immédiates pour chaque exception et aucun signal de régression. Quel ensemble de modifications constitue la correction prête pour la production ?"
               },
-              "assignment": {
-                "en": "Write the corrected version of the application. For each defect, show the fixed code and name what it changes.",
-                "fr": "Écrivez la version corrigée de l’application. Pour chaque défaut, montrez le code corrigé et nommez ce qu’il modifie."
-              },
-              "instructions": {
-                "en": "Write your corrected version first, then submit to compare with the model answer.",
-                "fr": "Rédigez d’abord votre version corrigée, puis soumettez-la pour la comparer à la réponse du modèle."
-              },
-              "steps": [
+              "options": [
                 {
-                  "instruction_text": {
-                    "en": "Show the fixed code for each defect.",
-                    "fr": "Montrez le code corrigé pour chaque défaut."
+                  "id": "a",
+                  "text": {
+                    "en": "Keep the suggested destination but log it, retry all exceptions after one fixed second, and save three successful manual demonstrations in a document.",
+                    "fr": "Conserver la destination suggérée mais la journaliser, réessayer toutes les exceptions après une seconde fixe, et enregistrer dans un document trois démonstrations manuelles réussies."
                   }
                 },
                 {
-                  "instruction_text": {
-                    "en": "Name what each correction changes.",
-                    "fr": "Nommez ce que chaque correction modifie."
+                  "id": "b",
+                  "text": {
+                    "en": "Enforce an approved write scope before the tool runs, retry only classified transient failures with bounded backoff and a terminal fallback, and run fixed graded holdout cases after relevant changes.",
+                    "fr": "Imposer un périmètre d’écriture approuvé avant l’exécution de l’outil, réessayer uniquement les défaillances transitoires classifiées avec un backoff borné et une solution de repli terminale, puis exécuter des cas de réserve fixes et notés après les modifications pertinentes."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Move the write call after the API response, raise the retry limit from five to ten, and mark the feature complete whenever the response contains text.",
+                    "fr": "Déplacer l’appel d’écriture après la réponse API, porter la limite de tentatives de cinq à dix, et marquer la fonctionnalité comme terminée dès que la réponse contient du texte."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Allow the model to choose the destination when it explains its choice, retry until any response arrives, and use the latest production output as the expected answer.",
+                    "fr": "Autoriser le modèle à choisir la destination lorsqu’il explique son choix, réessayer jusqu’à ce qu’une réponse arrive, et utiliser la dernière sortie de production comme réponse attendue."
                   }
                 }
               ],
-              "hint": {
-                "en": "Address the security boundary, error handling, and eval coverage.",
-                "fr": "Traitez la frontière de sécurité, la gestion des erreurs et la couverture d’évaluation."
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "This package supplies an enforceable control for each identified defect. A scope check or policy before the write prevents untrusted content from selecting arbitrary destinations. Error classification plus bounded backoff avoids amplifying transient failures and gives terminal failures a defined outcome. Fixed, graded holdout cases provide a stable baseline that can expose a regression after a prompt, model, or tool change. Logging, adding attempts, or preserving successful demos may be useful operationally, but none replaces these controls.",
+                "fr": "Cet ensemble apporte un contrôle imposable pour chacun des défauts identifiés. Une vérification de périmètre ou une politique avant l’écriture empêche le contenu non fiable de choisir des destinations arbitraires. La classification des erreurs associée à un backoff borné évite d’amplifier les défaillances transitoires et donne une issue définie aux défaillances terminales. Des cas de réserve fixes et notés fournissent une référence stable qui peut révéler une régression après un changement de prompt, de modèle ou d’outil. La journalisation, l’ajout de tentatives ou la conservation de démonstrations réussies peuvent être utiles en exploitation, mais rien de cela ne remplace ces contrôles."
               },
-              "solution": {
-                "en": "def answer(question, page_url):\n    page = fetch(page_url)                   # still untrusted\n\n    # security: fixed write path + PreToolUse hook enforces it\n    notes = read_file(\"/workspace/input/notes\")  # scoped read, unchanged\n    write_file(\"/workspace/output/summary.txt\", summarize(page))\n    # (hook denies any write outside /workspace/output and audits it)\n\n    # error handling: backoff, honor retry-after, fail fast on terminal\n    resp = call_with_retry(\n        lambda: client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question)))\n\n    # eval: answer() is covered by a graded holdout set run on every change\n    return resp.content[0].text\n\nEach fix sits at the layer it defends: the fixed write path and hook close the security boundary before the tool runs; call_with_retry adds exponential backoff with terminal-status detection; the graded holdout set gives the eval a baseline score to fail against on every future change.",
-                "fr": "def answer(question, page_url):\n    page = fetch(page_url)                   # still untrusted\n\n    # security: fixed write path + PreToolUse hook enforces it\n    notes = read_file(\"/workspace/input/notes\")  # scoped read, unchanged\n    write_file(\"/workspace/output/summary.txt\", summarize(page))\n    # (hook denies any write outside /workspace/output and audits it)\n\n    # error handling: backoff, honor retry-after, fail fast on terminal\n    resp = call_with_retry(\n        lambda: client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question)))\n\n    # eval: answer() is covered by a graded holdout set run on every change\n    return resp.content[0].text\n\nChaque correction se situe dans la couche qu’elle défend : le chemin d’écriture corrigé et le hook ferment la frontière de sécurité avant l’exécution de l’outil ; call_with_retry ajoute un backoff exponentiel avec détection des statuts terminaux ; le jeu de réserve noté donne à l’évaluation un score de référence permettant de détecter un échec à chaque modification future."
-              },
-              "successMessage": {
-                "en": "Your response has been submitted. Review the model answer.",
-                "fr": "Votre réponse a été soumise. Consultez la réponse du modèle."
-              },
-              "minimumAnswerLength": 40,
+              "serverValidated": true,
               "sourceScreenId": "S18",
-              "sourceEvidence": "CumulativeModule-Wide · 8 min"
+              "sourceEvidence": "Skilljar authenticated Developer Foundations, cumulative production-hardening task · 8 min"
             }
           ],
           "completionRule": {
             "requires": [
-              "cloudExerciseCompleted"
+              "requiredExercisesPassed"
             ]
           }
         },

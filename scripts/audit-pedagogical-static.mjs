@@ -109,6 +109,10 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
         if (["single_choice_exercise", "multi_choice_exercise"].includes(block.type)) {
           const options = Array.isArray(block.options) ? block.options : [];
           if (options.length < 2) add(lessonIndex, chapterIndex, chapter, block, "P0", "activité", "Le QCM ne fournit pas au moins deux options sélectionnables.", "Ajouter des options distinctes et valides.");
+          if (block.type === "single_choice_exercise" && block.correctAnswer !== undefined) {
+            const ids = options.map((option) => option?.id);
+            if (!ids.includes(block.correctAnswer) || new Set(ids).size !== ids.length) add(lessonIndex, chapterIndex, chapter, block, "P0", "correction", "Le QCM ne possède pas une clé de réponse univoque parmi ses options.", "Corriger la clé et les identifiants d’options avant publication.");
+          }
           // Server-validated choices only release their answer key and
           // explanation after a submission; this is still observable feedback
           // and must not be reported as missing by a static scan.
@@ -144,6 +148,10 @@ for (const filename of fs.readdirSync(coursesDir).filter((name) => name.endsWith
       for (const block of blocks) {
         if (block?.type === "text" && hasUsableText(block.content) && !hasUsableText(block.body)) {
           add(lessonIndex, chapterIndex, chapter, block, "P1", "rendu", "Le contenu utilise le format historique text/content que le lecteur ne rend pas comme un bloc pédagogique courant.", "Migrer à l’identique vers le format content/body ou retirer le bloc s’il est une copie.");
+        }
+        if (block?.type === "content" && block.optionalMediaUnavailable === true
+          && /^Consultez (?:le contenu|le PDF) avant de continuer\.?$/i.test(text(block.body))) {
+          add(lessonIndex, chapterIndex, chapter, block, "P1", "contenu_absent", "Le remplacement d’un média indisponible n’offre aucune explication ni ressource consultable.", "Restaurer une explication spécifique vérifiée ou retirer l’écran ; ne pas garder une consigne vide.");
         }
       }
     });

@@ -12,22 +12,83 @@
         {
           "id": "lesson_01_chapter_01",
           "title": {
-            "en": "What You Will Learn"
+            "en": "What You Will Learn",
+            "fr": "Ce que vous allez apprendre"
           },
           "type": "content",
           "body": {
-            "en": "In this lesson you will learn:\n• How to save LoRA and other PEFT adapters to disk and to the Hugging Face Hub\n• The difference between keeping adapters separate and merging them into the base model weights\n• How to use merge_and_unload() to produce a standalone fine-tuned model\n• Best practices for versioning and organizing adapter checkpoints for production use"
+            "en": "In this lesson you will learn how to save LoRA and other PEFT adapters locally and on the Hugging Face Hub; distinguish a separate adapter from merged base-model weights; use merge_and_unload() to create a standalone fine-tuned model; and organize adapter checkpoints for production use.",
+            "fr": "Dans cette leçon, vous apprendrez à enregistrer localement et sur le Hugging Face Hub des adaptateurs LoRA et autres PEFT, à distinguer un adaptateur séparé de poids fusionnés au modèle de base, à utiliser merge_and_unload() pour produire un modèle fine-tuné autonome et à organiser des checkpoints d’adaptateurs pour la production."
           },
           "blocks": [
             {
+              "type": "content",
+              "id": "open_source_llms_04_ch01_adapter_merging_content",
+              "body": {
+                "en": "## Objective\n\nAfter training, decide deliberately which artifact to preserve. This lesson covers saving LoRA and other PEFT adapters locally or on the Hugging Face Hub, keeping an adapter separate from the base weights, creating a standalone fine-tuned model with `merge_and_unload()`, and organizing checkpoints for production use.\n\n## Separate adapter or merged model?\n\nA separate PEFT adapter stores the learned adaptation apart from the base model. It is usually the better artifact when several task-specific adapters share one base model, when you need to switch adapters, or when you want a compact artifact to version independently. Record the exact base-model revision, the adapter revision, the training data provenance, and evaluation context together; an adapter is not meaningful without its compatible base.\n\n`merge_and_unload()` takes a loaded PEFT model and returns a standalone model with adapter weights merged into the base weights. It is not an in-place operation: assign its return value and use that returned model. Merging can remove the overhead of loading the adapter separately, but it trades away the convenience of swapping or unmerging that adapter in the merged artifact.\n\n**Example.** A team maintains two adapters for the same base model: one for product support and one for internal knowledge retrieval. Keeping them separate permits one shared base model and independent releases. If the approved support version must run where only one model artifact is expected, the team can produce and version a merged release after recording the evidence that identifies it.\n\nOfficial reference: [PEFT LoRA post-training documentation](https://huggingface.co/docs/peft/en/package_reference/lora).",
+                "fr": "## Objectif\n\nAprès l’entraînement, choisissez délibérément l’artefact à conserver. Cette leçon traite de l’enregistrement local ou sur le Hugging Face Hub des adaptateurs LoRA et autres PEFT, de la distinction entre adaptateur séparé et poids de base fusionnés, de la création d’un modèle fine-tuné autonome avec `merge_and_unload()` et de l’organisation des checkpoints pour la production.\n\n## Adaptateur séparé ou modèle fusionné ?\n\nUn adaptateur PEFT séparé conserve l’adaptation apprise à part du modèle de base. C’est généralement le bon artefact lorsque plusieurs adaptateurs propres à une tâche partagent un même modèle de base, lorsque vous devez changer d’adaptateur ou lorsque vous voulez versionner indépendamment un artefact compact. Conservez avec lui la révision exacte du modèle de base, celle de l’adaptateur, la provenance des données d’entraînement et le contexte d’évaluation : un adaptateur n’a pas de sens sans sa base compatible.\n\n`merge_and_unload()` prend un modèle PEFT chargé et retourne un modèle autonome dont les poids de l’adaptateur sont fusionnés aux poids de base. L’opération n’est pas effectuée sur place : il faut affecter sa valeur de retour puis utiliser le modèle retourné. La fusion peut supprimer le surcoût du chargement séparé de l’adaptateur, mais l’artefact fusionné ne permet plus aussi facilement de changer ou d’annuler cet adaptateur.\n\n**Exemple.** Une équipe maintient deux adaptateurs pour le même modèle de base : l’un pour le support produit, l’autre pour la recherche interne de connaissances. Les conserver séparés permet de partager la même base et de publier chaque version indépendamment. Si la version de support approuvée doit fonctionner dans un environnement qui attend un seul artefact modèle, l’équipe peut produire et versionner une version fusionnée après avoir enregistré les éléments qui l’identifient.\n\nRéférence officielle : [documentation PEFT LoRA post-entraînement](https://huggingface.co/docs/peft/en/package_reference/lora)."
+              }
+            },
+            {
               "type": "video",
               "url": "https://www.youtube.com/watch?v=6TF_00jiivk",
-              "title": "qLoRa in Action: A Fine-Tuning Tutorial",
-              "label": "Course Video",
+              "title": {
+                "en": "qLoRa in Action: A Fine-Tuning Tutorial",
+                "fr": "qLoRA en pratique : tutoriel de fine-tuning"
+              },
+              "label": {
+                "en": "Course video (English)",
+                "fr": "Vidéo de cours (en anglais)"
+              },
               "objectiveBefore": {
-                "fr": "Pendant cette vidéo, repérez les éléments qui illustrent « What You Will Learn » avant de poursuivre.",
-                "en": "While watching, identify the elements that illustrate “What You Will Learn” before continuing."
-              }
+                "en": "Read the adapter-versus-merge distinction below first. The English-language tutorial then provides a visual walkthrough of qLoRA fine-tuning; use it to connect the workflow to the artifact you would keep after training.",
+                "fr": "Lisez d’abord ci-dessous la distinction entre adaptateur et fusion. Le tutoriel en anglais illustre ensuite le fine-tuning qLoRA ; reliez ses étapes à l’artefact que vous conserveriez après l’entraînement."
+              },
+              "alternativeTextFr": "Alternative textuelle française de cet écran : qLoRA applique une adaptation de faible rang à un modèle de base quantifié afin de réduire les ressources nécessaires au fine-tuning. À l’issue de l’entraînement, un adaptateur PEFT peut rester séparé du modèle de base : cette option est compacte et permet de conserver ou de changer plusieurs adaptations. Si l’inférence doit charger un modèle autonome, `merge_and_unload()` retourne un modèle dans lequel les poids de l’adaptateur sont fusionnés aux poids de base et ne conserve pas l’adaptateur en mémoire. La vidéo est en anglais et propose un tutoriel qLoRA ; le texte de l’écran donne les critères de décision et la conséquence concrète de chaque forme d’artefact."
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "open_source_llms_04_ch01_adapter_merge_q1",
+              "question": {
+                "en": "A service uses one base model with several task-specific LoRA adapters and must switch among them during operation. Which artifact choice best preserves that flexibility?",
+                "fr": "Un service utilise un modèle de base avec plusieurs adaptateurs LoRA propres à des tâches et doit passer de l’un à l’autre pendant son fonctionnement. Quel choix d’artefact préserve le mieux cette flexibilité ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Keep each compatible adapter separate from the shared base model.",
+                    "fr": "Conserver chaque adaptateur compatible séparément du modèle de base partagé."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Merge all adapters into the base model with `merge_and_unload()` and discard their revisions.",
+                    "fr": "Fusionner tous les adaptateurs au modèle de base avec `merge_and_unload()` et supprimer leurs révisions."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Save only the final tokenizer because it identifies every adapter.",
+                    "fr": "Enregistrer uniquement le tokenizer final car il identifie chaque adaptateur."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Keep no record of the base-model revision so the adapter can load on any base.",
+                    "fr": "Ne garder aucune trace de la révision du modèle de base pour que l’adaptateur puisse se charger sur n’importe quelle base."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "en": "Separate adapters are designed for reuse with their compatible base and make adapter switching possible. `merge_and_unload()` creates a standalone merged model, which can simplify one fixed deployment but gives up that same swapping flexibility. Version records are essential for compatibility and traceability.",
+                "fr": "Des adaptateurs séparés sont conçus pour être réutilisés avec leur base compatible et permettent de changer d’adaptateur. `merge_and_unload()` crée un modèle fusionné autonome, ce qui peut simplifier un déploiement fixe mais sacrifie cette flexibilité. Les informations de version sont indispensables à la compatibilité et à la traçabilité."
+              },
+              "serverValidated": true
             }
           ]
         },
@@ -406,22 +467,66 @@
         {
           "id": "lesson_02_chapter_02",
           "title": {
-            "en": "Model Card and Dataset Documentation"
+            "en": "Model Card and Dataset Documentation",
+            "fr": "Documentation des model cards et dataset cards"
           },
           "type": "content",
           "body": {
-            "en": "A model card is a structured document published alongside a model repository that communicates what the model does, how it was trained, its known limitations, and how it should—and should not—be used. It is the primary artifact that enables other practitioners, auditors, and regulators to assess fitness for purpose.\n\nThe Hugging Face model card spec uses YAML front matter for machine-readable fields such as language, license, datasets, metrics, and base_model. The prose sections cover model description, intended uses, out-of-scope uses, biases, training data, training procedure, evaluation results, and a carbon footprint estimate. Dataset cards follow a parallel structure focusing on data sources, collection methodology, preprocessing steps, known quality issues, and the license governing redistribution. The ModelCard class in huggingface_hub lets you create, validate, and push cards programmatically, ensuring metadata stays consistent with the repository contents."
+            "en": "A model card is the README.md published with a model repository, with YAML metadata and human-readable documentation of intended uses, limitations, training information, datasets, and evaluation results. A dataset card is the README.md for a dataset repository; it documents the data’s content, use context, license, and relevant considerations such as biases. The two documents are complementary.",
+            "fr": "Une model card est le README.md publié avec un dépôt de modèle, avec des métadonnées YAML et une documentation lisible sur les usages prévus, les limites, l’entraînement, les jeux de données et les évaluations. Une dataset card est le README.md d’un dépôt de données ; elle documente le contenu des données, leur contexte d’usage, leur licence et des considérations pertinentes telles que les biais. Ces deux documents sont complémentaires."
           },
           "blocks": [
             {
-              "type": "video",
-              "url": "https://www.youtube.com/watch?v=DbeWXlXunNE",
-              "title": "The Major LLM Families Explained: Llama, Mistral, Gemma",
-              "label": "Recommended Viewing",
-              "objectiveBefore": {
-                "fr": "Pendant cette vidéo, repérez les éléments qui illustrent « Model Card and Dataset Documentation » avant de poursuivre.",
-                "en": "While watching, identify the elements that illustrate “Model Card and Dataset Documentation” before continuing."
+              "type": "content",
+              "id": "open_source_llms_04_ch02_documentation_content",
+              "body": {
+                "en": "## Objective\n\nDocument a fine-tuned model and its data so that another practitioner can determine fitness for purpose without inferring missing facts. On the Hugging Face Hub, the `README.md` of a model repository renders as a model card; the `README.md` of a dataset repository renders as a dataset card. Both can start with YAML metadata, but they document different artifacts.\n\n## Model card: the model and its evidence\n\nA model card should identify what the model does, its intended uses and limitations, the training parameters or experimental information, the datasets used for training, and evaluation results. YAML metadata may contain fields such as `language`, `license`, `datasets`, and `base_model`. For a fine-tune or adapter, `base_model` makes the lineage inspectable instead of leaving a user to guess which base weights are compatible.\n\n## Dataset card: the data and its context\n\nA dataset card should explain the data’s contents and context for use. Include enough information to inspect provenance or collection context, license, and material limitations or potential biases. Its metadata can make attributes such as language, license, size, and task categories discoverable. A dataset card does not prove that a derived model is suitable; it supplies the data context that a model card must reference.\n\n**Example.** For a hypothetical adapter trained for support classification, the model card would identify the compatible base model, the intended classification use, limitations, and the evaluation method. The dataset card would describe the source, preparation, license, and known limits of the support examples. Do not insert benchmark results that were not actually measured.\n\nOfficial references: [Model Cards](https://huggingface.co/docs/hub/en/model-cards) and [Dataset Cards](https://huggingface.co/docs/hub/en/datasets-cards).",
+                "fr": "## Objectif\n\nDocumentez un modèle fine-tuné et ses données afin qu’un autre praticien puisse évaluer son adéquation à l’usage sans devoir deviner les faits manquants. Sur le Hugging Face Hub, le `README.md` d’un dépôt de modèle est rendu comme model card ; le `README.md` d’un dépôt de données est rendu comme dataset card. Les deux peuvent commencer par des métadonnées YAML, mais ils documentent des artefacts différents.\n\n## Model card : le modèle et ses éléments de preuve\n\nUne model card doit indiquer ce que fait le modèle, ses usages prévus et ses limites, les paramètres d’entraînement ou informations expérimentales, les jeux de données utilisés et les résultats d’évaluation. Des métadonnées YAML peuvent contenir notamment `language`, `license`, `datasets` et `base_model`. Pour un fine-tune ou un adaptateur, `base_model` rend la filiation vérifiable : l’utilisateur n’a pas à deviner quels poids de base sont compatibles.\n\n## Dataset card : les données et leur contexte\n\nUne dataset card doit expliquer le contenu des données et leur contexte d’usage. Elle doit permettre d’examiner la provenance ou le contexte de collecte, la licence et les limites ou biais potentiels importants. Ses métadonnées peuvent rendre découvrables des attributs tels que la langue, la licence, la taille et les catégories de tâches. Une dataset card ne prouve pas qu’un modèle dérivé convient à un usage : elle fournit le contexte des données auquel la model card doit faire référence.\n\n**Exemple.** Pour un adaptateur hypothétique entraîné à la classification de demandes de support, la model card indiquerait le modèle de base compatible, l’usage de classification prévu, les limites et la méthode d’évaluation. La dataset card décrirait la source, la préparation, la licence et les limites connues des exemples de support. N’ajoutez jamais des résultats de benchmark qui n’ont pas été réellement mesurés.\n\nRéférences officielles : [Model Cards](https://huggingface.co/docs/hub/en/model-cards) et [Dataset Cards](https://huggingface.co/docs/hub/en/datasets-cards)."
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "open_source_llms_04_ch02_cards_scope_q1",
+              "question": {
+                "en": "A reviewer wants to learn how a fine-tuned adapter relates to its base model and what evidence supports its intended use. Where should that information be documented first?",
+                "fr": "Un évaluateur veut comprendre comment un adaptateur fine-tuné se rattache à son modèle de base et quels éléments appuient son usage prévu. Dans quel document cette information doit-elle d’abord figurer ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The model card, including `base_model` metadata and the intended-use and evaluation sections.",
+                    "fr": "La model card, avec notamment la métadonnée `base_model` et les sections sur l’usage prévu et l’évaluation."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The dataset card only, because it replaces model lineage and evaluation evidence.",
+                    "fr": "Uniquement la dataset card, car elle remplace la filiation du modèle et les éléments d’évaluation."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "A model-family video, because a family name identifies the fine-tuned revision.",
+                    "fr": "Une vidéo sur les familles de modèles, car un nom de famille identifie la révision fine-tunée."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "An undocumented access token, because it encodes the model’s intended use.",
+                    "fr": "Un token d’accès non documenté, car il encode l’usage prévu du modèle."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "en": "The model card documents the model artifact: lineage through `base_model`, intended use, limitations, and evaluation evidence. The dataset card remains important for data provenance and conditions, but it does not substitute for documenting the derived model.",
+                "fr": "La model card documente l’artefact modèle : sa filiation via `base_model`, son usage prévu, ses limites et les éléments d’évaluation. La dataset card reste essentielle pour la provenance et les conditions des données, mais elle ne remplace pas la documentation du modèle dérivé."
+              },
+              "serverValidated": true
             }
           ]
         },
@@ -695,14 +800,60 @@
           },
           "type": "content",
           "body": {
-            "en": "Excellent work completing Model Card and Dataset Documentation!\n\nYou can now write professional, standards-compliant model and dataset cards that serve both human readers and automated governance systems.\n\nThis documentation foundation will directly support the lab where you publish your final benchmark and model card to the Hugging Face Hub.\n\nNext, explore how to serve your fine-tuned model efficiently in production environments."
+            "en": "Excellent work completing Model Card and Dataset Documentation.\n\nYou can now distinguish the role of a model card from that of a dataset card, and document information that lets human readers and governance processes inspect a model’s lineage, intended use, limitations, and data context.\n\nUse this documentation framework whenever you prepare a model for review or deployment. This course does not include a lab in which to publish a benchmark or a model card. Next, explore how to serve a fine-tuned model efficiently in production environments.",
+            "fr": "Excellent travail : vous avez terminé « Model Card and Dataset Documentation ».\n\nVous savez maintenant distinguer le rôle d’une model card de celui d’une dataset card et documenter les informations qui permettent à des lecteurs humains et aux processus de gouvernance d’examiner la filiation d’un modèle, son usage prévu, ses limites et le contexte de ses données.\n\nUtilisez ce cadre documentaire lorsque vous préparez un modèle à la revue ou au déploiement. Ce cours ne contient pas de lab pour publier un benchmark ou une model card. Passez maintenant à l’étude du serving efficace d’un modèle fine-tuné en production."
           },
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "Excellent work completing Model Card and Dataset Documentation!\n\nYou can now write professional, standards-compliant model and dataset cards that serve both human readers and automated governance systems.\n\nThis documentation foundation will directly support the lab where you publish your final benchmark and model card to the Hugging Face Hub.\n\nNext, explore how to serve your fine-tuned model efficiently in production environments."
+                "en": "Excellent work completing Model Card and Dataset Documentation.\n\nYou can now distinguish the role of a model card from that of a dataset card, and document information that lets human readers and governance processes inspect a model’s lineage, intended use, limitations, and data context.\n\nUse this documentation framework whenever you prepare a model for review or deployment. This course does not include a lab in which to publish a benchmark or a model card. Next, explore how to serve a fine-tuned model efficiently in production environments.",
+                "fr": "Excellent travail : vous avez terminé « Model Card and Dataset Documentation ».\n\nVous savez maintenant distinguer le rôle d’une model card de celui d’une dataset card et documenter les informations qui permettent à des lecteurs humains et aux processus de gouvernance d’examiner la filiation d’un modèle, son usage prévu, ses limites et le contexte de ses données.\n\nUtilisez ce cadre documentaire lorsque vous préparez un modèle à la revue ou au déploiement. Ce cours ne contient pas de lab pour publier un benchmark ou une model card. Passez maintenant à l’étude du serving efficace d’un modèle fine-tuné en production."
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "open_source_llms_04_ch02_documentation_closure_q1",
+              "question": {
+                "en": "When preparing a fine-tuned model for review, which documentation pairing best preserves both model and data context?",
+                "fr": "Lors de la préparation d’un modèle fine-tuné pour revue, quelle association documentaire préserve le mieux à la fois le contexte du modèle et celui des données ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "A model card for lineage, intended use, limits, and evaluation, together with a dataset card for data provenance and conditions.",
+                    "fr": "Une model card pour la filiation, l’usage prévu, les limites et l’évaluation, accompagnée d’une dataset card pour la provenance et les conditions des données."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "A model-family video instead of written documentation.",
+                    "fr": "Une vidéo sur les familles de modèles à la place de toute documentation écrite."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "An access token without a model card or dataset card.",
+                    "fr": "Un token d’accès sans model card ni dataset card."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "A publication task that the course does not provide.",
+                    "fr": "Une tâche de publication que la formation ne fournit pas."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "en": "The two cards are complementary. The model card documents the derived model and its evidence, while the dataset card documents the data context that readers need to assess reuse and limitations.",
+                "fr": "Les deux cartes sont complémentaires. La model card documente le modèle dérivé et ses éléments de preuve, tandis que la dataset card documente le contexte des données nécessaire pour évaluer la réutilisation et les limites."
+              },
+              "serverValidated": true
             }
           ]
         }
@@ -1441,18 +1592,65 @@
         {
           "id": "lesson_04_chapter_06",
           "title": {
-            "en": "Module Complete"
+            "en": "Module Complete",
+            "fr": "Module terminé"
           },
           "type": "content",
           "body": {
-            "en": "Congratulations on completing Cost, Governance and Lifecycle Management—the final lesson of the Packaging and Deployment course!\n\nYou are now equipped to manage fine-tuned LLMs responsibly across their entire lifecycle, from cost-efficient serving to governance-compliant retirement.\n\nProceed to the hands-on lab to publish your final benchmark results and model card to the Hugging Face Hub and earn your Open-Source LLMs and Fine-Tuning Engineer certification."
+            "en": "## Module complete\n\nYou have completed the explanatory material in **Cost, Governance and Lifecycle Management**, the final lesson of the Packaging and Deployment course. You can now distinguish cost-efficient serving choices from governance controls, describe the audit trail that links data, training, evaluation, and deployment approval, and recognize why distribution shift monitoring belongs in the production lifecycle.\n\n## Closing case\n\nConsider a candidate adapter that is ready for a production review. Before promotion, its record should let reviewers identify the exact base model and adapter version, the applicable license and intended use, the evaluation evidence, known limitations, and the approval decision. If live inputs later differ materially from the validated setting, the team should investigate the change rather than treating the original evaluation as permanently sufficient.\n\nThis course does not include a hands-on lab, publication task, benchmark upload, or certification step. The completion point is the knowledge and decision framework explained in the course.",
+            "fr": "## Module terminé\n\nVous avez terminé le contenu explicatif de **Cost, Governance and Lifecycle Management**, la dernière leçon du cours Packaging and Deployment. Vous savez désormais distinguer les choix de serving efficients des contrôles de gouvernance, décrire la piste d’audit qui relie données, entraînement, évaluation et approbation de déploiement, et expliquer pourquoi la surveillance de dérive de distribution appartient au cycle de vie de production.\n\n## Cas de clôture\n\nConsidérez un adaptateur candidat à une revue de production. Avant sa promotion, son dossier doit permettre aux évaluateurs d’identifier la version exacte du modèle de base et de l’adaptateur, la licence applicable et l’usage prévu, les éléments d’évaluation, les limites connues et la décision d’approbation. Si les entrées réelles diffèrent ensuite de manière significative du contexte validé, l’équipe doit examiner ce changement plutôt que de considérer l’évaluation initiale comme suffisante à jamais.\n\nCette formation ne contient pas de lab pratique, de tâche de publication, d’envoi de benchmark ni d’étape de certification. Le point de clôture est le cadre de connaissances et de décision expliqué dans le cours."
           },
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "Congratulations on completing Cost, Governance and Lifecycle Management—the final lesson of the Packaging and Deployment course!\n\nYou are now equipped to manage fine-tuned LLMs responsibly across their entire lifecycle, from cost-efficient serving to governance-compliant retirement.\n\nProceed to the hands-on lab to publish your final benchmark results and model card to the Hugging Face Hub and earn your Open-Source LLMs and Fine-Tuning Engineer certification."
+                "en": "## Module complete\n\nYou have completed the explanatory material in **Cost, Governance and Lifecycle Management**, the final lesson of the Packaging and Deployment course. You can now distinguish cost-efficient serving choices from governance controls, describe the audit trail that links data, training, evaluation, and deployment approval, and recognize why distribution shift monitoring belongs in the production lifecycle.\n\n## Closing case\n\nConsider a candidate adapter that is ready for a production review. Before promotion, its record should let reviewers identify the exact base model and adapter version, the applicable license and intended use, the evaluation evidence, known limitations, and the approval decision. If live inputs later differ materially from the validated setting, the team should investigate the change rather than treating the original evaluation as permanently sufficient.\n\nThis course does not include a hands-on lab, publication task, benchmark upload, or certification step. The completion point is the knowledge and decision framework explained in the course.",
+                "fr": "## Module terminé\n\nVous avez terminé le contenu explicatif de **Cost, Governance and Lifecycle Management**, la dernière leçon du cours Packaging and Deployment. Vous savez désormais distinguer les choix de serving efficients des contrôles de gouvernance, décrire la piste d’audit qui relie données, entraînement, évaluation et approbation de déploiement, et expliquer pourquoi la surveillance de dérive de distribution appartient au cycle de vie de production.\n\n## Cas de clôture\n\nConsidérez un adaptateur candidat à une revue de production. Avant sa promotion, son dossier doit permettre aux évaluateurs d’identifier la version exacte du modèle de base et de l’adaptateur, la licence applicable et l’usage prévu, les éléments d’évaluation, les limites connues et la décision d’approbation. Si les entrées réelles diffèrent ensuite de manière significative du contexte validé, l’équipe doit examiner ce changement plutôt que de considérer l’évaluation initiale comme suffisante à jamais.\n\nCette formation ne contient pas de lab pratique, de tâche de publication, d’envoi de benchmark ni d’étape de certification. Le point de clôture est le cadre de connaissances et de décision expliqué dans le cours."
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "open_source_llms_04_ch04_lifecycle_release_q1",
+              "question": {
+                "en": "During a production review for a fine-tuned adapter, which record most directly supports a responsible promotion decision?",
+                "fr": "Lors d’une revue de production d’un adaptateur fine-tuné, quel dossier appuie le plus directement une décision de promotion responsable ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Only the current serving cost, because governance records can be recreated later.",
+                    "fr": "Uniquement le coût de serving actuel, car les éléments de gouvernance peuvent être recréés plus tard."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The base-model and adapter versions, applicable license and intended use, evaluation evidence, known limitations, and approval decision.",
+                    "fr": "Les versions du modèle de base et de l’adaptateur, la licence applicable et l’usage prévu, les éléments d’évaluation, les limites connues et la décision d’approbation."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "A promise to publish results in a lab that is not part of the course.",
+                    "fr": "La promesse de publier des résultats dans un lab qui ne fait pas partie de la formation."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Only the family name of the underlying model.",
+                    "fr": "Uniquement le nom de la famille du modèle sous-jacent."
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "A promotion decision requires traceability across the artifact, its permitted and intended use, and the evidence for the deployment. Cost is one operational input, but it cannot replace lineage, evaluation, limitations, and accountable approval.",
+                "fr": "Une décision de promotion exige une traçabilité de l’artefact, de son usage permis et prévu, ainsi que des éléments qui justifient le déploiement. Le coût est une donnée opérationnelle, mais il ne remplace pas la filiation, l’évaluation, les limites et une approbation responsable."
+              },
+              "serverValidated": true
             }
           ]
         }

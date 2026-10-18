@@ -1,0 +1,39 @@
+{
+  "formation_id": "ia_appliquee_metiers_tp__formation_35",
+  "course_paths_changed": [
+    "/home/ubuntu/neopolis-akademy/client/public/data/courses/ia_appliquee_metiers_tp__35.json"
+  ],
+  "findings": [
+    {
+      "source_finding_index": 67,
+      "severity": "P1",
+      "course_id": "ia_appliquee_metiers_tp__35",
+      "chapter_id": "ia_appliquee_metiers_tp__35-final-quiz",
+      "status": "corrected",
+      "action": "Le quiz final conserve ses quatre IDs de QCM et son seuil de 4, mais chaque item évalue désormais un acquis RAG distinct : provenance et chunking, embeddings et recherche vectorielle, réponse bornée par les passages retrouvés, puis structure vérifiable d’un rapport Google Docs. Le tri généraliste a été supprimé. Les quatre explications sont spécifiques, bilingues et les QCM sont serverValidated.",
+      "proof": "Le chapitre final contient exactement ia_appliquee_metiers_tp__35-quiz-01 à -04, tous de type single_choice_exercise, avec 4 options FR/EN distinctes, correctAnswer appartenant aux options, serverValidated=true et passThreshold=4. Le bloc ia_appliquee_metiers_tp__35-quiz-order a été retiré. Le contenu visible de l’écran de construction explicite la chaîne corpus/chunks/provenance → embeddings et recherche Pinecone → réponse sourcée → rapport Google Docs, sans exiger de compte ni d’exécution externe."
+    }
+  ],
+  "added_quiz_ids": [],
+  "removed_block_ids": [
+    "ia_appliquee_metiers_tp__35-quiz-order"
+  ],
+  "sources_used": [
+    {
+      "title": "n8n — AI-Powered RAG Workflow For Stock Earnings Report Analysis",
+      "url": "https://n8n.io/workflows/2741-ai-powered-rag-workflow-for-stock-earnings-report-analysis/",
+      "use": "Périmètre documenté du workflow : PDF de résultats, chunking, embeddings, recherche Pinecone et livraison Google Docs."
+    },
+    {
+      "title": "Pinecone Docs — Data modeling",
+      "url": "https://docs.pinecone.io/guides/index-data/data-modeling",
+      "use": "Chunking applicatif, provenance par identifiant et métadonnées, recherche et filtrage des chunks."
+    },
+    {
+      "title": "Google Cloud — Retrieval-Augmented Generation",
+      "url": "https://cloud.google.com/use-cases/retrieval-augmented-generation",
+      "use": "Récupération de contexte externe et nécessité de la pertinence des passages pour une génération ancrée."
+    }
+  ],
+  "unresolved": []
+}

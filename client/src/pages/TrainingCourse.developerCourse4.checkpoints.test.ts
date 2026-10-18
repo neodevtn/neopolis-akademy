@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import course from '../../public/data/courses/claude_certified_developer_foundations__04.json';
+import { findServerValidatedChoiceKey } from '../../../server/sensitiveExerciseAnswerKeys';
+import { sanitizeCourseDataForLearner } from '../../../server/courseDataRoute';
 
 const collectFrenchText = (value: unknown, text: string[] = []): string[] => {
   if (Array.isArray(value)) value.forEach((item) => collectFrenchText(item, text));
@@ -71,24 +75,84 @@ describe('Developer Foundations course 4 checkpoint integrity', () => {
     expect(content).not.toContain('un score baseline épinglé');
   });
 
-  it('restores the two Skilljar cumulative production-hardening tasks before the recap', () => {
-    const ids = ['chapter_skilljar_04_s17', 'chapter_skilljar_04_s18'];
-    const chapters = ids.map(chapter);
+  it('keeps the legacy S17/S18 chapter and block IDs while replacing free TPs with autonomous bilingual case-study quizzes', () => {
+    const checkpoints = [
+      {
+        chapterId: 'chapter_skilljar_04_s17',
+        blockId: 'chapter_cumulative_s17',
+        englishCaseStudyTerms: ['Boundary pass', 'Failure pass', 'Regression pass'],
+        frenchCaseStudyTerms: ['Passe de frontière', 'Passe de défaillance', 'Passe de régression'],
+      },
+      {
+        chapterId: 'chapter_skilljar_04_s18',
+        blockId: 'chapter_cumulative_s18',
+        englishCaseStudyTerms: ['Boundary control', 'Failure control', 'Regression control'],
+        frenchCaseStudyTerms: ['Contrôle de frontière', 'Contrôle de défaillance', 'Contrôle de régression'],
+      },
+    ] as const;
     const recapIndex = lesson.chapters.findIndex((item: any) => item.id === 'chapter_08');
-    expect(chapters.every(Boolean)).toBe(true);
-    expect(lesson.chapters.findIndex((item: any) => item.id === ids[0])).toBeLessThan(recapIndex);
+    expect(recapIndex).toBeGreaterThan(-1);
 
-    for (const cumulative of chapters) {
-      const exerciseBlock = cumulative.blocks.find((block: any) => block.type === 'cloud_exercise');
-      expect(cumulative.completionRule).toEqual({ requires: ['cloudExerciseCompleted'] });
-      expect(exerciseBlock.minimumAnswerLength).toBe(40);
-      expect(exerciseBlock.solution.en).not.toHaveLength(0);
-      expect(exerciseBlock.solution.fr).not.toHaveLength(0);
-      expect(exerciseBlock.instructions.fr).toContain('soumettez');
-      expect(exerciseBlock.instructions.fr).toContain('réponse du modèle');
+    for (const specification of checkpoints) {
+      const cumulative = chapter(specification.chapterId);
+      expect(cumulative, specification.chapterId).toBeTruthy();
+      expect(lesson.chapters.findIndex((item: any) => item.id === specification.chapterId)).toBeLessThan(recapIndex);
+      expect(cumulative.completionRule).toEqual({ requires: ['requiredExercisesPassed'] });
+      expect(cumulative.completionRule.requires).not.toContain('cloudExerciseCompleted');
+      expect(cumulative.blocks.filter((block: any) => block.type === 'cloud_exercise')).toHaveLength(0);
+
+      const caseStudy = cumulative.blocks.find((block: any) => block.type === 'content');
+      const quiz = cumulative.blocks.find((block: any) => block.id === specification.blockId);
+      expect(caseStudy?.body.en.trim().length).toBeGreaterThan(500);
+      expect(caseStudy?.body.fr.trim().length).toBeGreaterThan(500);
+      for (const term of specification.englishCaseStudyTerms) expect(caseStudy.body.en).toContain(term);
+      for (const term of specification.frenchCaseStudyTerms) expect(caseStudy.body.fr).toContain(term);
+
+      expect(cumulative.blocks.filter((block: any) => block.id === specification.blockId)).toHaveLength(1);
+      expect(quiz).toMatchObject({ id: specification.blockId, type: 'single_choice_exercise', serverValidated: true, correctAnswer: 'b' });
+      expect(quiz.options).toHaveLength(4);
+      expect(quiz.options.map((option: any) => option.id)).toEqual(['a', 'b', 'c', 'd']);
+      for (const localizedInstruction of [quiz.question, quiz.explanation, ...quiz.options.map((option: any) => option.text)]) {
+        expect(localizedInstruction.en.trim()).not.toHaveLength(0);
+        expect(localizedInstruction.fr.trim()).not.toHaveLength(0);
+      }
+      for (const obsoleteFreeResponseField of ['minimumAnswerLength', 'solution', 'instructions', 'rubricCriteria', 'learnerCriteria']) {
+        expect(quiz, `${specification.blockId} must not regress to a free-response TP`).not.toHaveProperty(obsoleteFreeResponseField);
+      }
+    }
+  });
+
+  it('keeps the S17/S18 answer keys server-only and cannot unlock their required-exercise gates with a false answer', () => {
+    const learnerCourse = JSON.parse(sanitizeCourseDataForLearner(JSON.stringify(course)));
+    const lessonViewerSource = readFileSync(path.resolve(import.meta.dirname, 'training', 'LessonViewer.tsx'), 'utf8');
+    const singleChoiceSource = readFileSync(path.resolve(import.meta.dirname, '..', 'components', 'SingleChoiceExercise.tsx'), 'utf8');
+
+    for (const [chapterId, blockId] of [
+      ['chapter_skilljar_04_s17', 'chapter_cumulative_s17'],
+      ['chapter_skilljar_04_s18', 'chapter_cumulative_s18'],
+    ] as const) {
+      const sourceQuiz = chapter(chapterId).blocks.find((block: any) => block.id === blockId);
+      const learnerQuiz = learnerCourse.lessons[0].chapters.find((item: any) => item.id === chapterId).blocks.find((block: any) => block.id === blockId);
+      const serverKey = findServerValidatedChoiceKey(course, blockId);
+      const wrongOption = sourceQuiz.options.find((option: any) => option.id !== sourceQuiz.correctAnswer);
+
+      expect(serverKey, `${blockId} needs exactly one server-resolvable key`).toEqual({
+        correctAnswer: sourceQuiz.correctAnswer,
+        explanation: sourceQuiz.explanation,
+      });
+      expect(learnerQuiz.serverValidated).toBe(true);
+      expect(learnerQuiz.correctAnswer).toBeUndefined();
+      expect(learnerQuiz.explanation).toBeUndefined();
+      expect(wrongOption.id).not.toBe(serverKey?.correctAnswer);
+      expect(wrongOption.id === serverKey?.correctAnswer, `${blockId} false answer must not pass`).toBe(false);
+      expect(sourceQuiz.correctAnswer === serverKey?.correctAnswer, `${blockId} correct answer must pass`).toBe(true);
     }
 
-    expect(chapter('chapter_skilljar_04_s17').blocks[1].solution.fr).toContain('aucune évaluation n’existe');
-    expect(chapter('chapter_skilljar_04_s18').blocks[1].solution.en).toContain('call_with_retry');
+    // The secured evaluator is wired for serverValidated blocks, and completion
+    // is emitted only when that evaluator returns correct=true. The chapter gate
+    // then requires every single-choice ID in completedExercises before advancing.
+    expect(lessonViewerSource).toContain('onEvaluate={block.serverValidated ? async (selectedId) => validateServerChoice.mutateAsync');
+    expect(singleChoiceSource).toContain('if (result.correct && onCorrect) onCorrect(id);');
+    expect(lessonViewerSource).toContain('if (scIds.length > 0 && !scIds.every((id: string) => isScopedInteractionComplete(completedExercises');
   });
 });

@@ -1,3 +1,6 @@
+import { readFileSync, statSync } from "node:fs";
+import path from "node:path";
+import { getCourseDataDirectories, isValidCourseDataId } from "./courseDataRoute";
 import { CLAUDE_SCIENCE_V2_CHECKPOINT_KEYS } from "./claudeScienceV2Assessments";
 
 type LocalizedText = { en?: string; fr?: string };
@@ -48,6 +51,41 @@ const sensitiveExerciseAnswerKeys: Record<string, Record<string, SensitiveExerci
   },
 };
 
+/** Resolve only active, explicitly server-validated choices with an unambiguous key. */
+export function findServerValidatedChoiceKey(course: any, exerciseId: string): SensitiveExerciseAnswerKey | null {
+  const candidates = (Array.isArray(course?.lessons) ? course.lessons : [])
+    .flatMap((lesson: any) => Array.isArray(lesson?.chapters) ? lesson.chapters : [])
+    .flatMap((chapter: any) => Array.isArray(chapter?.blocks) ? chapter.blocks : [])
+    .filter((block: any) => block?.type === "single_choice_exercise"
+      && block.serverValidated === true && (block.exerciseId || block.id) === exerciseId);
+  if (candidates.length !== 1) return null;
+  const block = candidates[0];
+  const options = Array.isArray(block.options) ? block.options : [];
+  const optionIds = options.map((option: any) => option?.id);
+  if (options.length < 2 || optionIds.some((id: unknown) => typeof id !== "string" || !id)
+    || new Set(optionIds).size !== options.length
+    || typeof block.correctAnswer !== "string" || !optionIds.includes(block.correctAnswer)) return null;
+  return { correctAnswer: block.correctAnswer, explanation: block.explanation };
+}
+
+const courseKeyCache = new Map<string, { stamp: string; course: any }>();
+
 export function getSensitiveExerciseAnswerKey(courseId: string, exerciseId: string): SensitiveExerciseAnswerKey | null {
-  return sensitiveExerciseAnswerKeys[courseId]?.[exerciseId] ?? null;
+  if (!isValidCourseDataId(courseId) || !exerciseId) return null;
+  const registered = sensitiveExerciseAnswerKeys[courseId]?.[exerciseId];
+  if (registered) return registered;
+  for (const directory of getCourseDataDirectories()) {
+    const filename = path.join(directory, `${courseId}.json`);
+    try {
+      const stat = statSync(filename);
+      const stamp = `${stat.mtimeMs}:${stat.size}`;
+      const cached = courseKeyCache.get(filename);
+      const course = cached?.stamp === stamp ? cached.course : JSON.parse(readFileSync(filename, "utf8"));
+      courseKeyCache.set(filename, { stamp, course });
+      return findServerValidatedChoiceKey(course, exerciseId);
+    } catch {
+      // Try the next managed course directory; do not expose paths or raw keys.
+    }
+  }
+  return null;
 }

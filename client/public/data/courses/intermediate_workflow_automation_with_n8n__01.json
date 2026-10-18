@@ -501,99 +501,67 @@
         {
           "id": "dc_ch02_act07",
           "title": {
-            "en": "Modify an existing Code node",
-            "fr": "Modify an existing Code node"
+            "fr": "Modifier la règle d’un nœud Code existant",
+            "en": "Modify the rule in an existing Code node"
           },
           "description": {
-            "en": "",
-            "fr": ""
+            "fr": "Distinguer une mesure d’humidité numérique d’une valeur présente mais non numérique, puis comprendre comment cette décision alimente un branchement.",
+            "en": "Distinguish a numeric humidity measurement from a present but non-numeric value, then understand how that decision feeds a branch."
           },
           "type": "exercise",
           "requiredBeforeAdvance": true,
           "blocks": [
             {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_07_tp",
-              "title": {
-                "en": "Modify an existing Code node",
-                "fr": "Modify an existing Code node"
+              "type": "content",
+              "id": "dc_2_act_07_content",
+              "body": {
+                "fr": "## Objectif\n\nComprendre comment une règle de validation sépare une mesure d’humidité numérique d’une valeur manquante ou d’un texte qui ressemble à un nombre. Cette séquence est une étude de cas autonome : elle ne demande ni workflow de départ, ni fichier, ni accès à une instance n8n.\n\n## Une valeur présente n’est pas forcément une mesure exploitable\n\nUne règle robuste examine au moins trois choses, dans cet ordre :\n\n1. **Présence** : le champ attendu existe-t-il et sa valeur est-elle renseignée ?\n2. **Type** : la valeur est-elle un nombre JSON, plutôt qu’un texte ou un booléen ?\n3. **Règle métier** : une fois le type acceptable, la valeur respecte-t-elle les limites définies par le métier ?\n\nLe deuxième point évite une confusion fréquente : `58` est une valeur numérique, alors que `\"58\"` est du texte. Elles peuvent se ressembler à l’écran, mais ne portent pas le même type. Une conversion automatique de texte en nombre peut être utile dans un flux conçu pour cela ; elle ne doit pas être ajoutée silencieusement à une règle dont le contrat exige déjà une mesure numérique. De même, un booléen n’est pas une mesure, même si certains environnements Python le traitent comme un sous-type d’entier.\n\n## De la décision au branchement\n\nDans n8n, un nœud **Code** reçoit des *items*. Une règle de validation doit produire une décision explicite par item, par exemple un indicateur booléen dont le sens est documenté. Le nœud **If** placé ensuite peut alors router les items selon cet indicateur : la logique de contrôle reste distincte du traitement réservé à chaque branche.\n\nLe détail d’accès aux données dépend du runtime Python installé. La documentation n8n indique qu’en Python natif, le mode « Run Once for Each Item » expose `_item` et que l’accès aux propriétés se fait avec des crochets, par exemple `_item[\"json\"][\"humidity\"]`; les bibliothèques Python ne sont pas librement importables sur n8n Cloud. Avant de modifier un script existant, vérifiez donc le runtime, le mode d’exécution et le contrat de la valeur attendue.\n\n## Cas de contraste\n\nUne chaîne contenant des chiffres et un nombre JSON peuvent demander des décisions différentes. La règle doit rendre ce choix lisible : accepter uniquement le type reçu, convertir selon une politique explicitement prévue, ou orienter la valeur vers une branche de correction. Sans contrat clair, une conversion implicite masque des erreurs de saisie et rend les branches difficiles à interpréter.\n\nRépondez maintenant au QCM pour vérifier la conception d’une validation qui alimente un nœud **If**.",
+                "en": "## Objective\n\nUnderstand how a validation rule separates a numeric humidity measurement from a missing value or text that looks like a number. This is a self-contained case study: it requires no starter workflow, file, or access to an n8n instance.\n\n## A present value is not necessarily a usable measurement\n\nA robust rule considers at least three things, in this order:\n\n1. **Presence**: does the expected field exist and contain a value?\n2. **Type**: is that value a JSON number rather than text or a Boolean?\n3. **Business rule**: once the type is acceptable, does the value satisfy the limits defined by the business?\n\nThe second point prevents a common confusion: `58` is numeric, whereas `\"58\"` is text. They may look alike on screen, but they do not have the same type. Automatically converting text to a number can be useful in a workflow designed to do that; it should not be silently added to a rule whose contract already requires a numeric measurement. Likewise, a Boolean is not a measurement, even though some Python environments treat it as a subtype of an integer.\n\n## From decision to branch\n\nIn n8n, a **Code** node receives *items*. A validation rule should produce an explicit decision for each item, such as a documented Boolean flag. The following **If** node can then route items according to that flag: the control logic stays separate from the processing performed on each branch.\n\nThe exact data-access details depend on the installed Python runtime. n8n documentation states that in native Python, « Run Once for Each Item » exposes `_item` and properties are accessed with brackets, for example `_item[\"json\"][\"humidity\"]`; Python libraries cannot be freely imported on n8n Cloud. Before modifying an existing script, therefore check the runtime, the execution mode, and the contract of the expected value.\n\n## A contrast case\n\nA string containing digits and a JSON number may need different decisions. The rule should make that choice visible: accept only the received type, convert according to an explicitly intended policy, or route the value to a correction branch. Without a clear contract, implicit conversion hides data-entry errors and makes the branches difficult to interpret.\n\nAnswer the quiz to check the design of a validation rule that feeds an **If** node."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_2_act_07_qcm",
+              "question": {
+                "fr": "Une automatisation doit orienter chaque item vers un nœud **If** selon une règle d’humidité qui accepte uniquement les nombres JSON déjà fournis, sans conversion implicite de texte. Quelle conception rend la décision la plus traçable ?",
+                "en": "An automation must route each item to an **If** node using a humidity rule that accepts only JSON numbers already provided, with no implicit text conversion. Which design makes the decision most traceable?"
               },
-              "assignment": {
-                "fr": "Renforcez la validation afin que l’humidité soit obligatoirement numérique.",
-                "en": "Durcissement d’une règle Python pour distinguer humidités numériques et valeurs invalides."
-              },
-              "instructions": {
-                "fr": "Avant de commencer, utilisez votre propre instance n8n Cloud ou Docker. Téléchargez depuis le TP le pack synthétique Neopolis « humidité à contrôler ».",
-                "en": "Before you begin, use your own n8n Cloud or Docker instance. Download the Neopolis synthetic pack “humidity to check” from the practical exercise."
-              },
-              "environmentGuide": {
-                "fr": "**Préparer votre espace n8n**\n\n1. Ouvrez votre instance personnelle n8n Cloud ou Docker.\n2. Créez un workflow de travail dédié à ce TP.\n3. Utilisez uniquement des données synthétiques ; ne connectez ni compte professionnel, ni secret, ni données réelles.\n4. Exécutez en mode test avant toute activation.",
-                "en": "**Prepare your n8n workspace**\n\n1. Open your personal n8n Cloud or Docker instance.\n2. Create a dedicated workflow for this practical.\n3. Use synthetic data only; do not connect production accounts, secrets, or real data.\n4. Test before enabling any workflow."
-              },
-              "steps": [
+              "options": [
                 {
-                  "number": 1,
-                  "instruction_text": {
-                    "fr": "Chargez le workflow et les lignes synthétiques du pack Neopolis.",
-                    "en": "Load the workflow and the synthetic rows from the Neopolis pack."
+                  "id": "a",
+                  "text": {
+                    "fr": "Vérifier seulement que le champ humidity existe, puis considérer tous les items comme valides.",
+                    "en": "Check only that the humidity field exists, then treat all items as valid."
                   }
                 },
                 {
-                  "number": 2,
-                  "instruction_text": {
-                    "fr": "Dans Python Code, complétez la condition pour exiger une humidité numérique.",
-                    "en": "In Python Code, complete the condition to require numeric humidity."
+                  "id": "b",
+                  "text": {
+                    "fr": "Convertir automatiquement toute valeur en texte qui contient des chiffres, puis la transmettre sans indiquer la conversion.",
+                    "en": "Automatically convert any text value that contains digits, then pass it on without recording the conversion."
                   }
                 },
                 {
-                  "number": 3,
-                  "instruction_text": {
-                    "fr": "Exécutez à nouveau le workflow.",
-                    "en": "Run the workflow again."
+                  "id": "c",
+                  "text": {
+                    "fr": "Évaluer le type reçu dans le nœud Code, produire un indicateur booléen explicite par item, puis faire tester cet indicateur par le nœud If.",
+                    "en": "Evaluate the received type in the Code node, produce an explicit Boolean flag for each item, then have the If node test that flag."
                   }
                 },
                 {
-                  "number": 4,
-                  "instruction_text": {
-                    "fr": "Contrôlez les branches de Is Valid? pour repérer les enregistrements désormais rejetés.",
-                    "en": "Check the branches of Is Valid? to identify the records that are now rejected."
+                  "id": "d",
+                  "text": {
+                    "fr": "Envoyer les items vers une branche selon le nom du nœud Code, sans ajouter de décision aux données.",
+                    "en": "Send items to a branch based on the Code node name, without adding a decision to the data."
                   }
                 }
               ],
-              "resources": [
-                {
-                  "title": {
-                    "fr": "Données synthétiques — validation de villes",
-                    "en": "Données synthétiques — validation de villes"
-                  },
-                  "description": {
-                    "fr": "Lignes synthétiques avec valeurs valides et invalides pour une règle d’humidité numérique. Données synthétiques uniquement.",
-                    "en": "Lignes synthétiques avec valeurs valides et invalides pour une règle d’humidité numérique. Synthetic data only."
-                  },
-                  "url": "/api/assets/courses/datacamp/intermediate-n8n/synthetic-data/city_validation_rows_9c177f5f.json"
-                }
-              ],
-              "hint": {
-                "fr": "Ajoutez la vérification de type à la règle existante, puis comparez les deux sorties après exécution.",
-                "en": "Add the type check to the existing rule, then compare the two outputs after running it."
+              "correctAnswer": "c",
+              "explanation": {
+                "fr": "Cette conception sépare clairement la validation du routage. Le nœud Code examine la donnée effectivement reçue et ajoute une décision explicite ; le nœud If ne fait ensuite que consommer cette décision. Vérifier la seule présence du champ accepterait du texte ou un booléen. Convertir implicitement une chaîne modifie le contrat et cache cette transformation. Le nom d’un nœud ne décrit enfin aucune décision disponible pour chaque item.",
+                "en": "This design clearly separates validation from routing. The Code node examines the data actually received and adds an explicit decision; the If node then only consumes that decision. Checking only for field presence would accept text or a Boolean. Implicitly converting a string changes the contract and hides that transformation. A node name, finally, does not describe any decision available for each item."
               },
-              "successMessage": "",
-              "learnerCriteria": [
-                "Python Code teste que l’humidité est numérique.",
-                "Is Valid? montre les lignes qui échouent avec la règle renforcée."
-              ],
-              "minimumAnswerLength": 90,
-              "source_refs": [
-                {
-                  "source": "source course course screen",
-                  "url": "https://campus.datacamp.com/fr/courses/intermediate-workflow-automation-with-n8n/working-with-apis-code-and-data-tables?ex=7",
-                  "relevance": "Rapprochement de l’activité et de ses étapes; texte Neopolis reformulé pour un environnement personnel."
-                }
-              ],
-              "practiceStatus": "source_screen_verified",
-              "sourceSummary": "Durcissement d’une règle Python pour distinguer humidités numériques et valeurs invalides.",
-              "nonDownloadableFiles": [],
-              "serverGradedAssessment": "intermediate_n8n_source_verified"
+              "serverValidated": true
             }
           ]
         },

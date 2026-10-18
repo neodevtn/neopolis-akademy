@@ -20,6 +20,13 @@
           },
           "blocks": [
             {
+              "type": "content",
+              "body": {
+                "fr": "Dans cette leçon, vous apprendrez à :\n\n• Instrumenter les appels d’API LLM afin de capturer les métadonnées du fournisseur et du modèle dans des spans de trace\n• Enregistrer l’usage des tokens (tokens de prompt, de complétion et total) comme attributs de span\n• Mesurer et associer la latence de bout en bout de chaque invocation de modèle\n• Structurer les spans de trace selon les bonnes pratiques d’observabilité LLMOps",
+                "en": "In this lesson, you will learn how to:\n\n• Instrument LLM API calls to capture provider and model metadata in trace spans\n• Record token usage (prompt tokens, completion tokens, total tokens) as span attributes\n• Measure and attach end-to-end latency for each model invocation\n• Structure trace spans according to LLMOps observability best practices"
+              }
+            },
+            {
               "type": "video",
               "url": "https://www.youtube.com/watch?v=TDcT9ao47Tk",
               "title": "Observability for AI Apps feat. LangSmith, Langfuse",
@@ -412,9 +419,16 @@
           },
           "type": "content",
           "body": {
-            "en": "Retrieval-Augmented Generation (RAG) pipelines consist of multiple distinct steps, each of which should be individually traced. A typical RAG trace hierarchy begins with a root span for the entire query, then nests child spans for each processing stage.\n\nThe embedding step converts the user query into a vector. Its span should record the embedding model name, input token count, and latency. The retrieval step queries a vector store; its span should capture the number of candidates requested (top-k), the number of results returned, each document's ID and similarity score, and the vector database provider.\n\nWhen a reranker is applied, a dedicated child span records the reranking model name, the input document count, and the output document count after filtering by a score threshold. Recording before-and-after score distributions allows teams to evaluate whether reranking improves context quality.\n\nUsing OpenTelemetry, each stage is represented as a child span under a common parent. Span links or baggage can propagate the original query context across all child spans, enabling full-pipeline analysis in tools like Jaeger, Grafana Tempo, or LangSmith."
+            "en": "Retrieval-Augmented Generation (RAG) pipelines consist of multiple distinct steps, each of which should be individually traced. A typical RAG trace hierarchy begins with a root span for the entire query, then nests child spans for each processing stage.\n\nThe embedding step converts the user query into a vector. Its span should record the embedding model name, input token count, and latency. The retrieval step queries a vector store; its span should capture the number of candidates requested (top-k), the number of results returned, each document's ID and similarity score, and the vector database provider.\n\nWhen a reranker is applied, a dedicated child span records the reranking model name, the input document count, and the output document count after filtering by a score threshold. Recording before-and-after score distributions allows teams to evaluate whether reranking improves context quality.\n\nUsing OpenTelemetry, create each stage as a child span while the relevant parent context is active. Across services, propagate W3C Trace Context to continue the same trace. Baggage can carry selected, non-sensitive application context, but does not itself establish a parent-child relationship; span links instead associate causally related work without that hierarchy."
           },
           "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "fr": "Les pipelines de génération augmentée par récupération (RAG) comprennent plusieurs étapes distinctes, qui doivent chacune être tracées. Une hiérarchie de traces RAG typique commence par un span racine pour la requête entière, puis imbrique des spans enfants pour chaque étape de traitement.\n\nL’étape d’embedding convertit la requête de l’utilisateur en vecteur. Son span doit enregistrer le nom du modèle d’embedding, le nombre de tokens en entrée et la latence. L’étape de récupération interroge un magasin vectoriel ; son span doit capturer le nombre de candidats demandés (top-k), le nombre de résultats retournés, l’identifiant et le score de similarité de chaque document, ainsi que le fournisseur de la base vectorielle.\n\nLorsqu’un reranker est appliqué, un span enfant dédié enregistre le nom du modèle de reranking, le nombre de documents en entrée et le nombre de documents en sortie après filtrage par seuil de score. L’enregistrement des distributions de scores avant et après le reranking permet d’évaluer si ce dernier améliore la qualité du contexte.\n\nAvec OpenTelemetry, créez chaque étape comme un span enfant lorsque le contexte parent pertinent est actif. Entre services, propagez le contexte W3C Trace Context pour poursuivre la même trace. Le baggage peut transporter un contexte applicatif sélectionné et non sensible, mais il n’établit pas à lui seul une relation parent-enfant ; les span links servent plutôt à relier des travaux causalement associés sans cette relation hiérarchique.",
+                "en": "Retrieval-Augmented Generation (RAG) pipelines consist of multiple distinct steps, each of which should be individually traced. A typical RAG trace hierarchy begins with a root span for the entire query, then nests child spans for each processing stage.\n\nThe embedding step converts the user query into a vector. Its span should record the embedding model name, input token count, and latency. The retrieval step queries a vector store; its span should capture the number of candidates requested (top-k), the number of results returned, each document's ID and similarity score, and the vector database provider.\n\nWhen a reranker is applied, a dedicated child span records the reranking model name, the input document count, and the output document count after filtering by a score threshold. Recording before-and-after score distributions allows teams to evaluate whether reranking improves context quality.\n\nUsing OpenTelemetry, create each stage as a child span while the relevant parent context is active. Across services, propagate W3C Trace Context to continue the same trace. Baggage can carry selected, non-sensitive application context, but does not itself establish a parent-child relationship; span links instead associate causally related work without that hierarchy."
+              }
+            },
             {
               "type": "video",
               "url": "https://www.youtube.com/watch?v=HH887f9sozs",
@@ -667,7 +681,7 @@
               ],
               "correctAnswer": "b",
               "explanation": {
-                "en": "The W3C TraceContext specification (RFC 7239 derivative) defines the traceparent and tracestate HTTP headers used by OpenTelemetry to propagate trace and span IDs across service boundaries, ensuring all distributed steps of a RAG pipeline appear in the same trace."
+                "en": "The W3C Trace Context specification defines the traceparent and tracestate HTTP headers used by OpenTelemetry to propagate trace and parent-span context across service boundaries. This keeps the distributed steps of a RAG pipeline in the same trace for end-to-end analysis."
               }
             }
           ]
@@ -1074,6 +1088,13 @@
             "en": "Congratulations on completing Lesson 3: Trace Tool Calls and Agent Loops!\n\nYou now know how to instrument agentic AI workflows with structured traces that capture the full reasoning cycle, individual tool invocations, and loop safety signals. These traces are essential for debugging agent failures and optimizing multi-step task performance.\n\nIn the final lesson, you will learn how to implement redaction and privacy controls in your trace pipelines to protect sensitive user data."
           },
           "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "fr": "Félicitations, vous avez terminé la leçon 3 : tracer les appels d’outils et les boucles d’agents.\n\nVous savez désormais instrumenter des workflows d’IA agentique avec des traces structurées qui capturent le cycle complet de raisonnement, les invocations d’outils individuelles et les signaux de sécurité des boucles. Ces traces sont essentielles pour diagnostiquer les défaillances d’agents et optimiser les performances des tâches en plusieurs étapes.\n\nDans la dernière leçon, vous apprendrez à mettre en œuvre des contrôles de masquage et de confidentialité dans vos pipelines de traces afin de protéger les données sensibles des utilisateurs.",
+                "en": "Congratulations on completing Lesson 3: Trace Tool Calls and Agent Loops!\n\nYou now know how to instrument agentic AI workflows with structured traces that capture the full reasoning cycle, individual tool invocations, and loop safety signals. These traces are essential for debugging agent failures and optimizing multi-step task performance.\n\nIn the final lesson, you will learn how to implement redaction and privacy controls in your trace pipelines to protect sensitive user data."
+              }
+            },
             {
               "type": "video",
               "url": "https://www.youtube.com/watch?v=epnPfe5am3I",

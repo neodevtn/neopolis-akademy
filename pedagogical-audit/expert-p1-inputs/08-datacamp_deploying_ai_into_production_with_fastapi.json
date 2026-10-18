@@ -1,0 +1,42 @@
+{
+  "formation_id": "datacamp_deploying_ai_into_production_with_fastapi",
+  "formation_title": "Déployer l’IA en production avec FastAPI",
+  "course_paths": [
+    "/home/ubuntu/neopolis-akademy/client/public/data/courses/deploying_ai_into_production_with_fastapi__01.json"
+  ],
+  "findings": [
+    {
+      "formation_id": "datacamp_deploying_ai_into_production_with_fastapi",
+      "formation_title": "Déployer l’IA en production avec FastAPI",
+      "severity": "P1",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act01",
+      "category": "exactitude_technique",
+      "description": "Dans l’exemple d’analyse textuelle, `comment` est typé `CommentText` avec le champ `content`, mais le code appelle `comment.lower()`. La liste `forbidden` omet aussi la virgule entre `\"free\"` et `\"fake\"`, ce qui concatène ces deux valeurs ; le code ne peut donc pas produire la sortie annoncée.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[1].chapters[0].blocks[0].projectorSlides[3].content définit `class CommentText(BaseModel): content: str`; projectorSlides[5].content contient `\"free\" \"fake\"` et `text_lower = comment.lower()` avec la sortie attendue.",
+      "source_finding_index": 11
+    },
+    {
+      "formation_id": "datacamp_deploying_ai_into_production_with_fastapi",
+      "formation_title": "Déployer l’IA en production avec FastAPI",
+      "severity": "P1",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act04",
+      "category": "exactitude_technique",
+      "description": "Le constructeur est déclaré avec `requests_per_min` mais instancié avec `requests_per_minute`, ce qui déclenche une erreur d’argument. De plus, `is_rate_limited()` est annoncé comme retournant `tuple[bool, int]` mais retourne `False` seul, alors que l’exemple suivant le déstructure en deux valeurs.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[2].chapters[1].blocks[0].projectorSlides[6].content (`__init__(..., requests_per_min)`), projectorSlides[9].content (`RateLimiter(requests_per_minute=10)`), projectorSlides[8].content (`return False`), projectorSlides[10].content (`_, requests_remaining = rate_limiter.is_rate_limited(...)`).",
+      "source_finding_index": 12
+    },
+    {
+      "formation_id": "datacamp_deploying_ai_into_production_with_fastapi",
+      "formation_title": "Déployer l’IA en production avec FastAPI",
+      "severity": "P1",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act07",
+      "category": "exactitude_technique",
+      "description": "L’exemple de gestion du délai passe directement l’inférence synchrone `sentiment_model(comment.text)` à `asyncio.wait_for`, qui attend un awaitable. L’appel illustré ne peut donc pas appliquer le timeout annoncé à cette inférence telle qu’elle est définie à l’écran précédent.",
+      "evidence": "031.json → current_courses[0].current_data.lessons[2].chapters[2].blocks[0].projectorSlides[3].content appelle `sentiment_model(comment.text)` sans `await`; projectorSlides[5].content contient `await asyncio.wait_for(sentiment_model(comment.text), timeout=5.0)`.",
+      "source_finding_index": 13
+    }
+  ]
+}

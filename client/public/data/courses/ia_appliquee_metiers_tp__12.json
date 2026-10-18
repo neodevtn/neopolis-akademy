@@ -6,8 +6,8 @@
     "en": "Build an AI Customer Support Agent"
   },
   "description": {
-    "fr": "TP guidé pour Support lead, customer operations, administrateur Gorgias/Freshdesk. Outils : n8n, Helpdesk, IA.",
-    "en": "TP guidé pour Support lead, customer operations, administrateur Gorgias/Freshdesk. Outils : n8n, Helpdesk, IA."
+    "fr": "Étude de cas guidée pour Support lead, customer operations, administrateur Gorgias/Freshdesk. Concepts : n8n, helpdesk, IA.",
+    "en": "Guided case study for Support leads, customer operations, and Gorgias/Freshdesk administrators. Concepts: n8n, helpdesk, and AI."
   },
   "sourceReference": {
     "sourceType": "YouTube",
@@ -79,8 +79,8 @@
                 "en": "Agent IA complet pour Zendesk, Gorgias ou Freshdesk avec n8n"
               },
               "body": {
-                "fr": "Métier cible : Support lead, customer operations, administrateur Gorgias/Freshdesk. Niveau : Intermédiaire. Durée indicative : 2 h 30.",
-                "en": "Métier cible : Support lead, customer operations, administrateur Gorgias/Freshdesk. Niveau : Intermédiaire. Durée indicative : 2 h 30."
+                "fr": "Métier cible : Support lead, customer operations, administrateur Gorgias/Freshdesk. Niveau : Intermédiaire. Durée indicative : 2 h 30.\n\nCette formation s’appuie sur une **étude de cas autonome** : aucun compte n8n, helpdesk ou fournisseur LLM n’est requis pour apprendre la démarche.",
+                "en": "Target roles: Support lead, customer operations, and Gorgias/Freshdesk administrator. Level: Intermediate. Estimated duration: 2 h 30.\n\nThis course uses a **self-contained case study**: no n8n, helpdesk, or LLM-provider account is required to learn the approach."
               },
               "items": [
                 {
@@ -109,8 +109,8 @@
                 "en": "Cadre pratique"
               },
               "body": {
-                "fr": "Vous reproduisez un cas d’usage dans votre propre environnement de démonstration. La ressource source reste consultable ; elle ne remplace pas les contrôles métier et de sécurité.",
-                "en": "You reproduce a use case in your own demonstration environment. The source resource remains available for reference; it does not replace business and security controls."
+                "fr": "Vous allez analyser une file de support fictive et distinguer ce qui peut être préparé automatiquement de ce qui doit rester soumis à une décision humaine. Les noms n8n, Zendesk, Gorgias et Freshdesk désignent des contextes d’intégration possibles ; l’étude de cas ne demande aucun accès à ces produits.",
+                "en": "You will analyse a fictitious support queue and distinguish what can be prepared automatically from what must remain subject to a human decision. The names n8n, Zendesk, Gorgias, and Freshdesk refer to possible integration contexts; the case study does not require access to those products."
               }
             }
           ]
@@ -119,33 +119,17 @@
           "id": "ia_appliquee_metiers_tp__12-screen-02",
           "type": "teaching",
           "title": {
-            "fr": "Préparer l’environnement",
-            "en": "Préparer l’environnement"
+            "fr": "Lire le flux sans le déployer",
+            "en": "Read the flow without deploying it"
           },
           "requiredBeforeAdvance": false,
           "blocks": [
             {
               "type": "content",
+              "id": "ia_appliquee_metiers_tp__12-flow-reading-content",
               "body": {
-                "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, helpdesk sandbox, clé API LLM, base FAQ de test, jeu de tickets.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
-                "en": "## Environment preparation\n\nWork in a **personal sandbox**, a local draft, or demonstration accounts. Prepare only fictitious data and test access.\n\n- Expected tools: n8n, helpdesk sandbox, LLM API key, test FAQ database, ticket set.\n- Do not enter any key, password, or real personal data in the practical exercise or in its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with human impact, retain an **explicit human validation** before the final action.\n\nThis learning path does not require any provider-hosted lab: adapt the steps to your local or demonstration environment."
-              }
-            },
-            {
-              "type": "resource_review",
-              "id": "ia_appliquee_metiers_tp__12-source-review",
-              "title": {
-                "fr": "Ressource source",
-                "en": "Ressource source"
-              },
-              "instructions": {
-                "fr": "Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation.\n\n[Ouvrir la ressource source](https://www.youtube.com/watch?v=cEpbSVkt_Qc)",
-                "en": "Open the source resource in a new tab. Identify the business outcome, inputs, outputs, and control steps. Then return here to confirm that you reviewed it.\n\n[Open the source resource](https://www.youtube.com/watch?v=cEpbSVkt_Qc)"
-              },
-              "resourceUrl": "https://www.youtube.com/watch?v=cEpbSVkt_Qc",
-              "resourceLabel": {
-                "fr": "Ouvrir la ressource source",
-                "en": "Ouvrir la ressource source"
+                "fr": "## Lire une file de support comme un système de décision\n\n**Objectif :** décrire le trajet d’un ticket sans brancher d’outil ni utiliser de données client. Une automatisation de support fiable sépare la préparation d’une réponse de l’action qui engage le client ou l’entreprise.\n\n### Les quatre éléments du flux\n\n1. **Entrée et périmètre.** Le ticket est classé selon une catégorie autorisée et une règle de routage. Une question couverte par une FAQ n’a pas le même traitement qu’une demande liée à une commande, un remboursement ou une information absente de la FAQ.\n2. **Brouillon sourcé.** Pour une question dans le périmètre, l’agent peut préparer un brouillon fondé sur l’article FAQ identifié. Le brouillon n’est pas une affirmation vérifiée par défaut : sa source doit rester identifiable.\n3. **Escalade.** Une demande ambiguë, hors périmètre ou nécessitant une action sur un compte sort de la boucle automatique. Elle est transmise avec son contexte plutôt que résolue par approximation.\n4. **Mémoire FAQ.** Un schéma récurrent dans des tickets résolus peut devenir une proposition d’article. Cette proposition reste à relire avant publication.\n\n### Contraste utile\n\nUne FAQ peut aider à préparer une information générale ; elle ne donne pas à elle seule le droit de modifier une commande, d’accorder un remboursement ou de publier un nouvel article. La traçabilité permet ensuite à un responsable de relier la branche choisie à la règle appliquée et au statut de revue.\n\n**À retenir :** une boucle support responsable associe chaque décision à son périmètre, à une source lorsque la FAQ est utilisée et à une voie d’escalade quand la décision dépasse ce périmètre.",
+                "en": "## Read a support queue as a decision system\n\n**Goal:** describe a ticket’s path without connecting a tool or using customer data. A reliable support automation separates preparing a response from taking an action that commits the customer or the business.\n\n### The four flow elements\n\n1. **Input and scope.** The ticket is classified against an allowed category and a routing rule. A question covered by an FAQ is handled differently from a request involving an order, a refund, or information absent from the FAQ.\n2. **Sourced draft.** For an in-scope question, the agent can prepare a draft based on the identified FAQ article. A draft is not verified by default: its source must remain identifiable.\n3. **Escalation.** A request that is ambiguous, out of scope, or requires an account action leaves the automated loop. It is handed over with context rather than answered by guesswork.\n4. **FAQ memory.** A recurring pattern in resolved tickets can become a proposed article. That proposal remains subject to review before publication.\n\n### A useful contrast\n\nAn FAQ can help prepare general information; it does not by itself authorize changing an order, granting a refund, or publishing a new article. Traceability then lets a lead connect the selected branch to the applied rule and the review status.\n\n**Key point:** a responsible support loop links each decision to its scope, to a source when the FAQ is used, and to an escalation route when the decision exceeds that scope."
               }
             }
           ]
@@ -154,57 +138,57 @@
           "id": "ia_appliquee_metiers_tp__12-screen-03",
           "type": "teaching",
           "title": {
-            "fr": "Construire progressivement",
-            "en": "Construire progressivement"
+            "fr": "Raisonner sur les routes du cas",
+            "en": "Reason about the case routes"
           },
           "requiredBeforeAdvance": true,
           "blocks": [
             {
               "type": "sequence_visual",
               "title": {
-                "fr": "Démarche de réalisation",
-                "en": "Démarche de réalisation"
+                "fr": "Démarche d’analyse",
+                "en": "Analysis approach"
               },
               "layout": "timeline",
               "items": [
                 {
                   "title": {
                     "fr": "Cadrer",
-                    "en": "Cadrer"
+                    "en": "Scope"
                   },
                   "description": {
-                    "fr": "Définissez le cas d’usage pour Support lead, customer operations, administrateur Gorgias/Freshdesk et les limites d’automatisation.",
-                    "en": "Define the use case for Support lead, customer operations, Gorgias/Freshdesk administrator, and the automation limits."
+                    "fr": "Délimitez les catégories auxquelles une FAQ peut répondre et celles qui exigent une prise en charge humaine.",
+                    "en": "Define which categories an FAQ may address and which ones require human handling."
                   }
                 },
                 {
                   "title": {
-                    "fr": "Préparer",
-                    "en": "Préparer"
+                    "fr": "Modéliser",
+                    "en": "Model"
                   },
                   "description": {
-                    "fr": "Créez des données fictives adaptées aux outils : n8n, helpdesk sandbox, clé API LLM.",
-                    "en": "Create fictitious data suited to the tools: n8n, helpdesk sandbox, LLM API key."
+                    "fr": "Représentez la route logique : catégorisation, brouillon sourcé, escalade ou proposition d’article FAQ.",
+                    "en": "Represent the logical route: categorisation, sourced draft, escalation, or proposed FAQ article."
                   }
                 },
                 {
                   "title": {
-                    "fr": "Tester",
-                    "en": "Tester"
+                    "fr": "Simuler",
+                    "en": "Simulate"
                   },
                   "description": {
-                    "fr": "Exécutez des scénarios de test, relisez les sorties et consignez les écarts.",
-                    "en": "Run test scenarios, review the outputs, and document any discrepancies."
+                    "fr": "Parcourez mentalement des demandes fictives simples, ambiguës et hors périmètre pour vérifier que chaque route aboutit à une décision explicable.",
+                    "en": "Walk through simple, ambiguous, and out-of-scope fictitious requests to check that each route leads to an explainable decision."
                   }
                 },
                 {
                   "title": {
                     "fr": "Contrôler",
-                    "en": "Contrôler"
+                    "en": "Control"
                   },
                   "description": {
-                    "fr": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne.",
-                    "en": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne."
+                    "fr": "Vérifiez que les actions engageantes et les propositions de FAQ restent en attente d’une revue humaine.",
+                    "en": "Check that commitment-making actions and proposed FAQ content remain pending human review."
                   }
                 }
               ]
@@ -212,8 +196,8 @@
             {
               "type": "comparison_panel",
               "title": {
-                "fr": "Vérifications avant utilisation",
-                "en": "Vérifications avant utilisation"
+                "fr": "Vérifications de la route",
+                "en": "Route checks"
               },
               "columns": [
                 {
@@ -223,16 +207,16 @@
                   },
                   "items": [
                     {
-                      "fr": "Utiliser des données fictives.",
-                      "en": "Utiliser des données fictives."
+                      "fr": "Associer une catégorie à une règle de routage.",
+                      "en": "Associate a category with a routing rule."
                     },
                     {
-                      "fr": "Définir un contrôle humain.",
-                      "en": "Définir un contrôle humain."
+                      "fr": "Conserver la source d’un brouillon fondé sur la FAQ.",
+                      "en": "Retain the source of an FAQ-based draft."
                     },
                     {
-                      "fr": "Tester les cas limites.",
-                      "en": "Tester les cas limites."
+                      "fr": "Prévoir une escalade pour les décisions hors périmètre.",
+                      "en": "Plan an escalation for out-of-scope decisions."
                     }
                   ]
                 },
@@ -243,16 +227,16 @@
                   },
                   "items": [
                     {
-                      "fr": "Exposer un secret ou une donnée personnelle.",
-                      "en": "Exposer un secret ou une donnée personnelle."
+                      "fr": "Transformer un brouillon en action définitive sans revue.",
+                      "en": "Turn a draft into a final action without review."
                     },
                     {
-                      "fr": "Déclencher une action finale sans validation.",
-                      "en": "Déclencher une action finale sans validation."
+                      "fr": "Répondre à une demande ambiguë en inventant une règle.",
+                      "en": "Answer an ambiguous request by inventing a rule."
                     },
                     {
-                      "fr": "Déduire une décision sans vérification métier.",
-                      "en": "Déduire une décision sans vérification métier."
+                      "fr": "Publier une proposition de FAQ sans relecture.",
+                      "en": "Publish a proposed FAQ article without review."
                     }
                   ]
                 }
@@ -264,54 +248,62 @@
           "id": "ia_appliquee_metiers_tp__12-mini-project",
           "type": "exercise",
           "title": {
-            "fr": "Mini-projet et preuve de réalisation",
-            "en": "Mini-projet et preuve de réalisation"
+            "fr": "Étude de cas : cadrer l’agent",
+            "en": "Case study: scope the agent"
           },
           "requiredBeforeAdvance": false,
           "blocks": [
             {
-              "id": "ia_appliquee_metiers_tp__12-mini-project-proof",
-              "type": "cloud_exercise",
-              "title": {
-                "fr": "Mini-projet pratique",
-                "en": "Mini-projet pratique"
+              "id": "ia_appliquee_metiers_tp__12-case-study",
+              "type": "content",
+              "body": {
+                "fr": "## Étude de cas autonome : Boutique Démo\n\n**Situation.** Une file de support reçoit un message fictif qui combine une question générale sur le délai de livraison et une demande d’annulation d’une commande en cours. La FAQ de Boutique Démo explique les délais de livraison ; elle ne couvre pas les décisions sur les commandes.\n\n**Objectif.** Déterminez ce que l’agent peut préparer, ce qui doit être transmis à un agent humain et ce qui doit être enregistré pour rendre la décision contrôlable. Aucun workflow, fichier de tickets, compte helpdesk ou clé API n’est nécessaire : le cas se résout à partir des règles de cet écran.\n\n### Analyse attendue\n\n- La partie informative peut être reliée à la FAQ et préparée sous forme de brouillon.\n- La partie qui modifie la situation d’un client ne relève pas de la FAQ générale : elle doit suivre la voie de revue prévue.\n- La trace doit permettre de comprendre la route retenue, la référence documentaire éventuelle et l’état de la revue.\n- Si plusieurs tickets résolus font apparaître le même manque d’information, l’équipe peut proposer un article FAQ ; la publication reste distincte de la proposition.\n\n**Acquis.** Vous savez maintenant distinguer un brouillon sourcé, une escalade et une proposition de FAQ dans une même file de support, sans confondre préparation automatique et décision finale.",
+                "en": "## Self-contained case study: Demo Store\n\n**Situation.** A support queue receives a fictitious message that combines a general question about delivery time with a request to cancel an open order. Demo Store’s FAQ explains delivery times; it does not cover decisions about orders.\n\n**Goal.** Determine what the agent may prepare, what must be passed to a human agent, and what must be recorded to make the decision controllable. No workflow, ticket file, helpdesk account, or API key is needed: the case is solved from the rules on this screen.\n\n### Expected analysis\n\n- The informational part can be linked to the FAQ and prepared as a draft.\n- The part that changes a customer’s situation is not covered by the general FAQ: it follows the planned review route.\n- The trace must make it possible to understand the selected route, any supporting reference, and the review state.\n- If several resolved tickets reveal the same information gap, the team can propose an FAQ article; publishing remains separate from proposing it.\n\n**What you learned.** You can now distinguish a sourced draft, an escalation, and an FAQ proposal within one support queue, without confusing automated preparation with a final decision."
+              }
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__12-case-study-quiz",
+              "type": "single_choice_exercise",
+              "question": {
+                "fr": "Dans le cas Boutique Démo, quel traitement respecte le mieux la séparation entre information FAQ et décision sur une commande ?",
+                "en": "In the Demo Store case, which treatment best respects the separation between FAQ information and a decision about an order?"
               },
-              "assignment": "Configurer une file support de démonstration qui traite les questions fréquentes et crée trois articles FAQ à relire.",
-              "instructions": "Réalisez le mini-projet dans un environnement personnel de démonstration. Utilisez le support fictif fourni, puis décrivez dans la zone de preuve : le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine.\n\n- Construire une boucle réponse, escalade et apprentissage FAQ\n- Définir les limites d'automatisation du support L1\n- Tracer les décisions de l'agent\n- Préparer des réponses réutilisables à partir de tickets résolus",
-              "environmentGuide": {
-                "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, helpdesk sandbox, clé API LLM, base FAQ de test, jeu de tickets.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
-                "en": "## Environment preparation\n\nWork in a **personal sandbox**, a local draft, or demonstration accounts. Prepare only fictitious data and test access.\n\n- Planned tools: n8n, helpdesk sandbox, LLM API key, test FAQ database, ticket set.\n- Do not enter any key, password, or real personal data in the practical exercise or its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with a human impact, retain **explicit human approval** before the final action.\n\nThis learning path does not require any provider-hosted lab: adapt the steps to your local or demonstration environment."
-              },
-              "resources": [
+              "options": [
                 {
-                  "title": {
-                    "fr": "Support fictif de TP 12",
-                    "en": "Support fictif de TP 12"
-                  },
-                  "description": {
-                    "fr": "Données de démonstration sans secret ni information réelle.",
-                    "en": "Données de démonstration sans secret ni information réelle."
-                  },
-                  "url": "/api/assets/12-12-agent-ia-complet-pour-zendesk-gorgias-ou-freshdesk-avec-n8n-support-fictif_4c37e0da.md"
+                  "id": "a",
+                  "text": {
+                    "fr": "Envoyer automatiquement l’information de délai et annuler la commande dans la même étape.",
+                    "en": "Automatically send the delivery-time information and cancel the order in the same step."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Préparer un brouillon sourcé pour la question de délai et transmettre la demande d’annulation à la voie de revue.",
+                    "en": "Prepare a sourced draft for the delivery-time question and send the cancellation request through the review route."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Supprimer la demande d’annulation pour ne garder que la question couverte par la FAQ.",
+                    "en": "Delete the cancellation request and keep only the FAQ-covered question."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Publier immédiatement un nouvel article FAQ qui autorise les annulations.",
+                    "en": "Immediately publish a new FAQ article that authorises cancellations."
+                  }
                 }
               ],
-              "hint": "Commencez par un seul cas fictif et conservez l’action finale en brouillon ou derrière une validation humaine.",
-              "solution": "## Correction et auto-vérification\n\nUne preuve complète décrit le scénario fictif, le workflow ou la procédure réalisée, le résultat observé et le contrôle humain prévu.\n\n### Erreurs fréquentes\n\n- Introduire des données réelles, identifiants ou clés dans l’exercice.\n- Déclencher un envoi, une publication ou une décision sans étape de validation.\n- Confondre une sortie IA avec une validation métier.\n\n### Vérification\n\nRelisez votre preuve : elle doit être cohérente avec l’objectif « Configurer une file support de démonstration qui traite les questions fréquentes et crée trois articles FAQ à relire. » et montrer au moins un test avec données fictives.\n\n### Extension\n\nAjoutez un journal d’exécution, un cas limite supplémentaire et une règle d’escalade humaine.",
-              "successMessage": "Preuve enregistrée. Vous pouvez maintenant consulter la correction et terminer le quiz final.",
-              "steps": [
-                {
-                  "fr": "Relisez la consigne et identifiez le résultat attendu pour « Mini-projet et preuve de réalisation ».",
-                  "en": "Review the instructions and identify the expected outcome for “Mini-projet et preuve de réalisation”."
-                },
-                {
-                  "fr": "Réalisez la tâche avec les informations et ressources fournies sur cet écran, sans utiliser de donnée confidentielle.",
-                  "en": "Complete the task with the information and resources provided on this screen, without using confidential data."
-                },
-                {
-                  "fr": "Vérifiez votre production au regard des critères indiqués avant de la soumettre.",
-                  "en": "Check your work against the stated criteria before submitting it."
-                }
-              ]
+              "correctAnswer": "b",
+              "explanation": {
+                "fr": "La FAQ justifie un brouillon sur le délai de livraison, car elle porte sur une information générale identifiée. Une annulation modifie la situation du client et ne peut pas être déduite de cette FAQ : elle doit donc suivre la voie de revue. Les deux demandes restent ainsi traçables sans transformer un brouillon en action finale.",
+                "en": "The FAQ supports a delivery-time draft because it covers identified general information. A cancellation changes the customer’s situation and cannot be inferred from that FAQ, so it must follow the review route. Both requests therefore remain traceable without turning a draft into a final action."
+              },
+              "serverValidated": true
             }
           ]
         },
@@ -329,73 +321,89 @@
               "id": "ia_appliquee_metiers_tp__12-quiz-01",
               "type": "single_choice_exercise",
               "question": {
-                "fr": "Quel élément doit être conservé dans le mini-projet « Configurer une file support de démonstration qui traite les questions fréquentes et crée trois articles FAQ à relire. » ?",
-                "en": "What item must be retained in the mini-project “Set up a demonstration support queue that handles frequently asked questions and creates three FAQ articles for review.”?"
+                "fr": "Dans une file de support, quelle information rend le mieux une décision de routage contrôlable ?",
+                "en": "In a support queue, which information best makes a routing decision controllable?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Une preuve de test avec des données fictives et un résultat vérifiable.",
-                    "en": "Test evidence with fictitious data and a verifiable result."
+                    "fr": "La règle ou la source consultée, la branche retenue et le statut de revue.",
+                    "en": "The consulted rule or source, the selected branch, and the review status."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Un mot de passe de production directement dans le workflow.",
-                    "en": "A production password directly in the workflow."
+                    "fr": "Uniquement le texte final envoyé au client.",
+                    "en": "Only the final text sent to the customer."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Une action finale déclenchée sans relecture.",
-                    "en": "Une action finale déclenchée sans relecture."
+                    "fr": "Le nom de l’outil utilisé, sans contexte de décision.",
+                    "en": "The name of the tool used, without decision context."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Un export de données personnelles non anonymisées.",
-                    "en": "An export of non-anonymized personal data."
+                    "fr": "Une réponse sans référence pour éviter de conserver des traces.",
+                    "en": "An answer without a reference in order to avoid retaining records."
                   }
                 }
               ],
               "correctAnswer": "a",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the practical exercise framework: fictitious data, human oversight, and verification before any real action."
-              }
+                "fr": "Un journal utile relie une décision à sa règle ou à sa source, indique la route retenue et montre où en est la revue. Le texte final seul ou le nom d’un outil ne permettent pas de vérifier pourquoi un ticket a été routé ainsi.",
+                "en": "A useful log links a decision to its rule or source, records the selected route, and shows the review state. The final text alone or a tool name cannot show why a ticket was routed that way."
+              },
+              "serverValidated": true
             },
             {
               "id": "ia_appliquee_metiers_tp__12-quiz-02",
               "type": "single_choice_exercise",
               "question": {
-                "fr": "Vrai ou faux : un brouillon ou une validation humaine doit précéder toute action sensible générée par le workflow.",
-                "en": "True or false: a draft or human approval must precede any sensitive action generated by the workflow."
+                "fr": "Un ticket contient une demande d’action sur un compte que la FAQ ne couvre pas. Quelle est la bonne suite ?",
+                "en": "A ticket contains a request for an account action that the FAQ does not cover. What is the proper next step?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Vrai : les actions sensibles exigent un contrôle humain explicite.",
-                    "en": "True: sensitive actions require explicit human oversight."
+                    "fr": "Le transmettre avec son contexte à la voie de revue prévue.",
+                    "en": "Hand it over with its context through the planned review route."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Faux : l’automatisation dispense toujours de tout contrôle.",
-                    "en": "Faux : l’automatisation dispense toujours de tout contrôle."
+                    "fr": "Choisir une réponse au hasard pour conserver une réponse automatique.",
+                    "en": "Choose an answer at random to keep the response automatic."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Créer une règle FAQ définitive à partir de ce seul ticket.",
+                    "en": "Create a definitive FAQ rule from that single ticket."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Faire disparaître la demande du journal de traitement.",
+                    "en": "Remove the request from the processing log."
                   }
                 }
               ],
               "correctAnswer": "a",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the practical exercise framework: fictitious data, human oversight, and verification before any real action."
-              }
+                "fr": "Une demande hors périmètre ou nécessitant une action sur un compte doit être escaladée avec son contexte. Cette route évite qu’une FAQ générale soit interprétée comme une autorisation d’agir.",
+                "en": "A request outside scope or requiring an account action must be escalated with its context. This route avoids interpreting a general FAQ as authority to act."
+              },
+              "serverValidated": true
             },
             {
               "id": "ia_appliquee_metiers_tp__12-quiz-03",
@@ -438,50 +446,52 @@
               "explanation": {
                 "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
                 "en": "The correction reiterates the framework for the practical assignment: fictitious data, human oversight, and verification before any real action."
-              }
+              },
+              "serverValidated": true
             },
             {
               "id": "ia_appliquee_metiers_tp__12-quiz-04",
               "type": "single_choice_exercise",
               "question": {
-                "fr": "Question de vigilance : parmi ces outils prévus — n8n, helpdesk sandbox, clé API LLM, base FAQ de test, jeu de tickets — quelle donnée ne doit jamais être saisie dans le support ou le commentaire de preuve ?",
-                "en": "Safety question: among these planned tools — n8n, helpdesk sandbox, LLM API key, test FAQ database, ticket set — what data must never be entered into the submission or proof comment?"
+                "fr": "Après plusieurs tickets résolus qui révèlent la même lacune documentaire, quelle distinction faut-il conserver ?",
+                "en": "After several resolved tickets reveal the same documentation gap, which distinction must be retained?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Une clé API, un mot de passe ou un identifiant réel.",
-                    "en": "An API key, password, or real identifier."
+                    "fr": "Une proposition d’article FAQ est distincte de sa publication après relecture.",
+                    "en": "A proposed FAQ article is distinct from its publication after review."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Le nom fictif du dossier de démonstration.",
-                    "en": "The fictitious name of the demonstration file."
+                    "fr": "Toute proposition peut être publiée sans contrôle dès qu’elle est rédigée.",
+                    "en": "Every proposal can be published without review as soon as it is drafted."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Le statut de test « à vérifier ».",
-                    "en": "Le statut de test « à vérifier »."
+                    "fr": "Il faut effacer les tickets résolus avant de documenter la lacune.",
+                    "en": "Resolved tickets must be deleted before documenting the gap."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Une note indiquant qu’une validation humaine est requise.",
-                    "en": "Une note indiquant qu’une validation humaine est requise."
+                    "fr": "La FAQ doit remplacer le processus de revue des actions sur compte.",
+                    "en": "The FAQ should replace the review process for account actions."
                   }
                 }
               ],
               "correctAnswer": "a",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the framework for the practical assignment: fictitious data, human oversight, and verification before any real action."
-              }
+                "fr": "Les tickets résolus peuvent nourrir une proposition d’article, mais la proposition n’est pas une publication. La relecture permet de vérifier la portée, la formulation et la cohérence avec les règles de support avant diffusion.",
+                "en": "Resolved tickets can inform a proposed article, but proposing is not publishing. Review checks the scope, wording, and consistency with support rules before distribution."
+              },
+              "serverValidated": true
             },
             {
               "id": "ia_appliquee_metiers_tp__12-quiz-order",
@@ -505,8 +515,8 @@
                 {
                   "id": "2",
                   "label": {
-                    "fr": "2. Construire",
-                    "en": "2. Construire"
+                    "fr": "2. Modéliser",
+                    "en": "2. Model"
                   }
                 },
                 {
@@ -536,8 +546,8 @@
                 {
                   "id": "construire",
                   "text": {
-                    "fr": "Configurer le workflow dans un environnement de démonstration.",
-                    "en": "Configure the workflow in a demonstration environment."
+                    "fr": "Formaliser la route de traitement dans un schéma ou une description.",
+                    "en": "Formalise the treatment route in a diagram or a description."
                   },
                   "correctBucket": "2"
                 },

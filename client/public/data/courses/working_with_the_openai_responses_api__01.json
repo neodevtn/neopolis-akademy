@@ -238,8 +238,8 @@
         {
           "id": "dc_ch01_act06",
           "title": {
-            "en": "Experiment with more powerful models",
-            "fr": "Expérimenter avec des modèles plus puissants"
+            "en": "Choose a model configuration",
+            "fr": "Choisir une configuration de modèle"
           },
           "description": {
             "en": "Building AI applications has never been easier with the Responses API! Learn how to prompt models through a streamlined interface, best practices for working with reasoning models, and how to build back-and-forth exchanges with LLMs.",
@@ -252,9 +252,53 @@
               "type": "content",
               "id": "dc_1_act_06_content",
               "body": {
-                "en": "Let's experiment with some of the different LLMs offered by OpenAI. All of these models have reasoning capabilities, but to make the differences between the base models clearer, set the reasoning effort to 'none'.\n\nIn this exercise, you can enter any prompts you like, but try to use the same one at each step for a clearer comparison! If you need inspiration, you can use the one provided.",
-                "fr": "Expérimentons quelques-uns des différents LLM proposés par OpenAI. Tous ces modèles ont des capacités de raisonnement, mais pour rendre les différences entre les modèles de base plus claires, réglez l'effort de raisonnement sur 'none'.\n\nDans cet exercice, vous pouvez saisir les invites de votre choix, mais essayez d'utiliser la même à chaque étape pour une comparaison plus nette ! Si vous manquez d'idées, vous pouvez reprendre celle fournie."
+                "en": "### Objective\nChoose a **model, reasoning effort, and output-token limit** that fit the task instead of treating the most capable configuration as a default.\n\nA Responses API request combines these choices. `reasoning={\"effort\": ...}` guides how much a reasoning model works through a task. A lower effort generally favors speed and lower token use; a higher effort can be appropriate when the task has several dependent steps or needs careful checking. Supported effort values are **model-dependent**, so do not assume that every model accepts `none`.\n\n### A decision to make before implementation\nConsider two requests. A short, routine classification is latency-sensitive and has little value in extended reasoning. It is sensible to begin evaluation with a model and an effort level that prioritize speed and cost. A request that must reconcile several pieces of evidence has a different failure risk: it may need more reasoning room. For that case, compare an appropriate reasoning configuration on representative cases before adopting it.\n\n`max_output_tokens` is part of the same trade-off. For reasoning models, that limit must leave room for both internal reasoning and visible output. If it is too restrictive, a response can end before it provides a useful answer; raising reasoning effort while leaving an unsuitable limit does not make the configuration coherent.\n\nThe practical rule is to evaluate configurations against the application's quality, latency, and cost requirements. Start with the least expensive configuration that can meet the requirement, then change one relevant parameter at a time and compare the result on the same task cases. This lesson explains the choice; no prompt-entry or API execution interface is provided on this screen.",
+                "fr": "### Objectif\nChoisir un **modèle, un effort de raisonnement et une limite de jetons de sortie** adaptés à la tâche, plutôt que d’employer par défaut la configuration la plus puissante.\n\nUne requête de la Responses API associe ces choix. `reasoning={\"effort\": ...}` oriente l’ampleur du raisonnement appliqué par un modèle de raisonnement. Un effort faible privilégie en général la rapidité et une consommation de jetons plus faible ; un effort plus élevé peut être pertinent lorsqu’une tâche comporte plusieurs étapes dépendantes ou demande une vérification attentive. Les valeurs d’effort prises en charge dépendent du **modèle** : il ne faut donc pas supposer que chaque modèle accepte `none`.\n\n### Une décision à prendre avant l’implémentation\nComparez deux demandes. Une classification courte et routinière est sensible à la latence et tire peu de bénéfice d’un raisonnement prolongé. Il est raisonnable de commencer l’évaluation avec un modèle et un niveau d’effort qui privilégient vitesse et coût. Une demande qui doit mettre en cohérence plusieurs éléments de preuve présente un autre risque d’erreur : elle peut nécessiter davantage de capacité de raisonnement. Dans ce cas, comparez une configuration de raisonnement adaptée sur des cas représentatifs avant de l’adopter.\n\n`max_output_tokens` fait partie du même compromis. Pour les modèles de raisonnement, cette limite doit laisser de la place au raisonnement interne comme au texte visible. Si elle est trop restrictive, une réponse peut s’arrêter avant de donner un résultat utile ; augmenter l’effort de raisonnement en conservant une limite inadaptée ne rend pas la configuration cohérente.\n\nLa règle pratique consiste à évaluer les configurations au regard des exigences de qualité, de latence et de coût de l’application. Commencez par la configuration la moins coûteuse qui peut satisfaire le besoin, puis modifiez un paramètre pertinent à la fois et comparez le résultat sur les mêmes cas de tâche. Cet écran explique ce choix ; il ne fournit pas d’interface de saisie d’invite ni d’exécution d’API."
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_1_act_06_model_configuration_quiz",
+              "question": {
+                "en": "A product team must support a short, latency-sensitive classification and a separate multi-step evidence review. What is the most defensible way to choose their Responses API configurations?",
+                "fr": "Une équipe produit doit prendre en charge une classification courte sensible à la latence et, séparément, une vérification d’éléments de preuve en plusieurs étapes. Quelle démarche est la plus défendable pour choisir ses configurations de la Responses API ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Use the most capable model with the highest reasoning effort for both tasks, without comparing alternatives.",
+                    "fr": "Utiliser le modèle le plus puissant avec l’effort de raisonnement le plus élevé pour les deux tâches, sans comparer d’alternatives."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Evaluate task-appropriate model and effort choices on the same cases, and set an output-token limit that leaves room for the expected reasoning and visible answer.",
+                    "fr": "Évaluer des choix de modèle et d’effort adaptés à chaque tâche sur les mêmes cas, puis fixer une limite de jetons qui laisse de la place au raisonnement attendu et à la réponse visible."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Set `reasoning={\"effort\": \"none\"}` for every model because that value is universally supported.",
+                    "fr": "Définir `reasoning={\"effort\": \"none\"}` pour chaque modèle, car cette valeur est universellement prise en charge."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Choose only by model name; reasoning effort and `max_output_tokens` do not affect the trade-off.",
+                    "fr": "Choisir uniquement selon le nom du modèle ; l’effort de raisonnement et `max_output_tokens` n’influencent pas le compromis."
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "The two tasks have different quality and latency needs, so a configuration should be evaluated in context. Reasoning effort and `max_output_tokens` interact: the token budget must accommodate the model’s reasoning work as well as a visible completion. Support for individual effort values is model-dependent.",
+                "fr": "Les deux tâches ont des besoins différents de qualité et de latence : une configuration doit donc être évaluée dans son contexte. L’effort de raisonnement et `max_output_tokens` interagissent : le budget de jetons doit couvrir le travail de raisonnement du modèle et une réponse visible. La prise en charge des valeurs d’effort dépend du modèle."
+              },
+              "serverValidated": true
             }
           ]
         },
@@ -921,8 +965,8 @@
         {
           "id": "dc_ch03_act03",
           "title": {
-            "en": "Imbriquer des classes Pydantic",
-            "fr": "Imbriquer des classes Pydantic"
+            "en": "Nest Pydantic models",
+            "fr": "Imbriquer des modèles Pydantic"
           },
           "description": {
             "en": "Take your LLM systems from prototype to production with three key design paradigms. Learn to generate consistent, reliable structured outputs, such as JSON, using LLMs. You will also use semantic events to stream updates to your users and create engaging, interactive experiences. Finally, go multimodal and learn to combine text and images with OpenAI's GPT-5 models.",
@@ -935,9 +979,53 @@
               "type": "content",
               "id": "dc_3_act_03_content",
               "body": {
-                "en": "Your movie recommendation system works well, but you can still improve it. In particular, you want to add other similar movies with each recommendation so the user can explore. These similar movies require a separate class (`SimilarMovie`) so they can be listed in a new `DetailedMovieRecommendation` class.",
-                "fr": "Votre système de recommandation de films fonctionne bien, mais vous pouvez encore l’améliorer. En particulier, vous souhaitez ajouter d’autres films similaires à chaque recommandation afin que l’utilisateur puisse explorer. Ces films similaires nécessitent une classe distincte (`SimilarMovie`) afin de pouvoir être répertoriés dans une nouvelle classe `DetailedMovieRecommendation`."
+                "en": "### Objective\nModel a recommendation that contains **several related movie objects**, not just several unrelated text fields.\n\nA Pydantic model can be a field type inside another Pydantic model. Here, `SimilarMovie` describes one related film. `DetailedMovieRecommendation` is the outer object; its `similar_movies` field is a list whose every element must match `SimilarMovie`.\n\n```python\nfrom pydantic import BaseModel\n\n\nclass SimilarMovie(BaseModel):\n    title: str\n    reason: str\n\n\nclass DetailedMovieRecommendation(BaseModel):\n    title: str\n    recommendation: str\n    similar_movies: list[SimilarMovie]\n```\n\nThis is nesting: `DetailedMovieRecommendation` **contains** a collection of `SimilarMovie` values. It is different from writing parallel lists such as `similar_titles` and `similar_reasons`, where the connection between a title and its reason can be lost if their positions diverge. With the nested model, each film carries its own title and reason, and Pydantic validates the shape of every element in the list.\n\nFor a structured Responses API request, pass the outer model as the expected text format and read the parsed result only after the request completes:\n\n```python\nresponse = client.responses.parse(\n    model=\"your-structured-output-model\",\n    input=\"Recommend a film and two related titles.\",\n    text_format=DetailedMovieRecommendation,\n)\nrecommendation = response.output_parsed\n```\n\nThe API is asked for the **outer** structure; the nested list schema follows from its field annotation. This screen illustrates the schema and does not run the request or claim a generated recommendation.",
+                "fr": "### Objectif\nModéliser une recommandation qui contient **plusieurs objets de films liés**, plutôt que plusieurs champs de texte sans relation explicite.\n\nUn modèle Pydantic peut être utilisé comme type de champ dans un autre modèle Pydantic. Ici, `SimilarMovie` décrit un seul film apparenté. `DetailedMovieRecommendation` est l’objet englobant ; son champ `similar_movies` est une liste dont chaque élément doit correspondre à `SimilarMovie`.\n\n```python\nfrom pydantic import BaseModel\n\n\nclass SimilarMovie(BaseModel):\n    title: str\n    reason: str\n\n\nclass DetailedMovieRecommendation(BaseModel):\n    title: str\n    recommendation: str\n    similar_movies: list[SimilarMovie]\n```\n\nC’est une imbrication : `DetailedMovieRecommendation` **contient** une collection de valeurs `SimilarMovie`. Cette structure diffère de listes parallèles telles que `similar_titles` et `similar_reasons`, où le lien entre un titre et sa raison peut être perdu si leurs positions divergent. Avec le modèle imbriqué, chaque film porte son titre et sa raison, et Pydantic valide la forme de chaque élément de la liste.\n\nPour une requête structurée de la Responses API, transmettez le modèle englobant comme format de texte attendu et ne lisez le résultat analysé qu’après la fin de la requête :\n\n```python\nresponse = client.responses.parse(\n    model=\"your-structured-output-model\",\n    input=\"Recommend a film and two related titles.\",\n    text_format=DetailedMovieRecommendation,\n)\nrecommendation = response.output_parsed\n```\n\nL’API reçoit la demande de la structure **englobante** ; le schéma de la liste imbriquée découle de l’annotation de son champ. Cet écran illustre le schéma, n’exécute pas la requête et ne prétend pas générer une recommandation."
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_3_act_03_nested_pydantic_quiz",
+              "question": {
+                "en": "Why is `similar_movies: list[SimilarMovie]` preferable to separate `similar_titles` and `similar_reasons` lists in a detailed recommendation?",
+                "fr": "Pourquoi `similar_movies: list[SimilarMovie]` est-il préférable à deux listes séparées, `similar_titles` et `similar_reasons`, dans une recommandation détaillée ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It keeps each related film’s title and reason together and lets Pydantic validate every list element against the same model.",
+                    "fr": "Il conserve ensemble le titre et la raison de chaque film apparenté et permet à Pydantic de valider chaque élément de la liste avec le même modèle."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It prevents the Responses API from returning more than one related film.",
+                    "fr": "Il empêche la Responses API de renvoyer plus d’un film apparenté."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It converts each related film into an unvalidated plain string.",
+                    "fr": "Il convertit chaque film apparenté en une simple chaîne non validée."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It makes `DetailedMovieRecommendation` unnecessary because the inner model replaces it.",
+                    "fr": "Il rend `DetailedMovieRecommendation` inutile, car le modèle interne le remplace."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "en": "The outer model represents the full recommendation. Its `similar_movies` field holds separate `SimilarMovie` objects, so the title and reason remain associated within each object and each item is checked against that inner schema. The list can still contain multiple related films.",
+                "fr": "Le modèle englobant représente la recommandation complète. Son champ `similar_movies` contient des objets `SimilarMovie` distincts : le titre et la raison restent associés dans chaque objet et chaque élément est vérifié par rapport à ce schéma interne. La liste peut toujours contenir plusieurs films apparentés."
+              },
+              "serverValidated": true
             }
           ]
         },

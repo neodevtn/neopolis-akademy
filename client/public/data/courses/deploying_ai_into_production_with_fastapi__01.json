@@ -1172,6 +1172,14 @@
           "requiredBeforeAdvance": true,
           "blocks": [
             {
+              "type": "content",
+              "id": "neopolis_dc_ch02_act01_text_input_correction",
+              "body": {
+                "fr": "## Analyser le champ texte validé\n\n**Objectif :** distinguer l’objet Pydantic reçu par FastAPI de la valeur texte qu’il contient.\n\nUne requête JSON est d’abord validée en `CommentText`. Cet objet n’est pas une chaîne : la chaîne à normaliser est son attribut `content`. Appeler `.lower()` sur `comment` échouerait donc ; l’appel doit viser `comment.content`. De même, chaque mot-clé doit être un élément distinct de la liste : sans virgule, deux littéraux de chaîne adjacents sont concaténés par Python.\n\n```python\nclass CommentText(BaseModel):\n    content: str\n\n@app.post(\"/analyze_text\")\ndef analyze(comment: CommentText):\n    forbidden = [\"spam\", \"hate\", \"free\", \"fake\", \"sign up\"]\n    text_lower = comment.content.lower()\n    issues = [word for word in forbidden if word in text_lower]\n    return {\n        \"issues\": issues,\n        \"needs_moderation\": len(issues),\n    }\n```\n\nLe `lower()` rend la recherche insensible à la casse. La compréhension de liste teste ensuite chaque terme séparément dans le texte normalisé. `needs_moderation` est le nombre de correspondances trouvées ; ce n’est pas une prédiction de sentiment ni une décision métier complète.\n\n**Contraste utile :** `comment.lower()` traiterait le conteneur Pydantic comme une chaîne. `comment.content.lower()` traite réellement le texte validé.",
+                "en": "## Analyze the validated text field\n\n**Goal:** distinguish the Pydantic object received by FastAPI from the text value it contains.\n\nA JSON request is first validated into `CommentText`. That object is not a string: the string to normalize is its `content` attribute. Calling `.lower()` on `comment` would therefore fail; the call must target `comment.content`. Likewise, each forbidden keyword must be a separate list item: without a comma, Python concatenates adjacent string literals.\n\n```python\nclass CommentText(BaseModel):\n    content: str\n\n@app.post(\"/analyze_text\")\ndef analyze(comment: CommentText):\n    forbidden = [\"spam\", \"hate\", \"free\", \"fake\", \"sign up\"]\n    text_lower = comment.content.lower()\n    issues = [word for word in forbidden if word in text_lower]\n    return {\n        \"issues\": issues,\n        \"needs_moderation\": len(issues),\n    }\n```\n\n`lower()` makes the lookup case-insensitive. The list comprehension then tests each separate keyword in the normalized text. `needs_moderation` is the count of matches; it is neither a sentiment prediction nor a complete business decision.\n\n**Useful contrast:** `comment.lower()` would treat the Pydantic container as a string. `comment.content.lower()` processes the validated text itself."
+              }
+            },
+            {
               "type": "video",
               "id": "dc_2_act_01_video",
               "title": {
@@ -1247,9 +1255,9 @@
                   "type": "TwoColumns",
                   "script": "Another step in the moderation system is analyzing comment text. We have an analysis endpoint at \"/analyze_text\". This endpoint processes comment text as string and checks it for any issues.\n\nOur function takes a comment as CommentText parameter - it could be something like 'sign up for free'.\n\nWe define a list of forbidden keywords we want to look for like \"spam\", \"hate\", \"fake\", and so on.\n\nWe turn the comment into lowercase using the .lower() method to ensure we catch keywords regardless of capitalization.\n\nWe then use a list comprehension to find matching forbidden words.\n\nFinally, the endpoint returns \"issues\" with matching keywords, in this case, [\"sign up\", \"free\"] and a needs_moderation score which is nothing but the length of the issues list.\n\nThat's how we use basic text processing to handle text data. It could further be passed to a sentiment analysis model for more analysis.\n\n",
                   "images": [],
-                  "content": "```python\n@app.post(\"/analyze_text\")\n```\n```python\ndef analyze(comment: CommentText):\n```\n```python\n    forbidden = [\"spam\", \"hate\", \"free\"\n                 \"fake\", \"sign up\"]\n```\n```python\n    text_lower = comment.lower()\n```\n```python\n    issues = [word for word in forbidden \n              if word in text_lower]\n```\n```python\n    return {\n        \"issues\": issues,\n        \"needs_moderation\": len(issues)\n    }\n```\n\nOutput for comment: `Sign up for free`\n```{out}\n{\n    \"issues\": [\"free\", \"sign up\"],\n    \"needs_moderation\": 2\n}\n```",
-                  "contentLeft": "```python\n@app.post(\"/analyze_text\")\n```\n```python\ndef analyze(comment: CommentText):\n```\n```python\n    forbidden = [\"spam\", \"hate\", \"free\"\n                 \"fake\", \"sign up\"]\n```\n```python\n    text_lower = comment.lower()\n```\n```python\n    issues = [word for word in forbidden \n              if word in text_lower]\n```\n```python\n    return {\n        \"issues\": issues,\n        \"needs_moderation\": len(issues)\n    }\n```",
-                  "contentRight": "Output for comment: `Sign up for free`\n```{out}\n{\n    \"issues\": [\"free\", \"sign up\"],\n    \"needs_moderation\": 2\n}\n```"
+                  "content": "```python\n@app.post(\"/analyze_text\")\ndef analyze(comment: CommentText):\n    forbidden = [\"spam\", \"hate\", \"free\", \"fake\", \"sign up\"]\n    text_lower = comment.content.lower()\n    issues = [word for word in forbidden if word in text_lower]\n    return {\n        \"issues\": issues,\n        \"needs_moderation\": len(issues),\n    }\n```",
+                  "contentLeft": "```python\n@app.post(\"/analyze_text\")\ndef analyze(comment: CommentText):\n    forbidden = [\"spam\", \"hate\", \"free\", \"fake\", \"sign up\"]\n    text_lower = comment.content.lower()\n    issues = [word for word in forbidden if word in text_lower]\n    return {\n        \"issues\": issues,\n        \"needs_moderation\": len(issues),\n    }\n```",
+                  "contentRight": "`comment` is a `CommentText` instance, so the string is `comment.content`. A comma keeps `\"free\"` and `\"fake\"` as two distinct keywords."
                 },
                 {
                   "number": 7,
@@ -1436,7 +1444,8 @@
                   "heading": "7. Let's practice!",
                   "text": "Time to practice handling different input types!"
                 }
-              ]
+              ],
+              "alternativeTextFr": "# Gérer différents types d’entrées dans FastAPI\n\nCette séquence présente un endpoint de modération qui applique un traitement adapté au type reçu. Les données numériques d’un commentaire — longueur, réputation de l’utilisateur et nombre de signalements — peuvent être validées par un modèle Pydantic puis préparées pour un modèle de score. Le texte suit un autre chemin : il est validé dans un objet `CommentText` qui possède le champ `content`.\n\nPour analyser le texte, l’endpoint lit donc `comment.content`, puis utilise `.lower()` sur cette chaîne. La liste de termes interdits contient des chaînes distinctes : une virgule est nécessaire entre `\"free\"` et `\"fake\"`. Une compréhension de liste conserve les termes présents dans le texte normalisé et la réponse expose cette liste ainsi que son nombre. Cette étape illustre une règle générale : après la validation Pydantic, on utilise les champs du modèle, et non le modèle conteneur comme s’il était déjà une chaîne."
             },
             {
               "type": "download",
@@ -1451,6 +1460,50 @@
               },
               "url": "/api/assets/chapter_02_slides_849742b4.pdf",
               "filename": "chapter_02_slides.pdf"
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "neopolis_dc_ch02_act01_text_input_quiz",
+              "question": {
+                "fr": "Un endpoint reçoit une instance `CommentText` dont le champ texte s’appelle `content`. Quelle expression normalise le texte avant de rechercher des mots-clés ?",
+                "en": "An endpoint receives a `CommentText` instance whose text field is named `content`. Which expression normalizes the text before searching for keywords?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "`comment.lower()`",
+                    "en": "`comment.lower()`"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "`comment.content.lower()`",
+                    "en": "`comment.content.lower()`"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "`CommentText.lower()`",
+                    "en": "`CommentText.lower()`"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "`lower(comment.content)`",
+                    "en": "`lower(comment.content)`"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "fr": "`comment` est l’instance Pydantic validée ; elle structure la requête mais n’est pas elle-même une chaîne. Sa valeur textuelle se trouve dans `comment.content`, et c’est cette chaîne qui fournit la méthode `.lower()`. Les autres propositions appellent une méthode sur le conteneur, sur la classe, ou une fonction Python inexistante.",
+                "en": "`comment` is the validated Pydantic instance; it structures the request but is not itself a string. Its text value is `comment.content`, and that string provides `.lower()`. The other choices call a method on the container, on the class, or an unavailable Python function."
+              },
+              "serverValidated": true
             }
           ]
         },
@@ -2723,6 +2776,14 @@
           "requiredBeforeAdvance": true,
           "blocks": [
             {
+              "type": "content",
+              "id": "neopolis_dc_ch03_act04_rate_limiter_correction",
+              "body": {
+                "fr": "## Une décision de débit, un enregistrement\n\n**Objectif :** faire correspondre le contrat du limiteur, le nom de son paramètre et la réponse de l’endpoint.\n\nPour une clé API, le limiteur ne garde que les horodatages de la dernière minute. Une seule méthode, `check_and_record()`, effectue la décision et l’enregistrement : elle renvoie toujours `(is_limited, requests_remaining)`. Si la limite est déjà atteinte, elle renvoie `(True, 0)`. Sinon, elle ajoute l’horodatage courant et calcule la capacité restante **après** cette requête.\n\n```python\nfrom collections import defaultdict\nfrom datetime import datetime, timedelta, timezone\n\nclass RateLimiter:\n    def __init__(self, requests_per_min: int = 10):\n        self.requests_per_min = requests_per_min\n        self.requests = defaultdict(list)\n\n    def check_and_record(self, api_key: str) -> tuple[bool, int]:\n        now = datetime.now(timezone.utc)\n        minute_ago = now - timedelta(minutes=1)\n        timestamps = [t for t in self.requests[api_key] if t > minute_ago]\n        self.requests[api_key] = timestamps\n\n        if len(timestamps) >= self.requests_per_min:\n            return True, 0\n\n        timestamps.append(now)\n        return False, self.requests_per_min - len(timestamps)\n```\n\nLa dépendance d’authentification appelle cette méthode **une fois** puis transmet la valeur restante à l’endpoint. L’appeler une seconde fois pour construire la réponse consommerait à tort une autre requête. Le nom à l’instanciation doit rester identique au constructeur : `RateLimiter(requests_per_min=10)`.\n\n**Limite de l’exemple :** l’état en mémoire est local au processus. Pour plusieurs workers ou instances, la limite doit être appliquée par un stockage partagé et atomique ; ce cours ne fournit pas cette infrastructure.",
+                "en": "## One rate decision, one record\n\n**Goal:** align the limiter contract, its parameter name, and the endpoint response.\n\nFor one API key, the limiter retains only timestamps from the last minute. One method, `check_and_record()`, makes the decision and records the request: it always returns `(is_limited, requests_remaining)`. If the limit has already been reached, it returns `(True, 0)`. Otherwise, it adds the current timestamp and calculates the capacity remaining **after** that request.\n\n```python\nfrom collections import defaultdict\nfrom datetime import datetime, timedelta, timezone\n\nclass RateLimiter:\n    def __init__(self, requests_per_min: int = 10):\n        self.requests_per_min = requests_per_min\n        self.requests = defaultdict(list)\n\n    def check_and_record(self, api_key: str) -> tuple[bool, int]:\n        now = datetime.now(timezone.utc)\n        minute_ago = now - timedelta(minutes=1)\n        timestamps = [t for t in self.requests[api_key] if t > minute_ago]\n        self.requests[api_key] = timestamps\n\n        if len(timestamps) >= self.requests_per_min:\n            return True, 0\n\n        timestamps.append(now)\n        return False, self.requests_per_min - len(timestamps)\n```\n\nThe authentication dependency calls this method **once** and passes the remaining value to the endpoint. Calling it a second time merely to build a response would incorrectly consume another request. The constructor and instantiation must use the same name: `RateLimiter(requests_per_min=10)`.\n\n**Example boundary:** the in-memory state is local to one process. Across multiple workers or instances, a shared atomic store must enforce the limit; this course does not provide that infrastructure."
+              }
+            },
+            {
               "type": "video",
               "id": "dc_3_act_04_video",
               "title": {
@@ -2793,59 +2854,59 @@
                   "type": "FullSlide",
                   "script": "We are building on top of the sentiment analysis API that we built in the last video.\n\nWe have made the necessary imports for key based authentication and loaded the model using the pre-trained Sentiment Analysis model from our pre-defined Sentiment Analyzer class.\n\n",
                   "images": [],
-                  "content": "```python\nfrom fastapi import FastAPI, Depends, HTTPException\nfrom fastapi.security import APIKeyHeader\nfrom pydantic import BaseModel\n\napp = FastAPI()\nmodel = SentimentAnalyzer(pkl_file_path)\n\nAPI_KEY_HEADER = APIKeyHeader(name=\"X-API-Key\")\nAPI_KEY = \"your-secret-key\"\n```",
-                  "contentLeft": "```python\nfrom fastapi import FastAPI, Depends, HTTPException\nfrom fastapi.security import APIKeyHeader\nfrom pydantic import BaseModel\n\napp = FastAPI()\nmodel = SentimentAnalyzer(pkl_file_path)\n\nAPI_KEY_HEADER = APIKeyHeader(name=\"X-API-Key\")\nAPI_KEY = \"your-secret-key\"\n```",
+                  "content": "```python\nfrom collections import defaultdict\nfrom fastapi import FastAPI, Depends, HTTPException\nfrom fastapi.security import APIKeyHeader\nfrom pydantic import BaseModel\n\napp = FastAPI()\nsentiment_model = SentimentAnalyzer(pkl_file_path)\n\nAPI_KEY_HEADER = APIKeyHeader(name=\"X-API-Key\")\nAPI_KEY = \"your-secret-key\"\n```",
+                  "contentLeft": "```python\nfrom collections import defaultdict\nfrom fastapi import FastAPI, Depends, HTTPException\nfrom fastapi.security import APIKeyHeader\nfrom pydantic import BaseModel\n\napp = FastAPI()\nsentiment_model = SentimentAnalyzer(pkl_file_path)\n\nAPI_KEY_HEADER = APIKeyHeader(name=\"X-API-Key\")\nAPI_KEY = \"your-secret-key\"\n```",
                   "contentRight": ""
                 },
                 {
                   "number": 7,
                   "title": "The rate limiter logic",
                   "type": "TwoColumns",
-                  "script": "We define a RateLimiter class that helps us enforce API usage limits, with a default of 10 requests per minute. We can change the limit based on expected usage. It uses a defaultdict to track request timestamps for each API key, ensuring fairness and protecting our system from abuse.\n\nThe is_rate_limited method checks if an API key has exceeded its limit by comparing the current time with requests made in the last minute.\n\n",
+                  "script": "The RateLimiter records timestamps for each API key within a rolling one-minute window. Its check_and_record method returns the same two-value contract on every path: whether the request is limited and how many requests remain after an accepted request.",
                   "images": [],
-                  "content": "```python\nfrom datetime import datetime, timedelta\n\nclass RateLimiter:\n    def __init__(self, requests_per_min: int = 10):\n        self.requests_per_min = requests_per_min\n        self.requests = defaultdict(list)\n```\n```python\n    def is_rate_limited(\n        self, api_key: str\n    ) -> tuple[bool, int]:\n```",
-                  "contentLeft": "```python\nfrom datetime import datetime, timedelta\n\nclass RateLimiter:\n    def __init__(self, requests_per_min: int = 10):\n        self.requests_per_min = requests_per_min\n        self.requests = defaultdict(list)\n```\n```python\n    def is_rate_limited(\n        self, api_key: str\n    ) -> tuple[bool, int]:\n```",
+                  "content": "```python\nfrom collections import defaultdict\nfrom datetime import datetime, timedelta, timezone\n\nclass RateLimiter:\n    def __init__(self, requests_per_min: int = 10):\n        self.requests_per_min = requests_per_min\n        self.requests = defaultdict(list)\n\n    def check_and_record(self, api_key: str) -> tuple[bool, int]:\n```",
+                  "contentLeft": "```python\nfrom collections import defaultdict\nfrom datetime import datetime, timedelta, timezone\n\nclass RateLimiter:\n    def __init__(self, requests_per_min: int = 10):\n        self.requests_per_min = requests_per_min\n        self.requests = defaultdict(list)\n\n    def check_and_record(self, api_key: str) -> tuple[bool, int]:\n```",
                   "contentRight": ""
                 },
                 {
                   "number": 8,
                   "title": "Deleting old requests",
                   "type": "TwoColumns",
-                  "script": "Before we check the rate, we remove any timestamps older than one minute using the datetime and timedelta libraries, ensuring we only count recent activity. In the list comprehension, we filter the request timestamps for the specific API key to only keep requests from the last minute.\n\n",
+                  "script": "Before counting, the limiter removes timestamps older than one minute. Using timezone-aware UTC datetimes avoids comparing naive timestamps that depend on the server locale.",
                   "images": [],
-                  "content": "```python\nfrom datetime import datetime, timedelta\n\nclass RateLimiter:\n    def __init__(self, requests_per_min: int = 10):\n        self.requests_per_min = requests_per_min\n        self.requests = defaultdict(list)\n```\n```python\n    def is_rate_limited(\n        self, api_key: str\n    ) -> tuple[bool, int]:\n```\n```python\n        now = datetime.now()\n        minute_ago = now - timedelta(minutes=1)\n        self.requests[api_key] = [\n            req_time for req_time in \n          self.requests[api_key]\n          if req_time > minute_ago\n        ]\n```",
-                  "contentLeft": "```python\nfrom datetime import datetime, timedelta\n\nclass RateLimiter:\n    def __init__(self, requests_per_min: int = 10):\n        self.requests_per_min = requests_per_min\n        self.requests = defaultdict(list)\n```\n```python\n    def is_rate_limited(\n        self, api_key: str\n    ) -> tuple[bool, int]:\n```\n```python\n        now = datetime.now()\n        minute_ago = now - timedelta(minutes=1)\n        self.requests[api_key] = [\n            req_time for req_time in \n          self.requests[api_key]\n          if req_time > minute_ago\n        ]\n```",
+                  "content": "```python\n    def check_and_record(self, api_key: str) -> tuple[bool, int]:\n        now = datetime.now(timezone.utc)\n        minute_ago = now - timedelta(minutes=1)\n        timestamps = [\n            timestamp\n            for timestamp in self.requests[api_key]\n            if timestamp > minute_ago\n        ]\n        self.requests[api_key] = timestamps\n```",
+                  "contentLeft": "```python\n    def check_and_record(self, api_key: str) -> tuple[bool, int]:\n        now = datetime.now(timezone.utc)\n        minute_ago = now - timedelta(minutes=1)\n        timestamps = [\n            timestamp\n            for timestamp in self.requests[api_key]\n            if timestamp > minute_ago\n        ]\n        self.requests[api_key] = timestamps\n```",
                   "contentRight": ""
                 },
                 {
                   "number": 9,
                   "title": "Check request count",
                   "type": "TwoColumns",
-                  "script": "Now we can check the number of recent requests made by an API key. If the count exceeds the allowed limit, it returns True with a remaining limit of 0; otherwise, it adds the current request and returns False.\n\n",
+                  "script": "If the recent count is already at the limit, the method returns True and zero remaining requests. Otherwise it records the current request and returns False together with the remaining capacity.",
                   "images": [],
-                  "content": "```python\n    def is_rate_limited(self, api_key: str) -> \n  tuple[bool, int]:\n        now = datetime.now()\n        minute_ago = now - timedelta(minutes=1)\n```\n```python\n        self.requests[api_key] = [\n          req_time for req_time in \n          self.requests[api_key]\n          if req_time > minute_ago\n        ]\n```\n```python\n        recent_requests = len(self.requests[api_key])\n        if recent_requests >= self.requests_per_min:\n            return True, 0\n            \n        self.requests[api_key].append(now)\n        return False\n```",
-                  "contentLeft": "```python\n    def is_rate_limited(self, api_key: str) -> \n  tuple[bool, int]:\n        now = datetime.now()\n        minute_ago = now - timedelta(minutes=1)\n```\n```python\n        self.requests[api_key] = [\n          req_time for req_time in \n          self.requests[api_key]\n          if req_time > minute_ago\n        ]\n```\n```python\n        recent_requests = len(self.requests[api_key])\n        if recent_requests >= self.requests_per_min:\n            return True, 0\n            \n        self.requests[api_key].append(now)\n        return False\n```",
+                  "content": "```python\n    def check_and_record(self, api_key: str) -> tuple[bool, int]:\n        now = datetime.now(timezone.utc)\n        minute_ago = now - timedelta(minutes=1)\n        timestamps = [\n            timestamp\n            for timestamp in self.requests[api_key]\n            if timestamp > minute_ago\n        ]\n        self.requests[api_key] = timestamps\n\n        if len(timestamps) >= self.requests_per_min:\n            return True, 0\n\n        timestamps.append(now)\n        remaining = self.requests_per_min - len(timestamps)\n        return False, remaining\n```",
+                  "contentLeft": "```python\n    def check_and_record(self, api_key: str) -> tuple[bool, int]:\n        now = datetime.now(timezone.utc)\n        minute_ago = now - timedelta(minutes=1)\n        timestamps = [\n            timestamp\n            for timestamp in self.requests[api_key]\n            if timestamp > minute_ago\n        ]\n        self.requests[api_key] = timestamps\n\n        if len(timestamps) >= self.requests_per_min:\n            return True, 0\n\n        timestamps.append(now)\n        remaining = self.requests_per_min - len(timestamps)\n        return False, remaining\n```",
                   "contentRight": ""
                 },
                 {
                   "number": 10,
                   "title": "Add rate limit check",
                   "type": "FullSlide",
-                  "script": "The next step is to add the rate limiter instance to the endpoint.\n\nWe update the test_api_key function that we created to authenticate keys. It will now serve two purposes:\n\nFirst, it verifies that the API key is valid.\n\nSecond, it checks if the user has exceeded their rate limit using the rate_limiter's is_rate_limited method by passing the API key.\n\nIf the rate limit check fails, it raises 429 status_code as an HTTP exception indicating the rate limit is exceeded.\n\n",
+                  "script": "The dependency validates the API key, calls check_and_record once, raises HTTP 429 when the limit is reached, and otherwise returns the remaining capacity to the endpoint.",
                   "images": [],
-                  "content": "```python\nrate_limiter = RateLimiter(requests_per_minute=10)\n```\n```python\ndef test_api_key(api_key: str = Depends(API_KEY_HEADER)):\n    if api_key != API_KEY:\n        raise HTTPException(\n            status_code=403,\n            detail=\"Invalid API key\"\n        )\n    is_limited, _ = rate_limiter.is_rate_limited(api_key)\n    if is_limited:\n        raise HTTPException(\n            status_code=429,\n            detail=\"Rate limit exceeded. Please try again later.\"\n        )\n    return api_key\n```",
-                  "contentLeft": "```python\nrate_limiter = RateLimiter(requests_per_minute=10)\n```\n```python\ndef test_api_key(api_key: str = Depends(API_KEY_HEADER)):\n    if api_key != API_KEY:\n        raise HTTPException(\n            status_code=403,\n            detail=\"Invalid API key\"\n        )\n    is_limited, _ = rate_limiter.is_rate_limited(api_key)\n    if is_limited:\n        raise HTTPException(\n            status_code=429,\n            detail=\"Rate limit exceeded. Please try again later.\"\n        )\n    return api_key\n```",
+                  "content": "```python\nrate_limiter = RateLimiter(requests_per_min=10)\n\ndef test_api_key(api_key: str = Depends(API_KEY_HEADER)) -> int:\n    if api_key != API_KEY:\n        raise HTTPException(status_code=403, detail=\"Invalid API key\")\n\n    is_limited, requests_remaining = rate_limiter.check_and_record(api_key)\n    if is_limited:\n        raise HTTPException(\n            status_code=429,\n            detail=\"Rate limit exceeded. Please try again later.\",\n        )\n    return requests_remaining\n```",
+                  "contentLeft": "```python\nrate_limiter = RateLimiter(requests_per_min=10)\n\ndef test_api_key(api_key: str = Depends(API_KEY_HEADER)) -> int:\n    if api_key != API_KEY:\n        raise HTTPException(status_code=403, detail=\"Invalid API key\")\n\n    is_limited, requests_remaining = rate_limiter.check_and_record(api_key)\n    if is_limited:\n        raise HTTPException(\n            status_code=429,\n            detail=\"Rate limit exceeded. Please try again later.\",\n        )\n    return requests_remaining\n```",
                   "contentRight": ""
                 },
                 {
                   "number": 11,
                   "title": "Apply rate limit to endpoint",
                   "type": "TwoColumns",
-                  "script": "To apply rate limit to any endpoint, we can add it as a dependency within the argument corresponding to the api_key using the Depends function.\n\nThe function test_api_key will automatically check the key for authentication and number of requests remaining in a minute.\n\nThe rest of the endpoint remains unchanged.\n\nIf we try to send more than 10 requests to this endpoint within a minute using the curl command with the same API key, we will hit the rate limit error.\n\n",
+                  "script": "The endpoint receives the remaining capacity from the dependency. Reusing that value avoids recording the same request twice while reporting the response.",
                   "images": [],
-                  "content": "```python\n@app.post(\"/predict\")\ndef predict_sentiment(\n    request: SentimentRequest,\n    api_key: str = Depends(test_api_key)\n):\n    result = sentiment_model(request.text)\n    \n    _, requests_remaining = \n           rate_limiter.is_rate_limited(api_key)\n    \n    return {\n        \"text\": request.text,\n        \"sentiment\": result[0][\"label\"].lower(),\n        \"confidence\": result[0][\"score\"],\n        \"requests_remaining\": requests_remaining\n    }\n```\n\nSend request 11 times:\n```{out}\ncurl -X POST \"http://localhost:8000/predict\" \\\n     -H \"Content-Type: application/json\" \\\n     -H \"X-API-Key: your-secret-key\" \\\n     -d '{\"text\": \"I love this product\"}'\n```\n\nOutput:\n```{out}\n{\"detail\":\"Rate limit exceeded. \n           Please try again later.\"}\n```",
-                  "contentLeft": "```python\n@app.post(\"/predict\")\ndef predict_sentiment(\n    request: SentimentRequest,\n    api_key: str = Depends(test_api_key)\n):\n    result = sentiment_model(request.text)\n    \n    _, requests_remaining = \n           rate_limiter.is_rate_limited(api_key)\n    \n    return {\n        \"text\": request.text,\n        \"sentiment\": result[0][\"label\"].lower(),\n        \"confidence\": result[0][\"score\"],\n        \"requests_remaining\": requests_remaining\n    }\n```",
-                  "contentRight": "Send request 11 times:\n```{out}\ncurl -X POST \"http://localhost:8000/predict\" \\\n     -H \"Content-Type: application/json\" \\\n     -H \"X-API-Key: your-secret-key\" \\\n     -d '{\"text\": \"I love this product\"}'\n```\n\nOutput:\n```{out}\n{\"detail\":\"Rate limit exceeded. \n           Please try again later.\"}\n```"
+                  "content": "```python\n@app.post(\"/predict\")\ndef predict_sentiment(\n    request: SentimentRequest,\n    requests_remaining: int = Depends(test_api_key),\n):\n    result = sentiment_model(request.text)\n    return {\n        \"text\": request.text,\n        \"sentiment\": result[0][\"label\"].lower(),\n        \"confidence\": result[0][\"score\"],\n        \"requests_remaining\": requests_remaining,\n    }\n```",
+                  "contentLeft": "```python\n@app.post(\"/predict\")\ndef predict_sentiment(\n    request: SentimentRequest,\n    requests_remaining: int = Depends(test_api_key),\n):\n    result = sentiment_model(request.text)\n    return {\n        \"text\": request.text,\n        \"sentiment\": result[0][\"label\"].lower(),\n        \"confidence\": result[0][\"score\"],\n        \"requests_remaining\": requests_remaining,\n    }\n```",
+                  "contentRight": "The dependency calls `check_and_record()` once for this request and passes its `requests_remaining` value to the endpoint. Do not call the limiter again merely to build the response: that would record a second request."
                 },
                 {
                   "number": 12,
@@ -2982,7 +3043,7 @@
               ],
               "projectorTimingUnit": "fraction",
               "projectorDuration": 300,
-              "transcript": "1. Rate Limiting\nLet's learn about rate limiting.\n\n2. Introducing rate limiting\nThink of rate limiting like a traffic light - it helps control the flow of requests to prevent overload.\n\nIt controls the frequency of API requests to prevent abuse and ensure fair usage.\n\nIt raises HTTP 429 (\"Too Many Requests\") when the limit is exceeded.\n\n3. How rate limiting works\nLet's look at how we secure our API using two essential layers of protection. \n\nWhen a client sends a request to our API, it goes through two security checkpoints:\n\n4. Authenticating incoming credentials\nFirst, the API key authentication. If we provide a valid API key, we can proceed. If not, we'll receive a 403 Unauthorized error.\n\n5. Rate limiting check\nSecond, assuming our API key is valid, we the check rate limit. We are allowed only a certain number of requests per minute. If we are within our limit, our request is processed. If we have exceeded it, we'll get a 429 - Too many requests.\n\nWe track requests per API key and reset the counter after a specified time window.\n\n6. Setting up our API\nWe are building on top of the sentiment analysis API that we built in the last video.\n\nWe have made the necessary imports for key based authentication and loaded the model using the pre-trained Sentiment Analysis model from our pre-defined Sentiment Analyzer class.\n\n7. The rate limiter logic\nWe define a RateLimiter class that helps us enforce API usage limits, with a default of 10 requests per minute. We can change the limit based on expected usage. It uses a defaultdict to track request timestamps for each API key, ensuring fairness and protecting our system from abuse.\n\nThe is_rate_limited method checks if an API key has exceeded its limit by comparing the current time with requests made in the last minute.\n\n8. Deleting old requests\nBefore we check the rate, we remove any timestamps older than one minute using the datetime and timedelta libraries, ensuring we only count recent activity. In the list comprehension, we filter the request timestamps for the specific API key to only keep requests from the last minute.\n\n9. Check request count\nNow we can check the number of recent requests made by an API key. If the count exceeds the allowed limit, it returns True with a remaining limit of 0; otherwise, it adds the current request and returns False.\n\n10. Add rate limit check\nThe next step is to add the rate limiter instance to the endpoint.\n\nWe update the test_api_key function that we created to authenticate keys. It will now serve two purposes:\n\nFirst, it verifies that the API key is valid.\n\nSecond, it checks if the user has exceeded their rate limit using the rate_limiter's is_rate_limited method by passing the API key.\n\nIf the rate limit check fails, it raises 429 status_code as an HTTP exception indicating the rate limit is exceeded.\n\n11. Apply rate limit to endpoint\nTo apply rate limit to any endpoint, we can add it as a dependency within the argument corresponding to the api_key using the Depends function.\n\nThe function test_api_key will automatically check the key for authentication and number of requests remaining in a minute.\n\nThe rest of the endpoint remains unchanged.\n\nIf we try to send more than 10 requests to this endpoint within a minute using the curl command with the same API key, we will hit the rate limit error.\n\n12. Let's practice!\nAnd now, let's test our understanding by working on some exercises.",
+              "transcript": "1. Rate Limiting\nLet's learn about rate limiting.\n\n2. Introducing rate limiting\nThink of rate limiting like a traffic light - it helps control the flow of requests to prevent overload.\n\nIt controls the frequency of API requests to prevent abuse and ensure fair usage.\n\nIt raises HTTP 429 (\"Too Many Requests\") when the limit is exceeded.\n\n3. How rate limiting works\nLet's look at how we secure our API using two essential layers of protection. \n\nWhen a client sends a request to our API, it goes through two security checkpoints:\n\n4. Authenticating incoming credentials\nFirst, the API key authentication. If we provide a valid API key, we can proceed. If not, we'll receive a 403 Unauthorized error.\n\n5. Rate limiting check\nSecond, assuming our API key is valid, we the check rate limit. We are allowed only a certain number of requests per minute. If we are within our limit, our request is processed. If we have exceeded it, we'll get a 429 - Too many requests.\n\nWe track requests per API key and reset the counter after a specified time window.\n\n6. Setting up our API\nWe are building on top of the sentiment analysis API that we built in the last video.\n\nWe have made the necessary imports for key based authentication and loaded the model using the pre-trained Sentiment Analysis model from our pre-defined Sentiment Analyzer class.\n\n7. The rate limiter logic\nThe RateLimiter records timestamps for each API key within a rolling one-minute window. Its check_and_record method returns the same two-value contract on every path: whether the request is limited and how many requests remain after an accepted request.\n\n8. Deleting old requests\nBefore counting, the limiter removes timestamps older than one minute. Using timezone-aware UTC datetimes avoids comparing naive timestamps that depend on the server locale.\n\n9. Check request count\nIf the recent count is already at the limit, the method returns True and zero remaining requests. Otherwise it records the current request and returns False together with the remaining capacity.\n\n10. Add rate limit check\nThe dependency validates the API key, calls check_and_record once, raises HTTP 429 when the limit is reached, and otherwise returns the remaining capacity to the endpoint.\n\n11. Apply rate limit to endpoint\nThe endpoint receives the remaining capacity from the dependency. Reusing that value avoids recording the same request twice while reporting the response.\n\n12. Let's practice!\nAnd now, let's test our understanding by working on some exercises.",
               "transcriptSegments": [
                 {
                   "heading": "1. Rate Limiting",
@@ -3010,29 +3071,74 @@
                 },
                 {
                   "heading": "7. The rate limiter logic",
-                  "text": "We define a RateLimiter class that helps us enforce API usage limits, with a default of 10 requests per minute. We can change the limit based on expected usage. It uses a defaultdict to track request timestamps for each API key, ensuring fairness and protecting our system from abuse.\n\nThe is_rate_limited method checks if an API key has exceeded its limit by comparing the current time with requests made in the last minute."
+                  "text": "The RateLimiter records timestamps for each API key within a rolling one-minute window. Its check_and_record method returns the same two-value contract on every path: whether the request is limited and how many requests remain after an accepted request."
                 },
                 {
                   "heading": "8. Deleting old requests",
-                  "text": "Before we check the rate, we remove any timestamps older than one minute using the datetime and timedelta libraries, ensuring we only count recent activity. In the list comprehension, we filter the request timestamps for the specific API key to only keep requests from the last minute."
+                  "text": "Before counting, the limiter removes timestamps older than one minute. Using timezone-aware UTC datetimes avoids comparing naive timestamps that depend on the server locale."
                 },
                 {
                   "heading": "9. Check request count",
-                  "text": "Now we can check the number of recent requests made by an API key. If the count exceeds the allowed limit, it returns True with a remaining limit of 0; otherwise, it adds the current request and returns False."
+                  "text": "If the recent count is already at the limit, the method returns True and zero remaining requests. Otherwise it records the current request and returns False together with the remaining capacity."
                 },
                 {
                   "heading": "10. Add rate limit check",
-                  "text": "The next step is to add the rate limiter instance to the endpoint.\n\nWe update the test_api_key function that we created to authenticate keys. It will now serve two purposes:\n\nFirst, it verifies that the API key is valid.\n\nSecond, it checks if the user has exceeded their rate limit using the rate_limiter's is_rate_limited method by passing the API key.\n\nIf the rate limit check fails, it raises 429 status_code as an HTTP exception indicating the rate limit is exceeded."
+                  "text": "The dependency validates the API key, calls check_and_record once, raises HTTP 429 when the limit is reached, and otherwise returns the remaining capacity to the endpoint."
                 },
                 {
                   "heading": "11. Apply rate limit to endpoint",
-                  "text": "To apply rate limit to any endpoint, we can add it as a dependency within the argument corresponding to the api_key using the Depends function.\n\nThe function test_api_key will automatically check the key for authentication and number of requests remaining in a minute.\n\nThe rest of the endpoint remains unchanged.\n\nIf we try to send more than 10 requests to this endpoint within a minute using the curl command with the same API key, we will hit the rate limit error."
+                  "text": "The endpoint receives the remaining capacity from the dependency. Reusing that value avoids recording the same request twice while reporting the response."
                 },
                 {
                   "heading": "12. Let's practice!",
                   "text": "And now, let's test our understanding by working on some exercises."
                 }
-              ]
+              ],
+              "alternativeTextFr": "# Limitation de débit\n\nLa limitation de débit complète l’authentification par clé API. Après validation de la clé, un limiteur conserve, pour cette clé, les horodatages des requêtes dans une fenêtre glissante d’une minute. Avant tout comptage, il élimine les horodatages trop anciens. Le même appel `check_and_record()` décide si la requête est admise, enregistre une requête admise et renvoie toujours un tuple : `(is_limited, requests_remaining)`.\n\nLe constructeur et son appel emploient tous deux `requests_per_min`. Si la limite est atteinte, le tuple est `(True, 0)`. Sinon, l’horodatage courant est ajouté et le second élément indique la capacité restante après cette requête. La dépendance FastAPI vérifie d’abord la clé, appelle le limiteur une seule fois, transforme un dépassement en `HTTPException` 429 puis transmet la capacité restante à l’endpoint. L’endpoint ne rappelle pas le limiteur pour afficher cette information : un second appel enregistrerait à tort une seconde requête.\n\nCet exemple conserve son état en mémoire dans un seul processus, ce qui convient à l’illustration. Une API déployée sur plusieurs processus ou instances doit utiliser un mécanisme partagé et atomique adapté à son infrastructure pour appliquer une même limite partout."
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "neopolis_dc_ch03_act04_rate_limiter_quiz",
+              "question": {
+                "fr": "Une dépendance FastAPI vient d’appeler un limiteur qui admet la requête et renvoie la capacité restante. Comment l’endpoint doit-il renseigner `requests_remaining` sans fausser le compteur ?",
+                "en": "A FastAPI dependency has just called a limiter that admits the request and returns remaining capacity. How should the endpoint populate `requests_remaining` without corrupting the count?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Rappeler le limiteur dans l’endpoint pour recalculer la valeur.",
+                    "en": "Call the limiter again in the endpoint to recompute the value."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Réutiliser la capacité renvoyée par la dépendance.",
+                    "en": "Reuse the capacity returned by the dependency."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Soustraire une unité à une constante dans l’endpoint.",
+                    "en": "Subtract one from a constant in the endpoint."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Toujours renvoyer zéro après une authentification réussie.",
+                    "en": "Always return zero after successful authentication."
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "fr": "La vérification et l’enregistrement doivent constituer une seule opération logique. La dépendance possède déjà le résultat exact pour cette requête ; le transmettre évite un deuxième appel qui ajouterait un second horodatage et réduirait artificiellement la capacité.",
+                "en": "Checking and recording should form one logical operation. The dependency already has the exact result for this request; passing it through prevents a second call from adding another timestamp and artificially reducing capacity."
+              },
+              "serverValidated": true
             }
           ]
         },
@@ -3050,6 +3156,14 @@
           "sourceActivityType": "VideoExercise",
           "requiredBeforeAdvance": true,
           "blocks": [
+            {
+              "type": "content",
+              "id": "neopolis_dc_ch03_act07_async_timeout_correction",
+              "body": {
+                "fr": "## Appliquer un délai à une inférence synchrone\n\n**Objectif :** fournir un awaitable à `asyncio.wait_for()` lorsqu’un modèle est appelé par une fonction synchrone.\n\n`asyncio.wait_for()` attend une coroutine, une tâche ou un autre awaitable. En revanche, `sentiment_model(comment.text)` exécute immédiatement l’inférence et renvoie son résultat : ce résultat n’est pas l’objet attendu par `wait_for()`. `asyncio.to_thread()` enveloppe l’appel bloquant dans un awaitable, que `wait_for()` peut alors borner dans le temps.\n\n```python\nresult = await asyncio.wait_for(\n    asyncio.to_thread(sentiment_model, comment.text),\n    timeout=5.0,\n)\n```\n\nSi le délai expire, l’endpoint peut convertir `TimeoutError` en réponse HTTP contrôlée. Le délai limite l’attente de l’endpoint ; il ne garantit pas l’arrêt forcé d’un calcul déjà lancé dans un thread. `to_thread()` évite de bloquer l’event loop par l’appel ; ce n’est pas, à lui seul, une stratégie de parallélisme pour une inférence CPU-bound.\n\n**Contraste utile :** `wait_for(sentiment_model(comment.text), ...)` reçoit un résultat synchrone, pas un awaitable. Avec `BackgroundTasks`, le travail démarre après la réponse mais reste dans le processus : cette utilité légère ne remplace pas une file durable avec relance et distribution.",
+                "en": "## Apply a timeout to synchronous inference\n\n**Goal:** give `asyncio.wait_for()` an awaitable when a model is invoked through a synchronous function.\n\n`asyncio.wait_for()` waits for a coroutine, task, or another awaitable. In contrast, `sentiment_model(comment.text)` executes inference immediately and returns its result; that result is not the object expected by `wait_for()`. `asyncio.to_thread()` wraps the blocking call in an awaitable, which `wait_for()` can then bound in time.\n\n```python\nresult = await asyncio.wait_for(\n    asyncio.to_thread(sentiment_model, comment.text),\n    timeout=5.0,\n)\n```\n\nIf the delay expires, the endpoint can convert `TimeoutError` into a controlled HTTP response. The timeout limits the endpoint’s wait; it does not guarantee that computation already running in a thread has been forcibly stopped. `to_thread()` prevents the call from blocking the event loop; it is not, on its own, a parallelism strategy for CPU-bound inference.\n\n**Useful contrast:** `wait_for(sentiment_model(comment.text), ...)` receives a synchronous result, not an awaitable. With `BackgroundTasks`, work begins after the response but stays in the process: that lightweight feature does not replace a durable queue with retries and distribution."
+              }
+            },
             {
               "type": "video",
               "id": "dc_3_act_07_video",
@@ -3108,7 +3222,7 @@
                   "number": 4,
                   "title": "Turning synchronous endpoints asynchronous",
                   "type": "TwoColumns",
-                  "script": "Here's the fundamental difference: the synchronous code blocks other operations until completion, while async allows other operations to continue.\n\nWe use asyncio, which is a Python library for processing concurrent requests using async and await syntax. Think of it like a manager that helps Python do multiple things at once, especially when waiting for slow operations.\n\n'async' marks a function as a \"coroutine\" - meaning it can pause and resume (using await). Await tells Python to \"wait here for this task to finish, but let other code run while waiting.\" \n\nThe asyncio.to_thread method ensures our CPU-intensive sentiment analysis doesn't block the event loop.\n\n",
+                  "script": "A synchronous model call blocks the current execution path. In an async endpoint, `asyncio.to_thread()` gives that blocking call an awaitable and keeps the event loop available for other work. It does not guarantee generic CPU-bound Python work runs in parallel; model-serving capacity still needs an appropriate production design.",
                   "images": [],
                   "content": "&nbsp;\n\n```python\n@app.post(\"/analyze\")\ndef analyze_sync(comment: Comment):\n    result = sentiment_model(comment.text)\n    return {\"sentiment\": result}\n```\n\n&nbsp;\n\n```python\nimport asyncio\n\n@app.post(\"/analyze\")\nasync def analyze_async(comment: Comment):\n    result = await asyncio.to_thread(\n        sentiment_model, comment.text\n    )\n    return {\"sentiment\": result}\n```",
                   "contentLeft": "&nbsp;\n\n```python\n@app.post(\"/analyze\")\ndef analyze_sync(comment: Comment):\n    result = sentiment_model(comment.text)\n    return {\"sentiment\": result}\n```",
@@ -3118,30 +3232,30 @@
                   "number": 5,
                   "title": "Implementing background tasks",
                   "type": "TwoColumns",
-                  "script": "If we have loads of comments to analyze, we can't let the users wait for the processing to be done sequentially. Background tasks manage the individual processing so we can process large batches of comments without making users wait for them to be run sequentially.\n\nWe import BackgroundTasks from FastAPI, which lets us process data after responding to the client. \n\nInside our async endpoint, we have declared a parameter background_task of type BackgroundTasks. It creates a new instance of BackgroundTasks for this request with multiple comments and injects this dependency into our function.\n\nWe then create an inner async function 'process_comments' that loops through each text. The background_tasks.add_task method schedules this processing to happen after we send our response. \n\nThis means users don't have to wait for processing to complete - they get an immediate response while analysis happens in the background.\n\n",
+                  "script": "FastAPI runs BackgroundTasks after it sends the response. The example schedules an async function that hands each blocking model call to a thread. BackgroundTasks is suitable for small in-process follow-up work, not a durable job queue.",
                   "images": [],
-                  "content": "```python\nfrom fastapi import BackgroundTasks\nfrom typing import List\n```\n\n```python\n@app.post(\"/analyze_batch\")\nasync def analyze_batch(\n    comments: Comments,\n    background_tasks: BackgroundTasks\n):\n```\n  \n```python\n    async def process_comments(texts: List[str]):\n        for text in texts:\n            result = await asyncio.to_thread(\n              sentiment_model, text)\n    background_tasks.add_task(process_comments, \n                              comments.texts)\n    return {\"message\": \"Processing started\"}\n```\n\n- `BackgroundTasks` manage comment processing queue\n\n&nbsp;\n\n- `background_tasks` handles post-response processing.\n\n&nbsp;\n\n- `add_task` schedules `process_comments` asynchronously.",
-                  "contentLeft": "```python\nfrom fastapi import BackgroundTasks\nfrom typing import List\n```\n\n```python\n@app.post(\"/analyze_batch\")\nasync def analyze_batch(\n    comments: Comments,\n    background_tasks: BackgroundTasks\n):\n```\n  \n```python\n    async def process_comments(texts: List[str]):\n        for text in texts:\n            result = await asyncio.to_thread(\n              sentiment_model, text)\n    background_tasks.add_task(process_comments, \n                              comments.texts)\n    return {\"message\": \"Processing started\"}\n```",
-                  "contentRight": "- `BackgroundTasks` manage comment processing queue\n\n&nbsp;\n\n- `background_tasks` handles post-response processing.\n\n&nbsp;\n\n- `add_task` schedules `process_comments` asynchronously."
+                  "content": "```python\nfrom fastapi import BackgroundTasks\n\n@app.post(\"/analyze_batch\")\nasync def analyze_batch(\n    comments: Comments,\n    background_tasks: BackgroundTasks,\n):\n    async def process_comments(texts: list[str]):\n        for text in texts:\n            await asyncio.to_thread(sentiment_model, text)\n\n    background_tasks.add_task(process_comments, comments.texts)\n    return {\"message\": \"Processing started\"}\n```",
+                  "contentLeft": "```python\nfrom fastapi import BackgroundTasks\n\n@app.post(\"/analyze_batch\")\nasync def analyze_batch(\n    comments: Comments,\n    background_tasks: BackgroundTasks,\n):\n    async def process_comments(texts: list[str]):\n        for text in texts:\n            await asyncio.to_thread(sentiment_model, text)\n\n    background_tasks.add_task(process_comments, comments.texts)\n    return {\"message\": \"Processing started\"}\n```",
+                  "contentRight": "`BackgroundTasks` runs this task after the response is sent. It is useful for small in-process work; it is not a durable queue with retries or cross-server distribution."
                 },
                 {
                   "number": 6,
                   "title": "Adding error handling",
                   "type": "FullSlide",
-                  "script": "Robust error handling is crucial in async applications. \n\nHere we have an endpoint that analyzes comments using the pre-trained sentiment_model.\n\nWe use asyncio.wait_for to set a timeout of 5 seconds - if our model takes more than 5 seconds, it raises a TimeoutError.\n\n",
+                  "script": "asyncio.wait_for needs an awaitable. Since the model call is synchronous, asyncio.to_thread wraps it as an awaitable before wait_for applies the five-second waiting limit. A timeout ends the endpoint wait; it should not be treated as proof that a thread already running model code was forcibly stopped.",
                   "images": [],
-                  "content": "```python\n@app.post(\"/analyze_comment\")\nasync def analyze_comment(comment: Comment):\n    try:\n        sentiment_model = SentimentAnalyzer()\n        result = await asyncio.wait_for(\n            sentiment_model(comment.text),\n            timeout=5.0\n        )\n        return {\"sentiment\": result[\"label\"]}\n```",
-                  "contentLeft": "```python\n@app.post(\"/analyze_comment\")\nasync def analyze_comment(comment: Comment):\n    try:\n        sentiment_model = SentimentAnalyzer()\n        result = await asyncio.wait_for(\n            sentiment_model(comment.text),\n            timeout=5.0\n        )\n        return {\"sentiment\": result[\"label\"]}\n```",
-                  "contentRight": ""
+                  "content": "```python\nimport asyncio\nfrom fastapi import HTTPException\n\n@app.post(\"/analyze_comment\")\nasync def analyze_comment(comment: Comment):\n    try:\n        sentiment_model = SentimentAnalyzer()\n        result = await asyncio.wait_for(\n            asyncio.to_thread(sentiment_model, comment.text),\n            timeout=5.0,\n        )\n        return {\"sentiment\": result[\"label\"]}\n```",
+                  "contentLeft": "```python\nimport asyncio\nfrom fastapi import HTTPException\n\n@app.post(\"/analyze_comment\")\nasync def analyze_comment(comment: Comment):\n    try:\n        sentiment_model = SentimentAnalyzer()\n        result = await asyncio.wait_for(\n            asyncio.to_thread(sentiment_model, comment.text),\n            timeout=5.0,\n        )\n        return {\"sentiment\": result[\"label\"]}\n```",
+                  "contentRight": "`wait_for()` receives the awaitable returned by `asyncio.to_thread()`, not the synchronous result of calling the model directly."
                 },
                 {
                   "number": 7,
                   "title": "Adding error handling",
                   "type": "FullSlide",
-                  "script": "We catch this and other exceptions using try-except blocks. \n\nFastAPI's HTTPException lets us return HTTP status codes: 408 for timeouts and 500 for other errors. \n\nThis ensures our API fails gracefully and provides clear error messages to clients.\n\n",
+                  "script": "The endpoint maps a timeout to an HTTP error and maps other unexpected failures to a server error. Python raises TimeoutError for the wait_for timeout in current Python versions.",
                   "images": [],
-                  "content": "```python\n    except asyncio.TimeoutError:\n        raise HTTPException(\n            status_code=408,\n            detail=\"Analysis timed out\"\n        )\n```\n\n```python\n    except Exception:\n        raise HTTPException(\n            status_code=500,\n            detail=\"Analysis failed\"\n        )\n```",
-                  "contentLeft": "```python\n    except asyncio.TimeoutError:\n        raise HTTPException(\n            status_code=408,\n            detail=\"Analysis timed out\"\n        )\n```\n\n```python\n    except Exception:\n        raise HTTPException(\n            status_code=500,\n            detail=\"Analysis failed\"\n        )\n```",
+                  "content": "```python\n    except TimeoutError:\n        raise HTTPException(\n            status_code=408,\n            detail=\"Analysis timed out\",\n        )\n    except Exception:\n        raise HTTPException(\n            status_code=500,\n            detail=\"Analysis failed\",\n        )\n```",
+                  "contentLeft": "```python\n    except TimeoutError:\n        raise HTTPException(\n            status_code=408,\n            detail=\"Analysis timed out\",\n        )\n    except Exception:\n        raise HTTPException(\n            status_code=500,\n            detail=\"Analysis failed\",\n        )\n```",
                   "contentRight": ""
                 },
                 {
@@ -3249,7 +3363,7 @@
               ],
               "projectorTimingUnit": "fraction",
               "projectorDuration": 300,
-              "transcript": "1. Asynchronous processing\nIn this video, we'll explore how to implement asynchronous processing in FastAPI to improve performance and handle multiple requests efficiently.\n\n2. What is asynchronous processing\nImagine a restaurant where each waiter can only serve one table at a time until the food is served to that table. That would be a disaster for the restaurant.\n\nIt is more efficient for waiters, in our case APIs, to handle multiple requests simultaneously. Asynchronous processing allows us to handle multiple requests concurrently.\n\n3. Synchronous vs asynchronous requests\nHandling concurrent requests can be critical to scaling APIs, especially when serving the requests require compute power that can take some time. For example, if a request typically takes two seconds to process, the fastest we can expect to process three of them synchronously is six seconds. If we handle them asynchronously, the total time for all three is equal to the longest request processing time, about two seconds.\n\n4. Turning synchronous endpoints asynchronous\nHere's the fundamental difference: the synchronous code blocks other operations until completion, while async allows other operations to continue.\n\nWe use asyncio, which is a Python library for processing concurrent requests using async and await syntax. Think of it like a manager that helps Python do multiple things at once, especially when waiting for slow operations.\n\n'async' marks a function as a \"coroutine\" - meaning it can pause and resume (using await). Await tells Python to \"wait here for this task to finish, but let other code run while waiting.\" \n\nThe asyncio.to_thread method ensures our CPU-intensive sentiment analysis doesn't block the event loop.\n\n5. Implementing background tasks\nIf we have loads of comments to analyze, we can't let the users wait for the processing to be done sequentially. Background tasks manage the individual processing so we can process large batches of comments without making users wait for them to be run sequentially.\n\nWe import BackgroundTasks from FastAPI, which lets us process data after responding to the client. \n\nInside our async endpoint, we have declared a parameter background_task of type BackgroundTasks. It creates a new instance of BackgroundTasks for this request with multiple comments and injects this dependency into our function.\n\nWe then create an inner async function 'process_comments' that loops through each text. The background_tasks.add_task method schedules this processing to happen after we send our response. \n\nThis means users don't have to wait for processing to complete - they get an immediate response while analysis happens in the background.\n\n6. Adding error handling\nRobust error handling is crucial in async applications. \n\nHere we have an endpoint that analyzes comments using the pre-trained sentiment_model.\n\nWe use asyncio.wait_for to set a timeout of 5 seconds - if our model takes more than 5 seconds, it raises a TimeoutError.\n\n7. Adding error handling\nWe catch this and other exceptions using try-except blocks. \n\nFastAPI's HTTPException lets us return HTTP status codes: 408 for timeouts and 500 for other errors. \n\nThis ensures our API fails gracefully and provides clear error messages to clients.\n\n8. Let's practice!\nWe have learned how to process multiple requests asynchronously and how to process a big batch of workload in the background. Let's put all this into practice!",
+              "transcript": "1. Asynchronous processing\nIn this video, we'll explore how to implement asynchronous processing in FastAPI to improve performance and handle multiple requests efficiently.\n\n2. What is asynchronous processing\nImagine a restaurant where each waiter can only serve one table at a time until the food is served to that table. That would be a disaster for the restaurant.\n\nIt is more efficient for waiters, in our case APIs, to handle multiple requests simultaneously. Asynchronous processing allows us to handle multiple requests concurrently.\n\n3. Synchronous vs asynchronous requests\nHandling concurrent requests can be critical to scaling APIs, especially when serving the requests require compute power that can take some time. For example, if a request typically takes two seconds to process, the fastest we can expect to process three of them synchronously is six seconds. If we handle them asynchronously, the total time for all three is equal to the longest request processing time, about two seconds.\n\n4. Turning synchronous endpoints asynchronous\nA synchronous model call blocks the current execution path. In an async endpoint, `asyncio.to_thread()` gives that blocking call an awaitable and keeps the event loop available for other work. It does not guarantee generic CPU-bound Python work runs in parallel; model-serving capacity still needs an appropriate production design.\n\n5. Implementing background tasks\nFastAPI runs BackgroundTasks after it sends the response. The example schedules an async function that hands each blocking model call to a thread. BackgroundTasks is suitable for small in-process follow-up work, not a durable job queue.\n\n6. Adding error handling\nasyncio.wait_for needs an awaitable. Since the model call is synchronous, asyncio.to_thread wraps it as an awaitable before wait_for applies the five-second waiting limit. A timeout ends the endpoint wait; it should not be treated as proof that a thread already running model code was forcibly stopped.\n\n7. Adding error handling\nThe endpoint maps a timeout to an HTTP error and maps other unexpected failures to a server error. Python raises TimeoutError for the wait_for timeout in current Python versions.\n\n8. Let's practice!\nWe have learned how to process multiple requests asynchronously and how to process a big batch of workload in the background. Let's put all this into practice!",
               "transcriptSegments": [
                 {
                   "heading": "1. Asynchronous processing",
@@ -3265,25 +3379,70 @@
                 },
                 {
                   "heading": "4. Turning synchronous endpoints asynchronous",
-                  "text": "Here's the fundamental difference: the synchronous code blocks other operations until completion, while async allows other operations to continue.\n\nWe use asyncio, which is a Python library for processing concurrent requests using async and await syntax. Think of it like a manager that helps Python do multiple things at once, especially when waiting for slow operations.\n\n'async' marks a function as a \"coroutine\" - meaning it can pause and resume (using await). Await tells Python to \"wait here for this task to finish, but let other code run while waiting.\" \n\nThe asyncio.to_thread method ensures our CPU-intensive sentiment analysis doesn't block the event loop."
+                  "text": "A synchronous model call blocks the current execution path. In an async endpoint, `asyncio.to_thread()` gives that blocking call an awaitable and keeps the event loop available for other work. It does not guarantee generic CPU-bound Python work runs in parallel; model-serving capacity still needs an appropriate production design."
                 },
                 {
                   "heading": "5. Implementing background tasks",
-                  "text": "If we have loads of comments to analyze, we can't let the users wait for the processing to be done sequentially. Background tasks manage the individual processing so we can process large batches of comments without making users wait for them to be run sequentially.\n\nWe import BackgroundTasks from FastAPI, which lets us process data after responding to the client. \n\nInside our async endpoint, we have declared a parameter background_task of type BackgroundTasks. It creates a new instance of BackgroundTasks for this request with multiple comments and injects this dependency into our function.\n\nWe then create an inner async function 'process_comments' that loops through each text. The background_tasks.add_task method schedules this processing to happen after we send our response. \n\nThis means users don't have to wait for processing to complete - they get an immediate response while analysis happens in the background."
+                  "text": "FastAPI runs BackgroundTasks after it sends the response. The example schedules an async function that hands each blocking model call to a thread. BackgroundTasks is suitable for small in-process follow-up work, not a durable job queue."
                 },
                 {
                   "heading": "6. Adding error handling",
-                  "text": "Robust error handling is crucial in async applications. \n\nHere we have an endpoint that analyzes comments using the pre-trained sentiment_model.\n\nWe use asyncio.wait_for to set a timeout of 5 seconds - if our model takes more than 5 seconds, it raises a TimeoutError."
+                  "text": "asyncio.wait_for needs an awaitable. Since the model call is synchronous, asyncio.to_thread wraps it as an awaitable before wait_for applies the five-second waiting limit. A timeout ends the endpoint wait; it should not be treated as proof that a thread already running model code was forcibly stopped."
                 },
                 {
                   "heading": "7. Adding error handling",
-                  "text": "We catch this and other exceptions using try-except blocks. \n\nFastAPI's HTTPException lets us return HTTP status codes: 408 for timeouts and 500 for other errors. \n\nThis ensures our API fails gracefully and provides clear error messages to clients."
+                  "text": "The endpoint maps a timeout to an HTTP error and maps other unexpected failures to a server error. Python raises TimeoutError for the wait_for timeout in current Python versions."
                 },
                 {
                   "heading": "8. Let's practice!",
                   "text": "We have learned how to process multiple requests asynchronously and how to process a big batch of workload in the background. Let's put all this into practice!"
                 }
-              ]
+              ],
+              "alternativeTextFr": "# Traitement asynchrone\n\nCette séquence compare un endpoint synchrone, qui appelle directement le modèle, et un endpoint `async def`. L’asynchronisme est particulièrement utile lorsqu’une opération attend une ressource : l’event loop peut alors servir d’autres requêtes. Une inférence exécutée par une fonction synchrone reste cependant bloquante si elle est appelée directement depuis l’endpoint asynchrone.\n\n`asyncio.to_thread(sentiment_model, comment.text)` fournit un awaitable autour de cet appel bloquant. Il permet à l’endpoint d’attendre le résultat sans bloquer l’event loop ; il ne garantit pas un gain de calcul parallèle pour tout code Python CPU-bound. `asyncio.wait_for()` doit recevoir cet awaitable, puis applique ici une limite d’attente de cinq secondes. À l’expiration, l’endpoint répond avec l’erreur prévue. Cette expiration ne prouve pas qu’un code déjà en cours dans un thread a été arrêté de force.\n\n`BackgroundTasks` lance de petits travaux après l’envoi de la réponse. L’exemple traite les textes d’un lot dans le même processus ; il ne constitue ni une file durable, ni un système de relance, ni un mécanisme de distribution entre serveurs."
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "neopolis_dc_ch03_act07_async_timeout_quiz",
+              "question": {
+                "fr": "Le callable `sentiment_model` est synchrone. Quelle forme permet à `asyncio.wait_for()` de borner l’attente sans lui passer un résultat synchrone ?",
+                "en": "The `sentiment_model` callable is synchronous. Which form lets `asyncio.wait_for()` bound the wait without passing it a synchronous result?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "`await asyncio.wait_for(sentiment_model(comment.text), timeout=5.0)`",
+                    "en": "`await asyncio.wait_for(sentiment_model(comment.text), timeout=5.0)`"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "`await asyncio.wait_for(asyncio.to_thread(sentiment_model, comment.text), timeout=5.0)`",
+                    "en": "`await asyncio.wait_for(asyncio.to_thread(sentiment_model, comment.text), timeout=5.0)`"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "`await sentiment_model(asyncio.wait_for(comment.text, timeout=5.0))`",
+                    "en": "`await sentiment_model(asyncio.wait_for(comment.text, timeout=5.0))`"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "`asyncio.wait_for(await sentiment_model(comment.text), timeout=5.0)`",
+                    "en": "`asyncio.wait_for(await sentiment_model(comment.text), timeout=5.0)`"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "fr": "`asyncio.to_thread()` produit un awaitable pour l’appel synchrone. `wait_for()` peut donc l’attendre avec une limite. Dans les autres choix, le modèle est appelé avant l’installation du délai, `wait_for()` est appliqué à une chaîne, ou un callable synchrone est attendu comme s’il était une coroutine.",
+                "en": "`asyncio.to_thread()` produces an awaitable for the synchronous call. `wait_for()` can therefore await it with a limit. In the other choices, the model is called before the timeout is installed, `wait_for()` is applied to a string, or a synchronous callable is awaited as if it were a coroutine."
+              },
+              "serverValidated": true
             }
           ]
         }

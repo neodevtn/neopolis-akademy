@@ -1,0 +1,48 @@
+{
+  "formation_id": "datacamp_deploying_ai_into_production_with_fastapi",
+  "course_paths_changed": [
+    "/home/ubuntu/neopolis-akademy/client/public/data/courses/deploying_ai_into_production_with_fastapi__01.json"
+  ],
+  "findings": [
+    {
+      "source_finding_index": 11,
+      "severity": "P1",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch02_act01",
+      "status": "corrected",
+      "action": "Corrected the Pydantic-field access to `comment.content.lower()` and separated `\"free\"`/`\"fake\"` with a comma; added bilingual visible remediation and an aligned quiz.",
+      "proof": "The projected code, visible content block, French alternative text, and updated transcript now use `comment.content.lower()` and a five-item keyword list with distinct `\"free\"` and `\"fake\"` entries."
+    },
+    {
+      "source_finding_index": 12,
+      "severity": "P1",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act04",
+      "status": "corrected",
+      "action": "Replaced the inconsistent limiter API with `check_and_record()` returning a tuple on every path; aligned the constructor keyword and passed the one-call remaining count through the dependency.",
+      "proof": "Projected code now instantiates `RateLimiter(requests_per_min=10)`, returns `(True, 0)` or `(False, remaining)`, and no longer calls the limiter a second time in `/predict`."
+    },
+    {
+      "source_finding_index": 13,
+      "severity": "P1",
+      "course_id": "deploying_ai_into_production_with_fastapi__01",
+      "chapter_id": "dc_ch03_act07",
+      "status": "corrected",
+      "action": "Wrapped the synchronous model call with `asyncio.to_thread()` before passing it to `asyncio.wait_for()`; clarified timeout and BackgroundTasks boundaries.",
+      "proof": "The revised projected code and bilingual content use `await asyncio.wait_for(asyncio.to_thread(sentiment_model, comment.text), timeout=5.0)`; the transcript mirrors the corrected contract."
+    }
+  ],
+  "added_quiz_ids": [
+    "neopolis_dc_ch02_act01_text_input_quiz",
+    "neopolis_dc_ch03_act04_rate_limiter_quiz",
+    "neopolis_dc_ch03_act07_async_timeout_quiz"
+  ],
+  "removed_block_ids": [],
+  "sources_used": [
+    "Course projector slides and transcripts in deploying_ai_into_production_with_fastapi__01.json",
+    "https://docs.python.org/3/library/asyncio-task.html",
+    "https://fastapi.tiangolo.com/async/",
+    "https://fastapi.tiangolo.com/tutorial/background-tasks/"
+  ],
+  "unresolved": []
+}

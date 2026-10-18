@@ -1517,15 +1517,61 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "Outstanding work completing Lesson 4: Environment Variables, Secrets, and Release Checklist! You now have a comprehensive understanding of secure configuration management and the operational discipline required to release AI applications safely.\n\nYou are ready for the capstone lab, where you will deploy your full-stack AI application end-to-end and submit a complete runbook documenting every step of your deployment, secrets management, and rollback strategy.\n\nGood luck!"
+              "fr": "## Synthèse du module\n\n**Objectif.** Cette synthèse relie les tests d’API, les mocks de fournisseurs, les cibles de déploiement et la discipline de mise en production. **Aucun capstone lab ni soumission de runbook n’est requis pour terminer ce cours.**\n\n**Étude de cas (lecture).** Une version de l’assistant IA a passé ses tests unitaires et de contrat. Elle introduit un nouveau nom de modèle et doit appeler un fournisseur à l’aide d’une clé sensible. Avant la mise en production, l’équipe doit distinguer configuration non sensible et secret, vérifier que l’image est paramétrée pour l’environnement visé, et confirmer qu’un retour arrière et l’observabilité sont prêts. Le fait qu’un build réussisse ne remplace pas ces contrôles opérationnels.\n\n**À retenir.** Une livraison fiable est une chaîne : contrats testés, identifiants gérés hors du code, configuration injectée au déploiement, et critères de retour arrière observables. La checklist rend cette chaîne reproductible sous la pression d’une release.",
+              "en": "## Module synthesis\n\n**Objective.** This synthesis connects API testing, provider mocks, deployment targets, and release discipline. **No capstone lab or runbook submission is required to complete this course.**\n\n**Reading case.** A new version of an AI assistant has passed its unit and contract tests. It introduces a new model name and must call a provider using a sensitive key. Before production, the team must distinguish non-sensitive configuration from a secret, verify that the image is parameterised for its target environment, and confirm that rollback and observability are ready. A successful build does not replace those operational checks.\n\n**Takeaway.** A reliable release is a chain: tested contracts, credentials managed outside code, configuration injected at deployment, and observable rollback criteria. The checklist makes that chain repeatable under release pressure."
             }
           },
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "Outstanding work completing Lesson 4: Environment Variables, Secrets, and Release Checklist! You now have a comprehensive understanding of secure configuration management and the operational discipline required to release AI applications safely.\n\nYou are ready for the capstone lab, where you will deploy your full-stack AI application end-to-end and submit a complete runbook documenting every step of your deployment, secrets management, and rollback strategy.\n\nGood luck!"
+                "fr": "## Synthèse du module\n\n**Objectif.** Cette synthèse relie les tests d’API, les mocks de fournisseurs, les cibles de déploiement et la discipline de mise en production. **Aucun capstone lab ni soumission de runbook n’est requis pour terminer ce cours.**\n\n**Étude de cas (lecture).** Une version de l’assistant IA a passé ses tests unitaires et de contrat. Elle introduit un nouveau nom de modèle et doit appeler un fournisseur à l’aide d’une clé sensible. Avant la mise en production, l’équipe doit distinguer configuration non sensible et secret, vérifier que l’image est paramétrée pour l’environnement visé, et confirmer qu’un retour arrière et l’observabilité sont prêts. Le fait qu’un build réussisse ne remplace pas ces contrôles opérationnels.\n\n**À retenir.** Une livraison fiable est une chaîne : contrats testés, identifiants gérés hors du code, configuration injectée au déploiement, et critères de retour arrière observables. La checklist rend cette chaîne reproductible sous la pression d’une release.",
+                "en": "## Module synthesis\n\n**Objective.** This synthesis connects API testing, provider mocks, deployment targets, and release discipline. **No capstone lab or runbook submission is required to complete this course.**\n\n**Reading case.** A new version of an AI assistant has passed its unit and contract tests. It introduces a new model name and must call a provider using a sensitive key. Before production, the team must distinguish non-sensitive configuration from a secret, verify that the image is parameterised for its target environment, and confirm that rollback and observability are ready. A successful build does not replace those operational checks.\n\n**Takeaway.** A reliable release is a chain: tested contracts, credentials managed outside code, configuration injected at deployment, and observable rollback criteria. The checklist makes that chain repeatable under release pressure."
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "lesson_04_chapter_06_synthesis_quiz",
+              "question": {
+                "fr": "Une même image doit être promue en staging puis en production avec un nouveau nom de modèle et une clé de fournisseur. Quelle pratique respecte le mieux une mise en production sûre ?",
+                "en": "The same image must be promoted to staging and then production with a new model name and a provider key. Which practice best supports a safe release?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Inscrire le nom du modèle et la clé dans le Dockerfile afin que l’image soit autonome.",
+                    "en": "Put the model name and key in the Dockerfile so the image is self-contained."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Conserver la clé dans un fichier local commité, puis modifier l’image pour chaque environnement.",
+                    "en": "Keep the key in a committed local file, then modify the image for each environment."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Injecter le nom du modèle comme configuration d’environnement et fournir la clé depuis un gestionnaire de secrets au runtime, avec rollback et observabilité vérifiés.",
+                    "en": "Inject the model name as environment configuration and provide the key from a secrets manager at runtime, with rollback and observability verified."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Partager la clé dans le canal de déploiement et la supprimer une fois la release terminée.",
+                    "en": "Share the key in the deployment channel and delete it after the release."
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "fr": "Le nom du modèle est une configuration non sensible qui peut varier par environnement sans reconstruire l’image. La clé doit être stockée et auditée par un gestionnaire de secrets, puis injectée au runtime. Vérifier le rollback et les signaux d’observabilité complète le contrôle avant release.",
+                "en": "A model name is non-sensitive configuration that can vary by environment without rebuilding the image. The key must be stored and audited by a secrets manager, then injected at runtime. Verifying rollback and observability signals completes the release control."
+              },
+              "serverValidated": true
             }
           ]
         }

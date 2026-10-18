@@ -1,0 +1,42 @@
+{
+  "formation_id": "datacamp_databricks_with_the_python_sdk",
+  "formation_title": "Databricks avec le SDK Python",
+  "course_paths": [
+    "/home/ubuntu/neopolis-akademy/client/public/data/courses/databricks_with_the_python_sdk__01.json"
+  ],
+  "findings": [
+    {
+      "formation_id": "datacamp_databricks_with_the_python_sdk",
+      "formation_title": "Databricks avec le SDK Python",
+      "severity": "P1",
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch01_act01",
+      "category": "exactitude_du_contenu",
+      "description": "La slide d’authentification par défaut concatène deux affectations os.environ avec un antislash au lieu d’un saut de ligne; l’extrait est donc syntaxiquement invalide s’il est copié. Le texte associé appelle en outre os.environ une « fonction .environ() », alors que le même écran l’emploie comme mapping de variables d’environnement.",
+      "evidence": "current_courses[0].current_data.lessons[0].chapters[0].blocks[1].projectorSlides[number=7].content contient `os.environ['DATABRICKS_CLIENT_ID'] = \"Your-Databricks-Client-Id\"\\os.environ['DATABRICKS_HOST'] = \"Your-Databricks-Host\"`; le script et transcript de cette même slide disent « fonction .environ() ».",
+      "source_finding_index": 8
+    },
+    {
+      "formation_id": "datacamp_databricks_with_the_python_sdk",
+      "formation_title": "Databricks avec le SDK Python",
+      "severity": "P1",
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch02_act08",
+      "category": "exactitude_du_contenu",
+      "description": "L’exemple de création d’agent pose la question « What's the time and distance of the longest trip? », mais la sortie affichée répond seulement « The average trip takes approximately 15 minutes. ». La réponse ne traite ni le trajet le plus long ni la distance demandée.",
+      "evidence": "current_courses[0].current_data.lessons[1].chapters[3].blocks[0].projectorSlides[number=12].content: l’appel `agent.run(\"What's the time and distance of the longest trip?\")` est suivi de la sortie `The average trip takes approximately 15 minutes.`.",
+      "source_finding_index": 9
+    },
+    {
+      "formation_id": "datacamp_databricks_with_the_python_sdk",
+      "formation_title": "Databricks avec le SDK Python",
+      "severity": "P1",
+      "course_id": "databricks_with_the_python_sdk__01",
+      "chapter_id": "dc_ch03_act04",
+      "category": "exactitude_du_contenu",
+      "description": "L’exemple présenté pour créer et exécuter un job appelle `jobs.Task` et `jobs.NotebookTask`, mais le seul import affiché est `from databricks.sdk import WorkspaceClient`; aucun import ou définition de `jobs` n’est fourni dans l’extrait. Le code de démonstration n’est donc pas autonome tel qu’affiché.",
+      "evidence": "current_courses[0].current_data.lessons[2].chapters[1].blocks[0].projectorSlides[number=4].content: import de `WorkspaceClient`, puis appels à `jobs.Task(...)` et `jobs.NotebookTask(...)`, sans import ou définition de `jobs` dans la slide.",
+      "source_finding_index": 10
+    }
+  ]
+}

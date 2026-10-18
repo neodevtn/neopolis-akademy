@@ -1515,15 +1515,61 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "Congratulations on completing Lesson 4: File Upload, Background Jobs, Queues, and Storage!\n\nYou have now mastered all four pillars of production AI backend development: project architecture, async streaming, security and observability, and async job processing with durable storage.\n\nYou are ready to tackle the hands-on lab: implementing a secure /api/chat endpoint that combines JWT authentication, streaming SSE responses, rate limiting, audit logging, and conversation persistence—bringing together everything you have learned in this course. Good luck!"
+              "fr": "## Synthèse du module\n\n**Objectif.** Cette synthèse réunit l’architecture FastAPI, le streaming asynchrone, la sécurité et l’observabilité, ainsi que le traitement différé de fichiers. **Aucun hands-on lab, accès externe ou livrable n’est requis pour terminer ce cours.**\n\n**Étude de cas (lecture).** Un utilisateur envoie un PDF volumineux pour analyse. Le service doit vérifier le fichier, ne pas immobiliser la requête HTTP pendant l’analyse, indiquer un état exploitable au client et protéger l’accès au résultat. La décision d’architecture consiste à distinguer l’acceptation de la demande, le travail exécuté par un worker et la récupération du résultat ; cette séparation évite de transformer une opération longue en réponse HTTP fragile.\n\n**À retenir.** Les API d’IA en production combinent contrats typés, opérations asynchrones, journalisation et stockage durable. Pour une tâche longue, le client a besoin d’un identifiant et d’un état vérifiable, pas d’une connexion maintenue artificiellement jusqu’à la fin du calcul.",
+              "en": "## Module synthesis\n\n**Objective.** This synthesis brings together FastAPI architecture, asynchronous streaming, security and observability, and deferred file processing. **No hands-on lab, external access, or deliverable is required to complete this course.**\n\n**Reading case.** A user submits a large PDF for analysis. The service must validate the file, avoid holding the HTTP request during analysis, provide the client with a usable status, and protect access to the result. The architectural decision is to separate acceptance of the request, work run by a worker, and result retrieval; that separation prevents a long operation from becoming a fragile HTTP response.\n\n**Takeaway.** Production AI APIs combine typed contracts, asynchronous operations, logging, and durable storage. For a long-running task, a client needs an identifier and a verifiable status, not a connection kept open artificially until computation ends."
             }
           },
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "Congratulations on completing Lesson 4: File Upload, Background Jobs, Queues, and Storage!\n\nYou have now mastered all four pillars of production AI backend development: project architecture, async streaming, security and observability, and async job processing with durable storage.\n\nYou are ready to tackle the hands-on lab: implementing a secure /api/chat endpoint that combines JWT authentication, streaming SSE responses, rate limiting, audit logging, and conversation persistence—bringing together everything you have learned in this course. Good luck!"
+                "fr": "## Synthèse du module\n\n**Objectif.** Cette synthèse réunit l’architecture FastAPI, le streaming asynchrone, la sécurité et l’observabilité, ainsi que le traitement différé de fichiers. **Aucun hands-on lab, accès externe ou livrable n’est requis pour terminer ce cours.**\n\n**Étude de cas (lecture).** Un utilisateur envoie un PDF volumineux pour analyse. Le service doit vérifier le fichier, ne pas immobiliser la requête HTTP pendant l’analyse, indiquer un état exploitable au client et protéger l’accès au résultat. La décision d’architecture consiste à distinguer l’acceptation de la demande, le travail exécuté par un worker et la récupération du résultat ; cette séparation évite de transformer une opération longue en réponse HTTP fragile.\n\n**À retenir.** Les API d’IA en production combinent contrats typés, opérations asynchrones, journalisation et stockage durable. Pour une tâche longue, le client a besoin d’un identifiant et d’un état vérifiable, pas d’une connexion maintenue artificiellement jusqu’à la fin du calcul.",
+                "en": "## Module synthesis\n\n**Objective.** This synthesis brings together FastAPI architecture, asynchronous streaming, security and observability, and deferred file processing. **No hands-on lab, external access, or deliverable is required to complete this course.**\n\n**Reading case.** A user submits a large PDF for analysis. The service must validate the file, avoid holding the HTTP request during analysis, provide the client with a usable status, and protect access to the result. The architectural decision is to separate acceptance of the request, work run by a worker, and result retrieval; that separation prevents a long operation from becoming a fragile HTTP response.\n\n**Takeaway.** Production AI APIs combine typed contracts, asynchronous operations, logging, and durable storage. For a long-running task, a client needs an identifier and a verifiable status, not a connection kept open artificially until computation ends."
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "lesson_04__chapter_06_synthesis_quiz",
+              "question": {
+                "fr": "Après validation d’un PDF dont l’analyse peut durer plusieurs minutes, quel cycle d’API correspond le mieux à un traitement asynchrone durable ?",
+                "en": "After validating a PDF whose analysis may take several minutes, which API lifecycle best fits durable asynchronous processing?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Garder la requête d’upload ouverte jusqu’à la fin de l’analyse, puis retourner le fichier.",
+                    "en": "Keep the upload request open until analysis finishes, then return the file."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Écrire le fichier sur le disque local du conteneur et signaler qu’il sera peut-être disponible plus tard.",
+                    "en": "Write the file to the container's local disk and say it may be available later."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Retourner HTTP 202 avec un job_id, traiter la tâche via une file ou un worker, puis exposer un état et un accès temporaire au résultat stocké.",
+                    "en": "Return HTTP 202 with a job_id, process the task through a queue or worker, then expose status and temporary access to the stored result."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Renvoyer immédiatement HTTP 200 avec une réponse vide, sans identifiant ni suivi.",
+                    "en": "Immediately return HTTP 200 with an empty response, with no identifier or tracking."
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "fr": "Le statut 202 signifie que la demande est acceptée mais non terminée. Un job_id découple la réponse initiale du traitement par le worker ; un endpoint d’état permet le suivi, et un accès signé et limité dans le temps évite de proxyfier durablement le fichier par l’API.",
+                "en": "Status 202 means the request is accepted but not complete. A job_id decouples the initial response from worker processing; a status endpoint enables tracking, and time-limited signed access avoids permanently proxying the file through the API."
+              },
+              "serverValidated": true
             }
           ]
         }

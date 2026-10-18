@@ -1516,15 +1516,61 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "Congratulations on completing Lesson 4: Data Model for Users, Conversations, Messages, and Artifacts!\n\nYou now have the knowledge to design a robust, scalable database schema that underpins a production AI application — from user identity and conversation threads to message history and generated artifacts.\n\nYou have completed all four lessons of Modern AI App Foundations. Proceed to the course lab to apply everything you have learned by drawing and documenting a complete, deployable AI application architecture."
+              "fr": "## Synthèse du module\n\n**Objectif.** Cette synthèse relie les quatre leçons de *Modern AI App Foundations* : les composants d’une application IA, l’abstraction des fournisseurs, le cycle de réponse en streaming et le modèle de données. **Aucun laboratoire, dépôt ou livrable supplémentaire n’est requis pour terminer ce cours.**\n\n**Étude de cas (lecture).** Une équipe prépare un assistant de support. Chaque échange doit rester rattachable à la personne qui l’a initié ; les réponses et les pièces générées doivent pouvoir être retrouvées dans le fil concerné. L’architecture doit aussi pouvoir évoluer lorsque le fournisseur de modèles ou le format des réponses change. Lors d’une revue de conception, l’équipe vérifie donc les frontières entre identité, conversation, messages, artefacts et appels au modèle, plutôt que de disperser ces informations dans l’interface.\n\n**À retenir.** Une application IA exploitable repose sur des contrats explicites : le backend garde la responsabilité des relations et des autorisations, tandis que l’interface restitue l’état de la conversation. Cette séparation facilite le suivi, les évolutions de fournisseurs et les évaluations de qualité.",
+              "en": "## Module synthesis\n\n**Objective.** This synthesis connects the four *Modern AI App Foundations* lessons: AI application components, provider abstraction, the streaming response lifecycle, and the data model. **No lab, repository, or additional submission is required to complete this course.**\n\n**Reading case.** A team is preparing a support assistant. Every exchange must remain traceable to the person who initiated it, and generated responses and files must be retrievable from the relevant thread. The architecture must also remain adaptable when the model provider or response format changes. During a design review, the team therefore checks the boundaries among identity, conversation, messages, artefacts, and model calls instead of scattering that information in the interface.\n\n**Takeaway.** An operable AI application relies on explicit contracts: the backend owns relationships and authorisation, while the interface presents the conversation state. This separation supports traceability, provider changes, and quality evaluation."
             }
           },
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "Congratulations on completing Lesson 4: Data Model for Users, Conversations, Messages, and Artifacts!\n\nYou now have the knowledge to design a robust, scalable database schema that underpins a production AI application — from user identity and conversation threads to message history and generated artifacts.\n\nYou have completed all four lessons of Modern AI App Foundations. Proceed to the course lab to apply everything you have learned by drawing and documenting a complete, deployable AI application architecture."
+                "fr": "## Synthèse du module\n\n**Objectif.** Cette synthèse relie les quatre leçons de *Modern AI App Foundations* : les composants d’une application IA, l’abstraction des fournisseurs, le cycle de réponse en streaming et le modèle de données. **Aucun laboratoire, dépôt ou livrable supplémentaire n’est requis pour terminer ce cours.**\n\n**Étude de cas (lecture).** Une équipe prépare un assistant de support. Chaque échange doit rester rattachable à la personne qui l’a initié ; les réponses et les pièces générées doivent pouvoir être retrouvées dans le fil concerné. L’architecture doit aussi pouvoir évoluer lorsque le fournisseur de modèles ou le format des réponses change. Lors d’une revue de conception, l’équipe vérifie donc les frontières entre identité, conversation, messages, artefacts et appels au modèle, plutôt que de disperser ces informations dans l’interface.\n\n**À retenir.** Une application IA exploitable repose sur des contrats explicites : le backend garde la responsabilité des relations et des autorisations, tandis que l’interface restitue l’état de la conversation. Cette séparation facilite le suivi, les évolutions de fournisseurs et les évaluations de qualité.",
+                "en": "## Module synthesis\n\n**Objective.** This synthesis connects the four *Modern AI App Foundations* lessons: AI application components, provider abstraction, the streaming response lifecycle, and the data model. **No lab, repository, or additional submission is required to complete this course.**\n\n**Reading case.** A team is preparing a support assistant. Every exchange must remain traceable to the person who initiated it, and generated responses and files must be retrievable from the relevant thread. The architecture must also remain adaptable when the model provider or response format changes. During a design review, the team therefore checks the boundaries among identity, conversation, messages, artefacts, and model calls instead of scattering that information in the interface.\n\n**Takeaway.** An operable AI application relies on explicit contracts: the backend owns relationships and authorisation, while the interface presents the conversation state. This separation supports traceability, provider changes, and quality evaluation."
               }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "lesson_04_chapter_06_synthesis_quiz",
+              "question": {
+                "fr": "Pour qu’un service puisse appliquer les autorisations et retrouver le contexte d’un fichier généré, quelle modélisation est la plus robuste ?",
+                "en": "To let a service enforce authorisation and recover the context of a generated file, which model is the most robust?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Conserver le fichier uniquement dans le stockage local du navigateur.",
+                    "en": "Keep the file only in the browser's local storage."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Créer un enregistrement d’artefact relié au message ou à la conversation d’origine et contrôler la propriété côté serveur.",
+                    "en": "Create an artefact record linked to the originating message or conversation and enforce ownership on the server."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Ajouter le contenu du fichier à chaque profil utilisateur, sans relation avec les conversations.",
+                    "en": "Add the file content to every user profile, with no relation to conversations."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Conserver uniquement l’URL rendue dans l’interface, sans donnée métier côté backend.",
+                    "en": "Keep only the rendered URL in the interface, with no backend domain record."
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "fr": "Un artefact est une donnée métier : le relier à son message ou à sa conversation permet de conserver le contexte, et les relations côté serveur permettent de vérifier l’accès à partir du propriétaire. Le stockage navigateur ou une URL d’interface ne fournit ni traçabilité durable ni contrôle d’autorisation fiable.",
+                "en": "An artefact is domain data. Linking it to its message or conversation preserves context, and server-side relationships make it possible to verify access from the owner. Browser storage or an interface URL provides neither durable traceability nor reliable authorisation control."
+              },
+              "serverValidated": true
             }
           ]
         }

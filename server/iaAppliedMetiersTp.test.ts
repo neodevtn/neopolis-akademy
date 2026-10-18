@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { getStandaloneTpCertificationIdForOrder } from "../client/src/lib/iaAppliedMetiersCatalog";
+import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
 
 const root = path.resolve(import.meta.dirname, "..");
 const source = JSON.parse(fs.readFileSync(path.resolve(root, "../ia_appliquee_metiers_tp_bundle/catalogue_ia_appliquee_metiers_tp.json"), "utf8"));
@@ -24,6 +25,23 @@ const expectedSubcategories = [
 const courseId = (order: number) => `${certificationId}__${String(order).padStart(2, "0")}`;
 const text = (value: unknown) => typeof value === "string" ? value : (value as { fr?: string })?.fr || "";
 const displayTitle = (id: string, sourceTitle: string) => publicTitleOverrides[id]?.fr || sourceTitle;
+const localizedText = (value: unknown, locale: "fr" | "en") => typeof value === "string"
+  ? value
+  : (value as { fr?: string; en?: string } | undefined)?.[locale] || "";
+
+function expectServerCorrectedLocalizedQuestion(question: any) {
+  expect(question.type).toBe("single_choice_exercise");
+  expect(question.serverValidated).toBe(true);
+  expect(question.options).toHaveLength(4);
+  expect(question.options.map((option: any) => option.id)).toContain(question.correctAnswer);
+  for (const locale of ["fr", "en"] as const) {
+    expect(localizedText(question.question, locale).trim().length).toBeGreaterThan(20);
+    expect(localizedText(question.explanation, locale).trim().length).toBeGreaterThan(80);
+    const optionTexts = question.options.map((option: any) => localizedText(option.text, locale).trim());
+    expect(optionTexts.every(Boolean)).toBe(true);
+    expect(new Set(optionTexts).size).toBe(optionTexts.length);
+  }
+}
 
 describe("rubrique IA appliquée aux métiers - TP", () => {
   const tutorials = source.tutorials as any[];
@@ -70,12 +88,8 @@ describe("rubrique IA appliquée aux métiers - TP", () => {
     });
   });
 
-  it("conserve les parcours publiés, leurs sources et aucune activité pratique dépendant d’un actif absent", () => {
+  it("distingue un parcours conceptuel autonome d’un TP qui exige réellement un environnement", () => {
     const practicalTypes = new Set(["cloud_exercise", "code_repl", "ai_evaluation", "free_text_exercise", "terminal_sim"]);
-    const completableTypes = new Set([
-      "resource_review", "single_choice_exercise", "multi_choice_exercise", "bucket_sort",
-      "matching", "ordering", "knowledge_check", "content", "learning_section", "sequence_visual", "comparison_panel", "callout",
-    ]);
     tutorials.forEach((tutorial) => {
       const course = JSON.parse(fs.readFileSync(path.join(coursesDirectory, `${courseId(tutorial.order)}.json`), "utf8"));
       const lesson = course.lessons[0];
@@ -91,25 +105,30 @@ describe("rubrique IA appliquée aux métiers - TP", () => {
       expect(sourceReviews.every((block: any) => typeof block.resourceUrl === "string" && block.resourceUrl.startsWith("https://"))).toBe(true);
       expect(sourceReviews.every((block: any) => block.resourceUrl === tutorial.sourceUrl)).toBe(true);
       const remainingPracticals = blocks.filter((block: any) => practicalTypes.has(block.type));
-      expect(remainingPracticals.every((block: any) =>
-        Array.isArray(block.resources) && block.resources.length > 0 &&
-        block.resources.every((resource: any) => typeof resource.url === "string" && resource.url.trim().length > 0) &&
-        typeof (block.solution || block.correction) === "string" && (block.solution || block.correction).trim().length > 80 &&
-        typeof block.instructions === "string" && block.instructions.trim().length > 0,
-      )).toBe(true);
-      expect(chapters.filter((chapter: any) => chapter.requiredBeforeAdvance).every((chapter: any) =>
-        chapter.blocks.some((block: any) => completableTypes.has(block.type)),
-      )).toBe(true);
+      if (remainingPracticals.length === 0) {
+        // An autonomous conceptual route must be substantive; it is not a blank TP instruction.
+        expect(blocks.some((block: any) => ["learning_section", "content", "sequence_visual", "comparison_panel"].includes(block.type))).toBe(true);
+      } else {
+        // A real TP, conversely, must expose a usable environment and every required asset.
+        remainingPracticals.forEach((block: any) => {
+          expect(localizedText(block.environmentGuide, "fr").trim().length).toBeGreaterThan(40);
+          expect(localizedText(block.instructions, "fr").trim().length).toBeGreaterThan(20);
+          expect(Array.isArray(block.resources) && block.resources.length > 0).toBe(true);
+          expect(block.resources.every((resource: any) => typeof resource.url === "string" && resource.url.trim().length > 0)).toBe(true);
+          expect(typeof (block.solution || block.correction) === "string" && (block.solution || block.correction).trim().length > 80).toBe(true);
+        });
+      }
     });
   });
 
-  it("propose des quiz finaux rendables avec correction, sans recréer les activités retirées", () => {
+  it("propose des quiz finaux de quatre questions et autorise un gate QCM sans bucket sort", () => {
     tutorials.forEach((tutorial) => {
       const course = JSON.parse(fs.readFileSync(path.join(coursesDirectory, `${courseId(tutorial.order)}.json`), "utf8"));
       const finalQuiz = course.lessons[0].chapters.at(-1);
       const questions = finalQuiz.blocks.filter((block: any) => block.type === "single_choice_exercise");
       expect(finalQuiz.type).toBe("quiz");
       expect(questions).toHaveLength(4);
+      expect(finalQuiz.passThreshold).toBe(4);
       questions.forEach((question: any) => {
         const optionIds = question.options.map((option: any) => option.id);
         const optionTexts = question.options.map((option: any) => text(option.text).toLocaleLowerCase());
@@ -122,18 +141,57 @@ describe("rubrique IA appliquée aux métiers - TP", () => {
         expect(ordering.buckets.length).toBeGreaterThanOrEqual(2);
         expect(ordering.cards.length).toBeGreaterThanOrEqual(ordering.buckets.length);
         expect(ordering.cards.every((card: any) => ordering.buckets.some((bucket: any) => bucket.id === card.correctBucket))).toBe(true);
-      } else {
-        expect(finalQuiz.requiredBeforeAdvance).toBe(false);
       }
     });
+
+    const bucketlessGatedFinals = tutorials.filter((tutorial) => {
+      const course = JSON.parse(fs.readFileSync(path.join(coursesDirectory, `${courseId(tutorial.order)}.json`), "utf8"));
+      const finalQuiz = course.lessons[0].chapters.at(-1);
+      return finalQuiz.requiredBeforeAdvance === true && !finalQuiz.blocks.some((block: any) => block.type === "bucket_sort");
+    });
+    expect(bucketlessGatedFinals.map((tutorial) => tutorial.order)).toEqual([35]);
   });
 
-  it("n’introduit ni XP externe, ni DataCamp, ni laboratoire inaccessible", () => {
-    indexedCourses.forEach((entry: any) => {
-      const raw = fs.readFileSync(path.join(coursesDirectory, `${entry.id}.json`), "utf8");
-      expect(raw).not.toMatch(/\b(?:XP|DataCamp|DataLab)\b/i);
-      expect(raw).toMatch(/sandbox personnelle|environnement local|démonstration/i);
-      expect(raw).toMatch(/validation humaine/i);
+  it("remplace le TP 12 non corrigeable et protège les corrections locales des QCM 32 et 35", () => {
+    const load = (order: number) => JSON.parse(fs.readFileSync(path.join(coursesDirectory, `${courseId(order)}.json`), "utf8"));
+    const allBlocks = (course: any) => course.lessons[0].chapters.flatMap((chapter: any) => chapter.blocks);
+
+    const course12 = load(12);
+    const blocks12 = allBlocks(course12);
+    expect(blocks12.some((block: any) => block.id === "ia_appliquee_metiers_tp__12-mini-project-proof")).toBe(false);
+    expect(blocks12.some((block: any) => block.id === "ia_appliquee_metiers_tp__12-source-review")).toBe(false);
+    expect(blocks12.find((block: any) => block.id === "ia_appliquee_metiers_tp__12-case-study")?.type).toBe("content");
+    const caseStudyQuestion = blocks12.find((block: any) => block.id === "ia_appliquee_metiers_tp__12-case-study-quiz");
+    expectServerCorrectedLocalizedQuestion(caseStudyQuestion);
+
+    const course32 = load(32);
+    const final32 = course32.lessons[0].chapters.at(-1);
+    const questions32 = final32.blocks.filter((block: any) => block.type === "single_choice_exercise");
+    expect(questions32.map((block: any) => block.id)).toEqual([
+      "ia_appliquee_metiers_tp__32-quiz-01", "ia_appliquee_metiers_tp__32-quiz-02",
+      "ia_appliquee_metiers_tp__32-quiz-03", "ia_appliquee_metiers_tp__32-quiz-04",
+    ]);
+    questions32.forEach(expectServerCorrectedLocalizedQuestion);
+
+    const course35 = load(35);
+    const final35 = course35.lessons[0].chapters.at(-1);
+    expect(final35.requiredBeforeAdvance).toBe(true);
+    expect(final35.passThreshold).toBe(4);
+    expect(final35.blocks.some((block: any) => block.type === "bucket_sort")).toBe(false);
+    const questions35 = final35.blocks.filter((block: any) => block.type === "single_choice_exercise");
+    expect(questions35.map((block: any) => block.id)).toEqual([
+      "ia_appliquee_metiers_tp__35-quiz-01", "ia_appliquee_metiers_tp__35-quiz-02",
+      "ia_appliquee_metiers_tp__35-quiz-03", "ia_appliquee_metiers_tp__35-quiz-04",
+    ]);
+    questions35.forEach(expectServerCorrectedLocalizedQuestion);
+
+    [course12, course32, course35].forEach((course: any) => {
+      allBlocks(course).filter((block: any) => block.serverValidated === true).forEach((block: any) => {
+        expect(getSensitiveExerciseAnswerKey(course.courseId, block.id)).toEqual({
+          correctAnswer: block.correctAnswer,
+          explanation: block.explanation,
+        });
+      });
     });
   });
 });

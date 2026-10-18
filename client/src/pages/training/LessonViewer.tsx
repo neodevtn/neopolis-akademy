@@ -20,6 +20,7 @@ import { MediaProvenanceBadge } from "@/components/MediaProvenanceBadge";
 import PageContent from "./PageContent";
 import { CloudExerciseBlock, shouldRecordClientCompetency } from "@/components/CloudExerciseBlock";
 import { ProjectorPlayer } from "@/components/ProjectorPlayer";
+import { HostedMediaLearningSupport, shouldUseProjector } from "@/components/HostedMediaLearningSupport";
 import { CalloutBlock } from "@/components/blocks/CalloutBlock";
 import { MatchingBlock } from "@/components/blocks/MatchingBlock";
 import { FillBlankBlock } from "@/components/blocks/FillBlankBlock";
@@ -557,9 +558,10 @@ export default function LessonViewer({
           const isMp4Complete = completedVideos.has(mp4Key);
 
           // Use ProjectorPlayer if slide data exists (DataCamp Projector videos with blank zones)
-          if (block.projectorSlides && block.projectorSlides.length > 0 && block.projectorTimings) {
+          if (shouldUseProjector(block)) {
             return (
               <div key={blockIdx} className="my-6">
+                <HostedMediaLearningSupport block={block} lang={lang} />
                 <div className="flex items-center gap-3 px-4 py-3 border border-border rounded-t-xl bg-card">
                   <span className={`flex items-center justify-center w-7 h-7 rounded-full ${isMp4Complete ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
                     {isMp4Complete ? <CheckCircle2 className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
@@ -626,6 +628,7 @@ export default function LessonViewer({
           // Fallback: standard video player (no Projector data)
           return (
             <div key={blockIdx} className="my-6 rounded-xl border border-border overflow-hidden bg-card">
+              <HostedMediaLearningSupport block={block} lang={lang} />
               <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
                 <span className={`flex items-center justify-center w-7 h-7 rounded-full ${isMp4Complete ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
                   {isMp4Complete ? <CheckCircle2 className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
@@ -647,10 +650,10 @@ export default function LessonViewer({
                 }}
                 onEnded={() => { onMediaPlaybackChange?.(false, mp4Key); toggleVideoComplete(mp4Key); }}
               >
-                <source src={block.mp4Url} type="video/mp4" />
+                {block.mp4Url && <source src={block.mp4Url} type="video/mp4" />}
                 {block.hlsUrl && <source src={block.hlsUrl} type="application/x-mpegURL" />}
-                {block.subtitleUrlFr && <track kind="subtitles" srcLang="fr" label="Français" src={block.subtitleUrlFr} default />}
-                {block.subtitleUrlEn && <track kind="subtitles" srcLang="en" label="English" src={block.subtitleUrlEn} />}
+                {block.subtitleUrlFr && <track kind="subtitles" srcLang="fr" label="Français" src={block.subtitleUrlFr} default={lang === "fr"} />}
+                {block.subtitleUrlEn && <track kind="subtitles" srcLang="en" label="English" src={block.subtitleUrlEn} default={lang === "en"} />}
               </video>
               <div className="flex items-center justify-between px-4 py-2 border-t border-border">
                 <button
@@ -693,11 +696,12 @@ export default function LessonViewer({
           const audioTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || block.title?.fr || 'Audio') : (block.title || 'Audio');
           const audioKey = getMediaCompletionKey(block, blockIdx);
           const isAudioComplete = completedVideos.has(audioKey);
-          const hasProjectorSlides = Array.isArray(block.projectorSlides) && block.projectorSlides.length > 0 && Array.isArray(block.projectorTimings);
+          const hasProjectorSlides = shouldUseProjector(block);
 
           if (hasProjectorSlides) {
             return (
               <div key={blockIdx} className="my-6">
+                <HostedMediaLearningSupport block={block} lang={lang} />
                 <div className="flex items-center gap-3 px-4 py-3 border border-border rounded-t-xl bg-card">
                   <span className={`flex items-center justify-center w-7 h-7 rounded-full ${isAudioComplete ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'}`}>
                     {isAudioComplete ? <CheckCircle2 className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
@@ -764,6 +768,7 @@ export default function LessonViewer({
 
           return (
             <div key={blockIdx} className="my-6 rounded-xl border border-border overflow-hidden bg-card">
+              <HostedMediaLearningSupport block={block} lang={lang} />
               <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
                 <span className={`flex items-center justify-center w-7 h-7 rounded-full ${isAudioComplete ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'}`}>
                   {isAudioComplete ? <CheckCircle2 className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}

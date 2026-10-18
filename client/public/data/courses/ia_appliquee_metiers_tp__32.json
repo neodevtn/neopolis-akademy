@@ -6,8 +6,8 @@
     "en": "Construire un Data Analyst IA conversationnel"
   },
   "description": {
-    "fr": "TP guidé pour Data analyst, analyste BI, responsable reporting métier. Outils : n8n, AI Agent, Google Sheets ou SQL.",
-    "en": "TP guidé pour Data analyst, analyste BI, responsable reporting métier. Outils : n8n, AI Agent, Google Sheets ou SQL."
+    "fr": "Parcours guidé pour Data analyst, analyste BI et responsable reporting métier. Il explique une architecture conversationnelle avec n8n, une source tabulaire et un outil Calculator, sans exiger de dataset ni d’accès externe.",
+    "en": "Guided course for Data Analysts, BI Analysts, and business reporting managers. It explains a conversational architecture with n8n, a tabular source, and a Calculator tool, without requiring a dataset or external access."
   },
   "sourceReference": {
     "sourceType": "n8n workflow",
@@ -24,7 +24,6 @@
       "n8n",
       "Google Sheets ou PostgreSQL/MySQL",
       "LLM",
-      "dataset ventes fictif",
       "outil Calculator"
     ],
     "acquiredSkills": [
@@ -62,8 +61,8 @@
           "id": "ia_appliquee_metiers_tp__32-screen-01",
           "type": "teaching",
           "title": {
-            "fr": "Objectif du TP",
-            "en": "Objectif du TP"
+            "fr": "Objectif du parcours",
+            "en": "Learning objective"
           },
           "requiredBeforeAdvance": true,
           "blocks": [
@@ -79,8 +78,8 @@
                 "en": "Construire un Data Analyst IA conversationnel"
               },
               "body": {
-                "fr": "Métier cible : Data analyst, analyste BI, responsable reporting métier. Niveau : Intermédiaire. Durée indicative : 2 h 30.",
-                "en": "Métier cible : Data analyst, analyste BI, responsable reporting métier. Niveau : Intermédiaire. Durée indicative : 2 h 30."
+                "fr": "Métier cible : Data analyst, analyste BI, responsable reporting métier. Niveau : intermédiaire. Durée indicative : 2 h 30.\n\nCe parcours est **auto-suffisant** : il explique le rôle de n8n, d’une source tabulaire, d’un LLM et d’un outil Calculator sans vous demander de créer un workflow, de télécharger un fichier ou d’ouvrir une ressource externe.",
+                "en": "Target roles: Data Analyst, BI Analyst, business reporting manager. Level: intermediate. Indicative duration: 2 h 30.\n\nThis course is **self-contained**: it explains the roles of n8n, a tabular source, an LLM, and a Calculator tool without asking you to create a workflow, download a file, or open an external resource."
               },
               "items": [
                 {
@@ -89,7 +88,7 @@
                 },
                 {
                   "fr": "Séparer récupération de données et calculs",
-                  "en": "Séparer récupération de données et calculs"
+                  "en": "Separate data retrieval from calculations"
                 },
                 {
                   "fr": "Utiliser un outil Calculator pour fiabiliser les résultats",
@@ -97,7 +96,7 @@
                 },
                 {
                   "fr": "Répondre en langage métier à partir des données",
-                  "en": "Répondre en langage métier à partir des données"
+                  "en": "Answer in business language from data"
                 }
               ]
             },
@@ -119,33 +118,16 @@
           "id": "ia_appliquee_metiers_tp__32-screen-02",
           "type": "teaching",
           "title": {
-            "fr": "Préparer l’environnement",
-            "en": "Préparer l’environnement"
+            "fr": "Architecture et cadre de test",
+            "en": "Architecture and testing framework"
           },
           "requiredBeforeAdvance": true,
           "blocks": [
             {
               "type": "content",
               "body": {
-                "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Google Sheets ou PostgreSQL/MySQL, LLM, dataset ventes fictif, outil Calculator.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
-                "en": "## Environment preparation\n\nWork in a **personal sandbox**, a local draft, or demonstration accounts. Prepare only fictitious data and test access.\n\n- Expected tools: n8n, Google Sheets or PostgreSQL/MySQL, LLM, fictitious sales dataset, Calculator tool.\n- Do not enter any key, password, or real personal data in the practical exercise or its evidence.\n- For any sending, publishing, scheduling, data modification, or decision with human impact, maintain **explicit human validation** before the final action.\n\nThis learning path does not require any provider-hosted lab: adapt the steps to your local or demonstration environment."
-              }
-            },
-            {
-              "type": "resource_review",
-              "id": "ia_appliquee_metiers_tp__32-source-review",
-              "title": {
-                "fr": "Ressource source",
-                "en": "Ressource source"
-              },
-              "instructions": {
-                "fr": "Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation.\n\n[Ouvrir la ressource source](https://n8n.io/workflows/3050-build-your-first-ai-data-analyst-chatbot/)",
-                "en": "Open the source resource in a new tab. Identify the business outcome, inputs, outputs, and control steps. Then return here to confirm that you have reviewed it.\n\n[Open the source resource](https://n8n.io/workflows/3050-build-your-first-ai-data-analyst-chatbot/)"
-              },
-              "resourceUrl": "https://n8n.io/workflows/3050-build-your-first-ai-data-analyst-chatbot/",
-              "resourceLabel": {
-                "fr": "Ouvrir la ressource source",
-                "en": "Ouvrir la ressource source"
+                "fr": "## Délimiter ce que le système peut faire\n\nUne application réelle relierait n8n à une source tabulaire telle que Google Sheets ou PostgreSQL/MySQL. Ici, aucun accès, dataset ou workflow n’est fourni ni nécessaire : l’enjeu est de savoir **quels contrats** rendre explicites avant toute intégration.\n\n- **Périmètre de données :** précisez les tables ou feuilles autorisées, les champs utiles, la période et le niveau de détail attendus. Une question vague ne doit pas étendre ce périmètre.\n- **Calculs :** définissez les indicateurs et leurs conventions (période de comparaison, unité, arrondi) avant de les confier à un outil déterministe.\n- **Restitution :** la réponse doit indiquer le périmètre et distinguer un fait calculé d’une interprétation.\n- **Gouvernance :** utilisez des identifiants à privilèges minimaux, ne placez ni clé ni mot de passe dans un prompt ou un journal, et prévoyez une revue humaine avant une action ayant un impact.\n\nCette séparation rend un résultat plus facile à contrôler : on peut examiner la demande de données, les entrées du calcul et la formulation finale indépendamment.",
+                "en": "## Define what the system is allowed to do\n\nA real application would connect n8n to a tabular source such as Google Sheets or PostgreSQL/MySQL. Here, no access, dataset, or workflow is supplied or needed: the goal is to identify the **contracts** that must be explicit before any integration.\n\n- **Data scope:** specify the authorized tables or sheets, useful fields, period, and expected grain. A vague question must not enlarge that scope.\n- **Calculations:** define the indicators and their conventions (comparison period, unit, rounding) before assigning them to a deterministic tool.\n- **Presentation:** the answer must state its scope and distinguish a calculated fact from an interpretation.\n- **Governance:** use least-privilege credentials, never put a key or password in a prompt or log, and plan human review before an action with impact.\n\nThis separation makes a result easier to check: the data request, the calculation inputs, and the final wording can each be reviewed independently."
               }
             }
           ]
@@ -154,57 +136,69 @@
           "id": "ia_appliquee_metiers_tp__32-screen-03",
           "type": "teaching",
           "title": {
-            "fr": "Construire progressivement",
-            "en": "Construire progressivement"
+            "fr": "Concevoir une réponse analytique vérifiable",
+            "en": "Design a verifiable analytical answer"
           },
           "requiredBeforeAdvance": true,
           "blocks": [
             {
+              "type": "content",
+              "id": "ia_appliquee_metiers_tp__32-architecture-content",
+              "title": {
+                "fr": "Une responsabilité par étape",
+                "en": "One responsibility per stage"
+              },
+              "body": {
+                "fr": "## Objectif : tracer le chemin entre une question et une réponse métier\n\nUn Data Analyst IA conversationnel ne doit pas confondre la recherche des données, l’arithmétique et l’explication. Pour une question sur l’évolution d’un indicateur, répartissez le travail en trois responsabilités :\n\n1. **Récupération.** La source tabulaire applique le périmètre autorisé : les champs, filtres, période et regroupements demandés. Elle renvoie des valeurs et leur contexte, pas une conclusion rédigée.\n2. **Calcul.** L’outil **Calculator** reçoit les valeurs nécessaires et une formule définie. Son rôle est d’effectuer l’arithmétique de façon déterministe ; il ne choisit pas les données à consulter.\n3. **Interprétation.** Le LLM transforme le résultat et son contexte en langage métier. Il explicite le périmètre, l’unité et la définition de l’indicateur ; il ne présente pas une hypothèse comme un fait issu des données.\n\n### Contraste utile\nUn prompt unique qui choisit la source, fait l’opération et rédige la conclusion rend difficile l’examen d’une erreur. Des étapes séparées permettent au contraire de vérifier indépendamment le filtre appliqué, les entrées de l’opération et le sens métier de la réponse.\n\nLa validation finale porte donc sur la cohérence entre la demande, les données autorisées, le calcul et la formulation — sans exiger d’exécuter un workflow dans ce parcours.",
+                "en": "## Objective: trace the path from a question to a business answer\n\nA conversational AI Data Analyst must not mix data retrieval, arithmetic, and explanation. For a question about the change in an indicator, distribute the work across three responsibilities:\n\n1. **Retrieval.** The tabular source applies the authorized scope: requested fields, filters, period, and groupings. It returns values and their context, not a written conclusion.\n2. **Calculation.** The **Calculator** tool receives the necessary values and a defined formula. Its role is to perform arithmetic deterministically; it does not choose which data to consult.\n3. **Interpretation.** The LLM turns the result and its context into business language. It states the scope, unit, and definition of the indicator; it does not present an assumption as a fact from the data.\n\n### Useful contrast\nA single prompt that chooses the source, performs the operation, and writes the conclusion makes an error hard to examine. Separate steps instead let a reviewer independently check the applied filter, the operation inputs, and the business meaning of the answer.\n\nFinal validation therefore concerns the consistency between the request, authorized data, calculation, and wording—without requiring a workflow execution in this course."
+              }
+            },
+            {
               "type": "sequence_visual",
               "title": {
-                "fr": "Démarche de réalisation",
-                "en": "Démarche de réalisation"
+                "fr": "Chaîne de décision contrôlable",
+                "en": "Controllable decision chain"
               },
               "layout": "timeline",
               "items": [
                 {
                   "title": {
-                    "fr": "Cadrer",
-                    "en": "Cadrer"
+                    "fr": "Définir",
+                    "en": "Define"
                   },
                   "description": {
-                    "fr": "Définissez le cas d’usage pour Data analyst, analyste BI, responsable reporting métier et les limites d’automatisation.",
-                    "en": "Define the use case for the Data Analyst, BI Analyst, business reporting manager, and the limits of automation."
+                    "fr": "Décrivez l’indicateur, son périmètre, sa période, son unité et les données autorisées.",
+                    "en": "Describe the indicator, its scope, period, unit, and authorized data."
                   }
                 },
                 {
                   "title": {
-                    "fr": "Préparer",
-                    "en": "Préparer"
+                    "fr": "Récupérer",
+                    "en": "Retrieve"
                   },
                   "description": {
-                    "fr": "Créez des données fictives adaptées aux outils : n8n, Google Sheets ou PostgreSQL/MySQL, LLM.",
-                    "en": "Create fictitious data suited to the tools: n8n, Google Sheets or PostgreSQL/MySQL, LLM."
+                    "fr": "Interrogez la source tabulaire selon ce contrat et conservez le contexte des valeurs retournées.",
+                    "en": "Query the tabular source under that contract and retain the context of returned values."
                   }
                 },
                 {
                   "title": {
-                    "fr": "Tester",
-                    "en": "Tester"
+                    "fr": "Calculer",
+                    "en": "Calculate"
                   },
                   "description": {
-                    "fr": "Exécutez des scénarios de test, relisez les sorties et consignez les écarts.",
-                    "en": "Run test scenarios, review the outputs, and document any discrepancies."
+                    "fr": "Transmettez au Calculator les valeurs et la formule nécessaires à l’indicateur.",
+                    "en": "Send the Calculator the values and formula needed for the indicator."
                   }
                 },
                 {
                   "title": {
-                    "fr": "Contrôler",
-                    "en": "Contrôler"
+                    "fr": "Expliquer et contrôler",
+                    "en": "Explain and review"
                   },
                   "description": {
-                    "fr": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne.",
-                    "en": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne."
+                    "fr": "Formulez le résultat pour le métier et vérifiez que le périmètre, le calcul et l’interprétation concordent.",
+                    "en": "Phrase the result for the business and verify that scope, calculation, and interpretation agree."
                   }
                 }
               ]
@@ -212,47 +206,47 @@
             {
               "type": "comparison_panel",
               "title": {
-                "fr": "Vérifications avant utilisation",
-                "en": "Vérifications avant utilisation"
+                "fr": "Contrats explicites ou responsabilités confondues",
+                "en": "Explicit contracts or mixed responsibilities"
               },
               "columns": [
                 {
                   "title": {
-                    "fr": "À faire",
-                    "en": "À faire"
+                    "fr": "Chaîne vérifiable",
+                    "en": "Verifiable chain"
                   },
                   "items": [
                     {
-                      "fr": "Utiliser des données fictives.",
-                      "en": "Utiliser des données fictives."
+                      "fr": "La récupération indique les données et filtres autorisés.",
+                      "en": "Retrieval states the authorized data and filters."
                     },
                     {
-                      "fr": "Définir un contrôle humain.",
-                      "en": "Définir un contrôle humain."
+                      "fr": "Le Calculator traite des valeurs et une formule définies.",
+                      "en": "The Calculator processes defined values and a formula."
                     },
                     {
-                      "fr": "Tester les cas limites.",
-                      "en": "Tester les cas limites."
+                      "fr": "La réponse métier précise son périmètre et ses limites.",
+                      "en": "The business answer states its scope and limits."
                     }
                   ]
                 },
                 {
                   "title": {
-                    "fr": "À éviter",
-                    "en": "À éviter"
+                    "fr": "Chaîne difficile à auditer",
+                    "en": "Hard-to-audit chain"
                   },
                   "items": [
                     {
-                      "fr": "Exposer un secret ou une donnée personnelle.",
-                      "en": "Exposer un secret ou une donnée personnelle."
+                      "fr": "Un même prompt choisit librement les données et le calcul.",
+                      "en": "One prompt freely chooses both the data and the calculation."
                     },
                     {
-                      "fr": "Déclencher une action finale sans validation.",
-                      "en": "Déclencher une action finale sans validation."
+                      "fr": "Le modèle produit une opération sans entrées identifiables.",
+                      "en": "The model produces an operation without identifiable inputs."
                     },
                     {
-                      "fr": "Déduire une décision sans vérification métier.",
-                      "en": "Déduire une décision sans vérification métier."
+                      "fr": "Une conclusion est formulée sans définition de l’indicateur.",
+                      "en": "A conclusion is phrased without an indicator definition."
                     }
                   ]
                 }
@@ -261,38 +255,11 @@
           ]
         },
         {
-          "id": "ia_appliquee_metiers_tp__32-mini-project",
-          "type": "exercise",
-          "title": {
-            "fr": "Mini-projet et preuve de réalisation",
-            "en": "Mini-projet et preuve de réalisation"
-          },
-          "requiredBeforeAdvance": false,
-          "blocks": [
-            {
-              "type": "content",
-              "id": "ia_appliquee_metiers_tp__32-mini-project-proof_learning_note",
-              "title": {
-                "fr": "Mini-projet pratique",
-                "en": "Mini-projet pratique"
-              },
-              "body": {
-                "fr": "Créer un analyste conversationnel qui répond à dix questions sur ventes, marges, panier moyen et croissance mensuelle.",
-                "en": "Créer un analyste conversationnel qui répond à dix questions sur ventes, marges, panier moyen et croissance mensuelle."
-              },
-              "remediation": {
-                "sourcePreserved": true,
-                "reason": "activity_removed_unverifiable_or_unprovided"
-              }
-            }
-          ]
-        },
-        {
           "id": "ia_appliquee_metiers_tp__32-final-quiz",
           "type": "quiz",
           "title": {
-            "fr": "Quiz final : valider la démarche",
-            "en": "Quiz final : valider la démarche"
+            "fr": "Quiz final : valider l’architecture analytique",
+            "en": "Final quiz: validate the analytical architecture"
           },
           "requiredBeforeAdvance": false,
           "passThreshold": 4,
@@ -301,198 +268,216 @@
               "id": "ia_appliquee_metiers_tp__32-quiz-01",
               "type": "single_choice_exercise",
               "question": {
-                "fr": "Quel élément doit être conservé dans le mini-projet « Créer un analyste conversationnel qui répond à dix questions sur ventes, marges, panier moyen et croissance mensuelle. » ?",
-                "en": "What must be retained in the mini-project “Create a conversational analyst that answers ten questions about sales, margins, average basket value, and monthly growth.”?"
+                "fr": "Pour une question métier sur un indicateur, quelle chaîne conserve une séparation vérifiable entre récupération, calcul et explication ?",
+                "en": "For a business question about an indicator, which chain keeps retrieval, calculation, and explanation verifiably separate?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Une preuve de test avec des données fictives et un résultat vérifiable.",
-                    "en": "Test evidence using fictitious data and a verifiable result."
+                    "fr": "La source retourne les données dans le périmètre convenu, le Calculator applique la formule, puis le LLM formule la réponse avec son contexte.",
+                    "en": "The source returns data within the agreed scope, the Calculator applies the formula, then the LLM phrases the answer with its context."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Un mot de passe de production directement dans le workflow.",
-                    "en": "A production password directly in the workflow."
+                    "fr": "Le Calculator choisit les données à interroger et le LLM décide seul de l’opération.",
+                    "en": "The Calculator chooses which data to query and the LLM alone decides the operation."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Une action finale déclenchée sans relecture.",
-                    "en": "Une action finale déclenchée sans relecture."
+                    "fr": "Le LLM rédige une conclusion avant de demander les données, puis adapte les valeurs pour la confirmer.",
+                    "en": "The LLM writes a conclusion before requesting data, then adapts values to confirm it."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Un export de données personnelles non anonymisées.",
-                    "en": "An export of non-anonymized personal data."
+                    "fr": "Un seul prompt réalise toutes les étapes sans conserver le périmètre ni les entrées du calcul.",
+                    "en": "One prompt performs every step without retaining the scope or calculation inputs."
                   }
                 }
               ],
               "correctAnswer": "a",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the framework for the practical assignment: fictitious data, human oversight, and verification before any real action."
-              }
+                "fr": "La séparation permet de contrôler chaque responsabilité : la source justifie les valeurs sélectionnées, le Calculator rend l’arithmétique inspectable et le LLM ne fait que contextualiser le résultat. Les autres chaînes mélangent ces responsabilités et rendent une erreur difficile à localiser.",
+                "en": "Separation makes every responsibility reviewable: the source justifies selected values, the Calculator makes arithmetic inspectable, and the LLM only contextualizes the result. The other chains mix those responsibilities and make an error hard to locate."
+              },
+              "serverValidated": true
             },
             {
               "id": "ia_appliquee_metiers_tp__32-quiz-02",
               "type": "single_choice_exercise",
               "question": {
-                "fr": "Vrai ou faux : un brouillon ou une validation humaine doit précéder toute action sensible générée par le workflow.",
-                "en": "True or false: a draft or human approval must precede any sensitive action generated by the workflow."
+                "fr": "Quel rôle doit jouer l’outil Calculator dans cette architecture ?",
+                "en": "What role should the Calculator tool play in this architecture?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Vrai : les actions sensibles exigent un contrôle humain explicite.",
-                    "en": "True: sensitive actions require explicit human oversight."
+                    "fr": "Effectuer une arithmétique définie à partir de valeurs identifiables et d’une formule traçable.",
+                    "en": "Perform defined arithmetic from identifiable values and a traceable formula."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Faux : l’automatisation dispense toujours de tout contrôle.",
-                    "en": "Faux : l’automatisation dispense toujours de tout contrôle."
+                    "fr": "Choisir les tables auxquelles l’agent est autorisé à accéder.",
+                    "en": "Choose the tables the agent is authorized to access."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Transformer seul le résultat en recommandation métier.",
+                    "en": "Turn the result into a business recommendation by itself."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Masquer les données utilisées afin de simplifier la réponse.",
+                    "en": "Hide the data used in order to simplify the answer."
                   }
                 }
               ],
               "correctAnswer": "a",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the framework for the practical assignment: fictitious data, human oversight, and verification before any real action."
-              }
+                "fr": "Le Calculator est réservé au calcul déterministe : ses entrées et sa formule peuvent être relues. Le périmètre d’accès relève du contrat de récupération et la formulation métier relève du LLM, avec le contexte nécessaire.",
+                "en": "The Calculator is reserved for deterministic calculation: its inputs and formula can be reviewed. Access scope belongs to the retrieval contract and business phrasing belongs to the LLM, with the required context."
+              },
+              "serverValidated": true
             },
             {
               "id": "ia_appliquee_metiers_tp__32-quiz-03",
               "type": "single_choice_exercise",
               "question": {
-                "fr": "Quel contrôle aide à vérifier l’objectif « Connecter un agent à une source de données tabulaire » ?",
-                "en": "What check helps verify the objective “Connect an agent to a tabular data source”?"
+                "fr": "Après un calcul vérifié, quelle formulation répond le mieux à un interlocuteur métier ?",
+                "en": "After a verified calculation, which phrasing best answers a business stakeholder?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Comparer le résultat du test au critère métier défini puis documenter l’écart.",
-                    "en": "Compare the test result with the defined business criterion, then document the discrepancy."
+                    "fr": "Présenter l’indicateur avec sa période, son unité et son périmètre, puis distinguer le fait calculé de toute interprétation.",
+                    "en": "Present the indicator with its period, unit, and scope, then distinguish the calculated fact from any interpretation."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Considérer toute sortie du modèle comme correcte sans la relire.",
-                    "en": "Consider every model output correct without reviewing it."
+                    "fr": "Donner uniquement une conclusion affirmative, sans indiquer la définition de l’indicateur.",
+                    "en": "Give only an affirmative conclusion, without stating the indicator definition."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Supprimer les journaux et les traces de test avant la vérification.",
-                    "en": "Delete logs and test traces before verification."
+                    "fr": "Remplacer le résultat par une recommandation non reliée au périmètre de données.",
+                    "en": "Replace the result with a recommendation unrelated to the data scope."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Remplacer le jeu de données fictif par une exportation client.",
-                    "en": "Replace the fictional dataset with a customer export."
+                    "fr": "Décrire l’outil utilisé sans communiquer le sens du résultat pour le métier.",
+                    "en": "Describe the tool used without communicating what the result means for the business."
                   }
                 }
               ],
               "correctAnswer": "a",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
-              }
+                "fr": "Le langage métier ne consiste pas à masquer la méthode : il rend le résultat exploitable en donnant son sens, sa période, son unité et son périmètre. Une interprétation éventuelle doit rester identifiable comme telle et ne pas être confondue avec le fait calculé.",
+                "en": "Business language does not mean hiding the method: it makes a result usable by giving its meaning, period, unit, and scope. Any interpretation must remain identifiable as such and not be confused with the calculated fact."
+              },
+              "serverValidated": true
             },
             {
               "id": "ia_appliquee_metiers_tp__32-quiz-04",
               "type": "single_choice_exercise",
               "question": {
-                "fr": "Question de vigilance : parmi ces outils prévus — n8n, Google Sheets ou PostgreSQL/MySQL, LLM, dataset ventes fictif, outil Calculator — quelle donnée ne doit jamais être saisie dans le support ou le commentaire de preuve ?",
-                "en": "Vigilance question: among these planned tools — n8n, Google Sheets or PostgreSQL/MySQL, LLM, fictional sales dataset, Calculator tool — what data must never be entered in the evidence support or comment?"
+                "fr": "Quel élément doit figurer dans le contrat de récupération d’une source tabulaire ?",
+                "en": "What must be included in the retrieval contract for a tabular source?"
               },
               "options": [
                 {
                   "id": "a",
                   "text": {
-                    "fr": "Une clé API, un mot de passe ou un identifiant réel.",
-                    "en": "An API key, password, or real identifier."
+                    "fr": "Les champs et sources autorisés, les filtres, la période, le niveau de détail et le contexte à retourner.",
+                    "en": "Authorized fields and sources, filters, period, grain, and the context to return."
                   }
                 },
                 {
                   "id": "b",
                   "text": {
-                    "fr": "Le nom fictif du dossier de démonstration.",
-                    "en": "The fictional name of the demonstration folder."
+                    "fr": "Une consigne permettant au modèle d’élargir librement l’accès lorsqu’une réponse manque.",
+                    "en": "An instruction allowing the model to freely broaden access when an answer is missing."
                   }
                 },
                 {
                   "id": "c",
                   "text": {
-                    "fr": "Le statut de test « à vérifier ».",
-                    "en": "Le statut de test « à vérifier »."
+                    "fr": "Une clé API directement inscrite dans la question en langage naturel.",
+                    "en": "An API key written directly into the natural-language question."
                   }
                 },
                 {
                   "id": "d",
                   "text": {
-                    "fr": "Une note indiquant qu’une validation humaine est requise.",
-                    "en": "Une note indiquant qu’une validation humaine est requise."
+                    "fr": "Une promesse de résultat, sans préciser quelles données peuvent être consultées.",
+                    "en": "A promise of a result without specifying which data can be consulted."
                   }
                 }
               ],
               "correctAnswer": "a",
               "explanation": {
-                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
-                "en": "The correction reiterates the framework for the practical exercise: fictional data, human oversight, and verification before any real action."
-              }
+                "fr": "Le contrat de récupération borne ce que le système peut lire et explique ce qui a été retourné. Champs, période, filtres et granularité permettent ensuite de relier le calcul et la réponse au bon périmètre, sans exposer de secret.",
+                "en": "The retrieval contract bounds what the system can read and explains what was returned. Fields, period, filters, and grain then connect the calculation and response to the right scope, without exposing a secret."
+              },
+              "serverValidated": true
             },
             {
               "id": "ia_appliquee_metiers_tp__32-quiz-order",
               "type": "bucket_sort",
               "title": {
-                "fr": "Ordonnez la démarche de réalisation",
-                "en": "Put the implementation process in order"
+                "fr": "Ordonner une réponse analytique vérifiable",
+                "en": "Order a verifiable analytical answer"
               },
               "instructions": {
-                "fr": "Placez chaque action dans son étape. La correction est disponible après une tentative complète.",
-                "en": "Place each action in its step. The correction is available after a complete attempt."
+                "fr": "Placez chaque action dans l’étape appropriée. La correction est disponible après une tentative complète.",
+                "en": "Place each action in the appropriate stage. Feedback is available after a complete attempt."
               },
               "buckets": [
                 {
                   "id": "1",
                   "label": {
-                    "fr": "1. Cadrer",
-                    "en": "1. Cadrer"
+                    "fr": "1. Définir",
+                    "en": "1. Define"
                   }
                 },
                 {
                   "id": "2",
                   "label": {
-                    "fr": "2. Construire",
-                    "en": "2. Construire"
+                    "fr": "2. Récupérer",
+                    "en": "2. Retrieve"
                   }
                 },
                 {
                   "id": "3",
                   "label": {
-                    "fr": "3. Tester",
-                    "en": "3. Tester"
+                    "fr": "3. Calculer",
+                    "en": "3. Calculate"
                   }
                 },
                 {
                   "id": "4",
                   "label": {
-                    "fr": "4. Valider",
-                    "en": "4. Valider"
+                    "fr": "4. Expliquer et contrôler",
+                    "en": "4. Explain and review"
                   }
                 }
               ],
@@ -500,39 +485,39 @@
                 {
                   "id": "cadrer",
                   "text": {
-                    "fr": "Définir le résultat métier, les données fictives et les limites d’action.",
-                    "en": "Define the business outcome, the fictional data, and the action limits."
+                    "fr": "Préciser l’indicateur, son périmètre, sa période et les données autorisées.",
+                    "en": "Specify the indicator, its scope, its period, and authorized data."
                   },
                   "correctBucket": "1"
                 },
                 {
                   "id": "construire",
                   "text": {
-                    "fr": "Configurer le workflow dans un environnement de démonstration.",
-                    "en": "Configure the workflow in a demonstration environment."
+                    "fr": "Obtenir de la source tabulaire les valeurs et le contexte correspondant à ce périmètre.",
+                    "en": "Obtain from the tabular source the values and context matching that scope."
                   },
                   "correctBucket": "2"
                 },
                 {
                   "id": "tester",
                   "text": {
-                    "fr": "Exécuter des cas fictifs, journaliser les sorties et relever les écarts.",
-                    "en": "Run fictional cases, log the outputs, and note any discrepancies."
+                    "fr": "Appliquer la formule définie aux valeurs identifiables avec le Calculator.",
+                    "en": "Apply the defined formula to identifiable values with the Calculator."
                   },
                   "correctBucket": "3"
                 },
                 {
                   "id": "valider",
                   "text": {
-                    "fr": "Faire relire les actions sensibles avant toute utilisation réelle.",
-                    "en": "Faire relire les actions sensibles avant toute utilisation réelle."
+                    "fr": "Exprimer le résultat dans le langage métier et vérifier la cohérence de la chaîne.",
+                    "en": "Express the result in business language and verify the consistency of the chain."
                   },
                   "correctBucket": "4"
                 }
               ],
               "feedback": {
-                "fr": "La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés.",
-                "en": "The correct process goes from safe scoping to human validation, after documented tests."
+                "fr": "Une réponse fiable commence par un contrat de données, sépare récupération et calcul, puis explicite le résultat dans son contexte métier.",
+                "en": "A reliable answer starts with a data contract, separates retrieval from calculation, then states the result in its business context."
               }
             }
           ]
