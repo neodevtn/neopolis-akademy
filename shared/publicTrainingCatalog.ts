@@ -66,6 +66,8 @@ const localize = (value: string | LocalizedText | undefined, locale: PublicTrain
 function publicDescription(value: string | LocalizedText | undefined, locale: PublicTrainingLocale) {
   return localize(value, locale)
     .replace(/\b(?:un(?:e)?\s+)?cours\s+partenaire(?:\s+(?:de\s+)?formation)?(?:\s+autorisée?)?/gi, "Formation pratique")
+    .replace(/\bparcours\s+partenaire\s+Anthropic\b/gi, "Formation avancée")
+    .replace(/\bAnthropic\s+partner\s+learning\s+path\b/gi, "Advanced training pathway")
     .replace(/\bcours\s+Hugging\s+Face(?:\s+Learn)?\s+autorisée?/gi, "Formation pratique")
     .replace(/\b(?:an?\s+)?authorized\s+partner\s+course\b/gi, "Practical training")
     .replace(/\bcours\s+partenaire\b/gi, "Formation pratique")

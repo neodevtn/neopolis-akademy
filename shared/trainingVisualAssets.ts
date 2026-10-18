@@ -14,11 +14,14 @@ export type TrainingVisualAsset = {
 
 export type TrainingVisualOverride = Partial<Pick<TrainingVisualAsset, "socialPath" | "socialWidth" | "socialHeight" | "cardPath" | "cardWidth" | "cardHeight" | "alt">>;
 
+/** Les replis de marque doivent passer par le proxy public, et non une redirection signée. */
+const publicAssetPath = (path: string) => path.replace(/^\/manus-storage\//, "/api/assets/");
+
 const DEFAULT_TRAINING_VISUAL: TrainingVisualAsset = {
-  socialPath: PUBLIC_SOCIAL_ASSETS.openGraph.path,
+  socialPath: publicAssetPath(PUBLIC_SOCIAL_ASSETS.openGraph.path),
   socialWidth: PUBLIC_SOCIAL_ASSETS.openGraph.width,
   socialHeight: PUBLIC_SOCIAL_ASSETS.openGraph.height,
-  cardPath: PUBLIC_SOCIAL_ASSETS.square.path,
+  cardPath: publicAssetPath(PUBLIC_SOCIAL_ASSETS.square.path),
   cardWidth: PUBLIC_SOCIAL_ASSETS.square.width,
   cardHeight: PUBLIC_SOCIAL_ASSETS.square.height,
   alt: {

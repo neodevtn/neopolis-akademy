@@ -1,8 +1,13 @@
 import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import trainingIndex from "../client/src/data/trainingIndex.json";
 
 const coursesDir = resolve(process.cwd(), "client/public/data/courses");
+const anthropicCourseIds = trainingIndex.courses
+  .filter((course) => course.id.startsWith("claude_") && !course.id.startsWith("claude_science_"))
+  .map((course) => course.id)
+  .sort();
 const bannedArtifacts = [
   /\(Illustrative Scenario\)/i,
   /\(Scénario illustratif\)/i,
@@ -17,7 +22,7 @@ const bannedArtifacts = [
 describe("nettoyage générique des artefacts Anthropic", () => {
   it("retire des contenus de certification Anthropic les marqueurs UI et techniques non sémantiques ciblés", async () => {
     const files = (await readdir(coursesDir)).filter((file) => file.startsWith("claude_") && !file.startsWith("claude_science_") && file.endsWith(".json"));
-    expect(files.length).toBe(28);
+    expect(files.map((file) => file.replace(/\.json$/, "")).sort()).toEqual(anthropicCourseIds);
 
     const sources = await Promise.all(files.map((file) => readFile(resolve(coursesDir, file), "utf8")));
     for (const source of sources) {

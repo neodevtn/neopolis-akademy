@@ -19,6 +19,18 @@ const signals = [
   ["ai_solution_design", /architect|architecture|solution design|conception|use case|cas d.?usage|product management|transformation|system design/i],
 ];
 const validIds = new Set(signals.map(([id]) => id));
+const profileOverrides = {
+  claude_fde_delivery_methodology__01: [
+    { competencyId: "ai_solution_design", weight: 0.4 },
+    { competencyId: "ai_business", weight: 0.35 },
+    { competencyId: "ai_governance", weight: 0.25 },
+  ],
+  claude_fde_enterprise_adoption__01: [
+    { competencyId: "ai_business", weight: 0.45 },
+    { competencyId: "ai_governance", weight: 0.3 },
+    { competencyId: "ai_solution_design", weight: 0.25 },
+  ],
+};
 
 function addScore(scores, id, amount) {
   if (!validIds.has(id)) return;
@@ -45,6 +57,8 @@ function profileText(courseRef, course) {
 }
 
 function deriveProfile(courseRef, course) {
+  const override = profileOverrides[courseRef.id];
+  if (override) return override;
   const text = profileText(courseRef, course);
   const scores = new Map();
   for (const [id, pattern] of signals) if (pattern.test(text)) addScore(scores, id, 4);

@@ -1,11 +1,15 @@
 import { GENERATED_TRAINING_VISUAL_ASSETS } from "./trainingVisualAssets.generated";
-import { getTrainingVisualAsset, resolveTrainingVisualAsset } from "./trainingVisualAssets";
+import {
+  getTrainingVisualAsset,
+  resolveTrainingVisualAsset,
+} from "./trainingVisualAssets";
 import { describe, expect, it } from "vitest";
-import trainingIndex from "../client/src/data/trainingIndex.json";
 
 describe("registre des visuels de formation", () => {
   it("associe le pilote Claude à une image sociale Open Graph et une carte 4:3", () => {
-    const visual = getTrainingVisualAsset("claude_certified_associate_foundations");
+    const visual = getTrainingVisualAsset(
+      "claude_certified_associate_foundations"
+    );
 
     expect(visual).toMatchObject({
       socialWidth: 1200,
@@ -35,15 +39,37 @@ describe("registre des visuels de formation", () => {
     expect(fallback.socialPath).toContain("og-neopolis-akademy");
   });
 
-  it("attribue une carte et une image sociale dédiées à chaque formation du catalogue", () => {
+  it("utilise le repli public vérifié lorsqu’un parcours n’a pas de média dédié", () => {
+    const fallback = resolveTrainingVisualAsset(
+      "claude_forward_deployed_engineer"
+    );
+
+    expect(
+      getTrainingVisualAsset("claude_forward_deployed_engineer")
+    ).toBeUndefined();
+    expect(fallback).toMatchObject({
+      socialPath: "/api/assets/og-neopolis-akademy-1200x630_eef162a5.png",
+      socialWidth: 1200,
+      socialHeight: 630,
+      cardPath: "/api/assets/square-neopolis-akademy-1200x1200_a2756579.png",
+      cardWidth: 1200,
+      cardHeight: 1200,
+    });
+  });
+
+  it("conserve les visuels dédiés générés pour les formations qui en disposent", () => {
     const visuals = Object.values(GENERATED_TRAINING_VISUAL_ASSETS);
 
-    expect(visuals).toHaveLength(trainingIndex.certifications.length);
+    expect(visuals.length).toBeGreaterThan(0);
     for (const visual of visuals) {
-      expect(visual.socialPath).toMatch(/^\/manus-storage\/.+-social_[a-f0-9]+\.png$/);
+      expect(visual.socialPath).toMatch(
+        /^\/manus-storage\/.+-social_[a-f0-9]+\.png$/
+      );
       expect(visual.socialWidth).toBe(1200);
       expect(visual.socialHeight).toBe(630);
-      expect(visual.cardPath).toMatch(/^\/api\/assets\/.+-card_[a-f0-9]+\.png$/);
+      expect(visual.cardPath).toMatch(
+        /^\/api\/assets\/.+-card_[a-f0-9]+\.png$/
+      );
       expect(visual.cardWidth).toBe(1200);
       expect(visual.cardHeight).toBe(900);
     }

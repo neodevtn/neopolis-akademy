@@ -4,11 +4,13 @@ import os from "node:os";
 import path from "node:path";
 import express from "express";
 import { afterEach, describe, expect, it } from "vitest";
+import trainingIndex from "../client/src/data/trainingIndex.json";
 import { COURSE_DATA_ROUTE_PATHS, getCourseDataDirectories, getCourseDataDirectory, isValidCourseDataId, readCourseDataAsset, registerCourseDataRoute, sanitizeCourseDataForLearner } from "./courseDataRoute";
 import { getSensitiveExerciseAnswerKey } from "./sensitiveExerciseAnswerKeys";
 
 const temporaryDirectories: string[] = [];
 const courseDataDirectory = path.resolve(import.meta.dirname, "..", "client", "public", "data", "courses");
+const indexedCourseIds = trainingIndex.courses.map((course) => course.id).sort();
 
 function normalizeKey(key: string): string {
   return key.replace(/[^a-z0-9]/gi, "").toLowerCase();
@@ -147,9 +149,9 @@ describe("course data route", () => {
     expect(learnerData.datacampImport).toEqual({ expected: { courseCount: 1 } });
   });
 
-  it("sanitizes all 180 course assets without changing their learner-visible structure", async () => {
+  it("sanitizes every indexed course asset without changing its learner-visible structure", async () => {
     const filenames = (await readdir(courseDataDirectory)).filter(filename => filename.endsWith(".json")).sort();
-    expect(filenames).toHaveLength(180);
+    expect(filenames.map((filename) => filename.replace(/\.json$/, ""))).toEqual(indexedCourseIds);
 
     for (const filename of filenames) {
       const raw = await readFile(path.join(courseDataDirectory, filename), "utf8");

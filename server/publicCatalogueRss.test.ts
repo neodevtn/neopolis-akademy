@@ -7,17 +7,17 @@ import { registerPublicTrainingPages } from "./publicTrainingPages";
 
 const host = "https://akademy.neodev.click";
 const itemBodies = (rss: string) => Array.from(rss.matchAll(/<item>([\s\S]*?)<\/item>/g), (match) => match[1]!);
+const catalogueItemCount = (locale: "fr" | "en") => getPublicCatalogueTrainings(locale)
+  .reduce((count, training) => count + 1 + training.courses.length, 0);
 
 describe("RSS des formations compatible avec les lecteurs WordPress", () => {
   it.each(["fr", "en"] as const)("publie les programmes et cours %s avec description, image et URL stable", (locale) => {
     const rss = renderPublicCatalogueRss(locale);
-    const trainings = getPublicCatalogueTrainings(locale);
     const items = itemBodies(rss);
     expect(rss).toMatch(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<rss version="2.0"/);
     expect(rss).toContain('xmlns:media="http://search.yahoo.com/mrss/"');
     expect(rss).toContain('xmlns:content="http://purl.org/rss/1.0/modules/content/"');
-    expect(items).toHaveLength(trainings.length + trainings.reduce((n, training) => n + training.courses.length, 0));
-    expect(items).toHaveLength(296);
+    expect(items).toHaveLength(catalogueItemCount(locale));
     const guids = items.map((item) => item.match(/<guid isPermaLink="true">([^<]+)<\/guid>/)?.[1]);
     expect(new Set(guids).size).toBe(items.length);
     for (const item of items) {
@@ -44,6 +44,7 @@ describe("RSS des formations compatible avec les lecteurs WordPress", () => {
     try {
       const baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
       for (const path of ["/formations-ia/rss.xml", "/en/ai-training/rss.xml"]) {
+        const locale = path.startsWith("/en/") ? "en" : "fr";
         const response = await fetch(`${baseUrl}${path}`, { redirect: "manual", headers: { "user-agent": "WordPress/6.8; https://example.com" } });
         const body = await response.text();
         expect(response.status).toBe(200);
@@ -52,7 +53,7 @@ describe("RSS des formations compatible avec les lecteurs WordPress", () => {
         expect(response.headers.get("set-cookie")).toBeNull();
         expect(response.headers.get("x-content-type-options")).toBe("nosniff");
         expect(Number(response.headers.get("content-length"))).toBe(Buffer.byteLength(body, "utf8"));
-        expect(itemBodies(body)).toHaveLength(296);
+        expect(itemBodies(body)).toHaveLength(catalogueItemCount(locale));
       }
     } finally {
       await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));

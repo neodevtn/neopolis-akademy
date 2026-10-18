@@ -203,6 +203,22 @@ describe("pages publiques de formations IA", () => {
     expect(html.toLowerCase()).not.toContain("hugging face learn autorisé");
   });
 
+  it("ne divulgue pas les métadonnées de provenance du parcours FDE dans ses pages publiques", () => {
+    for (const locale of ["fr", "en", "ar"] as const) {
+      const training = getPublicCatalogueTrainings(locale).find((item) => item.slug === "claude-forward-deployed-engineer");
+      expect(training, locale).toBeDefined();
+      expect(training!.courses).toHaveLength(2);
+
+      const pages = [
+        renderPublicCatalogueTraining(training!, locale),
+        ...training!.courses.map((course) => renderPublicCatalogueCourse(training!, course, locale)),
+      ];
+      for (const html of pages) {
+        expect(html).not.toMatch(/anthropic partner|skilljar|cours partenaire|parcours partenaire|sourceprovider|sourcecourseurl/i);
+      }
+    }
+  });
+
   it("rend une vraie page introuvable non indexable et un sitemap avec les routes publiques", () => {
     expect(renderPublicTrainingNotFound()).toContain('name="robots" content="noindex, follow"');
     const index = renderPublicTrainingSitemap();

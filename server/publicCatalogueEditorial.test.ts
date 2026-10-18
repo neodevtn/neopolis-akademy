@@ -4,11 +4,13 @@ import editorial from "@shared/publicCatalogueEditorial.generated.json";
 import { getPublicCatalogueTrainings } from "@shared/publicTrainingCatalog";
 import { renderPublicCatalogueTraining, renderPublicCatalogueCourse } from "./publicTrainingPages";
 
-const sourceNames = /\b(?:datacamp|skilljar|certsafari|coursera|udemy|cours partenaire|partner course)\b/i;
+const sourceNames = /\b(?:datacamp|skilljar|certsafari|coursera|udemy|cours partenaire|parcours partenaire|formation partenaire|partner course|partner learning path)\b/i;
 
 describe("descriptions publiques enrichies", () => {
-  it("couvre exactement les 116 formations et les 180 cours avec une rédaction FR/EN relue", () => {
+  it("couvre exactement les 117 formations et les 182 cours avec une rédaction FR/EN relue", () => {
     expect(Number.isFinite(Date.parse(editorial.generatedAt))).toBe(true);
+    expect(catalogue.certifications).toHaveLength(117);
+    expect(catalogue.courses).toHaveLength(182);
     expect(Object.keys(editorial.programmes)).toHaveLength(catalogue.certifications.length);
     expect(Object.keys(editorial.courses)).toHaveLength(catalogue.courses.length);
     for (const [kind, ids] of [["programmes", catalogue.certifications.map((item) => item.id)], ["courses", catalogue.courses.map((item) => item.id)]] as const) {

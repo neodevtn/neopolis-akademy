@@ -4,7 +4,7 @@
 Exécution : python3 scripts/enrich_public_catalogue_descriptions.py --workers 4
 Pilote : python3 scripts/enrich_public_catalogue_descriptions.py --workers 1 --limit-batches 1
 Les lots intermédiaires sont hors dépôt. Le JSON public final n'est écrit que si les
-296 fiches et leurs deux langues sont complètes et validées.
+299 fiches et leurs deux langues sont complètes et validées.
 """
 import argparse
 import concurrent.futures
@@ -24,7 +24,7 @@ COURSES = ROOT / "client/public/data/courses"
 WORK = Path("/home/ubuntu/catalogue-editorial-work")
 OUTPUT = ROOT / "shared/publicCatalogueEditorial.generated.json"
 MODEL = "gpt-5-mini"
-BANNED = re.compile(r"\b(?:datacamp|skilljar|certsafari|coursera|udemy|cours partenaire|partner course|source du cours|source de la formation|formation partenaire)\b", re.I)
+BANNED = re.compile(r"\b(?:datacamp|skilljar|certsafari|coursera|udemy|cours partenaire|parcours partenaire|formation partenaire|partner course|partner learning path|source du cours|source de la formation|provenance d[’']import)\b", re.I)
 GENERIC = re.compile(r"^(what you will learn|introduction|conclusion|summary|quiz|checkpoint|learning objectives|ce que vous allez apprendre|résumé|sommaire)$", re.I)
 
 
@@ -37,6 +37,8 @@ def localized(value, lang):
 def keep_text(text, max_len=240):
     text = re.sub(r"\s+", " ", str(text or "")).strip()
     text = re.sub(r"\b(?:un(?:e)?\s+)?cours\s+partenaire(?:\s+(?:de\s+)?formation)?(?:\s+autorisée?)?\b", "une formation pratique", text, flags=re.I)
+    text = re.sub(r"\bparcours\s+partenaire\s+Anthropic\b", "formation avancée", text, flags=re.I)
+    text = re.sub(r"\bAnthropic\s+partner\s+learning\s+path\b", "advanced learning path", text, flags=re.I)
     text = re.sub(r"\b(?:an?\s+)?partner\s+course\b", "practical training", text, flags=re.I)
     text = re.sub(r"\b(?:source du cours|source de la formation|formation partenaire)\b", "formation", text, flags=re.I)
     text = re.sub(r"\b(?:DataCamp|Skilljar|CertSafari)\b", "", text, flags=re.I)

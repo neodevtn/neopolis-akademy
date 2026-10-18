@@ -29,5 +29,15 @@ describe("training competency profiles", () => {
     expect(profiles.certifications.claude_science_recherche_sante_v3.map((item) => item.competencyId)).toEqual(expect.arrayContaining(["bi_ai", "ai_governance"]));
     expect(profiles.certifications.claude_certified_developer_foundations.map((item) => item.competencyId)).toEqual(expect.arrayContaining(["ai_development", "ai_devops"]));
     expect(profiles.certifications.novasavo_automatisation_comptable_ia.map((item) => item.competencyId)).toContain("bi_ai");
+    expect(profiles.courses.claude_fde_delivery_methodology__01).toEqual([
+      { competencyId: "ai_solution_design", weight: 0.4 },
+      { competencyId: "ai_business", weight: 0.35 },
+      { competencyId: "ai_governance", weight: 0.25 },
+    ]);
+    expect(profiles.courses.claude_fde_enterprise_adoption__01).toEqual([
+      { competencyId: "ai_business", weight: 0.45 },
+      { competencyId: "ai_governance", weight: 0.3 },
+      { competencyId: "ai_solution_design", weight: 0.25 },
+    ]);
   });
 });

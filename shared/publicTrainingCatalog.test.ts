@@ -11,7 +11,8 @@ describe("catalogue public de formation", () => {
     const trainings = getPublicCatalogueTrainings("fr");
     const slugs = trainings.map((training) => training.slug);
 
-    expect(trainings.length).toBeGreaterThan(0);
+    expect(trainings).toHaveLength(117);
+    expect(trainings.reduce((count, training) => count + training.courses.length, 0)).toBe(182);
     expect(new Set(slugs).size).toBe(slugs.length);
     expect(trainings.every((training) => training.title && training.format && training.metrics.courseCount === training.courses.length)).toBe(true);
     expect(getPublicCatalogueSitemapEntries().length).toBeGreaterThan(trainings.length);
@@ -34,7 +35,7 @@ describe("catalogue public de formation", () => {
       const descriptions = getPublicCatalogueTrainings(locale)
         .flatMap((training) => [training.description, ...training.courses.map((course) => course.description)]);
 
-      const prohibitedDescription = descriptions.find((description) => /cours partenaire|partner course|hugging face learn autorisé/i.test(description));
+      const prohibitedDescription = descriptions.find((description) => /cours partenaire|parcours partenaire|formation partenaire|partner course|partner learning path|hugging face learn autorisé/i.test(description));
       expect(prohibitedDescription, locale).toBeUndefined();
     }
   });
