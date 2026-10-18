@@ -5,6 +5,7 @@ import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
+import { getCoursesForTraining } from "@shared/courseTrainingMembership";
 import {
   LogIn,
   Trophy,
@@ -222,7 +223,7 @@ export default function TrainingDashboard() {
 
   const certCompletionData = useMemo(() => {
     return trainingIndex.certifications.map((cert) => {
-      const courses = trainingIndex.courses.filter((c) => c.certId === cert.id);
+      const courses = getCoursesForTraining(trainingIndex.courses as any[], cert.id);
       const courseIds = courses.map((c) => c.id);
       const totalLessonsMap: Record<string, number> = {};
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });

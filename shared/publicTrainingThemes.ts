@@ -4,6 +4,7 @@ import { extractTargetJobRoles, resolveTrainingFormat } from "../client/src/lib/
 import { localizePublicTrainingText, type PublicTrainingLocale } from "./publicTrainingLocale";
 import { compareCataloguePriority } from "./cataloguePriority";
 import { getPublicCatalogueEditorial } from "./publicCatalogueEditorial";
+import { getCoursesForTraining } from "./courseTrainingMembership";
 
 export type LocalizedText = { fr: string; en: string; ar?: string };
 type LocalizedValue = string | LocalizedText;
@@ -11,6 +12,7 @@ type LocalizedValue = string | LocalizedText;
 type CatalogCourse = {
   id: string;
   certId: string;
+  trainingMemberships?: { certificationId: string; order?: number }[];
   title?: LocalizedText;
   description?: LocalizedText;
   level?: LocalizedText;
@@ -233,7 +235,7 @@ function localizedDefinitionText(value: LocalizedValue, locale: PublicTrainingLo
 }
 
 function relatedDomainLabels(certification: CatalogCertification, currentSlug: string, locale: PublicTrainingLocale) {
-  return themeDefinitions.filter((definition) => definition.slug !== currentSlug && catalog.courses.some((course) => course.certId === certification.id && courseMatchesTheme(course, certification, definition)))
+  return themeDefinitions.filter((definition) => definition.slug !== currentSlug && getCoursesForTraining(catalog.courses as any[], certification.id).some((course) => courseMatchesTheme(course, certification, definition)))
     .map((definition) => localizedDefinitionText(definition.shortTitle, locale, ""));
 }
 
@@ -256,12 +258,12 @@ function createUseCases(definition: ThemeDefinition, courses: CatalogCourse[], l
 function createTheme(definition: ThemeDefinition, locale: PublicTrainingLocale): PublicTrainingTheme {
   const certificationById = new Map(catalog.certifications.map((certification) => [certification.id, certification]));
   const courses = catalog.courses.filter((course) => courseMatchesTheme(course, certificationById.get(course.certId), definition));
-  const certificationIds = new Set(courses.map((course) => course.certId));
+  const certificationIds = new Set(catalog.certifications.filter((certification) => getCoursesForTraining(catalog.courses as any[], certification.id).some((course) => courseMatchesTheme(course, certification, definition))).map((certification) => certification.id));
   const certifications = [...catalog.certifications]
     .filter((certification) => certificationIds.has(certification.id))
     .sort(compareCataloguePriority)
     .map((certification) => {
-      const certificationCourses = courses.filter((course) => course.certId === certification.id);
+      const certificationCourses = getCoursesForTraining(catalog.courses as any[], certification.id).filter((course) => courseMatchesTheme(course, certification, definition));
       return {
         id: certification.id,
         title: localizePublicTrainingText(certification.title, locale, "AI training"),

@@ -90,9 +90,12 @@ for (const courseRef of index.courses || []) {
   const course = fs.existsSync(sourcePath) ? JSON.parse(fs.readFileSync(sourcePath, "utf8")) : {};
   const profile = deriveProfile(courseRef, course);
   courses[courseRef.id] = profile;
-  const aggregate = certifications[courseRef.certId] || new Map();
-  for (const item of profile) aggregate.set(item.competencyId, Math.max(aggregate.get(item.competencyId) || 0, item.weight));
-  certifications[courseRef.certId] = aggregate;
+  const trainingIds = [courseRef.certId, ...(Array.isArray(courseRef.trainingMemberships) ? courseRef.trainingMemberships.map((entry) => entry?.certificationId) : [])].filter(Boolean);
+  for (const trainingId of new Set(trainingIds)) {
+    const aggregate = certifications[trainingId] || new Map();
+    for (const item of profile) aggregate.set(item.competencyId, Math.max(aggregate.get(item.competencyId) || 0, item.weight));
+    certifications[trainingId] = aggregate;
+  }
 }
 for (const [certificationId, aggregate] of Object.entries(certifications)) {
   const selected = Array.from(aggregate.entries())

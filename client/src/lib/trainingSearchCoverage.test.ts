@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import catalog from "../data/trainingIndex.json";
 import searchIndex from "../../public/data/training-search-index.json";
 import { searchTrainingContent } from "./trainingSearch";
+import { getCoursesForTraining } from "@shared/courseTrainingMembership";
 
 type SearchEntry = { id: string; kind: "certification" | "course" | "chapter"; title: string; href: string; keywords: string[] };
 
@@ -14,39 +15,33 @@ const sourceCourseIds = fs.readdirSync(courseSourceDirectory).filter((name) => n
 const localize = (value: unknown): string => typeof value === "string" ? value : typeof value === "object" && value !== null ? String((value as { fr?: string; en?: string }).fr || (value as { en?: string }).en || "") : "";
 
 describe("couverture de l’index de recherche des formations", () => {
-  it("indexe exactement une entrée de cours exploitable pour chaque cours catalogue", () => {
-    const catalogCourseIds = new Set(catalog.courses.map((course) => course.id));
+  it("indexe exactement une entrée de cours exploitable par contexte de formation", () => {
+    const expectedIds = catalog.certifications.flatMap((training) => getCoursesForTraining(catalog.courses as any[], training.id).map((course) => `course:${training.id}:${course.id}`));
     const courseEntries = entries.filter((entry) => entry.kind === "course");
-    const courseEntryIds = courseEntries.map((entry) => entry.id.replace(/^course:/, ""));
-    const missing = [...catalogCourseIds].filter((courseId) => !courseEntryIds.includes(courseId));
-    const duplicates = courseEntryIds.filter((courseId, index) => courseEntryIds.indexOf(courseId) !== index);
-    const orphaned = courseEntryIds.filter((courseId) => !catalogCourseIds.has(courseId));
-
-    expect(missing).toEqual([]);
-    expect(duplicates).toEqual([]);
-    expect(orphaned).toEqual([]);
+    const indexedIds = courseEntries.map((entry) => entry.id);
+    expect(expectedIds.filter((id) => !indexedIds.includes(id))).toEqual([]);
+    expect(indexedIds.filter((id, index) => indexedIds.indexOf(id) !== index)).toEqual([]);
+    expect(indexedIds.filter((id) => !expectedIds.includes(id))).toEqual([]);
     expect(courseEntries.every((entry) => Boolean(entry.title) && Boolean(entry.href) && entry.keywords.length > 0)).toBe(true);
   });
 
   it("indexe tous les chapitres réellement présents dans les fichiers de cours catalogue", () => {
-    const catalogCourseIds = new Set(catalog.courses.map((course) => course.id));
     const expectedChapterIds: string[] = [];
-    for (const courseId of sourceCourseIds.filter((id) => catalogCourseIds.has(id))) {
-      const course = JSON.parse(fs.readFileSync(path.join(courseSourceDirectory, `${courseId}.json`), "utf8"));
-      for (const [lessonIndex, lesson] of (course.lessons || []).entries()) {
-        for (const [chapterIndex] of (lesson.chapters || []).entries()) expectedChapterIds.push(`chapter:${courseId}:${lessonIndex}:${chapterIndex}`);
-      }
+    for (const training of catalog.certifications) for (const courseRef of getCoursesForTraining(catalog.courses as any[], training.id)) {
+      if (!sourceCourseIds.includes(courseRef.id)) continue;
+      const course = JSON.parse(fs.readFileSync(path.join(courseSourceDirectory, `${courseRef.id}.json`), "utf8"));
+      for (const [lessonIndex, lesson] of (course.lessons || []).entries()) for (const [chapterIndex] of (lesson.chapters || []).entries()) expectedChapterIds.push(`chapter:${training.id}:${courseRef.id}:${lessonIndex}:${chapterIndex}`);
     }
     const indexedChapterIds = new Set(entries.filter((entry) => entry.kind === "chapter").map((entry) => entry.id));
     expect(expectedChapterIds.filter((id) => !indexedChapterIds.has(id))).toEqual([]);
   });
 
   it("retrouve chaque cours catalogue lorsqu’un utilisateur recherche son titre public", () => {
-    const missingFromTitleSearch = catalog.courses.flatMap((course) => {
+    const missingFromTitleSearch = catalog.certifications.flatMap((training) => getCoursesForTraining(catalog.courses as any[], training.id).flatMap((course) => {
       const title = localize(course.title || course.name);
       const results = searchTrainingContent(entries, title, { kind: "course", limit: 500 });
-      return results.some((entry) => entry.id === `course:${course.id}`) ? [] : [`${course.id} (${title})`];
-    });
+      return results.some((entry) => entry.id === `course:${training.id}:${course.id}`) ? [] : [`${training.id}/${course.id} (${title})`];
+    }));
     expect(missingFromTitleSearch).toEqual([]);
   });
 });

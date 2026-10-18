@@ -12,6 +12,7 @@ const coursesDir = path.join(root, "client", "public", "data", "courses");
 const indexPath = path.join(root, "client", "src", "data", "trainingIndex.json");
 const certId = "claude_forward_deployed_engineer";
 const courseIds = ["claude_fde_delivery_methodology__01", "claude_fde_enterprise_adoption__01"] as const;
+const sharedCourseIds = ["claude_101__01", "claude_code_101__01", "claude_code_in_action__01", "introduction_to_agent_skills__01", "introduction_to_claude_models__01", "introduction_to_subagents__01", "model_context_protocol_advanced_topics__01", "software_development_with_claude_code__01", "building_scalable_agentic_systems__01"] as const;
 const expectedLessons: Record<(typeof courseIds)[number], number> = {
   claude_fde_delivery_methodology__01: 7,
   claude_fde_enterprise_adoption__01: 14,
@@ -21,7 +22,7 @@ const readCourse = (courseId: string) => readJson<any>(path.join(coursesDir, `${
 
 /** Contracts for the two FDE-only modules observed in the authenticated Skilljar path. */
 describe("Claude Forward Deployed Engineer path", () => {
-  it("registers a learning path, not a certification claim, and contains only the two FDE-exclusive modules", () => {
+  it("registers a non-certifying learning path with its two exclusive and nine natively shared modules", () => {
     const index = readJson<any>(indexPath);
     const training = index.certifications.find((item: any) => item.id === certId);
     expect(training).toMatchObject({
@@ -29,16 +30,20 @@ describe("Claude Forward Deployed Engineer path", () => {
       trainingFormat: "formation",
       provider: "anthropic",
       sequentialCourseLocking: true,
-      noDuplicateSourceCourses: true,
-      courses: [...courseIds],
+      contentKind: "learning_path",
+      certificationStatus: "non_certifying",
+      assessmentPolicy: "none",
+      credentialPolicy: "none",
+      courses: [...courseIds, ...sharedCourseIds],
     });
     expect(training.catalogTag.en).toMatch(/enterprise adoption/i);
     expect(training.description.en).not.toMatch(/official certification/i);
-    expect(training.companionCourses).toHaveLength(9);
-    expect(training.companionCoursesTitle.en).toMatch(/already available/i);
-    expect(training.companionCoursesDescription.fr).toMatch(/sans duplication/i);
-    expect(training.courses).not.toContain("claude_101__01");
-    expect(training.courses).not.toContain("claude_code_101__01");
+    expect(training.companionCourses).toBeUndefined();
+    for (const [indexInPath, sharedCourseId] of sharedCourseIds.entries()) {
+      const sharedCourse = index.courses.find((course: any) => course.id === sharedCourseId);
+      expect(sharedCourse.certId).not.toBe(certId);
+      expect(sharedCourse.trainingMemberships).toContainEqual({ certificationId: certId, order: indexInPath + 3 });
+    }
   });
 
   it("preserves the official source topology with 7 Delivery lessons and 14 Enterprise Adoption lessons", () => {
@@ -86,7 +91,7 @@ describe("Claude Forward Deployed Engineer path", () => {
       expect(learner).not.toContain('"explanation"');
     }
     const tektek = getTekTekTrainingSources(certId, "fr");
-    expect(tektek?.courseIds).toEqual(new Set(courseIds));
+    expect(tektek?.courseIds).toEqual(new Set([...courseIds, ...sharedCourseIds]));
     expect(tektek?.sources.some((source) => source.courseId === courseIds[0] && /qualifier/i.test(source.text))).toBe(true);
     expect(tektek?.sources.some((source) => source.courseId === courseIds[1] && /activation/i.test(source.text))).toBe(true);
   });

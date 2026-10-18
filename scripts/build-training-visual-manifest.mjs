@@ -31,8 +31,10 @@ function subjectHint(certification, relatedCourses) {
   return skills.slice(0, 4).join(", ") || localized(certification.title, "fr");
 }
 
+const belongsToTraining = (course, trainingId) => course.certId === trainingId || (Array.isArray(course.trainingMemberships) && course.trainingMemberships.some((entry) => entry?.certificationId === trainingId));
+
 const entries = (trainingIndex.certifications || []).map((certification) => {
-  const courses = (trainingIndex.courses || []).filter((course) => course.certId === certification.id);
+  const courses = (trainingIndex.courses || []).filter((course) => belongsToTraining(course, certification.id));
   const languageKeys = Object.keys(certification.title || {}).filter((key) => langLabel[key]);
   const languages = languageKeys.length ? languageKeys.map((key) => langLabel[key]) : ["FR", "EN"];
   const title = localized(certification.title, "fr");

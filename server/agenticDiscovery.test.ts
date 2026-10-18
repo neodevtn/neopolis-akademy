@@ -24,7 +24,7 @@ describe("SEO and agentic-search discovery", () => {
     const summary = getAgenticDiscoverySummary();
 
     expect(summary.programmes).toBe(index.metrics.certificationCount);
-    expect(summary.courses).toBe(index.metrics.courseCount);
+    expect(summary.courses).toBe(getPublicCatalogueTrainings("fr").reduce((count, training) => count + training.courses.length, 0));
     expect(summary.programmes).toBeGreaterThan(100);
     expect(summary.courses).toBeGreaterThan(150);
     expect(summary.languages).toBe(3);

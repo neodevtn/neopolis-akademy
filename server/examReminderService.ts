@@ -1,4 +1,5 @@
 import trainingIndex from "../client/src/data/trainingIndex.json";
+import { getCoursesForTraining } from "../shared/courseTrainingMembership";
 import {
   claimExamReminder,
   createEmailEvent,
@@ -96,7 +97,7 @@ export function selectEligibleExamReminderCandidates(snapshot: ReminderSnapshot,
     for (const [certificationId, exam] of Object.entries(examConfigs)) {
       const pairKey = `${learner.id}:${certificationId}`;
       if (attemptedPairs.has(pairKey) || remindedPairs.has(pairKey)) continue;
-      const courses = catalog.courses.filter((course) => course.certId === certificationId);
+      const courses = getCoursesForTraining(catalog.courses as any[], certificationId);
       if (!courses.length) continue;
       const completedAt = courses.map((course) => completedCourseAt({
         userId: learner.id,

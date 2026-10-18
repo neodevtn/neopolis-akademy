@@ -1,3 +1,4 @@
+import { courseBelongsToTraining } from "@shared/courseTrainingMembership";
 type CatalogCourse = {
   certId: string;
   lessonCount?: number;
@@ -27,7 +28,7 @@ export function getCourseCatalogMetrics(course: CatalogCourse) {
 }
 
 export function getCertificationCatalogMetrics(certificationId: string, courses: CatalogCourse[]) {
-  const certificationCourses = courses.filter((course) => course.certId === certificationId);
+  const certificationCourses = courses.filter((course) => courseBelongsToTraining(course as any, certificationId));
   return certificationCourses.reduce((totals, course) => {
     const metrics = getCourseCatalogMetrics(course);
     return {

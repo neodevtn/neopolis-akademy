@@ -1,3 +1,5 @@
+import { getCoursesForTraining } from "./courseTrainingMembership";
+
 export type CourseMetrics = {
   lessonCount: number;
   chapterCount: number;
@@ -53,7 +55,7 @@ export function applyCatalogMetrics(index: any, coursesById: Record<string, any>
   });
 
   const certifications = (index?.certifications || []).map((certification: any) => {
-    const certificationCourses = courses.filter((course: any) => course.certId === certification.id);
+    const certificationCourses = getCoursesForTraining(courses, certification.id);
     return {
       ...certification,
       courseCount: certificationCourses.length,

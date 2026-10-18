@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import catalog from "../client/src/data/trainingIndex.json";
+import { getCoursesForTraining } from "./courseTrainingMembership";
 import {
   getPublicCatalogueCourse,
   getPublicCatalogueSitemapEntries,
@@ -12,9 +14,11 @@ describe("catalogue public de formation", () => {
     const slugs = trainings.map((training) => training.slug);
 
     expect(trainings).toHaveLength(117);
-    expect(trainings.reduce((count, training) => count + training.courses.length, 0)).toBe(182);
+    expect(trainings.reduce((count, training) => count + training.courses.length, 0)).toBe(catalog.certifications.reduce((count, training) => count + getCoursesForTraining(catalog.courses as any[], training.id).length, 0));
     expect(new Set(slugs).size).toBe(slugs.length);
     expect(trainings.every((training) => training.title && training.format && training.metrics.courseCount === training.courses.length)).toBe(true);
+    const sitemapCourseEntries = getPublicCatalogueSitemapEntries().filter((entry) => entry.courseSlug);
+    expect(sitemapCourseEntries).toHaveLength(catalog.courses.length);
     expect(getPublicCatalogueSitemapEntries().length).toBeGreaterThan(trainings.length);
   });
 

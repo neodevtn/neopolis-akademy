@@ -1,5 +1,6 @@
 import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import fs from "node:fs";
+import { getCoursesForTraining } from "../shared/courseTrainingMembership";
 import path from "node:path";
 import {
   competencyContributionRules,
@@ -57,7 +58,7 @@ export function getContentCompetencyTags(input: { courseId?: string; lessonIndex
   if (!input.certificationId) return [];
   try {
     const index = JSON.parse(fs.readFileSync(trainingIndexPath, "utf8"));
-    const courseIds = (index.courses || []).filter((course: any) => course.certId === input.certificationId).map((course: any) => course.id);
+    const courseIds = getCoursesForTraining(index.courses || [], input.certificationId).map((course: any) => course.id);
     const tags: string[] = [];
     for (const linkedCourseId of courseIds) tags.push(...getContentCompetencyTags({ courseId: linkedCourseId }));
     return Array.from(new Set<string>(tags));

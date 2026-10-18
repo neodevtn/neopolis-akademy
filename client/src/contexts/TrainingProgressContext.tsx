@@ -4,6 +4,8 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { announceAchievement } from "@/components/AchievementCelebration";
 import trainingIndex from "@/data/trainingIndex.json";
+import { getCoursesForTraining } from "@shared/courseTrainingMembership";
+import { isCertifyingTraining } from "@shared/trainingEligibility";
 import { canMapChapterProgressToLessons, shouldPreferChapterProgressForSingleLessonCourse } from "./trainingProgressMapping";
 
 interface LastVisitedInfo {
@@ -82,7 +84,7 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
           });
 
           // Check if next course is now unlocked
-          const certCourses = trainingIndex.courses.filter((c) => c.certId === certificationId);
+          const certCourses = getCoursesForTraining(trainingIndex.courses as any[], certificationId);
           const courseIndex = certCourses.findIndex((c) => c.id === courseId);
           if (courseIndex >= 0 && courseIndex < certCourses.length - 1) {
             const nextCourse = certCourses[courseIndex + 1];
@@ -104,12 +106,16 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
 
           if (allCertCoursesComplete) {
             const cert = trainingIndex.certifications.find((c) => c.id === certificationId);
-            setTimeout(() => {
-              toast.success("Certification disponible !", {
-                description: `Tous les cours de "${resolveTitle(cert?.title)}" sont terminés. L'examen blanc est maintenant débloqué !`,
-                duration: 7000,
-              });
-            }, 3000);
+            if (isCertifyingTraining(cert as any)) {
+              setTimeout(() => {
+                toast.success("Certification disponible !", {
+                  description: `Tous les cours de "${resolveTitle(cert?.title)}" sont terminés. L'examen blanc est maintenant débloqué !`,
+                  duration: 7000,
+                });
+              }, 3000);
+            } else {
+              setTimeout(() => toast.success("Parcours terminé !", { description: `Vous avez terminé "${resolveTitle(cert?.title)}".`, duration: 5000 }), 3000);
+            }
           }
         }
       }

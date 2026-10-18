@@ -7,6 +7,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
+import { courseBelongsToTraining, getCoursesForTraining } from "@shared/courseTrainingMembership";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Check, Filter, Video, Eye,
@@ -293,7 +294,7 @@ export default function TrainingCourse() {
   }, [certId, courseAnalyticsParams, courseId, courseLessons, isAuthenticated, isCourseComplete]);
 
   // Prefetch next course in certification path for instant navigation
-  const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
+  const certCourses = getCoursesForTraining(trainingIndex.courses as any[], certId);
   const currentCourseIdx = certCourses.findIndex((c: any) => c.id === courseId);
   const dynamicExamQuery = trpc.training.getExamDefinition.useQuery({ certificationId: certId || "" }, { enabled: Boolean(certId) });
   const examInfo = dynamicExamQuery.isSuccess ? dynamicExamQuery.data : getTrainingExamInfo(trainingIndex as any, certId);
@@ -370,7 +371,7 @@ export default function TrainingCourse() {
     return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
   }
 
-    if (!course || !cert) {
+    if (!course || !cert || !courseBelongsToTraining(course as any, certId)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <p className="text-muted-foreground">{t({ en: "Course not found", fr: "Cours introuvable" })}</p>

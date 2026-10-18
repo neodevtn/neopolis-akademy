@@ -28,7 +28,7 @@ export function renderPublicCatalogueRss(locale: "fr" | "en" = "fr") {
       : "";
     const itemsForTraining = [
       { title: training.title, description: training.description, overview: training.overview, path: publicTrainingCataloguePath(locale, training.slug), imageMeta, image, category: training.format },
-      ...training.courses.map((course) => ({ title: course.title, description: course.description, overview: course.overview, path: publicTrainingCataloguePath(locale, training.slug, course.slug), imageMeta, image, category: training.title })),
+      ...training.courses.filter((course) => course.isCanonical).map((course) => ({ title: course.title, description: course.description, overview: course.overview, path: publicTrainingCataloguePath(locale, training.slug, course.slug), imageMeta, image, category: training.title })),
     ];
     return itemsForTraining.map((item) => {
       const canonical = `${ORIGIN}${item.path}`;

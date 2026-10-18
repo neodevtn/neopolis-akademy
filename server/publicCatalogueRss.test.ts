@@ -8,7 +8,7 @@ import { registerPublicTrainingPages } from "./publicTrainingPages";
 const host = "https://akademy.neodev.click";
 const itemBodies = (rss: string) => Array.from(rss.matchAll(/<item>([\s\S]*?)<\/item>/g), (match) => match[1]!);
 const catalogueItemCount = (locale: "fr" | "en") => getPublicCatalogueTrainings(locale)
-  .reduce((count, training) => count + 1 + training.courses.length, 0);
+  .reduce((count, training) => count + 1 + training.courses.filter((course) => course.isCanonical).length, 0);
 
 describe("RSS des formations compatible avec les lecteurs WordPress", () => {
   it.each(["fr", "en"] as const)("publie les programmes et cours %s avec description, image et URL stable", (locale) => {

@@ -81,7 +81,7 @@ export const goldenJobs: GoldenJob[] = [
     scope: text("Arbitre les choix de modèles, données, RAG, APIs, Cloud, sécurité et intégration au système d’information à l’échelle d’un portefeuille de cas d’usage.", "Makes trade-offs across models, data, RAG, APIs, cloud, security and systems integration for a portfolio of use cases.", "يتخذ القرارات بين النماذج والبيانات وRAG وواجهات API والسحابة والأمن والتكامل مع أنظمة المعلومات عبر مجموعة من حالات الاستخدام."),
     skills: [text("Architecture de systèmes IA", "AI systems architecture", "هندسة أنظمة الذكاء الاصطناعي"), text("Données, RAG & APIs", "Data, RAG & APIs", "البيانات وRAG وواجهات API"), text("Sécurité & gouvernance", "Security & governance", "الأمن والحوكمة")],
     salary: null,
-    recommendedCertificationIds: ["claude_certified_architect_foundations", "claude_certified_architect_professional", "datacamp_building_scalable_agentic_systems"],
+    recommendedCertificationIds: ["claude_forward_deployed_engineer", "claude_certified_architect_foundations", "claude_certified_architect_professional", "datacamp_building_scalable_agentic_systems"],
     videoGroup: "engineering",
   },
   {

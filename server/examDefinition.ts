@@ -5,6 +5,8 @@ import trainingIndex from "../client/src/data/trainingIndex.json";
 import { certificationExams } from "../drizzle/schema";
 import { normalizeExamConfiguration, type ExamConfiguration } from "../shared/examConfiguration";
 import { getDb } from "./db";
+import { getCoursesForTraining } from "../shared/courseTrainingMembership";
+import { isMockExamEligible } from "../shared/trainingEligibility";
 
 export type ExamChoice = {
   id: string;
@@ -73,8 +75,7 @@ export function certificationExists(certificationId: string): boolean {
 }
 
 export function getCertificationLessonCounts(certificationId: string): Record<string, number> {
-  return (trainingIndex as unknown as { courses: Array<{ id: string; certId?: string; lessonCount?: number }> }).courses
-    .filter((course) => course.certId === certificationId)
+  return getCoursesForTraining((trainingIndex as unknown as { courses: Array<{ id: string; certId?: string; lessonCount?: number }> }).courses, certificationId)
     .reduce<Record<string, number>>((counts, course) => ({ ...counts, [course.id]: Math.max(1, Number(course.lessonCount) || 1) }), {});
 }
 
@@ -100,7 +101,8 @@ export async function getExamDefinitions(): Promise<Record<string, ExamConfigura
   const certificationIds = new Set([...Object.keys(staticConfigurations), ...Object.keys(overrides), ...Array.from(storedByCertification.keys())]);
   const definitions: Record<string, ExamConfiguration> = {};
   for (const certificationId of Array.from(certificationIds)) {
-    if (!certificationExists(certificationId)) continue;
+    const training = (trainingIndex.certifications as Array<any>).find((entry) => entry.id === certificationId);
+    if (!certificationExists(certificationId) || !isMockExamEligible(training)) continue;
     const availableQuestions = questions.filter((question) => question.certificationId === certificationId).length;
     const base = staticConfigurations[certificationId] || {};
     const override = overrides[certificationId] || {};
@@ -116,12 +118,15 @@ export async function getExamDefinitions(): Promise<Record<string, ExamConfigura
 }
 
 export async function getExamDefinition(certificationId: string): Promise<ExamConfiguration | null> {
+  const training = (trainingIndex.certifications as Array<any>).find((entry) => entry.id === certificationId);
+  if (!isMockExamEligible(training)) return null;
   const definitions = await getExamDefinitions();
   return definitions[certificationId] || null;
 }
 
 export async function saveExamConfiguration(certificationId: string, configuration: ExamConfiguration): Promise<void> {
-  if (!certificationExists(certificationId)) throw new Error("Formation inconnue pour cet examen");
+  const training = (trainingIndex.certifications as Array<any>).find((entry) => entry.id === certificationId);
+  if (!certificationExists(certificationId) || !isMockExamEligible(training)) throw new Error("Cette formation ne peut pas comporter d’examen blanc.");
   const questions = await getQuestionsForCertification(certificationId);
   await persistExam(certificationId, configuration, questions);
 }
@@ -194,7 +199,8 @@ export async function updateExamQuestion(questionId: string, data: Omit<ExamQues
 }
 
 export async function addExamQuestion(data: Omit<ExamQuestion, "id">): Promise<string> {
-  if (!certificationExists(data.certificationId)) throw new Error("Formation inconnue pour cette question");
+  const training = (trainingIndex.certifications as Array<any>).find((entry) => entry.id === data.certificationId);
+  if (!certificationExists(data.certificationId) || !isMockExamEligible(training)) throw new Error("Cette formation ne peut pas comporter de question d’examen.");
   const existing = await getQuestionsForCertification(data.certificationId);
   const id = `exam_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
   validateAnthropicExamQuestion({ ...data, id });

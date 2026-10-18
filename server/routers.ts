@@ -9,6 +9,8 @@ import { createApplication, getApplications, getApplicationById, updateApplicati
 getAdminAnalytics, getExamMonitoring, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation, updateUserEmail, updateLearnerProfileByAdmin, setUserPasswordHash, recordAccountSecurityEvent, getUserById, createPasswordResetToken } from "./db";
 import { getLearnerActivityLogPage } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
+import trainingIndex from "../client/src/data/trainingIndex.json";
+import { courseBelongsToTraining } from "../shared/courseTrainingMembership";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { applicationSchema } from "@shared/validation";
@@ -597,6 +599,10 @@ export const appRouter = router({
         lessonIndex: z.number(),
       }))
       .mutation(async ({ ctx, input }) => {
+        const course = (trainingIndex.courses as Array<any>).find((entry) => entry.id === input.courseId);
+        if (!course || !courseBelongsToTraining(course, input.certificationId)) throw new TRPCError({ code: "NOT_FOUND", message: "Ce cours n’appartient pas à cette formation." });
+        const lessonCount = Math.max(1, Number(course.lessonCount) || 1);
+        if (!Number.isInteger(input.lessonIndex) || input.lessonIndex < 0 || input.lessonIndex >= lessonCount) throw new TRPCError({ code: "BAD_REQUEST", message: "Indice de leçon invalide." });
         await requireLearningIntegrityClearance({ userId: ctx.user.id, role: ctx.user.role });
         const result = await markLessonComplete(ctx.user.id, input.certificationId, input.courseId, input.lessonIndex);
         await recordLearningEvent({ userId: ctx.user.id, eventType: "lesson_completed", certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, success: 1 });

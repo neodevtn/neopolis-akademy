@@ -207,7 +207,7 @@ describe("pages publiques de formations IA", () => {
     for (const locale of ["fr", "en", "ar"] as const) {
       const training = getPublicCatalogueTrainings(locale).find((item) => item.slug === "claude-forward-deployed-engineer");
       expect(training, locale).toBeDefined();
-      expect(training!.courses).toHaveLength(2);
+      expect(training!.courses).toHaveLength(11);
 
       const pages = [
         renderPublicCatalogueTraining(training!, locale),

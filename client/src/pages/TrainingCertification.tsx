@@ -18,7 +18,8 @@ import { IA_APPLIQUEE_METIERS_COLLECTION_ID, isStandaloneTpCertification } from 
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 import { trackEvent } from "@/lib/analytics";
 import { resolveTrainingVisualAsset } from "@shared/trainingVisualAssets";
-import { resolveTrainingCompanionCourses } from "@/lib/trainingCompanionCourses";
+import { getCoursesForTraining } from "@shared/courseTrainingMembership";
+import { isMockExamEligible, isNonCertifyingTraining } from "@shared/trainingEligibility";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -41,8 +42,7 @@ export default function TrainingCertification() {
   const viewedCertificationRef = useRef<string | null>(null);
 
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
-  const courses = cert ? trainingIndex.courses.filter((c) => c.certId === certId) : [];
-  const companionCourses = useMemo(() => resolveTrainingCompanionCourses(cert, trainingIndex.courses as any[]), [cert]);
+  const courses = cert ? getCoursesForTraining(trainingIndex.courses as any[], certId) : [];
   const trainingVisual = resolveTrainingVisualAsset(certId, (cert as any)?.visualAssets);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function TrainingCertification() {
   const isStandaloneTP = isStandaloneTpCertification(cert as any);
   const dynamicExamQuery = trpc.training.getExamDefinition.useQuery({ certificationId: certId || "" }, { enabled: Boolean(certId) });
   const examInfo = dynamicExamQuery.isSuccess ? dynamicExamQuery.data : getTrainingExamInfo(trainingIndex as any, certId);
-  const hasCertificationExam = Boolean(examInfo) && !isStandaloneTP;
+  const hasCertificationExam = Boolean(examInfo) && !isStandaloneTP && isMockExamEligible(cert as any);
   const courseIds = courses.map((c) => c.id);
   const isDataCampPartner = (cert as any)?.provider === "datacamp";
   const dataCampActivityTotal = useMemo(() => courses.reduce((sum, course) => sum + Number((course as any).totalActivities || (course as any).chapterCount || 0), 0), [courses]);
@@ -149,7 +149,7 @@ export default function TrainingCertification() {
   if (!cert) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">{t({ en: "Certification not found", fr: "Certification introuvable" })}</p>
+        <p className="text-muted-foreground">{t({ en: "Training programme not found", fr: "Formation introuvable" })}</p>
       </div>
     );
   }
@@ -209,7 +209,7 @@ export default function TrainingCertification() {
   }
 
   return (
-    <div className="min-h-screen bg-background" data-training-metrics-revision="n8n-activities-2026-08-21">
+    <div className="min-h-screen bg-background" data-training-metrics-revision="native-memberships-2026-10-18">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -666,37 +666,6 @@ export default function TrainingCertification() {
 	            </section>
 	          ))}
 	        </motion.div>
-
-	        {companionCourses.length > 0 && (
-	          <motion.section variants={fadeInUp} className="mt-8 rounded-2xl border border-border bg-secondary/20 p-5 sm:p-6" aria-labelledby="companion-courses">
-	            <div className="flex items-start gap-3">
-	              <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-	                <Layers className="h-4 w-4" />
-	              </div>
-	              <div className="min-w-0">
-	                <h2 id="companion-courses" className="text-base font-semibold text-foreground">
-	                  {t((cert as any)?.companionCoursesTitle || { en: "Related modules already available", fr: "Modules associés déjà disponibles" })}
-	                </h2>
-	                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-	                  {t((cert as any)?.companionCoursesDescription || { en: "These modules remain in their canonical learning paths and are not duplicated here.", fr: "Ces modules restent dans leur parcours d’origine et ne sont pas dupliqués ici." })}
-	                </p>
-	              </div>
-	            </div>
-	            <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-	              {companionCourses.map((course: any) => (
-	                <Link
-	                  key={course.id}
-	                  href={`/training/${course.certId}/${course.id}`}
-	                  className="group flex min-w-0 items-center gap-3 rounded-xl border border-border bg-card px-3.5 py-3 transition-colors hover:border-primary/30 hover:bg-primary/[0.03]"
-	                >
-	                  <BookOpen className="h-4 w-4 shrink-0 text-primary" />
-	                  <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground group-hover:text-primary">{t(course.title)}</span>
-	                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-	                </Link>
-	              ))}
-	            </div>
-	          </motion.section>
-	        )}
 
 	        {hasCertificationExam && certComplete && <motion.div variants={fadeInUp} className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm dark:border-emerald-900/50 dark:bg-emerald-950/25">
 	          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

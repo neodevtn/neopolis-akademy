@@ -5,12 +5,14 @@ import { getPublicTrainingThemes } from "./publicTrainingThemes";
 import { localizePublicTrainingText, type PublicTrainingLocale } from "./publicTrainingLocale";
 import { resolveTrainingVisualAsset, type TrainingVisualAsset, type TrainingVisualOverride } from "./trainingVisualAssets";
 import { compareCataloguePriority } from "./cataloguePriority";
+import { getCoursesForTraining } from "./courseTrainingMembership";
 import { getPublicCatalogueEditorial } from "./publicCatalogueEditorial";
 
 type LocalizedText = { fr?: string; en?: string; ar?: string };
 type CatalogCourse = {
   id: string;
   certId: string;
+  trainingMemberships?: { certificationId: string; order?: number }[];
   targetJob?: unknown;
   title?: string | LocalizedText;
   description?: string | LocalizedText;
@@ -88,6 +90,8 @@ export type PublicCatalogueCourse = {
   metrics: ReturnType<typeof getCourseCatalogMetrics>;
   skills: string[];
   tags: string[];
+  canonicalTrainingId: string;
+  isCanonical: boolean;
 };
 
 export type PublicCatalogueTraining = {
@@ -126,7 +130,7 @@ function relatedDomains(certificationId: string, locale: PublicTrainingLocale) {
 }
 
 function trainingFromCertification(certification: CatalogCertification, locale: PublicTrainingLocale): PublicCatalogueTraining {
-  const certificationCourses = source.courses.filter((course) => course.certId === certification.id);
+  const certificationCourses = getCoursesForTraining(source.courses, certification.id);
   const editorial = getPublicCatalogueEditorial("programmes", certification.id, locale);
   const skills = Array.from(new Set(certificationCourses.flatMap((course) => course.acquiredSkills || []).map((skill) => localize(skill, locale)).filter(Boolean))).slice(0, 16);
   const roles = extractTargetJobRoles(certificationCourses).map((role) => localize(role, locale, role)).filter(Boolean).slice(0, 14);
@@ -152,6 +156,8 @@ function trainingFromCertification(certification: CatalogCertification, locale: 
       metrics: getCourseCatalogMetrics(course),
       skills: (course.acquiredSkills || []).map((skill) => localize(skill, locale, skill)).filter(Boolean).slice(0, 10),
       tags: (course.tags || []).map((tag) => localize(tag, locale, tag)).filter(Boolean).slice(0, 10),
+      canonicalTrainingId: course.certId,
+      isCanonical: course.certId === certification.id,
     })),
   };
 }
@@ -184,6 +190,6 @@ export function getPublicCatalogueCourse(trainingSlug: string, courseSlug: strin
 export function getPublicCatalogueSitemapEntries() {
   return source.certifications.flatMap((certification) => {
     const trainingSlug = certificationSlugs.get(certification.id) || "formation-ia";
-    return [{ trainingSlug }, ...source.courses.filter((course) => course.certId === certification.id).map((course) => ({ trainingSlug, courseSlug: courseSlugs.get(course.id) || "cours-ia" }))];
+    return [{ trainingSlug }, ...getCoursesForTraining(source.courses, certification.id).filter((course) => course.certId === certification.id).map((course) => ({ trainingSlug, courseSlug: courseSlugs.get(course.id) || "cours-ia" }))];
   });
 }

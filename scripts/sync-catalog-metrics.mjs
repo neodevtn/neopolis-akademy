@@ -20,6 +20,8 @@ const interactive = new Set([
   "resource_review",
 ]);
 const index = JSON.parse(await fs.readFile(indexPath, "utf8"));
+const belongsToTraining = (course, trainingId) => course.certId === trainingId || (Array.isArray(course.trainingMemberships) && course.trainingMemberships.some((entry) => entry?.certificationId === trainingId));
+const orderInTraining = (course, trainingId) => course.certId === trainingId ? Number(course.order) || Number.MAX_SAFE_INTEGER : Number((course.trainingMemberships || []).find((entry) => entry?.certificationId === trainingId)?.order) || Number.MAX_SAFE_INTEGER;
 const courseFiles = await fs.readdir(coursesDir);
 const byId = {};
 for (const file of courseFiles.filter((entry) => entry.endsWith(".json"))) {
@@ -73,7 +75,7 @@ index.courses = index.courses.map((course) => {
   return { ...course, ...metrics, breakdown: refreshBreakdown(course.breakdown, metrics) };
 });
 index.certifications = index.certifications.map((certification) => {
-  const courses = index.courses.filter((course) => course.certId === certification.id);
+  const courses = index.courses.filter((course) => belongsToTraining(course, certification.id)).sort((a, b) => orderInTraining(a, certification.id) - orderInTraining(b, certification.id) || a.id.localeCompare(b.id));
   const totals = { lessonCount: courses.reduce((sum, course) => sum + course.lessonCount, 0), totalActivities: courses.reduce((sum, course) => sum + course.totalActivities, 0), exerciseCount: courses.reduce((sum, course) => sum + course.exerciseCount, 0), videoCount: courses.reduce((sum, course) => sum + course.videoCount, 0), downloadCount: courses.reduce((sum, course) => sum + course.downloadCount, 0), chapterCount: courses.reduce((sum, course) => sum + course.chapterCount, 0) };
   return { ...certification, courseCount: courses.length, totalLessons: totals.lessonCount, totalActivities: totals.totalActivities, totalExercises: totals.exerciseCount, totalVideos: totals.videoCount, totalDownloads: totals.downloadCount, breakdown: refreshBreakdown(certification.breakdown, totals) };
 });

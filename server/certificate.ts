@@ -3,6 +3,8 @@ import PDFDocument from "pdfkit";
 import { sdk } from "./_core/sdk";
 import { getAchievementById, getExamAttempts } from "./db";
 import { generateAchievementPdf } from "./achievementPdf";
+import trainingIndex from "../client/src/data/trainingIndex.json";
+import { canIssueTrainingCredential } from "../shared/trainingEligibility";
 
 const router = Router();
 

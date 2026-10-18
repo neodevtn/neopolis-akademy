@@ -474,6 +474,7 @@ const courses = [
 ];
 
 const index = readJson(indexPath);
+const existingFde = (index.certifications || []).find((item) => item.id === certificationId);
 for (const course of courses) writeJson(path.join(coursesDir, `${course.courseId}.json`), course);
 
 const certification = {
@@ -485,40 +486,19 @@ const certification = {
   ),
   level: i18n("Advanced", "Avancé"),
   icon: "🚀",
-  courseCount: courses.length,
-  totalLessons: courses.reduce((sum, course) => sum + course.lessons.length, 0),
-  totalExercises: courses.reduce((sum, course) => sum + course.lessons.length, 0),
-  totalVideos: 0,
-  totalDownloads: 0,
-  totalActivities: courses.reduce((sum, course) => sum + course.lessons.length, 0),
-  courses: [deliveryId, enterpriseId],
+  courses: [deliveryId, enterpriseId, "claude_101__01", "claude_code_101__01", "claude_code_in_action__01", "introduction_to_agent_skills__01", "introduction_to_claude_models__01", "introduction_to_subagents__01", "model_context_protocol_advanced_topics__01", "software_development_with_claude_code__01", "building_scalable_agentic_systems__01"],
   group: "claude_ai_agents",
   catalogTag: i18n("Claude delivery & enterprise adoption", "Déploiement Claude et adoption en entreprise"),
   trainingFormat: "formation",
   provider: "anthropic",
   source_refs: [source.pathUrl],
   sequentialCourseLocking: true,
-  noDuplicateSourceCourses: true,
-  companionCourses: [
-    "claude_101__01",
-    "claude_code_101__01",
-    "claude_code_in_action__01",
-    "introduction_to_agent_skills__01",
-    "introduction_to_claude_models__01",
-    "introduction_to_subagents__01",
-    "model_context_protocol_advanced_topics__01",
-    "software_development_with_claude_code__01",
-    "building_scalable_agentic_systems__01",
-  ],
-  companionCoursesTitle: i18n("FDE modules already available in Akademy", "Modules FDE déjà disponibles dans Akademy"),
-  companionCoursesDescription: i18n(
-    "These nine modules are shared with the Claude Certified Developer learning path. They remain in their canonical paths to preserve one consistent learner history and are linked here without duplication.",
-    "Ces neuf modules sont communs avec le parcours Claude Certified Developer. Ils restent dans leurs parcours d’origine afin de préserver un historique apprenant cohérent et sont liés ici sans duplication."
-  ),
-  mediaStatus: {
-    result: "No course media were available in the verified source lesson HTML. Default Akademy visual is intentionally used until an official course-specific asset is supplied or published to the Neopolis media library.",
-    verifiedAt: source.observedAt,
-  },
+  contentKind: "learning_path",
+  certificationStatus: "non_certifying",
+  assessmentPolicy: "none",
+  credentialPolicy: "none",
+  visualAssets: existingFde?.visualAssets,
+  mediaStatus: existingFde?.mediaStatus || { result: "No source instructional media were detected in the verified lessons.", verifiedAt: source.observedAt },
 };
 index.certifications = (index.certifications || []).filter((item) => item.id !== certificationId);
 index.certifications.push(certification);
@@ -547,5 +527,11 @@ index.courses.push(
     competencyTags: ["ai_business", "ai_governance", "ai_solution_design", "leadership"],
   },
 );
+const sharedIds = certification.courses.slice(2);
+for (const [offset, id] of sharedIds.entries()) {
+  const course = index.courses.find((item) => item.id === id);
+  if (!course) throw new Error(`Shared FDE course missing from catalogue: ${id}`);
+  course.trainingMemberships = [...(Array.isArray(course.trainingMemberships) ? course.trainingMemberships.filter((entry) => entry?.certificationId !== certificationId) : []), { certificationId, order: offset + 3 }];
+}
 writeJson(indexPath, index);
-console.log(JSON.stringify({ certificationId, courses: courses.map((course) => ({ id: course.courseId, lessons: course.lessons.length, screens: course.lessons.length, requiredChecks: course.lessons.length })), reusedCompanionCourses: certification.companionCourses.length }, null, 2));
+console.log(JSON.stringify({ certificationId, courses: certification.courses, nonCertifying: true, nativeMemberships: sharedIds.length }, null, 2));
