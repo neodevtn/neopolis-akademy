@@ -3,11 +3,14 @@ import path from "node:path";
 import { storagePut } from "../server/storage";
 
 const root = path.resolve(import.meta.dirname, "..");
-const sourceRoot = "/home/ubuntu/webdev-static-assets/claude-fde";
+// Les deux fichiers sont les sorties du générateur de marque commun à toutes
+// les formations : même logo, hiérarchie typographique et palette. La photo
+// Envato reste uniquement l'illustration intégrée dans ce template.
+const sourceRoot = "/home/ubuntu/webdev-static-assets/training-cards/rendered";
 const output = path.join(root, ".work", "claude-fde-visual-assets.json");
 const inputs = [
-  ["claude-forward-deployed-engineer-card.png", "claude-forward-deployed-engineer-card.png", "cardPath"],
-  ["claude-forward-deployed-engineer-social.png", "claude-forward-deployed-engineer-social.png", "socialPath"],
+  ["claude_forward_deployed_engineer-card.png", "claude_forward_deployed_engineer-card.png", "cardPath"],
+  ["claude_forward_deployed_engineer-social.png", "claude_forward_deployed_engineer-social.png", "socialPath"],
 ] as const;
 
 const result: Record<string, string> = {};

@@ -1,4 +1,5 @@
 import { GENERATED_TRAINING_VISUAL_ASSETS } from "./trainingVisualAssets.generated";
+import trainingIndex from "../client/src/data/trainingIndex.json";
 import {
   getTrainingVisualAsset,
   resolveTrainingVisualAsset,
@@ -39,22 +40,20 @@ describe("registre des visuels de formation", () => {
     expect(fallback.socialPath).toContain("og-neopolis-akademy");
   });
 
-  it("utilise le repli public vérifié lorsqu’un parcours n’a pas de média dédié", () => {
-    const fallback = resolveTrainingVisualAsset(
-      "claude_forward_deployed_engineer"
+  it("associe FDE aux deux sorties du template de marque plutôt qu’à une photo brute", () => {
+    const fde = (trainingIndex.certifications as any[]).find(
+      (training) => training.id === "claude_forward_deployed_engineer",
     );
+    const visual = resolveTrainingVisualAsset(fde.id, fde.visualAssets);
 
-    expect(
-      getTrainingVisualAsset("claude_forward_deployed_engineer")
-    ).toBeUndefined();
-    expect(fallback).toMatchObject({
-      socialPath: "/api/assets/og-neopolis-akademy-1200x630_eef162a5.png",
+    expect(visual).toMatchObject({
       socialWidth: 1200,
       socialHeight: 630,
-      cardPath: "/api/assets/square-neopolis-akademy-1200x1200_a2756579.png",
       cardWidth: 1200,
-      cardHeight: 1200,
+      cardHeight: 900,
     });
+    expect(visual.cardPath).toMatch(/^\/api\/assets\/claude_forward_deployed_engineer-card_[a-f0-9]+\.png$/);
+    expect(visual.socialPath).toMatch(/^\/api\/assets\/claude_forward_deployed_engineer-social_[a-f0-9]+\.png$/);
   });
 
   it("conserve les visuels dédiés générés pour les formations qui en disposent", () => {

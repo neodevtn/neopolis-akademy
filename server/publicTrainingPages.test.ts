@@ -180,6 +180,17 @@ describe("pages publiques de formations IA", () => {
     expect(courseHtml).toContain(`<meta property="og:image" content="${socialUrl}" />`);
   });
 
+  it("utilise la même carte FDE dans le catalogue et dans l’en-tête de sa fiche", () => {
+    const fde = getPublicCatalogueTrainings("fr").find((item) => item.slug === "claude-forward-deployed-engineer");
+    expect(fde).toBeDefined();
+
+    const catalogueHtml = renderPublicTrainingCatalogue("fr");
+    const trainingHtml = renderPublicCatalogueTraining(fde!, "fr");
+    expect(fde!.visual.cardPath).toMatch(/claude_forward_deployed_engineer-card_[a-f0-9]+\.png$/);
+    expect(catalogueHtml).toContain(`src="${fde!.visual.cardPath}"`);
+    expect(trainingHtml).toContain(`class="hero-visual" src="${fde!.visual.cardPath}"`);
+  });
+
   it("expose une carte et une image sociale non vides pour chaque formation publique dans chaque langue", () => {
     const expectedCount = getPublicCatalogueTrainings("fr").length;
     expect(expectedCount).toBeGreaterThan(0);

@@ -70,6 +70,9 @@ function visualProfile(training) {
 function visualProfilePriority(training) {
   const title = training.title.toLowerCase();
   const source = `${training.title} ${training.description}`.toLowerCase();
+  if (/forward deployed engineer|déploiement claude|claude deployment/.test(source)) {
+    return { motif: "people", kind: "people", label: "Déploiement", icon: "↗" };
+  }
   if (/recherche médicale|medical research|science|génom|genom|biolog|protéin|protein/.test(source)) return { motif: "research", kind: "science", label: "Recherche", icon: "⌬" };
   if (/workflow|automatisation|automation|n8n/.test(title)) {
     if (/marketing|campaign|campagne|social/.test(source)) return { motif: "workflow", kind: "marketing", label: "Marketing", icon: "✦" };

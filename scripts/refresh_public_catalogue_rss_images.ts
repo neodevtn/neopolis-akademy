@@ -3,6 +3,7 @@ import { getPublicCatalogueTrainings } from "../shared/publicTrainingCatalog";
 
 /** Crée un instantané des tailles réelles, jamais estimées, des cartes PNG canoniques. */
 async function main() {
+  const publicBaseUrl = (process.env.PUBLIC_BASE_URL || "https://akademy.neodev.click").replace(/\/$/, "");
   const paths = Array.from(new Set(getPublicCatalogueTrainings("fr").map((training) => training.visual.cardPath)));
   const result: Record<string, number> = {};
   let next = 0;
@@ -12,7 +13,7 @@ async function main() {
       const path = paths[next++]!;
       try {
         if (!/^\/api\/assets\/[A-Za-z0-9_.-]+\.png$/.test(path)) throw new Error("chemin d'image non conforme");
-        const response = await fetch(`https://akademy.neodev.click${path}`, { method: "HEAD", signal: AbortSignal.timeout(20_000) });
+        const response = await fetch(`${publicBaseUrl}${path}`, { method: "HEAD", signal: AbortSignal.timeout(20_000) });
         const bytes = Number(response.headers.get("content-length"));
         if (!response.ok || !response.headers.get("content-type")?.startsWith("image/png") || !Number.isSafeInteger(bytes) || bytes < 1_000) {
           throw new Error(`HTTP ${response.status}, type ${response.headers.get("content-type")}, octets ${bytes}`);
