@@ -43,6 +43,7 @@ import { ORGANIZATION_SOCIAL_PROFILES } from "./seo";
 import { getAiNewsFeed, type AiNewsFeed } from "./aiNews";
 import { ENV } from "./_core/env";
 import { getPublicCatalogueRssPath, renderPublicCatalogueRss } from "./publicCatalogueRss";
+import { CATALOGUE_EXCHANGE_PATHS, getCatalogueExchangeSnapshot } from "./catalogueExchange";
 
 const SITE_NAME = "Neopolis Akademy";
 const ORIGIN = "https://akademy.neodev.click";
@@ -744,6 +745,30 @@ export function registerPublicTrainingPages(app: Express) {
       }).end(payload);
     });
   }
+  const sendCatalogueExchange = (locale: "fr" | "en-US") => (req: Request, res: Response) => {
+    try {
+      const exchange = getCatalogueExchangeSnapshot(locale);
+      if (req.headers["if-none-match"] === exchange.etag) {
+        return res.status(304).set({
+          ETag: exchange.etag,
+          "Cache-Control": "public, max-age=900, stale-while-revalidate=21600",
+          "X-Content-Type-Options": "nosniff",
+        }).end();
+      }
+      const payload = Buffer.from(exchange.body, "utf8");
+      return res.status(200).set({
+        ETag: exchange.etag,
+        "Cache-Control": "public, max-age=900, stale-while-revalidate=21600",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Length": String(payload.byteLength),
+        "X-Content-Type-Options": "nosniff",
+      }).end(payload);
+    } catch {
+      return res.status(503).set({ "Cache-Control": "no-cache", "Retry-After": "60", "Content-Type": "application/json; charset=utf-8" }).send(JSON.stringify({ error: "catalogue_snapshot_unavailable" }));
+    }
+  };
+  app.get(CATALOGUE_EXCHANGE_PATHS.fr, sendCatalogueExchange("fr"));
+  app.get(CATALOGUE_EXCHANGE_PATHS["en-US"], sendCatalogueExchange("en-US"));
   app.get("/formations-ia/catalogue/:trainingSlug/:courseSlug", catalogueCourse("fr"));
   app.get("/en/ai-training/catalogue/:trainingSlug/:courseSlug", catalogueCourse("en"));
   app.get("/ar/ai-training/catalogue/:trainingSlug/:courseSlug", catalogueCourse("ar"));
