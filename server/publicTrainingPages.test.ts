@@ -424,4 +424,22 @@ describe("pages publiques de formations IA", () => {
       await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
     }
   });
+
+  it("redirige les anciennes URLs anglaises valides et retourne 404 pour une fiche inconnue", async () => {
+    const app = express();
+    registerPublicTrainingPages(app);
+    const server = await new Promise<ReturnType<typeof app.listen>>((resolve) => {
+      const listener = app.listen(0, "127.0.0.1", () => resolve(listener));
+    });
+    try {
+      const baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+      const migrated = await fetch(`${baseUrl}/ai-training/catalogue/claude-forward-deployed-engineer`, { redirect: "manual" });
+      expect(migrated.status).toBe(301);
+      expect(migrated.headers.get("location")).toBe("/en/ai-training/catalogue/claude-forward-deployed-engineer");
+      const missing = await fetch(`${baseUrl}/ai-training/catalogue/does-not-exist`, { redirect: "manual" });
+      expect(missing.status).toBe(404);
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
+  });
 });

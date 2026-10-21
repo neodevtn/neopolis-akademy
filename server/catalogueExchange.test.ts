@@ -17,6 +17,10 @@ describe("export catalogue Akademy → Neopolis v1", () => {
     expect(Buffer.byteLength(first.body, "utf8")).toBeLessThan(10 * 1024 * 1024);
     expect(first.snapshot.items.every((item) => ["category", "training", "module"].includes(String(item.entity_type)))).toBe(true);
     expect(first.snapshot.items.filter((item) => item.status === "published").every((item) => typeof item.title === "string" && item.title.length > 0)).toBe(true);
+    const localized = first.snapshot.items.filter((item) => item.entity_type !== "category");
+    expect(localized.every((item) => String(item.id).endsWith(locale === "fr" ? "__fr" : "__en"))).toBe(true);
+    expect(localized.every((item) => String(item.translation_group_id) !== String(item.id))).toBe(true);
+    if (locale === "en-US") expect(localized.every((item) => Array.isArray(item.legacy_urls) && item.legacy_urls.length > 0)).toBe(true);
   });
 
   it("sert le JSON public sans session puis répond 304 avec le même ETag", async () => {

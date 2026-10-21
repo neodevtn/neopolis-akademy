@@ -748,7 +748,8 @@ export function registerPublicTrainingPages(app: Express) {
   const sendCatalogueExchange = (locale: "fr" | "en-US") => (req: Request, res: Response) => {
     try {
       const exchange = getCatalogueExchangeSnapshot(locale);
-      if (req.headers["if-none-match"] === exchange.etag) {
+      const requestEtags = String(req.headers["if-none-match"] || "").split(",").map((value) => value.trim().replace(/^W\//, ""));
+      if (requestEtags.includes(exchange.etag) || requestEtags.includes("*")) {
         return res.status(304).set({
           ETag: exchange.etag,
           "Cache-Control": "public, max-age=900, stale-while-revalidate=21600",
@@ -775,6 +776,14 @@ export function registerPublicTrainingPages(app: Express) {
   app.get("/formations-ia/catalogue/:trainingSlug", catalogueTraining("fr"));
   app.get("/en/ai-training/catalogue/:trainingSlug", catalogueTraining("en"));
   app.get("/ar/ai-training/catalogue/:trainingSlug", catalogueTraining("ar"));
+  app.get("/ai-training/catalogue/:trainingSlug/:courseSlug", (req: Request, res: Response) => {
+    const result = getPublicCatalogueCourse(req.params.trainingSlug, req.params.courseSlug, "en");
+    return result ? res.redirect(301, `/en/ai-training/catalogue/${req.params.trainingSlug}/${req.params.courseSlug}`) : sendHtml(res, renderPublicTrainingNotFound("en"), 404);
+  });
+  app.get("/ai-training/catalogue/:trainingSlug", (req: Request, res: Response) => {
+    const training = getPublicCatalogueTraining(req.params.trainingSlug, "en");
+    return training ? res.redirect(301, `/en/ai-training/catalogue/${req.params.trainingSlug}`) : sendHtml(res, renderPublicTrainingNotFound("en"), 404);
+  });
   app.get("/formations-ia/golden-jobs", goldenJobs("fr"));
   app.get("/en/ai-training/golden-jobs", goldenJobs("en"));
   app.get("/ar/ai-training/golden-jobs", goldenJobs("ar"));
